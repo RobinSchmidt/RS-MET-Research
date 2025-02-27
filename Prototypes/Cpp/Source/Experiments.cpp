@@ -17370,6 +17370,24 @@ void testNewtonOptimizer1D()
 }
 
 
+
+template <class T>
+void rsOrderBitReversedStrided(T *buffer, int N, int log2N, int stride = 1)
+{
+  int n, nr; // index and bit-reversed index
+  for(n = 0; n < N; n++)
+  {
+    nr = (int) RAPT::rsBitReverse(n, log2N);
+    if(n < nr)
+      rsSwap(buffer[stride*n], buffer[stride*nr]);
+  }
+
+  // rsBitReverse() works with unsigned long, so maybe we should declare n,nr as unsigned long, too
+  // to avoid conversions inside the loop.
+}
+// Needs tests!
+
+
 template<class T>
 void rsStridedFFT(T* a, int N, T W, int stride = 1)
 {
@@ -17399,7 +17417,9 @@ void rsStridedFFT(T* a, int N, T W, int stride = 1)
     W *= W;
   }
 
-  rsArrayTools::orderBitReversed(a, N, (int)(rsLog2(N)+0.5)); // descramble outputs
+  rsOrderBitReversedStrided(a, N, (int)(rsLog2(N)+0.5), stride); // descramble outputs
+  //rsArrayTools::orderBitReversed(a, N, (int)(rsLog2(N)+0.5)); // descramble outputs
+  // We need a strided variant of that, too!
 
   // Code was adpated from rsLinearTransforms::fourierRadix2DIF()
   // Needs tests!
@@ -17474,6 +17494,9 @@ void testFourierTrafo2D()
   // scipy for a 2D FFT. If it has none, look into some image processing libraries for a reference
   // 2D FFT implementation.
 
+  // Ah - I think, the orderBitReversed is not applicable as is. We need to make a strided version 
+  // of that, too! Yes! that fixes it! ..at least for M=N=8, it works now. Try next M != N.
+
   // We want to implement a 2D FFT based on a strided 1D FFT. Later we want to generalize the
   // implementation to nD.
 
@@ -17507,7 +17530,8 @@ void testFourierTrafo2D()
   // or the FFT or both. Or maybe even in rsMatrix.getDataPointer(i,j)
 
   Mat err = B - B2;
-  // Hmm - *some* values actually do match. But most are totally different with M=N=8. Weird!
+  ok &= rsAbs(err.getAbsoluteMaximum()) <= 1.e-12;
+  // Hmm - *some* values actually do match with M=N=8. But most are totally different. Weird!
 
 
   // Compute the IDFT of the naive DFT:
@@ -17555,6 +17579,12 @@ void testFourierTrafo2D()
   // - This can be generalized to an nD FFT. We would just run the strided FFT along all dimensions
   //   one dimension at a time. Try that with a 3D FFT as well. Compare results against naive 
   //   computation of the nD DFT in unit tests.
+
+  // See:
+  //
+  // https://thepythoncodingbook.com/2021/08/30/2d-fourier-transform-in-python-and-fourier-synthesis-of-images/
+  // https://docs.scipy.org/doc/scipy/reference/generated/scipy.fft.fft2.html
+  // https://numpy.org/doc/stable/reference/generated/numpy.fft.fft2.html
 }
 
 
@@ -17563,7 +17593,7 @@ void testFourierTrafo2D()
 can be used in merge sort. All the implementations of merge sort I have seen so far, use an 
 additional buffer, making its space complexity O(n). I'd like to do merge sort with space 
 complexity of O(1). I'm not sure, if that's possible, though. I guess, if it would be possible,
-implementations would be already available...but maybe I didn't serach hard enough. */
+implementations would be already available...but maybe I didn't search hard enough. */
 template<class T>
 void rsMergeInPlace(std::vector<T>& A, int s)
 {

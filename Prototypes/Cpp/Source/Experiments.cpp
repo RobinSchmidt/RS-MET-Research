@@ -17472,17 +17472,27 @@ rsMatrix<T> rsFFT2D(const rsMatrix<T>& A, T Wx, T Wy)
 
   rsMatrix<T> B(A);
 
-  // Do M row-wise FFTs of length N with stride 1 and twiddle base Wx:
+  // Old - buggy - uses wrong (swapped) twiddle bases:
+  //// Do M row-wise FFTs of length N with stride 1 and twiddle base Wx:
+  //for(int i = 0; i < M; i++)
+  //  rsStridedFFT(B.getDataPointer(i, 0), N, Wx, 1);
+
+  //// Do N column-wise FFTs of length M with stride N and twiddle base Wy:
+  //for(int j = 0; j < N; j++)
+  //  rsStridedFFT(B.getDataPointer(0, j), M, Wy, N);
+
+
+  // New - seems to work correctly:
+
+  // Do M row-wise FFTs of length N with stride 1 and twiddle base Wy:
   for(int i = 0; i < M; i++)
-    rsStridedFFT(B.getDataPointer(i, 0), N, Wx, 1);
+    rsStridedFFT(B.getDataPointer(i, 0), N, Wy, 1);
 
   // Do N column-wise FFTs of length M with stride N and twiddle base Wy:
   for(int j = 0; j < N; j++)
-    rsStridedFFT(B.getDataPointer(0, j), M, Wy, N);
+    rsStridedFFT(B.getDataPointer(0, j), M, Wx, N);
 
   return B;
-
-  // May still be wrong. Maybe swap Wx, Wy? ..nah - that doesn't seem to help
 }
 
 void testFourierTrafo2D()
@@ -17505,8 +17515,14 @@ void testFourierTrafo2D()
   using Mat     = rsMatrix<Complex>;
 
   int M = 8;        // Number of rows
-  //int N = 16;       // Number of columns
-  int N = 8;        // Number of columns - test to see if this fixes problems -> nope
+  int N = 16;       // Number of columns
+
+  //int N = 8;        // Number of columns - test to see if this fixes problems -> Yes!
+  // So, it currently works when N = M but not when N != M, I think.
+
+  //M = 2;
+  //N = 4;
+
 
   Complex i(0, 1);  // Imaginary unit
   bool ok = true;
@@ -17518,6 +17534,8 @@ void testFourierTrafo2D()
   // Compute basic twiddle factors:
   Complex Wx = rsExp(-2*PI*i / Real(M));
   Complex Wy = rsExp(-2*PI*i / Real(N));
+  //Complex Wx = rsExp(-2*PI*i / Real(N));
+  //Complex Wy = rsExp(-2*PI*i / Real(M));
   // Wait! Shouldn't Wx be e^(-2*pi*i/N) and wy be e^(-2*pi*i/M)? But the FDT-IDFT roundtrip 
   // actually works - which would be unlikely if teh formulas were wrong
 
@@ -17548,6 +17566,10 @@ void testFourierTrafo2D()
 
   // OK - we have computed the DFT naively and it works to do a DFT -> IDFT roundtrip. I have not
   // yet checked the 2D DFT result against a reference implementation, though.
+
+
+
+
 
 
   // ToDo: implement and test a 2D FFT:

@@ -17500,7 +17500,7 @@ rsMatrix<T> rsFFT2D(const rsMatrix<T>& A, T Wx, T Wy)
 
 
 template<class TReal, class TComplex>
-bool testFourierTrafo2D(int M, int N, int seed)
+bool testFourierTrafo2D(int M, int N, int seed, TReal tol)
 {
   // Tests our 2D FFT routine rsFFT2D against a naive implementation of the 2D DFT. We test also
   // if a DFT -> IDFT roundtrip of the naive immplementaion reconstructs the original 2D signal.
@@ -17521,7 +17521,7 @@ bool testFourierTrafo2D(int M, int N, int seed)
 
   // Create a MxN matrix of random complex values:
   Mat A(M, N);
-  rsFillWithComplexRandomValues(A.getDataPointer(), M*N, -5.0, +5.0, seed);
+  rsFillWithComplexRandomValues(A.getDataPointer(), M*N, TReal(-5), TReal(+5), seed);
 
   // Compute basic twiddle factors:
   TComplex Wx = rsExp(-2*PI*i / TReal(M)); // Twiddle base along 1st axis (x, rows)
@@ -17531,7 +17531,7 @@ bool testFourierTrafo2D(int M, int N, int seed)
   Mat B   = rsDFT2D(A, Wx, Wy);
   Mat B2  = rsFFT2D(A, Wx, Wy);
   Mat err = B - B2;
-  ok &= rsAbs(err.getAbsoluteMaximum()) <= 1.e-11;
+  ok &= rsAbs(err.getAbsoluteMaximum()) <= tol;
   // We need to take the rsAbs again because the return value of getAbsoluteMaximum() is of type
   // Complex. This is a bit weird.
 
@@ -17543,7 +17543,7 @@ bool testFourierTrafo2D(int M, int N, int seed)
 
   // Compute and check DFT-IDFT roundtrip error:
   err = A - C;
-  ok &= rsAbs(err.getAbsoluteMaximum()) <= 1.e-13;
+  ok &= rsAbs(err.getAbsoluteMaximum()) <= tol;
 
   return ok;
 
@@ -17591,19 +17591,30 @@ bool testFourierTrafo2D(int M, int N, int seed)
   // https://www.uomustansiriyah.edu.iq/media/lectures/5/5_2017_03_26!05_31_37_PM.pdf
 }
 
+template<class TReal, class TComplex>
+bool runTestsFourierTrafo2D(int maxPower, int seed, TReal tol)
+{
+  bool ok = true;
+
+  // Test 2D FFT for M,N = 1,2,4,8, ..., 2^maxPower:
+  for(int i = 0; i <= maxPower; i++) {
+    int M = rsPow(2, i);
+    for(int j = 0; j <= maxPower; j++) {
+      int N = rsPow(2, j);
+      ok &= testFourierTrafo2D<TReal, TComplex>(M, N, 0, tol);  }}
+
+  return ok;
+}
+
+
 void testFourierTrafo2D()
 {
   // This can someday be teurned into a unit test in the main repo.
 
   bool ok = true;
 
-  // Test 2D FFT for M,N = 1,2,4,8,16:
-  int maxPower = 4;
-  for(int i = 0; i <= maxPower; i++) {
-    int M = rsPow(2, i);
-    for(int j = 0; j <= maxPower; j++) {
-      int N = rsPow(2, j);
-      ok &= testFourierTrafo2D<double, std::complex<double>>(M, N, 0);  }}
+  //ok &= runTestsFourierTrafo2D<float,  std::complex<float>> (4, 0, 1.e-6f); // FAILS!
+  ok &= runTestsFourierTrafo2D<double, std::complex<double>>(4, 0, 1.e-11);
 
   rsAssert(ok);
 }

@@ -17488,6 +17488,9 @@ rsMatrix<T> rsFFT2D(const rsMatrix<T>& A, T Wx, T Wy)
 
   return B;
 
+  // ToDo: Let it operate in place, i.e. directly on A. Use rsMatrixView instead of rsMatrix. Maybe
+  // pass the matrix by pointer.
+
   // Notes:
   //
   // - The total cost is the sum of the costs of the two loops given by:
@@ -17630,6 +17633,56 @@ void testFourierTrafo2D()
   // - Fix linker error for rsComplex<float>. It's about some functions in rsArrayTools for which
   //   apparently no instantioations exist for rsComplex<float>.
 }
+
+
+
+template<class T>
+void rsStridedKroneckerTrafo2x2(T* A, int N, T a, T b, T c, T d, int stride = 1)
+{
+  rsAssert(rsIsPowerOfTwo(N), "N must be a power of 2");
+  int h = 1;
+  while(h < N) 
+  {
+    for(int i = 0; i < N; i += 2*h) 
+    {
+      for(int j = i; j < i+h; j++) 
+      {
+        int i1 = stride *  j;
+        int i2 = stride * (j+h);
+        T x = A[i1];
+        T y = A[i2];
+        A[i1] = a*x + b*y;
+        A[i2] = c*x + d*y;
+      }
+    }
+    h *= 2;
+  }
+
+  // Code adapted from rsLinearTransforms::kronecker2x2().
+}
+// Needs tests
+
+void testKroneckerTrafo2D()
+{
+  // Under construction. It should implement roundtrip tests like in testFourierTrafo2D but for the
+  // 2x2 Kronecker trafo. We also want to compare a rows-first vs columns-first trafo. With the 
+  // Fourier trafo, it doesn't matter but with the Kronecker trafo, I don't know yet. We could also
+  // use different a,b,c,d parameters for the row-wise and column-wise trafos. In this case, it 
+  // clearly makes a difference along which axis we transform first.
+
+
+
+
+  int dummy = 0;
+
+  // ToDo:
+  //
+  // - Apply the 2D FKT to an 16 delayline FDN by wrapping rsMatrixView around the vector of 
+  //   outputs.
+}
+
+
+
 
 
 /** UNDER CONSTRUCTION. Does not work yet. I try to come up with an in-place merge algorithm that 

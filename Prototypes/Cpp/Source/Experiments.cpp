@@ -17673,9 +17673,29 @@ void rsKroneckerTrafoRowsFirst(rsMatrixView<T>* A, T a, T b, T c, T d)
     rsStridedKroneckerTrafo2x2(A->getDataPointer(i, 0), N, a, b, c, d, 1);
   for(int j = 0; j < N; j++)
     rsStridedKroneckerTrafo2x2(A->getDataPointer(0, j), M, a, b, c, d, N);
-
-  // Make a rsKroneckerTrafoColsFirst variant, too. It would just swap the order of the two loops.
 }
+
+template<class T>
+void rsKroneckerTrafoColsFirst(rsMatrixView<T>* A, T a, T b, T c, T d)
+{
+  int M = A->getNumRows();
+  int N = A->getNumColumns();
+
+  // Check preconditions:
+  rsAssert(M >= 1 && N >= 1);
+  rsAssert(rsIsPowerOfTwo(M), "Number of rows must be a power of two.");
+  rsAssert(rsIsPowerOfTwo(N), "Number of columns must be a power of two.");
+
+  // Do the trafo:
+  for(int j = 0; j < N; j++)
+    rsStridedKroneckerTrafo2x2(A->getDataPointer(0, j), M, a, b, c, d, N);
+  for(int i = 0; i < M; i++)
+    rsStridedKroneckerTrafo2x2(A->getDataPointer(i, 0), N, a, b, c, d, 1);
+}
+// It turns out that ..RowsFirst and ..ColsFirst actually produce the same results such that we may
+// get rid of one of them - or keep the other only for demonstration purposes.
+
+
 
 void testKroneckerTrafo2D()
 {
@@ -17712,11 +17732,11 @@ void testKroneckerTrafo2D()
   ci = -s*c;
   di =  s*a;
 
-  // Do forward trafo:
+  // Do rows-first forward trafo:
   Mat B(A);
   rsKroneckerTrafoRowsFirst(&B, a,b,c,d);
 
-  // Do inverse trafo:
+  // Do rows-first inverse trafo:
   Mat C(B);
   rsKroneckerTrafoRowsFirst(&C, ai,bi,ci,di);
 
@@ -17729,14 +17749,30 @@ void testKroneckerTrafo2D()
   // happen to be "nice" numbers. Maybe it's because the scaler s is exactly representable. It's
   // -0.5.
 
+  // Do columns-first forward trafo:
+  Mat D(A);
+  rsKroneckerTrafoColsFirst(&D, a,b,c,d);
+  err = D - B;
+  ok &= rsAbs(err.getAbsoluteMaximum()) <= tol;
+  // It's again actually precisely zero
 
 
   int dummy = 0;
 
+  // Observations:
+  //
+  // - It doesn't seem to matter whether we transform along the rows first and the along the 
+  //   columns or the other way around. Apparently, the 2D (fast) Kronecker transform is separable
+  //   just as the 2D (fast) Fourier transform.
+  //
+  //
   // ToDo:
   //
   // - Apply the 2D FKT to an 16 delayline FDN by wrapping rsMatrixView around the vector of 
   //   outputs.
+  //
+  // - Maybe compare the result of the 2D trafo to a 1D trafo. Maybe it's the same or related by a
+  //   permutation?
 }
 
 

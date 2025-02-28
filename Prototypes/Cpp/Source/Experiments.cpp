@@ -17686,6 +17686,49 @@ void testKroneckerTrafo2D()
   // clearly makes a difference along which axis we transform first.
 
 
+  bool ok = true;
+
+  int M =  8;
+  int N = 16;
+
+  // Create a MxN matrix of random complex values:
+  using Real = double;
+  using Mat  = rsMatrix<Real>;
+  Mat A(M, N);
+  rsFillWithRandomValues(A.getDataPointer(), M*N, Real(-5), Real(+5), 0);
+
+  // Assign coeffs for forward trafo:
+  Real a, b, c, d;
+  a = -1;
+  b =  2;
+  c =  3;
+  d = -4;
+
+  // Compute coeffs for inverse trafo:
+  Real ai, bi, ci, di;
+  Real s = Real(1) / (a*d - b*c);
+  ai =  s*d;
+  bi = -s*b;
+  ci = -s*c;
+  di =  s*a;
+
+  // Do forward trafo:
+  Mat B(A);
+  rsKroneckerTrafoRowsFirst(&B, a,b,c,d);
+
+  // Do inverse trafo:
+  Mat C(B);
+  rsKroneckerTrafoRowsFirst(&C, ai,bi,ci,di);
+
+  // Compute error and check if it's within tolerance:
+  Real tol = 1.e-13;
+  Mat  err = C - A;
+  ok &= rsAbs(err.getAbsoluteMaximum()) <= tol;
+  // Looking at the data in err, we see that it's actually exactly zero. No roundoff error at all!
+  // Maybe it's because all of the coeffs a,b,c,d and ai,bi,ci,di can be represented exactly? They
+  // happen to be "nice" numbers. Maybe it's because the scaler s is exactly representable. It's
+  // -0.5.
+
 
 
   int dummy = 0;

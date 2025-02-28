@@ -141,7 +141,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSmoothMax();                   // stub
   //testNewtonOptimizer1D();
   testFourierTrafo2D();
-  testKroneckerTrafo2D();              // Under construction.
+  testKroneckerTrafo2D();
 
 
 

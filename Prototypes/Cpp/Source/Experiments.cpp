@@ -17655,7 +17655,6 @@ void rsStridedKroneckerTrafo2x2(T* A, int N, T a, T b, T c, T d, int stride = 1)
 
   // Code adapted from rsLinearTransforms::kronecker2x2().
 }
-// Needs tests
 
 template<class T>
 void rsKroneckerTrafoRowsFirst(rsMatrixView<T>* A, T a, T b, T c, T d)
@@ -17695,16 +17694,14 @@ void rsKroneckerTrafoColsFirst(rsMatrixView<T>* A, T a, T b, T c, T d)
 // It turns out that ..RowsFirst and ..ColsFirst actually produce the same results such that we may
 // get rid of one of them - or keep the other only for demonstration purposes.
 
-
-
 void testKroneckerTrafo2D()
 {
-  // Under construction. It should implement roundtrip tests like in testFourierTrafo2D but for the
-  // 2x2 Kronecker trafo. We also want to compare a rows-first vs columns-first trafo. With the 
-  // Fourier trafo, it doesn't matter but with the Kronecker trafo, I don't know yet. We could also
-  // use different a,b,c,d parameters for the row-wise and column-wise trafos. In this case, it 
-  // clearly makes a difference along which axis we transform first.
-
+  // Under construction. 
+  
+  // We implement some experiments with a 2D 2x2 variant of the fast Kronecker transform. This 2D 
+  // variant follows the same principle that is used to derive a 2D FFT from a strided 1D FFT. 
+  // ...TBC...
+  
 
   bool ok = true;
 
@@ -17744,35 +17741,48 @@ void testKroneckerTrafo2D()
   Real tol = 1.e-13;
   Mat  err = C - A;
   ok &= rsAbs(err.getAbsoluteMaximum()) <= tol;
-  // Looking at the data in err, we see that it's actually exactly zero. No roundoff error at all!
-  // Maybe it's because all of the coeffs a,b,c,d and ai,bi,ci,di can be represented exactly? They
-  // happen to be "nice" numbers. Maybe it's because the scaler s is exactly representable. It's
-  // -0.5.
 
   // Do columns-first forward trafo:
   Mat D(A);
   rsKroneckerTrafoColsFirst(&D, a,b,c,d);
   err = D - B;
   ok &= rsAbs(err.getAbsoluteMaximum()) <= tol;
-  // It's again actually precisely zero
 
-
-  int dummy = 0;
 
   // Observations:
   //
-  // - It doesn't seem to matter whether we transform along the rows first and the along the 
+  // - With M = 8, N = 16, a = -1, b = 2, c = 3, d = -4, the error matrices are actually 
+  //   precisiely zero. We see no roundoff error at all! Maybe it's because all of the coeffs 
+  //   a,b,c,d and ai,bi,ci,di can be represented exactly? They happen to be "nice" numbers. Maybe
+  //   it's because the scaler s is exactly representable. It's -0.5.
+  //
+  // - It doesn't seem to matter whether we transform along the rows first and then along the 
   //   columns or the other way around. Apparently, the 2D (fast) Kronecker transform is separable
   //   just as the 2D (fast) Fourier transform.
   //
   //
   // ToDo:
   //
-  // - Apply the 2D FKT to an 16 delayline FDN by wrapping rsMatrixView around the vector of 
-  //   outputs.
+  // - Maybe compare the result of the 2D trafo to a 1D trafo of size L = M*N. Maybe it's the same
+  //   or related by a permutation? Try also interpreting the length L vector as matrices of 
+  //   various shapes. For example, for L = 64, we can interpret is as 1x64, 2x32, 4x16, 8x8, 16x4,
+  //   32x2, 64x1 matrix. We just need to wrap an appropriate rsMatrixView around the underlying 
+  //   array.
   //
-  // - Maybe compare the result of the 2D trafo to a 1D trafo. Maybe it's the same or related by a
-  //   permutation?
+  // - Find the transform matrix by transforming the basis vectors of R^L = R^(M*N) one at a time. 
+  //
+  // - Maybe use the differently shaped 2D FKTs in FDNs by wrapping an appropriate rsMatrixView 
+  //   around the vector of delayline in/outputs. This may give use more variants of possible 
+  //   feedback matrices. But maybe these variants are equivalent to permutations of the input or 
+  //   output vector? This is just speculation, though. I just have a foggy intuition that this 
+  //   could be the case. It might be totally wrong.
+  //
+  // - If it turns out that using differently shaped 2D FKTs is equivalent to doing a 1D FKT and 
+  //   subsequent permutation (or doing the permutation first and then the FKT), then it may make 
+  //   sense to enforce the results to be different for different shapes by using different a.b,c,d
+  //   coeffs for the row-wise and the column-wise transforms. Then it may also make a difference,
+  //   if we do the row-wise or column-wise trafo first. I'm not sure about that, though. We need 
+  //   to do an experiment for that.
 }
 
 

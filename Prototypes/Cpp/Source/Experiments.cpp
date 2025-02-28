@@ -17468,25 +17468,21 @@ of the FFT algorithm. For an MxN matrix, the algorithm first computes M row-wise
 with stride 1 and twiddle base Wy and then computes N column-wise FFTs of length M with stride N 
 and twiddle base Wy. The total computational cost is of order M*N * log2(M*N). */
 template<class T>
-rsMatrix<T> rsFFT2D(const rsMatrix<T>& A, T Wx, T Wy)
+void rsFFT2D(rsMatrix<T>* A, T Wx, T Wy)
 {
-  int M = A.getNumRows();
-  int N = A.getNumColumns();
+  int M = A->getNumRows();
+  int N = A->getNumColumns();
   rsAssert(M >= 1 && N >= 1); // Maybe we don't need this?
   rsAssert(rsIsPowerOfTwo(M), "Number of rows must be a power of two.");
   rsAssert(rsIsPowerOfTwo(N), "Number of columns must be a power of two.");
 
-  rsMatrix<T> B(A);
-
   // Do M row-wise FFTs of length N with stride 1 and twiddle base Wy. Cost is M * (N*log2(N)).
   for(int i = 0; i < M; i++)
-    rsStridedFFT(B.getDataPointer(i, 0), N, Wy, 1);
+    rsStridedFFT(A->getDataPointer(i, 0), N, Wy, 1);
 
   // Do N column-wise FFTs of length M with stride N and twiddle base Wy. Cost is N * (M*log2(M)).
   for(int j = 0; j < N; j++)
-    rsStridedFFT(B.getDataPointer(0, j), M, Wx, N);
-
-  return B;
+    rsStridedFFT(A->getDataPointer(0, j), M, Wx, N);
 
   // ToDo: Let it operate in place, i.e. directly on A. Use rsMatrixView instead of rsMatrix. Maybe
   // pass the matrix by pointer.
@@ -17524,7 +17520,9 @@ bool testFourierTrafo2D(int M, int N, int seed, TReal tol)
 
   // Compute the DFT naively and via the FFT and check if results match:
   Mat B   = rsDFT2D(A, Wx, Wy);
-  Mat B2  = rsFFT2D(A, Wx, Wy);
+  //Mat B2  = rsFFT2D(A, Wx, Wy);
+  Mat B2(A);
+  rsFFT2D(&B2, Wx, Wy);
   Mat err = B - B2;
   ok &= rsAbs(err.getAbsoluteMaximum()) <= tol;
   // We need to take the rsAbs again because the return value of getAbsoluteMaximum() is of type

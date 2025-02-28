@@ -17384,7 +17384,7 @@ void rsOrderBitReversedStrided(T *buffer, int N, int log2N, int stride = 1)
   }
 
   // rsBitReverse() works with unsigned long, so maybe we should declare n,nr as unsigned long, too
-  // to avoid conversions inside the loop.
+  // to avoid conversions inside the loop. Or maybe rsBitReverse should be templatized.
 }
 
 template<class T>
@@ -17468,11 +17468,13 @@ of the FFT algorithm. For an MxN matrix, the algorithm first computes M row-wise
 with stride 1 and twiddle base Wy and then computes N column-wise FFTs of length M with stride N 
 and twiddle base Wy. The total computational cost is of order M*N * log2(M*N). */
 template<class T>
-void rsFFT2D(rsMatrix<T>* A, T Wx, T Wy)
+void rsFFT2D(rsMatrixView<T>* A, T Wx, T Wy)
 {
   int M = A->getNumRows();
   int N = A->getNumColumns();
-  rsAssert(M >= 1 && N >= 1); // Maybe we don't need this?
+
+  // Check preconditions:
+  rsAssert(M >= 1 && N >= 1);
   rsAssert(rsIsPowerOfTwo(M), "Number of rows must be a power of two.");
   rsAssert(rsIsPowerOfTwo(N), "Number of columns must be a power of two.");
 
@@ -17484,9 +17486,6 @@ void rsFFT2D(rsMatrix<T>* A, T Wx, T Wy)
   for(int j = 0; j < N; j++)
     rsStridedFFT(A->getDataPointer(0, j), M, Wx, N);
 
-  // ToDo: Let it operate in place, i.e. directly on A. Use rsMatrixView instead of rsMatrix. Maybe
-  // pass the matrix by pointer.
-
   // Notes:
   //
   // - The total cost is the sum of the costs of the two loops given by:
@@ -17497,13 +17496,12 @@ void rsFFT2D(rsMatrix<T>* A, T Wx, T Wy)
   //   stride = 1.
 }
 
-
+/** Runs a unit test for an MxN 2D Fourier trafo. It creates a random MxN matrix of complex values
+and runs a 2D FFT on it and compares the result to a naive implementation of a 2D DFT. We test also
+if a DFT -> IDFT roundtrip of the naive implementaion reconstructs the original 2D signal. */
 template<class TReal, class TComplex>
 bool testFourierTrafo2D(int M, int N, int seed, TReal tol)
 {
-  // Tests our 2D FFT routine rsFFT2D against a naive implementation of the 2D DFT. We test also
-  // if a DFT -> IDFT roundtrip of the naive immplementaion reconstructs the original 2D signal.
-
   bool ok = true;
 
   // Create a MxN matrix of random complex values:
@@ -17519,8 +17517,7 @@ bool testFourierTrafo2D(int M, int N, int seed, TReal tol)
   // TReal = float, leading to wrong results.
 
   // Compute the DFT naively and via the FFT and check if results match:
-  Mat B   = rsDFT2D(A, Wx, Wy);
-  //Mat B2  = rsFFT2D(A, Wx, Wy);
+  Mat B = rsDFT2D(A, Wx, Wy);
   Mat B2(A);
   rsFFT2D(&B2, Wx, Wy);
   Mat err = B - B2;
@@ -17659,6 +17656,26 @@ void rsStridedKroneckerTrafo2x2(T* A, int N, T a, T b, T c, T d, int stride = 1)
   // Code adapted from rsLinearTransforms::kronecker2x2().
 }
 // Needs tests
+
+template<class T>
+void rsKroneckerTrafoRowsFirst(rsMatrixView<T>* A, T a, T b, T c, T d)
+{
+  int M = A->getNumRows();
+  int N = A->getNumColumns();
+
+  // Check preconditions:
+  rsAssert(M >= 1 && N >= 1);
+  rsAssert(rsIsPowerOfTwo(M), "Number of rows must be a power of two.");
+  rsAssert(rsIsPowerOfTwo(N), "Number of columns must be a power of two.");
+
+  // Do the trafo:
+  for(int i = 0; i < M; i++)
+    rsStridedKroneckerTrafo2x2(A->getDataPointer(i, 0), N, a, b, c, d, 1);
+  for(int j = 0; j < N; j++)
+    rsStridedKroneckerTrafo2x2(A->getDataPointer(0, j), M, a, b, c, d, N);
+
+  // Make a rsKroneckerTrafoColsFirst variant, too. It would just swap the order of the two loops.
+}
 
 void testKroneckerTrafo2D()
 {

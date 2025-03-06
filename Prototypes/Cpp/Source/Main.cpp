@@ -118,7 +118,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testLiftedPolynomial();
   //testFactoredPolynomial();
   //testPolynomialRootCorrespondence1();
-  //testPolynomialRootCorrespondence2();
+  testPolynomialRootCorrespondence2();
 
 
   // MIMO Filters:

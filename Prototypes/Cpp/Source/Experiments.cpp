@@ -14963,6 +14963,10 @@ void testPolynomialRootCorrespondence1()
   // - Try to figure out a function that describes the spacing of samples along the trajectory as
   //   function of the spacing of t values. Maybe work this out explicitly for the simple case
   //   p = (x-1)*(x+1), q = (x-2)*(x+2). Then maybe for p = (x-1)(x-i)(x+i), q = (x-2)(x-2i)(x+2i).
+  //
+  //
+  // See also:
+  // https://en.wikipedia.org/wiki/Root_locus_analysis
 
 }
 

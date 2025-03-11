@@ -47,9 +47,9 @@ I also renamed the Delay1 etc. labels to A1,A2,A3 to indicate that this may not 
  transfer functions B1(z) etc.
 
 Note how this increases the number of feedback paths with different lengths from 3 to 3*3 = 9. If 
-we denote by M1,M2,M3 the delays in A1,A2,A3 and by N1,N2,N3 the delays in B1,B2,B3 then the delay 
-that occur in feedback paths are M1+N1, M1+N2, M1+N3, M2+N1, M2+N2, M2+N3, M3+N1, M3+N2, M3+N3. Now
-we want these 9 numbers to be mutally prime.  ...TBC...
+we denote by M1,M2,M3 the delays in A1,A2,A3 and by N1,N2,N3 the delays in B1,B2,B3 then the delays 
+that occur in feedback paths are M1+N1, M1+N2, M1+N3, M2+N1, M2+N2, M2+N3, M3+N1, M3+N2, M3+N3. That 
+is: We get all the possible sums Mi+Mj where i,j = 1,2,3. Now we want these 9 numbers to be mutally prime.  ...TBC...
 
 
 ToDo
@@ -59,12 +59,16 @@ ToDo
   delays to figure out if these really give us anything new or if we could achieve the same effect
   with the old structure.
 
+- We could also interpret the new structure as dragging the matrix "into" the delay block. We break
+  up the delayline block into left and right half and put the matrix in between. It now acts like
+  a scattering matrix between the left and right part of the delay block.
+
 - Explain where the damping occurs in the new structure. I think, it makes most sense to imagine 
   damping baked into A1,A2,A3 as well as B1,B2,B3. But the question arises, how we distribute the
   damping between the A and B filters. An impulse signal that circled around the loop as 
-  A1 -> FB -> B3 would already have two rounds damping applied. One from the A1 filter and one from
-  the B3 filter. Maybe we need to adjust the (linear) high frequency gain of the dampers (assuming
-  high shelvers) by taking its square root? Try it!
+  A1 -> FB -> B3 would already have two rounds of damping applied. One from the A1 filter and one 
+  from the B3 filter. Maybe we need to adjust the (linear) high frequency gain of the dampers 
+  (assuming high shelvers) by taking its square root? Try it!
 
 - Try picking up output signals after the A filters *and* after the B filters. This should be 
   particularly good for the initial echo density because we will see earyl reflectios with all 9
@@ -75,17 +79,18 @@ ToDo
   example though. In reality, we may want to do that for the 16x16 case or so. The algorithm should 
   perhaps start with an initial setting and then check some (random?) variations of that setting. 
   In the 16x16 case, there are 256 sums and we try to find 32 delay values such that all possible
-  pairwise sums are mututally prime. Maybe number theory can help with that search? Are there any
+  pairwise sums are mutually prime. Maybe number theory can help with that search? Are there any
   theorems for when a sum of two numbers is a prime, for example? Maybe that helps to narrow the 
   search space. Or maybe use fractional delays (with 1st order allpass interpolation) and try to 
   define some (differentiable) cost function that measures the irrationality of all the possible
   delay ratios. Maybe this cost function should be fomulated in terms of the continuous fraction
-  expansions of the ratios? By the rations, I mean numbers like (M1+N1)/(M1+N2), ... i.e. the 
+  expansions of the ratios? By the ratios, I mean numbers like (M1+N1)/(M1+N2), ... i.e. the 
   ratios between all possible sums
 
 - Maybe try to extend the idea to put another matrix after the B filters and after that matrix 
-  another set of delays/filters (let's clal them C), etc. This way, we could build a multilayer FDN
+  another set of delays/filters (let's call them C), etc. This way, we could build a multilayer FDN
   in a way similar to multilayer perceptrons. The feedback would occur after the last layer. We 
   could call them MLFDNs. In this view, the architecture above could perhaps be considered to have 
   1.5 layers. Or maybe define the number of layers as the number of delay sets. The number of 
-  matrices is always 1 less - except for the 1 layer case, maybe.
+  matrices is always 1 less - except for the 1 layer case, maybe. Or maybe call it scattering 
+  feedback delay network. Or delay-scatter-feedback network.

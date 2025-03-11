@@ -16040,7 +16040,47 @@ void testFeedbackDelayNetworks()
   // We want to implement the idea that is outlined in 
   // Notes/DSP/FeedbackDelayNetworkIdeas.md
 
+  using Real  = double;
+  using Vec   = std::vector<Real>;
+  using Delay = RAPT::rsDelay<Real>;
 
+  // Delays values:
+  int M1 = 17;
+  int M2 = 23;
+  int M3 = 29;
+  int N1 = 20;
+  int N2 = 26;
+  int N3 = 35;
+
+
+  // Helper function
+  auto setDelay = [](Delay& delay, int amount)
+  {
+    delay.setMaxDelayInSamples(amount);
+    delay.setDelayInSamples(amount);
+  };
+
+  // Rotation angles for feedback matrix (in degrees):
+  Real p1 = 60;
+  Real p2 = 60;
+  Real p3 = 60;
+
+  // Create and set up the delay lines:
+  Delay A1, A2, A3;  // Delaylines left to the feedback matrix
+  Delay B1, B2, B3;  // Delaylines right to the feedback matrix
+  setDelay(A1, M1);
+
+
+
+
+
+
+
+
+
+
+
+  int dummy = 0;
 }
 
 

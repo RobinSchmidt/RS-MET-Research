@@ -16032,6 +16032,19 @@ void testStateSpaceFilters()
   testStateSpaceFromDF();
 }
 
+
+void testFeedbackDelayNetworks()
+{
+  // Under construction
+
+  // We want to implement the idea that is outlined in 
+  // Notes/DSP/FeedbackDelayNetworkIdeas.md
+
+
+}
+
+
+
 void test2x2Matrices1()
 {
   // We implement definitions and verify formulas/theorems from chapter 1 in the book "Mathematik 

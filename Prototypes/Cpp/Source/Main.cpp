@@ -118,13 +118,16 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testLiftedPolynomial();
   //testFactoredPolynomial();
   //testPolynomialRootCorrespondence1();
-  testPolynomialRootCorrespondence2();
+  //testPolynomialRootCorrespondence2();
 
 
   // MIMO Filters:
   //testMimoTransferMatrix();
-  //testMimoFilters();        // just a stub - not much in there yet, mostly comments
-  //testStateSpaceFilters();
+  //testMimoFilters();           // just a stub - not much in there yet, mostly comments
+//  testStateSpaceFilters(); 
+  testFeedbackDelayNetworks();   // still a stub
+
+
 
   // Math:
   //testMatrixSqrt();              // Tests functions to compute square root of a matrix
@@ -140,8 +143,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSmoothCrossFade2();
   //testSmoothMax();                   // stub
   //testNewtonOptimizer1D();
-  testFourierTrafo2D();
-  testKroneckerTrafo2D();
+  //testFourierTrafo2D();
+  //testKroneckerTrafo2D();
 
 
 

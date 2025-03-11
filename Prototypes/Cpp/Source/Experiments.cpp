@@ -16044,31 +16044,90 @@ void testFeedbackDelayNetworks()
   using Vec   = std::vector<Real>;
   using Delay = RAPT::rsDelay<Real>;
 
-  // Delays values:
+
+  int numSamples = 500;
+
+  // Delay values:
   int M1 = 17;
   int M2 = 23;
   int M3 = 29;
+
   int N1 = 20;
   int N2 = 26;
   int N3 = 35;
+  // Using all zeros here should reduce it to the regular 3x3 FDN
 
-
-  // Helper function
-  auto setDelay = [](Delay& delay, int amount)
-  {
-    delay.setMaxDelayInSamples(amount);
-    delay.setDelayInSamples(amount);
-  };
 
   // Rotation angles for feedback matrix (in degrees):
   Real p1 = 60;
   Real p2 = 60;
   Real p3 = 60;
 
+
+
+  // Helper function:
+  auto setDelay = [](Delay& delay, int amount)
+  {
+    delay.setMaxDelayInSamples(amount);
+    delay.setDelayInSamples(amount);
+  };
+
   // Create and set up the delay lines:
   Delay A1, A2, A3;  // Delaylines left to the feedback matrix
   Delay B1, B2, B3;  // Delaylines right to the feedback matrix
   setDelay(A1, M1);
+  setDelay(A2, M2);
+  setDelay(A3, M3);
+  setDelay(B1, N1);
+  setDelay(B2, N2);
+  setDelay(B3, N3);
+
+  // Create and set up the feedback matrix:
+  rsRotationXYZ<Real> F;
+  Real toRad = PI/180;
+  F.setAngles(toRad*p1, toRad*p2, toRad*p3);
+
+  int N = numSamples;
+  Vec y1(N), y2(N), y3(N);  // Outputs after the the A delaylines
+  Vec z1(N), z2(N), z3(N);  // Outputs after the the B delaylines
+
+
+  // Helper function:
+  auto produceInternalSamples = [&](Real x, int n)
+  {
+    // Establish inputs to the A filters:
+    Real u1 = x + B1.readOutput();
+    Real u2 = x + B2.readOutput();
+    Real u3 = x + B3.readOutput();
+
+    // Apply A filters:
+    y1[n] = A1.getSample(u1);
+    y2[n] = A2.getSample(u2);
+    y3[n] = A3.getSample(u3);
+
+    // Apply feedback matrix to outputs of A filters:
+    Real v1 = y1[n];
+    Real v2 = y2[n];
+    Real v3 = y3[n];
+    F.apply(&v1, &v2, &v3);
+
+    // Feed those into the B filters:
+    z1[n] = B1.getSample(v1);
+    z2[n] = B2.getSample(v2);
+    z3[n] = B3.getSample(v3);
+
+    int dummy = 0;
+  };
+
+
+  // Create all the internal signals:
+  produceInternalSamples(1.0, 0);
+  for(int n = 0; n < N; n++)
+    produceInternalSamples(0.0, n);
+
+
+
+
 
 
 

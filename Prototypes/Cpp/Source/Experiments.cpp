@@ -16154,6 +16154,10 @@ void testFeedbackDelayNetworks()
   //
   // - More experiments are needed to optimize the matrix and the delays. Using all phases 
   //   p1,p2,p3 = 90°, it is really bad!
+  //
+  // - Try it with more realistic values for the delays. Maybe write a 2nd function that does the
+  //   same thing with 16 delaylines using a fast Kronecker trafo instead of the explicit feedback
+  //   matrix.
 }
 
 

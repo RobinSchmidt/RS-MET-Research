@@ -16054,7 +16054,8 @@ void testFeedbackDelayNetworks()
 
   int N1 = 20;
   int N2 = 26;
-  int N3 = 35;
+  int N3 = 36;
+  //int N3 = 32;
 
   // Rotation angles for feedback matrix (in degrees):
   Real p1 = 60;
@@ -16062,6 +16063,8 @@ void testFeedbackDelayNetworks()
   Real p3 = 60;
   // Not ideal! yy is close to 1 meaning a lot of self-feedback fo the middle path, I think.
  
+  // Feedback:
+  Real fb = 0.9;
 
   // Some stuff to uncomment to test with other settings:
 
@@ -16071,6 +16074,20 @@ void testFeedbackDelayNetworks()
 
   // Test: Using 90 seems especially bad:
   //p1 = p2 = p3 = 45; 
+
+
+  // Compute the 9 = 3*3 total roundtrip delays:
+  int M1_N1 = M1 + N1;
+  int M1_N2 = M1 + N2;
+  int M1_N3 = M1 + N3;
+  int M2_N1 = M2 + N1;
+  int M2_N2 = M2 + N2;
+  int M2_N3 = M2 + N3;
+  int M3_N1 = M3 + N1;
+  int M3_N2 = M3 + N2;
+  int M3_N3 = M3 + N3;
+
+
 
 
   // Helper function:
@@ -16104,9 +16121,9 @@ void testFeedbackDelayNetworks()
   auto produceInternalSamples = [&](Real x, int n)
   {
     // Establish inputs to the A filters:
-    Real u1 = x + B1.readOutput();
-    Real u2 = x + B2.readOutput();
-    Real u3 = x + B3.readOutput();
+    Real u1 = x + fb * B1.readOutput();
+    Real u2 = x + fb * B2.readOutput();
+    Real u3 = x + fb * B3.readOutput();
 
     // Apply A filters:
     y1[n] = A1.getSample(u1);
@@ -16155,9 +16172,32 @@ void testFeedbackDelayNetworks()
   // - More experiments are needed to optimize the matrix and the delays. Using all phases 
   //   p1,p2,p3 = 90°, it is really bad!
   //
+  // - Instead of one single global feedback factor, apply different feedback scalers after the
+  //   A1.getSample().., B1.getSample()... functions that are computed in accordance with the a 
+  //   desired decay time and the length of the respective delayline. Maybe take the square roots
+  //   of the factors computed via the usual formula to account for the fact that we have two 
+  //   rounds of multiplications (after the A and after the B filters).
+  //
+  // - I think, it may make sense to have all M values odd and all n values even. Then we avoid any
+  //   of the sums Mi+Nj to be even (because odd + even = odd). We want them all odd because 
+  //   otherwise, two even sums have a gcd of 2. Although maybe a gcd of 2 is not as bad as a gcd 
+  //   of 5, say. Ideally we want the gcd to be 1. If that's not possible, we may want it to be as
+  //   small as possible?
+  //
+  // - Maybe when using real delay values (i.e. interpolated delaylines), it could make sense to 
+  //   use power of the golden ratio phi (wrapped back into the interval 1..2 by dividing by an 
+  //   appropriate power of 2)? Maybe look at the continued fraction expansions of the powers of
+  //   phi.
+  //
   // - Try it with more realistic values for the delays. Maybe write a 2nd function that does the
-  //   same thing with 16 delaylines using a fast Kronecker trafo instead of the explicit feedback
-  //   matrix.
+  //   same thing with 16 delaylines using a fast Kronecker trafo (FKT) instead of the explicit 
+  //   feedback matrix.
+  //
+  // - But maybe when we use 2*16 = 32 delaylines, it may actually give us more bang for the buck
+  //   to just use the 32 delaylines with a 32x32 matrix? The FKT would have to compute one level
+  //   more. Maybe compare the results for a smaller case: 4x4 with 2nd round of delays vs 8x8 with
+  //   a single round of delays. Maybe try to re-express the smaller case with a particular 
+  //   feedback matrix of the bigger case.
 }
 
 
@@ -16176,7 +16216,7 @@ void test2x2Matrices1()
   //using VecR    = rsVector2D<Real>;
   using VecC    = rsVector2D<Complex>;
 
-  bool ok = true;            // for verifying the therorems in a unit-test style
+  bool ok = true;            // for verifying the theorems in a unit-test style
 
   // Some variables for example computations:
   MatC I(1, 0, 0, 1);

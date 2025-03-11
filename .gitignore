@@ -11,7 +11,7 @@
 *.pdf
 *.png
 *.ppm
-*.svg
+# *.svg ...we need to track svg files in e.g. Notes/DSP/Diagrams
 *.wav
 
 # Build products:

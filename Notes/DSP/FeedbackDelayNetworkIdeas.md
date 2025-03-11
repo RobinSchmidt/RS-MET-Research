@@ -38,7 +38,7 @@ The Idea
 My new idea is now to introduce a second set of delaylines after the matrix but before picking up 
 the feedback signals. The new structure would look like depicted below:
 
-![FDNIndea](./Diagrams/FeedbackDelayNetworkIdea.svg)
+![FDNIdea](./Diagrams/FeedbackDelayNetworkIdea.svg)
 
 I also renamed the Delay1 etc. labels to A1,A2,A3 to indicate that this may not just be a delay but
  rather a more general transfer function A(z). It may be a simple delay but it may also be an 
@@ -82,3 +82,10 @@ ToDo
   delay ratios. Maybe this cost function should be fomulated in terms of the continuous fraction
   expansions of the ratios? By the rations, I mean numbers like (M1+N1)/(M1+N2), ... i.e. the 
   ratios between all possible sums
+
+- Maybe try to extend the idea to put another matrix after the B filters and after that matrix 
+  another set of delays/filters (let's clal them C), etc. This way, we could build a multilayer FDN
+  in a way similar to multilayer perceptrons. The feedback would occur after the last layer. We 
+  could call them MLFDNs. In this view, the architecture above could perhaps be considered to have 
+  1.5 layers. Or maybe define the number of layers as the number of delay sets. The number of 
+  matrices is always 1 less - except for the 1 layer case, maybe.

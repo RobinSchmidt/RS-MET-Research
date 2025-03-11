@@ -16045,7 +16045,7 @@ void testFeedbackDelayNetworks()
   using Delay = RAPT::rsDelay<Real>;
 
 
-  int numSamples = 500;
+  int numSamples = 4000;
 
   // Delay values:
   int M1 = 17;
@@ -16062,6 +16062,7 @@ void testFeedbackDelayNetworks()
   Real p1 = 60;
   Real p2 = 60;
   Real p3 = 60;
+  // Not ideal! yy is close to 1 meaning a lot of self-feedback fo the middle path, I think.
 
 
 
@@ -16120,21 +16121,15 @@ void testFeedbackDelayNetworks()
   };
 
 
-  // Create all the internal signals:
+  // Create all the internal signals and their sum:
   produceInternalSamples(1.0, 0);
   for(int n = 0; n < N; n++)
     produceInternalSamples(0.0, n);
+  Vec sum = y1 + y2 + y3 + z1 + z2 + z3;
 
-
-
-
-
-
-
-
-
-
-
+  // Plot the signals:
+  rsPlotVectors(sum);
+  //rsPlotVectors(sum, y1, y2, y3, z1, z2, z3);
 
 
 

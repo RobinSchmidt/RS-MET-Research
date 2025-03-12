@@ -16058,15 +16058,14 @@ void testFeedbackDelayNetworks()
 
 
   // Rotation angles for feedback matrix (in degrees):
-  Real p1, p2, p3;     // ToDo: rename to rx, ry, rz
-  p1 = p2 = p3 = 45;
-  //p1 = p2 = p3 = 60;
-  //p1 = p2 = p3 = 90;
+  Real rx, ry, rz;     // ToDo: rename to rx, ry, rz
+  rx = ry = rz = 45;
+  //rx = ry = rz = 60;
+  //rx = ry = rz = 90;
   // Using 90 seems especially bad. I think 45 might be best theoretcially?
 
-  // Feedback (ToDo: repace by decay from which a1,a2,a3,b1,b2,b3 are computed):
-  //Real fb = 1.0;
-  Real decay = 1000;  // RT60 in samples
+  // Decay time (RT60) in samples:
+  Real decay = 1000;
 
   // Output vectors:
   Real c1 = +1, c2 = -1, c3 = +1;
@@ -16122,7 +16121,7 @@ void testFeedbackDelayNetworks()
   // Create and set up the feedback matrix:
   rsRotationXYZ<Real> F;
   Real toRad = PI/180;
-  F.setAngles(toRad*p1, toRad*p2, toRad*p3);
+  F.setAngles(toRad*rx, toRad*ry, toRad*rz);
 
   //rsMatrix3x3<Real> F;
   ////Real s = Real(1) / rsSqrt(3.0);
@@ -16132,7 +16131,10 @@ void testFeedbackDelayNetworks()
   // when we divide by sqrt(3)? Oh! no! The rows are actually not orthogonal! Figure out what 
   // scaler we need to use! 0.5 seems to be stable but may be slightly decaying. 0.51 blows up.
   // 0.505 also. 0.502 may be very slowly growing. 0.5015 seems to be (close to) the stability 
-  // limit. ToDo: figure out theoretically what the value should be!
+  // limit. ToDo: figure out theoretically what the value should be! In think, we need to compute
+  // the eigenvalues of the matrix [+1,+1,-1; +1,-1,+1; -1,+1,+1] and then take the reciprocal of
+  // the magnitude of the one with maximum magnitude. They are probably all the same in magnitude
+  // anyway.
   //
   // The results with the rotation matrix look actually better - more complex and less regular.
     
@@ -16255,8 +16257,9 @@ void testFeedbackDelayNetworks()
   //   mutually prime because we don't get these nasty sums
   //
   // - Maybe apply different types of waveshaping in the feedback path: 
-  //   Saturation: should make early decay faster
-  //   -Antisaturation: should make late decay faster
+  //   -Saturation: should make early decay faster
+  //   -Antisaturation: should make late decay faster. But be careful: this may break stability
+  //    when we do not limit the slope to unity.
   //   -Bitcrush: should noisify the tail, relative noisification is stronger for quiet signals
   //   -Floatcrush: should noisify the tail, relative nosification is independent from level
   //   -Soft-Bitcrush: should be a bitcrush with adjustable smoothing of the stairsteps into softer

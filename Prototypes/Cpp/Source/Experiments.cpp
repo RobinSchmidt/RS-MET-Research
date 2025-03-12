@@ -16063,8 +16063,13 @@ void testFeedbackDelayNetworks()
   Real p3 = 60;
   // Not ideal! yy is close to 1 meaning a lot of self-feedback fo the middle path, I think.
  
-  // Feedback:
+  // Feedback (ToDo: repace by decay from which a1,a2,a3,b1,b2,b3 are computed):
   Real fb = 0.9;
+
+  // Output vectors:
+  Real c1 = +1, c2 = -1, c3 = +1;
+  Real d1 = -1, d2 = +1, d3 = -1;
+
 
 
   // Some stuff to uncomment to test with other settings:
@@ -16120,14 +16125,14 @@ void testFeedbackDelayNetworks()
   auto produceInternalSamples = [&](Real x, int n)
   {
     // Establish inputs to the A filters:
-    Real u1 = x + fb * B1.readOutput();
-    Real u2 = x + fb * B2.readOutput();
-    Real u3 = x + fb * B3.readOutput();
+    Real u1 = x + fb * B1.readOutput();  // ToDo: replace fb by b1
+    Real u2 = x + fb * B2.readOutput();  // ToDo: replace fb by b2
+    Real u3 = x + fb * B3.readOutput();  // ToDo: replace fb by b3
 
     // Apply A filters:
-    y1[n] = A1.getSample(u1);
-    y2[n] = A2.getSample(u2);
-    y3[n] = A3.getSample(u3);
+    y1[n] = A1.getSample(u1);            // ToDo: scale by a1
+    y2[n] = A2.getSample(u2);            // ToDo: scale by a2
+    y3[n] = A3.getSample(u3);            // ToDo: scale by a3
 
     // Apply feedback matrix to outputs of A filters:
     Real v1 = y1[n];
@@ -16136,9 +16141,9 @@ void testFeedbackDelayNetworks()
     F.apply(&v1, &v2, &v3);
 
     // Feed those into the B filters:
-    z1[n] = B1.getSample(v1);
-    z2[n] = B2.getSample(v2);
-    z3[n] = B3.getSample(v3);
+    z1[n] = B1.getSample(v1);            // ToDo: scale by b1
+    z2[n] = B2.getSample(v2);            // ToDo: scale by b2
+    z3[n] = B3.getSample(v3);            // ToDo: scale by b3
   };
 
 
@@ -16147,8 +16152,14 @@ void testFeedbackDelayNetworks()
   for(int n = 1; n < N; n++)
     produceInternalSamples(0.0, n);
 
-  Vec ySum = y1 + y2 + y3;
-  Vec zSum = z1 + z2 + z3;
+
+
+  // Old:
+  //Vec ySum = y1 + y2 + y3;
+  //Vec zSum = z1 + z2 + z3;
+
+  Vec ySum = c1*y1 + c2*y2 + c3*y3;
+  Vec zSum = d1*z1 + d2*z2 + d3*z3;
   Vec sum  = ySum + zSum;
 
   // Plot the signals:
@@ -16168,7 +16179,12 @@ void testFeedbackDelayNetworks()
   //   does indeed add complexity.
   //
   // - More experiments are needed to optimize the matrix and the delays. Using all phases 
-  //   p1,p2,p3 = 90°, it is really bad!
+  //   p1,p2,p3 = 90°, it is really bad! Figure out for what seeting of the phases, we obtain a
+  //   maximally diffusive matrix. We may also just use rsMatrix3x3 with
+  //   [+1,+1,-1; +1,-1,+1; -1,+1,+1] / sqrt(3) but it would be nice to achieve the same effect 
+  //   with a rotation matrix because that would give us another 3 degrees of flexibility for the 
+  //   design. But the 3x3 case is supposed to be a toy example for initial experiments anyway. I'm
+  //   not really planning to actually use it anywhere.
   //
   // - Instead of one single global feedback factor, apply different feedback scalers after the
   //   A1.getSample().., B1.getSample()... functions that are computed in accordance with the a 
@@ -16215,6 +16231,14 @@ void testFeedbackDelayNetworks()
   //   network is better. For the total number of modes, I need to write down the transfer 
   //   functions, I guess. In the 16x16 case, it's also easier to tune the delays to be all 
   //   mutually prime because we don't get these nasty sums
+  //
+  // - Maybe apply different types of waveshaping in the feedback path: 
+  //   Saturation: should make early decay faster
+  //   -Antisaturation: should make late decay faster
+  //   -Bitcrush: should noisify the tail, relative noisification is stronger for quiet signals
+  //   -Floatcrush: should noisify the tail, relative nosification is independent from level
+  //   -Soft-Bitcrush: should be a bitcrush with adjustable smoothing of the stairsteps into softer
+  //    sigmoid shapes
 }
 
 

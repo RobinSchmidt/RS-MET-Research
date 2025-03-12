@@ -16215,7 +16215,8 @@ void testFeedbackDelayNetworks()
   //   at M1,...,M16. If we assume that N1,..,N8 ins the 1st case are identical to M8,...,M16 in 
   //   the 2nd case, we would have more early echoes in the 2nd case. Maybe that means the 16x16 
   //   network is better. For the total number of modes, I need to write down the transfer 
-  //   functions, I guess...
+  //   functions, I guess. In the 16x16 case, it's also easier to tune the delays to be all 
+  //   mutually prime because we don't get these nasty sums
 }
 
 

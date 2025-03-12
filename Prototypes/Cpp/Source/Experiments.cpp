@@ -16197,7 +16197,25 @@ void testFeedbackDelayNetworks()
   //   to just use the 32 delaylines with a 32x32 matrix? The FKT would have to compute one level
   //   more. Maybe compare the results for a smaller case: 4x4 with 2nd round of delays vs 8x8 with
   //   a single round of delays. Maybe try to re-express the smaller case with a particular 
-  //   feedback matrix of the bigger case.
+  //   feedback matrix of the bigger case. Or take an 8x8 network with 2 rounds vs a 16x16 network
+  //   with 1 round of delays: Let's assume that evaluating 1 delayline takes a computational cost 
+  //   of c and one elementary operation inside matrix computation takes a computational amount of 
+  //   1. With the FKT, The 8x8 case with two delays would have a total cost of 
+  //   8*c + 8*log2(8) + 8*c = 16*c + 8*3 = 16*c + 24. The 16x16 case with one round of delays 
+  //   would take 16*c + 16*log2(16) = 16*c + 16*4 = 16*c + 64. It's probably realistic to assume 
+  //   that k > 1, i.e. the evaluation of one delayline (including damping, possibly interpolation, 
+  //   maybe additional allpass or notchpass, etc.) is more costly than the inner matrix operation 
+  //   which we have normalized to have a cost of 1. OK - so the 16*c term is equal in both costs.
+  //   They differ only the N*log2(N) term which is 24 in the 8x8 bi-delay case and 64 in the 16x16
+  //   single delay case. So, indeed, the cost of a 8x8 bi-delay network is less. But maybe the 
+  //   16x16 network will give better result for the higher cost? At the moment, we considered only
+  //   cost, i.e. the buck. What about the bang? Maybe consider the total number of modes and/or 
+  //   the initial echo density as a figure of merit. The first echoes in the 8x8 case arrive at 
+  //   M1,..,M8 and then at M1+N1,...,M1+N8,.....,M8+N1,...,M8+N8. In the 16x16 case, they arrive 
+  //   at M1,...,M16. If we assume that N1,..,N8 ins the 1st case are identical to M8,...,M16 in 
+  //   the 2nd case, we would have more early echoes in the 2nd case. Maybe that means the 16x16 
+  //   network is better. For the total number of modes, I need to write down the transfer 
+  //   functions, I guess...
 }
 
 

@@ -16066,6 +16066,7 @@ void testFeedbackDelayNetworks()
   // Feedback:
   Real fb = 0.9;
 
+
   // Some stuff to uncomment to test with other settings:
 
   // Test: Using all zeros here should reduce it to the regular 3x3 FDN. Uncomment to test without
@@ -16086,8 +16087,6 @@ void testFeedbackDelayNetworks()
   int M3_N1 = M3 + N1;
   int M3_N2 = M3 + N2;
   int M3_N3 = M3 + N3;
-
-
 
 
   // Helper function:
@@ -16161,9 +16160,10 @@ void testFeedbackDelayNetworks()
   // Observations:
   //
   // - It looks like we can create complexity pretty fast with this approach. It still sounds bad,
-  //   though - but that is probably due to the unrealistically short delays.
+  //   though - but that is probably due to the unrealistically short delays and the fact that we 
+  //   have just a 3x3 matrix in this toy example.
   //
-  // - When setting the N values to all zeros, the spikes ine zSum and ySum coincide. That means,
+  // - When setting the N values to all zeros, the spikes in zSum and ySum coincide. That means,
   //   using nonzero values (i.e. actually using the second delay layer rather than bypassing it)
   //   does indeed add complexity.
   //
@@ -16201,7 +16201,7 @@ void testFeedbackDelayNetworks()
   //   1. With the FKT, The 8x8 case with two delays would have a total cost of 
   //   8*c + 8*log2(8) + 8*c = 16*c + 8*3 = 16*c + 24. The 16x16 case with one round of delays 
   //   would take 16*c + 16*log2(16) = 16*c + 16*4 = 16*c + 64. It's probably realistic to assume 
-  //   that k > 1, i.e. the evaluation of one delayline (including damping, possibly interpolation, 
+  //   that c > 1, i.e. the evaluation of one delayline (including damping, possibly interpolation, 
   //   maybe additional allpass or notchpass, etc.) is more costly than the inner matrix operation 
   //   which we have normalized to have a cost of 1. OK - so the 16*c term is equal in both costs.
   //   They differ only the N*log2(N) term which is 24 in the 8x8 bi-delay case and 64 in the 16x16

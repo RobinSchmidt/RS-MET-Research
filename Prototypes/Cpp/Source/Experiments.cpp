@@ -16045,7 +16045,7 @@ void testFeedbackDelayNetworks()
   using Delay = RAPT::rsDelay<Real>;
 
 
-  int numSamples = 15000;
+  int numSamples = 200;
 
   // Delay values:
   int M1 = 17;
@@ -16055,14 +16055,15 @@ void testFeedbackDelayNetworks()
   int N1 = 20;
   int N2 = 26;
   int N3 = 36;
-  //int N3 = 32;
+
 
   // Rotation angles for feedback matrix (in degrees):
-  Real p1 = 60;
-  Real p2 = 60;
-  Real p3 = 60;
-  // Not ideal! yy is close to 1 meaning a lot of self-feedback fo the middle path, I think.
- 
+  Real p1, p2, p3;     // ToDo: rename to rx, ry, rz
+  p1 = p2 = p3 = 45;
+  //p1 = p2 = p3 = 60;
+  //p1 = p2 = p3 = 90;
+  // Using 90 seems especially bad. I think 45 might be best theoretcially?
+
   // Feedback (ToDo: repace by decay from which a1,a2,a3,b1,b2,b3 are computed):
   Real fb = 1.0;
 
@@ -16071,15 +16072,12 @@ void testFeedbackDelayNetworks()
   Real d1 = -1, d2 = +1, d3 = -1;
 
 
-
   // Some stuff to uncomment to test with other settings:
 
   // Test: Using all zeros here should reduce it to the regular 3x3 FDN. Uncomment to test without
   // the second round fo delay:
   //N1 = N2 = N3 = 0; 
 
-  // Test: Using 90 seems especially bad:
-  //p1 = p2 = p3 = 45; 
 
 
   // Compute the 9 = 3*3 total roundtrip delays:

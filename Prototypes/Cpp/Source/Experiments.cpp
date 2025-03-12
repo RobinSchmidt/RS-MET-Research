@@ -16045,7 +16045,7 @@ void testFeedbackDelayNetworks()
   using Delay = RAPT::rsDelay<Real>;
 
 
-  int numSamples = 200;
+  int numSamples = 1000;
 
   // Delay values:
   int M1 = 17;
@@ -16065,8 +16065,8 @@ void testFeedbackDelayNetworks()
   // Using 90 seems especially bad. I think 45 might be best theoretcially?
 
   // Feedback (ToDo: repace by decay from which a1,a2,a3,b1,b2,b3 are computed):
-  Real fb = 1.0;
-  Real decay = 2000;  // RT60 in samples
+  //Real fb = 1.0;
+  Real decay = 1000;  // RT60 in samples
 
   // Output vectors:
   Real c1 = +1, c2 = -1, c3 = +1;
@@ -16147,14 +16147,14 @@ void testFeedbackDelayNetworks()
   auto produceInternalSamples = [&](Real x, int n)
   {
     // Establish inputs to the A filters:
-    Real u1 = x + fb * B1.readOutput();  // ToDo: replace fb by b1
-    Real u2 = x + fb * B2.readOutput();  // ToDo: replace fb by b2
-    Real u3 = x + fb * B3.readOutput();  // ToDo: replace fb by b3
+    Real u1 = x + b1 * B1.readOutput();
+    Real u2 = x + b2 * B2.readOutput();
+    Real u3 = x + b3 * B3.readOutput();
 
     // Apply A filters:
-    y1[n] = A1.getSample(u1);            // ToDo: scale by a1
-    y2[n] = A2.getSample(u2);            // ToDo: scale by a2
-    y3[n] = A3.getSample(u3);            // ToDo: scale by a3
+    y1[n] = a1 * A1.getSample(u1);
+    y2[n] = a2 * A2.getSample(u2);
+    y3[n] = a3 * A3.getSample(u3);
 
     // Apply feedback matrix to outputs of A filters:
     Real v1 = y1[n];
@@ -16163,9 +16163,9 @@ void testFeedbackDelayNetworks()
     F.apply(&v1, &v2, &v3);
 
     // Feed those into the B filters:
-    z1[n] = B1.getSample(v1);            // ToDo: scale by b1
-    z2[n] = B2.getSample(v2);            // ToDo: scale by b2
-    z3[n] = B3.getSample(v3);            // ToDo: scale by b3
+    z1[n] = b1 * B1.getSample(v1);
+    z2[n] = b2 * B2.getSample(v2);
+    z3[n] = b3 * B3.getSample(v3);
   };
 
 

@@ -16045,7 +16045,7 @@ void testFeedbackDelayNetworks()
   using Delay = RAPT::rsDelay<Real>;
 
 
-  int numSamples = 500;
+  int numSamples = 2000;
 
   // Delay values:
   int M1 = 17;
@@ -16140,23 +16140,21 @@ void testFeedbackDelayNetworks()
     z1[n] = B1.getSample(v1);
     z2[n] = B2.getSample(v2);
     z3[n] = B3.getSample(v3);
-
-    int dummy = 0;
   };
 
 
   // Create all the internal signals and their sum:
   produceInternalSamples(1.0, 0);
-  for(int n = 0; n < N; n++)
+  for(int n = 1; n < N; n++)
     produceInternalSamples(0.0, n);
 
   Vec ySum = y1 + y2 + y3;
   Vec zSum = z1 + z2 + z3;
-  Vec sum = ySum + zSum;
+  Vec sum  = ySum + zSum;
 
   // Plot the signals:
   //rosic::writeToMonoWaveFile("BiFDN_3x3.wav", &sum[0], N, 44100);
-  rsPlotVectors(sum, ySum, zSum);
+  //rsPlotVectors(sum, ySum, zSum);
   rsPlotVectors(sum);
   //rsPlotVectors(sum, y1, y2, y3, z1, z2, z3);
 

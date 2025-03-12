@@ -16045,7 +16045,7 @@ void testFeedbackDelayNetworks()
   using Delay = RAPT::rsDelay<Real>;
 
 
-  int numSamples = 2000;
+  int numSamples = 15000;
 
   // Delay values:
   int M1 = 17;
@@ -16064,7 +16064,7 @@ void testFeedbackDelayNetworks()
   // Not ideal! yy is close to 1 meaning a lot of self-feedback fo the middle path, I think.
  
   // Feedback (ToDo: repace by decay from which a1,a2,a3,b1,b2,b3 are computed):
-  Real fb = 0.9;
+  Real fb = 1.0;
 
   // Output vectors:
   Real c1 = +1, c2 = -1, c3 = +1;
@@ -16115,6 +16115,20 @@ void testFeedbackDelayNetworks()
   rsRotationXYZ<Real> F;
   Real toRad = PI/180;
   F.setAngles(toRad*p1, toRad*p2, toRad*p3);
+
+  //rsMatrix3x3<Real> F;
+  ////Real s = Real(1) / rsSqrt(3.0);
+  //Real s = 0.5015;
+  //F.setValues(+s,+s,-s, +s,-s,+s, -s,+s,+s);
+  // This makes the signal blow up when feedback is set to 1! Isn't it supposed to be unitary 
+  // when we divide by sqrt(3)? Oh! no! The rows are actually not orthogonal! Figure out what 
+  // scaler we need to use! 0.5 seems to be stable but may be slightly decaying. 0.51 blows up.
+  // 0.505 also. 0.502 may be very slowly growing. 0.5015 seems to be (close to) the stability 
+  // limit. ToDo: figure out theoretically what the value should be!
+  //
+  // The results with the rotation matrix look actually better - more complex and less regular.
+    
+
 
   int N = numSamples;
   Vec y1(N), y2(N), y3(N);  // Outputs after the the A delaylines

@@ -16066,6 +16066,7 @@ void testFeedbackDelayNetworks()
 
   // Feedback (ToDo: repace by decay from which a1,a2,a3,b1,b2,b3 are computed):
   Real fb = 1.0;
+  Real decay = 2000;  // RT60 in samples
 
   // Output vectors:
   Real c1 = +1, c2 = -1, c3 = +1;
@@ -16079,8 +16080,7 @@ void testFeedbackDelayNetworks()
   //N1 = N2 = N3 = 0; 
 
 
-
-  // Compute the 9 = 3*3 total roundtrip delays:
+  // Compute the 9 = 3*3 total roundtrip delays for inspection in debugger:
   int M1_N1 = M1 + N1;
   int M1_N2 = M1 + N2;
   int M1_N3 = M1 + N3;
@@ -16090,6 +16090,16 @@ void testFeedbackDelayNetworks()
   int M3_N1 = M3 + N1;
   int M3_N2 = M3 + N2;
   int M3_N3 = M3 + N3;
+
+
+  // Compute the feedback damping gain factors:
+  Real amp = Real(0.001);
+  Real a1  = rsDecayTimeToFeedbackGain(decay, Real(M1), amp);
+  Real a2  = rsDecayTimeToFeedbackGain(decay, Real(M2), amp);
+  Real a3  = rsDecayTimeToFeedbackGain(decay, Real(M3), amp);
+  Real b1  = rsDecayTimeToFeedbackGain(decay, Real(N1), amp);
+  Real b2  = rsDecayTimeToFeedbackGain(decay, Real(N2), amp);
+  Real b3  = rsDecayTimeToFeedbackGain(decay, Real(N3), amp);
 
 
   // Helper function:

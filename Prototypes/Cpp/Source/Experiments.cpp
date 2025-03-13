@@ -16035,10 +16035,8 @@ void testStateSpaceFilters()
 
 void testFeedbackDelayNetworks()
 {
-  // Under construction
-
-  // We want to implement the idea that is outlined in 
-  // Notes/DSP/FeedbackDelayNetworkIdeas.md
+  // We implement the idea that is outlined in Notes/DSP/FeedbackDelayNetworkIdeas.md in the 
+  // research repo
 
   using Real  = double;
   using Vec   = std::vector<Real>;
@@ -16058,11 +16056,10 @@ void testFeedbackDelayNetworks()
 
 
   // Rotation angles for feedback matrix (in degrees):
-  Real rx, ry, rz;     // ToDo: rename to rx, ry, rz
-  rx = ry = rz = 45;
-  //rx = ry = rz = 60;
-  //rx = ry = rz = 90;
-  // Using 90 seems especially bad. I think 45 might be best theoretcially?
+  Real rx, ry, rz;
+  rx = ry = rz = 45;    // Best theoretically? Most diffusive?
+  //rx = ry = rz = 60;  
+  //rx = ry = rz = 90;  // Very bad!
 
   // Decay time (RT60) in samples:
   Real decay = 1000;
@@ -16152,6 +16149,9 @@ void testFeedbackDelayNetworks()
     Real u1 = x + b1 * B1.readOutput();
     Real u2 = x + b2 * B2.readOutput();
     Real u3 = x + b3 * B3.readOutput();
+    // In a realtime implementation, we would probably just use "x + b1 * z[n-1]". But that 
+    // wouldn't work for n=0 here. A realtime implementation would just keep a vector of z-values 
+    // as state which could be read from in a getSample() call.
 
     // Apply A filters:
     y1[n] = a1 * A1.getSample(u1);
@@ -16176,12 +16176,6 @@ void testFeedbackDelayNetworks()
   for(int n = 1; n < N; n++)
     produceInternalSamples(0.0, n);
 
-
-
-  // Old:
-  //Vec ySum = y1 + y2 + y3;
-  //Vec zSum = z1 + z2 + z3;
-
   Vec ySum = c1*y1 + c2*y2 + c3*y3;
   Vec zSum = d1*z1 + d2*z2 + d3*z3;
   Vec sum  = ySum + zSum;
@@ -16202,19 +16196,7 @@ void testFeedbackDelayNetworks()
   //   using nonzero values (i.e. actually using the second delay layer rather than bypassing it)
   //   does indeed add complexity.
   //
-  // - More experiments are needed to optimize the matrix and the delays. Using all phases 
-  //   p1,p2,p3 = 90°, it is really bad! Figure out for what seeting of the phases, we obtain a
-  //   maximally diffusive matrix. We may also just use rsMatrix3x3 with
-  //   [+1,+1,-1; +1,-1,+1; -1,+1,+1] / sqrt(3) but it would be nice to achieve the same effect 
-  //   with a rotation matrix because that would give us another 3 degrees of flexibility for the 
-  //   design. But the 3x3 case is supposed to be a toy example for initial experiments anyway. I'm
-  //   not really planning to actually use it anywhere.
-  //
-  // - Instead of one single global feedback factor, apply different feedback scalers after the
-  //   A1.getSample().., B1.getSample()... functions that are computed in accordance with the a 
-  //   desired decay time and the length of the respective delayline. Maybe take the square roots
-  //   of the factors computed via the usual formula to account for the fact that we have two 
-  //   rounds of multiplications (after the A and after the B filters).
+  // - More experiments are needed to optimize the matrix and the delays. 
   //
   // - I think, it may make sense to have all M values odd and all n values even. Then we avoid any
   //   of the sums Mi+Nj to be even (because odd + even = odd). We want them all odd because 
@@ -16264,6 +16246,11 @@ void testFeedbackDelayNetworks()
   //   -Floatcrush: should noisify the tail, relative nosification is independent from level
   //   -Soft-Bitcrush: should be a bitcrush with adjustable smoothing of the stairsteps into softer
   //    sigmoid shapes
+  //
+  // - Maybe use a function x + a*x^3 with adjustable a > 0 and its inverse (used with |a| when 
+  //   a < 0). This waveshaping in the feedback path could be used to dial in a balance between
+  //   early and late deacy, I guess. But maybe for the a > 0 case, we need to limit the slope of
+  //   the function somewho to keep the feedbakc loop gain stable.
 }
 
 

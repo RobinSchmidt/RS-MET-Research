@@ -19,13 +19,13 @@ adjustment of the pattern of the early reflections.
 Moreover, in a practical implementation, one would have to include damping factors and even damping 
 filters in the feedback paths. The factors could be thought of as being absorbed into the matrix, 
 though. But it's usually more convenient to leave the matrix unitary and do the scaling of the 
-feedback signals explicitly after the matrix. When we include damping, we could place the damping 
-filters (typically lowpass or low shelving filters) directly after the delaylines or after the 
-feedback matrix. If we put the damping filters directly after the delaylines and want to pick up 
-the y1,y2,y3 signals after the delaylines, too, then it may make sense to pick them up in between 
-the delays and the dampers such that the first reflections are undamped. Or maybe it's actually 
-desirable to already dampen the first reflections. That's actually more physically plausible. In 
-that case, they should be picked up after the dampers.
+feedback signals explicitly before or after the matrix. When we include damping, we could place the
+damping filters (typically lowpass or low shelving filters) directly after the delaylines or after 
+the feedback matrix. If we put the damping filters directly after the delaylines and want to pick 
+up the y1,y2,y3 signals after the delaylines, too, then it may make sense to pick them up in 
+between the delays and the dampers such that the first reflections are undamped. Or maybe it's 
+actually desirable to already dampen the first reflections. That's actually more physically 
+plausible. In that case, they should be picked up after the dampers.
 
 The delays are usually chosen to be pairwise mutually prime. That avoids repetitive patterns in 
 the impulse response as much as possible. In other words, the length of the inevitable periodicity 
@@ -85,7 +85,11 @@ ToDo
   define some (differentiable) cost function that measures the irrationality of all the possible
   delay ratios. Maybe this cost function should be fomulated in terms of the continuous fraction
   expansions of the ratios? By the ratios, I mean numbers like (M1+N1)/(M1+N2), ... i.e. the 
-  ratios between all possible sums
+  ratios between all possible sums (except those with same numerator and denominator like 
+  (M1+N1)/(M1+N1) and those where numerator and denominator are just a swap of another ratio. 
+  If we already have (M1+N1)/(M1+N2), we don't need (M1+N2)/(M1+N1) anymore. I think, we should
+  get (N+1)*N/2 - N different ratios (number of elements of a triangular matrix minus number of 
+  diagonal elements)).
 
 - Maybe try to extend the idea to put another matrix after the B filters and after that matrix 
   another set of delays/filters (let's call them C), etc. This way, we could build a multilayer FDN

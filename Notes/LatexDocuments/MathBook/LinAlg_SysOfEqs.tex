@@ -291,6 +291,9 @@ The algorithm will lead us to such a triangular form only in the case of regular
 
 %We will also allow for rows of zeros at the bottom and we will allow the diagonal below which we want to see zeros to be even flatter - i.e. the columns can drop down to zero even faster. In essence, we will allow even more zeros
 
+% PROOF that Matrix Row Reduction ALWAYS Works! What is the Echelon Form?
+% https://www.youtube.com/watch?v=HyQ-BCGOnKo
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Spin-Offs: Rank, Determinant, Inverse, LU-Decomposition}
 The Gaussian elimination algorithm computes as a by-product also the rank of the matrix and with some minor modifications, i.e. by adding some bookkeeping, it can be made to compute the determinant as well. Is is also the basis of Gauss-Jordan elimination which can bring an LSE into the even more convenient diagonal (rather than just triangular) form which in turn serves as the basis for an algorithm to compute the inverse of a matrix. It is also the basis of the so called LU-decomposition of a matrix which we will encounter later.

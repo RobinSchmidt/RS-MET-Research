@@ -15108,7 +15108,7 @@ void testPolynomialRootCorrespondence2()
   //   affected by the pushing and pulling "forces"
   //
   // - Generally, we see that the trajectories never cross, i.e. never intersect one another. When 
-  //   they goe near each other, they eventually repel.
+  //   they go near each other, they eventually repel.
   //
   //
   // Questions:
@@ -15165,10 +15165,10 @@ void testPolynomialRootCorrespondence2()
   //   distances?). Maybe the actual pairing minimizes such an energy function? This is wild 
   //   speculation, though.
   //
-  // - Try two variations of (z+1)*(z-1)*(z+i)*(z-i) where the roots at +-i are knocked off 
-  //   differently, say to i+0.1, -i-0.1 in one case and i-0.1, -i+0.1 in the other. We are 
-  //   interested in the change in association. Maybe in the 1st case +1 gets associated with +1 
-  //   and -1 with -i and in the 2nd case +1 gets associated with -1 and -1 with +i?
+  // - Try two variations of p = (z+1)*(z-1), q = (z+i)*(z-i) where the roots of q at +-i are 
+  //   knocked off differently, say to i+0.1, -i-0.1 in one case and i-0.1, -i+0.1 in the other. We
+  //   are interested in the change in association. Maybe in the 1st case +1 gets associated with 
+  //   +1 and -1 with -i and in the 2nd case +1 gets associated with -1 and -1 with +i?
 }
 
 

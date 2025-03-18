@@ -14857,13 +14857,14 @@ void testPolynomialRootCorrespondence1()
 
 
   // Circular patterns with rotations between p and q:
-  rsPlotPolyRootTrajectories(
-    ellipRoots(8, 1.0, 1.0, 0.0 ), 1 + 0*i, 
-    ellipRoots(8, 1.0, 1.0, PI/8), 1 + 0*i, 51);
+  //rsPlotPolyRootTrajectories(
+  //  ellipRoots(8, 1.0, 1.0, 0.0 ), 1 + 0*i, 
+  //  ellipRoots(8, 1.0, 1.0, PI/8), 1 + 0*i, 51);
+  //rsPlotPolyRootTrajectories(
+  //  ellipRoots(8, 1.0, 1.0, 0.0  ), 1 + 0*i, 
+  //  ellipRoots(8, 1.0, 1.0, PI/16), 1 + 0*i, 16);
+  //  // They trigger assertions in the root finder (it doesn't converge)
 
-  rsPlotPolyRootTrajectories(
-    ellipRoots(8, 1.0, 1.0, 0.0  ), 1 + 0*i, 
-    ellipRoots(8, 1.0, 1.0, PI/16), 1 + 0*i, 16);
 
 
   // Observations:
@@ -15163,6 +15164,11 @@ void testPolynomialRootCorrespondence2()
   //   degree of p and q) a sort of overall energy function (maybe sum of the (squared) 
   //   distances?). Maybe the actual pairing minimizes such an energy function? This is wild 
   //   speculation, though.
+  //
+  // - Try two variations of (z+1)*(z-1)*(z+i)*(z-i) where the roots at +-i are knocked off 
+  //   differently, say to i+0.1, -i-0.1 in one case and i-0.1, -i+0.1 in the other. We are 
+  //   interested in the change in association. Maybe in the 1st case +1 gets associated with +1 
+  //   and -1 with -i and in the 2nd case +1 gets associated with -1 and -1 with +i?
 }
 
 

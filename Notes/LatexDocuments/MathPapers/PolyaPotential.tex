@@ -191,9 +191,7 @@ We can in general just always use $V_n(x,y)$ and add to it a $x^{n+1}/(n+1)$ ter
 \end{equation}
 
 \subsection{Negative Integer Powers}
-Let's now derive expressions for the Polya vector field and potential a general negative integer power, i.e. for functions of the form $f(z) = 1/z^n = z^{-n}$.
-
-We will again try a couple of examples and try to spot the patterns. We'll use this script:
+Let's now derive expressions for the Polya vector field and potential of a general negative integer power, i.e. for functions of the form $f(z) = 1/z^n = z^{-n}$. We will again try a couple of examples and try to spot the patterns. We'll use this script:
 \begin{verbatim}
 n = 3                     # exponent without the minus sign
 var("x y")
@@ -252,7 +250,7 @@ v_{-n}(x,y) = \frac{v_n}{u_n^2 + v_n^2} ,\quad
 P_{-n}(x,y) = \frac{-u_{n-1}}{(n-1)(x^2+y^2)^{n-1}}
 }
 \end{equation}
-where $u_n, v_n$ are the expressions for the corresponding positive power. It turns out that the case for $n=1$ doesn't follow the pattern, so we treat it separately. The result is actually already included in the table further above. 
+where $u_n, v_n$ are the expressions for the corresponding positive power. It turns out that the case for $n=1$ doesn't follow the pattern, so we treat it separately. The result is actually already included in the table further above. It's $\ln(x^2+y^2)/2$. The reciprocation function $f(z) = 1/z = z^{-1}$ is a very special citizen in complex (and real) analysis anyway.
 
 %[Maybe move the Sage derivations into an appendix and keep only the results in the main text. Refer to the implementation of the formulas]
 

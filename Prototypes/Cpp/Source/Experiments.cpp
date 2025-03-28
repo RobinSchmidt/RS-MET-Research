@@ -17911,27 +17911,27 @@ T rsMaxNorm(const T& x)
 //}
 // Shouldn't we use just a single template parameter, i.e. argument type and return type should match?
 
-template<class TArg, class TNorm>
-TNorm rsMaxNorm(const TArg& x, const TArg& y)
-{
-  return rsMax(rsMaxNorm(x), rsMaxNorm(y));
-}
+//template<class TArg, class TNorm>
+//TNorm rsMaxNorm(const TArg& x, const TArg& y)
+//{
+//  return rsMax(rsMaxNorm(x), rsMaxNorm(y));
+//}
 
-/** Implements the maximum norm for std::complex<TReal> where TReal */
-template<class TReal, class TNorm>
-TNorm rsMaxNorm(const std::complex<TReal>& z)
-{
-  return rsMaxNorm<TReal, TNorm>(std::abs(z.real()), std::abs(z.imag)); 
-
-  //return rsMax(std::abs(z.real()), std::abs(z.imag)); 
-  // Maybe we should use rsMaxNorm rather than rsMax? What if TReal is a simd type, for example? Might 
-  // rsMax then be unsuitable because the max function should return the underlying scalar type?
-}
+///** Implements the maximum norm for std::complex<TReal> where TReal */
+//template<class TReal, class TNorm>
+//TNorm rsMaxNorm(const std::complex<TReal>& z)
+//{
+//  return rsMaxNorm<TReal, TNorm>(std::abs(z.real()), std::abs(z.imag)); 
+//
+//  //return rsMax(std::abs(z.real()), std::abs(z.imag)); 
+//  // Maybe we should use rsMaxNorm rather than rsMax? What if TReal is a simd type, for example? Might 
+//  // rsMax then be unsuitable because the max function should return the underlying scalar type?
+//}
 
 void testMaxNorm()
 {
-  using Real    = double;
-  using Complex = std::complex<Real>;
+  //using Real    = double;
+  //using Complex = std::complex<Real>;
 
 
   int    intVal    = -5;

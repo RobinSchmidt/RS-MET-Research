@@ -118,7 +118,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testLiftedPolynomial();
   //testFactoredPolynomial();
   //testPolynomialRootCorrespondence1();
-  testPolynomialRootCorrespondence2();
+  //testPolynomialRootCorrespondence2();
 
 
   // MIMO Filters:
@@ -147,8 +147,10 @@ int main (int /*argc*/, char* /*argv[]*/)
 
 
 
-
+  // Misc:
+  testMaxNorm();
   //testMerge();  // Trying to find an in-place merge algorithm - not sure, if that's possible, though
+
 
 
   // Riemann zeta function:

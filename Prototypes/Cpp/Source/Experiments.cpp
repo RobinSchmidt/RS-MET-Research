@@ -17897,9 +17897,9 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 
 //--------------------------------------------------------------------------------------------------
 //
-// It's a bit tricky to predict the interactions between C++ template instantiation, type deduction 
-// and function overload resolution rules to make the overload set of the rsMaxNorm function behave
-// exactly the way I want it to. ...
+// It's a bit tricky to predict the interactions between C++ template instantiation, type 
+// deduction, return type deduction and function overload resolution rules to make the overload set 
+// of the rsMaxNorm function behave exactly the way I want it to. ...
 
 
 //inline unsigned int rsAbs(unsigned int x) 
@@ -18004,20 +18004,33 @@ TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 
 
 // Under construction:
-template<class TElem, class TNorm>
-TNorm rsMaxNormTest(const rsMatrix2x2<TElem>& A)
-{
-  return rsMax((TNorm)rsMaxNorm<TElem, TNorm>(A.a), (TNorm)rsMaxNorm<TElem, TNorm>(A.b), 
-               (TNorm)rsMaxNorm<TElem, TNorm>(A.c), (TNorm)rsMaxNorm<TElem, TNorm>(A.d));
 
+template<class TReal>
+auto rsMaxNormTest(const rsComplex<TReal>& z)
+{
+  return rsMax(rsMaxNorm<TReal>(z.real()), rsMaxNorm<TReal>(z.imag()));
 }
 
-template<class TReal, class TNorm>
-TNorm rsMaxNormTest(const rsComplex<TReal>& z)
-{
-  return rsMax(rsMaxNorm<TReal, TNorm>(z.real()), rsMaxNorm<TReal, TNorm>(z.imag()));
-}
+//template<class TReal, class TNorm>
+//TNorm rsMaxNormTest(const rsComplex<TReal>& z)
+//{
+//  return rsMax(rsMaxNorm<TReal, TNorm>(z.real()), rsMaxNorm<TReal, TNorm>(z.imag()));
+//}
 
+
+//template<class TElem>
+//auto rsMaxNormTest(const rsMatrix2x2<TElem>& A)
+//{
+//  return rsMax(rsMaxNorm<TElem>(A.a), rsMaxNorm<TElem>(A.b),
+//               rsMaxNorm<TElem>(A.c), rsMaxNorm<TElem>(A.d));
+//}
+
+template<class TElem>
+auto rsMaxNormTest(const rsMatrix2x2<TElem>& A)
+{
+  return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b),
+               rsMaxNorm(A.c), rsMaxNorm(A.d));
+}
 
 
 
@@ -18139,9 +18152,13 @@ void testMaxNorm()
   // name. But it still doesn't compile. It must be an overload resolution problem *inside* the function.
 
   // Let's try it on an element:
-  //auto test = rsMaxNorm<Complex, Real>(compMat.a);
+  auto test = rsMaxNormTest<Real>(compMat.a);
+  //auto test = rsMaxNormTest<Complex, Real>(compMat.a);
   // Yep! this also fails to compile. But why compMat.a is just a complex number of type rsComplex
   // which we previously tested. Oh! wait! In our previous test, we passed <Real, Real>
+
+  //auto compMatNorm = rsMaxNormTest(compMat);
+
 
 
   //ok &= typeid(compMatNorm) == typeid(realVal);

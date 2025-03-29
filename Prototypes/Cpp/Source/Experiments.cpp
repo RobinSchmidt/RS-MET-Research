@@ -17948,18 +17948,19 @@ TNorm rsMaxNorm(const TArg& x)
   //   without refering to the rsAbs template
 }
 
-
-
 //** Implements the maximum norm for std::complex<TReal> where TReal */
 template<class TReal, class TNorm>
 TNorm rsMaxNorm(const std::complex<TReal>& z)
 {
+  return std::max(std::abs(z.real()), std::abs(z.imag()));
   //return rsMax(std::abs(z.real()), std::abs(z.imag()));
-  return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
+  //return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
 }
+// TNorm may be superfluous - it's always equal to TReal for std::complex, I think. std::complex 
+// doesn't allow for more complicated complex types where the type of the norm of the underlying 
+// real type is different of the real type itself
 
 
-/*
 template<class TReal, class TNorm>
 TNorm rsMaxNorm(const rsComplex<TReal>& z)
 {
@@ -17972,6 +17973,8 @@ TNorm rsMaxNorm(const rsComplex<TReal>& z)
   // as a simd vector.
 }
 
+
+/*
 template<class TElem, class TNorm>
 TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 {
@@ -18070,13 +18073,14 @@ void testMaxNorm()
   // Trying to call  "auto compNorm = rsMaxNorm(compVal);"  would instantiate the template of 
   // rsMaxNorm with a single template parameter T and assign T to std::complex<float>
 
-  /*
+
   // Now the same with rsComplex (but with slightly different numbers):
   rsComplex<Real> compVal2(Real(-3), Real(5));
   auto compNorm2 = rsMaxNorm<Real, Real>(compVal2);
   ok &= typeid(compNorm2) == typeid(realVal);
   ok &= compNorm2 == Real(5);
 
+  /*
   // Maximum norm of a 2x2 matrix of real values:
   rsMatrix2x2<Real> realMat(3, -5, -7, 6);
   auto realMatNorm = rsMaxNorm<Real, Real>(realMat);

@@ -17968,7 +17968,7 @@ TNorm rsMaxNorm(const TArg& x)
 }
 
 
-
+/*
 template<class TReal, class TNorm>
 TNorm rsMaxNorm(const rsComplex<TReal>& z)
 {
@@ -17988,7 +17988,10 @@ TNorm rsMaxNorm(const rsComplex<TReal>& z)
   // Apparently it is with C++14:
   // https://stackoverflow.com/questions/15737223/when-should-i-use-c14-automatic-return-type-deduction
 }
+*/
 
+
+/*
 template<class TElem, class TNorm>
 TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 {
@@ -17997,7 +18000,7 @@ TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 
   //return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b), rsMaxNorm(A.c), rsMaxNorm(A.d));
 }
-
+*/
 
 
 
@@ -18005,10 +18008,11 @@ TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 
 // Under construction:
 
-template<class TReal>
-auto rsMaxNormTest(const rsComplex<TReal>& z)
+template<class TReal, class TNorm>
+auto rsMaxNorm(const rsComplex<TReal>& z)
 {
-  return rsMax(rsMaxNorm<TReal>(z.real()), rsMaxNorm<TReal>(z.imag()));
+  return rsMax(rsMaxNorm<TReal, TNorm>(z.real()), rsMaxNorm<TReal, TNorm>(z.imag()));
+  //return rsMax(rsMaxNorm<TReal>(z.real()), rsMaxNorm<TReal>(z.imag()));
 }
 
 //template<class TReal, class TNorm>
@@ -18026,7 +18030,7 @@ auto rsMaxNormTest(const rsComplex<TReal>& z)
 //}
 
 template<class TElem>
-auto rsMaxNormTest(const rsMatrix2x2<TElem>& A)
+auto rsMaxNorm(const rsMatrix2x2<TElem>& A)
 {
   return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b),
                rsMaxNorm(A.c), rsMaxNorm(A.d));
@@ -18134,7 +18138,7 @@ void testMaxNorm()
   
   // Maximum norm of a 2x2 matrix of real values:
   rsMatrix2x2<Real> realMat(3, -5, -7, 6);
-  auto realMatNorm = rsMaxNorm<Real, Real>(realMat);
+  auto realMatNorm = rsMaxNorm<Real>(realMat);
   ok &= typeid(realMatNorm) == typeid(realVal);
   ok &= realMatNorm == Real(7);
 
@@ -18147,12 +18151,13 @@ void testMaxNorm()
   // Doesn't compile! Apparently, the compiler doesn't understand that it should invoke the template
   // that takes an rsMatrix and tries to invoke one of the 4 non-templated variants. But why?
 
-  //auto compMatNorm = rsMaxNormTest<Complex, Real>(compMat);
+  //auto compMatNorm = rsMaxNorm<Complex>(compMat);
+  //auto compMatNorm = rsMaxNorm<Real>(compMat);
   // Hmm - now the compile has no choice but to invoke the version for rsMatrix because it has different 
   // name. But it still doesn't compile. It must be an overload resolution problem *inside* the function.
 
   // Let's try it on an element:
-  auto test = rsMaxNormTest<Real>(compMat.a);
+  auto test = rsMaxNorm<Real>(compMat.a);
   //auto test = rsMaxNormTest<Complex, Real>(compMat.a);
   // Yep! this also fails to compile. But why compMat.a is just a complex number of type rsComplex
   // which we previously tested. Oh! wait! In our previous test, we passed <Real, Real>

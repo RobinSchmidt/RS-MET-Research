@@ -17896,34 +17896,13 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 
 
 //--------------------------------------------------------------------------------------------------
-// Move this code in a different project that compiles faster!
+// Move this code in a different project that compiles faster! We need RAPT but not rosic or 
+// rs_testing
 //
 // It's a bit tricky to predict the interactions between C++ template instantiation, type 
 // deduction, return type deduction and function overload resolution rules to make the overload set 
 // of the rsMaxNorm function behave exactly the way I want it to. ...
 
-
-//inline unsigned int rsAbs(unsigned int x) 
-//{ 
-//  return x; 
-//}
-//
-///** Implements the maximum norm for primitive built in types like int, float, double, etc. It's just
-//the absolute value. This serves also as the general fallback implementation. */
-//template<class T>
-//T rsMaxNorm(const T& x)
-//{
-//  return rsAbs<T>(x);
-//  //return std::abs(x);
-//
-//  // Notes:
-//  //
-//  // - Maybe instead to fall back to using rsAbs, define explicit rsMaxNorm functions for all 
-//  //   primitive types (int, float, double, unsigned int, int64, etc. These are then the lowest 
-//  //   level functions that the instantiation cascade can fall back to. We then don't refer to 
-//  //   another function (like abs) at all. It's all recursion on rsMaxAbs until we hit the base 
-//  //   case of a primitive type.
-//}
 
 // Base cases for rsMaxNorm for built in types:
 
@@ -17943,6 +17922,7 @@ T rsMaxNorm(const std::complex<T>& z)
 
 // This is intended to call one of the non-templated base-case implementations and perhaps convert
 // the result to a different target type (for example from int to unsigned int):
+/*
 template<class TArg, class TNorm>
 TNorm rsMaxNorm(const TArg& x)
 {
@@ -17967,6 +17947,7 @@ TNorm rsMaxNorm(const TArg& x)
   //   ToDo: check is this is still the case after we switched to using non-templated base-cases 
   //   without refering to the rsAbs template
 }
+*/
 // Maybe we can do without this. Maybe it messes up our desired resolution behavior and all it 
 // really does is to call *some* other rsMaxNorm implementation and convert its type.
 
@@ -18006,12 +17987,15 @@ TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 */
 
 
+
+
+
 // Under construction:
 
 template<class TReal, class TNorm>
 auto rsMaxNorm(const rsComplex<TReal>& z)
 {
-  return rsMax(rsMaxNorm<TReal, TNorm>(z.real()), rsMaxNorm<TReal, TNorm>(z.imag()));
+  return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
   //return rsMax(rsMaxNorm<TReal>(z.real()), rsMaxNorm<TReal>(z.imag()));
 }
 
@@ -18102,6 +18086,8 @@ void testMaxNorm()
   ok &= floatNorm  == 5.f;
   ok &= doubleNorm == 5.0;
 
+  
+  /*
   // Now we try to produce a norm of type Uint from an int argument:
   //auto intNormUint = rsMaxNorm<Uint, int>(intVal);
   auto intNormUint = rsMaxNorm<int, Uint>(intVal);
@@ -18114,6 +18100,7 @@ void testMaxNorm()
   // We get an "ambiguous call" error. I'm not sure, why it is ambiguous, though (figure out!). I 
   // think, it would generally be nicer to take the return type as first template parameter. But it
   // may not be possible.
+  */
 
   
   // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 

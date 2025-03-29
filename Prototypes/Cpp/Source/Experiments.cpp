@@ -17904,6 +17904,8 @@ T rsMaxNorm(const T& x)
 {
   return std::abs(x);
 }
+
+
 //template<class TArg, class TNorm>
 //TNorm rsMaxNorm(const TArg& x)
 //{
@@ -17930,35 +17932,57 @@ T rsMaxNorm(const T& x)
 
 void testMaxNorm()
 {
-  //using Real    = double;
-  //using Complex = std::complex<Real>;
-
-
-  int    intVal    = -5;
-  float  floatVal  = -5.f;
-  double doubleVal = -5.0;
-                                           // Return type
-  auto intNorm    = rsMaxNorm(intVal);     // int
-  auto floatNorm  = rsMaxNorm(floatVal);
-  auto doubleNorm = rsMaxNorm(doubleVal);
+  // We verify that the various implementations of the rsMaxNorm function template produce the 
+  // correct return types and return the right return values. The latter is more or less trivial. 
+  // There's not much that could go wrong with that. It's mostly the return *types* about which we
+  // care here. We make sure that we get the right return types using the typeid operator.
+  //
+  // See: https://en.cppreference.com/w/cpp/language/typeid
 
   bool ok = true;
 
-  ok &= typeid(intNorm) == typeid(intVal);
+  using Real    = float;
+  using Complex = std::complex<Real>;
+  using Uint    = unsigned int;
+
+  // Create some numeric values of different types:
+  int    intVal     = -5;
+  float  floatVal   = -5.f;
+  double doubleVal  = -5.0;
+
+  // Make sure that typeid comparison does the right thing (I'm not so familiar with that language
+  // feature):
+  ok &= typeid(intVal) == typeid(3);
+  ok &= typeid(intVal) != typeid(floatVal);
+  ok &= typeid(intVal) != typeid(doubleVal);
+  // ...ok - looks good.
+
+  // Compute some norms of values of different types where we let the compiler infer the right type
+  // for the computed norm. In these cases here, the return type is actually equal to the argument 
+  // type. This is the simplest situation and it should invoke the version of the template 
+  // rsMaxNorm with a single argument of a given type T and return a result of the same type T as 
+  // well:
+                                           // Return type
+  auto intNorm    = rsMaxNorm(intVal);     // int
+  auto floatNorm  = rsMaxNorm(floatVal);   // float
+  auto doubleNorm = rsMaxNorm(doubleVal);  // double
+
+  // Check that the return types are as expected:
+  ok &= typeid(intNorm)    == typeid(intVal);
+  ok &= typeid(floatNorm)  == typeid(floatVal);
+  ok &= typeid(doubleNorm) == typeid(doubleVal);
+
+  // Check also that the return values are as expected:
+  ok &= intNorm    == 5;
+  ok &= floatNorm  == 5.f;
+  ok &= doubleNorm == 5.0;
 
 
-
-  ok &= typeid(intNorm) != typeid(floatVal);
-
-  // ...more to come...
-
-  
-  
-  // See: https://en.cppreference.com/w/cpp/language/typeid
+  // ...more to come...take max-norms of complex numbers -> real, real matrices -> real, 
+  // complex matrices -> real, complex<simd<real>> -> real, rsMaxNorm<uint>(int) -> uint
 
 
-
-  int dummy = 0; 
+  rsAssert(ok);
 }
 
 //--------------------------------------------------------------------------------------------------

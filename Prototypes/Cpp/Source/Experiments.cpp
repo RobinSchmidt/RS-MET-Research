@@ -17923,6 +17923,11 @@ TNorm rsMaxNorm(const TArg& x)
 }
 // Shouldn't we use just a single template parameter, i.e. argument type and return type should match?
 
+// Maybe we should always list the return type first. Rationale: This is the most important info for the 
+// compiler. Argument type(s) can actually be inferred from the given arguments. We then need to do this
+// consistently throughout the library. We may also need to modify rsConvert for matrices.
+
+
 //template<class TArg, class TNorm>
 //TNorm rsMaxNorm(const TArg& x, const TArg& y)
 //{

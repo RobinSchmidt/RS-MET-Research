@@ -17943,15 +17943,19 @@ TNorm rsMaxNorm(const TArg& x)
 //}
 
 ///** Implements the maximum norm for std::complex<TReal> where TReal */
-//template<class TReal, class TNorm>
-//TNorm rsMaxNorm(const std::complex<TReal>& z)
-//{
-//  return rsMaxNorm<TReal, TNorm>(std::abs(z.real()), std::abs(z.imag)); 
-//
-//  //return rsMax(std::abs(z.real()), std::abs(z.imag)); 
-//  // Maybe we should use rsMaxNorm rather than rsMax? What if TReal is a simd type, for example? Might 
-//  // rsMax then be unsuitable because the max function should return the underlying scalar type?
-//}
+template<class TReal, class TNorm>
+TNorm rsMaxNorm(const std::complex<TReal>& z)
+{
+  return rsMax(std::abs(z.real()), std::abs(z.imag()));
+  // Maybe instead of std::abs use rsMaxNorm
+
+
+  //return rsMaxNorm<TReal, TNorm>(std::abs(z.real()), std::abs(z.imag()));
+
+  //return rsMax(std::abs(z.real()), std::abs(z.imag)); 
+  // Maybe we should use rsMaxNorm rather than rsMax? What if TReal is a simd type, for example? Might 
+  // rsMax then be unsuitable because the max function should return the underlying scalar type?
+}
 
 void testMaxNorm()
 {
@@ -17964,8 +17968,8 @@ void testMaxNorm()
 
   bool ok = true;
 
-  using Real    = float;
-  using Complex = std::complex<Real>;
+  //using Real    = float;
+  //using Complex = std::complex<Real>;
   using Uint    = unsigned int;
   //using Uint    = rsUint32;
 
@@ -18019,11 +18023,23 @@ void testMaxNorm()
   // think, it would generally be nicer to take the return type as first template parameter. But it
   // may not be possible.
 
+  // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 
+  // norm of the underlying real type which is float here:
+  std::complex<float> compVal(3.f, -5.f);
+  auto compNorm = rsMaxNorm<float, float>(compVal);
+  ok &= typeid(compNorm) == typeid(floatVal);
+  ok &= compNorm == 5.f;
+  // Trying to call  "auto compNorm = rsMaxNorm(compVal);"  would instantiate the template of 
+  // rsMaxNorm with a single template parameter T and assign T to std::complex<float>
+
+
 
 
   // ...more to come...take max-norms of complex numbers -> real, real matrices -> real, 
   // complex matrices -> real, complex<simd<real>> -> real, rsMaxNorm<uint>(int) -> uint,
-  // rsFraction<int> -> rsFracction<int> 
+  // rsFraction<int> -> rsFraction<int>, rsSparsePolynomial, try to make a complex type from 
+  // rsMatrix2x2. Maybe we need to use rsComplex for that. I think, std::complex would not work. 
+  // Try as rsComplex<rsFraction<int>>
 
 
   rsAssert(ok);

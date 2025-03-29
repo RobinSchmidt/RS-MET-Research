@@ -18025,12 +18025,22 @@ void testMaxNorm()
 
   // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 
   // norm of the underlying real type which is float here:
-  std::complex<float> compVal(3.f, -5.f);
-  auto compNorm = rsMaxNorm<float, float>(compVal);
-  ok &= typeid(compNorm) == typeid(floatVal);
-  ok &= compNorm == 5.f;
+  std::complex<float> compVal1(3.f, -5.f);
+  auto compNorm1 = rsMaxNorm<float, float>(compVal1);
+  ok &= typeid(compNorm1) == typeid(floatVal);
+  ok &= compNorm1 == 5.f;
   // Trying to call  "auto compNorm = rsMaxNorm(compVal);"  would instantiate the template of 
   // rsMaxNorm with a single template parameter T and assign T to std::complex<float>
+
+  // Now the same with rsComplex:
+  rsComplex<float> compVal2(3.f, -5.f);
+  auto compNorm2 = rsMaxNorm<float, float>(compVal2);
+  ok &= typeid(compNorm2) == typeid(floatVal);
+  ok &= compNorm2 == 5.f;
+
+  // Maybe templatize on the real type
+
+
 
 
 

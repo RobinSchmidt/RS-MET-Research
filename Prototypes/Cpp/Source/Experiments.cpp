@@ -17897,7 +17897,6 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 
 //--------------------------------------------------------------------------------------------------
 
-
 inline unsigned int rsAbs(unsigned int x) 
 { 
   return x; 
@@ -17908,8 +17907,16 @@ the absolute value. This serves also as the general fallback implementation. */
 template<class T>
 T rsMaxNorm(const T& x)
 {
-  //return std::abs(x);
   return rsAbs<T>(x);
+  //return std::abs(x);
+
+  // Notes:
+  //
+  // - Maybe instead to fall back to using rsAbs, define explicit rsMaxNorm functions for all 
+  //   primitive types (int, float, double, unsigned int, int64, etc. These are then the lowest 
+  //   level functions that the instantiation cascade can fall back to. We then don't refer to 
+  //   another function (like abs) at all. It's all recursion on rsMaxAbs until we hit the base 
+  //   case of a primitive type.
 }
 
 template<class TArg, class TNorm>
@@ -17917,23 +17924,40 @@ template<class TArg, class TNorm>
 TNorm rsMaxNorm(const TArg& x)
 {
   return (TNorm) rsMaxNorm<TArg>(x);
-
   //return (TNorm) rsAbs(x);
-
   //return (TNorm) std::abs(x);
-}
-// Shouldn't we use just a single template parameter, i.e. argument type and return type should 
-// match?
 
-// Maybe we should always list the return type first. Rationale: This is the most important info 
-// for the compiler. Argument type(s) can actually be inferred from the given arguments. We then 
-// need to do thisconsistently throughout the library. We may also need to modify rsConvert for 
-// matrices.
-//
-// Oh - trying to do this, i.e. use  template<class TNorm, class TArg>  instead of
-// template<class TArg, class TNorm>  and then also adapting the order of template arguments at the
-// call the call site breaks the compilation. We get an "rsMaxNorm: ambiguous call to overloaded 
-// function" error.
+  // Notes:
+  //
+  // - Maybe we should always list the return type first. Rationale: This is the most important 
+  //   info for the compiler. Argument type(s) can actually be inferred from the given arguments. 
+  //   We then need to do thisconsistently throughout the library. We may also need to modify 
+  //   rsConvert for matrices. But trying to do this, i.e. use  template<class TNorm, class TArg>  
+  //   instead of  template<class TArg, class TNorm>  and then also adapting the order of template 
+  //   arguments at the call the call site breaks the compilation. We get an "rsMaxNorm: ambiguous 
+  //   call to overloaded function" error.
+}
+
+//** Implements the maximum norm for std::complex<TReal> where TReal */
+template<class TReal, class TNorm>
+TNorm rsMaxNorm(const std::complex<TReal>& z)
+{
+  //return rsMax(std::abs(z.real()), std::abs(z.imag()));
+  return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
+
+  // What if TReal is a simd type, for example? Might rsMax then be unsuitable because the max 
+  // function should return the underlying scalar type? Ah - I think, we need an explicit
+  // specialization of rsMaxNorm for the simd type which should should return the max abs of the
+  // elements of the vector. Maybe simulate that with TReal rsVector2D. It should behave the same
+  // as a simd vector.
+}
+
+template<class TElem, class TNorm>
+TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
+{
+  return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b), rsMaxNorm(A.c), rsMaxNorm(A.d));
+}
+
 
 
 //template<class TArg, class TNorm>
@@ -17942,22 +17966,11 @@ TNorm rsMaxNorm(const TArg& x)
 //  return rsMax(rsMaxNorm(x), rsMaxNorm(y));
 //}
 
-///** Implements the maximum norm for std::complex<TReal> where TReal */
-template<class TReal, class TNorm>
-TNorm rsMaxNorm(const std::complex<TReal>& z)
-{
-  //return rsMax(std::abs(z.real()), std::abs(z.imag()));
-  return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
-
-  // Maybe instead of std::abs use rsMaxNorm
+// Should return e.g. -7 for x = -4 + 5i, y = 3 - 7i, for example 
 
 
-  //return rsMaxNorm<TReal, TNorm>(std::abs(z.real()), std::abs(z.imag()));
 
-  //return rsMax(std::abs(z.real()), std::abs(z.imag)); 
-  // Maybe we should use rsMaxNorm rather than rsMax? What if TReal is a simd type, for example? Might 
-  // rsMax then be unsuitable because the max function should return the underlying scalar type?
-}
+
 
 void testMaxNorm()
 {
@@ -18039,8 +18052,11 @@ void testMaxNorm()
   ok &= typeid(compNorm2) == typeid(realVal);
   ok &= compNorm2 == Real(5);
 
-
+  // Now take the maximum norm of a matrix of real values:
   rsMatrix2x2<Real> realMat(3, -5, -7, 6);
+  auto realMatNorm = rsMaxNorm<Real, Real>(realMat);
+  ok &= typeid(realMatNorm) == typeid(realVal);
+  ok &= realMatNorm == Real(7);  // Fails to compile!
 
 
 

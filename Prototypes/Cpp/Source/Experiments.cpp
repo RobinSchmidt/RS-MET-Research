@@ -17944,6 +17944,13 @@ TNorm rsMaxNorm(const std::complex<TReal>& z)
 {
   //return rsMax(std::abs(z.real()), std::abs(z.imag()));
   return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
+}
+
+
+template<class TReal, class TNorm>
+TNorm rsMaxNorm(const rsComplex<TReal>& z)
+{
+  return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
 
   // What if TReal is a simd type, for example? Might rsMax then be unsuitable because the max 
   // function should return the underlying scalar type? Ah - I think, we need an explicit
@@ -17952,10 +17959,16 @@ TNorm rsMaxNorm(const std::complex<TReal>& z)
   // as a simd vector.
 }
 
+
+
+
 template<class TElem, class TNorm>
 TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 {
-  return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b), rsMaxNorm(A.c), rsMaxNorm(A.d));
+  return rsMax(rsMaxNorm<TElem, TNorm>(A.a), rsMaxNorm<TElem, TNorm>(A.b), 
+               rsMaxNorm<TElem, TNorm>(A.c), rsMaxNorm<TElem, TNorm>(A.d));
+
+  //return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b), rsMaxNorm(A.c), rsMaxNorm(A.d));
 }
 
 
@@ -17983,8 +17996,9 @@ void testMaxNorm()
 
   bool ok = true;
 
-  using Real = float;
-  using Uint = unsigned int;
+  using Real    = float;
+  using Uint    = unsigned int;
+  using Complex = rsComplex<Real>;
 
   // Create some numeric values of different types:
   int    intVal     = -5;
@@ -18052,11 +18066,17 @@ void testMaxNorm()
   ok &= typeid(compNorm2) == typeid(realVal);
   ok &= compNorm2 == Real(5);
 
-  // Now take the maximum norm of a matrix of real values:
+  // Maximum norm of a 2x2 matrix of real values:
   rsMatrix2x2<Real> realMat(3, -5, -7, 6);
   auto realMatNorm = rsMaxNorm<Real, Real>(realMat);
   ok &= typeid(realMatNorm) == typeid(realVal);
-  ok &= realMatNorm == Real(7);  // Fails to compile!
+  ok &= realMatNorm == Real(7);
+
+  // Maximum norm of a 2x2 matrix of complex values:
+  rsMatrix2x2<Complex> compMat(3, -5, -7, 6);  // ToDo: use proper complex numbers with nozero imaginary part
+  //auto compMatNorm = rsMaxNorm<Complex, Real>(compMat);
+  //ok &= typeid(compMatNorm) == typeid(realVal);
+  //ok &= compMatNorm == Real(7);
 
 
 
@@ -18067,7 +18087,7 @@ void testMaxNorm()
   // complex matrices -> real, complex<simd<real>> -> real, rsMaxNorm<uint>(int) -> uint,
   // rsFraction<int> -> rsFraction<int>, rsSparsePolynomial, try to make a complex type from 
   // rsMatrix2x2. Maybe we need to use rsComplex for that. I think, std::complex would not work. 
-  // Try as rsComplex<rsFraction<int>>
+  // Try as rsComplex<rsFraction<int>>, try rsComplex<rsVector2D<Real>>
 
 
   rsAssert(ok);

@@ -17896,6 +17896,7 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 
 
 //--------------------------------------------------------------------------------------------------
+// Move this code in a different project that compiles faster!
 //
 // It's a bit tricky to predict the interactions between C++ template instantiation, type 
 // deduction, return type deduction and function overload resolution rules to make the overload set 
@@ -17966,6 +17967,8 @@ TNorm rsMaxNorm(const TArg& x)
   //   ToDo: check is this is still the case after we switched to using non-templated base-cases 
   //   without refering to the rsAbs template
 }
+// Maybe we can do without this. Maybe it messes up our desired resolution behavior and all it 
+// really does is to call *some* other rsMaxNorm implementation and convert its type.
 
 
 /*
@@ -18003,9 +18006,6 @@ TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 */
 
 
-
-
-
 // Under construction:
 
 template<class TReal, class TNorm>
@@ -18035,9 +18035,6 @@ auto rsMaxNorm(const rsMatrix2x2<TElem>& A)
   return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b),
                rsMaxNorm(A.c), rsMaxNorm(A.d));
 }
-
-
-
 
 
 //template<class TArg, class TNorm>
@@ -18153,10 +18150,13 @@ void testMaxNorm()
 
   //auto compMatNorm = rsMaxNorm<Complex>(compMat);
   //auto compMatNorm = rsMaxNorm<Real>(compMat);
+  //auto compMatNorm = rsMaxNorm(compMat);
+
   // Hmm - now the compile has no choice but to invoke the version for rsMatrix because it has different 
   // name. But it still doesn't compile. It must be an overload resolution problem *inside* the function.
 
   // Let's try it on an element:
+  //auto test = rsMaxNorm(compMat.a);         // Doesn't compile
   auto test = rsMaxNorm<Real>(compMat.a);
   //auto test = rsMaxNormTest<Complex, Real>(compMat.a);
   // Yep! this also fails to compile. But why compMat.a is just a complex number of type rsComplex

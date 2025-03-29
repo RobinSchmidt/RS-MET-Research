@@ -18074,7 +18074,7 @@ void testMaxNorm()
 
   // Maximum norm of a 2x2 matrix of complex values:
   rsMatrix2x2<Complex> compMat(3, -5, -7, 6);  // ToDo: use proper complex numbers with nozero imaginary part
-  //auto compMatNorm = rsMaxNorm<Complex, Real>(compMat);
+  //auto compMatNorm = rsMaxNorm<Complex, Real>(compMat);  // Doesn't compile!
   //ok &= typeid(compMatNorm) == typeid(realVal);
   //ok &= compMatNorm == Real(7);
 

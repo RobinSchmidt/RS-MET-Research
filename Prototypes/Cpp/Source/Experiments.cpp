@@ -17904,7 +17904,7 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 // of the rsMaxNorm function behave exactly the way I want it to. ...
 
 
-// Base cases for rsMaxNorm for built in types:
+// Base cases for rsMaxNorm for built in primitive types:
 
 inline unsigned int rsMaxNorm(unsigned int x) { return x;            }
 inline int          rsMaxNorm(int          x) { return std::abs(x);  }
@@ -17912,7 +17912,7 @@ inline float        rsMaxNorm(float        x) { return std::fabs(x); }
 inline double       rsMaxNorm(double       x) { return std::fabs(x); }
 // ToDo: add all primitive types like int64_t etc.
 
-//** Implements the maximum norm for std::complex<T> where T can be either double or float. */
+// Implements the maximum norm for std::complex<T> where T can be either double or float.
 template<class T>
 T rsMaxNorm(const std::complex<T>& z)
 {
@@ -17992,12 +17992,19 @@ TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 
 // Under construction:
 
-template<class TReal, class TNorm>
-auto rsMaxNorm(const rsComplex<TReal>& z)
+template<class T>
+auto rsMaxNorm(const rsVector3D<T>& v)
+{
+  return rsMax(rsMaxNorm(v.x), rsMaxNorm(v.y), rsMaxNorm(v.z));
+}
+// Needs test
+
+template<class T>
+auto rsMaxNorm(const rsComplex<T>& z)
 {
   return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
-  //return rsMax(rsMaxNorm<TReal>(z.real()), rsMaxNorm<TReal>(z.imag()));
 }
+// Try its behavior if T is a vector type like rsVector3D or a simd vector type
 
 //template<class TReal, class TNorm>
 //TNorm rsMaxNormTest(const rsComplex<TReal>& z)
@@ -18106,7 +18113,7 @@ void testMaxNorm()
   // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 
   // norm of the underlying real type which is float here:
   std::complex<Real> compVal1(Real(3), Real(-5));
-  auto compNorm1 = rsMaxNorm<Real, Real>(compVal1);
+  auto compNorm1 = rsMaxNorm<Real>(compVal1);
   ok &= typeid(compNorm1) == typeid(realVal);
   ok &= compNorm1 == Real(5);
   // Trying to call  "auto compNorm = rsMaxNorm(compVal);"  would instantiate the template of 
@@ -18115,9 +18122,20 @@ void testMaxNorm()
 
   // Now the same with rsComplex (but with slightly different numbers):
   rsComplex<Real> compVal2(Real(-3), Real(5));
-  auto compNorm2 = rsMaxNorm<Real, Real>(compVal2);
+  auto compNorm2 = rsMaxNorm<Real>(compVal2);
   ok &= typeid(compNorm2) == typeid(realVal);
   ok &= compNorm2 == Real(5);
+
+  // Maximum norm of a 3D vector of type rsVector3D:
+  rsVector3D<Real> vecVal(Real(-2), Real(3), Real(-5));
+  auto vecNorm = rsMaxNorm(vecVal);
+  ok &= typeid(vecNorm) == typeid(realVal);
+  ok &= vecNorm == Real(5);
+
+
+
+
+
 
   
   // Maximum norm of a 2x2 matrix of real values:

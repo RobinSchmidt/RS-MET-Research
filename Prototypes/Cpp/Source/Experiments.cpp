@@ -17913,6 +17913,7 @@ T rsMaxNorm(const T& x)
 }
 
 template<class TArg, class TNorm>
+//template<class TNorm, class TArg>
 TNorm rsMaxNorm(const TArg& x)
 {
   return (TNorm) rsMaxNorm<TArg>(x);
@@ -17921,11 +17922,18 @@ TNorm rsMaxNorm(const TArg& x)
 
   //return (TNorm) std::abs(x);
 }
-// Shouldn't we use just a single template parameter, i.e. argument type and return type should match?
+// Shouldn't we use just a single template parameter, i.e. argument type and return type should 
+// match?
 
-// Maybe we should always list the return type first. Rationale: This is the most important info for the 
-// compiler. Argument type(s) can actually be inferred from the given arguments. We then need to do this
-// consistently throughout the library. We may also need to modify rsConvert for matrices.
+// Maybe we should always list the return type first. Rationale: This is the most important info 
+// for the compiler. Argument type(s) can actually be inferred from the given arguments. We then 
+// need to do thisconsistently throughout the library. We may also need to modify rsConvert for 
+// matrices.
+//
+// Oh - trying to do this, i.e. use  template<class TNorm, class TArg>  instead of
+// template<class TArg, class TNorm>  and then also adapting the order of template arguments at the
+// call the call site breaks the compilation. We get an "rsMaxNorm: ambiguous call to overloaded 
+// function" error.
 
 
 //template<class TArg, class TNorm>
@@ -17999,18 +18007,23 @@ void testMaxNorm()
   ok &= doubleNorm == 5.0;
 
   // Now we try to produce a norm of type Uint from an int argument:
+  //auto intNormUint = rsMaxNorm<Uint, int>(intVal);
   auto intNormUint = rsMaxNorm<int, Uint>(intVal);
   ok &= typeid(intNormUint) == typeid(uintVal);
   ok &= intNormUint == 5;
-
-
-
-  //auto intNormUint = rsMaxNorm<Uint>(intVal);  // This is wrong!
+  // Note: Calling it like  "auto intNormUint = rsMaxNorm<Uint>(intVal);"  would be wrong. It would
+  // instantiate the wrong template - namely the one that takes an Uint parameter and returns an 
+  // Uint. Also, if we would swap the order of the template parameters in the  rsMaxNorm<int, Uint>
+  // template (here at the call site and at the definition site), it wouldn't even compile anymore.
+  // We get an "ambiguous call" error. I'm not sure, why it is ambiguous, though (figure out!). I 
+  // think, it would generally be nicer to take the return type as first template parameter. But it
+  // may not be possible.
 
 
 
   // ...more to come...take max-norms of complex numbers -> real, real matrices -> real, 
-  // complex matrices -> real, complex<simd<real>> -> real, rsMaxNorm<uint>(int) -> uint
+  // complex matrices -> real, complex<simd<real>> -> real, rsMaxNorm<uint>(int) -> uint,
+  // rsFraction<int> -> rsFracction<int> 
 
 
   rsAssert(ok);

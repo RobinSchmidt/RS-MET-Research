@@ -17946,7 +17946,9 @@ TNorm rsMaxNorm(const TArg& x)
 template<class TReal, class TNorm>
 TNorm rsMaxNorm(const std::complex<TReal>& z)
 {
-  return rsMax(std::abs(z.real()), std::abs(z.imag()));
+  //return rsMax(std::abs(z.real()), std::abs(z.imag()));
+  return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
+
   // Maybe instead of std::abs use rsMaxNorm
 
 
@@ -17968,16 +17970,15 @@ void testMaxNorm()
 
   bool ok = true;
 
-  //using Real    = float;
-  //using Complex = std::complex<Real>;
-  using Uint    = unsigned int;
-  //using Uint    = rsUint32;
+  using Real = float;
+  using Uint = unsigned int;
 
   // Create some numeric values of different types:
   int    intVal     = -5;
   Uint   uintVal    =  5;
   float  floatVal   = -5.f;
   double doubleVal  = -5.0;
+  Real   realVal    = Real(-5);
 
   // Make sure that typeid comparison does the right thing (I'm not so familiar with that language
   // feature):
@@ -18025,20 +18026,21 @@ void testMaxNorm()
 
   // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 
   // norm of the underlying real type which is float here:
-  std::complex<float> compVal1(3.f, -5.f);
-  auto compNorm1 = rsMaxNorm<float, float>(compVal1);
-  ok &= typeid(compNorm1) == typeid(floatVal);
-  ok &= compNorm1 == 5.f;
+  std::complex<Real> compVal1(Real(3), Real(-5));
+  auto compNorm1 = rsMaxNorm<Real, Real>(compVal1);
+  ok &= typeid(compNorm1) == typeid(realVal);
+  ok &= compNorm1 == Real(5);
   // Trying to call  "auto compNorm = rsMaxNorm(compVal);"  would instantiate the template of 
   // rsMaxNorm with a single template parameter T and assign T to std::complex<float>
 
-  // Now the same with rsComplex:
-  rsComplex<float> compVal2(3.f, -5.f);
-  auto compNorm2 = rsMaxNorm<float, float>(compVal2);
-  ok &= typeid(compNorm2) == typeid(floatVal);
-  ok &= compNorm2 == 5.f;
+  // Now the same with rsComplex (but with slightly different numbers):
+  rsComplex<Real> compVal2(Real(-3), Real(5));
+  auto compNorm2 = rsMaxNorm<Real, Real>(compVal2);
+  ok &= typeid(compNorm2) == typeid(realVal);
+  ok &= compNorm2 == Real(5);
 
-  // Maybe templatize on the real type
+
+  rsMatrix2x2<Real> realMat(3, -5, -7, 6);
 
 
 

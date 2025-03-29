@@ -17897,20 +17897,27 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 
 //--------------------------------------------------------------------------------------------------
 
+
+inline unsigned int rsAbs(unsigned int x) 
+{ 
+  return x; 
+}
+
 /** Implements the maximum norm for primitive built in types like int, float, double, etc. It's just
 the absolute value. This serves also as the general fallback implementation. */
 template<class T>
 T rsMaxNorm(const T& x)
 {
-  return std::abs(x);
+  //return std::abs(x);
+  return rsAbs(x);
 }
 
-
-//template<class TArg, class TNorm>
-//TNorm rsMaxNorm(const TArg& x)
-//{
-//  return (TNorm) std::abs(x);
-//}
+template<class TArg, class TNorm>
+TNorm rsMaxNorm(const TArg& x)
+{
+  return (TNorm) rsAbs(x);
+  //return (TNorm) std::abs(x);
+}
 // Shouldn't we use just a single template parameter, i.e. argument type and return type should match?
 
 //template<class TArg, class TNorm>
@@ -17944,15 +17951,18 @@ void testMaxNorm()
   using Real    = float;
   using Complex = std::complex<Real>;
   using Uint    = unsigned int;
+  //using Uint    = rsUint32;
 
   // Create some numeric values of different types:
   int    intVal     = -5;
+  Uint   uintVal    =  5;
   float  floatVal   = -5.f;
   double doubleVal  = -5.0;
 
   // Make sure that typeid comparison does the right thing (I'm not so familiar with that language
   // feature):
   ok &= typeid(intVal) == typeid(3);
+  ok &= typeid(intVal) != typeid(uintVal);
   ok &= typeid(intVal) != typeid(floatVal);
   ok &= typeid(intVal) != typeid(doubleVal);
   // ...ok - looks good.
@@ -17962,18 +17972,21 @@ void testMaxNorm()
   // type. This is the simplest situation and it should invoke the version of the template 
   // rsMaxNorm with a single argument of a given type T and return a result of the same type T as 
   // well:
-                                           // Return type
+                                           // Expected return type
   auto intNorm    = rsMaxNorm(intVal);     // int
+  auto uintNorm   = rsMaxNorm(uintVal);    // unsigned int
   auto floatNorm  = rsMaxNorm(floatVal);   // float
   auto doubleNorm = rsMaxNorm(doubleVal);  // double
 
   // Check that the return types are as expected:
   ok &= typeid(intNorm)    == typeid(intVal);
+  ok &= typeid(uintNorm)   == typeid(uintVal);
   ok &= typeid(floatNorm)  == typeid(floatVal);
   ok &= typeid(doubleNorm) == typeid(doubleVal);
 
   // Check also that the return values are as expected:
   ok &= intNorm    == 5;
+  ok &= uintNorm   == 5;
   ok &= floatNorm  == 5.f;
   ok &= doubleNorm == 5.0;
 

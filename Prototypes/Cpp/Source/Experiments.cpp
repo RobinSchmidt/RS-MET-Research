@@ -17897,33 +17897,42 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 
 //--------------------------------------------------------------------------------------------------
 
-inline unsigned int rsAbs(unsigned int x) 
-{ 
-  return x; 
-}
+//inline unsigned int rsAbs(unsigned int x) 
+//{ 
+//  return x; 
+//}
+//
+///** Implements the maximum norm for primitive built in types like int, float, double, etc. It's just
+//the absolute value. This serves also as the general fallback implementation. */
+//template<class T>
+//T rsMaxNorm(const T& x)
+//{
+//  return rsAbs<T>(x);
+//  //return std::abs(x);
+//
+//  // Notes:
+//  //
+//  // - Maybe instead to fall back to using rsAbs, define explicit rsMaxNorm functions for all 
+//  //   primitive types (int, float, double, unsigned int, int64, etc. These are then the lowest 
+//  //   level functions that the instantiation cascade can fall back to. We then don't refer to 
+//  //   another function (like abs) at all. It's all recursion on rsMaxAbs until we hit the base 
+//  //   case of a primitive type.
+//}
 
-/** Implements the maximum norm for primitive built in types like int, float, double, etc. It's just
-the absolute value. This serves also as the general fallback implementation. */
-template<class T>
-T rsMaxNorm(const T& x)
-{
-  return rsAbs<T>(x);
-  //return std::abs(x);
+inline unsigned int rsMaxNorm(unsigned int x) { return x;            }
+inline int          rsMaxNorm(int          x) { return std::abs(x);  }
+inline float        rsMaxNorm(float        x) { return std::fabs(x); }
+inline double       rsMaxNorm(double       x) { return std::fabs(x); }
+// ToDo: add all primitive types like int64_t etc.
 
-  // Notes:
-  //
-  // - Maybe instead to fall back to using rsAbs, define explicit rsMaxNorm functions for all 
-  //   primitive types (int, float, double, unsigned int, int64, etc. These are then the lowest 
-  //   level functions that the instantiation cascade can fall back to. We then don't refer to 
-  //   another function (like abs) at all. It's all recursion on rsMaxAbs until we hit the base 
-  //   case of a primitive type.
-}
 
 template<class TArg, class TNorm>
 //template<class TNorm, class TArg>
 TNorm rsMaxNorm(const TArg& x)
 {
-  return (TNorm) rsMaxNorm<TArg>(x);
+  return (TNorm) rsMaxNorm(x);
+  //return (TNorm) rsMaxNorm<TArg>(x);
+
   //return (TNorm) rsAbs(x);
   //return (TNorm) std::abs(x);
 
@@ -17938,6 +17947,9 @@ TNorm rsMaxNorm(const TArg& x)
   //   call to overloaded function" error.
 }
 
+
+#ifdef aksfdhgfka
+
 //** Implements the maximum norm for std::complex<TReal> where TReal */
 template<class TReal, class TNorm>
 TNorm rsMaxNorm(const std::complex<TReal>& z)
@@ -17945,7 +17957,6 @@ TNorm rsMaxNorm(const std::complex<TReal>& z)
   //return rsMax(std::abs(z.real()), std::abs(z.imag()));
   return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
 }
-
 
 template<class TReal, class TNorm>
 TNorm rsMaxNorm(const rsComplex<TReal>& z)
@@ -17959,9 +17970,6 @@ TNorm rsMaxNorm(const rsComplex<TReal>& z)
   // as a simd vector.
 }
 
-
-
-
 template<class TElem, class TNorm>
 TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 {
@@ -17971,8 +17979,6 @@ TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
   //return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b), rsMaxNorm(A.c), rsMaxNorm(A.d));
 }
 
-
-
 //template<class TArg, class TNorm>
 //TNorm rsMaxNorm(const TArg& x, const TArg& y)
 //{
@@ -17981,7 +17987,7 @@ TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 
 // Should return e.g. -7 for x = -4 + 5i, y = 3 - 7i, for example 
 
-
+#endif
 
 
 
@@ -18051,6 +18057,7 @@ void testMaxNorm()
   // think, it would generally be nicer to take the return type as first template parameter. But it
   // may not be possible.
 
+  /*
   // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 
   // norm of the underlying real type which is float here:
   std::complex<Real> compVal1(Real(3), Real(-5));
@@ -18077,7 +18084,7 @@ void testMaxNorm()
   //auto compMatNorm = rsMaxNorm<Complex, Real>(compMat);  // Doesn't compile!
   //ok &= typeid(compMatNorm) == typeid(realVal);
   //ok &= compMatNorm == Real(7);
-
+  */
 
 
 

@@ -17927,7 +17927,6 @@ inline double       rsMaxNorm(double       x) { return std::fabs(x); }
 
 
 template<class TArg, class TNorm>
-//template<class TNorm, class TArg>
 TNorm rsMaxNorm(const TArg& x)
 {
   return (TNorm) rsMaxNorm(x);
@@ -17945,10 +17944,11 @@ TNorm rsMaxNorm(const TArg& x)
   //   instead of  template<class TArg, class TNorm>  and then also adapting the order of template 
   //   arguments at the call the call site breaks the compilation. We get an "rsMaxNorm: ambiguous 
   //   call to overloaded function" error.
+  //   ToDo: check is this is still the case after we switched to using non-templated base-cases 
+  //   without refering to the rsAbs template
 }
 
 
-#ifdef aksfdhgfka
 
 //** Implements the maximum norm for std::complex<TReal> where TReal */
 template<class TReal, class TNorm>
@@ -17958,6 +17958,8 @@ TNorm rsMaxNorm(const std::complex<TReal>& z)
   return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
 }
 
+
+/*
 template<class TReal, class TNorm>
 TNorm rsMaxNorm(const rsComplex<TReal>& z)
 {
@@ -17978,6 +17980,7 @@ TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 
   //return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b), rsMaxNorm(A.c), rsMaxNorm(A.d));
 }
+*/
 
 //template<class TArg, class TNorm>
 //TNorm rsMaxNorm(const TArg& x, const TArg& y)
@@ -17987,7 +17990,7 @@ TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
 
 // Should return e.g. -7 for x = -4 + 5i, y = 3 - 7i, for example 
 
-#endif
+
 
 
 
@@ -18057,7 +18060,7 @@ void testMaxNorm()
   // think, it would generally be nicer to take the return type as first template parameter. But it
   // may not be possible.
 
-  /*
+  
   // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 
   // norm of the underlying real type which is float here:
   std::complex<Real> compVal1(Real(3), Real(-5));
@@ -18067,6 +18070,7 @@ void testMaxNorm()
   // Trying to call  "auto compNorm = rsMaxNorm(compVal);"  would instantiate the template of 
   // rsMaxNorm with a single template parameter T and assign T to std::complex<float>
 
+  /*
   // Now the same with rsComplex (but with slightly different numbers):
   rsComplex<Real> compVal2(Real(-3), Real(5));
   auto compNorm2 = rsMaxNorm<Real, Real>(compVal2);
@@ -18081,10 +18085,11 @@ void testMaxNorm()
 
   // Maximum norm of a 2x2 matrix of complex values:
   rsMatrix2x2<Complex> compMat(3, -5, -7, 6);  // ToDo: use proper complex numbers with nozero imaginary part
-  //auto compMatNorm = rsMaxNorm<Complex, Real>(compMat);  // Doesn't compile!
+  auto compMatNorm = rsMaxNorm<Complex, Real>(compMat);  // Doesn't compile!
   //ok &= typeid(compMatNorm) == typeid(realVal);
   //ok &= compMatNorm == Real(7);
   */
+  
 
 
 

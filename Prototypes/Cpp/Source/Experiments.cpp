@@ -17909,13 +17909,16 @@ template<class T>
 T rsMaxNorm(const T& x)
 {
   //return std::abs(x);
-  return rsAbs(x);
+  return rsAbs<T>(x);
 }
 
 template<class TArg, class TNorm>
 TNorm rsMaxNorm(const TArg& x)
 {
-  return (TNorm) rsAbs(x);
+  return (TNorm) rsMaxNorm<TArg>(x);
+
+  //return (TNorm) rsAbs(x);
+
   //return (TNorm) std::abs(x);
 }
 // Shouldn't we use just a single template parameter, i.e. argument type and return type should match?
@@ -17989,6 +17992,16 @@ void testMaxNorm()
   ok &= uintNorm   == 5;
   ok &= floatNorm  == 5.f;
   ok &= doubleNorm == 5.0;
+
+  // Now we try to produce a norm of type Uint from an int argument:
+  auto intNormUint = rsMaxNorm<int, Uint>(intVal);
+  ok &= typeid(intNormUint) == typeid(uintVal);
+  ok &= intNormUint == 5;
+
+
+
+  //auto intNormUint = rsMaxNorm<Uint>(intVal);  // This is wrong!
+
 
 
   // ...more to come...take max-norms of complex numbers -> real, real matrices -> real, 

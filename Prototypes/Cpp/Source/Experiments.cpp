@@ -18123,18 +18123,22 @@ bool testMaxNormTemplates()
 
 
   // Maximum norm of a 2x2 matrix of real values:
-  rsMatrix2x2<Real> realMat(3, -5, -7, 6);
-  auto realMatNorm = rsMaxNorm(realMat);
-  ok &= typeid(realMatNorm) == typeid(realVal);
-  ok &= realMatNorm == Real(7);
+  rsMatrix2x2<Real> realMat2x2(3, -5, -7, 6);
+  auto realMat2x2Norm = rsMaxNorm(realMat2x2);
+  ok &= typeid(realMat2x2Norm) == typeid(realVal);
+  ok &= realMat2x2Norm == Real(7);
  
   // Maximum norm of a 2x2 matrix of complex values:
-  rsMatrix2x2<Complex> compMat(3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i);
-  auto compMatNorm = rsMaxNorm(compMat);
+  rsMatrix2x2<Complex> compMat2x2(3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i);
+  auto compMat2x2Norm = rsMaxNorm(compMat2x2);
+  ok &= typeid(compMat2x2Norm) == typeid(realVal);
+  ok &= compMat2x2Norm == Real(7);
+
+  // Maximum norm of a general matrix of real values. It's 2x2 but could be anything:
+  rsMatrix<Real> realMat(2, 2, {3, -5, -7, 6});
+  auto realMatNorm = rsMaxNorm(realMat);
   ok &= typeid(compMatNorm) == typeid(realVal);
   ok &= compMatNorm == Real(7);
-
-
 
 
 

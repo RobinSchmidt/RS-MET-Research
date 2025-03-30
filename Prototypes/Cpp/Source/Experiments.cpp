@@ -18016,12 +18016,6 @@ auto rsMaxNorm(const T* p, int N)
   for(int i = 0; i < N; i++)
     max = rsMax(max, rsMaxNorm(p[i]));
   return max;
-}
-
-template<class T>
-auto rsMaxNorm(const rsMatrixView<T>& A)
-{
-  return rsMaxNorm(A.getDataPointerConst(), A.getSize());
 
   // ToDo:
   //
@@ -18031,10 +18025,20 @@ auto rsMaxNorm(const rsMatrixView<T>& A)
   //   need to implement it, if we wnat to do linear algebra with them. But maybe we can directly
   //   implement rsIsNegligible or maybe we don't need it for rsModularInteger if rsIsZero is 
   //   correctly implemented. We'll see.
-  //
-  // - Factor out a function that takes a pointer to T and a size (done). This can then be reused 
-  //   for rsPolynomial<T>
 }
+
+template<class T>
+auto rsMaxNorm(const rsMatrixView<T>& A)
+{
+  return rsMaxNorm(A.getDataPointerConst(), A.getSize());
+}
+
+template<class T>
+auto rsMaxNorm(const rsPolynomial<T>& p)
+{
+  return rsMaxNorm(p.getCoeffPointerConst(), p.getNumCoeffs());
+}
+// Needs test
 
 
 // Some more base cases for some of my own types:
@@ -18184,6 +18188,10 @@ bool testMaxNormTemplates()
   rsMatrixView<T> matView(2,3, vals);
   ok &= testMaxNorm(matView, T(7));
 
+
+  rsPolynomial<T> poly(5, vals);
+  // This constructor call does NOT initialize! The constructor with boolean 2nd parameter is 
+  // invoked! WTF!
 
 
   return ok;

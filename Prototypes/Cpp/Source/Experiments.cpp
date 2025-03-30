@@ -17896,23 +17896,30 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 
 
 //--------------------------------------------------------------------------------------------------
-// Move this code in a different project that compiles faster! We need RAPT but not rosic or 
-// rs_testing
+// Definitions of a function rsMaxNorm for different types. The main intention of this function is 
+// to find the maximum absolute value in an arbitrarily nested template container type. For 
+// example, one could have a vector of complex values or a matrix of matrices of complex vectors or
+// whatever. The behavior of rsMaxNorm should always be: return the maximum absolute element of the
+// bottommost type which is one of the primitive types, i.e. built in C++ types like int or float.
+// This rsMaxNorm function shall then be used as basis to implement an rsIsNegligible() function 
+// that can be used to determine if a value is so close to zero that it can be considered zero. We
+// need this mostly to deal with inexact floating point comparisons for equality (to zero).
 //
-// It's a bit tricky to predict the interactions between C++ template instantiation, type 
-// deduction, return type deduction and function overload resolution rules to make the overload set 
-// of the rsMaxNorm function behave exactly the way I want it to. ...well - actually it's not so
-// tricky if you know the trick hwo to do it: use auto for the return value (requires at least
-// C++14)
+// My first attempt was to use two template parameters: one for the argument type and another for
+// the return type and then somehow structure the implementations such that it all works. It was 
+// quite tricky to predict the interactions between C++ template instantiations, type deductions, 
+// and function overload resolution rules to make the overload set of the rsMaxNorm function 
+// behave exactly the way I want it to. I couldn't make it work this way. It turned out that the
+// trick is to use return type deduction, i.e. to use auto for the return value rather than 
+// manually declaring it via another template parameter (we already need one template parameter 
+// for the argument type). Return type deduction requires at least C++14.
 //
 // I'm not sure if we should call it rsMaxNorm. Maybe think about the name some more. For 
 // mathematical usage of the term, see:
 //
 // https://en.wikipedia.org/wiki/Norm_(mathematics)
 // https://en.wikipedia.org/wiki/Norm_(mathematics)#Maximum_norm_(special_case_of:_infinity_norm,_uniform_norm,_or_supremum_norm)
-// https://math.stackexchange.com/questions/285398/what-is-the-norm-of-a-complex-number
-//
-// 
+// https://math.stackexchange.com/questions/285398/what-is-the-norm-of-a-complex-number 
 
 
 // Base cases for rsMaxNorm for built in primitive types:
@@ -17923,21 +17930,27 @@ inline float        rsMaxNorm(float        x) { return std::abs(x); }
 inline double       rsMaxNorm(double       x) { return std::abs(x); }
 // ToDo: add all primitive types like int64_t etc.
 
-// Implements the maximum norm for std::complex<T> where T can be either double or float.
+/** Implements the maximum norm for std::complex<T> where T can be either double or float. The 
+maximum of a complex number x + i*y is defined as max(|x|,|y|). When viewing the complex plane as
+a 2D real vector space, this is also called the infinity norm for this vector space. That's because
+it's the limit of the p-norm: L_p(x,y) = (|x|^p + |y|^p)^(1/p) as p approaches infinity. */
 template<class T>
 T rsMaxNorm(const std::complex<T>& z)
 {
   return std::max(std::abs(z.real()), std::abs(z.imag()));
 }
 
-
+/** Implements the maximum norm for a std::vector of some type T. The max-norm of a vector is 
+defined recursively as the maximum of the max-norms of the vector's elements. */
 template<class T>
 auto rsMaxNorm(const std::vector<T>& v)
 {
   auto max = rsMaxNorm(T(0));
   for(auto& e : v)
-    max = rsMax(max, rsMaxNorm(e));  // Maybe try to use std::max
+    max = rsMax(max, rsMaxNorm(e));
   return max;
+
+  // Maybe use std::max instead of rsMax and maybe use std::accumulate instead of a loop.
 }
 
 template<class T>
@@ -17945,13 +17958,10 @@ auto rsMaxNorm(const std::list<T>& v)
 {
   auto max = rsMaxNorm(T(0));
   for(auto& e : v)
-    max = rsMax(max, rsMaxNorm(e));  // Maybe try to use std::max
+    max = rsMax(max, rsMaxNorm(e));
   return max;
 }
 
-// ToDo: Maybe use std::accumulate and maybe std::max instead of rsMax (not sure about that, 
-// though)
-//
 // It's annyoing that we need to duplicate the code for any container type for which we want to
 // support the rsMaxNorm operation. But if we want to implement it generically for all sorts of
 // containers like below, we get an error related to rsMatrix not defining value_type. Apparently,
@@ -17971,10 +17981,10 @@ auto rsMaxNorm(const std::list<T>& v)
 // To make that work, I think rsMatrix (or maybe already rsMatrixView) needs to implement the 
 // following STL compatibility features: a "using value_type = T;" definition, definition of the
 // iterator type and begin() and end() functions. Maybe more. Another possibility could be to
-// define an explicit specialization for rsMatrix itself such that the compiler selects that rather
-// than the generic container template. It could invoke the definition for rsMatrixView by an 
-// upcast (cast to baseclass reference). Try that! It would be the less invasive solution and 
-// therefore perhaps preferable.
+// define an explicit specialization for rsMatrix itself such that the compiler selects that 
+// instead of the generic container template. It could invoke the definition for rsMatrixView by 
+// an upcast (cast to baseclass reference). Try that! It would be the less invasive solution and 
+// therefore perhaps preferable over modifying rsMatrix(View).
 
 
 
@@ -18015,66 +18025,11 @@ auto rsMaxNorm(const rsMatrixView<T>& A)
   //   need to implement it, if we wnat to do linear algebra with them. But maybe we can directly
   //   implement rsIsNegligible or maybe we don't need it for rsModularInteger if rsIsZero is 
   //   correctly implemented. We'll see.
-
-  // Old:
-
-  //rsAssert(!A.isEmpty());
-  //auto max = rsMaxNorm(A(0, 0));
-  //const T* p = A.getDataPointerConst();
-  //for(int i = 1; i < A.getSize(); i++)
-  //  max = rsMax(max, rsMaxNorm(p[i]));
-  //return max;
-
-  // Notes:
-  //
-  // - This currently only works when A is non empty. I don't know what value to return when A is 
-  //   empty because I don't know which type to return because the return type is deduced from 
-  //   A(0,0). We cannot just assume that it is the same as the element type T because that would 
-  //   be wrong in case of complex matrices, for example (in which case the return type would be 
-  //   the underlying real type). Maybe we can to somthing like:
-  //   auto max = rsMaxNorm(A::getZeroElementValue()); or something. Make sure to start the loop 
-  //   at 0 then. It currently starts at 1 because we use the 0th element for initialization. Maybe
-  //   that function getZeroElementValue should be a free function to not clutter class rsMatrix 
-  //   with that.
 }
 
 
-/*
-template<class T>
-auto rsMaxNorm(const rsMatrixView<T>& A)
-{
-  T max(0);
-  const T* p = A.getDataPointerConst();
-  for(int i = 0; i < A.getSize(); i++)
-    max = rsMax(max, rsMaxNorm(p[i]));
-  return max;
 
-  // Notes:
-  //
-  // - This implementation may not work for types T that need a prototype based 
-  //   construction/initialization such as rsModularInteger (for which the concept of a max-norm is
-  //   mathematically questionable, although we could define one anyway) or rsMultiVector. To make 
-  //   it work, we could use A(0,0) as prototype to initalize max with rsZeroValue(A(0,0)). But 
-  //   then it wouldn't work for empty matrices. If we would still try to access A(0,0) we would 
-  //   have an access violation. But there is nowhere else where we could get prototype from. But 
-  //   wait! No! The type of max is not necessarily the same type as the matrix elements anyway! 
-  //   The matrix elements could be complex, after all! But then, we cant actually declare it as
-  //   type T! Damn! That's a serious problem! Maybe we could let the class rsMatrixView have a 
-  //   static member (maybe constexpr) called zeroMaxNorm that we could use? Maybe it's possible
-  //   to do:
-  //   static const auto zeroMaxNorm = rsMaxNorm(T(0))
-}
-*/
-
-
-// ToDo: rsMatrixView
-
-// It should be possible to arbitrarily nest the templates. For example, one could have a vector of
-// complex values or a matrix of matrices of complex vectors or whatever. The behavior of rsMaxNorm 
-// should always be: return the maximum absolute element of the bottommost type which is one of the 
-// primitive types, i.e. built in C++ types like int or float.
-
-
+// Unit tests for the max-norm implementations (ToDo: move these into the main repo):
 
 bool testMaxNormBaseCases()
 {

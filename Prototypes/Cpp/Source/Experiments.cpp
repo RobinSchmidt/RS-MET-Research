@@ -17930,6 +17930,13 @@ T rsMaxNorm(const std::complex<T>& z)
   return std::max(std::abs(z.real()), std::abs(z.imag()));
 }
 
+// Make a version for std::vector and maybe for other containers as well. Maybe use std::accumulate
+// with std::max. Maybe try to templatize it on the container type as well and make tests with 
+// std::vector and std::list.
+
+
+
+
 
 
 // Now the template implementations for template classe from RAPT:
@@ -17961,7 +17968,14 @@ auto rsMaxNorm(const rsMatrixView<T>& A)
     max = rsMax(max, rsMaxNorm(p[i]));
   return max;
 
-
+  // ToDo:
+  //
+  // - Try it with a type T that requires a prototype for correct initialization. Maybe something
+  //   like rsMultiVector or rsModularInteger - although, for the latter, the notion of a 
+  //   maximum-norm may be mathematically questionable and maybe for the former as well. But we may
+  //   need to implement it, if we wnat to do linear algebra with them. But maybe we can directly
+  //   implement rsIsNegligible or maybe we don't need it for rsModularInteger if rsIsZero is 
+  //   correctly implemented. We'll see.
 
   // Old:
 

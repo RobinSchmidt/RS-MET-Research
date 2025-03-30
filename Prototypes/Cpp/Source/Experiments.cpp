@@ -17951,28 +17951,16 @@ auto rsMaxNorm(const rsMatrix2x2<T>& A)
 
 
 
-void testMaxNorm()
+bool testMaxNormBaseCases()
 {
-  // We verify that the various implementations of the rsMaxNorm function template produce the 
-  // correct return types and return the right return values. The latter is more or less trivial. 
-  // There's not much that could go wrong with that. It's mostly the return *types* about which we
-  // care here. We make sure that we get the right return types using the typeid operator.
-  //
-  // See: https://en.cppreference.com/w/cpp/language/typeid
-
   bool ok = true;
 
-  using Real    = float;
-  using Uint    = unsigned int;
-  using Complex = rsComplex<Real>;
-  using Vec3D   = rsVector3D<Real>;
+  using Uint = unsigned int;
 
-  // Create some numeric values of different types:
-  int    intVal     = -5;
-  Uint   uintVal    =  5;
-  float  floatVal   = -5.f;
-  double doubleVal  = -5.0;
-  Real   realVal    = Real(-5);
+  int    intVal    = -5;
+  Uint   uintVal   =  5;
+  float  floatVal  = -5.f;
+  double doubleVal = -5.0;
 
   // Make sure that typeid comparison does the right thing (I'm not so familiar with that language
   // feature):
@@ -18004,6 +17992,36 @@ void testMaxNorm()
   ok &= uintNorm   == 5;
   ok &= floatNorm  == 5.f;
   ok &= doubleNorm == 5.0;
+
+  return ok;
+}
+
+void testMaxNorm()
+{
+  // We verify that the various implementations of the rsMaxNorm function template produce the 
+  // correct return types and return the right return values. The latter is more or less trivial. 
+  // There's not much that could go wrong with that. It's mostly the return *types* about which we
+  // care here. We make sure that we get the right return types using the typeid operator.
+  //
+  // See: https://en.cppreference.com/w/cpp/language/typeid
+
+  bool ok = true;
+
+  ok &= testMaxNormBaseCases();
+
+  using Real    = float;
+  using Uint    = unsigned int;
+  using Complex = rsComplex<Real>;
+  using Vec3D   = rsVector3D<Real>;
+
+  // Create some numeric values of different types:
+  //int    intVal     = -5;
+  //Uint   uintVal    =  5;
+  //float  floatVal   = -5.f;
+  //double doubleVal  = -5.0;
+  Real   realVal    = Real(-5);
+
+
 
  
   // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 

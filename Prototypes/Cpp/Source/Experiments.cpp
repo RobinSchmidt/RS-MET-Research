@@ -18135,28 +18135,24 @@ bool testMaxNormTemplates()
   // Imaginary unit:
   Complex i(0, 1);
 
-  // Complex numbers:
-  ok &= testMaxNorm(rsComplex<T>(T(-3), T(5)),  T(5));
+  // We use the testMaxNorm() helper functionto verify that the data type and value of the norm
+  // returned by rsMaxNorm is as expected. We do this for various input data types such as complex
+  // numbers, vectors, vectors of complex numbers, complex numbers whose real and imaginary parts
+  // are vectors, real and complex matrices, etc. In any case, we expect the returned value to be
+  // maximum of the absolute values of the innermost type and its type should be equal to our 
+  // template parameter T.
+  //
+  //                Argument                                                        Norm
+  ok &= testMaxNorm(rsComplex<T>    (T(-3),             T(5)           ),           T(5));
+  ok &= testMaxNorm(rsComplex<Vec3D>(Vec3D({ 1,-7,3 }), Vec3D({3,2,-5})),           T(7));
 
-  // 3D vectors of real numbers:
-  ok &= testMaxNorm(rsVector3D<T>(T(-2), T(3), T(5)),  T(5));
+  ok &= testMaxNorm(rsVector3D<T>(      T(-2),   T(3),    T(5)   ),                 T(5));
+  ok &= testMaxNorm(rsVector3D<Complex>(2 + 3*i, 3 - 2*i, 4 - 5*i),                 T(5));
 
-  // 3D vectors of complex numbers:
-  ok &= testMaxNorm(rsVector3D<Complex>(2 + 3*i, 3 - 2*i, 4 - 5*i),  T(5));
+  ok &= testMaxNorm(rsMatrix2x2<T>      (3,      -5,      -7,       6      ),       T(7));
+  ok &= testMaxNorm(rsMatrix2x2<Complex>(3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i),       T(7));
 
-  // Complex numbers x + i*y whose "real" components x,y are vectors:
-  ok &= testMaxNorm(rsComplex<Vec3D>(Vec3D({ 1,-7,3 }), Vec3D({3,2,-5})),  T(7));
-
-  // 2x2 matrix of real values:
-  ok &= testMaxNorm(rsMatrix2x2<T>(3, -5, -7, 6),  T(7));
-
-  // 2x2 matrix of complex values:
-  ok &= testMaxNorm(rsMatrix2x2<Complex>(3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i),  T(7));
-
-  // Matrix of real values. It's 2x2 but could be anything:
-  ok &= testMaxNorm(rsMatrix<T>(2, 2, {3, -5, -7, 6}),  T(7));
-
-  // Matrix of complex values:
+  ok &= testMaxNorm(rsMatrix<T>      (2, 2, {3,      -5,      -7,      6       }),  T(7));
   ok &= testMaxNorm(rsMatrix<Complex>(2, 2, {3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i}),  T(7));
 
   return ok;

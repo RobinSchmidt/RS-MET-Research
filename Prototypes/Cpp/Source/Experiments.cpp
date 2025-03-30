@@ -18022,9 +18022,7 @@ bool testMaxNormBaseCases()
 template<class Real> 
 bool testMaxNormTemplates()
 {
-  // Maybe use a more general type T - maybe we can also use int or something else. But I guess, that
-  // wouldn't work with std::complex. Maybe factor the test for std::complex out into its own test 
-  // function.
+  // Maybe use a more general type T - maybe we can also use int or something else. 
 
   // We verify that the various implementations of the rsMaxNorm function template produce the 
   // correct return types and return the right return values. The latter is more or less trivial. 
@@ -18039,7 +18037,7 @@ bool testMaxNormTemplates()
   using Vec3D   = rsVector3D<Real>;
 
   // Create some numeric values of different types:
-  Real realVal = Real(-5);
+  Real realVal = Real(5);
 
   // Now the same with rsComplex (but with slightly different numbers):
   rsComplex<Real> compVal2(Real(-3), Real(5));
@@ -18105,6 +18103,13 @@ void testMaxNorm()
   ok &= testMaxNormBaseCases();
   ok &= testMaxNormTemplates<float>();
   ok &= testMaxNormTemplates<double>();
+
+  //ok &= testMaxNormTemplates<int>();   // Compile error
+  // When we create rsComplex<int>, it becomes ambiguous which version of the +,-,*,/ operators 
+  // should be used. We have one for the left operand being of type T and one for the left operand
+  // being int. But when T == int, the compiler doesn't know which one to use. Maybe we can solve 
+  // it by defining a single operator for a templatized left argument?
+
 
   rsAssert(ok);
 }

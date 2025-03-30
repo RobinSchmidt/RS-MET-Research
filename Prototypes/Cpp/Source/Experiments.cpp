@@ -17952,6 +17952,35 @@ auto rsMaxNorm(const rsMatrix2x2<T>& A)
   return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b), rsMaxNorm(A.c), rsMaxNorm(A.d));
 }
 
+
+/*
+template<class T>
+auto rsMaxNorm(const rsMatrixView<T>& A)
+{
+  T max(0);
+  const T* p = A.getDataPointerConst();
+  for(int i = 0; i < A.getSize(); i++)
+    max = rsMax(max, rsMaxNorm(p[i]));
+  return max;
+
+  // Notes:
+  //
+  // - This implementation may not work for types T that need a prototype based 
+  //   construction/initialization such as rsModularInteger (for which the concept of a max-norm is
+  //   mathematically questionable, although we could define one anyway) or rsMultiVector. To make 
+  //   it work, we could use A(0,0) as prototype to initalize max with rsZeroValue(A(0,0)). But 
+  //   then it wouldn't work for empty matrices. If we would still try to access A(0,0) we would 
+  //   have an access violation. But there is nowhere else where we could get prototype from. But 
+  //   wait! No! The type of max is not necessarily the same type as the matrix elements anyway! 
+  //   The matrix elements could be complex, after all! But then, we cant actually declare it as
+  //   type T! Damn! That's a serious problem! Maybe we could let the class rsMatrixView have a 
+  //   static member (maybe constexpr) called zeroMaxNorm that we could use? Maybe it's possible
+  //   to do:
+  //   static const auto zeroMaxNorm = rsMaxNorm(T(0))
+}
+*/
+
+
 // ToDo: rsMatrixView
 
 // It should be possible to arbitrarily nest the templates. For example, one could have a vector of
@@ -18108,7 +18137,10 @@ void testMaxNorm()
 
   //ok &= testMaxNormTemplates<rsFraction<int>>();
   // This fails! I think, it's because we have no rsMaxNorm defined for rsFraction. But it 
-  // compiles. I think, it may implictly convert to double somewhere.
+  // compiles. I think, it may implictly convert to double somewhere. rsFraction has the double()
+  // operator defined which allows implicit conversion. Maybe we should take that out to enforce
+  // explicit usage of the toDouble member function. Maybe for more flexibility, we can also 
+  // provide a free function rsToDouble which can be overloaded for other types as well.
 
   rsAssert(ok);
 }

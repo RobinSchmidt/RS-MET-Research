@@ -18102,8 +18102,13 @@ void testMaxNorm()
 
   ok &= testMaxNormBaseCases();
   ok &= testMaxNormTemplates<int>();
+  //ok &= testMaxNormTemplates<uint>();     // Error because test uses negative numbers
   ok &= testMaxNormTemplates<float>();
   ok &= testMaxNormTemplates<double>();
+
+  //ok &= testMaxNormTemplates<rsFraction<int>>();
+  // This fails! I think, it's because we have no rsMaxNorm defined for rsFraction. But it 
+  // compiles. I think, it may implictly convert to double somewhere.
 
   rsAssert(ok);
 }

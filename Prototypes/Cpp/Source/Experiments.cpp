@@ -18114,7 +18114,7 @@ void testMaxNorm()
   // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 
   // norm of the underlying real type which is float here:
   std::complex<Real> compVal1(Real(3), Real(-5));
-  auto compNorm1 = rsMaxNorm<Real>(compVal1);
+  auto compNorm1 = rsMaxNorm(compVal1);
   ok &= typeid(compNorm1) == typeid(realVal);
   ok &= compNorm1 == Real(5);
   // Trying to call  "auto compNorm = rsMaxNorm(compVal);"  would instantiate the template of 
@@ -18123,7 +18123,7 @@ void testMaxNorm()
 
   // Now the same with rsComplex (but with slightly different numbers):
   rsComplex<Real> compVal2(Real(-3), Real(5));
-  auto compNorm2 = rsMaxNorm<Real>(compVal2);
+  auto compNorm2 = rsMaxNorm(compVal2);
   ok &= typeid(compNorm2) == typeid(realVal);
   ok &= compNorm2 == Real(5);
 
@@ -18150,17 +18150,18 @@ void testMaxNorm()
   // Try nested vectors, i.e. vectors of vectors - maybe use 2D vectors for that
 
 
-  /*
   // Maximum norm of a 2x2 matrix of real values:
   rsMatrix2x2<Real> realMat(3, -5, -7, 6);
-  auto realMatNorm = rsMaxNorm<Real>(realMat);
+  auto realMatNorm = rsMaxNorm(realMat);
   ok &= typeid(realMatNorm) == typeid(realVal);
   ok &= realMatNorm == Real(7);
-  */
-
-  
+ 
   // Maximum norm of a 2x2 matrix of complex values:
-  rsMatrix2x2<Complex> compMat(3, -5, -7, 6);  // ToDo: use proper complex numbers with nozero imaginary part
+  rsMatrix2x2<Complex> compMat(3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i);
+  auto compMatNorm = rsMaxNorm(compMat);
+  ok &= typeid(compMatNorm) == typeid(realVal);
+  ok &= compMatNorm == Real(7);
+
 
   //auto compMatNorm = rsMaxNorm<Complex, Real>(compMat);  // Doesn't compile!
   // Doesn't compile! Apparently, the compiler doesn't understand that it should invoke the template

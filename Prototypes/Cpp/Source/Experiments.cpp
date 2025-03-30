@@ -18010,13 +18010,18 @@ auto rsMaxNorm(const rsMatrix2x2<T>& A)
 }
 
 template<class T>
-auto rsMaxNorm(const rsMatrixView<T>& A)
+auto rsMaxNorm(const T* p, int N)
 {
   auto max = rsMaxNorm(T(0));
-  const T* p = A.getDataPointerConst();
-  for(int i = 0; i < A.getSize(); i++)
+  for(int i = 0; i < N; i++)
     max = rsMax(max, rsMaxNorm(p[i]));
   return max;
+}
+
+template<class T>
+auto rsMaxNorm(const rsMatrixView<T>& A)
+{
+  return rsMaxNorm(A.getDataPointerConst(), A.getSize());
 
   // ToDo:
   //
@@ -18026,6 +18031,9 @@ auto rsMaxNorm(const rsMatrixView<T>& A)
   //   need to implement it, if we wnat to do linear algebra with them. But maybe we can directly
   //   implement rsIsNegligible or maybe we don't need it for rsModularInteger if rsIsZero is 
   //   correctly implemented. We'll see.
+  //
+  // - Factor out a function that takes a pointer to T and a size (done). This can then be reused 
+  //   for rsPolynomial<T>
 }
 
 
@@ -18141,8 +18149,8 @@ bool testMaxNormTemplates()
   bool ok = true;
 
   // Type aliases for convenience:
-  using Complex = rsComplex<T>;
-  using Vec3D   = rsVector3D<T>;
+  using Complex = rsComplex<T>;      // Maybe use C
+  using Vec3D   = rsVector3D<T>;     // Maybe use V3
 
   // Imaginary unit:
   Complex i(0, 1);
@@ -18195,27 +18203,22 @@ void testMaxNorm()
 {
   bool ok = true;
 
-  ok &= testMaxNormBaseCases();
-  ok &= testMaxNormTemplates<int>();
-  //ok &= testMaxNormTemplates<uint>();       // Error because test uses negative numbers
-  ok &= testMaxNormTemplates<float>();
-  ok &= testMaxNormTemplates<double>();    
-
-  ok &= !testMaxNormTemplates<rsFloat32x4>();
-  // This should return false because the type of the norm of rsFloat32x4 is float whereas the test
-  // expects the type of the norm to be rsFloat32x4, i.e. the type of the norm is expected to be
-  // equal to the template parameter T. ToDo: Try rsFloat64x2 as well
-
-  ok &= testMaxNormTemplates<rsFraction<int>>();
-  // This fails! I think, it's because we have no rsMaxNorm defined for rsFraction. But it 
-  // compiles. I think, it may implictly convert to double somewhere. rsFraction has the double()
-  // operator defined which allows implicit conversion. Maybe we should take that out to enforce
-  // explicit usage of the toDouble member function. Maybe for more flexibility, we can also 
-  // provide a free function rsToDouble which can be overloaded for other types as well.
-  // ...OK - I declared the conversion operator explicit. Now we get a compiler error. Good. ToDo:
-  // Implement rsMaxNorm for rsFraction.
+  ok &=  testMaxNormBaseCases();
+  ok &=  testMaxNormTemplates<int>();
+  //ok &=  testMaxNormTemplates<uint>();           // Error because test uses negative numbers
+  ok &=  testMaxNormTemplates<float>();
+  ok &=  testMaxNormTemplates<double>();
+  ok &= !testMaxNormTemplates<rsFloat32x4>();      // Yes. This should return false. See below.
+  ok &=  testMaxNormTemplates<rsFraction<int>>();
 
   rsAssert(ok);
+
+  // Notes:
+  //
+  // - The call to "testMaxNormTemplates<rsFloat32x4>()" should return false because the type of 
+  //   the norm of rsFloat32x4 is float whereas the test expects the type of the norm to be 
+  //   rsFloat32x4, i.e. the type of the norm is expected to be equal to the template parameter T.
+  //   ToDo: Try rsFloat64x2 as well
 }
 
 

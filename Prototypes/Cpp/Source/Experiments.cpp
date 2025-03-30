@@ -17901,7 +17901,9 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 //
 // It's a bit tricky to predict the interactions between C++ template instantiation, type 
 // deduction, return type deduction and function overload resolution rules to make the overload set 
-// of the rsMaxNorm function behave exactly the way I want it to. ...
+// of the rsMaxNorm function behave exactly the way I want it to. ...well - actually it's not so
+// tricky if you know the trick hwo to do it: use auto for the return value (requires at least
+// C++14)
 
 
 // Base cases for rsMaxNorm for built in primitive types:
@@ -17920,123 +17922,32 @@ T rsMaxNorm(const std::complex<T>& z)
 }
 
 
-// This is intended to call one of the non-templated base-case implementations and perhaps convert
-// the result to a different target type (for example from int to unsigned int):
-/*
-template<class TArg, class TNorm>
-TNorm rsMaxNorm(const TArg& x)
-{
-  return (TNorm) rsMaxNorm(x);
-  //return (TNorm) rsMaxNorm<TArg>(x);
 
-  //return (TNorm) rsAbs(x);
-  //return (TNorm) std::abs(x);
-  // I don't think, it's a good idea to bring an abs function template (be it std::abs or rsAbs) 
-  // into this. This makes the situation just even more complicated. The way the rsMaxNorm 
-  // overloads are resolved should be self contained and not bring in another function.
-
-  // Notes:
-  //
-  // - Maybe we should always list the return type first. Rationale: This is the most important 
-  //   info for the compiler. Argument type(s) can actually be inferred from the given arguments. 
-  //   We then need to do thisconsistently throughout the library. We may also need to modify 
-  //   rsConvert for matrices. But trying to do this, i.e. use  template<class TNorm, class TArg>  
-  //   instead of  template<class TArg, class TNorm>  and then also adapting the order of template 
-  //   arguments at the call the call site breaks the compilation. We get an "rsMaxNorm: ambiguous 
-  //   call to overloaded function" error.
-  //   ToDo: check is this is still the case after we switched to using non-templated base-cases 
-  //   without refering to the rsAbs template
-}
-*/
-// Maybe we can do without this. Maybe it messes up our desired resolution behavior and all it 
-// really does is to call *some* other rsMaxNorm implementation and convert its type.
-
-
-/*
-template<class TReal, class TNorm>
-TNorm rsMaxNorm(const rsComplex<TReal>& z)
-{
-  return rsMax(rsMaxNorm<TReal, TNorm>(z.real()), rsMaxNorm<TReal, TNorm>(z.imag()));
-  //return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
-
-  // What if TReal is a simd type, for example? Might rsMax then be unsuitable because the max 
-  // function should return the underlying scalar type? Ah - I think, we need an explicit
-  // specialization of rsMaxNorm for the simd type which should should return the max abs of the
-  // elements of the vector. Maybe simulate that with TReal rsVector2D. It should behave the same
-  // as a simd vector.
-  //
-  // Maybe we should not distinguish between TReal and TNorm? If TReal is a (simd) vector type then
-  // this may be taken care of by providing an explicit instantiation for that vector type. We 
-  // wouldn't specify the return type here and just use auto ...if that is possible
-  //
-  // Apparently it is with C++14:
-  // https://stackoverflow.com/questions/15737223/when-should-i-use-c14-automatic-return-type-deduction
-}
-*/
-
-
-/*
-template<class TElem, class TNorm>
-TNorm rsMaxNorm(const rsMatrix2x2<TElem>& A)
-{
-  return rsMax(rsMaxNorm<TElem, TNorm>(A.a), rsMaxNorm<TElem, TNorm>(A.b), 
-               rsMaxNorm<TElem, TNorm>(A.c), rsMaxNorm<TElem, TNorm>(A.d));
-
-  //return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b), rsMaxNorm(A.c), rsMaxNorm(A.d));
-}
-*/
-
-
-
-
-
-// Under construction:
+// Now the template implementations for template classe from RAPT:
 
 template<class T>
 auto rsMaxNorm(const rsVector3D<T>& v)
 {
   return rsMax(rsMaxNorm(v.x), rsMaxNorm(v.y), rsMaxNorm(v.z));
 }
-// Needs test
 
 template<class T>
 auto rsMaxNorm(const rsComplex<T>& z)
 {
-  return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
+  return rsMax(rsMaxNorm(z.re), rsMaxNorm(z.im));
+  //return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
 }
-// Try its behavior if T is a vector type like rsVector3D or a simd vector type
 
-//template<class TReal, class TNorm>
-//TNorm rsMaxNormTest(const rsComplex<TReal>& z)
-//{
-//  return rsMax(rsMaxNorm<TReal, TNorm>(z.real()), rsMaxNorm<TReal, TNorm>(z.imag()));
-//}
-
-
-//template<class TElem>
-//auto rsMaxNormTest(const rsMatrix2x2<TElem>& A)
-//{
-//  return rsMax(rsMaxNorm<TElem>(A.a), rsMaxNorm<TElem>(A.b),
-//               rsMaxNorm<TElem>(A.c), rsMaxNorm<TElem>(A.d));
-//}
-
-template<class TElem>
-auto rsMaxNorm(const rsMatrix2x2<TElem>& A)
+template<class T>
+auto rsMaxNorm(const rsMatrix2x2<T>& A)
 {
-  return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b),
-               rsMaxNorm(A.c), rsMaxNorm(A.d));
+  return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b), rsMaxNorm(A.c), rsMaxNorm(A.d));
 }
 
-
-//template<class TArg, class TNorm>
-//TNorm rsMaxNorm(const TArg& x, const TArg& y)
-//{
-//  return rsMax(rsMaxNorm(x), rsMaxNorm(y));
-//}
-
-// Should return e.g. -7 for x = -4 + 5i, y = 3 - 7i, for example 
-
-
+// It should be possible to arbitrarily nest the templates. For example, one could have a vector of
+// complex values or a matrix of matrices of complex vectors or whatever. The behavior of rsMaxNorm 
+// should always be: return the maximum absolute element of the bottommost type which is one of the 
+// primitive types, i.e. built in C++ types like int or float.
 
 
 
@@ -18094,32 +18005,13 @@ void testMaxNorm()
   ok &= floatNorm  == 5.f;
   ok &= doubleNorm == 5.0;
 
-  
-  /*
-  // Now we try to produce a norm of type Uint from an int argument:
-  //auto intNormUint = rsMaxNorm<Uint, int>(intVal);
-  auto intNormUint = rsMaxNorm<int, Uint>(intVal);
-  ok &= typeid(intNormUint) == typeid(uintVal);
-  ok &= intNormUint == 5;
-  // Note: Calling it like  "auto intNormUint = rsMaxNorm<Uint>(intVal);"  would be wrong. It would
-  // instantiate the wrong template - namely the one that takes an Uint parameter and returns an 
-  // Uint. Also, if we would swap the order of the template parameters in the  rsMaxNorm<int, Uint>
-  // template (here at the call site and at the definition site), it wouldn't even compile anymore.
-  // We get an "ambiguous call" error. I'm not sure, why it is ambiguous, though (figure out!). I 
-  // think, it would generally be nicer to take the return type as first template parameter. But it
-  // may not be possible.
-  */
-
-  
+ 
   // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 
   // norm of the underlying real type which is float here:
   std::complex<Real> compVal1(Real(3), Real(-5));
   auto compNorm1 = rsMaxNorm(compVal1);
   ok &= typeid(compNorm1) == typeid(realVal);
   ok &= compNorm1 == Real(5);
-  // Trying to call  "auto compNorm = rsMaxNorm(compVal);"  would instantiate the template of 
-  // rsMaxNorm with a single template parameter T and assign T to std::complex<float>
-
 
   // Now the same with rsComplex (but with slightly different numbers):
   rsComplex<Real> compVal2(Real(-3), Real(5));
@@ -18163,32 +18055,6 @@ void testMaxNorm()
   ok &= compMatNorm == Real(7);
 
 
-  //auto compMatNorm = rsMaxNorm<Complex, Real>(compMat);  // Doesn't compile!
-  // Doesn't compile! Apparently, the compiler doesn't understand that it should invoke the template
-  // that takes an rsMatrix and tries to invoke one of the 4 non-templated variants. But why?
-
-  //auto compMatNorm = rsMaxNorm<Complex>(compMat);
-  //auto compMatNorm = rsMaxNorm<Real>(compMat);
-  //auto compMatNorm = rsMaxNorm(compMat);
-
-  // Hmm - now the compile has no choice but to invoke the version for rsMatrix because it has different 
-  // name. But it still doesn't compile. It must be an overload resolution problem *inside* the function.
-
-  // Let's try it on an element:
-  //auto test = rsMaxNorm(compMat.a);         // Doesn't compile
-  auto test = rsMaxNorm<Real>(compMat.a);
-  //auto test = rsMaxNormTest<Complex, Real>(compMat.a);
-  // Yep! this also fails to compile. But why compMat.a is just a complex number of type rsComplex
-  // which we previously tested. Oh! wait! In our previous test, we passed <Real, Real>
-
-  //auto compMatNorm = rsMaxNormTest(compMat);
-
-
-
-  //ok &= typeid(compMatNorm) == typeid(realVal);
-  //ok &= compMatNorm == Real(7);
-  
-  
 
 
 

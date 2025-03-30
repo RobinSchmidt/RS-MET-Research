@@ -17996,7 +17996,7 @@ bool testMaxNormBaseCases()
   return ok;
 }
 
-void testMaxNorm()
+bool testMaxNormTemplates()
 {
   // We verify that the various implementations of the rsMaxNorm function template produce the 
   // correct return types and return the right return values. The latter is more or less trivial. 
@@ -18015,15 +18015,8 @@ void testMaxNorm()
   using Vec3D   = rsVector3D<Real>;
 
   // Create some numeric values of different types:
-  //int    intVal     = -5;
-  //Uint   uintVal    =  5;
-  //float  floatVal   = -5.f;
-  //double doubleVal  = -5.0;
   Real   realVal    = Real(-5);
 
-
-
- 
   // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 
   // norm of the underlying real type which is float here:
   std::complex<Real> compVal1(Real(3), Real(-5));
@@ -18085,8 +18078,20 @@ void testMaxNorm()
   // Try as rsComplex<rsFraction<int>>, try rsComplex<rsVector2D<Real>>
 
 
+  return ok;
+}
+
+
+void testMaxNorm()
+{
+  bool ok = true;
+
+  ok &= testMaxNormBaseCases();
+  ok &= testMaxNormTemplates();
+
   rsAssert(ok);
 }
+
 
 //--------------------------------------------------------------------------------------------------
 

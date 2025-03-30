@@ -17917,10 +17917,10 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 
 // Base cases for rsMaxNorm for built in primitive types:
 
-inline unsigned int rsMaxNorm(unsigned int x) { return x;            }
-inline int          rsMaxNorm(int          x) { return std::abs(x);  }
-inline float        rsMaxNorm(float        x) { return std::fabs(x); }
-inline double       rsMaxNorm(double       x) { return std::fabs(x); }
+inline unsigned int rsMaxNorm(unsigned int x) { return x;           }
+inline int          rsMaxNorm(int          x) { return std::abs(x); }
+inline float        rsMaxNorm(float        x) { return std::abs(x); }
+inline double       rsMaxNorm(double       x) { return std::abs(x); }
 // ToDo: add all primitive types like int64_t etc.
 
 // Implements the maximum norm for std::complex<T> where T can be either double or float.

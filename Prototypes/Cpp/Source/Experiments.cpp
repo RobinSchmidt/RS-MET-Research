@@ -18114,31 +18114,25 @@ bool testMaxNorm(const T& value, const TNorm& expectedNorm)
   ok &= typeid(computedNorm) == typeid(expectedNorm);  // Verify type of computed norm
   ok &=        computedNorm  ==        expectedNorm;   // Verify value of computed norm
   return ok;
+
+  // See: https://en.cppreference.com/w/cpp/language/typeid
 }
 
 template<class T> 
 bool testMaxNormTemplates()
 {
-  // Maybe use a more general type T - maybe we can also use int or something else. 
-
   // We verify that the various implementations of the rsMaxNorm function template produce the 
   // correct return types and return the right return values. The latter is more or less trivial. 
   // There's not much that could go wrong with that. It's mostly the return *types* about which we
   // care here. We make sure that we get the right return types using the typeid operator.
-  //
-  // See: https://en.cppreference.com/w/cpp/language/typeid
 
   bool ok = true;
-
-  //using T = Real;  // preliminary - todo: use T directly in the template definition
 
   // Type aliases for convenience:
   using Complex = rsComplex<T>;
   using Vec3D   = rsVector3D<T>;
 
-  // Arbitrary real number used for the typeid comparisons:
-  //Real realVal = Real(5);
-
+  // Imaginary unit:
   Complex i(0, 1);
 
   // Complex numbers:
@@ -18163,13 +18157,11 @@ bool testMaxNormTemplates()
   ok &= testMaxNorm(rsMatrix<T>(2, 2, {3, -5, -7, 6}),  T(7));
 
   // Matrix of complex values:
-  ok &= testMaxNorm( rsMatrix<Complex>(2, 2, {3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i}),  T(7));
+  ok &= testMaxNorm(rsMatrix<Complex>(2, 2, {3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i}),  T(7));
 
-
+  return ok;
 
   // ToDo:
-  //
-  // - Try to make each test case a one-liner by using the helper function testMaxNorm
   //
   // - Try nested vectors, i.e. vectors of vectors - maybe use 2D vectors for that
   //
@@ -18178,9 +18170,6 @@ bool testMaxNormTemplates()
   // - rsFraction<int> -> rsFraction<int>, rsSparsePolynomial, try to make a complex type from 
   //   rsMatrix2x2. Maybe we need to use rsComplex for that. I think, std::complex would not work. 
   //   Try as rsComplex<rsFraction<int>>, try rsComplex<rsVector2D<Real>>
-
-
-  return ok;
 }
 
 void testMaxNorm()

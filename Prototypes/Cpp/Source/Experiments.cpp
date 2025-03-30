@@ -17949,6 +17949,26 @@ auto rsMaxNorm(const std::list<T>& v)
 }
 
 
+// It's annyoing that we need to duplicate the code for any container type for which we want to
+// support the rsMaxNorm operation. But if we want to implement it generically for all sorts of
+// containers like below, we get an error realted to rsMatrix not defining value_type. Apparently,
+// the compiler tries to invoke this template for rsMatrix. Maybe it's because the spcific 
+// implementation actually takes an rsMatrixView rather than an rsMatrix. ToDo: implement unit
+// tests that actually pass an rsMatrixView such that this implementation gets never obsolete and
+// then try to make the stuff below work for general containers (possibly including rsMatrix):
+
+//template<class TCont>
+//auto rsMaxNorm(const TCont& v)
+//{
+//  using T = TCont::value_type;
+//  auto max = rsMaxNorm(T(0));
+//  for(auto& e : v)
+//    max = rsMax(max, rsMaxNorm(e));  // Maybe try to use std::max
+//  return max;
+//}
+
+
+
 // Make a version for std::vector and maybe for other containers as well. Maybe use std::accumulate
 // with std::max. Maybe try to templatize it on the container type as well and make tests with 
 // std::vector and std::list.

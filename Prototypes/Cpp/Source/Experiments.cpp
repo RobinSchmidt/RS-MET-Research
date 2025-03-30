@@ -17996,6 +17996,7 @@ bool testMaxNormBaseCases()
   return ok;
 }
 
+template<class Real>
 bool testMaxNormTemplates()
 {
   // We verify that the various implementations of the rsMaxNorm function template produce the 
@@ -18009,13 +18010,14 @@ bool testMaxNormTemplates()
 
   ok &= testMaxNormBaseCases();
 
-  using Real    = float;
-  using Uint    = unsigned int;
+  //using Real    = float;
+  //using Uint    = unsigned int;
+
   using Complex = rsComplex<Real>;
   using Vec3D   = rsVector3D<Real>;
 
   // Create some numeric values of different types:
-  Real   realVal    = Real(-5);
+  Real realVal = Real(-5);
 
   // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 
   // norm of the underlying real type which is float here:
@@ -18087,7 +18089,9 @@ void testMaxNorm()
   bool ok = true;
 
   ok &= testMaxNormBaseCases();
-  ok &= testMaxNormTemplates();
+  ok &= testMaxNormTemplates<float>();
+  ok &= testMaxNormTemplates<double>();
+
 
   rsAssert(ok);
 }

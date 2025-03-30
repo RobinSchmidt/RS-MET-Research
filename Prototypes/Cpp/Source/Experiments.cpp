@@ -18101,15 +18101,9 @@ void testMaxNorm()
   bool ok = true;
 
   ok &= testMaxNormBaseCases();
+  ok &= testMaxNormTemplates<int>();
   ok &= testMaxNormTemplates<float>();
   ok &= testMaxNormTemplates<double>();
-
-  //ok &= testMaxNormTemplates<int>();   // Compile error
-  // When we create rsComplex<int>, it becomes ambiguous which version of the +,-,*,/ operators 
-  // should be used. We have one for the left operand being of type T and one for the left operand
-  // being int. But when T == int, the compiler doesn't know which one to use. Maybe we can solve 
-  // it by defining a single operator for a templatized left argument?
-
 
   rsAssert(ok);
 }

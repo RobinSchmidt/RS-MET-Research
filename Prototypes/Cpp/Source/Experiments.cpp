@@ -18156,30 +18156,14 @@ bool testMaxNormTemplates()
   // 2x2 matrix of real values:
   ok &= testMaxNorm(rsMatrix2x2<T>(3, -5, -7, 6),  T(7));
 
-
   // 2x2 matrix of complex values:
-  rsMatrix2x2<Complex> compMat2x2(3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i);
-  auto compMat2x2Norm = rsMaxNorm(compMat2x2);
-  ok &= typeid(compMat2x2Norm) == typeid(realVal);
-  ok &= compMat2x2Norm == Real(7);
-
-
+  ok &= testMaxNorm(rsMatrix2x2<Complex>(3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i),  T(7));
 
   // Matrix of real values. It's 2x2 but could be anything:
-  rsMatrix<Real> realMat(2, 2, {3, -5, -7, 6});
-  auto realMatNorm = rsMaxNorm(realMat);
-  ok &= typeid(realMatNorm) == typeid(realVal);
-  ok &= realMatNorm == Real(7);
+  ok &= testMaxNorm(rsMatrix<T>(2, 2, {3, -5, -7, 6}),  T(7));
 
   // Matrix of complex values:
-  rsMatrix<Complex> compMat(2, 2, {3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i});
-  auto compMatNorm = rsMaxNorm(compMat);
-  ok &= typeid(compMatNorm) == typeid(realVal);
-  ok &= compMatNorm == Real(7);
-
-
-
-  // ok &= testMaxNorm(, T(5));
+  ok &= testMaxNorm( rsMatrix<Complex>(2, 2, {3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i}),  T(7));
 
 
 

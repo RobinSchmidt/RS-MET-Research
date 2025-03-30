@@ -17930,6 +17930,16 @@ T rsMaxNorm(const std::complex<T>& z)
   return std::max(std::abs(z.real()), std::abs(z.imag()));
 }
 
+template<class T>
+auto rsMaxNorm(const std::vector<T>& v)
+{
+  auto max = rsMaxNorm(T(0));
+  for(const auto T& e : v)
+    max = rsMax(max, rsMaxNorm(e));
+  return max;
+}
+// Needs test
+
 // Make a version for std::vector and maybe for other containers as well. Maybe use std::accumulate
 // with std::max. Maybe try to templatize it on the container type as well and make tests with 
 // std::vector and std::list.
@@ -17939,7 +17949,7 @@ T rsMaxNorm(const std::complex<T>& z)
 
 
 
-// Now the template implementations for template classe from RAPT:
+// Now the template implementations for template classes from RAPT:
 
 template<class T>
 auto rsMaxNorm(const rsVector3D<T>& v)
@@ -18173,9 +18183,11 @@ bool testMaxNormTemplates()
   //
   // - Try nested vectors, i.e. vectors of vectors - maybe use 2D vectors for that
   //
-  // - / rsFraction<int> -> rsFraction<int>, rsSparsePolynomial, try to make a complex type from 
-  // rsMatrix2x2. Maybe we need to use rsComplex for that. I think, std::complex would not work. 
-  // Try as rsComplex<rsFraction<int>>, try rsComplex<rsVector2D<Real>>
+  // - Try std::vector of Real std::complex<Real> and rsComplex<Real>
+  //
+  // - rsFraction<int> -> rsFraction<int>, rsSparsePolynomial, try to make a complex type from 
+  //   rsMatrix2x2. Maybe we need to use rsComplex for that. I think, std::complex would not work. 
+  //   Try as rsComplex<rsFraction<int>>, try rsComplex<rsVector2D<Real>>
 
 
   return ok;

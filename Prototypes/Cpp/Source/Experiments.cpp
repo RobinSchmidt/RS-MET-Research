@@ -18130,7 +18130,7 @@ bool testMaxNormTemplates()
 
   bool ok = true;
 
-  using T = Real;  // preliminray - todo: use T directly in the template definition
+  using T = Real;  // preliminary - todo: use T directly in the template definition
 
   // Type aliases for convenience:
   using Complex = rsComplex<Real>;
@@ -18139,43 +18139,27 @@ bool testMaxNormTemplates()
   // Arbitrary real number used for the typeid comparisons:
   Real realVal = Real(5);
 
+  Complex i(0, 1);
+
   // Complex numbers:
-  //rsComplex<Real> compVal2(Real(-3), Real(5));
-  //auto compNorm2 = rsMaxNorm(compVal2);
-  //ok &= typeid(compNorm2) == typeid(realVal);
-  //ok &= compNorm2 == Real(5);
   ok &= testMaxNorm(rsComplex<T>(T(-3), T(5)),  T(5));
 
-  // 3D vectors:
-  //rsVector3D<Real> vecVal(Real(-2), Real(3), Real(-5));
-  //auto vecNorm = rsMaxNorm(vecVal);
-  //ok &= typeid(vecNorm) == typeid(realVal);
-  //ok &= vecNorm == Real(5);
-  ok &= testMaxNorm(rsVector3D<T>(T(-2), T(3), T(5)),  Real(5));
-
-
-  // ok &= testMaxNorm(, T(5));
-
-
+  // 3D vectors of real numbers:
+  ok &= testMaxNorm(rsVector3D<T>(T(-2), T(3), T(5)),  T(5));
 
   // 3D vectors of complex numbers:
-  Complex i(0, 1);
-  rsVector3D<Complex> compVec(2 + 3*i, 3 - 2*i, 4 - 5*i);
-  auto compVecNorm = rsMaxNorm(compVec);
-  ok &= typeid(compVecNorm) == typeid(realVal);
-  ok &= compVecNorm == Real(5);
+  ok &= testMaxNorm(rsVector3D<Complex>(2 + 3*i, 3 - 2*i, 4 - 5*i),  T(5));
 
   // Complex numbers x + i*y whose "real" components x,y are vectors:
-  rsComplex<rsVector3D<Real>> vecComp(Vec3D({ 1,-7,3 }) , Vec3D({3,2,-5}));
-  auto vecCompNorm = rsMaxNorm(vecComp);
-  ok &= typeid(vecCompNorm) == typeid(realVal);
-  ok &= vecCompNorm == Real(7);
+  ok &= testMaxNorm(rsComplex<Vec3D>(Vec3D({ 1,-7,3 }), Vec3D({3,2,-5})),  T(7));
 
   // 2x2 matrix of real values:
   rsMatrix2x2<Real> realMat2x2(3, -5, -7, 6);
   auto realMat2x2Norm = rsMaxNorm(realMat2x2);
   ok &= typeid(realMat2x2Norm) == typeid(realVal);
   ok &= realMat2x2Norm == Real(7);
+
+
  
   // 2x2 matrix of complex values:
   rsMatrix2x2<Complex> compMat2x2(3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i);
@@ -18195,6 +18179,9 @@ bool testMaxNormTemplates()
   ok &= typeid(compMatNorm) == typeid(realVal);
   ok &= compMatNorm == Real(7);
 
+
+
+  // ok &= testMaxNorm(, T(5));
 
 
 

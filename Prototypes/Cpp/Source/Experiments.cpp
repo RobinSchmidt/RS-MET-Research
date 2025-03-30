@@ -17956,13 +17956,22 @@ auto rsMaxNorm(const rsMatrix2x2<T>& A)
 template<class T>
 auto rsMaxNorm(const rsMatrixView<T>& A)
 {
-  rsAssert(!A.isEmpty());
-
-  auto max = rsMaxNorm(A(0, 0));
+  auto max = rsMaxNorm(T(0));
   const T* p = A.getDataPointerConst();
-  for(int i = 1; i < A.getSize(); i++)
+  for(int i = 0; i < A.getSize(); i++)
     max = rsMax(max, rsMaxNorm(p[i]));
   return max;
+
+
+
+  // Old:
+
+  //rsAssert(!A.isEmpty());
+  //auto max = rsMaxNorm(A(0, 0));
+  //const T* p = A.getDataPointerConst();
+  //for(int i = 1; i < A.getSize(); i++)
+  //  max = rsMax(max, rsMaxNorm(p[i]));
+  //return max;
 
   // Notes:
   //
@@ -18137,8 +18146,8 @@ bool testMaxNormTemplates()
   // Maximum norm of a general matrix of real values. It's 2x2 but could be anything:
   rsMatrix<Real> realMat(2, 2, {3, -5, -7, 6});
   auto realMatNorm = rsMaxNorm(realMat);
-  ok &= typeid(compMatNorm) == typeid(realVal);
-  ok &= compMatNorm == Real(7);
+  ok &= typeid(realMatNorm) == typeid(realVal);
+  ok &= realMatNorm == Real(7);
 
 
 

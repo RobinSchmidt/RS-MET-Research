@@ -17953,6 +17953,31 @@ auto rsMaxNorm(const rsMatrix2x2<T>& A)
 }
 
 
+template<class T>
+auto rsMaxNorm(const rsMatrixView<T>& A)
+{
+  rsAssert(!A.isEmpty());
+
+  auto max = rsMaxNorm(A(0, 0));
+  const T* p = A.getDataPointerConst();
+  for(int i = 1; i < A.getSize(); i++)
+    max = rsMax(max, rsMaxNorm(p[i]));
+  return max;
+
+  // Notes:
+  //
+  // - This currently only works when A is non empty. I don't know what value to return when A is 
+  //   empty because I don't know which type to return because the return type is deduced from 
+  //   A(0,0). We cannot just assume that it is the same as the element type T because that would 
+  //   be wrong in case of complex matrices, for example (in which case the return type would be 
+  //   the underlying real type). Maybe we can to somthing like:
+  //   auto max = rsMaxNorm(A::getZeroElementValue()); or something. Make sure to start the loop 
+  //   at 0 then. It currently starts at 1 because we use the 0th element for initialization. Maybe
+  //   that function getZeroElementValue should be a free function to not clutter class rsMatrix 
+  //   with that.
+}
+
+
 /*
 template<class T>
 auto rsMaxNorm(const rsMatrixView<T>& A)

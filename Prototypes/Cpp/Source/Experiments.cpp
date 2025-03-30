@@ -17985,11 +17985,15 @@ auto rsMaxNorm(const std::list<T>& v)
 // define an explicit specialization for rsMatrix itself such that the compiler selects that 
 // instead of the generic container template. It could invoke the definition for rsMatrixView by 
 // an upcast (cast to baseclass reference). Try that! It would be the less invasive solution and 
-// therefore perhaps preferable over modifying rsMatrix(View).
+// therefore perhaps preferable over modifying rsMatrix(View). At the moment, it's fine as is 
+// because I currently don't really need a max-norm function for any STL containers except 
+// std::vector. The implementation for std::list is just there for testing purposes. So, for the 
+// time being, it's fine. But maybe it's something to change later.
 
 
 
-// Now the template implementations for template classes from RAPT:
+// Now the template implementations for template classes from RAPT. These should eventually go near
+// the actual class definitions.
 
 template<class T>
 auto rsMaxNorm(const rsVector3D<T>& v)
@@ -18038,7 +18042,6 @@ auto rsMaxNorm(const rsPolynomial<T>& p)
 {
   return rsMaxNorm(p.getCoeffPointerConst(), p.getNumCoeffs());
 }
-// Needs test
 
 
 // Some more base cases for some of my own types:

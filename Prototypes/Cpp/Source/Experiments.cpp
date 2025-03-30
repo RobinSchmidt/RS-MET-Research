@@ -18182,29 +18182,24 @@ bool testMaxNormTemplates()
   ok &= testMaxNorm(std::vector<T>({2,-5,4,-2}),                                    T(5));
   ok &= testMaxNorm(std::list<T>(  {2,-5,4,-2}),                                    T(5));
 
-
-  // Test it with rsMatrixView:
-  T vals[6] = { 1, 3, -7, 5, -2, 3 };
-  rsMatrixView<T> matView(2,3, vals);
-  ok &= testMaxNorm(matView, T(7));
-
-
-  rsPolynomial<T> poly(5, vals);
-  // This constructor call does NOT initialize! The constructor with boolean 2nd parameter is 
-  // invoked! WTF!
-
+  // Some tests with classes that can be initialized with a std::vector of values:
+  std::vector<T> vals({ 1, 3, -7, 5, -2, 3 });
+  rsMatrixView<T> matView(2,3, &vals[0]);  ok &= testMaxNorm(matView, T(7));
+  rsPolynomial<T> poly(vals);              ok &= testMaxNorm(poly,    T(7));
 
   return ok;
 
   // ToDo:
   //
-  // - Try nested vectors, i.e. vectors of vectors - maybe use 2D vectors for that
+  // - Nested vectors, i.e. vectors of vectors. Maybe use rsVector2D for that. 
+  //   std::vector<Complex>, rsSparsePolynomial<T>, rsSparsePolynomial<Complex>, 
+  //   rsComplex<rsMatrix2x2<T>>. 
   //
-  // - Try std::vector of Real std::complex<Real> and rsComplex<Real>
-  //
-  // - rsFraction<int> -> rsFraction<int>, rsSparsePolynomial, try to make a complex type from 
-  //   rsMatrix2x2. Maybe we need to use rsComplex for that. I think, std::complex would not work. 
-  //   Try as rsComplex<rsFraction<int>>, try rsComplex<rsVector2D<Real>>
+  // - We need to define what rsMaxAbs should mean for rational functions. It may make sense to 
+  //   only take the numerator into account...at least when the goal is to decide if the maxNorm is
+  //   close enough to zero to consider the function zero. A function  0 / 1  or  0 / (1 + 2 x^2)  
+  //   is still zero. But maybe we should handle that in an overload for rsIsNegligible. Maybe we
+  //   shouldn't even define rsMaxNorm for rs(Sparse)RationalFunction at all.
 }
 
 void testMaxNorm()
@@ -18213,7 +18208,6 @@ void testMaxNorm()
 
   ok &=  testMaxNormBaseCases();
   ok &=  testMaxNormTemplates<int>();
-  //ok &=  testMaxNormTemplates<uint>();           // Error because test uses negative numbers
   ok &=  testMaxNormTemplates<float>();
   ok &=  testMaxNormTemplates<double>();
   ok &= !testMaxNormTemplates<rsFloat32x4>();      // Yes. This should return false. See below.
@@ -18227,6 +18221,11 @@ void testMaxNorm()
   //   the norm of rsFloat32x4 is float whereas the test expects the type of the norm to be 
   //   rsFloat32x4, i.e. the type of the norm is expected to be equal to the template parameter T.
   //   ToDo: Try rsFloat64x2 as well
+  //
+  // - Trying to call "ok &= testMaxNormTemplates<unsigned int>();" would give a compilation error
+  //   because the test would try to assign negative numbers to unsigned int variables. That's why 
+  //   we don't include a call for that type even though it is one of the primitive types for which
+  //   rsMaxNorm is defined.
 }
 
 

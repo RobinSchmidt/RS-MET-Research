@@ -18054,6 +18054,7 @@ void testMaxNorm()
   using Real    = float;
   using Uint    = unsigned int;
   using Complex = rsComplex<Real>;
+  using Vec3D   = rsVector3D<Real>;
 
   // Create some numeric values of different types:
   int    intVal     = -5;
@@ -18140,8 +18141,13 @@ void testMaxNorm()
   ok &= compVecNorm == Real(5);
 
   // Maximum norm of a complex number x + i*y whose "real" components x,y are vectors:
-  // ...
+  rsComplex<rsVector3D<Real>> vecComp(Vec3D({ 1,-7,3 }) , Vec3D({3,2,-5}));
+  auto vecCompNorm = rsMaxNorm(vecComp);
+  ok &= typeid(vecCompNorm) == typeid(realVal);
+  ok &= vecCompNorm == Real(7);
 
+
+  // Try nested vectors, i.e. vectors of vectors - maybe use 2D vectors for that
 
 
   /*

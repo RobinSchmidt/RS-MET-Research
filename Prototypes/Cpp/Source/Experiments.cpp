@@ -17934,11 +17934,20 @@ template<class T>
 auto rsMaxNorm(const std::vector<T>& v)
 {
   auto max = rsMaxNorm(T(0));
-  for(auto e : v)
+  for(auto& e : v)
     max = rsMax(max, rsMaxNorm(e));  // Maybe try to use std::max
   return max;
 }
-// Needs test
+
+template<class T>
+auto rsMaxNorm(const std::list<T>& v)
+{
+  auto max = rsMaxNorm(T(0));
+  for(auto& e : v)
+    max = rsMax(max, rsMaxNorm(e));  // Maybe try to use std::max
+  return max;
+}
+
 
 // Make a version for std::vector and maybe for other containers as well. Maybe use std::accumulate
 // with std::max. Maybe try to templatize it on the container type as well and make tests with 
@@ -18156,6 +18165,7 @@ bool testMaxNormTemplates()
   ok &= testMaxNorm(rsMatrix<Complex>(2, 2, {3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i}),  T(7));
 
   ok &= testMaxNorm(std::vector<T>({2,-5,4,-2}),                                    T(5));
+  ok &= testMaxNorm(std::list<T>(  {2,-5,4,-2}),                                    T(5));
 
 
 

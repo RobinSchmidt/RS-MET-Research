@@ -18035,6 +18035,20 @@ inline float rsMaxNorm(const rsFloat32x4& v)
   return rsMax(std::abs(v[0]), std::abs(v[1]), std::abs(v[2]), std::abs(v[3]));
 }
 
+template<class T>
+auto rsMaxNorm(const rsFraction<T>& q)
+{
+  return rsAbs(q);
+
+  // This currently invokes the fallback implementation of rsAbs that checks if less then zero and
+  // if so, returns -x otherwise returns x. Maybe we can provide a more efficient implementation 
+  // of rsAbs specifically for rsFraction. We just need to take the abs of the numerator and leave 
+  // the denominator as is. Maybe we can even bypass the canonicalization in the constructor. 
+  // Perhaps by using a private factory function makeUnchecked(T newNum, T newDen) or something 
+  // like that.
+}
+
+
 
 // Unit tests for the max-norm implementations (ToDo: move these into the main repo):
 
@@ -18192,12 +18206,14 @@ void testMaxNorm()
   // expects the type of the norm to be rsFloat32x4, i.e. the type of the norm is expected to be
   // equal to the template parameter T. ToDo: Try rsFloat64x2 as well
 
-  //ok &= testMaxNormTemplates<rsFraction<int>>();
+  ok &= testMaxNormTemplates<rsFraction<int>>();
   // This fails! I think, it's because we have no rsMaxNorm defined for rsFraction. But it 
   // compiles. I think, it may implictly convert to double somewhere. rsFraction has the double()
   // operator defined which allows implicit conversion. Maybe we should take that out to enforce
   // explicit usage of the toDouble member function. Maybe for more flexibility, we can also 
   // provide a free function rsToDouble which can be overloaded for other types as well.
+  // ...OK - I declared the conversion operator explicit. Now we get a compiler error. Good. ToDo:
+  // Implement rsMaxNorm for rsFraction.
 
   rsAssert(ok);
 }

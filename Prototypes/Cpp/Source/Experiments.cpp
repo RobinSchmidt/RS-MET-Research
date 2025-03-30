@@ -17904,6 +17904,15 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 // of the rsMaxNorm function behave exactly the way I want it to. ...well - actually it's not so
 // tricky if you know the trick hwo to do it: use auto for the return value (requires at least
 // C++14)
+//
+// I'm not sure if we should call it rsMaxNorm. Maybe think about the name some more. For 
+// mathematical usage of the term, see:
+//
+// https://en.wikipedia.org/wiki/Norm_(mathematics)
+// https://en.wikipedia.org/wiki/Norm_(mathematics)#Maximum_norm_(special_case_of:_infinity_norm,_uniform_norm,_or_supremum_norm)
+// https://math.stackexchange.com/questions/285398/what-is-the-norm-of-a-complex-number
+//
+// 
 
 
 // Base cases for rsMaxNorm for built in primitive types:
@@ -17935,7 +17944,6 @@ template<class T>
 auto rsMaxNorm(const rsComplex<T>& z)
 {
   return rsMax(rsMaxNorm(z.re), rsMaxNorm(z.im));
-  //return rsMax(rsMaxNorm(z.real()), rsMaxNorm(z.imag()));
 }
 
 template<class T>
@@ -17943,6 +17951,8 @@ auto rsMaxNorm(const rsMatrix2x2<T>& A)
 {
   return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b), rsMaxNorm(A.c), rsMaxNorm(A.d));
 }
+
+// ToDo: rsMatrixView
 
 // It should be possible to arbitrarily nest the templates. For example, one could have a vector of
 // complex values or a matrix of matrices of complex vectors or whatever. The behavior of rsMaxNorm 
@@ -17993,12 +18003,29 @@ bool testMaxNormBaseCases()
   ok &= floatNorm  == 5.f;
   ok &= doubleNorm == 5.0;
 
+  // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 
+  // norm of the underlying real type which is float here:
+  std::complex<float> compVal1(3.f, -5.f);
+  auto compNorm1 = rsMaxNorm(compVal1);
+  ok &= typeid(compNorm1) == typeid(floatVal);
+  ok &= compNorm1 == 5.f;
+
+  // Now with double for the underlying real type:
+  std::complex<double> compVal2(3.f, -5.f);
+  auto compNorm2 = rsMaxNorm(compVal2);
+  ok &= typeid(compNorm2) == typeid(doubleVal);
+  ok &= compNorm2 == 5.0;
+
   return ok;
 }
 
-template<class Real>
+template<class Real> 
 bool testMaxNormTemplates()
 {
+  // Maybe use a more general type T - maybe we can also use int or something else. But I guess, that
+  // wouldn't work with std::complex. Maybe factor the test for std::complex out into its own test 
+  // function.
+
   // We verify that the various implementations of the rsMaxNorm function template produce the 
   // correct return types and return the right return values. The latter is more or less trivial. 
   // There's not much that could go wrong with that. It's mostly the return *types* about which we
@@ -18008,23 +18035,11 @@ bool testMaxNormTemplates()
 
   bool ok = true;
 
-  ok &= testMaxNormBaseCases();
-
-  //using Real    = float;
-  //using Uint    = unsigned int;
-
   using Complex = rsComplex<Real>;
   using Vec3D   = rsVector3D<Real>;
 
   // Create some numeric values of different types:
   Real realVal = Real(-5);
-
-  // Take the max-norm of a complex number. This is defined to be max(|re|,|im|). It should return a 
-  // norm of the underlying real type which is float here:
-  std::complex<Real> compVal1(Real(3), Real(-5));
-  auto compNorm1 = rsMaxNorm(compVal1);
-  ok &= typeid(compNorm1) == typeid(realVal);
-  ok &= compNorm1 == Real(5);
 
   // Now the same with rsComplex (but with slightly different numbers):
   rsComplex<Real> compVal2(Real(-3), Real(5));
@@ -18083,7 +18098,6 @@ bool testMaxNormTemplates()
   return ok;
 }
 
-
 void testMaxNorm()
 {
   bool ok = true;
@@ -18091,7 +18105,6 @@ void testMaxNorm()
   ok &= testMaxNormBaseCases();
   ok &= testMaxNormTemplates<float>();
   ok &= testMaxNormTemplates<double>();
-
 
   rsAssert(ok);
 }

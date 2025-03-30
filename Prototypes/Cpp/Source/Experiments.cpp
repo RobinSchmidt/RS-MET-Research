@@ -18182,9 +18182,10 @@ void testMaxNorm()
 
   ok &= testMaxNormBaseCases();
   ok &= testMaxNormTemplates<int>();
-  //ok &= testMaxNormTemplates<uint>();     // Error because test uses negative numbers
+  //ok &= testMaxNormTemplates<uint>();       // Error because test uses negative numbers
   ok &= testMaxNormTemplates<float>();
-  ok &= testMaxNormTemplates<double>();     // ToDo: Try rsFloat32x4 and rsFloat64x2
+  ok &= testMaxNormTemplates<double>();       // ToDo: Try rsFloat32x4 and rsFloat64x2
+  //ok &= testMaxNormTemplates<rsFloat32x4>();  // FAILS!!! Figure out why!
 
   //ok &= testMaxNormTemplates<rsFraction<int>>();
   // This fails! I think, it's because we have no rsMaxNorm defined for rsFraction. But it 

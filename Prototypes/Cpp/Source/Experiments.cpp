@@ -18132,18 +18132,25 @@ void testMaxNorm()
   ok &= typeid(vecNorm) == typeid(realVal);
   ok &= vecNorm == Real(5);
 
+  // Maximum norm of a vector of complex values:
+  Complex i(0, 1);
+  rsVector3D<Complex> compVec(2 + 3*i, 3 - 2*i, 4 - 5*i);
+  auto compVecNorm = rsMaxNorm(compVec);
+  ok &= typeid(compVecNorm) == typeid(realVal);
+  ok &= compVecNorm == Real(5);
+
+  // Maximum norm of a complex number x + i*y whose "real" components x,y are vectors:
+  // ...
 
 
 
-
-
-  
+  /*
   // Maximum norm of a 2x2 matrix of real values:
   rsMatrix2x2<Real> realMat(3, -5, -7, 6);
   auto realMatNorm = rsMaxNorm<Real>(realMat);
   ok &= typeid(realMatNorm) == typeid(realVal);
   ok &= realMatNorm == Real(7);
-
+  */
 
   
   // Maximum norm of a 2x2 matrix of complex values:

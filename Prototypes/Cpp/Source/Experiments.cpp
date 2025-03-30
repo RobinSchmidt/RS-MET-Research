@@ -17934,7 +17934,7 @@ template<class T>
 auto rsMaxNorm(const std::vector<T>& v)
 {
   auto max = rsMaxNorm(T(0));
-  for(const auto T& e : v)
+  for(auto e : v)
     max = rsMax(max, rsMaxNorm(e));  // Maybe try to use std::max
   return max;
 }
@@ -18154,6 +18154,10 @@ bool testMaxNormTemplates()
 
   ok &= testMaxNorm(rsMatrix<T>      (2, 2, {3,      -5,      -7,      6       }),  T(7));
   ok &= testMaxNorm(rsMatrix<Complex>(2, 2, {3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i}),  T(7));
+
+  ok &= testMaxNorm(std::vector<T>({2,-5,4,-2}),                                    T(5));
+
+
 
   return ok;
 

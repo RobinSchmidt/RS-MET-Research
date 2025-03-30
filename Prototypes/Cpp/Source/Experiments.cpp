@@ -17930,6 +17930,7 @@ T rsMaxNorm(const std::complex<T>& z)
   return std::max(std::abs(z.real()), std::abs(z.imag()));
 }
 
+
 template<class T>
 auto rsMaxNorm(const std::vector<T>& v)
 {
@@ -17948,15 +17949,15 @@ auto rsMaxNorm(const std::list<T>& v)
   return max;
 }
 
-
+// ToDo: Maybe use std::accumulate and maybe std::max instead of rsMax (not sure about that, 
+// though)
+//
 // It's annyoing that we need to duplicate the code for any container type for which we want to
 // support the rsMaxNorm operation. But if we want to implement it generically for all sorts of
-// containers like below, we get an error realted to rsMatrix not defining value_type. Apparently,
-// the compiler tries to invoke this template for rsMatrix. Maybe it's because the spcific 
-// implementation actually takes an rsMatrixView rather than an rsMatrix. ToDo: implement unit
-// tests that actually pass an rsMatrixView such that this implementation gets never obsolete and
-// then try to make the stuff below work for general containers (possibly including rsMatrix):
-
+// containers like below, we get an error related to rsMatrix not defining value_type. Apparently,
+// the compiler tries to invoke this template for rsMatrix. Maybe it's because the specific 
+// implementation actually takes an rsMatrixView rather than an rsMatrix.
+//
 //template<class TCont>
 //auto rsMaxNorm(const TCont& v)
 //{
@@ -17966,15 +17967,14 @@ auto rsMaxNorm(const std::list<T>& v)
 //    max = rsMax(max, rsMaxNorm(e));  // Maybe try to use std::max
 //  return max;
 //}
-
-
-
-// Make a version for std::vector and maybe for other containers as well. Maybe use std::accumulate
-// with std::max. Maybe try to templatize it on the container type as well and make tests with 
-// std::vector and std::list.
-
-
-
+//
+// To make that work, I think rsMatrix (or maybe already rsMatrixView) needs to implement the 
+// following STL compatibility features: a "using value_type = T;" definition, definition of the
+// iterator type and begin() and end() functions. Maybe more. Another possibility could be to
+// define an explicit specialization for rsMatrix itself such that the compiler selects that rather
+// than the generic container template. It could invoke the definition for rsMatrixView by an 
+// upcast (cast to baseclass reference). Try that! It would be the less invasive solution and 
+// therefore perhaps preferable.
 
 
 

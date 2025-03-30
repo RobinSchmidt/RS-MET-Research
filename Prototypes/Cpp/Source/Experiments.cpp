@@ -18156,11 +18156,11 @@ bool testMaxNormTemplates()
   bool ok = true;
 
   // Type aliases for convenience:
-  using Complex = rsComplex<T>;      // Maybe use C
-  using Vec3D   = rsVector3D<T>;     // Maybe use V3
+  using C  = rsComplex<T>;
+  using V3 = rsVector3D<T>;
 
   // Imaginary unit:
-  Complex i(0, 1);
+  C i(0, 1);
 
   // We use the testMaxNorm() helper functionto verify that the data type and value of the norm
   // returned by rsMaxNorm is as expected. We do this for various input data types such as complex
@@ -18169,26 +18169,28 @@ bool testMaxNormTemplates()
   // maximum of the absolute values of the innermost type and its type should be equal to our 
   // template parameter T.
   //
-  //                Argument                                                        Norm
-  ok &= testMaxNorm(rsComplex<T>    (T(-3),             T(5)           ),           T(5));
-  ok &= testMaxNorm(rsComplex<Vec3D>(Vec3D({ 1,-7,3 }), Vec3D({3,2,-5})),           T(7));
+  //                Argument                                                  Norm
+  ok &= testMaxNorm(rsComplex<T> (T(-3),          T(5)        ),              T(5));
+  ok &= testMaxNorm(rsComplex<V3>(V3({ 1,-7,3 }), V3({3,2,-5})),              T(7));
 
-  ok &= testMaxNorm(rsVector3D<T>(      T(-2),   T(3),    T(5)   ),                 T(5));
-  ok &= testMaxNorm(rsVector3D<Complex>(2 + 3*i, 3 - 2*i, 4 - 5*i),                 T(5));
+  ok &= testMaxNorm(rsVector3D<T>(T(-2),   T(3),    T(5)   ),                 T(5));
+  ok &= testMaxNorm(rsVector3D<C>(2 + 3*i, 3 - 2*i, 4 - 5*i),                 T(5));
 
-  ok &= testMaxNorm(rsMatrix2x2<T>      (3,      -5,      -7,       6      ),       T(7));
-  ok &= testMaxNorm(rsMatrix2x2<Complex>(3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i),       T(7));
+  ok &= testMaxNorm(rsMatrix2x2<T>(3,      -5,      -7,       6      ),       T(7));
+  ok &= testMaxNorm(rsMatrix2x2<C>(3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i),       T(7));
 
-  ok &= testMaxNorm(rsMatrix<T>      (2, 2, {3,      -5,      -7,      6       }),  T(7));
-  ok &= testMaxNorm(rsMatrix<Complex>(2, 2, {3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i}),  T(7));
+  ok &= testMaxNorm(rsMatrix<T>(2, 2, {3,      -5,      -7,      6       }),  T(7));
+  ok &= testMaxNorm(rsMatrix<C>(2, 2, {3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i}),  T(7));
 
-  ok &= testMaxNorm(std::vector<T>({2,-5,4,-2}),                                    T(5));
-  ok &= testMaxNorm(std::list<T>(  {2,-5,4,-2}),                                    T(5));
+  ok &= testMaxNorm(std::vector<T>({2,-5,4,-2}),                              T(5));
+  ok &= testMaxNorm(std::list<T>(  {2,-5,4,-2}),                              T(5));
 
   // Some tests with classes that can be initialized with a std::vector of values:
-  std::vector<T> vals({ 1, 3, -7, 5, -2, 3 });
-  rsMatrixView<T> matView(2,3, &vals[0]);  ok &= testMaxNorm(matView, T(7));
-  rsPolynomial<T> poly(vals);              ok &= testMaxNorm(poly,    T(7));
+  {
+    std::vector<T> vals({ 1, 3, -7, 5, -2, 3 });
+    rsMatrixView<T> matView(2, 3, &vals[0]);  ok &= testMaxNorm(matView, T(7));
+    rsPolynomial<T> poly(vals);               ok &= testMaxNorm(poly,    T(7));
+  }
 
   return ok;
 

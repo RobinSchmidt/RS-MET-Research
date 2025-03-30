@@ -18116,7 +18116,7 @@ bool testMaxNorm(const T& value, const TNorm& expectedNorm)
   return ok;
 }
 
-template<class Real> 
+template<class T> 
 bool testMaxNormTemplates()
 {
   // Maybe use a more general type T - maybe we can also use int or something else. 
@@ -18130,14 +18130,14 @@ bool testMaxNormTemplates()
 
   bool ok = true;
 
-  using T = Real;  // preliminary - todo: use T directly in the template definition
+  //using T = Real;  // preliminary - todo: use T directly in the template definition
 
   // Type aliases for convenience:
-  using Complex = rsComplex<Real>;
-  using Vec3D   = rsVector3D<Real>;
+  using Complex = rsComplex<T>;
+  using Vec3D   = rsVector3D<T>;
 
   // Arbitrary real number used for the typeid comparisons:
-  Real realVal = Real(5);
+  //Real realVal = Real(5);
 
   Complex i(0, 1);
 

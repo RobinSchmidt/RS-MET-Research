@@ -11184,7 +11184,8 @@ void testSquarity()
   for(int n = 0; n < N; n++)
   {
     x[n] = (float)n;
-    y[n] = (float)squarity(n);
+    //y[n] = (float)squarity(n);
+    y[n] = squarity(n).toFloat();
   }
 
   // Compute some statistical features:

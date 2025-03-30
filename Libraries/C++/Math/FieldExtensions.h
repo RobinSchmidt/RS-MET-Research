@@ -78,6 +78,8 @@ public:
 
   double toDouble() const { return double(a) + double(b) * sqrt(double(n)); }
 
+  //double toDouble() const { return double(a) + double(b) * sqrt(double(n)); }
+
   operator double() const { return toDouble(); }
 
 

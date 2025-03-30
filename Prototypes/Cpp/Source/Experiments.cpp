@@ -18028,6 +18028,12 @@ auto rsMaxNorm(const rsMatrixView<T>& A)
 }
 
 
+// Some more base cases for some of my own types:
+inline float rsMaxNorm(const rsFloat32x4& v)
+{
+  return rsMax(std::abs(v[0]), std::abs(v[1]), std::abs(v[2]), std::abs(v[3]));
+}
+
 
 // Unit tests for the max-norm implementations (ToDo: move these into the main repo):
 
@@ -18085,6 +18091,13 @@ bool testMaxNormBaseCases()
   auto compNorm2 = rsMaxNorm(compVal2);
   ok &= typeid(compNorm2) == typeid(doubleVal);
   ok &= compNorm2 == 5.0;
+
+  // Test max-norm for the selfmade rsFloat32x4 type:
+  rsFloat32x4 f32x4(2.f, -3.f, -5.f, 4.f);
+  auto f32x4Norm = rsMaxNorm(f32x4);
+  ok &= typeid(f32x4Norm) == typeid(floatVal);
+  ok &= f32x4Norm == 5.f;
+  // ToDo: Add implementation and test for rsFloat64x2.
 
   return ok;
 }

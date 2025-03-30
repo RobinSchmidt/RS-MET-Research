@@ -18188,6 +18188,12 @@ bool testMaxNormTemplates()
   ok &= testMaxNorm(std::list<T>(  {2,-5,4,-2}),                                    T(5));
 
 
+  // Test it with rsMatrixView:
+  T vals[6] = { 1, 3, -7, 5, -2, 3 };
+  rsMatrixView<T> matView(2,3, vals);
+  ok &= testMaxNorm(matView, T(7));
+
+
 
   return ok;
 

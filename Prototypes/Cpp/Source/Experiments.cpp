@@ -18130,6 +18130,8 @@ bool testMaxNormTemplates()
 
   bool ok = true;
 
+  using T = Real;  // preliminray - todo: use T directly in the template definition
+
   // Type aliases for convenience:
   using Complex = rsComplex<Real>;
   using Vec3D   = rsVector3D<Real>;
@@ -18142,14 +18144,19 @@ bool testMaxNormTemplates()
   //auto compNorm2 = rsMaxNorm(compVal2);
   //ok &= typeid(compNorm2) == typeid(realVal);
   //ok &= compNorm2 == Real(5);
-  ok &= testMaxNorm(rsComplex<Real>(Real(-3), Real(5)), Real(5));
-
+  ok &= testMaxNorm(rsComplex<T>(T(-3), T(5)),  T(5));
 
   // 3D vectors:
-  rsVector3D<Real> vecVal(Real(-2), Real(3), Real(-5));
-  auto vecNorm = rsMaxNorm(vecVal);
-  ok &= typeid(vecNorm) == typeid(realVal);
-  ok &= vecNorm == Real(5);
+  //rsVector3D<Real> vecVal(Real(-2), Real(3), Real(-5));
+  //auto vecNorm = rsMaxNorm(vecVal);
+  //ok &= typeid(vecNorm) == typeid(realVal);
+  //ok &= vecNorm == Real(5);
+  ok &= testMaxNorm(rsVector3D<T>(T(-2), T(3), T(5)),  Real(5));
+
+
+  // ok &= testMaxNorm(, T(5));
+
+
 
   // 3D vectors of complex numbers:
   Complex i(0, 1);

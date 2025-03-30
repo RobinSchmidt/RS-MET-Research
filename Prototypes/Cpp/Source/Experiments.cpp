@@ -18184,8 +18184,12 @@ void testMaxNorm()
   ok &= testMaxNormTemplates<int>();
   //ok &= testMaxNormTemplates<uint>();       // Error because test uses negative numbers
   ok &= testMaxNormTemplates<float>();
-  ok &= testMaxNormTemplates<double>();       // ToDo: Try rsFloat32x4 and rsFloat64x2
-  //ok &= testMaxNormTemplates<rsFloat32x4>();  // FAILS!!! Figure out why!
+  ok &= testMaxNormTemplates<double>();    
+
+  ok &= !testMaxNormTemplates<rsFloat32x4>();
+  // This should return false because the type of the norm of rsFloat32x4 is float whereas the test
+  // expects the type of the norm to be rsFloat32x4, i.e. the type of the norm is expected to be
+  // equal to the template parameter T. ToDo: Try rsFloat64x2 as well
 
   //ok &= testMaxNormTemplates<rsFraction<int>>();
   // This fails! I think, it's because we have no rsMaxNorm defined for rsFraction. But it 

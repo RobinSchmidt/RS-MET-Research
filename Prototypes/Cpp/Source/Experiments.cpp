@@ -18149,6 +18149,11 @@ bool testMaxNormTemplates()
   ok &= typeid(realMatNorm) == typeid(realVal);
   ok &= realMatNorm == Real(7);
 
+  // Maximum norm of a general matrix of complex values:
+  rsMatrix<Complex> compMat(2, 2, {3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i});
+  auto compMatNorm = rsMaxNorm(compMat);
+  ok &= typeid(compMatNorm) == typeid(realVal);
+  ok &= compMatNorm == Real(7);
 
 
 

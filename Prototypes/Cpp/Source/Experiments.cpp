@@ -17952,7 +17952,6 @@ auto rsMaxNorm(const rsMatrix2x2<T>& A)
   return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b), rsMaxNorm(A.c), rsMaxNorm(A.d));
 }
 
-
 template<class T>
 auto rsMaxNorm(const rsMatrixView<T>& A)
 {
@@ -18128,7 +18127,7 @@ bool testMaxNormTemplates()
   ok &= vecCompNorm == Real(7);
 
 
-  // Try nested vectors, i.e. vectors of vectors - maybe use 2D vectors for that
+
 
 
   // Maximum norm of a 2x2 matrix of real values:
@@ -18156,11 +18155,11 @@ bool testMaxNormTemplates()
   ok &= compMatNorm == Real(7);
 
 
-
-
-  // ...more to come...take max-norms of complex numbers -> real, real matrices -> real, 
-  // complex matrices -> real, complex<simd<real>> -> real, rsMaxNorm<uint>(int) -> uint,
-  // rsFraction<int> -> rsFraction<int>, rsSparsePolynomial, try to make a complex type from 
+  // ToDo:
+  //
+  // - Try nested vectors, i.e. vectors of vectors - maybe use 2D vectors for that
+  //
+  // - / rsFraction<int> -> rsFraction<int>, rsSparsePolynomial, try to make a complex type from 
   // rsMatrix2x2. Maybe we need to use rsComplex for that. I think, std::complex would not work. 
   // Try as rsComplex<rsFraction<int>>, try rsComplex<rsVector2D<Real>>
 
@@ -18176,7 +18175,7 @@ void testMaxNorm()
   ok &= testMaxNormTemplates<int>();
   //ok &= testMaxNormTemplates<uint>();     // Error because test uses negative numbers
   ok &= testMaxNormTemplates<float>();
-  ok &= testMaxNormTemplates<double>();
+  ok &= testMaxNormTemplates<double>();     // ToDo: Try rsFloat32x4 and rsFloat64x2
 
   //ok &= testMaxNormTemplates<rsFraction<int>>();
   // This fails! I think, it's because we have no rsMaxNorm defined for rsFraction. But it 

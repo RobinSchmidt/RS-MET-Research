@@ -17804,7 +17804,12 @@ void testKroneckerTrafo2D()
 can be used in merge sort. All the implementations of merge sort I have seen so far, use an 
 additional buffer, making its space complexity O(n). I'd like to do merge sort with space 
 complexity of O(1). I'm not sure, if that's possible, though. I guess, if it would be possible,
-implementations would be already available...but maybe I didn't search hard enough. */
+implementations would be already available...but maybe I didn't search hard enough. 
+
+See: https://www.youtube.com/watch?v=InGeRuRk3f8  This video clearly says that merge sort is not in
+place. So, pretty surely, some serious computer science researchers have already tried hard to make
+it in place, so trying is probably futile. ...oh...the video actually discusses specifically that
+problem. */
 template<class T>
 void rsMergeInPlace(std::vector<T>& A, int s)
 {
@@ -17896,152 +17901,20 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 
 
 
-//--------------------------------------------------------------------------------------------------
-// Definitions of a function rsMaxNorm for different types. The main intention of this function is 
-// to find the maximum absolute value in an arbitrarily nested template container type. For 
-// example, one could have a vector of complex values or a matrix of matrices of complex vectors or
-// whatever. The behavior of rsMaxNorm should always be: return the maximum absolute element of the
-// bottommost type which is one of the primitive types, i.e. built in C++ types like int or float.
-// This rsMaxNorm function shall then be used as basis to implement an rsIsNegligible() function 
-// that can be used to determine if a value is so close to zero that it can be considered zero. We
-// need this mostly to deal with inexact floating point comparisons for equality (to zero).
-//
-// My first attempt was to use two template parameters: one for the argument type and another for
-// the return type and then somehow structure the implementations such that it all works. It was 
-// quite tricky to predict the interactions between C++ template instantiations, type deductions, 
-// and function overload resolution rules to make the overload set of the rsMaxNorm function 
-// behave exactly the way I want it to. I couldn't make it work this way. It turned out that the
-// trick is to use return type deduction, i.e. to use auto for the return value rather than 
-// manually declaring it via another template parameter (we already need one template parameter 
-// for the argument type). Return type deduction requires at least C++14.
-//
-// I'm not sure if we should call it rsMaxNorm. Maybe think about the name some more. For 
-// mathematical usage of the term, see:
-//
-// https://en.wikipedia.org/wiki/Norm_(mathematics)
-// https://en.wikipedia.org/wiki/Norm_(mathematics)#Maximum_norm_(special_case_of:_infinity_norm,_uniform_norm,_or_supremum_norm)
-// https://math.stackexchange.com/questions/285398/what-is-the-norm-of-a-complex-number 
+//-------------------------------------------------------------------------------------------------
 
 
-// Base cases for rsMaxNorm for built in primitive types:
-
-inline unsigned int rsMaxNorm(unsigned int x) { return x;           }
-inline int          rsMaxNorm(int          x) { return std::abs(x); }
-inline float        rsMaxNorm(float        x) { return std::abs(x); }
-inline double       rsMaxNorm(double       x) { return std::abs(x); }
-// ToDo: add all primitive types like int64_t etc.
-
-/** Implements the maximum norm for std::complex<T> where T can be either double or float. The 
-maximum of a complex number x + i*y is defined as max(|x|,|y|). When viewing the complex plane as
-a 2D real vector space, this is also called the infinity norm for this vector space. That's because
-it's the limit of the p-norm: L_p(x,y) = (|x|^p + |y|^p)^(1/p) as p approaches infinity. */
-template<class T>
-T rsMaxNorm(const std::complex<T>& z)
-{
-  return std::max(std::abs(z.real()), std::abs(z.imag()));
-}
-
-/** Implements the maximum norm for a std::vector of some type T. The max-norm of a vector is 
-defined recursively as the maximum of the max-norms of the vector's elements. */
-template<class T>
-auto rsMaxNorm(const std::vector<T>& v)
-{
-  auto max = rsMaxNorm(T(0));
-  for(auto& e : v)
-    max = rsMax(max, rsMaxNorm(e));
-  return max;
-
-  // Maybe use std::max instead of rsMax and maybe use std::accumulate instead of a loop.
-}
-
-template<class T>
-auto rsMaxNorm(const std::list<T>& v)
-{
-  auto max = rsMaxNorm(T(0));
-  for(auto& e : v)
-    max = rsMax(max, rsMaxNorm(e));
-  return max;
-}
-
-// It's annyoing that we need to duplicate the code for any container type for which we want to
-// support the rsMaxNorm operation. But if we want to implement it generically for all sorts of
-// containers like below, we get an error related to rsMatrix not defining value_type. Apparently,
-// the compiler tries to invoke this template for rsMatrix. Maybe it's because the specific 
-// implementation actually takes an rsMatrixView rather than an rsMatrix.
-//
-//template<class TCont>
-//auto rsMaxNorm(const TCont& v)
-//{
-//  using T = TCont::value_type;
-//  auto max = rsMaxNorm(T(0));
-//  for(auto& e : v)
-//    max = rsMax(max, rsMaxNorm(e));  // Maybe try to use std::max
-//  return max;
-//}
-//
-// To make that work, I think rsMatrix (or maybe already rsMatrixView) needs to implement the 
-// following STL compatibility features: a "using value_type = T;" definition, definition of the
-// iterator type and begin() and end() functions. Maybe more. Another possibility could be to
-// define an explicit specialization for rsMatrix itself such that the compiler selects that 
-// instead of the generic container template. It could invoke the definition for rsMatrixView by 
-// an upcast (cast to baseclass reference). Try that! It would be the less invasive solution and 
-// therefore perhaps preferable over modifying rsMatrix(View). At the moment, it's fine as is 
-// because I currently don't really need a max-norm function for any STL containers except 
-// std::vector. The implementation for std::list is just there for testing purposes. So, for the 
-// time being, it's fine. But maybe it's something to change later.
 
 
 
 // Now the template implementations for template classes from RAPT. These should eventually go near
 // the actual class definitions.
 
-template<class T>
-auto rsMaxNorm(const rsVector3D<T>& v)
-{
-  return rsMax(rsMaxNorm(v.x), rsMaxNorm(v.y), rsMaxNorm(v.z));
-}
 
-template<class T>
-auto rsMaxNorm(const rsComplex<T>& z)
-{
-  return rsMax(rsMaxNorm(z.re), rsMaxNorm(z.im));
-}
 
-template<class T>
-auto rsMaxNorm(const rsMatrix2x2<T>& A)
-{
-  return rsMax(rsMaxNorm(A.a), rsMaxNorm(A.b), rsMaxNorm(A.c), rsMaxNorm(A.d));
-}
 
-template<class T>
-auto rsMaxNorm(const T* p, int N)
-{
-  auto max = rsMaxNorm(T(0));
-  for(int i = 0; i < N; i++)
-    max = rsMax(max, rsMaxNorm(p[i]));
-  return max;
 
-  // ToDo:
-  //
-  // - Try it with a type T that requires a prototype for correct initialization. Maybe something
-  //   like rsMultiVector or rsModularInteger - although, for the latter, the notion of a 
-  //   maximum-norm may be mathematically questionable and maybe for the former as well. But we may
-  //   need to implement it, if we wnat to do linear algebra with them. But maybe we can directly
-  //   implement rsIsNegligible or maybe we don't need it for rsModularInteger if rsIsZero is 
-  //   correctly implemented. We'll see.
-}
 
-template<class T>
-auto rsMaxNorm(const rsMatrixView<T>& A)
-{
-  return rsMaxNorm(A.getDataPointerConst(), A.getSize());
-}
-
-template<class T>
-auto rsMaxNorm(const rsPolynomial<T>& p)
-{
-  return rsMaxNorm(p.getCoeffPointerConst(), p.getNumCoeffs());
-}
 
 
 // Some more base cases for some of my own types:
@@ -18050,18 +17923,7 @@ inline float rsMaxNorm(const rsFloat32x4& v)
   return rsMax(std::abs(v[0]), std::abs(v[1]), std::abs(v[2]), std::abs(v[3]));
 }
 
-template<class T>
-auto rsMaxNorm(const rsFraction<T>& q)
-{
-  return rsAbs(q);
 
-  // This currently invokes the fallback implementation of rsAbs that checks if less then zero and
-  // if so, returns -x otherwise returns x. Maybe we can provide a more efficient implementation 
-  // of rsAbs specifically for rsFraction. We just need to take the abs of the numerator and leave 
-  // the denominator as is. Maybe we can even bypass the canonicalization in the constructor. 
-  // Perhaps by using a private factory function makeUnchecked(T newNum, T newDen) or something 
-  // like that.
-}
 
 
 

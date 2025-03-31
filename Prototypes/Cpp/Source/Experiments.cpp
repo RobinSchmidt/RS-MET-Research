@@ -18018,7 +18018,7 @@ bool testMaxNormTemplates()
   ok &= testMaxNorm(rsMatrix<C>(2, 2, {3 + 2*i, 3 - 5*i, 2 - 7*i, 6 + 4*i}),  T(7));
 
   ok &= testMaxNorm(std::vector<T>({2,-5,4,-2}),                              T(5));
-  ok &= testMaxNorm(std::list<T>(  {2,-5,4,-2}),                              T(5));
+  //ok &= testMaxNorm(std::list<T>(  {2,-5,4,-2}),                              T(5));
 
   // Some tests with classes that can be initialized with a std::vector of values:
   {

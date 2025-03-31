@@ -17898,34 +17898,7 @@ void rsMergeInPlace(std::vector<T>& A, int s)
 
 }
 
-
-
-
 //-------------------------------------------------------------------------------------------------
-
-
-
-
-
-// Now the template implementations for template classes from RAPT. These should eventually go near
-// the actual class definitions.
-
-
-
-
-
-
-
-
-// Some more base cases for some of my own types:
-inline float rsMaxNorm(const rsFloat32x4& v)
-{
-  return rsMax(std::abs(v[0]), std::abs(v[1]), std::abs(v[2]), std::abs(v[3]));
-}
-
-
-
-
 
 // Unit tests for the max-norm implementations (ToDo: move these into the main repo):
 

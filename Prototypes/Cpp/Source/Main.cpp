@@ -122,7 +122,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
 
   // MIMO Filters:
-  //testMimoTransferMatrix();
+  testMimoTransferMatrix();
   //testMimoFilters();           // just a stub - not much in there yet, mostly comments
   //testStateSpaceFilters(); 
 
@@ -144,14 +144,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testFourierTrafo2D();
   //testKroneckerTrafo2D();
 
-
-
-
   // Misc:
-  testMaxNorm();
   //testMerge();  // Trying to find an in-place merge algorithm - not sure, if that's possible, though
-
-
 
   // Riemann zeta function:
   //testPolyaPotenialFormulas();

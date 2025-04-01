@@ -16028,6 +16028,9 @@ void testStateSpaceFromDF()
   //   a[0] != 1. At the moment, this test cas would fail but i think it is because our driect form
   //   filter implementation can't handle that case correctly - so I don't think that the DF -> SSF
   //   conversion is at fault.
+  //
+  // - Try to figure out how to invert a state space filter. To do that, look at the matrix 
+  //   equations for state update and output computation and solve these for the input vector.
 }
 
 void testStateSpaceFilters()

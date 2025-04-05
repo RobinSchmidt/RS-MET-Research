@@ -200,7 +200,9 @@ The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element
 %  x^T A x (sandwich product)
 % -The matrix product can be seen as being made up from scalar products of the rows of the left 
 %  factor with the columns of the right factor
-
+% -ToDo: explain, how associativity can be leveraged to optimize computations of products of
+%  multiple matrix factors. For example, computing (A*B)*C would be less efficient than computing
+%  A*(B*C) when A,B are full blown MxM matrices and C is just a M-vector, i.e. a Mx1 matrix.
 
 
 %---------------------------------------------------------------------------------------------------
@@ -861,7 +863,7 @@ The vectorization of a matrix $\mathbf{A}$ is denoted by $\vectorize(\mathbf{A})
 % eigenvalues. etc.
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Hadamard Product} The Hadamard product of two $m \times n$ matrices is just the element-wise product. It is associative, commutative and distributive over addition. It is denoted by $\mathbf{A} \odot \mathbf{B}$ and satisfies
+\subsubsection{Hadamard Product} The Hadamard product (also known as Schur product) of two $m \times n$ matrices is just the element-wise product. It is associative, commutative and distributive over addition. It is denoted by $\mathbf{A} \odot \mathbf{B}$ and satisfies
 
 \medskip
 \begin{tabular}{l l l l}
@@ -879,6 +881,10 @@ This product may also be called the \emph{naive matrix product}. Its application
 % -in numerical processing, we often need element-wise array operations
 
 % https://en.wikipedia.org/wiki/Hadamard_product_(matrices)
+
+% also known as Schur product - see:
+% https://en.wikipedia.org/wiki/Hadamard_product_(matrices)
+% https://bitbucket.org/blaze-lib/blaze/wiki/Matrix-Matrix%20Multiplication#!componentwise-multiplication-schur-product
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Kronecker Product} The Kronecker product between an $m \times n$ matrix $\mathbf{A}$ and a $p \times q$ matrix $\mathbf{B}$ is an $mp \times nq$ matrix $\mathbf{C}$ in which each element is a product of one element from $\mathbf{A}$ and one element from $\mathbf{B}$. ...TBC..

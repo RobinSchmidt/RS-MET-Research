@@ -5889,11 +5889,22 @@ void testDualComplex()
   // N(sin(z*z)), N(cos(z*z))
 
 
-  // todo: implement exp, sin, cos, sqrt, etc. and see if complex autodiff also works for them. if 
-  // it works, it may be useful for complex Newton iteration
-
   int dummy = 0;
 
+
+  // ToDo: 
+  //
+  // - Implement exp, sin, cos, sqrt, etc. and see if complex autodiff also works for them. if 
+  //   it works, it may be useful for complex Newton iteration
+  //
+  // - Figure out what happens if we compose dual numbers with complex numbers, i.e. form 
+  //   rsComplex<rsDualNumber<T>> or rsDualNumber<rsComplex<T>> - where for the latter, we could 
+  //   also use std::complex instead of rsComplex. Will is just work as expected and we get the 
+  //   correct behavior for complex derivatives? Or are there any pitfalls? Does it make a 
+  //   difference which way we do the composition. ...well - with std::complex, I guess using 
+  //   complex as inner class is the only way possible because std::complex does not really support
+  //   custom types T. But with rsComplex, we should be able to do it both ways (perhaps needs some 
+  //   additional code, though - but it should be possible).
 }
 
 

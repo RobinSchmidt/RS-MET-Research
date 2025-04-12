@@ -199,9 +199,13 @@ bool testAllocationLogger()
   // We did not yet allocate anything, so initially, we expect all counters to be zero:
   ok &= checkAllocState(0, 0);
 
+  // Data type that we use for the allocation logging tests. We will allocate buffers, vectors etc.
+  // of that type:
+  using Data = double;
+
   // Test if logger registers direct invocations of malloc and free:
   {
-    double* ptr = (double*)malloc(10 * sizeof(double));
+    Data* ptr = (Data*)malloc(10 * sizeof(Data));
     ok &= checkAllocState(1, 0);
     free(ptr);
     ok &= checkAllocState(1, 1);
@@ -209,7 +213,7 @@ bool testAllocationLogger()
 
   // Test logging for operators new and delete:
   {
-    double* ptr = new double;
+    Data* ptr = new Data;
     ok &= checkAllocState(2, 1);
     delete ptr;
     ok &= checkAllocState(2, 2);
@@ -217,7 +221,7 @@ bool testAllocationLogger()
 
   // Test logging for new[] and delete[]:
   {
-    double* ptr = new double[10];
+    Data* ptr = new Data[10];
     ok &= checkAllocState(3, 2);
     delete[] ptr;
     ok &= checkAllocState(3, 3);
@@ -232,23 +236,23 @@ bool testAllocationLogger()
 
   // Test logging for default constructor of std::vector:
   {
-    std::vector<double> v;             // This does one allocation in MSVC! Why?
+    std::vector<Data> v;             // This does one allocation in MSVC! Why?
     ok &= checkAllocState(4, 3);
   }
   ok &= checkAllocState(4, 4);
 
   // Test logging for constructor of std::vector that takes an int:
   {
-    std::vector<double> v(10);         // This does two allocations in MSVC! Why?
+    std::vector<Data> v(10);         // This does two allocations in MSVC! Why?
     ok &= checkAllocState(6, 4);
   }
   ok &= checkAllocState(6, 6);
 
   // Test logging for copy constructor of std::vector:
   {
-    std::vector<double> v(10);         // Two allocations in MSVC.
+    std::vector<Data> v(10);         // Two allocations in MSVC.
     ok &= checkAllocState(8, 6);
-    std::vector<double> v2(v);         // Another two allocations.
+    std::vector<Data> v2(v);         // Another two allocations.
     ok &= checkAllocState(10, 6);
   }
   ok &= checkAllocState(10, 10);

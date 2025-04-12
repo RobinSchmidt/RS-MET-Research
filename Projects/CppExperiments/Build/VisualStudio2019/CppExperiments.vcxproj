@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Common.h" />
+    <ClInclude Include="..\..\Source\HeapAllocationLogger.h" />
     <ClInclude Include="..\..\Source\MultiArray.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

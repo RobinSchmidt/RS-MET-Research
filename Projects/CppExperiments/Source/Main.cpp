@@ -1,3 +1,6 @@
+
+//#include "HeapAllocationLogger.h"  // Must be included before anything else, I think.
+
 #include <iostream>
 #include <array>
 #include <vector>
@@ -5,7 +8,6 @@
 #include <algorithm>
 #include <typeinfo>
 #include <optional>    // needs c++17
-
 
 #include "Common.h"
 #include "ObjectLifetime.cpp"

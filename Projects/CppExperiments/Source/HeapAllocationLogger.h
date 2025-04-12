@@ -46,15 +46,15 @@ public:
 
   void logAllocation() {  numAllocs++;  }
 
-  int getNumAllocations() const { return numAllocs; }
+  size_t getNumAllocations() const { return numAllocs; }
 
 
   void logDeallocation() { numDeallocs++; }
 
-  int getNumDeallocations() const { return numDeallocs; }
+  size_t getNumDeallocations() const { return numDeallocs; }
 
 
-  int getNumAllocatedChunks() const { return getNumAllocations() - getNumDeallocations(); }
+  size_t getNumAllocatedChunks() const { return getNumAllocations() - getNumDeallocations(); }
 
 
   void reset()
@@ -70,8 +70,8 @@ private:
 
   static rsHeapAllocationLogger* theObject;
 
-  int numAllocs   = 0;
-  int numDeallocs = 0;
+  size_t numAllocs   = 0;
+  size_t numDeallocs = 0;
 
 };
 

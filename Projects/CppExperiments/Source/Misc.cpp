@@ -183,30 +183,43 @@ bool testAllocationLogger()
 {
   bool ok = true;
 
+  // The allocation logger singleton:
   rsHeapAllocationLogger* logger = rsHeapAllocationLogger::getInstance();
 
-  ok &= logger->getNumAllocations()     == 0;
-  ok &= logger->getNumDeallocations()   == 0;
-  ok &= logger->getNumAllocatedChunks() == 0;
-  // ToDo: wrap into helper function checkAllocState(0, 0, 0)
+  // Helper function
+  auto checkAllocState = [&](size_t expectedAllocs, size_t expectedDeallocs, size_t expectedChunks)
+  {
+    bool ok = true;
+    ok &= logger->getNumAllocations()     == expectedAllocs;
+    ok &= logger->getNumDeallocations()   == expectedDeallocs;
+    ok &= logger->getNumAllocatedChunks() == expectedChunks;
+    return ok;
+  };
+
+
+  ok &= checkAllocState(0, 0, 0);
+
+
+
+
 
   // Test, if the custom allocation functions are called:
   double* pDouble10 = (double*) malloc(10 * sizeof(double));
 
-  ok &= logger->getNumAllocations()     == 1;
-  ok &= logger->getNumDeallocations()   == 0;
-  ok &= logger->getNumAllocatedChunks() == 1;
+
+
+  ok &= checkAllocState(1, 0, 1);
+
 
   free(pDouble10);
 
-  ok &= logger->getNumAllocations()     == 1;
-  ok &= logger->getNumDeallocations()   == 1;
-  ok &= logger->getNumAllocatedChunks() == 0;
+  ok &= checkAllocState(1, 1, 0);
 
 
 
 
-
+  // Clean up the logger:
+  rsHeapAllocationLogger::deleteInstance();
 
   return ok;
 }

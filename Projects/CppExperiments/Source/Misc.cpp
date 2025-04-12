@@ -186,6 +186,10 @@ bool testAllocationLogger()
   // The allocation logger singleton:
   //rsHeapAllocationLogger* logger = rsHeapAllocationLogger::getInstance();
 
+
+  heapAllocLogger.reset();
+
+
   // Helper function to check if the number of allocations, deallocations, etc. that occurred 
   // matches the expected values:
   auto checkAllocState = [&](size_t expectedAllocs, size_t expectedDeallocs, size_t expectedChunks)

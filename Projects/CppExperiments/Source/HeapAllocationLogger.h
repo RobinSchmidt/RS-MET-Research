@@ -24,32 +24,16 @@ ToDo:
 
 
 
-/** A singleton object for logging heap allocations. 
-
-Nah! Using the singleton pattern is not a good idea because it uses the new operator internally. I 
-had endless resursions and stack overflows with this!  */
+/** A class for logging heap allocations. ...TBC... */
 
 class rsHeapAllocationLogger
 {
 
 public:
 
-  /*
-  static rsHeapAllocationLogger* getInstance()
-  {
-    if(theObject == nullptr)
-      theObject = new rsHeapAllocationLogger;
-    return theObject;
-  }
-
-  static void deleteInstance()
-  {
-    delete theObject;
-    theObject = nullptr;
-  }
-  */
 
   void logAllocation() {  numAllocs++;  }
+
 
   size_t getNumAllocations() const { return numAllocs; }
 
@@ -57,7 +41,6 @@ public:
   void logDeallocation() { numDeallocs++; }
 
   size_t getNumDeallocations() const { return numDeallocs; }
-
 
   size_t getNumAllocatedChunks() const { return getNumAllocations() - getNumDeallocations(); }
 
@@ -70,10 +53,6 @@ public:
 
 
 private:
-
-  //rsHeapAllocationLogger(){};
-
-  //static rsHeapAllocationLogger* theObject;
 
   size_t numAllocs   = 0;
   size_t numDeallocs = 0;
@@ -100,8 +79,6 @@ void* rsLoggingMalloc(size_t size)
 
   // See: https://en.cppreference.com/w/c/memory/malloc
 }
-// This actually doesn't get called
-
 
 void* rsLoggingDebugMalloc(size_t size, int blockUse, char const* fileName, int lineNumber)
 {
@@ -121,65 +98,25 @@ void rsLoggingFree(void* ptr)
 }
 
 
-//#define malloc(size) (rsLoggingMalloc(size))
-//#define _malloc_dbg(size, blockUse, fileName, lineNumber) (rsLoggingDebugMalloc(size, blockUse, fileName, lineNumber))
-
-
 #define malloc(size) rsLoggingMalloc(size)
-#define _malloc_dbg(size, blockUse, fileName, lineNumber) rsLoggingDebugMalloc(size, blockUse, fileName, lineNumber)
-
-
-//#define free(ptr)    free(ptr)
+//#define _malloc_dbg(size, blockUse, fileName, lineNumber) rsLoggingDebugMalloc(size, blockUse, fileName, lineNumber)
 #define free(ptr)    rsLoggingFree(ptr)
-//#define free(ptr)    (rsLoggingFree(ptr))
-// With this defined, I can't even compile.
 
 // I think, this also covers new, new[], delete, delete[], because they use malloc and free 
 // internally...but cant we really count on that?  ...NOPE!!!
 // Also, what about realloc and calloc? 
 
 
-
-
-
 // Code for new/delete adapted from here:
 // https://learn.microsoft.com/en-us/cpp/cpp/new-and-delete-operators?view=msvc-170
-//
-//
-// Using these causes a stack overflow because allocating the rsHeapAllocationLogger leads to an 
-// endless recursion of calling rsLoggingMalloc and new. Solution: Try to implement the logger not
-// as singleto but rather as global object.
 
-int fLogMemory = 0;      // Perform logging (0=no; nonzero=yes)?
-int cBlocksAllocated = 0;  // Count of blocks allocated.
-
-// User-defined operator new:
-void *operator new( size_t stAllocateBlock ) {
-  static int fInOpNew = 0;   // Guard flag.
-
-  if ( fLogMemory && !fInOpNew ) 
-  {
-    fInOpNew = 1;
-    //clog << "Memory block " << ++cBlocksAllocated
-    //  << " allocated for " << stAllocateBlock
-    //  << " bytes\n";
-    fInOpNew = 0;
-  }
-  return malloc( stAllocateBlock );
+void *operator new(size_t stAllocateBlock) 
+{
+  return malloc(stAllocateBlock);
 }
 
-// User-defined operator delete.
-void operator delete( void *pvMem ) 
+void operator delete(void *pvMem) 
 {
-  static int fInOpDelete = 0;   // Guard flag.
-  if ( fLogMemory && !fInOpDelete ) 
-  {
-    //fInOpDelete = 1;
-    //clog << "Memory block " << cBlocksAllocated--
-    //  << " deallocated\n";
-    //fInOpDelete = 0;
-  }
-
   free( pvMem );
 }
 

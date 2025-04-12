@@ -223,6 +223,12 @@ bool testAllocationLogger()
     ok &= checkAllocState(3, 3);
   }
 
+
+  // The tests below use expectations that reflect the behavior of the MSVC compiler of Visual
+  // Studio 2019. They are actually not what I would naturally expect to happen. Apparently, MSVC 
+  // does some extra allocations. So, whether or not the tests below leave the ok variable in true
+  // state may be compiler dependent:
+
   // Test logging for default contructor of std::vector:
   {
     std::vector<double> v;             // This does one allocation in MSVC! Why?
@@ -277,12 +283,30 @@ bool testAllocationLogger()
   // - Maybe write a custom allocator class that logs allocations such that we can pass it to the
   //   std::vector that we use in e.g. rsMatrix. It currently has this ugly instrumentation code to
   //   log the allocations which we use in the unit test to make sure that we do not miss any 
-  //   unexpected extra allocations. But the dsiadvantage is that this complicates the API of 
+  //   unexpected extra allocations. But the disadvantage is that this complicates the API of 
   //   rsMatrix because we will then always have to pass this additional template parameter for the
   //   allocator type. This will increase the textual noise in the codebase considerably. 
   //   Alternativly, we may replace all usages of std::vector by an API compatible drop-in 
   //   replacement rsVector that does the logging in debug builds. This class may internally use 
   //   std::vector, so we can still inspect the contents of vectors in the debugger (but this will 
-  //   then require one click more which is an inconvenience that may add up in debugging 
-  //   sessions).
+  //   then require one click more because the actual content of the vector will be one "folder" 
+  //   level deeper into the data structure. This seems to be only a minor inconvenience but I 
+  //   guess it may add up in more intense debugging sessions. But wait: We do not necessarily have
+  //   to pass the allocator to every template invocation of rsMatrix. We could also use 
+  //   conditional compilation: in debug builds, we always use the logging allocator and in release
+  //   builds, we use the default allocator. It may uglify the implementation of rsMatrix a bit but
+  //   I think, that might be acceptable. It would look like:
+  //
+  //     #if defined(RS_DEBUG)
+  //       std::vector<T, rsLoggingAllocator> elems;
+  //     #else
+  //       std::vector<T> elems;
+  //
+  //   rather that just the else-branch. ...but actually: we ant to run the unit tests also with a
+  //   build in release configuration. But when doing it like above, we would break the allocation
+  //   test for rsMatrix. Maybe we should define a special macro RS_LOG_ALLOCS which we can #define
+  //   also in release builds.
+  //
+  // - Figure out if this weird behavior of std::vector with these unexpected extra allocations 
+  //   also happens with other compilers (i.e. gcc and clang).
 }

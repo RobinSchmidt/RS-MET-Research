@@ -20,6 +20,8 @@ public:
   size_t getNumDeallocations()   const { return numDeallocs; }
   size_t getNumAllocatedChunks() const { return getNumAllocations() - getNumDeallocations(); }
 
+  bool isMemoryAllocated() const { return getNumAllocatedChunks() > 0; }
+
   void logAllocation()   { numAllocs++;   }
   void logDeallocation() { numDeallocs++; }
 
@@ -83,7 +85,7 @@ void operator delete(void *ptr)
 //
 // - Check, if the custom new/delete functions also get called for array allocations via e.g.
 //   double* p = new double[10]; delete[] p;  If not, we may have to write specific versions for 
-//   those as well.
+//   those as well. ..OK...done - yes, they get called.
 //
 // - Maybe distinguish between different forms of allocation. Log separately the calls to malloc, new, 
 //   new[] and free, delete, delete[]. 

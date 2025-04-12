@@ -193,6 +193,7 @@ bool testAllocationLogger()
     ok &= heapAllocLogger.getNumAllocatedChunks() == expectedChunks;
     return ok;
   };
+  // Maybe get rid of the expectedChunks parameter. It's a trivial combination of the other two.
 
   // Reset the counters in the heap allocation logger:
   heapAllocLogger.reset();
@@ -201,40 +202,58 @@ bool testAllocationLogger()
   ok &= checkAllocState(0, 0, 0);
 
   // Test if logger registers direct invocations of malloc and free:
-  double* pDouble = (double*) malloc(10 * sizeof(double));
-  ok &= checkAllocState(1, 0, 1);
-  free(pDouble);
-  ok &= checkAllocState(1, 1, 0);
+  {
+    double* ptr = (double*)malloc(10 * sizeof(double));
+    ok &= checkAllocState(1, 0, 1);
+    free(ptr);
+    ok &= checkAllocState(1, 1, 0);
+  }
 
   // Test logging for operators new and delete:
-  pDouble = new double;
-  ok &= checkAllocState(2, 1, 1);
-  delete pDouble;
-  ok &= checkAllocState(2, 2, 0);
+  {
+    double* ptr = new double;
+    ok &= checkAllocState(2, 1, 1);
+    delete ptr;
+    ok &= checkAllocState(2, 2, 0);
+  }
 
   // Test logging for new[] and delete[]:
-  pDouble = new double[10];
-  ok &= checkAllocState(3, 2, 1);
-  delete[] pDouble;
-  ok &= checkAllocState(3, 3, 0);
-
-
-  /*
   {
-    //std::vector<double> vd;       // This does one allocation!   Why?
-    std::vector<double> vd(10);     // This does two allocations!
-    ok &= checkAllocState(5, 3, 1);
+    double* ptr = new double[10];
+    ok &= checkAllocState(3, 2, 1);
+    delete[] ptr;
+    ok &= checkAllocState(3, 3, 0);
   }
-  */
 
+  // Test logging for default contructor of std::vector:
+  {
+    std::vector<double> vd;            // This does one allocation in MSVC! Why?
+    ok &= checkAllocState(4, 3, 1);
+  }
+  ok &= checkAllocState(4, 4, 0);
+
+  // Test logging for contructor of std::vector that takes an int:
+  {
+    std::vector<double> vd(10);        // This does two allocations in MSVC! Why?
+    ok &= checkAllocState(6, 4, 2);
+  }
+  ok &= checkAllocState(6, 6, 0);
 
   // Return unit test result:
   return ok;
 
 
+  // Observations:
+  //
+  // - In MSVC, the standard constructor of std::vector does a memory allocation. That is a very 
+  //   unexpected behavior. What (the fuck) does it allocate? Moreover, the constructor which takes
+  //   an initial size (which is expected to allocate once), allocates twice. What is going on 
+  //   there?
+  //
+  //
   // ToDo:
   //
-  // - Check allocation logging of STL containers such as std::vector
+  // - Check allocation logging of more STL containers such as std::vector
   //
   // - Implement and check logging of calloc and realloc. 
 }

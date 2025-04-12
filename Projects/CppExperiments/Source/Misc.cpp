@@ -190,10 +190,8 @@ bool testAllocationLogger()
     bool ok = true;
     ok &= heapAllocLogger.getNumAllocations()     == expectedAllocs;
     ok &= heapAllocLogger.getNumDeallocations()   == expectedDeallocs;
-    //ok &= heapAllocLogger.getNumAllocatedChunks() == expectedChunks;
     return ok;
   };
-  // Maybe get rid of the expectedChunks parameter. It's a trivial combination of the other two.
 
   // Reset the counters in the heap allocation logger:
   heapAllocLogger.reset();
@@ -227,17 +225,28 @@ bool testAllocationLogger()
 
   // Test logging for default contructor of std::vector:
   {
-    std::vector<double> vd;            // This does one allocation in MSVC! Why?
+    std::vector<double> v;             // This does one allocation in MSVC! Why?
     ok &= checkAllocState(4, 3);
   }
   ok &= checkAllocState(4, 4);
 
   // Test logging for contructor of std::vector that takes an int:
   {
-    std::vector<double> vd(10);        // This does two allocations in MSVC! Why?
+    std::vector<double> v(10);         // This does two allocations in MSVC! Why?
     ok &= checkAllocState(6, 4);
   }
   ok &= checkAllocState(6, 6);
+
+  // Test logging for copy contructor of std::vector:
+  {
+    std::vector<double> v(10);
+    ok &= checkAllocState(8, 6);
+    std::vector<double> v2(v);
+    ok &= checkAllocState(10, 6);
+  }
+  ok &= checkAllocState(10, 10);
+
+
 
   // Return unit test result:
   return ok;
@@ -268,8 +277,12 @@ bool testAllocationLogger()
   // - Maybe write a custom allocator class that logs allocations such that we can pass it to the
   //   std::vector that we use in e.g. rsMatrix. It currently has this ugly instrumentation code to
   //   log the allocations which we use in the unit test to make sure that we do not miss any 
-  //   unexpected extra allocations. Or maybe alternativly, replace all usages of std::vector by an
-  //   API compatible drop-in replacement rsVector that does the logging in debug builds. This 
-  //   class may internally use std::vector, so we can still inspect the contents of vectors in the
-  //   debugger (but this will then require one click more).
+  //   unexpected extra allocations. But the dsiadvantage is that this complicates the API of 
+  //   rsMatrix because we will then always have to pass this additional template parameter for the
+  //   allocator type. This will increase the textual noise in the codebase considerably. 
+  //   Alternativly, we may replace all usages of std::vector by an API compatible drop-in 
+  //   replacement rsVector that does the logging in debug builds. This class may internally use 
+  //   std::vector, so we can still inspect the contents of vectors in the debugger (but this will 
+  //   then require one click more which is an inconvenience that may add up in debugging 
+  //   sessions).
 }

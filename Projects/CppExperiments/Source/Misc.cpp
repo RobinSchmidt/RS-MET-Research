@@ -185,12 +185,12 @@ bool testAllocationLogger()
 
   // Helper function to check if the number of allocations, deallocations, etc. that occurred 
   // matches the expected values:
-  auto checkAllocState = [&](size_t expectedAllocs, size_t expectedDeallocs, size_t expectedChunks)
+  auto checkAllocState = [&](size_t expectedAllocs, size_t expectedDeallocs)
   {
     bool ok = true;
     ok &= heapAllocLogger.getNumAllocations()     == expectedAllocs;
     ok &= heapAllocLogger.getNumDeallocations()   == expectedDeallocs;
-    ok &= heapAllocLogger.getNumAllocatedChunks() == expectedChunks;
+    //ok &= heapAllocLogger.getNumAllocatedChunks() == expectedChunks;
     return ok;
   };
   // Maybe get rid of the expectedChunks parameter. It's a trivial combination of the other two.
@@ -199,45 +199,45 @@ bool testAllocationLogger()
   heapAllocLogger.reset();
 
   // We did not yet allocate anything, so initially, we expect all counters to be zero:
-  ok &= checkAllocState(0, 0, 0);
+  ok &= checkAllocState(0, 0);
 
   // Test if logger registers direct invocations of malloc and free:
   {
     double* ptr = (double*)malloc(10 * sizeof(double));
-    ok &= checkAllocState(1, 0, 1);
+    ok &= checkAllocState(1, 0);
     free(ptr);
-    ok &= checkAllocState(1, 1, 0);
+    ok &= checkAllocState(1, 1);
   }
 
   // Test logging for operators new and delete:
   {
     double* ptr = new double;
-    ok &= checkAllocState(2, 1, 1);
+    ok &= checkAllocState(2, 1);
     delete ptr;
-    ok &= checkAllocState(2, 2, 0);
+    ok &= checkAllocState(2, 2);
   }
 
   // Test logging for new[] and delete[]:
   {
     double* ptr = new double[10];
-    ok &= checkAllocState(3, 2, 1);
+    ok &= checkAllocState(3, 2);
     delete[] ptr;
-    ok &= checkAllocState(3, 3, 0);
+    ok &= checkAllocState(3, 3);
   }
 
   // Test logging for default contructor of std::vector:
   {
     std::vector<double> vd;            // This does one allocation in MSVC! Why?
-    ok &= checkAllocState(4, 3, 1);
+    ok &= checkAllocState(4, 3);
   }
-  ok &= checkAllocState(4, 4, 0);
+  ok &= checkAllocState(4, 4);
 
   // Test logging for contructor of std::vector that takes an int:
   {
     std::vector<double> vd(10);        // This does two allocations in MSVC! Why?
-    ok &= checkAllocState(6, 4, 2);
+    ok &= checkAllocState(6, 4);
   }
-  ok &= checkAllocState(6, 6, 0);
+  ok &= checkAllocState(6, 6);
 
   // Return unit test result:
   return ok;
@@ -248,7 +248,15 @@ bool testAllocationLogger()
   // - In MSVC, the standard constructor of std::vector does a memory allocation. That is a very 
   //   unexpected behavior. What (the fuck) does it allocate? Moreover, the constructor which takes
   //   an initial size (which is expected to allocate once), allocates twice. What is going on 
-  //   there?
+  //   there? ...well - looking at the implementation of the standard constructor of std::vector,
+  //   these seems to be something strange going on. The vector has a data member _Mypair of type
+  //   ... and the constructor calls this:
+  //
+  //     _Mypair._Myval2._Alloc_proxy(_GET_PROXY_ALLOCATOR(_Alty, _Getal()))
+  //
+  //   I have no idea what this is, what it does and  why. But apparently, it triggers an 
+  //   allocation. Try to figure out, if this also happens in release builds. Maybe write a message 
+  //   to the command line with the number of allocs and deallocs.
   //
   //
   // ToDo:
@@ -256,4 +264,12 @@ bool testAllocationLogger()
   // - Check allocation logging of more STL containers such as std::vector
   //
   // - Implement and check logging of calloc and realloc. 
+  //
+  // - Maybe write a custom allocator class that logs allocations such that we can pass it to the
+  //   std::vector that we use in e.g. rsMatrix. It currently has this ugly instrumentation code to
+  //   log the allocations which we use in the unit test to make sure that we do not miss any 
+  //   unexpected extra allocations. Or maybe alternativly, replace all usages of std::vector by an
+  //   API compatible drop-in replacement rsVector that does the logging in debug builds. This 
+  //   class may internally use std::vector, so we can still inspect the contents of vectors in the
+  //   debugger (but this will then require one click more).
 }

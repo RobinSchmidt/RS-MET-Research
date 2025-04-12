@@ -24,7 +24,10 @@ ToDo:
 
 
 
-/** A singleton object for logging heap allocations. */
+/** A singleton object for logging heap allocations. 
+
+Nah! Using the singleton pattern is not a good idea because it uses the new operator internally. I 
+had endless resursions and stack overflows with this!  */
 
 class rsHeapAllocationLogger
 {
@@ -77,13 +80,14 @@ private:
 
 rsHeapAllocationLogger* rsHeapAllocationLogger::theObject = nullptr;
 
-
 // https://stackoverflow.com/questions/1008019/how-do-you-implement-the-singleton-design-pattern
-
 
 // Maybe also log the allocated size. But this requires us to keep track of all the addresses of 
 // the allocated chunks and their sizes, so it would complicate the implementation a lot. That's 
 // overkill at the moment. 
+
+
+
 
 
 

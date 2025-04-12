@@ -208,24 +208,29 @@ bool testAllocationLogger()
     Data* ptr = (Data*)malloc(10 * sizeof(Data));
     ok &= checkAllocState(1, 0);
     free(ptr);
-    ok &= checkAllocState(1, 1);
   }
+  ok &= checkAllocState(1, 1);
 
   // Test logging for operators new and delete:
   {
     Data* ptr = new Data;
     ok &= checkAllocState(2, 1);
     delete ptr;
-    ok &= checkAllocState(2, 2);
   }
+  ok &= checkAllocState(2, 2);
 
   // Test logging for new[] and delete[]:
   {
     Data* ptr = new Data[10];
     ok &= checkAllocState(3, 2);
     delete[] ptr;
-    ok &= checkAllocState(3, 3);
   }
+  ok &= checkAllocState(3, 3);
+
+
+  // Test logging for std::unique_ptr:
+  // ...
+
 
 
   // The tests below use expectations that reflect the behavior of the MSVC compiler of Visual
@@ -281,10 +286,8 @@ bool testAllocationLogger()
   //
   // ToDo:
   //
-  // - Maybe don't hardcode usage of double for the tests. Maybe use a "using Data = double;"
-  //   declarations and then allocates buffers, vectors, etc. of type Data.
-  //
-  // - Check allocation logging of more STL containers such as std::vector
+  // - Check allocation logging of more STL containers such as std::vector. Maybe test smart 
+  //   pointers as well.
   //
   // - Implement and check logging of calloc and realloc. 
   //

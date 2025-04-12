@@ -229,6 +229,10 @@ bool testAllocationLogger()
 
   // ToDo:
   //
+  // - Apparently, the new/delete operators do not invoke the logging allocator. Maybe we need to
+  //   write specific macros for new/delete? Then we could be more precise in the logger and count
+  //   number of calls to malloc, free, new, delete, new[], delete[]. Check, how JUCE does it.
+  //
   // - Maybe let the logger store some more information. Maybe the allocated sizes, the addresses
   //   of the objects, etc. 
 }

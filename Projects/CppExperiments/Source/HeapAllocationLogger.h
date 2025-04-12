@@ -124,15 +124,64 @@ void rsLoggingFree(void* ptr)
 #define _malloc_dbg(size, blockUse, fileName, lineNumber) rsLoggingDebugMalloc(size, blockUse, fileName, lineNumber)
 
 
-
-
 //#define free(ptr)    free(ptr)
 #define free(ptr)    rsLoggingFree(ptr)
 //#define free(ptr)    (rsLoggingFree(ptr))
 // With this defined, I can't even compile.
 
 // I think, this also covers new, new[], delete, delete[], because they use malloc and free 
-// internally...but cant we really count on that? Also, what about realloc and calloc?
+// internally...but cant we really count on that?  ...NOPE!!!
+// Also, what about realloc and calloc? 
+
+
+
+
+/*
+// Code for new/delete adapted from here:
+// https://learn.microsoft.com/en-us/cpp/cpp/new-and-delete-operators?view=msvc-170
+//
+//
+// Using these causes a stack overflow because allocating the rsHeapAllocationLogger leads to an 
+// endless recursion of calling rsLoggingMalloc and new. Solution: Try to implement the logger not
+// as singleto but rather as global object.
+
+int fLogMemory = 0;      // Perform logging (0=no; nonzero=yes)?
+int cBlocksAllocated = 0;  // Count of blocks allocated.
+
+// User-defined operator new:
+void *operator new( size_t stAllocateBlock ) {
+  static int fInOpNew = 0;   // Guard flag.
+
+  if ( fLogMemory && !fInOpNew ) 
+  {
+    fInOpNew = 1;
+    //clog << "Memory block " << ++cBlocksAllocated
+    //  << " allocated for " << stAllocateBlock
+    //  << " bytes\n";
+    fInOpNew = 0;
+  }
+  return malloc( stAllocateBlock );
+}
+
+// User-defined operator delete.
+void operator delete( void *pvMem ) 
+{
+  static int fInOpDelete = 0;   // Guard flag.
+  if ( fLogMemory && !fInOpDelete ) 
+  {
+    //fInOpDelete = 1;
+    //clog << "Memory block " << cBlocksAllocated--
+    //  << " deallocated\n";
+    //fInOpDelete = 0;
+  }
+
+  free( pvMem );
+}
+*/
+
+
+
+
 
 
 // https://stackoverflow.com/questions/438515/how-to-track-memory-allocations-in-c-especially-new-delete
@@ -143,5 +192,6 @@ void rsLoggingFree(void* ptr)
 
 // https://valgrind.org/
 // https://learn.microsoft.com/en-us/cpp/c-runtime-library/crt-debug-heap-details?view=msvc-170
+// https://learn.microsoft.com/en-us/cpp/cpp/new-and-delete-operators?view=msvc-170
 
 #endif

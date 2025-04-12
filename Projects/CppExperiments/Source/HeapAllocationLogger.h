@@ -116,9 +116,18 @@ void rsLoggingFree(void* ptr)
 }
 
 
-#define malloc(size) (rsLoggingMalloc(size))
-#define _malloc_dbg(size, blockUse, fileName, lineNumber) (rsLoggingDebugMalloc(size, blockUse, fileName, lineNumber))
+//#define malloc(size) (rsLoggingMalloc(size))
+//#define _malloc_dbg(size, blockUse, fileName, lineNumber) (rsLoggingDebugMalloc(size, blockUse, fileName, lineNumber))
 
+
+#define malloc(size) rsLoggingMalloc(size)
+#define _malloc_dbg(size, blockUse, fileName, lineNumber) rsLoggingDebugMalloc(size, blockUse, fileName, lineNumber)
+
+
+
+
+//#define free(ptr)    free(ptr)
+#define free(ptr)    rsLoggingFree(ptr)
 //#define free(ptr)    (rsLoggingFree(ptr))
 // With this defined, I can't even compile.
 

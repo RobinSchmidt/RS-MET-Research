@@ -1,5 +1,5 @@
 
-//#include "HeapAllocationLogger.h"  // Must be included before anything else, I think.
+#include "HeapAllocationLogger.h"  // Must be included before anything else, I think.
 
 #include <iostream>
 #include <array>
@@ -76,6 +76,16 @@ public:
 
 int main()
 {
+  // Test, if the custom allocation functions are called:
+  double* pDouble10 = (double*) malloc(10 * sizeof(double));
+  // ...
+  free(pDouble10);
+
+
+
+
+
+
   demoOptional();
   //demoObserver();
   //testReturnValueOptimization();
@@ -93,14 +103,8 @@ int main()
 
 
 
-
-
-
   //printLines1("Bla", 42, 3.14, 'c');
   //printLines2("Blub", 2.72, 'x', 73);
-
-
-
 
 
 

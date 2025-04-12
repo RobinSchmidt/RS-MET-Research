@@ -141,7 +141,7 @@ void rsLoggingFree(void* ptr)
 
 
 
-/*
+
 // Code for new/delete adapted from here:
 // https://learn.microsoft.com/en-us/cpp/cpp/new-and-delete-operators?view=msvc-170
 //
@@ -182,7 +182,6 @@ void operator delete( void *pvMem )
 
   free( pvMem );
 }
-*/
 
 
 

@@ -71,20 +71,8 @@ public:
 // maybe templatize
 
 
-
-
 int main()
 {
-  //// Test, if the custom allocation functions are called:
-  //double* pDouble10 = (double*) malloc(10 * sizeof(double));
-  //// ...
-  //free(pDouble10);
-
-  testAllocationLogger();
-
-
-
-
   demoOptional();
   //demoObserver();
   //testReturnValueOptimization();

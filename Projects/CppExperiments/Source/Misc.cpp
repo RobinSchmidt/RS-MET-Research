@@ -227,27 +227,28 @@ bool testAllocationLogger()
   // The tests below use expectations that reflect the behavior of the MSVC compiler of Visual
   // Studio 2019. They are actually not what I would naturally expect to happen. Apparently, MSVC 
   // does some extra allocations. So, whether or not the tests below leave the ok variable in true
-  // state may be compiler dependent:
+  // state may be compiler dependent. Well, actually, it's dependent on the implementation of the 
+  // standard library (but these usually ship together with a compiler and/or IDE).
 
-  // Test logging for default contructor of std::vector:
+  // Test logging for default constructor of std::vector:
   {
     std::vector<double> v;             // This does one allocation in MSVC! Why?
     ok &= checkAllocState(4, 3);
   }
   ok &= checkAllocState(4, 4);
 
-  // Test logging for contructor of std::vector that takes an int:
+  // Test logging for constructor of std::vector that takes an int:
   {
     std::vector<double> v(10);         // This does two allocations in MSVC! Why?
     ok &= checkAllocState(6, 4);
   }
   ok &= checkAllocState(6, 6);
 
-  // Test logging for copy contructor of std::vector:
+  // Test logging for copy constructor of std::vector:
   {
-    std::vector<double> v(10);
+    std::vector<double> v(10);         // Two allocations in MSVC.
     ok &= checkAllocState(8, 6);
-    std::vector<double> v2(v);
+    std::vector<double> v2(v);         // Another two allocations.
     ok &= checkAllocState(10, 6);
   }
   ok &= checkAllocState(10, 10);
@@ -275,6 +276,9 @@ bool testAllocationLogger()
   //
   //
   // ToDo:
+  //
+  // - Maybe don't hardcode usage of double for the tests. Maybe use a "using Data = double;"
+  //   declarations and then allocates buffers, vectors, etc. of type Data.
   //
   // - Check allocation logging of more STL containers such as std::vector
   //

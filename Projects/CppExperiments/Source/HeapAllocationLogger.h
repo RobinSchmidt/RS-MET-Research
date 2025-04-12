@@ -71,6 +71,7 @@ void rsLoggingFree(void* ptr)
 void *operator new(size_t size) 
 {
   return malloc(size);
+  // See: https://learn.microsoft.com/en-us/cpp/cpp/new-and-delete-operators?view=msvc-170
 }
 
 void operator delete(void *ptr)
@@ -81,7 +82,7 @@ void operator delete(void *ptr)
 
 // ToDo:
 //
-// - What about realloc and calloc?
+// - What about realloc and calloc? I think, we may need to redefine these, too.
 //
 // - Check, if the custom new/delete functions also get called for array allocations via e.g.
 //   double* p = new double[10]; delete[] p;  If not, we may have to write specific versions for 
@@ -95,6 +96,7 @@ void operator delete(void *ptr)
 //   overkill at the moment. Also, if we try to keep track of the allocated chunks, we'd probably 
 //   want to use a std::vector or some other dynamically allocating data structure to store that 
 //   data. But using dynamic allocations within the allocation logger itself could be problematic.
+//   It could give rise to infinte recursions and therefore stack overflows.
 //
 // - Figure out what happens if we try to use rsHeapAllocationLogger and the Visual Studio debug
 //   heap. They probably interfere such that one can use either one or the other. Maybe it should

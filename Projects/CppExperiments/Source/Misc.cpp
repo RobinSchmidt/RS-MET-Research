@@ -183,13 +183,6 @@ bool testAllocationLogger()
 {
   bool ok = true;
 
-  // The allocation logger singleton:
-  //rsHeapAllocationLogger* logger = rsHeapAllocationLogger::getInstance();
-
-
-  heapAllocLogger.reset();
-
-
   // Helper function to check if the number of allocations, deallocations, etc. that occurred 
   // matches the expected values:
   auto checkAllocState = [&](size_t expectedAllocs, size_t expectedDeallocs, size_t expectedChunks)
@@ -201,6 +194,9 @@ bool testAllocationLogger()
     return ok;
   };
 
+  // Reset the counters in the heap allocation logger:
+  heapAllocLogger.reset();
+
   // We did not yet allocate anything, so initially, we expect all counters to be zero:
   ok &= checkAllocState(0, 0, 0);
 
@@ -210,33 +206,35 @@ bool testAllocationLogger()
   free(pDouble);
   ok &= checkAllocState(1, 1, 0);
 
-  // Test operators new and delete:
+  // Test logging for operators new and delete:
   pDouble = new double;
-  ok &= checkAllocState(2, 1, 1);  // FAILS!!
+  ok &= checkAllocState(2, 1, 1);
   delete pDouble;
-  ok &= checkAllocState(2, 2, 0);  // FAILS!!
+  ok &= checkAllocState(2, 2, 0);
+
+  // Test logging for new[] and delete[]:
+  pDouble = new double[10];
+  ok &= checkAllocState(3, 2, 1);
+  delete[] pDouble;
+  ok &= checkAllocState(3, 3, 0);
 
 
-  //// Test operators new[] and delete[]:
-  //pDouble = new double[10];
-  //ok &= checkAllocState(2, 1, 0);
-  //// NOPE! This fails!!!
+  /*
+  {
+    //std::vector<double> vd;       // This does one allocation!   Why?
+    std::vector<double> vd(10);     // This does two allocations!
+    ok &= checkAllocState(5, 3, 1);
+  }
+  */
 
 
-
-
-
-
-  // Clean up the logger and return test result:
-  //rsHeapAllocationLogger::deleteInstance();
+  // Return unit test result:
   return ok;
+
 
   // ToDo:
   //
-  // - Apparently, the new/delete operators do not invoke the logging allocator. Maybe we need to
-  //   write specific macros for new/delete? Then we could be more precise in the logger and count
-  //   number of calls to malloc, free, new, delete, new[], delete[]. Check, how JUCE does it.
+  // - Check allocation logging of STL containers such as std::vector
   //
-  // - Maybe let the logger store some more information. Maybe the allocated sizes, the addresses
-  //   of the objects, etc. 
+  // - Implement and check logging of calloc and realloc. 
 }

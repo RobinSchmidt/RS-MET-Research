@@ -184,16 +184,16 @@ bool testAllocationLogger()
   bool ok = true;
 
   // The allocation logger singleton:
-  rsHeapAllocationLogger* logger = rsHeapAllocationLogger::getInstance();
+  //rsHeapAllocationLogger* logger = rsHeapAllocationLogger::getInstance();
 
   // Helper function to check if the number of allocations, deallocations, etc. that occurred 
   // matches the expected values:
   auto checkAllocState = [&](size_t expectedAllocs, size_t expectedDeallocs, size_t expectedChunks)
   {
     bool ok = true;
-    ok &= logger->getNumAllocations()     == expectedAllocs;
-    ok &= logger->getNumDeallocations()   == expectedDeallocs;
-    ok &= logger->getNumAllocatedChunks() == expectedChunks;
+    ok &= heapAllocLogger.getNumAllocations()     == expectedAllocs;
+    ok &= heapAllocLogger.getNumDeallocations()   == expectedDeallocs;
+    ok &= heapAllocLogger.getNumAllocatedChunks() == expectedChunks;
     return ok;
   };
 
@@ -224,7 +224,7 @@ bool testAllocationLogger()
 
 
   // Clean up the logger and return test result:
-  rsHeapAllocationLogger::deleteInstance();
+  //rsHeapAllocationLogger::deleteInstance();
   return ok;
 
   // ToDo:

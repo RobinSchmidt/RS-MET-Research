@@ -34,6 +34,7 @@ class rsHeapAllocationLogger
 
 public:
 
+  /*
   static rsHeapAllocationLogger* getInstance()
   {
     if(theObject == nullptr)
@@ -46,6 +47,7 @@ public:
     delete theObject;
     theObject = nullptr;
   }
+  */
 
   void logAllocation() {  numAllocs++;  }
 
@@ -69,16 +71,20 @@ public:
 
 private:
 
-  rsHeapAllocationLogger(){};
+  //rsHeapAllocationLogger(){};
 
-  static rsHeapAllocationLogger* theObject;
+  //static rsHeapAllocationLogger* theObject;
 
   size_t numAllocs   = 0;
   size_t numDeallocs = 0;
 
 };
 
-rsHeapAllocationLogger* rsHeapAllocationLogger::theObject = nullptr;
+//rsHeapAllocationLogger* rsHeapAllocationLogger::theObject = nullptr;
+
+rsHeapAllocationLogger heapAllocLogger;
+
+
 
 // https://stackoverflow.com/questions/1008019/how-do-you-implement-the-singleton-design-pattern
 
@@ -87,14 +93,9 @@ rsHeapAllocationLogger* rsHeapAllocationLogger::theObject = nullptr;
 // overkill at the moment. 
 
 
-
-
-
-
-
 void* rsLoggingMalloc(size_t size)
 {
-  rsHeapAllocationLogger::getInstance()->logAllocation();
+  heapAllocLogger.logAllocation();
   return malloc(size);
 
   // See: https://en.cppreference.com/w/c/memory/malloc
@@ -104,7 +105,7 @@ void* rsLoggingMalloc(size_t size)
 
 void* rsLoggingDebugMalloc(size_t size, int blockUse, char const* fileName, int lineNumber)
 {
-  rsHeapAllocationLogger::getInstance()->logAllocation();
+  heapAllocLogger.logAllocation();
   return _malloc_dbg(size, blockUse, fileName, lineNumber);
 
   // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/malloc-dbg?view=msvc-170
@@ -113,7 +114,7 @@ void* rsLoggingDebugMalloc(size_t size, int blockUse, char const* fileName, int 
 
 void rsLoggingFree(void* ptr)
 {
-  rsHeapAllocationLogger::getInstance()->logDeallocation();
+  heapAllocLogger.logDeallocation();
   free(ptr);
 
   // See: https://en.cppreference.com/w/c/memory/free

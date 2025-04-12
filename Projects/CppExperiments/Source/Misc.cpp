@@ -186,7 +186,8 @@ bool testAllocationLogger()
   // The allocation logger singleton:
   rsHeapAllocationLogger* logger = rsHeapAllocationLogger::getInstance();
 
-  // Helper function
+  // Helper function to check if the number of allocations, deallocations, etc. that occurred 
+  // matches the expected values:
   auto checkAllocState = [&](size_t expectedAllocs, size_t expectedDeallocs, size_t expectedChunks)
   {
     bool ok = true;
@@ -196,30 +197,38 @@ bool testAllocationLogger()
     return ok;
   };
 
-
+  // We did not yet allocate anything, so initially, we expect all counters to be zero:
   ok &= checkAllocState(0, 0, 0);
 
-
-
-
-
-  // Test, if the custom allocation functions are called:
-  double* pDouble10 = (double*) malloc(10 * sizeof(double));
-
-
-
+  // Test if logger registers direct invocations of malloc and free:
+  double* pDouble = (double*) malloc(10 * sizeof(double));
   ok &= checkAllocState(1, 0, 1);
-
-
-  free(pDouble10);
-
+  free(pDouble);
   ok &= checkAllocState(1, 1, 0);
 
+  // Test operators new and delete:
+  pDouble = new double;
+  ok &= checkAllocState(2, 1, 1);  // FAILS!!
+  delete pDouble;
+  ok &= checkAllocState(2, 2, 0);  // FAILS!!
+
+
+  //// Test operators new[] and delete[]:
+  //pDouble = new double[10];
+  //ok &= checkAllocState(2, 1, 0);
+  //// NOPE! This fails!!!
 
 
 
-  // Clean up the logger:
+
+
+
+  // Clean up the logger and return test result:
   rsHeapAllocationLogger::deleteInstance();
-
   return ok;
+
+  // ToDo:
+  //
+  // - Maybe let the logger store some more information. Maybe the allocated sizes, the addresses
+  //   of the objects, etc. 
 }

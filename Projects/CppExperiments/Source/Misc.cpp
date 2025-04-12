@@ -175,3 +175,38 @@ void demoOptional()
 
 // ToDo:
 // https://en.cppreference.com/w/cpp/utility/variant
+
+//=================================================================================================
+
+
+bool testAllocationLogger()
+{
+  bool ok = true;
+
+  rsHeapAllocationLogger* logger = rsHeapAllocationLogger::getInstance();
+
+  ok &= logger->getNumAllocations()     == 0;
+  ok &= logger->getNumDeallocations()   == 0;
+  ok &= logger->getNumAllocatedChunks() == 0;
+  // ToDo: wrap into helper function checkAllocState(0, 0, 0)
+
+  // Test, if the custom allocation functions are called:
+  double* pDouble10 = (double*) malloc(10 * sizeof(double));
+
+  ok &= logger->getNumAllocations()     == 1;
+  ok &= logger->getNumDeallocations()   == 0;
+  ok &= logger->getNumAllocatedChunks() == 1;
+
+  free(pDouble10);
+
+  ok &= logger->getNumAllocations()     == 1;
+  ok &= logger->getNumDeallocations()   == 1;
+  ok &= logger->getNumAllocatedChunks() == 0;
+
+
+
+
+
+
+  return ok;
+}

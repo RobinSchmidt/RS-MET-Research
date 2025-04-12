@@ -73,15 +73,14 @@ public:
 
 
 
-
 int main()
 {
-  // Test, if the custom allocation functions are called:
-  double* pDouble10 = (double*) malloc(10 * sizeof(double));
-  // ...
-  free(pDouble10);
+  //// Test, if the custom allocation functions are called:
+  //double* pDouble10 = (double*) malloc(10 * sizeof(double));
+  //// ...
+  //free(pDouble10);
 
-
+  testAllocationLogger();
 
 
 
@@ -96,6 +95,7 @@ int main()
   testFactorial();
   testBinomialCoeffs();
   testGcd();
+  testAllocationLogger();
 
   //int gcd_60_21 = gcd<60, 21>();
   //int gcd_60_48 = gcd<60, 48>();

@@ -8,8 +8,10 @@
 
 /** A class for logging heap allocations. A global object of this class is created and all calls to
 malloc, free, new, delete, etc. are intercepted by redefining them (via macros in case of the 
-C-functions). In these redefined versions, we log the call and then call the built in version.
-...TBC... */
+C-functions). In these redefined versions, we log the call and then call the built in version. The 
+class can be used to detect memory leaks and inadvertant heap allocations that are hidden inside 
+library calls. The latter is important to verify that code that is supposed to be realtime safe 
+doesn't do any unexpected heap allocations. ...TBC... */
 
 class rsHeapAllocationLogger
 {
@@ -88,8 +90,12 @@ void operator delete(void *ptr)
 //   double* p = new double[10]; delete[] p;  If not, we may have to write specific versions for 
 //   those as well. ..OK...done - yes, they get called.
 //
-// - Maybe distinguish between different forms of allocation. Log separately the calls to malloc, new, 
-//   new[] and free, delete, delete[]. 
+// - Maybe distinguish between different forms of allocation. Log separately the calls to malloc, 
+//   new, new[] and free, delete, delete[]. But maybe we should log these calls to new/delete just 
+//   in addition to the calls to malloc/free. That means a call to new would register as call to 
+//   new *and* as call to malloc. But maybe that's to complicated from an API point of view. I 
+//   think, the client code doesn't really care about that distinction anyway. I'm not sure about 
+//   that, though.
 //
 // - Maybe also log the allocated size. But this requires us to keep track of all the addresses of 
 //   the allocated chunks and their sizes, so it would complicate the implementation a lot. That's 
@@ -101,6 +107,17 @@ void operator delete(void *ptr)
 // - Figure out what happens if we try to use rsHeapAllocationLogger and the Visual Studio debug
 //   heap. They probably interfere such that one can use either one or the other. Maybe it should
 //   be set up in some config file which strategy to use.
+//
+// - What about usage of the class in a mutithreded setting? It's currently not made for that 
+//   purpose. Maybe the counters should be declared as thread local? Or maybe the bodies of 
+//   rsLoggingMalloc/Free should be inside criticial sections? Maybe we need different 
+//   implementations for different scenarios. This simple implementation here is suitable for the
+//   RAPT/rosic unit tests. This is just a single threaded commandline app. Maybe the class name
+//   should reflect that. rsSingleThreadedHeapAllocationLogger is quite long, though. Maybe 
+//   rsHeapLoggerSingleThread or rsHeapLoggerST or rsHeapLoggerSimple. Maybe it could have some
+//   self test code that makes sure that it is really used correctly? Maybe store the tread ID 
+//   where it was last called and compare it to the thread ID where it is currently called and
+//   trigger an error if they don't match?
 //
 //
 // Resources:

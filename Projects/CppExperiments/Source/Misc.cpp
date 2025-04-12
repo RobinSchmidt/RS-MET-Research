@@ -203,6 +203,12 @@ bool testAllocationLogger()
   // of that type:
   using Data = double;
 
+
+  //---------------------------------------------------------------------------
+  // Test logging of low level (de)allocations (malloc, free, new, etc.)
+
+  heapAllocLogger.reset();
+
   // Test if logger registers direct invocations of malloc and free:
   {
     Data* ptr = (Data*)malloc(10 * sizeof(Data));
@@ -228,10 +234,21 @@ bool testAllocationLogger()
   ok &= checkAllocState(3, 3);
 
 
-  // Test logging for std::unique_ptr:
-  // ...
+  //---------------------------------------------------------------------------
+  // Test logging for std::unique_ptr
+
+  heapAllocLogger.reset();
+
+  // Test std::make_unique and automatic release:
+  {
+    auto p = std::make_unique<Data>();
+    ok &= checkAllocState(1, 0);
+  }
+  ok &= checkAllocState(1, 1);
 
 
+  //---------------------------------------------------------------------------
+  // Test logging of (de)allocations for std::vector
 
   // The tests below use expectations that reflect the behavior of the MSVC compiler of Visual
   // Studio 2019. They are actually not what I would naturally expect to happen. Apparently, MSVC 
@@ -239,28 +256,30 @@ bool testAllocationLogger()
   // state may be compiler dependent. Well, actually, it's dependent on the implementation of the 
   // standard library (but these usually ship together with a compiler and/or IDE).
 
-  // Test logging for default constructor of std::vector:
+  heapAllocLogger.reset();
+
+  // Default constructor:
   {
     std::vector<Data> v;             // This does one allocation in MSVC! Why?
-    ok &= checkAllocState(4, 3);
+    ok &= checkAllocState(1, 0);
   }
-  ok &= checkAllocState(4, 4);
+  ok &= checkAllocState(1, 1);
 
-  // Test logging for constructor of std::vector that takes an int:
+  // Constructor that takes a size:
   {
     std::vector<Data> v(10);         // This does two allocations in MSVC! Why?
-    ok &= checkAllocState(6, 4);
+    ok &= checkAllocState(3, 1);
   }
-  ok &= checkAllocState(6, 6);
+  ok &= checkAllocState(3, 3);
 
-  // Test logging for copy constructor of std::vector:
+  // Copy constructor:
   {
     std::vector<Data> v(10);         // Two allocations in MSVC.
-    ok &= checkAllocState(8, 6);
+    ok &= checkAllocState(5, 3);
     std::vector<Data> v2(v);         // Another two allocations.
-    ok &= checkAllocState(10, 6);
+    ok &= checkAllocState(7, 3);
   }
-  ok &= checkAllocState(10, 10);
+  ok &= checkAllocState(7, 7);
 
 
 
@@ -286,8 +305,22 @@ bool testAllocationLogger()
   //
   // ToDo:
   //
-  // - Check allocation logging of more STL containers such as std::vector. Maybe test smart 
-  //   pointers as well.
+  // - Check allocation logging on more STL containers like list, map, deque, etc. But their 
+  //   behavior may be even less predictable than that of std::vector and may vary even more 
+  //   between different standard library implementations, I guess. Because they are more complex
+  //   than a simple std::vector. But it's actually pretty nice that we can learn a couple of 
+  //   things about implementation details of the standard library by using this heap allocation 
+  //   logging technique. Without it, I would never ever have known that std::vector does these 
+  //   weird extra allocations. And knowing such things may actually be important when writing
+  //   realtime safe code. We should have unit tests that make sure that we don't have any hidden
+  //   allocations in code that needs to be realtime safe.
+  //
+  // - Test copying, moving, assigning etc. of unique pointers. Test also other smart pointers
+  //   (i.e. std::shared_ptr and std::weak_ptr) and their interactions (e.g. assigning a shared_ptr
+  //   to a unqiue_ptr and the other way around (if this is even possible) and so on
+  //
+  // - Maybe use heapAllocLogger.reset(); between the tests to decouple their expected values. 
+  //   Maybe factor out some tests. ...but maybe not
   //
   // - Implement and check logging of calloc and realloc. 
   //

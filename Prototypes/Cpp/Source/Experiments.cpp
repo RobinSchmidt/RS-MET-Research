@@ -14010,6 +14010,13 @@ void testBezoutMatrix()
   //    we can dtermine stability of an analog filter without actually computing its roots.
 }
 
+
+
+
+
+
+
+
 template<class T>
 bool isCommutative(const T& a, const T& b, const std::function<T(T,T)>& f)
 {
@@ -14021,6 +14028,7 @@ bool isCommutative(const T& a, const T& b, const std::function<T(T,T)>& f)
   // the type T):
   //T c  = ab - ba;     // Commutator
   //return rsIsZero(c);
+  // Maybe make a test with a tolerance - use rsIsNegligible instead of rsIsZero.
 }
 
 template<class T>
@@ -14037,6 +14045,34 @@ bool isDistributive(const T& a, const T& b, const T& c,
 }
 
 
+
+template<class T>
+rsMatrix<T> rsZeroPad(const rsMatrix<T>& A, int numRows, int numCols)
+{
+  rsAssert(numRows >= A.getNumRows());
+  rsAssert(numCols >= A.getNumColumns());
+
+  rsMatrix<T> Ap(numRows, numCols);
+  Ap.setToZero();
+  for(int i = 0; i < A.getNumRows(); i++)
+    for(int j = 0; j < A.getNumColumns(); j++)
+      Ap(i, j) = A(i, j);
+  return Ap;
+}
+
+template<class T>
+rsMatrix<T> rsMatAdd(const rsMatrix<T>& A, const rsMatrix<T>& B)
+{
+  int numRows = rsMax(A.getNumRows(),    B.getNumRows());
+  int numCols = rsMax(A.getNumColumns(), B.getNumColumns());
+
+  rsMatrix<T> Ap = rsZeroPad(A, numRows, numCols);
+  rsMatrix<T> Bp = rsZeroPad(B, numRows, numCols);
+
+  return Ap + Bp;
+}
+
+// ToDo: implement rsMatMul in a similar way
 
 
 void testGeneralizedMatrixOperations()
@@ -14076,6 +14112,18 @@ void testGeneralizedMatrixOperations()
   //
   // - Create random matrices A,B,C of various shapes and verify the distributive law. 
   //   ...Ah - wait! To verify associativity, we also already need 3 matrices!
+  //
+  // - The same set of functions can also be used to test associativity, distibutivity and
+  //   commutativity of operations on other data types (such as the experimental group string). We
+  //   should drag the code for that over to here. It doesn't really belong into the main repo. 
+  //   It's about some experimental math ideas that really belong here into the research repo.
+  //
+  //
+  // Questions:
+  //
+  // - How do the new operations mix with other matrix operatiosn such as the Kronecker product and
+  //   inversion (perhaps using the Moore-Penrose pseudo inverse in case on non-square matrices)? 
+  //   Do identities involving those operations continue to hold in the more general case?
 }
 
 

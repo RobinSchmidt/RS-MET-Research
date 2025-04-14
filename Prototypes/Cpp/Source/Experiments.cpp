@@ -14061,6 +14061,20 @@ rsMatrix<T> rsZeroPad(const rsMatrix<T>& A, int numRows, int numCols)
 }
 
 template<class T>
+rsMatrix<T> rsRandomMatrix(int numRows, int numCols, T min, T max, int seed)
+{
+  rsNoiseGenerator<T> rng;
+  rng.setRange(min, max);
+  rng.setSeed(seed);
+
+  rsMatrix<T> A(numRows, numCols);
+  for(int i = 0; i < A.getNumRows(); i++)
+    for(int j = 0; j < A.getNumColumns(); j++)
+      A(i, j) = rng.getSample();
+  return A;
+}
+
+template<class T>
 rsMatrix<T> rsMatAdd(const rsMatrix<T>& A, const rsMatrix<T>& B)
 {
   int numRows = rsMax(A.getNumRows(),    B.getNumRows());
@@ -14085,14 +14099,42 @@ void testGeneralizedMatrixOperations()
   using Real = double;
   using Mat  = rsMatrix<Real>;
 
+  Real min = -8;
+  Real max = +8;
+
   std::vector<int> sizes({2,3,4,5,6,7});
 
+  int L = (int) sizes.size();
 
-  for(size_t i = 0; i < sizes.size(); i++)
+  for(int m = 0; m < L; m++)
   {
+    for(int n = 0; n < L; n++)
+    {
+      for(int p = 0; p < L; p++)
+      {
+        for(int q = 0; q < L; q++)
+        {
+          for(int r = 0; r < L; r++)
+          {
+            for(int s = 0; s < L; s++)
+            {
+              int M = sizes[m];
+              int N = sizes[n];
+              int P = sizes[p];
+              int Q = sizes[q];
+              int R = sizes[r];
+              int S = sizes[s];
 
+              Mat A = rsRandomMatrix(M, N, min, max, 0);
+              Mat B = rsRandomMatrix(P, Q, min, max, 0);
+              Mat C = rsRandomMatrix(R, S, min, max, 0);
 
-    int dummy = 0;
+              int dummy = 0;
+            }
+          }
+        }
+      }
+    }
   }
   // I think, we may need a loop nesting depth of 6 (if we count an unnested loop as depth 1). All
   // shape variables M,N,P,Q,R,S should take on any values from the sizes array. That gives us 

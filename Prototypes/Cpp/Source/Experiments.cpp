@@ -14018,7 +14018,8 @@ void testBezoutMatrix()
 
 
 template<class T>
-bool isCommutative(const T& a, const T& b, const std::function<T(T,T)>& f)
+bool rsIsCommutative(const T& a, const T& b, 
+  const std::function<T(const T&, const T&)>& f)
 {
   T ab = f(a, b);
   T ba = f(b, a);
@@ -14032,14 +14033,21 @@ bool isCommutative(const T& a, const T& b, const std::function<T(T,T)>& f)
 }
 
 template<class T>
-bool isAssociative(const T& a, const T& b, const T& c, const std::function<T(T,T)>& f)
+bool rsIsAssociative(const T& a, const T& b, const T& c, 
+  const std::function<T(const T&, const T&)>& f)
 {
-  return false;  // Preliminary
+  T ab   = f(a, b);
+  T bc   = f(b, c);
+  T ab_c = f(ab, c);
+  T a_bc = f(a, bc);
+  return ab_c == a_bc;
+  // Maybe make an inexact comparison with tolerance
 }
 
 template<class T>
-bool isDistributive(const T& a, const T& b, const T& c, 
-  const std::function<T(T,T)>& f1, const std::function<T(T,T)>& f2)
+bool rsIsDistributive(const T& a, const T& b, const T& c, 
+  const std::function<T(const T&, const T&)>& f1, 
+  const std::function<T(const T&, const T&)>& f2)
 {
   return false;  // Preliminary
 }
@@ -14106,14 +14114,15 @@ void testGeneralizedMatrixOperations()
   Real max = +8;
 
 
-  std::function<float(float)> test = &sinf;        // This compiles
-  std::function<Mat(const Mat&, const Mat&)> add = &rsMatAdd<Real>;    // ...but this doesn't
-
+  //std::function<float(float)> test = &sinf;        // This compiles
+  std::function<Mat(const Mat&, const Mat&)> add = &rsMatAdd<Real>; 
 
 
   std::vector<int> sizes({2,3,4,5,6,7});
 
   int L = (int) sizes.size();
+
+  bool ok = true;
 
   for(int m = 0; m < L; m++)
   {
@@ -14137,6 +14146,10 @@ void testGeneralizedMatrixOperations()
               Mat A = rsRandomMatrix(M, N, min, max, 0);
               Mat B = rsRandomMatrix(P, Q, min, max, 0);
               Mat C = rsRandomMatrix(R, S, min, max, 0);
+
+              ok &= rsIsAssociative(A, B, C, add);
+
+              // ToDo: maybe pass the operation as first argument
 
               int dummy = 0;
             }

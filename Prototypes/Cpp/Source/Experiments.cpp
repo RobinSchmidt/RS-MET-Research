@@ -14148,18 +14148,17 @@ void testGeneralizedMatrixOperations()
   Real max = +8;
 
 
-  std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>;
-  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
 
 
-
-
-
+  // For the sizes of the matrices:
   std::vector<int> sizes({2,3,4,5,6,7});
 
+  // Error tolerance for the inexact comparisons:
   Real tol = 1.e-13;
 
-
+  // The matrix operations for addition and multiplication wrapped into std::function:
+  std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>;
+  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
 
   // Helper function to do the tests with the given configuration of shapes:
   auto doTest = [&](int M, int N, int P, int Q, int R, int S)
@@ -14170,66 +14169,28 @@ void testGeneralizedMatrixOperations()
 
     bool ok = true;
 
-    ok &= rsIsAssociative<Mat, Real>(add, A, B, C, tol);
-    ok &= rsIsCommutative(add, A, B   );
-    ok &= rsIsAssociative<Mat, Real>(mul, A, B, C, tol);
+    ok &= rsIsAssociative(add, A, B, C, tol);
+    ok &= rsIsCommutative(add, A, B        );  // Should take a tol param, too!
+    ok &= rsIsAssociative(mul, A, B, C, tol);
 
     rsAssert(ok);
     return ok;
   };
 
-
-
-  int L = (int) sizes.size();
-
-
-  bool ok = true;
-
-
   // This is a 6-fold nested loop because all shape variables M,N,P,Q,R,S should take on any values 
   // from the sizes array. That gives us 6^6 = 46656 cases to check. This takes a while but it is 
   // still managable:
+  bool ok = true;
+  int  L  = (int) sizes.size();
   for(int m = 0; m < L; m++)
-  {
     for(int n = 0; n < L; n++)
-    {
       for(int p = 0; p < L; p++)
-      {
         for(int q = 0; q < L; q++)
-        {
           for(int r = 0; r < L; r++)
-          {
             for(int s = 0; s < L; s++)
-            {
-              int M = sizes[m];
-              int N = sizes[n];
-              int P = sizes[p];
-              int Q = sizes[q];
-              int R = sizes[r];
-              int S = sizes[s];
-
-              Mat A = rsRandomMatrix(M, N, min, max, 0);
-              Mat B = rsRandomMatrix(P, Q, min, max, 1);
-              Mat C = rsRandomMatrix(R, S, min, max, 2);
-
-              ok &= rsIsAssociative<Mat, Real>(add, A, B, C, tol);
-              ok &= rsIsCommutative(add, A, B   );
-              ok &= rsIsAssociative<Mat, Real>(mul, A, B, C, tol);
- 
-
               ok &= doTest(sizes[m], sizes[n], sizes[p], sizes[q], sizes[r], sizes[s]);
-              rsAssert(ok);             
-            }
-          }
-        }
-      }
-    }
-  }
-  // 
 
-
-
-  int dummy = 0;
+  rsAssert(ok);
 
 
   // ToDo:

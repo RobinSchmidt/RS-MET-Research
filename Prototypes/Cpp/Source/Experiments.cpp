@@ -14053,7 +14053,10 @@ rsMatrix<T> rsZeroPad(const rsMatrix<T>& A, int numRows, int numCols)
   rsAssert(numCols >= A.getNumColumns());
 
   rsMatrix<T> Ap(numRows, numCols);
-  Ap.setToZero();
+
+  Ap.setToZero(A(0,0));  // WARNING! What if A is empty? That would be an access violation here!
+  // Maybe we should use T(0) instead of A(0,0) ...but only in the case when A is empty.
+
   for(int i = 0; i < A.getNumRows(); i++)
     for(int j = 0; j < A.getNumColumns(); j++)
       Ap(i, j) = A(i, j);
@@ -14101,6 +14104,12 @@ void testGeneralizedMatrixOperations()
 
   Real min = -8;
   Real max = +8;
+
+
+  std::function<float(float)> test = &sinf;        // This compiles
+  std::function<Mat(const Mat&, const Mat&)> add = &rsMatAdd<Real>;    // ...but this doesn't
+
+
 
   std::vector<int> sizes({2,3,4,5,6,7});
 

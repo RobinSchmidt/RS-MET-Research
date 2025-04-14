@@ -14018,8 +14018,9 @@ void testBezoutMatrix()
 
 
 template<class T>
-bool rsIsCommutative(const T& a, const T& b, 
-  const std::function<T(const T&, const T&)>& f)
+bool rsIsCommutative(
+  const std::function<T(const T&, const T&)>& f,
+  const T& a, const T& b)
 {
   T ab = f(a, b);
   T ba = f(b, a);
@@ -14033,8 +14034,9 @@ bool rsIsCommutative(const T& a, const T& b,
 }
 
 template<class T>
-bool rsIsAssociative(const T& a, const T& b, const T& c, 
-  const std::function<T(const T&, const T&)>& f)
+bool rsIsAssociative(
+  const std::function<T(const T&, const T&)>& f,
+  const T& a, const T& b, const T& c)
 {
   T ab   = f(a, b);
   T bc   = f(b, c);
@@ -14045,9 +14047,10 @@ bool rsIsAssociative(const T& a, const T& b, const T& c,
 }
 
 template<class T>
-bool rsIsDistributive(const T& a, const T& b, const T& c, 
-  const std::function<T(const T&, const T&)>& f1, 
-  const std::function<T(const T&, const T&)>& f2)
+bool rsIsDistributive(
+  const std::function<T(const T&, const T&)>& f1,
+  const std::function<T(const T&, const T&)>& f2,
+  const T& a, const T& b, const T& c)
 {
   return false;  // Preliminary
 }
@@ -14129,8 +14132,8 @@ void testGeneralizedMatrixOperations()
   Real max = +8;
 
 
-  std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>; 
-  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>; 
+  std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>;
+  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
 
 
   std::vector<int> sizes({2,3,4,5,6,7});
@@ -14166,11 +14169,11 @@ void testGeneralizedMatrixOperations()
               Mat B = rsRandomMatrix(P, Q, min, max, 1);
               Mat C = rsRandomMatrix(R, S, min, max, 2);
 
-              ok &= rsIsAssociative(A, B, C, add);
-              ok &= rsIsCommutative(A, B,    add);
+              ok &= rsIsAssociative(add, A, B, C);
+              ok &= rsIsCommutative(add, A, B   );
 
 
-              //ok &= rsIsAssociative(A, B, C, mul);
+              //ok &= rsIsAssociative(mul, A, B, C);
               // This fails! It needs a tolerance!
 
 

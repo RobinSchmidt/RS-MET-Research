@@ -14117,6 +14117,9 @@ rsMatrix<T> rsMatrixMul(const rsMatrix<T>& A, const rsMatrix<T>& B)
 
   // Test:
   numRows = numCols = rsMax(numRows, numCols);
+  // With it, it seems to work and without it, it doesn't. Figure out why! And figure also out what
+  // this implies for the relation to the usual matrix multiplication. I think, it means the result
+  // will always be a square matrix
 
 
   rsMatrix<T> Ap = rsZeroPad(A, numRows, numCols);

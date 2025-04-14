@@ -14010,6 +14010,32 @@ void testBezoutMatrix()
   //    we can dtermine stability of an analog filter without actually computing its roots.
 }
 
+template<class T>
+bool isCommutative(const T& a, const T& b, const std::function<T(T,T)>& f)
+{
+  T ab = f(a, b);
+  T ba = f(b, a);
+  return ab == ba;
+
+  // Alternative implementation (requires minus operator and rsIsZero() to be suitably defined for
+  // the type T):
+  //T c  = ab - ba;     // Commutator
+  //return rsIsZero(c);
+}
+
+template<class T>
+bool isAssociative(const T& a, const T& b, const T& c, const std::function<T(T,T)>& f)
+{
+  return false;  // Preliminary
+}
+
+template<class T>
+bool isDistributive(const T& a, const T& b, const T& c, 
+  const std::function<T(T,T)>& f1, const std::function<T(T,T)>& f2)
+{
+  return false;  // Preliminary
+}
+
 
 
 
@@ -14020,9 +14046,36 @@ void testGeneralizedMatrixOperations()
   // We test the generalized definitions for matrix addition and multiplication that work for 
   // matrices with any shape.
 
+  using Real = double;
+  using Mat  = rsMatrix<Real>;
+
+  std::vector<int> sizes({2,3,4,5,6,7});
+
+
+  for(size_t i = 0; i < sizes.size(); i++)
+  {
+
+
+    int dummy = 0;
+  }
+  // I think, we may need a loop nesting depth of 6 (if we count an unnested loop as depth 1). All
+  // shape variables M,N,P,Q,R,S should take on any values from the sizes array. That gives us 
+  // 6^6 = 46656 cases to check. 
+
 
 
   int dummy = 0;
+
+
+  // ToDo:
+  //
+  // - Create random matrices A,B of shapes MxN, PxQ with M,N,P,Q going through {2,3,4,5} each such
+  //   that we get all 4! = 24 possible assignments M,N,P,Q and then form the sum and product
+  //   A+B, A*B and verify that they obey the familiar laws (associativity, commutativity for 
+  //   addition, (A*B)^T = B^T * A^T for multiplication)
+  //
+  // - Create random matrices A,B,C of various shapes and verify the distributive law. 
+  //   ...Ah - wait! To verify associativity, we also already need 3 matrices!
 }
 
 

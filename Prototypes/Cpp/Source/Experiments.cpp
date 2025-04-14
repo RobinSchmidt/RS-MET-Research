@@ -14086,7 +14086,7 @@ rsMatrix<T> rsRandomMatrix(int numRows, int numCols, T min, T max, int seed)
 }
 
 template<class T>
-rsMatrix<T> rsMatAdd(const rsMatrix<T>& A, const rsMatrix<T>& B)
+rsMatrix<T> rsMatrixAdd(const rsMatrix<T>& A, const rsMatrix<T>& B)
 {
   int numRows = rsMax(A.getNumRows(),    B.getNumRows());
   int numCols = rsMax(A.getNumColumns(), B.getNumColumns());
@@ -14096,6 +14096,21 @@ rsMatrix<T> rsMatAdd(const rsMatrix<T>& A, const rsMatrix<T>& B)
 
   return Ap + Bp;
 }
+
+template<class T>
+rsMatrix<T> rsMatrixMul(const rsMatrix<T>& A, const rsMatrix<T>& B)
+{
+  int numRows = rsMax(A.getNumRows(),    B.getNumColumns());
+  int numCols = rsMax(A.getNumColumns(), B.getNumRows());
+
+  rsMatrix<T> Ap = rsZeroPad(A, numRows, numCols);
+  rsMatrix<T> Bp = rsZeroPad(B, numRows, numCols);
+
+  return Ap * Bp;
+
+  //  #rows(C) = max(#rows(A), #cols(B)), #cols(C) = max(#cols(A), #rows(B))
+}
+
 
 // ToDo: implement rsMatMul in a similar way
 
@@ -14114,8 +14129,8 @@ void testGeneralizedMatrixOperations()
   Real max = +8;
 
 
-  //std::function<float(float)> test = &sinf;        // This compiles
-  std::function<Mat(const Mat&, const Mat&)> add = &rsMatAdd<Real>; 
+  std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>; 
+  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>; 
 
 
   std::vector<int> sizes({2,3,4,5,6,7});
@@ -14148,14 +14163,23 @@ void testGeneralizedMatrixOperations()
               int S = sizes[s];
 
               Mat A = rsRandomMatrix(M, N, min, max, 0);
-              Mat B = rsRandomMatrix(P, Q, min, max, 0);
-              Mat C = rsRandomMatrix(R, S, min, max, 0);
+              Mat B = rsRandomMatrix(P, Q, min, max, 1);
+              Mat C = rsRandomMatrix(R, S, min, max, 2);
 
               ok &= rsIsAssociative(A, B, C, add);
               ok &= rsIsCommutative(A, B,    add);
-              // ToDo: maybe pass the operation as first argument
 
-              int dummy = 0;
+
+              //ok &= rsIsAssociative(A, B, C, mul);
+              // This fails! It needs a tolerance!
+
+
+
+              // ToDo: maybe pass the operation as first argument and maybe pass a tolerance
+
+              rsAssert(ok);
+
+              //int dummy = 0;
             }
           }
         }
@@ -14173,8 +14197,9 @@ void testGeneralizedMatrixOperations()
   //
   // - Create random matrices A,B of shapes MxN, PxQ with M,N,P,Q going through {2,3,4,5} each such
   //   that we get all 4! = 24 possible assignments M,N,P,Q and then form the sum and product
-  //   A+B, A*B and verify that they obey the familiar laws (associativity, commutativity for 
-  //   addition, (A*B)^T = B^T * A^T for multiplication)
+  //   A+B, A*B and verify that they obey the familiar laws: associativity, commutativity for 
+  //   addition, (A*B)^T = B^T * A^T for multiplication. Maybe the last one could be called 
+  //   "pseudo-commutative"?
   //
   // - Create random matrices A,B,C of various shapes and verify the distributive law. 
   //   ...Ah - wait! To verify associativity, we also already need 3 matrices!

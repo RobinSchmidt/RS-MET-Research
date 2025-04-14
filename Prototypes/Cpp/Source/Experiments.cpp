@@ -14128,6 +14128,19 @@ rsMatrix<T> rsMatrixMul(const rsMatrix<T>& A, const rsMatrix<T>& B)
   return Ap * Bp;
 }
 
+// Another variant of multiplication for experimentation:
+template<class T>
+rsMatrix<T> rsMatrixMul2(const rsMatrix<T>& A, const rsMatrix<T>& B)
+{
+  int numRows = A.getNumRows();
+  int numCols = rsMax(A.getNumColumns(), B.getNumRows());
+
+  rsMatrix<T> Ap = rsZeroPad(A, numRows, numCols);
+
+  return Ap * B;
+
+  // Triggers rsAssert!
+}
 
 
 
@@ -14158,6 +14171,9 @@ void testGeneralizedMatrixOperations()
   // The matrix operations for addition and multiplication wrapped into std::function:
   std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>;
   std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
+  //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul2<Real>; // Triggers rsAssert!
+
+
 
   // Helper function to do the tests with the given configuration of shapes:
   auto doTest = [&](int M, int N, int P, int Q, int R, int S)

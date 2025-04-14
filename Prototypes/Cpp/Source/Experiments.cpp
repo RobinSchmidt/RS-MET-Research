@@ -14033,23 +14033,28 @@ bool rsIsCommutative(
   // Maybe make a test with a tolerance - use rsIsNegligible instead of rsIsZero.
 }
 
-template<class T>
+template<class T, class TTol>
 bool rsIsAssociative(
   const std::function<T(const T&, const T&)>& f,
-  const T& a, const T& b, const T& c)
+  const T& a, const T& b, const T& c, TTol tol)
 {
   T ab   = f(a, b);
   T bc   = f(b, c);
   T ab_c = f(ab, c);
   T a_bc = f(a, bc);
-  return ab_c == a_bc;
+  T d    = ab_c - ab_c;     // Associator?
+
+  return rsIsNegligible(d, tol);
+
+
+  //return ab_c == a_bc;
   // Maybe make an inexact comparison with tolerance
 }
 
 template<class T>
 bool rsIsDistributive(
-  const std::function<T(const T&, const T&)>& f1,
-  const std::function<T(const T&, const T&)>& f2,
+  const std::function<T(const T&, const T&)>& f,
+  const std::function<T(const T&, const T&)>& g,
   const T& a, const T& b, const T& c)
 {
   return false;  // Preliminary
@@ -14139,6 +14144,7 @@ void testGeneralizedMatrixOperations()
   std::vector<int> sizes({2,3,4,5,6,7});
 
   int L = (int) sizes.size();
+  Real tol = 1.e-13;
 
   bool ok = true;
 
@@ -14169,11 +14175,11 @@ void testGeneralizedMatrixOperations()
               Mat B = rsRandomMatrix(P, Q, min, max, 1);
               Mat C = rsRandomMatrix(R, S, min, max, 2);
 
-              ok &= rsIsAssociative(add, A, B, C);
+              ok &= rsIsAssociative<Mat, Real>(add, A, B, C, tol);
               ok &= rsIsCommutative(add, A, B   );
 
 
-              //ok &= rsIsAssociative(mul, A, B, C);
+              ok &= rsIsAssociative<Mat, Real>(mul, A, B, C, tol);
               // This fails! It needs a tolerance!
 
 

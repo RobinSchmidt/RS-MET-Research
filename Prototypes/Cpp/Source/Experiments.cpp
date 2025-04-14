@@ -14152,10 +14152,36 @@ void testGeneralizedMatrixOperations()
   std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
 
 
+
+
+
   std::vector<int> sizes({2,3,4,5,6,7});
 
-  int L = (int) sizes.size();
   Real tol = 1.e-13;
+
+
+
+  // Helper function to do the tests with the given configuration of shapes:
+  auto doTest = [&](int M, int N, int P, int Q, int R, int S)
+  {
+    Mat A = rsRandomMatrix(M, N, min, max, 0);
+    Mat B = rsRandomMatrix(P, Q, min, max, 1);
+    Mat C = rsRandomMatrix(R, S, min, max, 2);
+
+    bool ok = true;
+
+    ok &= rsIsAssociative<Mat, Real>(add, A, B, C, tol);
+    ok &= rsIsCommutative(add, A, B   );
+    ok &= rsIsAssociative<Mat, Real>(mul, A, B, C, tol);
+
+    rsAssert(ok);
+    return ok;
+  };
+
+
+
+  int L = (int) sizes.size();
+
 
   bool ok = true;
 
@@ -14188,18 +14214,11 @@ void testGeneralizedMatrixOperations()
 
               ok &= rsIsAssociative<Mat, Real>(add, A, B, C, tol);
               ok &= rsIsCommutative(add, A, B   );
-
-
               ok &= rsIsAssociative<Mat, Real>(mul, A, B, C, tol);
-              // This fails! It needs a tolerance!
+ 
 
-
-
-              // ToDo: maybe pass the operation as first argument and maybe pass a tolerance
-
-              rsAssert(ok);
-
-              //int dummy = 0;
+              ok &= doTest(sizes[m], sizes[n], sizes[p], sizes[q], sizes[r], sizes[s]);
+              rsAssert(ok);             
             }
           }
         }

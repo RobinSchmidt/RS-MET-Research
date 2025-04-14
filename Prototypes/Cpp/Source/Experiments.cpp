@@ -14126,12 +14126,11 @@ rsMatrix<T> rsMatrixMul(const rsMatrix<T>& A, const rsMatrix<T>& B)
   rsMatrix<T> Bp = rsZeroPad(B, numRows, numCols);
 
   return Ap * Bp;
-
-  //  #rows(C) = max(#rows(A), #cols(B)), #cols(C) = max(#cols(A), #rows(B))
 }
 
 
-// ToDo: implement rsMatMul in a similar way
+
+
 
 
 void testGeneralizedMatrixOperations()
@@ -14219,7 +14218,10 @@ void testGeneralizedMatrixOperations()
   //
   // - How do the new operations mix with other matrix operatiosn such as the Kronecker product and
   //   inversion (perhaps using the Moore-Penrose pseudo inverse in case on non-square matrices)? 
-  //   Do identities involving those operations continue to hold in the more general case?
+  //   Do identities involving those operations continue to hold in the more general case? What 
+  //   about 1/a + 1/b = (a+b)/(a*b)? Will we have 
+  //   inv(A) + inv(B) = (a+b) * inv(a*b) = inv(a*b) * (a+b)? Or maybe we have to distinguish 
+  //   between left and right iverses?
 }
 
 

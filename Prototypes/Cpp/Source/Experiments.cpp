@@ -14124,6 +14124,10 @@ void testGeneralizedMatrixOperations()
 
   bool ok = true;
 
+
+  // This is a 6-fold nested loop because all shape variables M,N,P,Q,R,S should take on any values 
+  // from the sizes array. That gives us 6^6 = 46656 cases to check. This takes a while but it is 
+  // still managable:
   for(int m = 0; m < L; m++)
   {
     for(int n = 0; n < L; n++)
@@ -14148,7 +14152,7 @@ void testGeneralizedMatrixOperations()
               Mat C = rsRandomMatrix(R, S, min, max, 0);
 
               ok &= rsIsAssociative(A, B, C, add);
-
+              ok &= rsIsCommutative(A, B,    add);
               // ToDo: maybe pass the operation as first argument
 
               int dummy = 0;
@@ -14158,9 +14162,7 @@ void testGeneralizedMatrixOperations()
       }
     }
   }
-  // I think, we may need a loop nesting depth of 6 (if we count an unnested loop as depth 1). All
-  // shape variables M,N,P,Q,R,S should take on any values from the sizes array. That gives us 
-  // 6^6 = 46656 cases to check. 
+  // 
 
 
 
@@ -14181,6 +14183,11 @@ void testGeneralizedMatrixOperations()
   //   commutativity of operations on other data types (such as the experimental group string). We
   //   should drag the code for that over to here. It doesn't really belong into the main repo. 
   //   It's about some experimental math ideas that really belong here into the research repo.
+  //
+  // - Maybe it would be better to generate all possible permutations of the sizes array and loop 
+  //   over those. This would give us 6! = 720 cases to check. Much less than the 6^6 = 46656 that
+  //   we check now. But we would have to produce all the permutaions. I'm not sure, if I already 
+  //   have a function for that available. Check that!
   //
   //
   // Questions:

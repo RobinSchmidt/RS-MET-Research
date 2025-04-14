@@ -14106,21 +14106,24 @@ rsMatrix<T> rsMatrixAdd(const rsMatrix<T>& A, const rsMatrix<T>& B)
 }
 
 template<class T>
-rsMatrix<T> rsMatrixMul(const rsMatrix<T>& A, const rsMatrix<T>& B)
+rsMatrix<T> rsMatrixMul1(const rsMatrix<T>& A, const rsMatrix<T>& B)
 {
   int numRows = rsMax(A.getNumRows(),    B.getNumColumns());
   int numCols = rsMax(A.getNumColumns(), B.getNumRows());
 
-
-  // Test:
-  //rsSwap(numRows, numCols);
-
-  // Test:
   numRows = numCols = rsMax(numRows, numCols);
-  // With it, it seems to work and without it, it doesn't. Figure out why! And figure also out what
-  // this implies for the relation to the usual matrix multiplication. I think, it means the result
-  // will always be a square matrix
 
+  rsMatrix<T> Ap = rsZeroPad(A, numRows, numCols);
+  rsMatrix<T> Bp = rsZeroPad(B, numRows, numCols);
+
+  return Ap * Bp;
+}
+
+template<class T>
+rsMatrix<T> rsMatrixMul2(const rsMatrix<T>& A, const rsMatrix<T>& B)
+{
+  int numRows = rsMax(A.getNumRows(),    B.getNumColumns());
+  int numCols = rsMax(A.getNumColumns(), B.getNumRows());
 
   rsMatrix<T> Ap = rsZeroPad(A, numRows, numCols);
   rsMatrix<T> Bp = rsZeroPad(B, numRows, numCols);
@@ -14130,7 +14133,7 @@ rsMatrix<T> rsMatrixMul(const rsMatrix<T>& A, const rsMatrix<T>& B)
 
 // Another variant of multiplication for experimentation:
 template<class T>
-rsMatrix<T> rsMatrixMul2(const rsMatrix<T>& A, const rsMatrix<T>& B)
+rsMatrix<T> rsMatrixMul3(const rsMatrix<T>& A, const rsMatrix<T>& B)
 {
   int numRows = A.getNumRows();
   int numCols = rsMax(A.getNumColumns(), B.getNumRows());
@@ -14160,7 +14163,7 @@ void testGeneralizedMatrixOperations()
   Real max = +8;
 
 
-
+  bool ok = true;
 
   // For the sizes of the matrices:
   std::vector<int> sizes({2,3,4,5,6,7});
@@ -14170,8 +14173,9 @@ void testGeneralizedMatrixOperations()
 
   // The matrix operations for addition and multiplication wrapped into std::function:
   std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>;
-  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
+  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul1<Real>;
   //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul2<Real>; // Triggers rsAssert!
+  //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul3<Real>; // Triggers rsAssert!
 
 
 
@@ -14192,11 +14196,18 @@ void testGeneralizedMatrixOperations()
     return ok;
   };
 
+
+  // Some manual tests for cases that have been identified as problematic or interesting:
+  ok &= doTest(2,3, 3,2, 2,3);
+  ok &= doTest(3,2, 2,3, 2,3);
+  //ok &= doTest(2,2, 2,3, 2,3);
+  //ok &= doTest(2,3, 2,3, 2,3);
+
+
   // This is a 6-fold nested loop because all shape variables M,N,P,Q,R,S should take on any values 
   // from the sizes array. That gives us 6^6 = 46656 cases to check. This takes a while but it is 
   // still managable:
-  bool ok = true;
-  int  L  = (int) sizes.size();
+  int L = (int) sizes.size();
   for(int m = 0; m < L; m++)
     for(int n = 0; n < L; n++)
       for(int p = 0; p < L; p++)
@@ -14228,6 +14239,8 @@ void testGeneralizedMatrixOperations()
   //   over those. This would give us 6! = 720 cases to check. Much less than the 6^6 = 46656 that
   //   we check now. But we would have to produce all the permutaions. I'm not sure, if I already 
   //   have a function for that available. Check that!
+  //
+  // - Test some cases manually - like multiplying 2x3 * 2x3
   //
   //
   // Questions:

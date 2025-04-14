@@ -14111,6 +14111,14 @@ rsMatrix<T> rsMatrixMul(const rsMatrix<T>& A, const rsMatrix<T>& B)
   int numRows = rsMax(A.getNumRows(),    B.getNumColumns());
   int numCols = rsMax(A.getNumColumns(), B.getNumRows());
 
+
+  // Test:
+  //rsSwap(numRows, numCols);
+
+  // Test:
+  numRows = numCols = rsMax(numRows, numCols);
+
+
   rsMatrix<T> Ap = rsZeroPad(A, numRows, numCols);
   rsMatrix<T> Bp = rsZeroPad(B, numRows, numCols);
 

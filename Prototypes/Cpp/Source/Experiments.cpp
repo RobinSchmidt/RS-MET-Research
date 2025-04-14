@@ -11253,6 +11253,10 @@ void testSquarity()
   //   rsq(x) = sq(x) * rsq(a) * rsq(b)  where rsq denotes the "recursive squarity function". Maybe
   //   we need a base case rsq(x) = 1 if x has only the trivial divisors 1 and x.
   //
+  // - Maybe it would be more consistent to define the squarity of prime numbers p not as zero but 
+  //   as 1/p. Then we would use the same rule for all numbers because 1 and p are indeed the two 
+  //   factors of p with the smallest distance. Maybe experiment with that alternative definition.
+  //
   //
   // Questions:
   //
@@ -14004,6 +14008,21 @@ void testBezoutMatrix()
   // https://en.wikipedia.org/wiki/Routh%E2%80%93Hurwitz_theorem
   // -> B can be used to determine, iff all roots of a polynomial are in the left half-plane, i.e.
   //    we can dtermine stability of an analog filter without actually computing its roots.
+}
+
+
+
+
+void testGeneralizedMatrixOperations()
+{
+  // Under construction
+
+  // We test the generalized definitions for matrix addition and multiplication that work for 
+  // matrices with any shape.
+
+
+
+  int dummy = 0;
 }
 
 

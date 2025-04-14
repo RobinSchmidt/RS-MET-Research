@@ -104,6 +104,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testWeightedAverages();
   //testSylvesterMatrix();
   //testBezoutMatrix();
+  testGeneralizedMatrixOperations();   // stub
 
   // Modular forms, lattices, elliptic functions:
   //testModularGroup();         // maybe move down, closer to the other 2x2 matrix stuff
@@ -124,7 +125,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   // MIMO Filters:
   //testMimoTransferMatrix();
   //testMimoFilters();           // just a stub - not much in there yet, mostly comments
-  testStateSpaceFilters(); 
+  //testStateSpaceFilters(); 
 
 
   // Math:

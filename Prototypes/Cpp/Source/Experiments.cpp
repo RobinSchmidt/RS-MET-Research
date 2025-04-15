@@ -14145,6 +14145,21 @@ rsMatrix<T> rsMatrixMul3(const rsMatrix<T>& A, const rsMatrix<T>& B)
   // Triggers rsAssert!
 }
 
+template<class T>
+rsMatrix<T> rsMatrixMul4(const rsMatrix<T>& A, const rsMatrix<T>& B)
+{
+  int numRows = A.getNumRows();
+  int numCols = B.getNumColumns();
+
+  rsMatrix<T> C(numRows, numCols);
+  for(int i = 0; i < numRows; i++) {
+    for(int j = 0; j < numCols; j++) {
+      C(i, j) = 0;
+      for(int k = 0; k < rsMin(A.getNumColumns(), B.getNumRows()); k++) {
+        C(i, j) += A(i, k) * B(k, j); }}}
+
+  return C;
+}
 
 
 
@@ -14173,9 +14188,10 @@ void testGeneralizedMatrixOperations()
 
   // The matrix operations for addition and multiplication wrapped into std::function:
   std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>;
-  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul1<Real>;
+  //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul1<Real>; // Overpads in some cases
   //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul2<Real>; // Triggers rsAssert!
   //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul3<Real>; // Triggers rsAssert!
+  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul4<Real>;
 
 
 
@@ -14198,7 +14214,7 @@ void testGeneralizedMatrixOperations()
 
 
   // Some manual tests for cases that have been identified as problematic or interesting:
-  ok &= doTest(2,3, 3,2, 2,3);
+  ok &= doTest(2,3, 3,2, 2,3);     // Leads to overpadding (to 3x3) with Mul1
   ok &= doTest(3,2, 2,3, 2,3);
   //ok &= doTest(2,2, 2,3, 2,3);
   //ok &= doTest(2,3, 2,3, 2,3);

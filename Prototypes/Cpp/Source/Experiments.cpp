@@ -14105,6 +14105,7 @@ rsMatrix<T> rsMatrixAdd(const rsMatrix<T>& A, const rsMatrix<T>& B)
   return Ap + Bp;
 }
 
+// I think, this works but may overpad for example to AB = 3x3 when A = 2x3, B = 3x2:
 template<class T>
 rsMatrix<T> rsMatrixMul1(const rsMatrix<T>& A, const rsMatrix<T>& B)
 {
@@ -14145,6 +14146,7 @@ rsMatrix<T> rsMatrixMul3(const rsMatrix<T>& A, const rsMatrix<T>& B)
   // Triggers rsAssert!
 }
 
+// I think, this is the one that works:
 template<class T>
 rsMatrix<T> rsMatrixMul4(const rsMatrix<T>& A, const rsMatrix<T>& B)
 {
@@ -14191,7 +14193,7 @@ void testGeneralizedMatrixOperations()
   //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul1<Real>; // Overpads in some cases
   //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul2<Real>; // Triggers rsAssert!
   //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul3<Real>; // Triggers rsAssert!
-  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul4<Real>;
+  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul4<Real>;   // Looks good, so far.
 
 
 
@@ -14205,8 +14207,20 @@ void testGeneralizedMatrixOperations()
     bool ok = true;
 
     ok &= rsIsAssociative(add, A, B, C, tol);
-    ok &= rsIsCommutative(add, A, B        );  // Should take a tol param, too!
+    ok &= rsIsCommutative(add, A, B        );  // Maybe it should take a tol param, too!
     ok &= rsIsAssociative(mul, A, B, C, tol);
+
+    // Check consistency with regular matrix multiplication if A,B happen to have the right shapes 
+    // such that it is possible to form the product A*B:
+    if(A.getNumColumns() == B.getNumRows())
+      ok &= A*B == mul(A, B);
+
+    // ToDo: 
+    //
+    // - Test distribuitivity
+    //
+    // - Test consistency with regular matrix add/mul. Maybe check, if A,B  are compatible for 
+    //   multiplication and if so, compare mul(A,B) with A*B. They should be the same.
 
     rsAssert(ok);
     return ok;
@@ -14214,15 +14228,17 @@ void testGeneralizedMatrixOperations()
 
 
   // Some manual tests for cases that have been identified as problematic or interesting:
-  ok &= doTest(2,3, 3,2, 2,3);     // Leads to overpadding (to 3x3) with Mul1
-  ok &= doTest(3,2, 2,3, 2,3);
+  //ok &= doTest(2,3, 3,2, 2,3);     // Leads to overpadding (to 3x3) with Mul1
+  //ok &= doTest(3,2, 2,3, 2,3);
   //ok &= doTest(2,2, 2,3, 2,3);
   //ok &= doTest(2,3, 2,3, 2,3);
 
 
+  rsPrintLine("Test started...");
+
   // This is a 6-fold nested loop because all shape variables M,N,P,Q,R,S should take on any values 
-  // from the sizes array. That gives us 6^6 = 46656 cases to check. This takes a while but it is 
-  // still managable:
+  // from the sizes array. That gives us 6^6 = 46656 cases to check. This takes a while in debug 
+  // builds but it is still managable. In a release build, it takes less than a second.
   int L = (int) sizes.size();
   for(int m = 0; m < L; m++)
     for(int n = 0; n < L; n++)
@@ -14232,6 +14248,11 @@ void testGeneralizedMatrixOperations()
             for(int s = 0; s < L; s++)
               ok &= doTest(sizes[m], sizes[n], sizes[p], sizes[q], sizes[r], sizes[s]);
 
+  if(ok)
+    rsPrintLine("Test passed.");
+  else
+    rsPrintLine("Test FAILED!");
+  getchar();
   rsAssert(ok);
 
 

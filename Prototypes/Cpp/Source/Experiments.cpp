@@ -14042,7 +14042,7 @@ bool rsIsAssociative(
   T bc   = f(b, c);
   T ab_c = f(ab, c);
   T a_bc = f(a, bc);
-  T d    = ab_c - ab_c;     // Associator?
+  T d    = ab_c - ab_c;     // "Associator"?
 
   return rsIsNegligible(d, tol);
 
@@ -14051,13 +14051,22 @@ bool rsIsAssociative(
   // Maybe make an inexact comparison with tolerance
 }
 
-template<class T>
+template<class T, class TTol>
 bool rsIsDistributive(
   const std::function<T(const T&, const T&)>& f,
   const std::function<T(const T&, const T&)>& g,
-  const T& a, const T& b, const T& c)
+  const T& a, const T& b, const T& c, TTol tol)
 {
-  return false;  // Preliminary
+  // The function f takes the role of multiplication and g takes the role fo addition.
+
+  // Maybe call it rsIsLeftDistributive and write a similar function rsIsRightDistributive and let
+  // another function rsIsDistributive check both
+
+  T a_bc  = f(a, g(b, c));        // a * (b + c)
+  T ab_ac = g(f(a,b), f(a,c));    // a*b + a*c
+  T d     = a_bc - ab_ac;         // Difference ("Distributor"?)
+
+  return rsIsNegligible(d, tol);
 }
 
 
@@ -14206,9 +14215,10 @@ void testGeneralizedMatrixOperations()
 
     bool ok = true;
 
-    ok &= rsIsAssociative(add, A, B, C, tol);
-    ok &= rsIsCommutative(add, A, B        );  // Maybe it should take a tol param, too!
-    ok &= rsIsAssociative(mul, A, B, C, tol);
+    ok &= rsIsAssociative( add,      A, B, C, tol);
+    ok &= rsIsCommutative( add,      A, B        );  // Maybe it should take a tol param, too?
+    ok &= rsIsAssociative( mul,      A, B, C, tol);
+    ok &= rsIsDistributive(mul, add, A, B, C, tol); 
 
     // Check consistency with regular matrix multiplication if A,B happen to have the right shapes 
     // such that it is possible to form the product A*B:
@@ -14267,7 +14277,7 @@ void testGeneralizedMatrixOperations()
   // - Create random matrices A,B,C of various shapes and verify the distributive law. 
   //   ...Ah - wait! To verify associativity, we also already need 3 matrices!
   //
-  // - The same set of functions can also be used to test associativity, distibutivity and
+  // - The same set of functions can also be used to test associativity, distributivity and
   //   commutativity of operations on other data types (such as the experimental group string). We
   //   should drag the code for that over to here. It doesn't really belong into the main repo. 
   //   It's about some experimental math ideas that really belong here into the research repo.

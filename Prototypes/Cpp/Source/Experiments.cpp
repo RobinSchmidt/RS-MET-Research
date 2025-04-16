@@ -14017,6 +14017,11 @@ void testBezoutMatrix()
 
 
 
+
+
+
+
+
 template<class T>
 bool rsIsCommutative(
   const std::function<T(const T&, const T&)>& f,
@@ -14042,9 +14047,9 @@ bool rsIsAssociative(
   T bc   = f(b, c);
   T ab_c = f(ab, c);
   T a_bc = f(a, bc);
-  T d    = ab_c - ab_c;     // "Associator"?
+  T d    = ab_c - ab_c;           // "Associator"?
 
-  return rsIsNegligible(d, tol);
+  return rsIsNegligible(d, tol);  // Maybe use rsIsCloseTo(ab_c, a_bc, tol)
 }
 
 /** Checks if the bivariate function f is distributive ove the bivariate function g for the given 
@@ -14069,13 +14074,34 @@ bool rsIsDistributive(
   // a_bc and ab_ac seem to automatically match. I wans't sure if I could expect this but it seems
   // to be the case.
 
-  return rsIsNegligible(d, tol);
+  return rsIsNegligible(d, tol);  // Maybe use rsIsCloseTo(ab_c, a_bc, tol)
 }
 
+/** Returns true, iff the bivariate function f is pseudo-commutative with respect to the univariate 
+function g for the given arguments a,b. Pseudo-commutativity of one function f with respect to 
+another function g is a term that I made up and I define it to mean that g(f(a,b)) = f(g(b), g(a)).
+For example, matrix multiplication is pseudo-commutative with respect to matrix transposition 
+because we have (A*B)^T = B^T * A^T. Here, f takes the role of matrix multiplication and g takes 
+the role of matrix transposition. Matrix addition is pseudo-commutative with respect to g being the
+identity. It should also be pseudo-commutative with respect transposition, I think (verify!) */
+template<class T, class TTol>
+bool rsIsPseudoCommutative(
+  const std::function<T(const T&, const T&)>& f,
+  const std::function<T(const T&)>& g,
+  const T& a, const T& b, TTol tol)
+{
+  // The function f takes the role of multiplication and g takes the role of transposition.
 
+  T ab = g(f(a, b));      // (a*b)^T
+  T ba = f(g(b), g(a));   // b^T * a^T
+
+  T d  = ab - ba;
+  return rsIsNegligible(d, tol);  // Maybe use rsIsCloseTo(ab, ba, tol)
+}
+// Needs test
 
 template<class T>
-rsMatrix<T> rsZeroPad(const rsMatrix<T>& A, int numRows, int numCols)
+rsMatrix<T> rsZeroPad(const rsMatrixView<T>& A, int numRows, int numCols)
 {
   rsAssert(numRows >= A.getNumRows());
   rsAssert(numCols >= A.getNumColumns());
@@ -14090,6 +14116,17 @@ rsMatrix<T> rsZeroPad(const rsMatrix<T>& A, int numRows, int numCols)
       Ap(i, j) = A(i, j);
   return Ap;
 }
+
+template<class T>
+rsMatrix<T> rsTranspose(const rsMatrix<T>& A)
+{
+  return A.getTranspose();
+}
+
+
+
+
+
 
 template<class T>
 rsMatrix<T> rsRandomMatrix(int numRows, int numCols, T min, T max, int seed)
@@ -14110,7 +14147,7 @@ rsMatrix<T> rsRandomMatrix(int numRows, int numCols, T min, T max, int seed)
 }
 
 template<class T>
-rsMatrix<T> rsMatrixAdd(const rsMatrix<T>& A, const rsMatrix<T>& B)
+rsMatrix<T> rsMatrixAdd(const rsMatrixView<T>& A, const rsMatrixView<T>& B)
 {
   int numRows = rsMax(A.getNumRows(),    B.getNumRows());
   int numCols = rsMax(A.getNumColumns(), B.getNumColumns());
@@ -14172,7 +14209,7 @@ rsMatrix<T> rsMatrixMul3(const rsMatrix<T>& A, const rsMatrix<T>& B)
 
 // I think, this is the one that works:
 template<class T>
-rsMatrix<T> rsMatrixMul(const rsMatrix<T>& A, const rsMatrix<T>& B)
+rsMatrix<T> rsMatrixMul(const rsMatrixView<T>& A, const rsMatrixView<T>& B)
 {
   int numRows = A.getNumRows();
   int numCols = B.getNumColumns();
@@ -14199,6 +14236,7 @@ void testGeneralizedMatrixOperations()
 
   using Real = double;
   using Mat  = rsMatrix<Real>;
+  //using View = rsMatrixView<Real>;
 
   Real min = -8;
   Real max = +8;
@@ -14216,6 +14254,7 @@ void testGeneralizedMatrixOperations()
   std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>;
   std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
 
+  std::function<Mat(const Mat&)> trans = &rsTranspose<Real>;
 
 
   // Helper function to do the tests with the given configuration of shapes:
@@ -14227,10 +14266,15 @@ void testGeneralizedMatrixOperations()
 
     bool ok = true;
 
+    // Triple-wise tests:
     ok &= rsIsAssociative( add,      A, B, C, tol);
-    ok &= rsIsCommutative( add,      A, B        );  // Maybe it should take a tol param, too?
     ok &= rsIsAssociative( mul,      A, B, C, tol);
     ok &= rsIsDistributive(mul, add, A, B, C, tol); 
+
+
+    // Pairwise tests:
+    ok &= rsIsCommutative(      add,        A, B);      // Maybe it should take a tol param, too?
+    ok &= rsIsPseudoCommutative(mul, trans, A, B, tol);
 
     // Check consistency with regular matrix multiplication if A,B happen to have the right shapes 
     // such that it is possible to form the product A*B:

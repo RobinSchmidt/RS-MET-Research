@@ -14103,6 +14103,10 @@ rsMatrix<T> rsRandomMatrix(int numRows, int numCols, T min, T max, int seed)
     for(int j = 0; j < A.getNumColumns(); j++)
       A(i, j) = rng.getSample();
   return A;
+
+  // ToDo: 
+  //
+  // - factor out a function rsRandomize that takes a pointer to an rsMatrixView object
 }
 
 template<class T>
@@ -14115,7 +14119,14 @@ rsMatrix<T> rsMatrixAdd(const rsMatrix<T>& A, const rsMatrix<T>& B)
   rsMatrix<T> Bp = rsZeroPad(B, numRows, numCols);
 
   return Ap + Bp;
+
+  // ToDo:
+  //
+  // - Implement a version that doesn't explicitly create the zero-padded versions of A,B. 
 }
+
+/*
+// These are obsolete now:
 
 // I think, this works but may overpad for example to AB = 3x3 when A = 2x3, B = 3x2:
 template<class T>
@@ -14157,10 +14168,11 @@ rsMatrix<T> rsMatrixMul3(const rsMatrix<T>& A, const rsMatrix<T>& B)
 
   // Triggers rsAssert!
 }
+*/
 
 // I think, this is the one that works:
 template<class T>
-rsMatrix<T> rsMatrixMul4(const rsMatrix<T>& A, const rsMatrix<T>& B)
+rsMatrix<T> rsMatrixMul(const rsMatrix<T>& A, const rsMatrix<T>& B)
 {
   int numRows = A.getNumRows();
   int numCols = B.getNumColumns();
@@ -14202,10 +14214,7 @@ void testGeneralizedMatrixOperations()
 
   // The matrix operations for addition and multiplication wrapped into std::function:
   std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>;
-  //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul1<Real>; // Overpads in some cases
-  //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul2<Real>; // Triggers rsAssert!
-  //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul3<Real>; // Triggers rsAssert!
-  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul4<Real>;   // Looks good, so far.
+  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
 
 
 
@@ -14225,15 +14234,19 @@ void testGeneralizedMatrixOperations()
 
     // Check consistency with regular matrix multiplication if A,B happen to have the right shapes 
     // such that it is possible to form the product A*B:
-    if(A.getNumColumns() == B.getNumRows())
-      ok &= A*B == mul(A, B);
+    if(A.getNumColumns() == B.getNumRows())  // Maybe factor out a function A.canBeRightMultipliedBy(B)
+      ok &= A * B == mul(A, B);
+
+    if(A.hasSameShapeAs(B))
+      ok &= A + B == add(A, B);
 
     // ToDo: 
     //
     // - Test (A*B)^T = B^T * A^T - maybe call it rsIsPseudoCommutative(). But maybe first split 
     //   this doTest function into two. One that does tests involving only two matrices A,B and one
     //   that involves three matrices A,B,C. Maybe name the functions doPairTest(), doTripleTest().
-    //   The commutativity test for addition should then also go into the pair tests.
+    //   The commutativity test for addition should then also go into the pair tests. The 
+    //   consistency tests as well.
 
     rsAssert(ok);
     return ok;
@@ -14279,6 +14292,11 @@ void testGeneralizedMatrixOperations()
   //
   // - Create random matrices A,B,C of various shapes and verify the distributive law. 
   //   ...Ah - wait! To verify associativity, we also already need 3 matrices!
+  //
+  // - Maybe use rsMatrixView instead of rsMatrix. Pre-allocate and pre-generate 3 std::vectors of 
+  //   random numbers of length U^2 where U = max(sizes). That should be large enough to hold all
+  //   the values of a UxU matrix. This avoids a lot of allocations and a lot of redundant runs of
+  //   the PRNG.
   //
   // - The same set of functions can also be used to test associativity, distributivity and
   //   commutativity of operations on other data types (such as the experimental group string). We

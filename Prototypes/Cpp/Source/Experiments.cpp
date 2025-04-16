@@ -14077,13 +14077,15 @@ bool rsIsDistributive(
   return rsIsNegligible(d, tol);  // Maybe use rsIsCloseTo(ab_c, a_bc, tol)
 }
 
-/** Returns true, iff the bivariate function f is pseudo-commutative with respect to the univariate 
-function g for the given arguments a,b. Pseudo-commutativity of one function f with respect to 
-another function g is a term that I made up and I define it to mean that g(f(a,b)) = f(g(b), g(a)).
-For example, matrix multiplication is pseudo-commutative with respect to matrix transposition 
-because we have (A*B)^T = B^T * A^T. Here, f takes the role of matrix multiplication and g takes 
-the role of matrix transposition. Matrix addition is pseudo-commutative with respect to g being the
-identity. It should also be pseudo-commutative with respect transposition, I think (verify!) */
+/** Returns true, iff the bivariate function (or binary operator) f is pseudo-commutative with 
+respect to the univariate function (or unary operator) g for the given arguments a,b. 
+Pseudo-commutativity of one function f with respect to another function g is a term that I made up 
+and I define it to mean that g(f(a,b)) = f(g(b), g(a)). For example, matrix multiplication is 
+pseudo-commutative with respect to matrix transposition because we have (A*B)^T = B^T * A^T. Here, 
+f takes the role of matrix multiplication and g takes the role of matrix transposition. The 
+definition of pseudo-commutativity intends to be an abstraction of that idea. Regular commutativity
+is a special case where g is the identity function. Matrix addition is pseudo-commutative with 
+respect to the identity and also with respect to transposition and negation. */
 template<class T, class TTol>
 bool rsIsPseudoCommutative(
   const std::function<T(const T&, const T&)>& f,
@@ -14131,6 +14133,16 @@ rsMatrix<T> rsTranspose(const rsMatrix<T>& A)
 {
   return A.getTranspose();
 }
+// Maybe rename to rsMatrixTranspose
+
+template<class T>
+rsMatrix<T> rsMatrixNegate(const rsMatrix<T>& A)
+{
+  //return A.getTranspose();
+  return -A;
+}
+
+
 
 
 
@@ -14266,6 +14278,7 @@ void testGeneralizedMatrixOperations()
   std::function<Mat(const Mat&)> trans = &rsTranspose<Real>;
   std::function<Mat(const Mat&)> id    = &rsIdentity<Mat>;
 
+  //std::function<Mat(const Mat&)> neg   = &rsMatrixNegate<Mat>;  // Doesn't compile - why?
 
 
   // Helper function to do the tests with the given configuration of shapes:
@@ -14287,8 +14300,9 @@ void testGeneralizedMatrixOperations()
     // Pairwise tests:
     ok &= rsIsCommutative(      add,        A, B);      // Maybe it should take a tol param, too?
     ok &= rsIsPseudoCommutative(mul, trans, A, B, tol);
-    ok &= rsIsPseudoCommutative(add, trans, A, B, tol);
     ok &= rsIsPseudoCommutative(add, id,    A, B, tol);
+    //ok &= rsIsPseudoCommutative(add, neg,   A, B, tol);
+    ok &= rsIsPseudoCommutative(add, trans, A, B, tol);
 
     // Check consistency with regular matrix multiplication if A,B happen to have the right shapes 
     // such that it is possible to form the product A*B:
@@ -14376,7 +14390,11 @@ void testGeneralizedMatrixOperations()
   //   Do identities involving those operations continue to hold in the more general case? What 
   //   about 1/a + 1/b = (a+b)/(a*b)? Will we have 
   //   inv(A) + inv(B) = (a+b) * inv(a*b) = inv(a*b) * (a+b)? Or maybe we have to distinguish 
-  //   between left and right iverses?
+  //   between left and right inverses?
+  //
+  // - Can we also show some pseudo-commutativity with respect to inversion? I think, indeed we
+  //   have (A*B)^-1 = B^-1 * A^-1 - at least for square matrices A,B. But maybe it also works with
+  //   a suitable pseudo inverse?
 }
 
 

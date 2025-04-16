@@ -14097,6 +14097,15 @@ bool rsIsPseudoCommutative(
 
   T d  = ab - ba;
   return rsIsNegligible(d, tol);  // Maybe use rsIsCloseTo(ab, ba, tol)
+
+  // This could also be fomulated in terms of unary and binary operators rather than univariate and
+  // bivariate functions. It's really the same thing just different terminology. Maybe for the 
+  // unary operator, we could in general use a bar or hat or tilde or something when writing it 
+  // down in math notation.
+  //
+  // ToDo: figure out, if this definition of pseudo-commutativity applies to other things as well.
+  // Maybe quaternion multiplication? But what should the unary opeartor be? Maybe reversing the 
+  // vector part? What about complex numbers with conjugation? Maybe rotation by 180°, too?
 }
 // Needs test
 

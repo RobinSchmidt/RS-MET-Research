@@ -14163,7 +14163,7 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
     Mat AT_A = AT * A;
     Mat P(M, M);                  // P shall become the pseudo inverse.
     LA::solve(AT_A, P, AT);       // (A^T * A) * P = A^T
-    return X;
+    return P;
   }
 
   if(M < N)                       // A is wide
@@ -14181,9 +14181,19 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
   //   respectively. They should be declared near isSquare().
   //
   // - When it works, move it to the library as LA::pseudoInverse(A). But for generalization to
-  //   complex numbers, we should really use the conjugate transpose rather than the transpose.
-
-
+  //   complex numbers, we should really use the conjugate transpose rather than the transpose. And
+  //   what aabout the case of square matrices that are singular? Maybe in these cases, we can also
+  //   compute a pseudo inverse? Figure that out and then maybe implement it that way. The last 
+  //   line "return LA::inverse(A)" should then become more complicated. It needs to attempt to 
+  //   invert A and if, along the way, it discovers that A is singular, it needs to also switch to
+  //   computing a pseudo-inverse.
+  //
+  // - Figure out if in the tall and wide cases, we could encounter a singular system. If so, try
+  //   to figure out what we can do in such a case. If not, document why not. Maybe it's because 
+  //   the matrices A^T A and A A^T are symmetric and therefore always invertible? ..not sure about
+  //   that, though.
+  //
+  //
   // See: 
   // https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse
   // https://en.wikipedia.org/wiki/Generalized_inverse
@@ -14354,6 +14364,9 @@ void testGeneralizedMatrixOperations()
       for(int p = 0; p < L; p++)
         for(int q = 0; q < L; q++)
           ok &= pairTest(sizes[m], sizes[n], sizes[p], sizes[q]);
+  // I think, it would be enough, if the loops run up to L-2, i.e. up to 4. But it doesn't really 
+  // matter that much because the bulk of the computational load is in the 6-fold nested loop below
+  // anyway
 
   // Tests with triples of matrices. This needs a 6-fold nested loop because all shape variables 
   // M,N,P,Q,R,S should take on any values from the sizes array. That gives us 6^6 = 46656 cases to

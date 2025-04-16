@@ -14133,14 +14133,15 @@ rsMatrix<T> rsTranspose(const rsMatrix<T>& A)
 {
   return A.getTranspose();
 }
-// Maybe rename to rsMatrixTranspose
+// Maybe rename to rsMatrixTranspose or maybe to rsGetTranspose. A function name rsTranspose could
+// be mistaken to work in place
 
 template<class T>
 rsMatrix<T> rsMatrixNegate(const rsMatrix<T>& A)
 {
-  //return A.getTranspose();
   return -A;
 }
+// Maybe rename rsGetNegative or rsGetNegation
 
 
 
@@ -14164,7 +14165,7 @@ rsMatrix<T> rsRandomMatrix(int numRows, int numCols, T min, T max, int seed)
 
   // ToDo: 
   //
-  // - factor out a function rsRandomize that takes a pointer to an rsMatrixView object
+  // - Factor out a function rsRandomize that takes a pointer to an rsMatrixView object
 }
 
 template<class T>
@@ -14180,55 +14181,14 @@ rsMatrix<T> rsMatrixAdd(const rsMatrixView<T>& A, const rsMatrixView<T>& B)
 
   // ToDo:
   //
-  // - Implement a version that doesn't explicitly create the zero-padded versions of A,B. 
+  // - Implement a version that doesn't explicitly create the zero-padded versions of A,B. That 
+  //   will optimize memory usage. Keep that version here around for unit testing the other. This
+  //   here is much easier to verify to be correct by inspection.
 }
 
-/*
-// These are obsolete now:
-
-// I think, this works but may overpad for example to AB = 3x3 when A = 2x3, B = 3x2:
-template<class T>
-rsMatrix<T> rsMatrixMul1(const rsMatrix<T>& A, const rsMatrix<T>& B)
-{
-  int numRows = rsMax(A.getNumRows(),    B.getNumColumns());
-  int numCols = rsMax(A.getNumColumns(), B.getNumRows());
-
-  numRows = numCols = rsMax(numRows, numCols);
-
-  rsMatrix<T> Ap = rsZeroPad(A, numRows, numCols);
-  rsMatrix<T> Bp = rsZeroPad(B, numRows, numCols);
-
-  return Ap * Bp;
-}
-
-template<class T>
-rsMatrix<T> rsMatrixMul2(const rsMatrix<T>& A, const rsMatrix<T>& B)
-{
-  int numRows = rsMax(A.getNumRows(),    B.getNumColumns());
-  int numCols = rsMax(A.getNumColumns(), B.getNumRows());
-
-  rsMatrix<T> Ap = rsZeroPad(A, numRows, numCols);
-  rsMatrix<T> Bp = rsZeroPad(B, numRows, numCols);
-
-  return Ap * Bp;
-}
-
-// Another variant of multiplication for experimentation:
-template<class T>
-rsMatrix<T> rsMatrixMul3(const rsMatrix<T>& A, const rsMatrix<T>& B)
-{
-  int numRows = A.getNumRows();
-  int numCols = rsMax(A.getNumColumns(), B.getNumRows());
-
-  rsMatrix<T> Ap = rsZeroPad(A, numRows, numCols);
-
-  return Ap * B;
-
-  // Triggers rsAssert!
-}
-*/
-
-// I think, this is the one that works:
+/** Implements a generalized matrix multiplication that works for all shapes. It's based on 
+conceptually zero padding either the columns of A or the rows of B in order to make the dimension
+that is too small fit. */
 template<class T>
 rsMatrix<T> rsMatrixMul(const rsMatrixView<T>& A, const rsMatrixView<T>& B)
 {
@@ -14275,10 +14235,11 @@ void testGeneralizedMatrixOperations()
   std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>;
   std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
 
+  // Matrix transposition, negation and identity:
   std::function<Mat(const Mat&)> trans = &rsTranspose<Real>;
+  std::function<Mat(const Mat&)> neg   = &rsMatrixNegate<Real>;
   std::function<Mat(const Mat&)> id    = &rsIdentity<Mat>;
 
-  //std::function<Mat(const Mat&)> neg   = &rsMatrixNegate<Mat>;  // Doesn't compile - why?
 
 
   // Helper function to do the tests with the given configuration of shapes:
@@ -14301,7 +14262,7 @@ void testGeneralizedMatrixOperations()
     ok &= rsIsCommutative(      add,        A, B);      // Maybe it should take a tol param, too?
     ok &= rsIsPseudoCommutative(mul, trans, A, B, tol);
     ok &= rsIsPseudoCommutative(add, id,    A, B, tol);
-    //ok &= rsIsPseudoCommutative(add, neg,   A, B, tol);
+    ok &= rsIsPseudoCommutative(add, neg,   A, B, tol);
     ok &= rsIsPseudoCommutative(add, trans, A, B, tol);
 
     // Check consistency with regular matrix multiplication if A,B happen to have the right shapes 

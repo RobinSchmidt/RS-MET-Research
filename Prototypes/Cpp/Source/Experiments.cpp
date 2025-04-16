@@ -14045,19 +14045,18 @@ bool rsIsAssociative(
   T d    = ab_c - ab_c;     // "Associator"?
 
   return rsIsNegligible(d, tol);
-
-
-  //return ab_c == a_bc;
-  // Maybe make an inexact comparison with tolerance
 }
 
+/** Checks if the bivariate function f is distributive ove the bivariate function g for the given 
+three arguments a,b,c. If f would be multiplication and g addition, we would write this as
+a * (b + c) = a*b + a*c. More generally, we verify that f(a, g(b, c)) = g(f(a,b), f(a,c)). */
 template<class T, class TTol>
 bool rsIsDistributive(
   const std::function<T(const T&, const T&)>& f,
   const std::function<T(const T&, const T&)>& g,
   const T& a, const T& b, const T& c, TTol tol)
 {
-  // The function f takes the role of multiplication and g takes the role fo addition.
+  // The function f takes the role of multiplication and g takes the role of addition.
 
   // Maybe call it rsIsLeftDistributive and write a similar function rsIsRightDistributive and let
   // another function rsIsDistributive check both

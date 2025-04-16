@@ -14081,11 +14081,12 @@ bool rsIsDistributive(
 respect to the univariate function (or unary operator) g for the given arguments a,b. 
 Pseudo-commutativity of one function f with respect to another function g is a term that I made up 
 and I define it to mean that g(f(a,b)) = f(g(b), g(a)). For example, matrix multiplication is 
-pseudo-commutative with respect to matrix transposition because we have (A*B)^T = B^T * A^T. Here, 
-f takes the role of matrix multiplication and g takes the role of matrix transposition. The 
-definition of pseudo-commutativity intends to be an abstraction of that idea. Regular commutativity
-is a special case where g is the identity function. Matrix addition is pseudo-commutative with 
-respect to the identity and also with respect to transposition and negation. */
+pseudo-commutative with respect to matrix transposition because we have (A*B)' = B' * A' if we 
+denote transposition by the ' symbol. Here, f takes the role of matrix multiplication and g takes 
+the role of matrix transposition. The definition of pseudo-commutativity intends to be an 
+abstraction of that idea. Regular commutativity is a special case where g is the identity function. 
+Matrix addition is pseudo-commutative with respect to the identity and also with respect to 
+transposition and negation. */
 template<class T, class TTol>
 bool rsIsPseudoCommutative(
   const std::function<T(const T&, const T&)>& f,
@@ -14094,8 +14095,8 @@ bool rsIsPseudoCommutative(
 {
   // The function f takes the role of multiplication and g takes the role of transposition.
 
-  T ab = g(f(a, b));      // (a*b)^T
-  T ba = f(g(b), g(a));   // b^T * a^T
+  T ab = g(f(a, b));      // (a*b)'
+  T ba = f(g(b), g(a));   // b' * a'
 
   T d  = ab - ba;
   return rsIsNegligible(d, tol);  // Maybe use rsIsCloseTo(ab, ba, tol)
@@ -14103,7 +14104,9 @@ bool rsIsPseudoCommutative(
   // This could also be fomulated in terms of unary and binary operators rather than univariate and
   // bivariate functions. It's really the same thing just different terminology. Maybe for the 
   // unary operator, we could in general use a bar or hat or tilde or something when writing it 
-  // down in math notation.
+  // down in math notation. Maybe the overbar is best suited because it can span over the 
+  // expression a*b. Although, the prime is also quite nice - although, it need parentheses when 
+  // applied to a*b. It's used by Matlab for transposition, too.
   //
   // ToDo: figure out, if this definition of pseudo-commutativity applies to other things as well.
   // Maybe quaternion multiplication? But what should the unary opeartor be? Maybe reversing the 
@@ -14206,29 +14209,35 @@ rsMatrix<T> rsMatrixMul(const rsMatrixView<T>& A, const rsMatrixView<T>& B)
 }
 
 
-
-
 void testGeneralizedMatrixOperations()
 {
-  // Under construction
-
   // We test the generalized definitions for matrix addition and multiplication that work for 
-  // matrices with any shape.
+  // matrices with any configuration of shapes for the inputs. We verify experimentally that the 
+  // extended definitions still obey the expected algebraic rules such as commutativity, 
+  // associativity, distributivity. The experiments create random matrices of various shapes and
+  // check, if the laws hold up for these example matrices. This is not a real substitute for a 
+  // mathematical proof but it's a first sanity check that would be highly unlikely to succeed if
+  // the laws wouldn't hold up in general - because we use totally random matrices. And by highly 
+  // unlikely, I mean that the test would have a zero probability of success when we could do it 
+  // with random real numbers of infinite precision. That's good enough for me at the moment in 
+  // this exploration phase. A formal proof may or may not follow at some point later. 
+
+
+  bool ok = true;
 
   using Real = double;
   using Mat  = rsMatrix<Real>;
   //using View = rsMatrixView<Real>;
 
+  // Minimum and maximum value for the matrix entries:
   Real min = -8;
   Real max = +8;
 
-
-  bool ok = true;
-
-  // For the sizes of the matrices:
+  // Each matrix from the set A,B,C takes on all possible shapes MxN where M,N are from the set of 
+  // sizes below:
   std::vector<int> sizes({2,3,4,5,6,7});
 
-  // Error tolerance for the inexact comparisons:
+  // Error tolerance for the inexact floating point comparisons:
   Real tol = 1.e-13;
 
   // The matrix operations for addition and multiplication wrapped into std::function:
@@ -14241,71 +14250,79 @@ void testGeneralizedMatrixOperations()
   std::function<Mat(const Mat&)> id    = &rsIdentity<Mat>;
 
 
-
-  // Helper function to do the tests with the given configuration of shapes:
-  auto doTest = [&](int M, int N, int P, int Q, int R, int S)
+  // Helper function to do the tests with a pair A,B of matrices with the given configuration 
+  // of shapes. A is MxN, B is PxQ.
+  auto pairTest = [&](int M, int N, int P, int Q)
   {
-    Mat A = rsRandomMatrix(M, N, min, max, 0);
-    Mat B = rsRandomMatrix(P, Q, min, max, 1);
-    Mat C = rsRandomMatrix(R, S, min, max, 2);
-
     bool ok = true;
 
-    // Triple-wise tests:
-    ok &= rsIsAssociative( add,      A, B, C, tol);
-    ok &= rsIsAssociative( mul,      A, B, C, tol);
-    ok &= rsIsDistributive(mul, add, A, B, C, tol); 
+    Mat A = rsRandomMatrix(M, N, min, max, 0);
+    Mat B = rsRandomMatrix(P, Q, min, max, 1);
 
-
-
-    // Pairwise tests:
+    // Addition is commutative and pseudo-commutative with respect to identity, negation and 
+    // transposition:
     ok &= rsIsCommutative(      add,        A, B);      // Maybe it should take a tol param, too?
-    ok &= rsIsPseudoCommutative(mul, trans, A, B, tol);
     ok &= rsIsPseudoCommutative(add, id,    A, B, tol);
     ok &= rsIsPseudoCommutative(add, neg,   A, B, tol);
     ok &= rsIsPseudoCommutative(add, trans, A, B, tol);
 
-    // Check consistency with regular matrix multiplication if A,B happen to have the right shapes 
-    // such that it is possible to form the product A*B:
+    // Multiplication is pseudo-commutative with respect to transposition. That means 
+    // (A*B)^T = B^T * A^T:
+    ok &= rsIsPseudoCommutative(mul, trans, A, B, tol);
+
+    // Check consistency with regular matrix addition and multiplication if A,B happen to have the
+    // right shapes:
+    if(A.hasSameShapeAs(B))
+      ok &= A + B == add(A, B);
     if(A.getNumColumns() == B.getNumRows())  // Maybe factor out a function A.canBeRightMultipliedBy(B)
       ok &= A * B == mul(A, B);
 
-    if(A.hasSameShapeAs(B))
-      ok &= A + B == add(A, B);
+    rsAssert(ok);
+    return ok;
+  };
 
-    // ToDo: 
-    //
-    // - Test (A*B)^T = B^T * A^T - maybe call it rsIsPseudoCommutative(). But maybe first split 
-    //   this doTest function into two. One that does tests involving only two matrices A,B and one
-    //   that involves three matrices A,B,C. Maybe name the functions doPairTest(), doTripleTest().
-    //   The commutativity test for addition should then also go into the pair tests. The 
-    //   consistency tests as well.
+  // Helper function to do the tests with a triple A,B,C of matrices with the given configuration 
+  // of shapes. A is MxN, B is PxQ, C is RxS.
+  auto tripleTest = [&](int M, int N, int P, int Q, int R, int S)
+  {
+    bool ok = true;
+
+    Mat A = rsRandomMatrix(M, N, min, max, 0);
+    Mat B = rsRandomMatrix(P, Q, min, max, 1);
+    Mat C = rsRandomMatrix(R, S, min, max, 2);
+
+    ok &= rsIsAssociative( add,      A, B, C, tol);
+    ok &= rsIsAssociative( mul,      A, B, C, tol);
+    ok &= rsIsDistributive(mul, add, A, B, C, tol); 
 
     rsAssert(ok);
     return ok;
   };
 
 
-  // Some manual tests for cases that have been identified as problematic or interesting:
-  //ok &= doTest(2,3, 3,2, 2,3);     // Leads to overpadding (to 3x3) with Mul1
-  //ok &= doTest(3,2, 2,3, 2,3);
-  //ok &= doTest(2,2, 2,3, 2,3);
-  //ok &= doTest(2,3, 2,3, 2,3);
 
-
+  // Start the actual tests:
   rsPrintLine("Test started...");
-
-  // This is a 6-fold nested loop because all shape variables M,N,P,Q,R,S should take on any values 
-  // from the sizes array. That gives us 6^6 = 46656 cases to check. This takes a while in debug 
-  // builds but it is still managable. In a release build, it takes less than a second.
   int L = (int) sizes.size();
+
+  // Tests with pairs of matrices:
+  for(int m = 0; m < L; m++)
+    for(int n = 0; n < L; n++)
+      for(int p = 0; p < L; p++)
+        for(int q = 0; q < L; q++)
+          ok &= pairTest(sizes[m], sizes[n], sizes[p], sizes[q]);
+
+  // Tests with triples of matrices. This needs a 6-fold nested loop because all shape variables 
+  // M,N,P,Q,R,S should take on any values from the sizes array. That gives us 6^6 = 46656 cases to
+  // check. This takes a couple of seconds in debug builds. In a release build, it takes less than 
+  // a second, so it's totally managable even though it looks scary.
   for(int m = 0; m < L; m++)
     for(int n = 0; n < L; n++)
       for(int p = 0; p < L; p++)
         for(int q = 0; q < L; q++)
           for(int r = 0; r < L; r++)
             for(int s = 0; s < L; s++)
-              ok &= doTest(sizes[m], sizes[n], sizes[p], sizes[q], sizes[r], sizes[s]);
+              ok &= tripleTest(sizes[m], sizes[n], sizes[p], sizes[q], sizes[r], sizes[s]);
 
   if(ok)
     rsPrintLine("Test passed.");
@@ -14316,15 +14333,6 @@ void testGeneralizedMatrixOperations()
 
 
   // ToDo:
-  //
-  // - Create random matrices A,B of shapes MxN, PxQ with M,N,P,Q going through {2,3,4,5} each such
-  //   that we get all 4! = 24 possible assignments M,N,P,Q and then form the sum and product
-  //   A+B, A*B and verify that they obey the familiar laws: associativity, commutativity for 
-  //   addition, (A*B)^T = B^T * A^T for multiplication. Maybe the last one could be called 
-  //   "pseudo-commutative"?
-  //
-  // - Create random matrices A,B,C of various shapes and verify the distributive law. 
-  //   ...Ah - wait! To verify associativity, we also already need 3 matrices!
   //
   // - Maybe use rsMatrixView instead of rsMatrix. Pre-allocate and pre-generate 3 std::vectors of 
   //   random numbers of length U^2 where U = max(sizes). That should be large enough to hold all
@@ -14341,8 +14349,6 @@ void testGeneralizedMatrixOperations()
   //   we check now. But we would have to produce all the permutaions. I'm not sure, if I already 
   //   have a function for that available. Check that!
   //
-  // - Test some cases manually - like multiplying 2x3 * 2x3
-  //
   //
   // Questions:
   //
@@ -14351,11 +14357,11 @@ void testGeneralizedMatrixOperations()
   //   Do identities involving those operations continue to hold in the more general case? What 
   //   about 1/a + 1/b = (a+b)/(a*b)? Will we have 
   //   inv(A) + inv(B) = (a+b) * inv(a*b) = inv(a*b) * (a+b)? Or maybe we have to distinguish 
-  //   between left and right inverses?
+  //   between left and right inverses? What about the matrix inversion lemma?
   //
   // - Can we also show some pseudo-commutativity with respect to inversion? I think, indeed we
   //   have (A*B)^-1 = B^-1 * A^-1 - at least for square matrices A,B. But maybe it also works with
-  //   a suitable pseudo inverse?
+  //   non-square matrices with a suitable pseudo inverse?
 }
 
 

@@ -14047,8 +14047,7 @@ bool rsIsAssociative(
   T bc   = f(b, c);
   T ab_c = f(ab, c);
   T a_bc = f(a, bc);
-  T d    = ab_c - ab_c;           // "Associator"?
-
+  T d = ab_c - ab_c;              // "Associator"?
   return rsIsNegligible(d, tol);  // Maybe use rsIsCloseTo(ab_c, a_bc, tol)
 }
 
@@ -14068,13 +14067,12 @@ bool rsIsDistributive(
 
   T a_bc  = f(a, g(b, c));        // a * (b + c)
   T ab_ac = g(f(a,b), f(a,c));    // a*b + a*c
-  T d     = a_bc - ab_ac;         // Difference ("Distributor"?)
+  T d = a_bc - ab_ac;             // Difference ("Distributor"?)
+  return rsIsNegligible(d, tol);  // Maybe use rsIsCloseTo(ab_c, a_bc, tol)
 
   // Apparently, we don't even need to use a generalized form of subtraction here. The shapes of 
   // a_bc and ab_ac seem to automatically match. I wans't sure if I could expect this but it seems
   // to be the case.
-
-  return rsIsNegligible(d, tol);  // Maybe use rsIsCloseTo(ab_c, a_bc, tol)
 }
 
 /** Returns true, iff the bivariate function (or binary operator) f is pseudo-commutative with 
@@ -14146,8 +14144,51 @@ rsMatrix<T> rsMatrixNegate(const rsMatrix<T>& A)
 }
 // Maybe rename rsGetNegative or rsGetNegation
 
+template<class T>
+rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
+{
+  // Under construction
 
 
+  using LA  = rsLinearAlgebraNew;
+  using Mat = rsMatrix<T>;
+
+  int M = A.getNumRows();
+  int N = A.getNumColumns();
+
+
+  if(M > N)                       // A is tall
+  {
+    Mat AT   = A.getTranspose();
+    Mat AT_A = AT * A;
+    Mat P(M, M);                  // P shall become the pseudo inverse.
+    LA::solve(AT_A, P, AT);       // (A^T * A) * P = A^T
+    return X;
+  }
+
+  if(M < N)                       // A is wide
+  {
+    rsError("Not yet implemented");
+    return rsMatrix<T>();         // Preliminary
+  }
+
+  return LA::inverse(A);          // A is square, M == N
+
+
+  // ToDo:
+  //
+  // - Maybe let rsMatrixView have functions isTall(), isWide() for the conditions M > N and M < N
+  //   respectively. They should be declared near isSquare().
+  //
+  // - When it works, move it to the library as LA::pseudoInverse(A). But for generalization to
+  //   complex numbers, we should really use the conjugate transpose rather than the transpose.
+
+
+  // See: 
+  // https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse
+  // https://en.wikipedia.org/wiki/Generalized_inverse
+  // https://en.wikipedia.org/wiki/Invertible_matrix#Generalized_inverses
+}
 
 
 
@@ -14251,7 +14292,8 @@ void testGeneralizedMatrixOperations()
 
 
   // Helper function to do the tests with a pair A,B of matrices with the given configuration 
-  // of shapes. A is MxN, B is PxQ.
+  // of shapes. A is MxN, B is PxQ. The tests we do here are for (pseudo)commutativity and 
+  // consistency with the old definitions:
   auto pairTest = [&](int M, int N, int P, int Q)
   {
     bool ok = true;
@@ -14282,7 +14324,8 @@ void testGeneralizedMatrixOperations()
   };
 
   // Helper function to do the tests with a triple A,B,C of matrices with the given configuration 
-  // of shapes. A is MxN, B is PxQ, C is RxS.
+  // of shapes. A is MxN, B is PxQ, C is RxS. The tests we do here are for associativity and 
+  // distributivity.
   auto tripleTest = [&](int M, int N, int P, int Q, int R, int S)
   {
     bool ok = true;
@@ -14346,7 +14389,7 @@ void testGeneralizedMatrixOperations()
   //
   // - Maybe it would be better to generate all possible permutations of the sizes array and loop 
   //   over those. This would give us 6! = 720 cases to check. Much less than the 6^6 = 46656 that
-  //   we check now. But we would have to produce all the permutaions. I'm not sure, if I already 
+  //   we check now. But we would have to produce all the permutations. I'm not sure, if I already 
   //   have a function for that available. Check that!
   //
   //
@@ -14361,7 +14404,10 @@ void testGeneralizedMatrixOperations()
   //
   // - Can we also show some pseudo-commutativity with respect to inversion? I think, indeed we
   //   have (A*B)^-1 = B^-1 * A^-1 - at least for square matrices A,B. But maybe it also works with
-  //   non-square matrices with a suitable pseudo inverse?
+  //   non-square matrices with a suitable pseudo inverse? What about (A^-1)^T = (A^T)^-1?
+  //
+  // - Is there a way we could define a derivative of a matrix such that it obeys the product rule
+  //   of derivatives? Maybe when we intepret the entries as series expansion coeffs?
 }
 
 

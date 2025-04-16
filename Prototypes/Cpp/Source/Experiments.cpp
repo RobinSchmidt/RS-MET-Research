@@ -14255,6 +14255,8 @@ void testGeneralizedMatrixOperations()
   std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
 
   std::function<Mat(const Mat&)> trans = &rsTranspose<Real>;
+  std::function<Mat(const Mat&)> id    = &rsIdentity<Mat>;
+
 
 
   // Helper function to do the tests with the given configuration of shapes:
@@ -14272,9 +14274,12 @@ void testGeneralizedMatrixOperations()
     ok &= rsIsDistributive(mul, add, A, B, C, tol); 
 
 
+
     // Pairwise tests:
     ok &= rsIsCommutative(      add,        A, B);      // Maybe it should take a tol param, too?
     ok &= rsIsPseudoCommutative(mul, trans, A, B, tol);
+    ok &= rsIsPseudoCommutative(add, trans, A, B, tol);
+    ok &= rsIsPseudoCommutative(add, id,    A, B, tol);
 
     // Check consistency with regular matrix multiplication if A,B happen to have the right shapes 
     // such that it is possible to form the product A*B:

@@ -14066,6 +14066,10 @@ bool rsIsDistributive(
   T ab_ac = g(f(a,b), f(a,c));    // a*b + a*c
   T d     = a_bc - ab_ac;         // Difference ("Distributor"?)
 
+  // Apparently, we don't even need to use a generalized form of subtraction here. The shapes of 
+  // a_bc and ab_ac seem to automatically match. I wans't sure if I could expect this but it seems
+  // to be the case.
+
   return rsIsNegligible(d, tol);
 }
 
@@ -14227,10 +14231,10 @@ void testGeneralizedMatrixOperations()
 
     // ToDo: 
     //
-    // - Test distribuitivity
-    //
-    // - Test consistency with regular matrix add/mul. Maybe check, if A,B  are compatible for 
-    //   multiplication and if so, compare mul(A,B) with A*B. They should be the same.
+    // - Test (A*B)^T = B^T * A^T - maybe call it rsIsPseudoCommutative(). But maybe first split 
+    //   this doTest function into two. One that does tests involving only two matrices A,B and one
+    //   that involves three matrices A,B,C. Maybe name the functions doPairTest(), doTripleTest().
+    //   The commutativity test for addition should then also go into the pair tests.
 
     rsAssert(ok);
     return ok;

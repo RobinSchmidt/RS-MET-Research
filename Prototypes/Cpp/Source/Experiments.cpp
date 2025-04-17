@@ -14306,18 +14306,18 @@ bool testMatrixPseudoInverse()
   A = rsRandomMatrix(3, 2, min, max, 0);
   P = rsPseudoInverse(A);
   P = inv(A);
-  T = A*P;                                // T is 3x3 random mess
-  T = P*A;                                // T is 2x2 identity matrix
+  T = A*P;                                   // T is 3x3 random mess
+  T = P*A;                                   // T is 2x2 identity matrix
   ok &= rsIsCloseTo(T, I_2, tol);
   B = inv(P);
-  ok &= rsIsCloseTo(B, A,   tol);         // (A^-1)^-1 = A. Pseudo-inversion is an involution.
+  ok &= rsIsCloseTo(B, A,   tol);            // (A^-1)^-1 = A. Pseudo-inversion is an involution.
 
   // For wide matrices A with M < N, we can form a right pseudo inverse P for which A*P = I_N:
   A = rsRandomMatrix(2, 3, min, max, 0);
   P = rsPseudoInverse(A);
   P = inv(A);
-  T = P*A;                                // T is 3x3 random mess
-  T = A*P;                                // T is 2x2 identity matrix
+  T = P*A;                                   // T is 3x3 random mess
+  T = A*P;                                   // T is 2x2 identity matrix
   ok &= rsIsCloseTo(T, I_2, tol);
   B = inv(P);
   ok &= rsIsCloseTo(B, A,   tol);
@@ -14326,19 +14326,25 @@ bool testMatrixPseudoInverse()
   // Check why the rule (A*B)^-1 = B^-1 * A^-1 does not seem to work with generalized matrix 
   // multiplication and pseudo inversion with an example of A = 2x2, B = 3x2:
   Mat AB, Bi, Ai, ABi, BiAi, D;
-  A    = rsRandomMatrix(2, 2, min, max, 0);  // A is 2x2
-  B    = rsRandomMatrix(3, 2, min, max, 1);  // B is 3x2
+  A    = rsRandomMatrix(3, 3, min, max, 0);  // A is 2x2
+  B    = rsRandomMatrix(3, 3, min, max, 1);  // B is 3x2
   AB   = mul(A, B);
   Ai   = inv(A);
   Bi   = inv(B);
-  ABi  = inv(AB);         // (A*B)^-1
-  BiAi = mul(Bi, Ai);     // B^-1 * A^-1
+  ABi  = inv(AB);                            // (A*B)^-1
+  BiAi = mul(Bi, Ai);                        // B^-1 * A^-1
   D    = ABi - BiAi;
+  Real d = rsMaxNorm(D);
   // ABi and BiAi have the same shapes but the values are totally different. When making B also a
   // 2x2 matrix, D is indeed the zero matrix (up to roundoff error). OK - so the rule 
   // (A*B)^-1 = B^-1 * A^-1  does unfortunately not carry over. That's sad! Can we come up with a
   // different definition of a generalized inverse where the rule does carry over? 
-
+  //
+  // Results for different shape configurations. X means "works", O means "doesn't work":
+  //
+  //   A  2x2 2x2 2x2 2x2  2x3 2x3 2x3 2x3  3x2 3x2 3x2 3x2  3x3 3x3 3x3 3x3
+  //   B  2x2 2x3 3x2 3x3  2x2 2x3 3x2 3x3  2x2 2x3 3x2 3x3  2x2 2x3 3x2 3x3
+  //       X   X   O   O    O   O   O   O    X   O   O   O    O   O   O   X
 
   return ok;
 

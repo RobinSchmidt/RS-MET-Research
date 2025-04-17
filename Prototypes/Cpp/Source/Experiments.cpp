@@ -14294,8 +14294,8 @@ bool testMatrixPseudoInverse()
 
   // Our matrices. A is the matrix to be pseudo-inverted, P the pseudo inverse and T a test matrix
   // for verifying the pseudo inverse properties of P:
-  Mat A, P, T;
-  Mat B, AB, Bi, Ai, ABi, BiAi, D;
+  Mat A, B, P, T;
+
 
   // Create 2x2 identity matrix:
   Mat I_2(2, 2);
@@ -14323,9 +14323,9 @@ bool testMatrixPseudoInverse()
   ok &= rsIsCloseTo(B, A,   tol);
 
 
-  /*
   // Check why the rule (A*B)^-1 = B^-1 * A^-1 does not seem to work with generalized matrix 
   // multiplication and pseudo inversion with an example of A = 2x2, B = 3x2:
+  Mat AB, Bi, Ai, ABi, BiAi, D;
   A    = rsRandomMatrix(2, 2, min, max, 0);  // A is 2x2
   B    = rsRandomMatrix(3, 2, min, max, 1);  // B is 3x2
   AB   = mul(A, B);
@@ -14337,11 +14337,7 @@ bool testMatrixPseudoInverse()
   // ABi and BiAi have the same shapes but the values are totally different. When making B also a
   // 2x2 matrix, D is indeed the zero matrix (up to roundoff error). OK - so the rule 
   // (A*B)^-1 = B^-1 * A^-1  does unfortunately not carry over. That's sad! Can we come up with a
-  // different definition of a generalized inverse where the rule does carry over? I think, in 
-  // order to work as an inverse, we want to get our original matrix back when we apply the 
-  // inversion twice. It should be an involution. Is that the case for the Moore-Penrose inverse?
-  // ..Yes - it seems to be the case
-  */
+  // different definition of a generalized inverse where the rule does carry over? 
 
 
   return ok;

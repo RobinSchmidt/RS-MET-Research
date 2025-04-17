@@ -14372,6 +14372,7 @@ void testGeneralizedMatrixOperations()
   // Matrix transposition, negation and identity:
   std::function<Mat(const Mat&)> trans = &rsTranspose<Real>;
   std::function<Mat(const Mat&)> neg   = &rsMatrixNegate<Real>;
+  std::function<Mat(const Mat&)> inv   = &rsPseudoInverse<Real>;
   std::function<Mat(const Mat&)> id    = &rsIdentity<Mat>;
 
 
@@ -14395,6 +14396,16 @@ void testGeneralizedMatrixOperations()
     // Multiplication is pseudo-commutative with respect to transposition. That means 
     // (A*B)^T = B^T * A^T:
     ok &= rsIsPseudoCommutative(mul, trans, A, B, tol);
+
+
+    // Test, if multiplication pseudo-commutative wrt pseudo-inversion, i.e. 
+    // (A*B)^-1 = B^-1 * A^-1. I think, this is a law that holds for normal matrix multiplication 
+    // and inversion:
+    //ok &= rsIsPseudoCommutative(mul, inv, A, B, tol);
+    // ...Nope! Doesn't seem to be the case. Fails for 2x2 * 3x2. ToDo: Figure out in which way it
+    // fails. Do we get wrong shapes? Or maybe we just need a higher tolerance?
+
+
 
     // Check consistency with regular matrix addition and multiplication if A,B happen to have the
     // right shapes:

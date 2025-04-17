@@ -14321,7 +14321,8 @@ bool testMatrixPseudoInverse()
   // - Try to figure out if the "random mess" matrices have any meaning.
   //
   // - Make the size parameters M,N and the seed for the random generator function parameters. If
-  //   N > M, swap them
+  //   N > M, swap them. But maybe make an extra function for that. Maybe that should go into the
+  //   unit test when the rsPseudoInverse() function gets integrated into the library.
 }
 
 

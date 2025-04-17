@@ -14318,13 +14318,15 @@ bool testMatrixPseudoInverse()
   std::function<Mat(const Mat&)>             inv = &rsPseudoInverse<Real>;
   Mat B, AB, Bi, Ai, ABi, BiAi;
   A    = rsRandomMatrix(2, 2, min, max, 0);  // A is 2x2
-  B    = rsRandomMatrix(3, 2, min, max, 1);  // B is 3x2
+  B    = rsRandomMatrix(2, 2, min, max, 1);  // B is 3x2
   AB   = mul(A, B);
   Ai   = inv(A);
   Bi   = inv(B);
   ABi  = inv(AB);         // (A*B)^-1
   BiAi = mul(Bi, Ai);     // B^-1 * A^-1
-  // ABi and BiAi have the same shapes but the values are totally different
+  // ABi and BiAi have the same shapes but the values are totally different. BUT: That is also the
+  // case when both A and B are 2x2. Is the rule  (A*B)^-1 = B^-1 * A^-1  not true even for square
+  // matrices? Try it with normal matrix multiplication and inversion!
 
 
 

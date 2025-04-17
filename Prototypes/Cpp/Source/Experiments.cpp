@@ -14326,8 +14326,8 @@ bool testMatrixPseudoInverse()
   // Check why the rule (A*B)^-1 = B^-1 * A^-1 does not seem to work with generalized matrix 
   // multiplication and pseudo inversion with an example of A = 2x2, B = 3x2:
   Mat AB, Bi, Ai, ABi, BiAi, D;
-  A    = rsRandomMatrix(3, 3, min, max, 0);  // A is 2x2
-  B    = rsRandomMatrix(3, 3, min, max, 1);  // B is 3x2
+  A    = rsRandomMatrix(3, 2, min, max, 0);
+  B    = rsRandomMatrix(2, 3, min, max, 1);
   AB   = mul(A, B);
   Ai   = inv(A);
   Bi   = inv(B);
@@ -14345,6 +14345,12 @@ bool testMatrixPseudoInverse()
   //   A  2x2 2x2 2x2 2x2  2x3 2x3 2x3 2x3  3x2 3x2 3x2 3x2  3x3 3x3 3x3 3x3
   //   B  2x2 2x3 3x2 3x3  2x2 2x3 3x2 3x3  2x2 2x3 3x2 3x3  2x2 2x3 3x2 3x3
   //       X   X   O   O    O   O   O   O    X   O   O   O    O   O   O   X
+  //
+  // Interesting: Besides the cases A=2x2,B=2x2 and A=3x3,B=3x2 which are expected to work, we also
+  // have the cases A=2x2,B=2x3 and A=3x2,B=2x2 where it also works which is not necessarily to be
+  // expected. Maybe one (but not both) of the outer numbers is allowed to be bigger?
+  // BUT: maybe we should verify first that we don't run into a singular case. I think, we have not
+  // yet ruled that out for the non-square pseudo-inverse computation
 
   return ok;
 

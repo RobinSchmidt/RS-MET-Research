@@ -14350,7 +14350,7 @@ bool testMatrixPseudoInverse()
   // have the cases A=2x2,B=2x3 and A=3x2,B=2x2 where it also works which is not necessarily to be
   // expected. Maybe one (but not both) of the outer numbers is allowed to be bigger?
   // BUT: maybe we should verify first that we don't run into a singular case. I think, we have not
-  // yet ruled that out for the non-square pseudo-inverse computation
+  // yet ruled that out for the non-square pseudo-inverse computation.
 
   return ok;
 

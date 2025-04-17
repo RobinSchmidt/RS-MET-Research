@@ -14175,9 +14175,22 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
 
   if(M < N)                          // A is wide
   {
-    rsError("Not yet implemented");
-    return rsMatrix<T>();            // Preliminary
+    //rsError("Not yet implemented");
+    //return rsMatrix<T>();            // Preliminary
+
+    Mat AT     = A.getTranspose();
+    Mat A_AT   = A * AT;
+    Mat A_AT_i = LA::inverse(A_AT);
+    Mat P      = AT * A_AT_i;
+    return P;
   }
+
+  // Maybe try to find one letter names for the matrices. Maybe T for A^T (because it's the 
+  // transpose) and S for AT_A/A_AT (because it's symmetric), I for AT_A_i/A_AT_i (because it's the
+  // inverse of S) and keep P for the pseudo inverse of A. Or wait - no - S is not symmetric. Maybe
+  // call it P (for product) and don't assign a name to the final result (that we now call P) but 
+  // return it directly instead).
+
 
   return LA::inverse(A);             // A is square, M == N
 
@@ -14302,6 +14315,11 @@ bool testMatrixPseudoInverse()
 
 
   return ok;
+
+  // ToDo:
+  //
+  // - Verify other properties that a pseudo inverse is supposed to have. I think A * P*A = A is 
+  //   one of them (for the left pseudo inverse)? 
 }
 
 

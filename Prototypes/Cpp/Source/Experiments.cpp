@@ -14160,11 +14160,17 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
 
   if(M > N)                          // A is tall
   {
-    Mat AT = A.getTranspose();
-    Mat AT_A = AT * A;
-    Mat P(M, M);                     // P shall become the pseudo inverse.
-    LA::solve(AT_A, P, AT);          // (A^T * A) * P = A^T
+    Mat AT     = A.getTranspose();
+    Mat AT_A   = AT * A;
+    Mat AT_A_i = LA::inverse(AT_A);
+    Mat P      = AT_A_i * AT;
     return P;
+
+
+    // From here, it seems to get wrong:
+    //Mat P(M, M);                     // P shall become the pseudo inverse.
+    //LA::solve(AT_A, P, AT);          // (A^T * A) * P = A^T
+    //return P;
   }
 
   if(M < N)                          // A is wide
@@ -14261,6 +14267,44 @@ rsMatrix<T> rsMatrixMul(const rsMatrixView<T>& A, const rsMatrixView<T>& B)
 }
 
 
+bool testMatrixPseudoInverse()
+{
+  bool ok = true;
+
+  using Real = double;
+  using Mat  = rsMatrix<Real>;
+
+  // Minimum and maximum value for the matrix entries:
+  Real min = -5;
+  Real max = +5;
+  Real tol =  1.e-13;
+
+  // Our matrices. A is the matrix to be pseudo-inverted, P the pseudo inverse and T a test matrix
+  // for verifying the pseudo inverse properties of P:
+  Mat A, P, T;
+
+  // Create 2x2 identity matrix:
+  Mat E_2(2, 2);
+  E_2.setToIdentity(0.0);
+
+
+
+  // For tall matrices A with M > N, we can form a left pseudo inverse for which P*A = I_N which is 
+  // the NxN identity matrix:
+  A = rsRandomMatrix(3, 2, min, max, 0);
+  P = rsPseudoInverse(A);
+  T = A*P;                                // T is 3x3 random mess
+  T = P*A;                                // T is 2x2 identity matrix
+
+  ok &= rsIsCloseTo(T, E_2, tol);
+
+
+
+
+  return ok;
+}
+
+
 void testGeneralizedMatrixOperations()
 {
   // We test the generalized definitions for matrix addition and multiplication that work for 
@@ -14276,6 +14320,8 @@ void testGeneralizedMatrixOperations()
 
 
   bool ok = true;
+
+  ok &= testMatrixPseudoInverse();
 
   using Real = double;
   using Mat  = rsMatrix<Real>;

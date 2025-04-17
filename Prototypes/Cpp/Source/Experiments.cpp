@@ -14323,18 +14323,22 @@ bool testMatrixPseudoInverse()
   ok &= rsIsCloseTo(B, A,   tol);
 
 
+
+  // Maybe factor the stuff below out into a function. It is just random experimentaion whereas the
+  // stuff above is unit testing. These two things don't belong together.
+
   // Check why the rule (A*B)^-1 = B^-1 * A^-1 does not seem to work with generalized matrix 
   // multiplication and pseudo inversion with an example of A = 2x2, B = 3x2:
-  Mat AB, Bi, Ai, ABi, BiAi, D;
-  A    = rsRandomMatrix(3, 2, min, max, 0);
-  B    = rsRandomMatrix(2, 3, min, max, 1);
-  AB   = mul(A, B);
-  Ai   = inv(A);
-  Bi   = inv(B);
-  ABi  = inv(AB);                            // (A*B)^-1
-  BiAi = mul(Bi, Ai);                        // B^-1 * A^-1
-  D    = ABi - BiAi;
-  Real d = rsMaxNorm(D);
+  //Mat AB, Bi, Ai, ABi, BiAi, D;
+  A         = rsRandomMatrix(2, 2, min, max, 0);
+  B         = rsRandomMatrix(2, 2, min, max, 1);
+  Mat  AB   = mul(A, B);
+  Mat  Ai   = inv(A);
+  Mat  Bi   = inv(B);
+  Mat  ABi  = inv(AB);                            // (A*B)^-1
+  Mat  BiAi = mul(Bi, Ai);                        // B^-1 * A^-1
+  Mat  D    = ABi - BiAi;
+  Real d    = rsMaxNorm(D);
   // ABi and BiAi have the same shapes but the values are totally different. When making B also a
   // 2x2 matrix, D is indeed the zero matrix (up to roundoff error). OK - so the rule 
   // (A*B)^-1 = B^-1 * A^-1  does unfortunately not carry over. That's sad! Can we come up with a
@@ -14351,6 +14355,17 @@ bool testMatrixPseudoInverse()
   // expected. Maybe one (but not both) of the outer numbers is allowed to be bigger?
   // BUT: maybe we should verify first that we don't run into a singular case. I think, we have not
   // yet ruled that out for the non-square pseudo-inverse computation.
+  
+  // Try if  (A*B)^-T = B^-T * A^-T  holds (just a totally random guess):
+  Mat Ait    = rsTranspose(Ai);
+  Mat Bit    = rsTranspose(Bi);
+  Mat ABit   = rsTranspose(ABi);
+  Mat BitAit = mul(Bit, Ait);
+  // Nope! They don't even have matching shapes in the 3x2,2x3 case. In the 2x2,2x2 case, they have
+  // the same shapes but the values are different.
+
+
+
 
   return ok;
 
@@ -14547,6 +14562,12 @@ void testGeneralizedMatrixOperations()
   //
   // - Is there a way we could define a derivative of a matrix such that it obeys the product rule
   //   of derivatives? Maybe when we intepret the entries as series expansion coeffs?
+  //
+  // - What about a different definition of multiplication as follows: Suppose we want to compute a
+  //   product (MxN)*(PxQ) where N != P. Let's put an adapter matrix of shape NxP in between to 
+  //   form: (MxN)*(NxP)*(PxQ). Now it fits together. In the case of N == P, it would just be NxN
+  //   identity matrix. If N != P, it may be the identity matrix with extra rows or columns filled
+  //   with zeros. Try it!
 }
 
 

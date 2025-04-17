@@ -14289,9 +14289,13 @@ bool testMatrixPseudoInverse()
   Real max = +5;
   Real tol =  1.e-13;
 
+  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
+  std::function<Mat(const Mat&)>             inv = &rsPseudoInverse<Real>;
+
   // Our matrices. A is the matrix to be pseudo-inverted, P the pseudo inverse and T a test matrix
   // for verifying the pseudo inverse properties of P:
   Mat A, P, T;
+  Mat B, AB, Bi, Ai, ABi, BiAi, D;
 
   // Create 2x2 identity matrix:
   Mat I_2(2, 2);
@@ -14301,33 +14305,43 @@ bool testMatrixPseudoInverse()
   // is the NxN identity matrix:
   A = rsRandomMatrix(3, 2, min, max, 0);
   P = rsPseudoInverse(A);
+  P = inv(A);
   T = A*P;                                // T is 3x3 random mess
   T = P*A;                                // T is 2x2 identity matrix
   ok &= rsIsCloseTo(T, I_2, tol);
+  B = inv(P);
+  ok &= rsIsCloseTo(B, A,   tol);         // (A^-1)^-1 = A. Pseudo-inversion is an involution.
 
   // For wide matrices A with M < N, we can form a right pseudo inverse P for which A*P = I_N:
   A = rsRandomMatrix(2, 3, min, max, 0);
   P = rsPseudoInverse(A);
+  P = inv(A);
   T = P*A;                                // T is 3x3 random mess
   T = A*P;                                // T is 2x2 identity matrix
   ok &= rsIsCloseTo(T, I_2, tol);
+  B = inv(P);
+  ok &= rsIsCloseTo(B, A,   tol);
 
+
+  /*
   // Check why the rule (A*B)^-1 = B^-1 * A^-1 does not seem to work with generalized matrix 
   // multiplication and pseudo inversion with an example of A = 2x2, B = 3x2:
-  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
-  std::function<Mat(const Mat&)>             inv = &rsPseudoInverse<Real>;
-  Mat B, AB, Bi, Ai, ABi, BiAi;
   A    = rsRandomMatrix(2, 2, min, max, 0);  // A is 2x2
-  B    = rsRandomMatrix(2, 2, min, max, 1);  // B is 3x2
+  B    = rsRandomMatrix(3, 2, min, max, 1);  // B is 3x2
   AB   = mul(A, B);
   Ai   = inv(A);
   Bi   = inv(B);
   ABi  = inv(AB);         // (A*B)^-1
   BiAi = mul(Bi, Ai);     // B^-1 * A^-1
-  // ABi and BiAi have the same shapes but the values are totally different. BUT: That is also the
-  // case when both A and B are 2x2. Is the rule  (A*B)^-1 = B^-1 * A^-1  not true even for square
-  // matrices? Try it with normal matrix multiplication and inversion!
-
+  D    = ABi - BiAi;
+  // ABi and BiAi have the same shapes but the values are totally different. When making B also a
+  // 2x2 matrix, D is indeed the zero matrix (up to roundoff error). OK - so the rule 
+  // (A*B)^-1 = B^-1 * A^-1  does unfortunately not carry over. That's sad! Can we come up with a
+  // different definition of a generalized inverse where the rule does carry over? I think, in 
+  // order to work as an inverse, we want to get our original matrix back when we apply the 
+  // inversion twice. It should be an involution. Is that the case for the Moore-Penrose inverse?
+  // ..Yes - it seems to be the case
+  */
 
 
   return ok;

@@ -14282,6 +14282,7 @@ bool testMatrixPseudoInverse()
 
   using Real = double;
   using Mat  = rsMatrix<Real>;
+  using LA   = rsLinearAlgebraNew;
 
   // Minimum and maximum value for the matrix entries:
   Real min = -5;
@@ -14310,6 +14311,22 @@ bool testMatrixPseudoInverse()
   T = P*A;                                // T is 3x3 random mess
   T = A*P;                                // T is 2x2 identity matrix
   ok &= rsIsCloseTo(T, I_2, tol);
+
+  // Check why the rule (A*B)^-1 = B^-1 * A^-1 does not seem to work with generalized matrix 
+  // multiplication and pseudo inversion with an example of A = 2x2, B = 3x2:
+  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
+  std::function<Mat(const Mat&)>             inv = &rsPseudoInverse<Real>;
+  Mat B, AB, Bi, Ai, ABi, BiAi;
+  A    = rsRandomMatrix(2, 2, min, max, 0);  // A is 2x2
+  B    = rsRandomMatrix(3, 2, min, max, 1);  // B is 3x2
+  AB   = mul(A, B);
+  Ai   = inv(A);
+  Bi   = inv(B);
+  ABi  = inv(AB);         // (A*B)^-1
+  BiAi = mul(Bi, Ai);     // B^-1 * A^-1
+  // ABi and BiAi have the same shapes but the values are totally different
+
+
 
   return ok;
 

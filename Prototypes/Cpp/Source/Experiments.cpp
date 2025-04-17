@@ -14107,8 +14107,9 @@ bool rsIsPseudoCommutative(
   // applied to a*b. It's used by Matlab for transposition, too.
   //
   // ToDo: figure out, if this definition of pseudo-commutativity applies to other things as well.
-  // Maybe quaternion multiplication? But what should the unary opeartor be? Maybe reversing the 
-  // vector part? What about complex numbers with conjugation? Maybe rotation by 180°, too?
+  // Maybe quaternion multiplication? But what should the unary operator be? Maybe reversing the 
+  // vector part? What about complex numbers with conjugation? Maybe rotation by 180°, too? What 
+  // about multivectors?
 }
 // Needs test
 
@@ -14157,22 +14158,22 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
   int N = A.getNumColumns();
 
 
-  if(M > N)                       // A is tall
+  if(M > N)                          // A is tall
   {
-    Mat AT   = A.getTranspose();
+    Mat AT = A.getTranspose();
     Mat AT_A = AT * A;
-    Mat P(M, M);                  // P shall become the pseudo inverse.
-    LA::solve(AT_A, P, AT);       // (A^T * A) * P = A^T
+    Mat P(M, M);                     // P shall become the pseudo inverse.
+    LA::solve(AT_A, P, AT);          // (A^T * A) * P = A^T
     return P;
   }
 
-  if(M < N)                       // A is wide
+  if(M < N)                          // A is wide
   {
     rsError("Not yet implemented");
-    return rsMatrix<T>();         // Preliminary
+    return rsMatrix<T>();            // Preliminary
   }
 
-  return LA::inverse(A);          // A is square, M == N
+  return LA::inverse(A);             // A is square, M == N
 
 
   // ToDo:

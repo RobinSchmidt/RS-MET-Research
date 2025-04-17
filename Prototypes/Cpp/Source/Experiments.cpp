@@ -14195,7 +14195,10 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
   //   the matrices A^T A and A A^T are symmetric and therefore always invertible? ..not sure about
   //   that, though. ...nah - they don't seem to be symmetric. But wait - isn't a product of a 
   //   matrix with its transpose supposed to always be symmetric? Or does that hold only for the 
-  //   sum?
+  //   sum? Oh! Yes! I think, we may indeed encounter a singular system. It seems that the 
+  //   algorithm above works only when A has full rank, i.e. rank(A) = min(M,N). Otherwise, it 
+  //   seems that we need to use an algorithm based on SVD. See:
+  //   https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse#Definition
   //
   // - Maybe drag the computation of A^T out of the 2 if-statements. But then it would be computed
   //   for no reason in case of M == N. Therefore, drag this case before the others to handle it 
@@ -14211,6 +14214,7 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
   // See: 
   // https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse
   // https://en.wikipedia.org/wiki/Generalized_inverse
+  // https://en.wikipedia.org/wiki/Weak_inverse
   // https://en.wikipedia.org/wiki/Invertible_matrix#Generalized_inverses
 }
 // Needs more tests
@@ -14314,6 +14318,8 @@ bool testMatrixPseudoInverse()
   //
   // - Verify other properties that a pseudo inverse is supposed to have. I think A * P*A = A is 
   //   one of them (for the left pseudo inverse)? 
+  //   https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse#Definition
+  //   https://en.wikipedia.org/wiki/Weak_inverse
   //
   // - Maybe rename P to L in the tall case (for left pseudo inverse) and to R in the wide case 
   //   (for right pseudo inverse)

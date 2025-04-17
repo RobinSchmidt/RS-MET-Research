@@ -14145,10 +14145,13 @@ rsMatrix<T> rsMatrixNegate(const rsMatrix<T>& A)
 }
 // Maybe rename rsGetNegative or rsGetNegation
 
+
+/** Computes the Moore-Penrose pseudo inverse of the matrix A. ...TBC... ToDo: explain a bit what 
+this pseudo inverse is and what it is good for. */
 template<class T>
 rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
 {
-  // Under construction
+  // Under construction. See ToDo list at the bottom. It seems to generally work, though.
 
   using LA  = rsLinearAlgebraNew;
   using Mat = rsMatrix<T>;
@@ -14158,29 +14161,21 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
 
   if(M > N)                          // A is tall
   {
-    Mat AT     = A.getTranspose();
-    Mat AT_A   = AT * A;
-    Mat AT_A_i = LA::inverse(AT_A);
-    return AT_A_i * AT;
+    Mat T = A.getTranspose();        //  A^T
+    Mat P = T * A;                   //  A^T * A
+    Mat I = LA::inverse(P);          // (A^T * A)^-1
+    return I * T;                    // (A^T * A)^-1 * A^T
   }
 
   if(M < N)                          // A is wide
   {
-    Mat AT     = A.getTranspose();
-    Mat A_AT   = A * AT;
-    Mat A_AT_i = LA::inverse(A_AT);
-    return AT * A_AT_i;
+    Mat T = A.getTranspose();        //  A^T
+    Mat P = A * T;                   //  A * A^T
+    Mat I = LA::inverse(P);          // (A * A^T)^-1
+    return T * I;                    //  A^T * (A * A^T)^-1
   }
 
-  // Maybe try to find one letter names for the matrices. Maybe T for A^T (because it's the 
-  // transpose) and S for AT_A/A_AT (because it's symmetric), I for AT_A_i/A_AT_i (because it's the
-  // inverse of S) and keep P for the pseudo inverse of A. Or wait - no - S is not symmetric. Maybe
-  // call it P (for product) and don't assign a name to the final result (that we now call P) but 
-  // return it directly instead).
-
-
   return LA::inverse(A);             // A is square, M == N
-
 
   // ToDo:
   //
@@ -14189,7 +14184,7 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
   //
   // - When it works, move it to the library as LA::pseudoInverse(A). But for generalization to
   //   complex numbers, we should really use the conjugate transpose rather than the transpose. And
-  //   what aabout the case of square matrices that are singular? Maybe in these cases, we can also
+  //   what about the case of square matrices that are singular? Maybe in these cases, we can also
   //   compute a pseudo inverse? Figure that out and then maybe implement it that way. The last 
   //   line "return LA::inverse(A)" should then become more complicated. It needs to attempt to 
   //   invert A and if, along the way, it discovers that A is singular, it needs to also switch to
@@ -14198,7 +14193,19 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
   // - Figure out if in the tall and wide cases, we could encounter a singular system. If so, try
   //   to figure out what we can do in such a case. If not, document why not. Maybe it's because 
   //   the matrices A^T A and A A^T are symmetric and therefore always invertible? ..not sure about
-  //   that, though.
+  //   that, though. ...nah - they don't seem to be symmetric. But wait - isn't a product of a 
+  //   matrix with its transpose supposed to always be symmetric? Or does that hold only for the 
+  //   sum?
+  //
+  // - Maybe drag the computation of A^T out of the 2 if-statements. But then it would be computed
+  //   for no reason in case of M == N. Therefore, drag this case before the others to handle it 
+  //   first. ...and yeah - as said above - it should actually be the conjugate transpose rather 
+  //   than just the transpose. We may add a member function A.getConjugateTranspose() for this. 
+  //   The comments should then be updated to use A^H instead of A^T.
+  //
+  // - Figure out if we can avoid to compute the inverse and instead formulate it as solving a 
+  //   linear system of equations. If so, do that in a production version but keep the version here
+  //   for reference. It's closer to the math given at wikipedia.
   //
   //
   // See: 
@@ -14206,9 +14213,7 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
   // https://en.wikipedia.org/wiki/Generalized_inverse
   // https://en.wikipedia.org/wiki/Invertible_matrix#Generalized_inverses
 }
-
-
-
+// Needs more tests
 
 
 template<class T>
@@ -14314,6 +14319,9 @@ bool testMatrixPseudoInverse()
   //   (for right pseudo inverse)
   //
   // - Try to figure out if the "random mess" matrices have any meaning.
+  //
+  // - Make the size parameters M,N and the seed for the random generator function parameters. If
+  //   N > M, swap them
 }
 
 

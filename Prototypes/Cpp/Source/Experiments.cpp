@@ -14297,29 +14297,36 @@ bool testMatrixPseudoInverse()
   Mat A, P, T;
 
   // Create 2x2 identity matrix:
-  Mat E_2(2, 2);
-  E_2.setToIdentity(0.0);
+  Mat I_2(2, 2);
+  I_2.setToIdentity(0.0);
 
-
-
-  // For tall matrices A with M > N, we can form a left pseudo inverse for which P*A = I_N which is 
-  // the NxN identity matrix:
+  // For tall matrices A with M > N, we can form a left pseudo inverse P for which P*A = I_N which 
+  // is the NxN identity matrix:
   A = rsRandomMatrix(3, 2, min, max, 0);
   P = rsPseudoInverse(A);
   T = A*P;                                // T is 3x3 random mess
   T = P*A;                                // T is 2x2 identity matrix
+  ok &= rsIsCloseTo(T, I_2, tol);
 
-  ok &= rsIsCloseTo(T, E_2, tol);
-
-
-
+  // For wide matrices A with M < N, we can form a right pseudo inverse P for which A*P = I_N:
+  A = rsRandomMatrix(2, 3, min, max, 0);
+  P = rsPseudoInverse(A);
+  T = P*A;                                // T is 3x3 random mess
+  T = A*P;                                // T is 2x2 identity matrix
+  ok &= rsIsCloseTo(T, I_2, tol);
 
   return ok;
+
 
   // ToDo:
   //
   // - Verify other properties that a pseudo inverse is supposed to have. I think A * P*A = A is 
   //   one of them (for the left pseudo inverse)? 
+  //
+  // - Maybe rename P to L in the tall case (for left pseudo inverse) and to R in the wide case 
+  //   (for right pseudo inverse)
+  //
+  // - Try to figure out if the "random mess" matrices have any meaning.
 }
 
 

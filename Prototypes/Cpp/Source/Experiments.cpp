@@ -14150,39 +14150,26 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
 {
   // Under construction
 
-
   using LA  = rsLinearAlgebraNew;
   using Mat = rsMatrix<T>;
 
   int M = A.getNumRows();
   int N = A.getNumColumns();
 
-
   if(M > N)                          // A is tall
   {
     Mat AT     = A.getTranspose();
     Mat AT_A   = AT * A;
     Mat AT_A_i = LA::inverse(AT_A);
-    Mat P      = AT_A_i * AT;
-    return P;
-
-
-    // From here, it seems to get wrong:
-    //Mat P(M, M);                     // P shall become the pseudo inverse.
-    //LA::solve(AT_A, P, AT);          // (A^T * A) * P = A^T
-    //return P;
+    return AT_A_i * AT;
   }
 
   if(M < N)                          // A is wide
   {
-    //rsError("Not yet implemented");
-    //return rsMatrix<T>();            // Preliminary
-
     Mat AT     = A.getTranspose();
     Mat A_AT   = A * AT;
     Mat A_AT_i = LA::inverse(A_AT);
-    Mat P      = AT * A_AT_i;
-    return P;
+    return AT * A_AT_i;
   }
 
   // Maybe try to find one letter names for the matrices. Maybe T for A^T (because it's the 

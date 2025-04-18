@@ -14142,6 +14142,32 @@ rsMatrix<T> rsZeroPad(const rsMatrixView<T>& A, int numRows, int numCols)
 }
 
 template<class T>
+void rsSetToCirculantIdentity(rsMatrixView<T>& A)
+{
+  // Under construction
+
+  // Fills matrix A with entries so as to get a circulant identity matrix. That is an identity 
+  // matrix. For example, a circulant identity matrix of shape 3x5 would look like:
+  //
+  //   1 0 0 1 0
+  //   0 1 0 0 1
+  //   0 0 1 0 0
+  //
+  // But wait - that's not really a circulant matrix. For this, it would have to look like:
+  //
+  //   1 0 0 1 0
+  //   0 1 0 0 1
+  //   1 0 1 0 0
+  //
+  // Hmm...or maybe the first version could be called column-circulant and the second 
+  // row-circulant?
+
+
+  int dummy = 0;
+}
+
+
+template<class T>
 rsMatrix<T> rsTranspose(const rsMatrix<T>& A)
 {
   return A.getTranspose();
@@ -14320,7 +14346,21 @@ rsMatrix<T> rsMatrixMul2(const rsMatrix<T>& A, const rsMatrix<T>& B)
   // - Maybe let the function take parameters of type rsMatrixView.
 }
 
+template<class T>
+rsMatrix<T> rsMatrixMul3(const rsMatrix<T>& A, const rsMatrix<T>& B)
+{
+  // Under construction, experimental
 
+  int M = A.getNumRows();
+  int N = A.getNumColumns();
+  int P = B.getNumRows();
+  int Q = B.getNumColumns();
+
+  rsMatrix<T> C(N, P);
+  rsSetToCirculantIdentity(C);
+
+  return A * C * B;
+}
 
 
 
@@ -14373,7 +14413,8 @@ bool testMatrixPseudoInverse()
 
 
   // Maybe factor the stuff below out into a function. It is just random experimentaion whereas the
-  // stuff above is unit testing. These two things don't belong together.
+  // stuff above is unit testing. These two things don't belong together. Maybe call the function 
+  // testMatrixMulInv() - it tests the interplay between multiplication and inversion.
 
   // Check why the rule (A*B)^-1 = B^-1 * A^-1 does not seem to work with generalized matrix 
   // multiplication and pseudo inversion with an example of A = 2x2, B = 3x2:
@@ -14416,10 +14457,7 @@ bool testMatrixPseudoInverse()
   // what's going on
 
 
-
-
   return ok;
-
 
   // ToDo:
   //
@@ -14436,6 +14474,34 @@ bool testMatrixPseudoInverse()
   // - Make the size parameters M,N and the seed for the random generator function parameters. If
   //   N > M, swap them. But maybe make an extra function for that. Maybe that should go into the
   //   unit test when the rsPseudoInverse() function gets integrated into the library.
+}
+
+
+
+void testMatrixMulAdapter()
+{
+  using Real = double;
+  using Mat  = rsMatrix<Real>;
+
+  Real min = -8;
+  Real max = +8;
+  Real tol = 1.e-13;
+
+  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul3<Real>;
+
+  int M = 2;
+  int N = 3;
+  int P = 5;
+  int Q = 4;
+
+
+  Mat A(M, N);
+  Mat B(P, Q);
+
+  Mat C = mul(A, B);
+
+  // ...TBC...
+ 
 }
 
 

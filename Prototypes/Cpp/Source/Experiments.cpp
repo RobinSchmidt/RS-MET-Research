@@ -14364,6 +14364,9 @@ bool testMatrixPseudoInverse()
   // Nope! They don't even have matching shapes in the 3x2,2x3 case. In the 2x2,2x2 case, they have
   // the same shapes but the values are different.
 
+  // Maybe try doing some tests with simple matrices (like diagonal ones) to get a better handle on
+  // what's going on
+
 
 
 

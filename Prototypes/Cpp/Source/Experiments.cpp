@@ -14144,7 +14144,7 @@ rsMatrix<T> rsZeroPad(const rsMatrixView<T>& A, int numRows, int numCols)
 template<class T>
 void rsSetToCirculantIdentity(rsMatrix<T>& A)
 {
-  // Under construction
+  // Under construction. Needs tests.
 
   // Fills matrix A with entries so as to get a circulant identity matrix. That is an identity 
   // matrix. For example, a circulant identity matrix of shape 3x5 would look like:
@@ -14165,7 +14165,6 @@ void rsSetToCirculantIdentity(rsMatrix<T>& A)
 
   int M = A.getNumRows();
   int N = A.getNumColumns();
-
 
   A.setToIdentity(A(0,0));
 
@@ -14188,11 +14187,8 @@ void rsSetToCirculantIdentity(rsMatrix<T>& A)
       A(i, j) = 1;
     }
   }
-  // Needs tests!
 
-
-
-  int dummy = 0;
+  //plotMatrix(A);
 }
 
 
@@ -14525,6 +14521,7 @@ void testMatrixMulAdapter()
 
   // Tests:
   N = 3; M = 10;
+  //N = 10; M = 3;
 
 
   Mat A(M, N);

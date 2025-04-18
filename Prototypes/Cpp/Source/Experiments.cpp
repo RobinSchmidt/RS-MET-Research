@@ -14375,7 +14375,7 @@ template<class T>
 rsMatrix<T> rsMatrixMul3(const rsMatrix<T>& A, const rsMatrix<T>& B)
 {
   // This multiplication uses a "circulant identity" adapter matrix. It's not distributive over 
-  // addition.
+  // addition. It doesn't seem to play nicely with pseudo inversion either.
 
   int M = A.getNumRows();
   int N = A.getNumColumns();
@@ -14386,6 +14386,10 @@ rsMatrix<T> rsMatrixMul3(const rsMatrix<T>& A, const rsMatrix<T>& B)
   rsSetToCirculantIdentity(C);
 
   return A * C * B;
+
+  // ToDo:
+  //
+  // - Figure out why it's not distributive by giving a simple example where it fails.
 }
 
 
@@ -14445,8 +14449,8 @@ bool testMatrixPseudoInverse()
   // Check why the rule (A*B)^-1 = B^-1 * A^-1 does not seem to work with generalized matrix 
   // multiplication and pseudo inversion with an example of A = 2x2, B = 3x2:
   //Mat AB, Bi, Ai, ABi, BiAi, D;
-  A         = rsRandomMatrix(2, 2, min, max, 0);
-  B         = rsRandomMatrix(2, 2, min, max, 1);
+  A         = rsRandomMatrix(3, 2, min, max, 0);
+  B         = rsRandomMatrix(3, 2, min, max, 1);
   Mat  AB   = mul(A, B);
   Mat  Ai   = inv(A);
   Mat  Bi   = inv(B);

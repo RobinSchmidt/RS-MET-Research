@@ -14019,8 +14019,19 @@ void testBezoutMatrix()
 
 
 
-
-
+/** Checks if the two bivariate functions f and g produce the same result for the given inputs a,b.
+So, it returns true if f(a,b) is equal to g(a,b) up to the given numerical tolerance. */
+template<class T, class TTol>
+bool rsAreFunctionsEquivalent(
+  const std::function<T(const T&, const T&)>& f,
+  const std::function<T(const T&, const T&)>& g,
+  const T& a, const T& b, TTol tol)
+{
+  T fab = f(a, b);
+  T gab = g(a, b);
+  T d   = fab - gab; 
+  return rsIsNegligible(d, tol);
+}
 
 template<class T>
 bool rsIsCommutative(
@@ -14275,8 +14286,6 @@ rsMatrix<T> rsMatrixMul(const rsMatrixView<T>& A, const rsMatrixView<T>& B)
   return C;
 }
 
-
-
 template<class T>
 rsMatrix<T> rsMatrixMul2(const rsMatrix<T>& A, const rsMatrix<T>& B)
 {
@@ -14464,9 +14473,9 @@ void testGeneralizedMatrixOperations()
   Real tol = 1.e-13;
 
   // The matrix operations for addition and multiplication wrapped into std::function:
-  std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>;
-  //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
-  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul2<Real>;
+  std::function<Mat(const Mat&, const Mat&)> add  = &rsMatrixAdd<Real>;
+  std::function<Mat(const Mat&, const Mat&)> mul  = &rsMatrixMul<Real>;
+  std::function<Mat(const Mat&, const Mat&)> mul2 = &rsMatrixMul2<Real>;
 
 
   // Matrix transposition, negation and identity:
@@ -14513,6 +14522,9 @@ void testGeneralizedMatrixOperations()
       ok &= A + B == add(A, B);
     if(A.getNumColumns() == B.getNumRows())  // Maybe factor out a function A.canBeRightMultipliedBy(B)
       ok &= A * B == mul(A, B);
+
+    // Check, if the two implementation of multiplication produc the same result:
+    ok &= rsAreFunctionsEquivalent(mul, mul2, A, B, tol);
 
     rsAssert(ok);
     return ok;

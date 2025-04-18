@@ -104,8 +104,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testWeightedAverages();
   //testSylvesterMatrix();
   //testBezoutMatrix();
-  testMatrixMulAdapter();
-  //testGeneralizedMatrixOperations();   // stub
+  testMatrixMulAdapter();            // stub
+  testGeneralizedMatrixOperations();
 
   // Modular forms, lattices, elliptic functions:
   //testModularGroup();         // maybe move down, closer to the other 2x2 matrix stuff

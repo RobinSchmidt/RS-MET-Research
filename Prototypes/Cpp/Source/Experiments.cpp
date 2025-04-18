@@ -14374,7 +14374,8 @@ rsMatrix<T> rsMatrixMul2(const rsMatrix<T>& A, const rsMatrix<T>& B)
 template<class T>
 rsMatrix<T> rsMatrixMul3(const rsMatrix<T>& A, const rsMatrix<T>& B)
 {
-  // Under construction, experimental
+  // This multiplication uses a "circulant identity" adapter matrix. It's not distributive over 
+  // addition.
 
   int M = A.getNumRows();
   int N = A.getNumColumns();
@@ -14499,10 +14500,13 @@ bool testMatrixPseudoInverse()
   // - Make the size parameters M,N and the seed for the random generator function parameters. If
   //   N > M, swap them. But maybe make an extra function for that. Maybe that should go into the
   //   unit test when the rsPseudoInverse() function gets integrated into the library.
+  //
+  // - Try this test with rsMatrixMul3. This multiplication is not distributive over addition but
+  //   maybe it plays nicely with pseudo inversion?
 }
 
 
-
+// Maybe this can be deleted someday:
 void testMatrixMulAdapter()
 {
   using Real = double;
@@ -14520,7 +14524,7 @@ void testMatrixMulAdapter()
   int Q = 4;
 
   // Tests:
-  N = 3; M = 10;
+  //N = 3; M = 10;
   //N = 10; M = 3;
 
 
@@ -14528,6 +14532,8 @@ void testMatrixMulAdapter()
   Mat B(P, Q);
 
   Mat C = mul(A, B);
+
+  //bool ok = true;
 
   // ...TBC...
  
@@ -14571,6 +14577,10 @@ void testGeneralizedMatrixOperations()
   std::function<Mat(const Mat&, const Mat&)> add  = &rsMatrixAdd<Real>;
   std::function<Mat(const Mat&, const Mat&)> mul  = &rsMatrixMul<Real>;
   std::function<Mat(const Mat&, const Mat&)> mul2 = &rsMatrixMul2<Real>;
+
+  // Test:
+  //mul = mul2 = &rsMatrixMul3<Real>;
+  // With this multiplication, the distributivity test fails
 
 
   // Matrix transposition, negation and identity:
@@ -14638,7 +14648,7 @@ void testGeneralizedMatrixOperations()
 
     ok &= rsIsAssociative( add,      A, B, C, tol);
     ok &= rsIsAssociative( mul,      A, B, C, tol);
-    ok &= rsIsDistributive(mul, add, A, B, C, tol); 
+    ok &= rsIsDistributive(mul, add, A, B, C, tol);
 
     rsAssert(ok);
     return ok;

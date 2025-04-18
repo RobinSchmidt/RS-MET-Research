@@ -14142,7 +14142,7 @@ rsMatrix<T> rsZeroPad(const rsMatrixView<T>& A, int numRows, int numCols)
 }
 
 template<class T>
-void rsSetToCirculantIdentity(rsMatrixView<T>& A)
+void rsSetToCirculantIdentity(rsMatrix<T>& A)
 {
   // Under construction
 
@@ -14161,6 +14161,35 @@ void rsSetToCirculantIdentity(rsMatrixView<T>& A)
   //
   // Hmm...or maybe the first version could be called column-circulant and the second 
   // row-circulant?
+
+
+  int M = A.getNumRows();
+  int N = A.getNumColumns();
+
+
+  A.setToIdentity(A(0,0));
+
+  if(N > M)
+  {
+    for(int k = 0; k < N-M; k++)
+    {
+      int i = k % M;
+      int j = k + M;
+      A(i, j) = 1;
+    }
+  }
+
+  if(N < M)
+  {
+    for(int k = 0; k < M-N; k++)
+    {
+      int i = k + N;
+      int j = k % N;
+      A(i, j) = 1;
+    }
+  }
+  // Needs tests!
+
 
 
   int dummy = 0;
@@ -14493,6 +14522,9 @@ void testMatrixMulAdapter()
   int N = 3;
   int P = 5;
   int Q = 4;
+
+  // Tests:
+  N = 3; M = 10;
 
 
   Mat A(M, N);

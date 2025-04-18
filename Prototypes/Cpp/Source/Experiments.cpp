@@ -14276,6 +14276,45 @@ rsMatrix<T> rsMatrixMul(const rsMatrixView<T>& A, const rsMatrixView<T>& B)
 }
 
 
+
+template<class T>
+rsMatrix<T> rsMatrixMul2(const rsMatrix<T>& A, const rsMatrix<T>& B)
+{
+  // This implementation of the multiplication of a MxN matrix A and a PxQ matrix B sticks a NxP 
+  // adapter matrix C in between. It's the identity matrix filled up with rows or columns of 
+  // zeros, if needed.
+
+  int M = A.getNumRows();
+  int N = A.getNumColumns();
+  int P = B.getNumRows();
+  int Q = B.getNumColumns();
+
+  rsMatrix<T> C(N, P);
+  C.setToIdentity(A(0,0)); // Should produce zero-padded identity matrix
+
+  return A * C * B;
+
+
+  // ToDo:
+  //
+  // - Figure out if this implementation is equivalent to the other. I think so. If this is the 
+  //   case, this gives us a new way of thinking about the operation. Maybe write a function that 
+  //   takes two different matrix operations and compares their results. It should be called like 
+  //   areOperationsEquivalent(mul1, mul2, A, B)
+  //
+  // - Try different adapter matrices. Maybe a "circular identity" matrix that just circularly 
+  //   repeats rows or columns
+  //
+  // - Use the more efficient way to compute it - either (A*C)*B or A*(C*B). Which variant is more
+  //   efficient depends on the shapes of A and B
+  //
+  // - Maybe let the function take parameters of type rsMatrixView.
+}
+
+
+
+
+
 bool testMatrixPseudoInverse()
 {
   bool ok = true;
@@ -14426,7 +14465,9 @@ void testGeneralizedMatrixOperations()
 
   // The matrix operations for addition and multiplication wrapped into std::function:
   std::function<Mat(const Mat&, const Mat&)> add = &rsMatrixAdd<Real>;
-  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
+  //std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul<Real>;
+  std::function<Mat(const Mat&, const Mat&)> mul = &rsMatrixMul2<Real>;
+
 
   // Matrix transposition, negation and identity:
   std::function<Mat(const Mat&)> trans = &rsTranspose<Real>;

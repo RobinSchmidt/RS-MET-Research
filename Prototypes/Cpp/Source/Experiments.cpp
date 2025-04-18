@@ -14567,7 +14567,9 @@ void testGeneralizedMatrixOperations()
   //   product (MxN)*(PxQ) where N != P. Let's put an adapter matrix of shape NxP in between to 
   //   form: (MxN)*(NxP)*(PxQ). Now it fits together. In the case of N == P, it would just be NxN
   //   identity matrix. If N != P, it may be the identity matrix with extra rows or columns filled
-  //   with zeros. Try it!
+  //   with zeros. Try it! But maybe it will be equivalent - just a different way of thinking about
+  //   it? But maybe other rules for forming the adapter matrix can be tried. Maybe repeating the
+  //   rows or columns of the identity matrix circularly as often as needed?
 }
 
 

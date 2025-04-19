@@ -14477,6 +14477,9 @@ bool testMatrixPseudoInverse()
   // expected. Maybe one (but not both) of the outer numbers is allowed to be bigger?
   // BUT: maybe we should verify first that we don't run into a singular case. I think, we have not
   // yet ruled that out for the non-square pseudo-inverse computation.
+  //
+  // Maybe we can call the difference  (A*B)^-1  -  B^-1 * A^-1  the pseudo commutator of A and B
+  // with respect to pseudo inversion?
   
   // Try if  (A*B)^-T = B^-T * A^-T  holds (just a totally random guess):
   Mat Ait    = rsTranspose(Ai);

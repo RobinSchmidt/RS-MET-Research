@@ -14262,6 +14262,9 @@ rsMatrix<T> rsPseudoInverse(const rsMatrix<T>& A)
   //   seems that we need to use an algorithm based on SVD. See:
   //   https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse#Definition
   //
+  // - Check if the algorithms for tall and wide matrices also work for square matrices. Maybe they
+  //   could then also be used for singular square matrices?
+  //
   // - Maybe drag the computation of A^T out of the 2 if-statements. But then it would be computed
   //   for no reason in case of M == N. Therefore, drag this case before the others to handle it 
   //   first. ...and yeah - as said above - it should actually be the conjugate transpose rather 
@@ -14484,7 +14487,7 @@ bool testMatrixPseudoInverse()
   // the same shapes but the values are different.
 
   // Maybe try doing some tests with simple matrices (like diagonal ones) to get a better handle on
-  // what's going on
+  // what's going on. 
 
 
   return ok;
@@ -14507,6 +14510,12 @@ bool testMatrixPseudoInverse()
   //
   // - Try this test with rsMatrixMul3. This multiplication is not distributive over addition but
   //   maybe it plays nicely with pseudo inversion?
+  //
+  // - Try to get a geometric interpretation for what is happening. Figure out what the matrices
+  //   AB, (A*B)^-1, B^-1 * A^-1 do to vectors. Maybe first figure out a geometric interpretation 
+  //   of non-square matrices. I think, such matrices combine transformations (scale, rotate, 
+  //   shear, reflect) with projections (in case of wide matrices) or with embeddings (in case of 
+  //   tall matrices)
 }
 
 

@@ -14556,7 +14556,8 @@ bool testMatrixPseudoInverse()
   //   demand by definition that (A*B)^-1 = B^-1 * A^-1 should hold? Like defining: A^-1 is the 
   //   (unique?) matrix such that for any matrix B, (A*B)^-1 = B^-1 * A^-1? Does that make any 
   //   sense? Can such a matrix even be expected to exist? If so, how would we go about computing
-  //   it?
+  //   it? Such a definition is very indirect. It doesn't really suggest any algorithm to compute
+  //   it.
 }
 
 

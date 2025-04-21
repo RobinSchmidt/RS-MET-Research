@@ -14762,6 +14762,9 @@ void testGeneralizedMatrixOperations()
   //   we check now. But we would have to produce all the permutations. I'm not sure, if I already 
   //   have a function for that available. Check that!
   //
+  // - Write the stuff down into a latex document - maybe something like "Extending the domain of
+  //   matrix addition and multiplication" or shorter: "Generalized matrix operations".
+  //
   //
   // Questions:
   //

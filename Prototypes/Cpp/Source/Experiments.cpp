@@ -14508,9 +14508,6 @@ bool testMatrixPseudoInverse()
   // the same thing in case of rectangular matrices.
 
 
-  // Maybe try doing some tests with simple matrices (like diagonal ones) to get a better handle on
-  // what's going on. 
-
 
   return ok;
 
@@ -14538,6 +14535,28 @@ bool testMatrixPseudoInverse()
   //   of non-square matrices. I think, such matrices combine transformations (scale, rotate, 
   //   shear, reflect) with projections (in case of wide matrices) or with embeddings (in case of 
   //   tall matrices)
+  //
+  // - Maybe try framing the problem as a multiplication of 3 matrices using an adapter matrix to 
+  //   facilitate the multiplication. Consider the produce A*B of an MxN and PxQ matrix as A*M*B 
+  //   with the NxP adapter matrix M. (A*M*B)^-1 = B^-1 * M^-1 * A^-1
+  //
+  // - Maybe try doing some tests with simple matrices (like diagonal ones) to get a better handle
+  //   on what's going on.
+  //
+  // - What about (A*B)^-1 / (B^-1 * A^-1) and (B^-1 * A^-1) / (A*B)^-1.
+  //
+  // - What about (A+B)^-1. Does this expression behave the same way with the new addition and 
+  //   pseudo inversion as for square matrices?
+  //
+  // - If it doesn't work with the Moore-Penrose pseudo inverse then maybe it works with a 
+  //   different pseudo inverse? 
+  //   https://en.wikipedia.org/wiki/Constrained_generalized_inverse
+  //   https://en.wikipedia.org/wiki/Drazin_inverse
+  //   And if none of the existing definitions work - maybe I can make up one myself? Could I just
+  //   demand by definition that (A*B)^-1 = B^-1 * A^-1 should hold? Like defining: A^-1 is the 
+  //   (unique?) matrix such that for any matrix B, (A*B)^-1 = B^-1 * A^-1? Does that make any 
+  //   sense? Can such a matrix even be expected to exist? If so, how would we go about computing
+  //   it?
 }
 
 

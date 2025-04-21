@@ -14453,7 +14453,7 @@ bool testMatrixPseudoInverse()
   // multiplication and pseudo inversion with an example of A = 2x2, B = 3x2:
   //Mat AB, Bi, Ai, ABi, BiAi, D;
   A         = rsRandomMatrix(3, 2, min, max, 0);
-  B         = rsRandomMatrix(3, 2, min, max, 1);
+  B         = rsRandomMatrix(2, 3, min, max, 1);
   Mat  AB   = mul(A, B);
   Mat  Ai   = inv(A);
   Mat  Bi   = inv(B);
@@ -14488,6 +14488,25 @@ bool testMatrixPseudoInverse()
   Mat BitAit = mul(Bit, Ait);
   // Nope! They don't even have matching shapes in the 3x2,2x3 case. In the 2x2,2x2 case, they have
   // the same shapes but the values are different.
+
+  // Test what happens when we multiply our pseudo inverses with the originals in both ways:
+  Mat T1 = ABi * AB;
+  Mat T2 = AB * ABi;
+  Mat T3 = BiAi * AB;
+  Mat T4 = AB * BiAi;
+  // In the case of A=3x2,B=2x3, they are all different random 3x3 matrices. T1 has the last row 
+  // close to zero and the 1st elemenet of the 2nd row is exactly zero. T3 and T4 have some entries
+  // that are exactly the same. Strange...
+  //
+  // What about yet other ways to multiply them together like Ai*A*B*Bi, B*Bi*Ai*A, etc.?
+  Mat T5 = A * Ai * Bi * B;
+  Mat T6 = B * Bi * Ai * A;
+  Mat T7 = Ai * A * B * Bi;
+  Mat T8 = Bi * B * A * Ai;
+  // T6 and T7 are 2x2 identity matrices. So - what does all of this mean? Figure out, when A,B and
+  // AB have left- and right inverses. Maybe it has to do with left and right inverses not being 
+  // the same thing in case of rectangular matrices.
+
 
   // Maybe try doing some tests with simple matrices (like diagonal ones) to get a better handle on
   // what's going on. 

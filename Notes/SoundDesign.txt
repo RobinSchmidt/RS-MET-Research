@@ -35,3 +35,12 @@ Wind:
 
 Flowing Water:
  -random filter blips, maybe
+
+
+
+
+
+Background resources on sound synthesis:
+
+https://www.perfectcircuit.com/signal/east-coast-west-coast-synthesis
+https://www.perfectcircuit.com/signal/what-is-west-coast-synthesis

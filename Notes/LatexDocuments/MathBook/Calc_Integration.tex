@@ -60,6 +60,9 @@ For the difference of $F$ evaluated at the endpoints $a,b$ that appears on the r
 \end{equation}
 This notation is useful when instead of the symbolic $F(x)$, we deal with a written out and possibly complicated expression for $F(x)$, like e.g. $x + e^x \cos(2 x^2 + \pi x /2 )$, because then we don't need to write it out twice. With the fundamental theorem of calculus in hand, we can easily compute (signed) areas under the graph of a function $f$ over an interval $[a,b]$ provided that we know an antiderivative $F$ of $f$. We just need to evaluate our antiderivative $F$ at two points $b$ and $a$ and subtract the results. To find such an antiderivative for some simple functions, we just need to read our table of derivatives backwards. For more complicated functions, there are certain laws that we can use. %Before we get to them, let's try to convince ourselves that this theorem is plausible. 
 
+% I think, it's called an integral bar - or evaluation bar?
+% https://math.stackexchange.com/questions/52651/what-is-the-name-of-the-vertical-bar-in-x21-vert-x-4-or-left-left
+
 %...TBC...
 
 % F being *an* antiderivative for f implies that f is *the* derivative of F. Given f, the antiderivative is determined only up to an additive constant. But given F, the derivative f is uniquely determined because the derivative of the constant is zero.
@@ -195,7 +198,7 @@ The techniques explained above are for finding antiderivatives also known as ind
 
 
 \paragraph{Improper Integrals}
-Improper integrals are definite integrals in which one or both of the integration limits are infinity or there may be points inside the integration interval where the integrand is undefined. In the former case, there are some subcases to consider. It may be the case the the lower or upper limit is finite and the other limit is infinite. In both cases, the value of the integral is defined by replacing the infinite limit by some variable and the considering the limit as this variable approaches infinity:
+Improper integrals are definite integrals in which one or both of the integration limits are infinity or there may be points inside the integration interval where the integrand is undefined. In the former case, there are some subcases to consider. It may be the case the the lower or upper limit is finite and the other limit is infinite. In both cases, the value of the integral is defined by replacing the infinite limit by some variable and then considering the limit as this variable approaches infinity:
 \begin{equation}
 \int_a^{\infty} f(x) \; dx = \lim_{b \rightarrow \infty} \int_a^b f(x) \; dx
 \qquad \text{or} \qquad
@@ -330,7 +333,10 @@ By the way, there is also a notion of a so called $\Sigma$-algebra in computer s
 \begin{equation}
 \mu \left( \bigcup_{k=1}^{\infty} X_k \right) = \sum_{k=1}^{\infty}	\mu(X_k)
 \end{equation}
-for any countable collection $\{X_k\}_{k=1}^{\infty}$ of pairwise disjoint sets $X_k$ where each such $X_k$ is an element of $\Sigma$. 
+for any countable collection $\{X_k\}_{k=1}^{\infty}$ of pairwise disjoint sets $X_k$ where each such $X_k$ is an element of $\Sigma$.
+
+\medskip
+Here "countable" means either countably infinite or finite. That means that the above equation should also hold for finite unions and finite sums, i.e. it's possible the replace the $\infty$ symbol by some finite upper limit.
 
 % You may sometimes encounter the notation $\bigsqcup_{k=1}^{\infty} X_k$ rather than $\bigcup_{k=1}^{\infty} X_k$ to emphasize the disjointness of the sets. If the sets $X_k$ are not already disjoint, $\bigsqcup$ would make them so. ...but it's kinda informal because $ $\bigsqcup$ changes the data type, so to speak
 

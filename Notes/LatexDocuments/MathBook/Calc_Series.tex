@@ -1,11 +1,11 @@
 \section{Infinite Sums (aka Series)}
 
 \subsection{Infinite Sums}
-When we have a given sequence $(a_k)$, we can use it to define a new sequence, namely the sequence of its partial sums. Let's call that sequence $(s_n)$. Its $n$th element is given by the sum over all elements up to $n$ of our input sequence $(a_n)$:
+When we have a given sequence $(a_k)$, we can use it to define a new sequence, namely the sequence of its partial sums. Let's call that sequence $(s_n)$. Its $n$th element is given by the sum over all elements\footnote{It's not often framed like this but if you want, you may see the production of the sequence of partial sums as a sequence transformation in the sense described in section about sequences (albeit not a regular one).} up to $n$ of our input sequence $(a_n)$:
 \begin{equation}
  s_n = \sum_{k=0}^n a_k
 \end{equation}
-It's not often framed like this but if you want, you may see the production of the sequence of partial sums as a sequence transformation in the sense above - albeit not a regular one. Just like with any sequence, we can ask whether this sequence of partial sums converges or diverges when we let $n$ approach infinity. What we have then created is an \emph{infinite sum}. Such infinite sums have a special name: they are called \emph{series}. A necessary condition for a series $(s_n)$ to converge is that the sequence $(a_n)$ of its terms converges to zero. But that is not a sufficient condition. The terms must also converge to zero "fast enough". For example, if the terms follow a power rule like $a_n = 1 / n^c$ for some constant $c > 0$, then the $a_n$ will converge to zero. But they will only converge to zero "fast enough" if $c > 1$. If the sequence of partial sums $s_n$ converges, then we can define its value as:
+Just like with any sequence, we can ask whether this sequence of partial sums converges or diverges when we let $n$ approach infinity. What we have then created is an \emph{infinite sum}. Such infinite sums have a special name: they are called \emph{series}. A necessary condition for a series $(s_n)$ to converge is that the sequence $(a_n)$ of its terms converges to zero. But that is not a sufficient condition. The terms must also converge to zero "fast enough". For example, if the terms follow a power rule like $a_n = 1 / n^c$ for some constant $c > 0$, then the $a_n$ will converge to zero. But they will only converge to zero "fast enough" if $c > 1$. If the sequence of partial sums $s_n$ converges, then we can define its value as:
 \begin{equation}
 \label{Eq:InfiniteSum}
 S = \lim_{n \rightarrow \infty} s_n 
@@ -15,6 +15,10 @@ S = \lim_{n \rightarrow \infty} s_n
 This limit, if it exists and is finite, is called the \emph{sum} of the series. The rightmost expression in the equation is just a definition of notation. That is: we define a sum that has $\infty$ as its upper summation limit via replacing $\infty$ by $n$ and then take the limit as $n$ approaches infinity. That naturally extends our sigma notation for summation to the case of infinite upper limits. By the way, an analogous step can be taken to extend the notation further to allow $-\infty$ as lower summation limit. [Q: Is there a way to extend the notation to allow real numbers for the summation limits? And no, I don't mean integrals.]
 
 % Is there a way to extend the notation to allow real numbers for the limits? I mean, we have integrals - but can we do it with sums, too?
+
+% Here is a way:
+% How to Extend the Sum of Any* Function
+% https://www.youtube.com/watch?v=hkn9zeRuzHs
 
 % https://en.wikipedia.org/wiki/Series_(mathematics)
 % For a_n = 1/n^c, it will be fast enough if |c| > 1.

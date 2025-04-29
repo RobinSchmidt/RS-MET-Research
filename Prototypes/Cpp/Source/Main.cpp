@@ -131,7 +131,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Math:
   //testMatrixSqrt();              // Tests functions to compute square root of a matrix
-  //test2x2Matrices();               // stub
+  test2x2Matrices();               // stub
   //test2x2MatrixCommutation();
   //test2x2MatrixInterpolation();    // stub
   //testQuaternion();

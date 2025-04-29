@@ -17105,12 +17105,30 @@ void test2x2Matrices()
   rsPlotVectorsXY(x, y);     // Shows the circle (we go around it N/P times)
 
   // ToDo:
-  // -Try some more interesting groups:
-  //  -Rotations with scaling ("amplitwists") 
-  //   -> produces exponentially decying sines when iterated
-  //   -> should be isomorphic to the complex numbers?
-  // -The book (1) has a whole zoo of matrix groups - see the list on page 88 - and it's not even
-  //  complete - maybe we can find something interesting and/or useful
+  //
+  // - Try some more interesting groups:
+  //   - Rotations with scaling ("amplitwists") 
+  //     -> produces exponentially decying sines when iterated
+  //     -> should be isomorphic to the complex numbers?
+  //
+  // - The book (1) has a whole zoo of matrix groups - see the list on page 88 - and it's not even
+  //   complete - maybe we can find something interesting and/or useful
+  //
+  // - Implement a class for "Quadrix numbers", see: https://www.youtube.com/watch?v=sKJSWUQ1FT4
+  //   A quadrix number is a number M = a*i + b*j + c*k + d*r where i = [1,0; 0,0], j = [0,1; 0,0], 
+  //   i = [0,0; 1,0], r = [0,0; 0,1]. The multiplication table for the basis elements i,j,k,r is:
+  //  
+  //        i  j  k  r
+  //     i  i  j  0  0           we have: i^2 = i, r^2 = r, j^2 = 0, k^2 = 0, so
+  //     j  0  0  i  j           i,r ar idempotent and j,k are nilpotent
+  //     k  k  r  0  0
+  //     r  0  0  k  r
+  //
+  //   The identity element is i+r. The inverse M^-1 of M = a*i + b*j + c*k + d*r is given by
+  //   M^-1 = d*i - b*j - c*k + a*r / (a*d - b*c) = conj(M) / |M|^2 where |M| = sqrt(a*d - b*c).
+  //   N = sqrt(M) is defined via N^2 = M with N = x*i + y*i + z*k + w*r. Let 
+  //   S = +-sqrt((a+d) +- 2*sqrt(a*d-b*c)), D = (S - (a-d)/S) / 2   (with 4 solutions for S, I 
+  //   think). Then: x = (S+D)/2, y = b/S, z = c/S, w = (S-D)/2
 
   int dummy = 0;
 }

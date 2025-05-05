@@ -371,24 +371,31 @@ Suppose we have a function $f$ of $x$, say $f(x) = x^6$, and we want to take the
 \subsubsection{Analogies}
 There are certain derivative-like operations that can be applied to other things than real functions. They are "derivative-like" in the sense that they obey certain rules that derivatives also obey. Mostly we are interested in operation that have a product rule similar to the one of differentiation [VERIFY].
 
+% Maybe the whole subsubsection starred
+
 \paragraph{Arithmetic Derivatives} The arithmetic derivative is an operation that can be applied to a natural number. For any given natural number $n$, its arithmetic derivative is denoted by $D(n)$ and defined as follows: For prime numbers $p$, we have $D(p) = 1$. For composite numbers that can be factored as $m n$, we have $D(m n) = D(m) \cdot n + m \cdot D(n)$. This second definition, i.e. the one for composite numbers, \emph{is} the product rule. That means that the so defined arithmetic derivative satisfies the product rule by definition. To compute the arithmetic derivative of a given number, the second definition can be applied recursively until we hit the base case of a prime number. [VERIFY!] ToDo: explain why it's well defined - maybe take the example $D(12)$ and show that $D(2 \cdot 6) = D(3 \cdot 4)$ by going through the recursive steps.
 
-%
-%\begin{equation}
-%D(n) =
-%\begin{cases}
-%1, \quad \text{if $n$ is prime} \\
-%... \quad \text{}
-%\end{cases}
-%\end{equation}
+% ToDo: mention extensions to the integer and rational numbers. Mention use cases for it.
 
+% https://en.wikipedia.org/wiki/Arithmetic_derivative#Extensions_beyond_natural_numbers
 % https://en.wikipedia.org/wiki/Arithmetic_derivative
 
 % https://en.wikipedia.org/wiki/Arithmetic_function
 % ...maybe belongs into number theory
 
 \paragraph{Algebraic Derivations}
-In the field of abstract algebra, specifically in \emph{differential algebra}, there is the notion of a so called \emph{derivation}. ...TBC...
+In the field of abstract algebra, specifically in \emph{differential algebra}, there is the notion of a so called \emph{derivation}. In this context, we start with a vector space and we assume that there is product $a b$ defined between any two vectors $a$ and $b$ which are elements of this vector space. Such a vector space that is equipped with a product (in addition to the usual vector space operations), is called an algebra. ...TBC...
+
+% I think, in this context, an "algebra" is a vector space in which there is a product defined 
+% between any two vectors a,b. Then, it must hold that:
+%
+% D(a b) = a D(b) + D(a) b
+%
+% for the operation D to qualify as a "derivation". Note that the order of the factors in the 
+% formula is important because the product is not required to be commutative in general. Maybe give
+% as example the vector space of infinite real valued sequences and interpret the elements as 
+% polynomial coefficients (or power series coeffs). The "product" would be convolution and the
+% "derivation" would be our regular rule for computing derivatives of polynomials (or power series)
 
 % https://en.wikipedia.org/wiki/Derivation_(differential_algebra)
 % https://en.wikipedia.org/wiki/P-derivation

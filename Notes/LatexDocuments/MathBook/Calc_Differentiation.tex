@@ -110,6 +110,8 @@ Instead of evaluating derivatives from first principles every time, we see one, 
 % are there more rules? what about logarithmic differentiation and derivative of inverse?
 % In other chapters where I use such tabulars, I usually write the name of the rule into the left column and the formula into the right one. Maybe it would be nice to make that consistent. But maybe having the formula in the left column is better suited for rules that have no name. Leaving the right column blank is less weird than leaving the left column blank
 
+% % https://en.wikipedia.org/wiki/Differentiation_rules
+
 % Maybe write down the reciprocal rule, see:
 % https://www.youtube.com/watch?v=qOr-MPiXRaA  at 28:38
 % ..it's actually a special case of the quotient rule but may make sense to have as separate rule
@@ -163,20 +165,43 @@ where the indices $k,i$ range from $1$ to $n$.
 %  that we have already found the root - the problematic case occurs only at the root itself.
 
 \paragraph{Higher Order Derivatives of Products}
-Another generalization of the product rule applies to higher order derivatives to products of two functions. It says:
+Another generalization of the product rule applies to higher order derivatives of products of two functions. It says:
 \begin{equation}
  (f g)^{(n)} = \sum_{k=0}^n \binom{n}{k}   f^{(n-k)} g^{(k)}
 \end{equation}
-ToDo: Figure out the general case for derivatives of arbitrary order and an arbitrary number of factors.
+Note the structural similarity with the binomial theorem. The $n$-th power would be replaced by the $n$-th derivative and instead of a sum of two variables, we have a product of two functions inside the parentheses. ToDo: Figure out the general case for derivatives of arbitrary order and an arbitrary number of factors. Maybe it would look structurally similar to the multinomial theorem?
 
 % https://en.wikipedia.org/wiki/General_Leibniz_rule
 
 
+\subsubsection{The Quotient Rule} ...TBC...
 
-\subsubsection{Generalized Chain Rule}
-There is also a similar generalization of the chain rule for compositions of more than two functions. For a composition of 3 functions, it states that $f(g(h(x)))' =  f'(g(h(x))) \cdot g'(h(x)) \cdot h'(x)$. I'll refrain from giving a general formula because I would have to introduce an uncommon notation for it. Instead, I'll appeal to your ability to see the pattern. It's basically just a product of all the derivatives and each derivative is taken at the appropriate argument of the respective function. For example, the derivative of $g$ is taken at $h(x)$ because $h(x)$ is the argument of $g$ etc. ...TBC... ToDo: inverse function rule, logarithmic differentiation
+% Quotient rule for higher derivatives:
+% https://math.stackexchange.com/questions/5357/whats-the-generalisation-of-the-quotient-rule-for-higher-derivatives
+% https://www.physicsforums.com/threads/quotient-rule-for-higher-order-derivatives.289320/
+% https://en.wikipedia.org/wiki/Quotient_rule#Higher_order_derivatives
+% 
+% https://en.wikipedia.org/wiki/Reciprocal_rule
+% Maybe treat the reciprocal rule as special case of the quotient rule or treat the quotien rule
+% as a consequence of the reciprocal rule together with the product rule.
 
-%TODO: maybe instead of writing (f(g))' = g' f'(g) write  (f(g(x)))' = g'(x) f'(g(x)) because it's ambiguous otherwise
+
+
+\subsubsection{The Chain Rule}
+We have also already seen the chain rule in our table above. There, it was given in terse form with suppressed argument. With unsuppressed argument, it would look like:
+\begin{equation}
+ (f( g(x)))' = g'(x) \cdot f'(g(x))
+\end{equation}
+which may make it a bit clearer what is going on.
+
+\paragraph{Compositions of More Than 2 Functions}
+There is also a generalization of the chain rule for compositions of more than two functions. For a composition of 3 functions, it states that:
+\begin{equation}
+f(g(h(x)))' =  f'(g(h(x))) \cdot g'(h(x)) \cdot h'(x)
+\end{equation}
+I'll refrain from giving a general formula because I would have to introduce an uncommon notation for it. Instead, I'll appeal to your ability to see the pattern. It's basically just a product of all the derivatives and each derivative is taken at the appropriate argument of the respective function. For example, the derivative of $g$ is taken at $h(x)$ because $h(x)$ is the argument of $g$ etc. ...TBC... ToDo: explain relation to backpropagation algorithm.
+
+% https://en.wikipedia.org/wiki/Chain_rule#Composites_of_more_than_two_functions
 
 % https://www.youtube.com/watch?v=-cedS03L17I
 % -Logarithmic differentiation: if f > 0, then (log(f(x)))' = f'(x)/f(x)
@@ -189,8 +214,6 @@ There is also a similar generalization of the chain rule for compositions of mor
 % and the multiply them all together to obtain f'(x)
 % I think, it doesn't really matter in which direction we evaluate the derivatives - we could also do that in a forward pass - but maybe in the multivariate case, we really need to do it backwards? Try it in the bivariate case
 
-%https://en.wikipedia.org/wiki/Chain_rule#Composites_of_more_than_two_functions
-
 % f(g(h(x))) = f'(g(h(x))) * g'(h(x)) * h'(x)
 
 % Where did I get this formula from? I think, I derived it myself? Maybe via a Taylor expansion of f? Or via specializing to 1D the directional derivative which itself is more easily to "see" intuitively? Or maybe we can define a bivariate function f(x,h) = f(x+h) and derive it from there using partial derivatives? Or maybe evaluate the limit directly from the bivariate function?
@@ -198,29 +221,19 @@ There is also a similar generalization of the chain rule for compositions of mor
 % This formula looks actually similar:
 % https://en.wikipedia.org/wiki/Differential_of_a_function#General_formulation
 
-% Generalization of chain rule to higher oder derivatives - Faa di Bruno's formula:
+\paragraph{Higher Order Derivatives of Composite Functions}
+There is also a formula for higher order derivatives of a composition of two functions. It's called \emph{Faa di Bruno's formula} and it is very messy. You may look it up on Wikipedia if you need it. ToDo: Give the formula here. Perhaps it would make more sense to express it in the form of an algorithm in pseudocode or in python? Maybe figure out an even more general formula for higher order derivatives of composites of multiple functions - but that would then probably be unmanagably messy? 
+
 % https://en.wikipedia.org/wiki/Fa%C3%A0_di_Bruno%27s_formula
 
+
+
+\subsubsection{The Inverse Function Rule} ...TBC...
+
+
+\subsubsection{Logarithmic Differentiation} ...TBC...
+
 % Give example to differentiate f(x) = x^x
-
-
-% Is there a similar generalization for the chain rule?
-% Yes: https://en.wikipedia.org/wiki/Chain_rule#Composites_of_more_than_two_functions
-
-
-
-
-
-
-
-
-
-% Quotient rule for higher derivatives:
-% https://math.stackexchange.com/questions/5357/whats-the-generalisation-of-the-quotient-rule-for-higher-derivatives
-% https://www.physicsforums.com/threads/quotient-rule-for-higher-order-derivatives.289320/
-% https://en.wikipedia.org/wiki/Quotient_rule#Higher_order_derivatives
-% 
-
 
 
 
@@ -356,16 +369,30 @@ Suppose we have a function $f$ of $x$, say $f(x) = x^6$, and we want to take the
 %  variational, fractional, Radon-Nikodym, stochastic. 
 
 \subsubsection{Analogies}
-There are certain derivative-like operations that can be applied to other things than real functions. They are "derivative-like" in the sense that they obey certain rules that derivatives also obey - mostly the product rule [VERIFY].
+There are certain derivative-like operations that can be applied to other things than real functions. They are "derivative-like" in the sense that they obey certain rules that derivatives also obey. Mostly we are interested in operation that have a product rule similar to the one of differentiation [VERIFY].
 
-\paragraph{Arithmetic Derivatives}
-
-\paragraph{Algebraic Derivations}
-In the field of abstract algebra, specifically in \emph{differential algebra}, there is the notion of a so called \emph{derivation}. ...tbc...
-
-%https://en.wikipedia.org/wiki/Derivation_(differential_algebra)
+\paragraph{Arithmetic Derivatives} The arithmetic derivative is an operation that can be applied to a natural number. For any given natural number $n$, its arithmetic derivative is denoted by $D(n)$ and defined as follows: For prime numbers $p$, we have $D(p) = 1$. For composite numbers that can be factored as $m n$, we have $D(m n) = D(m) \cdot n + m \cdot D(n)$. This second definition, i.e. the one for composite numbers, \emph{is} the product rule. That means that the so defined arithmetic derivative satisfies the product rule by definition. To compute the arithmetic derivative of a given number, the second definition can be applied recursively until we hit the base case of a prime number. [VERIFY!] ToDo: explain why it's well defined - maybe take the example $D(12)$ and show that $D(2 \cdot 6) = D(3 \cdot 4)$ by going through the recursive steps.
 
 %
+%\begin{equation}
+%D(n) =
+%\begin{cases}
+%1, \quad \text{if $n$ is prime} \\
+%... \quad \text{}
+%\end{cases}
+%\end{equation}
+
+% https://en.wikipedia.org/wiki/Arithmetic_derivative
+
+% https://en.wikipedia.org/wiki/Arithmetic_function
+% ...maybe belongs into number theory
+
+\paragraph{Algebraic Derivations}
+In the field of abstract algebra, specifically in \emph{differential algebra}, there is the notion of a so called \emph{derivation}. ...TBC...
+
+% https://en.wikipedia.org/wiki/Derivation_(differential_algebra)
+% https://en.wikipedia.org/wiki/P-derivation
+
 
 \begin{comment}
 	

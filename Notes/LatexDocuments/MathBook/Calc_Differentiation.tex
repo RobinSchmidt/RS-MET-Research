@@ -27,7 +27,37 @@ This means: take the derivative of $f$ with respect to $x$, then evaluate the re
 %ToDo: Introduce the "evaluated at" notation with the vertical bar on the right. [Done?]
 % also introduce the notation with the brackets
 
-\subsection{Differentiability}
+
+\subsection{Higher Order Derivatives}
+With the derivative, we have an operation to produce a new "derived" function from a given function. There's nothing that stops us to apply the same operation to the derived function as well. And then iterate that process as often as we like. That's the way, higher order derivatives are created.
+
+...TBC...
+
+% ToDo:
+% -derive a formula for the definition of f'' based on using the definition of f'
+% -interpret the formula in terms of a numeric 2nd derivative when h is small.
+
+% give all different notations $f'', f''', f^{(k)}, \frac{d^k}{d x^k}, D^k, \ddot{f}, \dddot{f}$
+
+
+
+
+%todo: list derivatives of elementary functions
+
+\subsection{Elementary Derivatives}
+We'll now give a list of some of the most important derivatives of elementary functions. This list (or a more comprehensive version of it that can be found elsewhere), together with the differentiation rules above, will allow us to mechanically evaluate derivatives of all functions that can be constructed from these elementary functions by algebraic operations or composition (i.e. nesting). ...TBC...
+
+% State also some tricks to evaluate certain functions togther with their derivatives without much 
+% extra cost
+
+
+
+
+
+
+
+
+%\subsection{Differentiability}
 
 % Give examples of weird functions:
 % continuous everywhere, differentiable nowhere: Weierstrass function, Bolzano function
@@ -61,8 +91,12 @@ This means: take the derivative of $f$ with respect to $x$, then evaluate the re
 % are discontinuous but differentiable (verify!)
 
 
+
+
+
+
 \subsection{Differentiation Rules}
-Instead of evaluating derivatives from first principles every time, we see one, we have a lookup list of derivatives of all important elementary functions that has been assembled once and for all by the technique above or otherwise and we have a couple of rules how to compute derivatives of more complicated functions that are created in various ways from the more basic functions (btw: Did I already say that a big theme in math is finding computational shortcuts? This is a nice example). These rules are for any two functions $f$ and $g$ and any constant $a$:
+Instead of evaluating derivatives from first principles every time, we see one, we have a lookup list of derivatives of all important elementary functions that has been assembled once and for all by the technique above or otherwise and we have a couple of rules how to compute derivatives of more complicated functions that are created in various ways from the more basic functions (btw: Did I already say that a big theme in math is finding computational shortcuts? This is a nice example). The most elementary differentiation rules for any two functions $f$ and $g$ and any constant $a$ are the following:
 
 \medskip
 \begin{tabular}{c c c l}
@@ -91,12 +125,55 @@ The two first properties, homogeneity and additivity, taken together constitute 
  = \lim_{h \rightarrow 0} \frac{f(x + h) - f(x)}{h}
  = \frac{d}{d h} f(x + h) \bigg\rvert_{h=0}
 \end{equation}
-whose usefulness lies mostly in its generalizations to the directional derivative and Gateaux derivative which we will encounter later. There, we will see a similar definition via a limit and the RHS will tell us, how to actually evaluate the limit - but that's a topic for later. There is a generalization for the product rule for products with more than two factors. The rule says to take the derivative of one function at a time and leave the other factors as is and then add up the results. For example, for a product of 3 functions, it says that $(fgh)' =  f' g h + f g' h + f g h'$.  In general:
+whose usefulness lies mostly in its generalizations to the directional derivative and Gateaux derivative which we will encounter later. There, we will see a similar definition via a limit and the RHS will tell us, how to actually evaluate the limit - but that's a topic for later. 
+
+
+
+\subsubsection{The Product Rule}
+In the list above, we already mentioned the product rule which is also known as the Leibniz rule. It says:
+\begin{equation}
+ (f g)'  = f' g + g' f
+\end{equation}
+
+\paragraph{Products Of More Than 2 Functions}
+
+There is a generalization for the product rule for products with more than two factors. The rule says to take the derivative of one function at a time and leave the other factors as is and then add up the results. For example, for a product of 3 functions, it says that:
+\begin{equation}
+(fgh)' =  f' g h + f g' h + f g h'
+\end{equation}
+For a general product of an arbitrary number $n$ of functions $f_1, f_2, \ldots, f_n$:
 \begin{equation}
 \frac{d}{dx} \prod_k f_k(x)  
 = \Bigl(  \prod_k f_k(x)   \Bigr) '
 = \sum_k \Bigl( f_k'(x) \prod_{i \neq k} f_i(x)  \Bigr) 
 \end{equation}
+where the indices $k,i$ range from $1$ to $n$.
+
+% Do You ACTUALLY Know The Product Rule?
+% https://www.youtube.com/watch?v=0dz5HTHWneo
+% -Nice generalization of the product rule for a product of multiple functions. The rule says to 
+%  take the derivative of one function at a time and leave the others as is and add the results.
+%  For 3 functions (f g h)' = f' g h + f g' h + f g h'. In general for n functions, we have a sum of
+%  n terms where each term is a product of (n-1) function values and one derivative value. In 
+%  practice, we could evaluate it via first forming a product P of all n terms and then form a sum 
+%  of terms of the form P * f_i' / f_i where i is the index of the function. This should be more
+%  efficient than evaluating the n-1 different products from scratch. We need to take care of
+%  possible division by zero, though. In the context evaluating the derivative for Newton iteration,
+%  this may not be a problem because when one of f_i is zero, then so is the product which means 
+%  that we have already found the root - the problematic case occurs only at the root itself.
+
+\paragraph{Higher Order Derivatives of Products}
+Another generalization of the product rule applies to higher order derivatives to products of two functions. It says:
+\begin{equation}
+ (f g)^{(n)} = \sum_{k=0}^n \binom{n}{k}   f^{(n-k)} g^{(k)}
+\end{equation}
+ToDo: Figure out the general case for derivatives of arbitrary order and an arbitrary number of factors.
+
+% https://en.wikipedia.org/wiki/General_Leibniz_rule
+
+
+
+\subsubsection{Generalized Chain Rule}
 There is also a similar generalization of the chain rule for compositions of more than two functions. For a composition of 3 functions, it states that $f(g(h(x)))' =  f'(g(h(x))) \cdot g'(h(x)) \cdot h'(x)$. I'll refrain from giving a general formula because I would have to introduce an uncommon notation for it. Instead, I'll appeal to your ability to see the pattern. It's basically just a product of all the derivatives and each derivative is taken at the appropriate argument of the respective function. For example, the derivative of $g$ is taken at $h(x)$ because $h(x)$ is the argument of $g$ etc. ...TBC... ToDo: inverse function rule, logarithmic differentiation
 
 %TODO: maybe instead of writing (f(g))' = g' f'(g) write  (f(g(x)))' = g'(x) f'(g(x)) because it's ambiguous otherwise
@@ -121,28 +198,19 @@ There is also a similar generalization of the chain rule for compositions of mor
 % This formula looks actually similar:
 % https://en.wikipedia.org/wiki/Differential_of_a_function#General_formulation
 
-
 % Generalization of chain rule to higher oder derivatives - Faa di Bruno's formula:
 % https://en.wikipedia.org/wiki/Fa%C3%A0_di_Bruno%27s_formula
 
 % Give example to differentiate f(x) = x^x
 
 
-% Do You ACTUALLY Know The Product Rule?
-% https://www.youtube.com/watch?v=0dz5HTHWneo
-% -Nice generalization of the product rule for a product of multiple functions. The rule says to 
-%  take the derivative of one function at a time and leave the others as is and add the results.
-%  For 3 functions (f g h)' = f' g h + f g' h + f g h'. In general for n functions, we have a sum of
-%  n terms where each term is a product of (n-1) function values and one derivative value. In 
-%  practice, we could evaluate it via first forming a product P of all n terms and then form a sum 
-%  of terms of the form P * f_i' / f_i where i is the index of the function. This should be more
-%  efficient than evaluating the n-1 different products from scratch. We need to take care of
-%  possible division by zero, though. In the context evaluating the derivative for Newton iteration,
-%  this may not be a problem because when one of f_i is zero, then so is the product which means 
-%  that we have already found the root - the problematic case occurs only at the root itself.
-
 % Is there a similar generalization for the chain rule?
 % Yes: https://en.wikipedia.org/wiki/Chain_rule#Composites_of_more_than_two_functions
+
+
+
+
+
 
 
 
@@ -155,24 +223,6 @@ There is also a similar generalization of the chain rule for compositions of mor
 
 
 
-%todo: list derivatives of elementary functions
-
-\subsection{Elementary Derivatives}
-We'll now give a list of some of the most important derivatives of elementary functions. This list (or a more comprehensive version of it that can be found elsewhere), together with the differentiation rules above, will allow us to mechanically evaluate derivatives of all functions that can be constructed from these elementary functions by algebraic operations or composition (i.e. nesting). ...TBC...
-
-% State also some tricks to evaluate cretain functions togther with their derivatives without much 
-% extra cost
-
-\subsection{Higher Order Derivatives}
-With the derivative, we have an operation to produce a new "derived" function from a given function. There's nothing that stops us to apply the same operation to the derived function as well. And then iterate that process as often as we like. That's the way, higher order derivatives are created.
-
-...TBC...
-
-% ToDo:
-% -derive a formula for the definition of f'' based on using the definition of f'
-% -interpret the formula in terms of a numeric 2nd derivative when h is small.
-
-% give all different notations $f'', f''', f^{(k)}, \frac{d^k}{d x^k}, D^k, \ddot{f}, \dddot{f}$
 
 
 

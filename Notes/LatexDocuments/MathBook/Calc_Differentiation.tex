@@ -24,31 +24,22 @@ so the derivative of $f(x) = x^2$ is $f'(x) = 2 x$.
 \end{equation}
 This means: take the derivative of $f$ with respect to $x$, then evaluate the resulting expression at $x = a$.
 
-%ToDo: Introduce the "evaluated at" notation with the vertical bar on the right. [Done?]
-% also introduce the notation with the brackets
+%ToDo: also introduce the notation with the brackets
 
 
 \subsection{Higher Order Derivatives}
 With the derivative, we have an operation to produce a new "derived" function $f'$ from a given function $f$. There's nothing that stops us to apply the same operation to the derived function as well. And then iterate that process as often as we like. That's the way, higher order derivatives are created. The second derivative of a function $f(x)$ is denoted as $f''(x)$ in Lagrange notation, the third as $f'''(x)$. From the fourth one onwards, the "dash" or "prime" notation becomes impractical so one often sees the notation $f^{(n)}(x)$ to denote the $n$-th order derivative of the function $f$. In this notation, the $0$-th order derivative means the function $f$ itself. This makes sense because taking the derivative zero times should be a "do-nothing" operation. To translate this into Leibniz notation, one would write $f^{(n)}(x) = \frac{d^n}{d x^n} f(x) = \frac{d^n f(x)}{d x^n}$. In operator notation with suppressed argument $x$, one would write $f^{(n)} = D^n f$ or $D^n[f]$. Higher order derivatives in Newton notation use multiple dots above the function as in $\dot{x}(t), \ddot{x}(t), \dddot{x}(t), \ddddot{x}(t)$. I have seen up to 4 dots but there, the usefulness of this notation ends (and for more than 2, it's already questionable). Time derivatives of order higher than 4 typically do not occur in physics which is the place where Newton's notation is used. Mostly, we deal only with first and second derivatives anyway - and for these, Newton notation works fine. [ToDo: figure out if there's a general way to write an $n$-th time derivative in Newton notation - maybe something $\overset{n}{x}(t)$?]
 
-%...TBC...
-
 % ToDo:
 % -derive a formula for the definition of f'' based on using the definition of f'
 % -interpret the formula in terms of a numeric 2nd derivative when h is small.
 
-% give all different notations $f'', f''', f^{(k)}, \frac{d^k}{d x^k}, D^k, \ddot{f}, \dddot{f}$
-
-
-
-
-%todo: list derivatives of elementary functions
-
 \subsection{Elementary Derivatives}
 We'll now give a list of some of the most important derivatives of elementary functions. This list (or a more comprehensive version of it that can be found elsewhere), together with the differentiation rules above, will allow us to mechanically evaluate derivatives of all functions that can be constructed from these elementary functions by algebraic operations or composition (i.e. nesting). ...TBC...
 
-% State also some tricks to evaluate certain functions togther with their derivatives without much 
-% extra cost
+%todo: list derivatives of elementary functions
+
+% State also some tricks to evaluate certain functions togther with their derivatives without much extra cost
 
 
 
@@ -96,7 +87,7 @@ We'll now give a list of some of the most important derivatives of elementary fu
 
 
 \subsection{Differentiation Rules}
-Instead of evaluating derivatives from first principles every time, we see one, we have a lookup list of derivatives of all important elementary functions that has been assembled once and for all by the technique above or otherwise and we have a couple of rules how to compute derivatives of more complicated functions that are created in various ways from the more basic functions (btw: Did I already say that a big theme in math is finding computational shortcuts? This is a nice example). The most elementary differentiation rules for any two functions $f$ and $g$ and any constant $a$ are the following:
+Instead of evaluating derivatives from first principles every time we see one, we have a lookup list of derivatives of all important elementary functions that has been assembled once and for all from first principles (i.e. using the definition via the limit) and we have a couple of rules how to compute derivatives of more complicated functions that are created in various ways from the more basic functions (btw: Did I already say that a big theme in math is finding computational shortcuts? This is a nice example). The most elementary differentiation rules for any two functions $f$ and $g$ and any constant $a$ are the following:
 
 \medskip
 \begin{tabular}{c c c l}
@@ -117,10 +108,9 @@ Instead of evaluating derivatives from first principles every time, we see one, 
 % ..it's actually a special case of the quotient rule but may make sense to have as separate rule
 % 5 maybe write down the rule for inverse functions. It's alsoin the video. Maybe mention that one needs to take care to not confuse inverse functions with reciprocal functions - I once fell into this trap.
 
-% What about inverse function rule? (f^-1)'(x) = 1/f'(f^-1(x))
-% https://en.wikipedia.org/wiki/Inverse_function_rule
 
-The two first properties, homogeneity and additivity, taken together constitute the important property of linearity. We may state the linearity property also in a single formula: $(a f + b g)' = a f' + b g'$ where $b$ is another constant. It can easily be verified that this single formula is equivalent to the first two rules in the list above. One lesser known formula is [VERIFY!]:
+
+The two first properties, homogeneity and additivity, taken together, constitute the important property of linearity. We may state the linearity property also in a single formula: $(a f + b g)' = a f' + b g'$ where $b$ is another constant. It can easily be verified that this single formula is equivalent to the first two rules in the list above. One lesser known formula is [VERIFY!]:
 \begin{equation}
 \label{Eq:DerivativeViaH}
  \frac{d}{d x} f(x) 
@@ -129,6 +119,14 @@ The two first properties, homogeneity and additivity, taken together constitute 
 \end{equation}
 whose usefulness lies mostly in its generalizations to the directional derivative and Gateaux derivative which we will encounter later. There, we will see a similar definition via a limit and the RHS will tell us, how to actually evaluate the limit - but that's a topic for later. 
 
+% ToDo: Maybe move that rule to the bottom of our list of rules. Maybe try to figure out if it has
+% a name. If not, maybe invent one. Maybe shift-change-evaluate (shift by h, change derivative
+% from wrt x to wrt h, eval at h=0). Maybe verify this rule in a couple of example cases. Maybe
+% call it the dummy-offset rule? or the shift-by-zero rule?`
+
+% Explain the motivation. I think, I have derived it from the Gateaux derivative or from the
+% directional derivative in the special case of 1D functions - or something. I'm not sure 
+% anymore.
 
 
 \subsubsection{The Product Rule}
@@ -199,7 +197,7 @@ There is also a generalization of the chain rule for compositions of more than t
 \begin{equation}
 f(g(h(x)))' =  f'(g(h(x))) \cdot g'(h(x)) \cdot h'(x)
 \end{equation}
-I'll refrain from giving a general formula because I would have to introduce an uncommon notation for it. Instead, I'll appeal to your ability to see the pattern. It's basically just a product of all the derivatives and each derivative is taken at the appropriate argument of the respective function. For example, the derivative of $g$ is taken at $h(x)$ because $h(x)$ is the argument of $g$ etc. ...TBC... ToDo: explain relation to backpropagation algorithm.
+I'll refrain from giving a general formula because I would have to introduce an uncommon notation for it. Instead, I'll appeal to your ability to see the pattern. It's basically just a product of all the derivatives and each derivative is taken at the appropriate argument of the respective function. For example, the derivative of $g$ is taken at $h(x)$ because $h(x)$ is the argument of $g$ etc. ...TBC... ToDo: explain relation to backpropagation algorithm. There, we make use of a multivariable version of it.
 
 % https://en.wikipedia.org/wiki/Chain_rule#Composites_of_more_than_two_functions
 
@@ -229,6 +227,9 @@ There is also a formula for higher order derivatives of a composition of two fun
 
 
 \subsubsection{The Inverse Function Rule} ...TBC...
+
+% What about inverse function rule? (f^-1)'(x) = 1/f'(f^-1(x))
+% https://en.wikipedia.org/wiki/Inverse_function_rule
 
 
 \subsubsection{Logarithmic Differentiation} ...TBC...

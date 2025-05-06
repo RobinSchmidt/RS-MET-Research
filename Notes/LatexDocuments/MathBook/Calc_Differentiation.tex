@@ -384,7 +384,9 @@ There are certain derivative-like operations that can be applied to other things
 % ...maybe belongs into number theory
 
 \paragraph{Algebraic Derivations}
-In the field of abstract algebra, specifically in \emph{differential algebra}, there is the notion of a so called \emph{derivation}. In this context, we start with a vector space and we assume that there is product $a b$ defined between any two vectors $a$ and $b$ which are elements of this vector space. Such a vector space that is equipped with a product (in addition to the usual vector space operations), is called an algebra. ...TBC...
+In the field of abstract algebra, specifically in \emph{differential algebra}, there is the notion of a so called \emph{derivation}. In this context, we start with a vector space and we assume that there is product $a b$ defined between any two vectors $a$ and $b$ which are elements of this vector space. Such a vector space that is equipped with a product (in addition to the usual vector space operations), is called an algebra. If that algebra has yet another operation $D$ that satisfies the rule $D(a b) = a D(b) + D(a) b$, then we call the operation $D$ a \emph{derivation}. As an example, we can take the vector space of all polynomials (or maybe power series, if we allow "infinite polynomials"). The product would be defined by polynomial multiplication and the derivation would be defined by the usual way in which we take derivatives of polynomials. That immediately gives us a way to define products and derivations on (possibly infinite) sequences - we just interpret the sequence elements as polynomial coefficients and use the rules for multiplying and differentiating polynomials (or power series). That means: multiplication on sequences is convolution and derivation on sequences is multiplying by index and then left-shifting. [VERIFY!] ...TBC...
+
+% https://en.wikipedia.org/wiki/Differential_algebra#Differential_rings
 
 % I think, in this context, an "algebra" is a vector space in which there is a product defined 
 % between any two vectors a,b. Then, it must hold that:
@@ -396,6 +398,10 @@ In the field of abstract algebra, specifically in \emph{differential algebra}, t
 % as example the vector space of infinite real valued sequences and interpret the elements as 
 % polynomial coefficients (or power series coeffs). The "product" would be convolution and the
 % "derivation" would be our regular rule for computing derivatives of polynomials (or power series)
+
+% Or maybe consider the vector space of all polynomials up to degree n. But no - limiting the degree
+% to any number, we wouldn't get a vector space because by using the product, we could always
+% produce polynomials of even higher degree. Maybe take the vector space of all polynomials.
 
 % https://en.wikipedia.org/wiki/Derivation_(differential_algebra)
 % https://en.wikipedia.org/wiki/P-derivation

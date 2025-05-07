@@ -9680,16 +9680,30 @@ void testShanksTransformation()
     T[n] = num / den;
   }
 
-  // Plot the sequences S and T:
-  rsPlotVectors(S, T);
+  // Compute relative estimation errors for the sequences S and T. They both converge to pi, so the
+  // relative error is (pi-S[n])/pi and (pi-T[n])/pi:
+  Vec errS(N), errT(N);
+  for(int n = 1; n < N-1; n++)
+  {
+    errS[n] = (PI - S[n]) / PI;
+    errT[n] = (PI - T[n]) / PI;
+  }
+
+  // Plot the sequences S and T and the corresponding approximation error sequences:
+  rsPlotVectors(   S,    T);
+  rsPlotVectors(errS, errT);
 
 
-
-  int dummy = 0;
-
+  // Observations:
+  //
+  // - The sequences S[n] and T[n] both converge to pi. T converges much faster than S. In both 
+  //   cases, the error sequences have alternating signs.
+  //
+  //
   // ToDo:
   //
-  // - Maybe instead of plotting S and T, plot S-pi, T-pi, i.e. the approximation error.
+  // - Create a 3rd sequence U by applying the Shanks transformation to T. Will this converge even 
+  //   faster?
 
 }
 

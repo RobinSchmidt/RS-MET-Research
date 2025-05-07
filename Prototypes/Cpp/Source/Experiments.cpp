@@ -9749,7 +9749,8 @@ void testShanksTransformation()
   //
   // - Maybe plot the absolute values of the relative errors on a logarithmic scale. Maybe we see 
   //   some slopes which are different depending on the number of times we applied the Shanks 
-  //   trafo?
+  //   trafo? Estimate the orders of convergence experimentally. See:
+  //   https://de.wikipedia.org/wiki/Experimentelle_Konvergenzordnung
   //
   // - Figure out if we can use this to accelerate the convergence of root finding algorithms such
   //   as Newton-Raphson. Apply the Shanks trafo to the sequence of estimates. But maybe it only

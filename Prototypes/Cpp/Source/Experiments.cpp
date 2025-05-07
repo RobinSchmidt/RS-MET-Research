@@ -9659,8 +9659,9 @@ void testShanksTransformation()
   using Real = double;
   using Vec  = std::vector<Real>;
 
-  int N = 100;                          // Number of terms
+  int N = 50;                          // Number of terms
 
+  // Compute the first N partial sums for the Leibniz series for pi. That will be our sequence S:
   Vec S(N);
   S[0] = 4.0;
   Real sign = -1.0;
@@ -9670,9 +9671,25 @@ void testShanksTransformation()
     sign *= -1.0;
   }
 
+  // Apply the Shanks transformation to the sequence S to produce our sequence T = T(S):
+  Vec T(N);
+  for(int n = 1; n < N-1; n++)
+  {
+    Real num = S[n+1]*S[n-1] - S[n]*S[n];
+    Real den = S[n+1] - 2*S[n] + S[n-1];
+    T[n] = num / den;
+  }
+
+  // Plot the sequences S and T:
+  rsPlotVectors(S, T);
+
 
 
   int dummy = 0;
+
+  // ToDo:
+  //
+  // - Maybe instead of plotting S and T, plot S-pi, T-pi, i.e. the approximation error.
 
 }
 

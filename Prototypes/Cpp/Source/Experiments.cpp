@@ -9673,31 +9673,26 @@ void testShanksTransformation()
     sign *= -1.0;
   }
 
-  // Apply the Shanks transformation to the sequence S to produce our sequence T = T(S):
-  Vec T(N);
-  for(int n = 1; n < N-1; n++)
-  {
-    Real num = S[n+1]*S[n-1] - S[n]*S[n];
-    Real den = S[n+1] - 2*S[n] + S[n-1];
-    T[n] = num / den;
-  }
-
-  Seq::applyShanksTrafo(&S[0], N, &T[0]); 
+  // Apply the Shanks transformation to the sequence S to produce our sequence T = T(S). Then apply
+  // the Shanks trafo again to T to obtain U which converges even faster:
+  Vec T(N); Seq::applyShanksTrafo(&S[0], N, &T[0]);
+  Vec U(N); Seq::applyShanksTrafo(&T[0], N, &U[0]);
 
 
-
-  // Compute relative estimation errors for the sequences S and T. They both converge to pi, so the
-  // relative error is (pi-S[n])/pi and (pi-T[n])/pi:
-  Vec errS(N), errT(N);
+  // Compute relative estimation errors for the sequences S, T and U. They both converge to pi, so the
+  // relative error is (pi-S[n])/pi etc.:
+  Vec errS(N), errT(N), errU(N);
   for(int n = 1; n < N-1; n++)
   {
     errS[n] = (PI - S[n]) / PI;
     errT[n] = (PI - T[n]) / PI;
+    errU[n] = (PI - U[n]) / PI;
   }
+  // Maybe factor out into Seq::relativeError(&S[0], N, PI, &errS[0]); etc.
 
   // Plot the sequences S and T and the corresponding approximation error sequences:
-  rsPlotVectors(   S,    T);
-  rsPlotVectors(errS, errT);
+  rsPlotVectors(S, T, U);
+  rsPlotVectors(errS, errT, errU);
 
 
   // Observations:
@@ -9727,7 +9722,9 @@ void testShanksTransformation()
   //   available to test various transformations on them - like the Euler and Shanks 
   //   transformation.
   //
-  // - Also factor out a function for the Shanks transformation
+  // - Maybe plot the absolute values of the relative errors on a logarithmic scale. Maybe we see 
+  //   some slopes which are different depending on the number of times we applied the Shanks 
+  //   trafo? 
 }
 
 

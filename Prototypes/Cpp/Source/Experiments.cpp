@@ -9659,6 +9659,7 @@ void testShanksTransformation()
 
   using Real = double;
   using Vec  = std::vector<Real>;
+  using Seq  = rsMathSequence<Real>;
 
   int N = 50;                          // Number of terms
 
@@ -9680,6 +9681,10 @@ void testShanksTransformation()
     Real den = S[n+1] - 2*S[n] + S[n-1];
     T[n] = num / den;
   }
+
+  Seq::applyShanksTrafo(&S[0], N, &T[0]); 
+
+
 
   // Compute relative estimation errors for the sequences S and T. They both converge to pi, so the
   // relative error is (pi-S[n])/pi and (pi-T[n])/pi:

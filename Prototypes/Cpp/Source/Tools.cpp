@@ -3339,6 +3339,57 @@ void sphericalToCartesian(T r, T theta, T phi, T* x, T* y, T* z)
 //  close together (-> figure out details) - the bottom line is that we have to take care assigning
 //  u-coordinates to make sure, the specify a valid point
 
+
+//=================================================================================================
+
+/** A class for dealing with mathematical sequences, i.e. functions from the natural numbers into
+the real or complex numbers. It also provides facilities for dealing with  series which are just 
+sequences obtained by taking a running sum of a given other sequence. The class provides functions 
+for producing some well known sequences as well as functions to transform sequences into new 
+sequences with the goal of accelerating the convergence.  ...TBC...  */
+
+template<class T>
+class rsMathSequence
+{
+
+public:
+
+  /** Applies the Shanks transformation to the given sequence x[n] and stores the result in y[n]. 
+  The Shanks trafo uses the formula:
+  
+             x[n+1]*x[n-1] - x[n]*x[n]
+     y[n] = ---------------------------
+             x[n+1] - 2*x[n] + x[n-1]
+
+  ...TBC...  */
+  static void applyShanksTrafo(const T* x, int N, T* y);
+  // The implementation is written such that it can be used in place, i.e. y == x is allowed. This
+  // needs to be tested!
+
+};
+
+template<class T>
+void rsMathSequence<T>::applyShanksTrafo(const T* x, int N, T* y)
+{
+  T xL = x[0];                      // Left input
+  for(int n = 1; n < N-1; n++)
+  {
+    T xM  = x[n];                   // Middle input
+    T xR  = x[n+1];                 // Right input
+    T num = xR*xL - xM*xM;          // Numerator
+    T den = xR - 2*xM + xL;         // Denominator
+    y[n]  = num / den;              // Compute and store result
+    xL    = xM;                     // State update (mid input becomes left)
+  }
+}
+
+// ToDo:
+//
+// - Add functions for creating the Leibniz series for pi, the (alternating) harmonic series, etc.
+//
+// - Add functions to perform the Euler transformation, Cesaro summation, running averages etc.
+
+
 //=================================================================================================
 // Set operations on std::vector (not yet tested):
 

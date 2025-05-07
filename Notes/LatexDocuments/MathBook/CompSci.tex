@@ -116,4 +116,15 @@ https://en.wikipedia.org/wiki/Chaitin%27s_constant
 https://www.youtube.com/watch?v=yi4Ho_K5LRw  What is Primitive Recursion?
 https://www.youtube.com/watch?v=_NwZh-0X9tQ  Limitations of Primitive Recursive Functions
 
+
+How to solve Hard Problems by Guessing | Algorithmic Intuition #1
+https://www.youtube.com/watch?v=W8xj4ybqiik
+-I think, the general idea is: You can solve a problem in O(n*log(n)) time if you can check in O(n)
+ time (for example, by a greedy algorithm), if a guessed solution is either too large to be a lower 
+ bound or too small to be an upper bound? If that is possible and you can come up with an initial 
+ lower and upper bound (in the case of the video: 0 and sum a_i), then you can use bisection (or 
+ binary search) to narrow down the interval where the true solution must be until you have only one
+ value left - which then is the solution.
+
+
 \end{comment}

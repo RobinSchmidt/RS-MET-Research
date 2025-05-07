@@ -3427,13 +3427,16 @@ void rsMathSequence<T>::shanksTrafo(const T* x, int N, T* y)
   //
   // - What if the denominator is zero? Maybe then we should just use y[n] = x[n]?
   //
-  // - Here https://en.wikipedia.org/wiki/Shanks_transformation#Formulation it says that there is a 
+  // - Here https://en.wikipedia.org/wiki/Shanks_transformation#Formulation it says that there is a
   //   more numerically stable way to compute the transformed sequence. It's the rightmost 
-  //   expression in the documentation. Maybe use that instead. Maybe implement both and make some
-  //   numerical accuracy comparisons - maybe be using both expressions with float and double and
-  //   check which of the float implementations is closer to the double implementation. Or maybe 
-  //   use rsFraction to produce an exact reference - but be careful about overflow - it will 
-  //   probably overflow quickly.
+  //   expression our code documentation of the function (in the class). Maybe use that instead. 
+  //   Maybe implement both and make some numerical accuracy comparisons - maybe by using both 
+  //   expressions with float and double and check which of the float implementations is closer to 
+  //   the double implementation. Or maybe use rsFraction to produce an exact reference - but be 
+  //   careful about overflow - it will probably overflow quickly.
+  //
+  // - Can we invert the Shanks trafo, i.e. reconstruct x from y? That's probably not very useful 
+  //   in practice but it may be of theoretical interest.
 }
 
 

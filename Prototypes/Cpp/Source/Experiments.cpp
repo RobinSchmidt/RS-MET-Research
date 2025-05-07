@@ -9754,7 +9754,8 @@ void testShanksTransformation()
   // - Figure out if we can use this to accelerate the convergence of root finding algorithms such
   //   as Newton-Raphson. Apply the Shanks trafo to the sequence of estimates. But maybe it only
   //   works well when the error in the estimates has alternating signs? Try to figure that out 
-  //   experimentally.
+  //   experimentally. Try it also on fixed point iteration - the raw iteration always converges 
+  //   at least linearly. See: https://de.wikipedia.org/wiki/Konvergenzgeschwindigkeit
 
 }
 

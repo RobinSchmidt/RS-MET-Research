@@ -9658,10 +9658,11 @@ void testShanksTransformation()
 
 
   using Real = double;
+  //using Real = float;                // Use that to expose numerical precision problems.
   using Vec  = std::vector<Real>;
   using Seq  = rsMathSequence<Real>;
 
-  int N = 50;                          // Number of terms
+  int N = 30;                          // Number of terms
 
   // Compute the first N partial sums for the Leibniz series for pi. That will be our sequence S:
   Vec S(N);
@@ -9672,6 +9673,11 @@ void testShanksTransformation()
     S[n] = S[n-1] + sign * 4.0 / (2.0*n + 1.0);
     sign *= -1.0;
   }
+  // https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80
+  // https://de.wikipedia.org/wiki/Leibniz-Reihe
+  //
+  // The Leibniz series converges sublinearly, namely logarithmically. See:
+  // https://de.wikipedia.org/wiki/Konvergenzgeschwindigkeit
 
   // Apply the Shanks transformation to the sequence S to produce our sequence T = T(S). Then apply
   // the Shanks trafo again to T to obtain U which converges even faster:
@@ -9683,9 +9689,10 @@ void testShanksTransformation()
   //// Test:
   //Vec T = Seq::runningMean(S);
   //Vec U = Seq::runningMean(T);
-  //// This doesn't seem to accelerate the convergence
+  //// Nah! This doesn't seem to accelerate the convergence.
 
-  // Compute relative estimation errors for the sequences S, T and U. They both converge to pi, so the
+
+  // Compute relative estimation errors for the sequences S, T, U, v. They all converge to pi, so the
   // relative error is (pi-S[n])/pi etc.:
   Vec eS(N), eT(N), eU(N), eV(N);
   for(int n = 1; n < N-1; n++)
@@ -9695,7 +9702,8 @@ void testShanksTransformation()
     eU[n] = (PI - U[n]) / PI;
     eV[n] = (PI - V[n]) / PI;
   }
-  // Maybe factor out into Seq::relativeError(&S[0], N, PI, &errS[0]); etc.
+  // Maybe factor out into Seq::relativeError(&S[0], N, PI, &eS[0]); etc. or something like
+  // eS = Seq::relativeError(S, PI)
 
   // Plot the sequences S and T and the corresponding approximation error sequences:
   rsPlotVectors( S,  T,  U,  V);
@@ -9707,7 +9715,9 @@ void testShanksTransformation()
   // - The sequences S[n] and T[n] both converge to pi. T converges much faster than S. In both 
   //   cases, the error sequences have alternating signs. U converges even faster and has also 
   //   alternating signs. With V, the result becomes questionable. The error for the later terms
-  //   looks more like noise. Maybe we hit the numerical precision limits here?
+  //   looks more like noise. Maybe we hit the numerical precision limits here? Yes - that seems 
+  //   plausible. When using "Real = float" instead of "Real = double", U already becomes 
+  //   questionable and v even more so.
   //
   // - It's a bit dissatisfying that we don't have formulas for the T[0] and T[N-1], so for these
   //   values, maybe some sort of one-sided variation of the formula would be required. The formula 
@@ -9728,8 +9738,8 @@ void testShanksTransformation()
   //
   // ToDo:
   //
-  // - Create a 3rd sequence U by applying the Shanks transformation to T. Will this converge even 
-  //   faster?
+  // - Try the different implementation formula that is supposed to be more numerically stable.
+  //   Check if we can confirm this experimentally.
   //
   // - Maybe factor out a function to produce the Leibniz series. Maybe create a class that has a 
   //   bunch of static functions to produce sum well known series such as the Leibniz series, the 
@@ -9739,7 +9749,13 @@ void testShanksTransformation()
   //
   // - Maybe plot the absolute values of the relative errors on a logarithmic scale. Maybe we see 
   //   some slopes which are different depending on the number of times we applied the Shanks 
-  //   trafo? 
+  //   trafo?
+  //
+  // - Figure out if we can use this to accelerate the convergence of root finding algorithms such
+  //   as Newton-Raphson. Apply the Shanks trafo to the sequence of estimates. But maybe it only
+  //   works well when the error in the estimates has alternating signs? Try to figure that out 
+  //   experimentally.
+
 }
 
 

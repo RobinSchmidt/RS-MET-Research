@@ -9675,9 +9675,13 @@ void testShanksTransformation()
 
   // Apply the Shanks transformation to the sequence S to produce our sequence T = T(S). Then apply
   // the Shanks trafo again to T to obtain U which converges even faster:
-  Vec T(N); Seq::applyShanksTrafo(&S[0], N, &T[0]);
-  Vec U(N); Seq::applyShanksTrafo(&T[0], N, &U[0]);
+  Vec T = Seq::shanksTrafo(S);
+  Vec U = Seq::shanksTrafo(T);
 
+  //// Test:
+  //Vec T = Seq::runningMean(S);
+  //Vec U = Seq::runningMean(T);
+  //// This doesn't seem to accelerate the convergence
 
   // Compute relative estimation errors for the sequences S, T and U. They both converge to pi, so the
   // relative error is (pi-S[n])/pi etc.:
@@ -9709,6 +9713,12 @@ void testShanksTransformation()
   //   thereby produce transformed sequences that converge even faster? But we can also iterate the
   //   Shanks transform to produce an even faster converging sequence (I guess). Maybe that's 
   //   equivalent? Figure this out!
+  //
+  // - Using a running mean instead of a Shanks trafo doesn't seem to accelerate the convergence. 
+  //   Why not? Isn't this the same as Cesaro summation? Or maybe the running mean must be applied
+  //   to the sequence of terms rather than the sequence of partial sums? So maybe we should do:
+  //   take 1st difference (to restore terms from partial sums), then do the running mean on that,
+  //   then take cumulative sum to undo the 1st difference?
   // 
   //
   // ToDo:

@@ -3357,47 +3357,37 @@ public:
   /** Applies the Shanks transformation to the given sequence x[n] and stores the result in y[n]. 
   The Shanks trafo uses the formula:
   
-             x[n+1]*x[n-1] - x[n]*x[n]
-     y[n] = ---------------------------
-             x[n+1] - 2*x[n] + x[n-1]
+             x[n+1]*x[n-1] - x[n]*x[n]                      (x[n+1] - x[n])^2
+     y[n] = --------------------------- = x[n+1] - -----------------------------------
+             x[n+1] - 2*x[n] + x[n-1]               (x[n+1] - x[n]) - (x[n] - x[n-1])
 
-  ...TBC...  */
+  The edges y[0] and y[N-1] are not touched. Whatever values are stored there, they will be left as
+  is. The implementation is written such that it can be used in place, i.e. y == x is allowed. This
+  needs to be tested! */
   static void shanksTrafo(const T* x, int N, T* y);
-  // The implementation is written such that it can be used in place, i.e. y == x is allowed. This
-  // needs to be tested!
-  // ToDo: Document what we do for the edges, i.e. for y[0] and y[N-1]. We simply do not touch 
-  // them, i.e. leave them as is. I'm not sure, if that's the best thing to do, though. Maybe we 
-  // should use some sort of extrapolation instead? Maybe quadratic extrapolation would be 
-  // appropriate?
 
-  // https://en.wikipedia.org/wiki/Shanks_transformation
 
+
+  static void aitkenDeltaSquared(const T* x, int N, T* y);
+  // https://en.wikipedia.org/wiki/Aitken%27s_delta-squared_process
 
 
 
   static void runningMean(const T* x, int N, T* y);
-  // Maybe this should go into rsArrayTools
-
-
+  // I'm not sure, if this makes sense here. See comment in implementation.
 
 
 
   // Convenience functions:
 
   static std::vector<T> shanksTrafo(const std::vector<T>& x)
-  {
-    std::vector<T> y(x.size());
-    shanksTrafo(&x[0], (int) x.size(), &y[0]);
-    return y;
-  }
+  { std::vector<T> y(x.size()); shanksTrafo(&x[0], (int) x.size(), &y[0]); return y; }
 
+  static std::vector<T> aitkenDeltaSquared(const std::vector<T>& x)
+  { std::vector<T> y(x.size()); aitkenDeltaSquared(&x[0], (int) x.size(), &y[0]); return y; }
 
   static std::vector<T> runningMean(const std::vector<T>& x)
-  {
-    std::vector<T> y(x.size());
-    runningMean(&x[0], (int) x.size(), &y[0]);
-    return y;
-  }
+  { std::vector<T> y(x.size()); runningMean(&x[0], (int) x.size(), &y[0]); return y; }
 
 
 };
@@ -3415,6 +3405,47 @@ void rsMathSequence<T>::shanksTrafo(const T* x, int N, T* y)
     y[n]  = num / den;              // Compute and store result
     xL    = xM;                     // State update (mid input becomes left)
   }
+
+  // See:
+  //
+  // https://en.wikipedia.org/wiki/Shanks_transformation
+  // https://math.stackexchange.com/questions/3871781/simplified-explanation-of-shanks-transformation
+  //
+  // Non-linear Transformations of Divergent and Slowly Convergent Sequences  (Daniel Shanks)
+  // https://onlinelibrary.wiley.com/doi/10.1002/sapm19553411
+  //
+  // Shanks and Anderson-type acceleration techniques for systems of nonlinear equations
+  // https://arxiv.org/abs/2007.05716
+  //
+  //
+  // ToDo: 
+  //
+  // - Maybe we should use some sort of extrapolation for the edges? Maybe quadratic extrapolation
+  //   would be appropriate? Or maybe we should go back to the motivation of the Shanks trafo - 
+  //   which is fitting an exponential to 3 successive terms - and use the exponential for y[1] 
+  //   also for y[0] and the one for y[N-2] also for y[N-1].
+  //
+  // - What if the denominator is zero? Maybe then we should just use y[n] = x[n]?
+  //
+  // - Here https://en.wikipedia.org/wiki/Shanks_transformation#Formulation it says that there is a 
+  //   more numerically stable way to compute the transformed sequence. It's the rightmost 
+  //   expression in the documentation. Maybe use that instead. Maybe implement both and make some
+  //   numerical accuracy comparisons - maybe be using both expressions with float and double and
+  //   check which of the float implementations is closer to the double implementation. Or maybe 
+  //   use rsFraction to produce an exact reference - but be careful about overflow - it will 
+  //   probably overflow quickly.
+}
+
+
+template<class T>
+void rsMathSequence<T>::aitkenDeltaSquared(const T* x, int N, T* y)
+{
+
+
+  // https://en.wikipedia.org/wiki/Aitken%27s_delta-squared_process
+  //
+  // Hmm - I think, this Aitken "delta-squared process" is actually the same as the Shanks 
+  // transform just shifted to the left by one (I think)
 }
 
 template<class T>
@@ -3426,6 +3457,12 @@ void rsMathSequence<T>::runningMean(const T* x, int N, T* y)
     sum += x[n];
     y[n] = sum / T(n+1);
   }
+
+  // Maybe this should go into rsArrayTools. I'm not sure, if it even makes sense in the context of
+  // convergence acceleration. Maybe not. It was just an off the cuff idea motivated by ideas used
+  // in Cesaro summation. But maybe I have misapplied them. Maybe one needs to take the 1st 
+  // difference (to transform a series from partial sums back to sequence terms), then do the 
+  // running mean, then do the cumulative sum (to undo the 1st difference)? Try it!
 }
 
 
@@ -3452,6 +3489,11 @@ void rsMathSequence<T>::runningMean(const T* x, int N, T* y)
 // https://en.wikipedia.org/wiki/Lambert_summation
 // https://en.wikipedia.org/wiki/Euler%E2%80%93Boole_summation
 // https://en.wikipedia.org/wiki/Van_Wijngaarden_transformation
+// https://en.wikipedia.org/wiki/Aitken%27s_delta-squared_process
+// https://en.wikipedia.org/wiki/Richardson_extrapolation
+
+//
+// https://en.wikipedia.org/wiki/Anderson_acceleration
 
 //=================================================================================================
 // Set operations on std::vector (not yet tested):

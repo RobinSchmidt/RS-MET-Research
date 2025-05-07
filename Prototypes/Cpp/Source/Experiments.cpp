@@ -9677,6 +9677,8 @@ void testShanksTransformation()
   // the Shanks trafo again to T to obtain U which converges even faster:
   Vec T = Seq::shanksTrafo(S);
   Vec U = Seq::shanksTrafo(T);
+  Vec V = Seq::shanksTrafo(U);
+
 
   //// Test:
   //Vec T = Seq::runningMean(S);
@@ -9685,24 +9687,27 @@ void testShanksTransformation()
 
   // Compute relative estimation errors for the sequences S, T and U. They both converge to pi, so the
   // relative error is (pi-S[n])/pi etc.:
-  Vec errS(N), errT(N), errU(N);
+  Vec eS(N), eT(N), eU(N), eV(N);
   for(int n = 1; n < N-1; n++)
   {
-    errS[n] = (PI - S[n]) / PI;
-    errT[n] = (PI - T[n]) / PI;
-    errU[n] = (PI - U[n]) / PI;
+    eS[n] = (PI - S[n]) / PI;
+    eT[n] = (PI - T[n]) / PI;
+    eU[n] = (PI - U[n]) / PI;
+    eV[n] = (PI - V[n]) / PI;
   }
   // Maybe factor out into Seq::relativeError(&S[0], N, PI, &errS[0]); etc.
 
   // Plot the sequences S and T and the corresponding approximation error sequences:
-  rsPlotVectors(S, T, U);
-  rsPlotVectors(errS, errT, errU);
+  rsPlotVectors( S,  T,  U,  V);
+  rsPlotVectors(eS, eT, eU, eV);
 
 
   // Observations:
   //
   // - The sequences S[n] and T[n] both converge to pi. T converges much faster than S. In both 
-  //   cases, the error sequences have alternating signs.
+  //   cases, the error sequences have alternating signs. U converges even faster and has also 
+  //   alternating signs. With V, the result becomes questionable. The error for the later terms
+  //   looks more like noise. Maybe we hit the numerical precision limits here?
   //
   // - It's a bit dissatisfying that we don't have formulas for the T[0] and T[N-1], so for these
   //   values, maybe some sort of one-sided variation of the formula would be required. The formula 

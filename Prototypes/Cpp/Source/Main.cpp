@@ -74,6 +74,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //eulersNumberViaPascalsTriangle();
   //testBellTriangle();
   //testEulerTransformation();
+  testShanksTransformation();
   //testCesaroSum();
   //testFejerSum();
   //testGreensFunction();  // stub
@@ -105,7 +106,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSylvesterMatrix();
   //testBezoutMatrix();
   //testMatrixMulAdapter();            // stub
-  testGeneralizedMatrixOperations();
+  //testGeneralizedMatrixOperations();
 
   // Modular forms, lattices, elliptic functions:
   //testModularGroup();         // maybe move down, closer to the other 2x2 matrix stuff
@@ -131,7 +132,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Math:
   //testMatrixSqrt();              // Tests functions to compute square root of a matrix
-  test2x2Matrices();               // stub
+  //test2x2Matrices();               // stub
   //test2x2MatrixCommutation();
   //test2x2MatrixInterpolation();    // stub
   //testQuaternion();

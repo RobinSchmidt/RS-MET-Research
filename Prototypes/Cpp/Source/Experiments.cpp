@@ -9636,6 +9636,47 @@ void testEulerTransformation()
   // one which in turn can be expressed in terms of binomial coeffs? ...just a wild guess...
 }
 
+
+void testShanksTransformation()
+{
+  // Given a sequence S[n] that converges slowly, we obtain a new sequence T(S[n]) by the following
+  // formula:
+  //
+  //              S[n+1]*S[n-1] - S[n]*S[n]
+  //   T(S[n]) = ---------------------------
+  //              S[n+1] - 2*S[n] + S[n-1]
+  //
+  // This new sequences will converge faster under certain conditions (What are these conditions? 
+  // Are there any at all?). We test it using as example the Leibniz series for pi:
+  //
+  //   pi = 4/1 - 4/3 + 4/5 - 4/7 + 4/9 - 4/11 + ... = sum_{n=0}^inf 4/(2*n+1)
+  //
+  // References:
+  //
+  // - "Numerical methods for Scientists and Engineers", 2nd Ed. (R.W. Hamming), page 205 ff.
+
+
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+  int N = 100;                          // Number of terms
+
+  Vec S(N);
+  S[0] = 4.0;
+  Real sign = -1.0;
+  for(int n = 1; n < N; n++)
+  {
+    S[n] = S[n-1] + sign * 4.0 / (2.0*n + 1.0);
+    sign *= -1.0;
+  }
+
+
+
+  int dummy = 0;
+
+}
+
+
 void testCesaroSum()
 {
   // Some experiments with Cesaro summation inpired by this video:

@@ -9549,8 +9549,8 @@ void testEulerTransformation()
     sign *= -1;
   }
 
-// Compute the forward differences of all orders. The j-th column will contain the j-th 
-// difference:
+  // Compute the forward differences of all orders. The j-th column will contain the j-th 
+  // difference:
   for(j = 1; j < N; j++)
     for(i = 0; i < N-j; i++)
       A(i, j) = A(i+1, j-1) - A(i, j-1);
@@ -9646,10 +9646,11 @@ void testShanksTransformation()
   //   T(S[n]) = ---------------------------
   //              S[n+1] - 2*S[n] + S[n-1]
   //
-  // This new sequences will converge faster under certain conditions (What are these conditions? 
+  // This new sequence T will converge faster under certain conditions (What are these conditions? 
   // Are there any at all?). We test it using as example the Leibniz series for pi:
   //
   //   pi = 4/1 - 4/3 + 4/5 - 4/7 + 4/9 - 4/11 + ... = sum_{n=0}^inf 4/(2*n+1)
+  //
   //
   // References:
   //
@@ -9699,12 +9700,29 @@ void testShanksTransformation()
   // - The sequences S[n] and T[n] both converge to pi. T converges much faster than S. In both 
   //   cases, the error sequences have alternating signs.
   //
+  // - It's a bit dissatisfying that we don't have formulas for the T[0] and T[N-1], so for these
+  //   values, maybe some sort of one-sided variation of the formula would be required. The formula 
+  //   for the Shanks trafo has similarities with the central difference formula for the 2nd 
+  //   derivative. Maybe we can also define a formula that is similar to the backward difference? 
+  //   Maybe T[n] = (S[n]*S[n-1] - S[n]*S[n]) / (S[n-1] - S[n]) or something? Or maybe we can also 
+  //   find formulas that are similar to higher order numerical differentiation formulas and 
+  //   thereby produce transformed sequences that converge even faster? But we can also iterate the
+  //   Shanks transform to produce an even faster converging sequence (I guess). Maybe that's 
+  //   equivalent? Figure this out!
+  // 
   //
   // ToDo:
   //
   // - Create a 3rd sequence U by applying the Shanks transformation to T. Will this converge even 
   //   faster?
-
+  //
+  // - Maybe factor out a function to produce the Leibniz series. Maybe create a class that has a 
+  //   bunch of static functions to produce sum well known series such as the Leibniz series, the 
+  //   alternating harmonic series etc. The goal is to have these series readily and conveniently 
+  //   available to test various transformations on them - like the Euler and Shanks 
+  //   transformation.
+  //
+  // - Also factor out a function for the Shanks transformation
 }
 
 

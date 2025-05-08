@@ -9712,13 +9712,19 @@ void testShanksTransformation()
   // implement that, too.
 
 
+
   // Use the realtime implementation:
   rsShanksFilter<Real> flt;
   Vec T4(N);
   for(int n = 0; n < N; n++)
     T4[n] = flt.getSample(S[n]);
   rsPlotVectors(T, T4);
-  // Is there a delay?
+  rsPlotVectors(S, T4);
+
+  // T4 has a 1 sample delay with respect to T and the outputs at indices 0 and 1 are meaningless
+  // because the filter state is not yet warmed up. Verify that:
+  for(int n = 2; n < N; n++)
+    ok &= T4[n] == T[n-1];
 
 
 
@@ -9805,11 +9811,17 @@ void testShanksTransformation()
   //   Compute expansions of various orders and store them in a sequence. Then apply the 
   //   acceleration methods.
   //
-  // - Implement a realtime Shanks filter. Apply it to: noise, impulse- and step-responses of 
-  //   lowpass filters, envelope followers, etc. It may improve these time responses in the sense 
-  //   of settling faster. The rationale is that impulse and step responses can indeed be seen as
-  //   convergent sequences - so techniques for convergence acceleration may work on them as well.
-  //   I'm not sure about that, though - but it's worth a try.
+  // - Apply the Shanks filter to: noise, impulse- and step-responses of lowpass filters, envelope
+  //   followers, etc. It may improve these time responses in the sense of settling faster. The 
+  //   rationale is that impulse and step responses can indeed be seen as convergent sequences - so
+  //   techniques for convergence acceleration may work on them as well. I'm not sure about that, 
+  //   though - but it's worth a try. 
+  //
+  // - Maybe the Shanks filter could also be used together with decimation using averages, i.e. if
+  //   decimate by factor M, we take y[n] = (x[n] + x[n-1] + x[n-M]) / M and then apply the Shanks
+  //   filter to the decimated sequence (and then maybe upsample via linear interpolation back to 
+  //   the original sample rate). The rationale is that the Shanks filter in its current form has 
+  //   no way of taking into account different sample rates.
 }
 
 

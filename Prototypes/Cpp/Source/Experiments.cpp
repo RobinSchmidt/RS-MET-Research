@@ -9637,7 +9637,7 @@ void testEulerTransformation()
 }
 
 
-void testShanksTransformation()
+void testShanksTrafo1()
 {
   // Given a sequence S[n] that converges slowly, we obtain a new sequence T(S[n]) by the following
   // formula:
@@ -9822,6 +9822,31 @@ void testShanksTransformation()
   //   filter to the decimated sequence (and then maybe upsample via linear interpolation back to 
   //   the original sample rate). The rationale is that the Shanks filter in its current form has 
   //   no way of taking into account different sample rates.
+}
+
+void testShanksFilter()
+{
+  using Real = float;
+  using Vec  = std::vector<Real>;
+
+  int  N = 100;
+
+  Real a = 0.1;   // Decay factor of exponential. Smaller means slower.
+
+  Vec x(N);
+  for(int n = 0; n < N; n++)
+    x[n] = 1 - exp(-a*n);
+
+  rsShanksFilter<Real> flt;
+  Vec y = filterResponse(flt, N, x);
+
+  rsPlotVectors(x, y);
+}
+
+void testShanksTransformation()
+{
+  //testShanksTrafo1();
+  testShanksFilter();
 }
 
 

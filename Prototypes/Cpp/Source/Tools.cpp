@@ -3364,11 +3364,14 @@ public:
   The edges y[0] and y[N-1] are not touched. Whatever values are stored there, they will be left as
   is. The implementation is written such that it can be used in place, i.e. y == x is allowed. This
   needs to be tested! */
-  static void shanksTrafo(const T* x, int N, T* y);
+  static void shanksTrafo1(const T* x, int N, T* y);
+
+
+  static void shanksTrafo2(const T* x, int N, T* y);
 
 
 
-  static void aitkenDeltaSquared(const T* x, int N, T* y);
+  //static void aitkenDeltaSquared(const T* x, int N, T* y);
   // https://en.wikipedia.org/wiki/Aitken%27s_delta-squared_process
 
 
@@ -3380,11 +3383,14 @@ public:
 
   // Convenience functions:
 
-  static std::vector<T> shanksTrafo(const std::vector<T>& x)
-  { std::vector<T> y(x.size()); shanksTrafo(&x[0], (int) x.size(), &y[0]); return y; }
+  static std::vector<T> shanksTrafo1(const std::vector<T>& x)
+  { std::vector<T> y(x.size()); shanksTrafo1(&x[0], (int) x.size(), &y[0]); return y; }
 
-  static std::vector<T> aitkenDeltaSquared(const std::vector<T>& x)
-  { std::vector<T> y(x.size()); aitkenDeltaSquared(&x[0], (int) x.size(), &y[0]); return y; }
+  static std::vector<T> shanksTrafo2(const std::vector<T>& x)
+  { std::vector<T> y(x.size()); shanksTrafo2(&x[0], (int) x.size(), &y[0]); return y; }
+
+  //static std::vector<T> aitkenDeltaSquared(const std::vector<T>& x)
+  //{ std::vector<T> y(x.size()); aitkenDeltaSquared(&x[0], (int) x.size(), &y[0]); return y; }
 
   static std::vector<T> runningMean(const std::vector<T>& x)
   { std::vector<T> y(x.size()); runningMean(&x[0], (int) x.size(), &y[0]); return y; }
@@ -3393,7 +3399,7 @@ public:
 };
 
 template<class T>
-void rsMathSequence<T>::shanksTrafo(const T* x, int N, T* y)
+void rsMathSequence<T>::shanksTrafo1(const T* x, int N, T* y)
 {
   T xL = x[0];                      // Left input
   for(int n = 1; n < N-1; n++)
@@ -3441,6 +3447,29 @@ void rsMathSequence<T>::shanksTrafo(const T* x, int N, T* y)
 
 
 template<class T>
+void rsMathSequence<T>::shanksTrafo2(const T* x, int N, T* y)
+{
+  T xL = x[0];                      // Left input
+  for(int n = 1; n < N-1; n++)
+  {
+    T xM  = x[n];                   // Middle input
+    T xR  = x[n+1];                 // Right input
+    T dR  = xR - xM;                // Right difference (forward difference)
+    T dL  = xM - xL;                // Left difference (backward difference)
+    T num = dR * dR;                // Numerator
+    T den = dR - dL;                // Denominator
+    y[n]  = xR - num / den;         // Compute and store result
+    xL    = xM;                     // State update (mid input becomes left)
+  }
+
+  // I think, we could simplify/optimize the code by storing dL as state
+
+  // What happens if we use  num = dR * dL; y[n] = xM - num/den;?  This looks more symmetric.
+}
+
+
+/*
+template<class T>
 void rsMathSequence<T>::aitkenDeltaSquared(const T* x, int N, T* y)
 {
 
@@ -3450,6 +3479,7 @@ void rsMathSequence<T>::aitkenDeltaSquared(const T* x, int N, T* y)
   // Hmm - I think, this Aitken "delta-squared process" is actually the same as the Shanks 
   // transform just shifted to the left by one (I think)
 }
+*/
 
 template<class T>
 void rsMathSequence<T>::runningMean(const T* x, int N, T* y)

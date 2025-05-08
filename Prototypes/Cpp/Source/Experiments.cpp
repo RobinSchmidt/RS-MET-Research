@@ -9657,12 +9657,13 @@ void testShanksTransformation()
   // - "Numerical methods for Scientists and Engineers", 2nd Ed. (R.W. Hamming), page 205 ff.
 
 
-  using Real = double;
-  //using Real = float;                // Use that to expose numerical precision problems.
+  //using Real = double;
+  using Real = float;                // Use that to expose numerical precision problems.
   using Vec  = std::vector<Real>;
   using Seq  = rsMathSequence<Real>;
 
-  int N = 30;                          // Number of terms
+  bool ok = true;
+  int  N  = 30;                        // Number of terms
 
   // Compute the first N partial sums for the Leibniz series for pi. That will be our sequence S:
   Vec S(N);
@@ -9681,9 +9682,15 @@ void testShanksTransformation()
 
   // Apply the Shanks transformation to the sequence S to produce our sequence T = T(S). Then apply
   // the Shanks trafo again to T to obtain U which converges even faster:
-  Vec T = Seq::shanksTrafo(S);
-  Vec U = Seq::shanksTrafo(T);
-  Vec V = Seq::shanksTrafo(U);
+  Vec T = Seq::shanksTrafo1(S);
+  Vec U = Seq::shanksTrafo1(T);
+  Vec V = Seq::shanksTrafo1(U);
+
+  // Test different implementations of Shanks trafo:
+  Vec  T2  = Seq::shanksTrafo2(S);
+  Real tol = 1.e-13;
+  rsPlotVectors(T2-T);
+  ok &= rsIsCloseTo(T, T2, tol);
 
 
   //// Test:
@@ -9706,7 +9713,7 @@ void testShanksTransformation()
   // eS = Seq::relativeError(S, PI)
 
   // Plot the sequences S and T and the corresponding approximation error sequences:
-  rsPlotVectors( S,  T,  U,  V);
+  //rsPlotVectors( S,  T,  U,  V);
   rsPlotVectors(eS, eT, eU, eV);
 
 
@@ -9760,7 +9767,12 @@ void testShanksTransformation()
   //   How about applying it to Taylor series expansions? Try it for exp(1) and sin(1) for example.
   //   Compute expansions of various orders and store them in a sequence. Then apply the 
   //   acceleration methods.
-
+  //
+  // - Implement a realtime Shanks filter. Apply it to: noise, impulse- and step-responses of 
+  //   lowpass filters, envelope followers, etc. It may improve these time responses in the sense 
+  //   of settling faster. The rationale is that impulse and step responses can indeed be seen as
+  //   convergent sequences - so techniques for convergence acceleration may work on them as well.
+  //   I'm not sure about that, though - but it's worth a try.
 }
 
 

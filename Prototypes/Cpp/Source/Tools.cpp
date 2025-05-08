@@ -3541,8 +3541,6 @@ void rsMathSequence<T>::runningMean(const T* x, int N, T* y)
   // running mean, then do the cumulative sum (to undo the 1st difference)? Try it!
 }
 
-
-
 // ToDo:
 //
 // - Add functions for creating the Leibniz series for pi, the (alternating) harmonic series, etc.
@@ -3567,9 +3565,63 @@ void rsMathSequence<T>::runningMean(const T* x, int N, T* y)
 // https://en.wikipedia.org/wiki/Van_Wijngaarden_transformation
 // https://en.wikipedia.org/wiki/Aitken%27s_delta-squared_process
 // https://en.wikipedia.org/wiki/Richardson_extrapolation
-
 //
 // https://en.wikipedia.org/wiki/Anderson_acceleration
+
+
+
+/** A nonlinear filter that implements the Shanks transformation for use in a realtime context. */
+
+template<class T>
+class rsShanksFilter
+{
+
+public:
+
+
+  T getSample(T in)
+  {
+    // Compute intermediates:
+    T xR  = in;
+    T dR  = xR - xM;
+    T num = dR * dR;
+    T den = dR - dL;
+
+    // Compute output:
+    T y;
+    if(rsMaxNorm(den) <= tol)
+      y = xM;                    // Avoid division by zero
+    else
+      y = xR - num / den;
+
+    // Update state:
+    xL = xM;
+    xM = xR;
+    dL = dR;
+
+    // Return output:
+    return y;
+  }
+
+  void reset()
+  {
+    xL = xM = dL = T(0);
+  }
+
+protected:
+
+  // State:
+  T xL = T(0);
+  T xM = T(0);
+  T dL = T(0);
+
+  // Tolerance for avoiding division by (near) zero:
+  T tol = std::numeric_limits<T>::epsilon();
+  // ToDo: Maybe use 0 as default value. Maybe let it have its own type TTol
+
+};
+
+
 
 //=================================================================================================
 // Set operations on std::vector (not yet tested):

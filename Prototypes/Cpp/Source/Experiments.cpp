@@ -9712,6 +9712,14 @@ void testShanksTransformation()
   // implement that, too.
 
 
+  // Use the realtime implementation:
+  rsShanksFilter<Real> flt;
+  Vec T4(N);
+  for(int n = 0; n < N; n++)
+    T4[n] = flt.getSample(S[n]);
+  rsPlotVectors(T, T4);
+  // Is there a delay?
+
 
 
 

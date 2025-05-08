@@ -3447,7 +3447,7 @@ void rsMathSequence<T>::shanksTrafo1(const T* x, int N, T* y)
   //   in practice but it may be of theoretical interest.
   //
   // - Move this function out of the class. It should serve only as prototype implementation. Maybe
-  //  call it rsShanksTrafoNaive(). Then rename shanksTrafo2() to shanksTrafo().
+  //   call it rsShanksTrafoNaive(). Then rename shanksTrafo2() to shanksTrafo().
 }
 
 

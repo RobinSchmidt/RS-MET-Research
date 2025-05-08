@@ -9709,7 +9709,8 @@ void testShanksTrafo1()
   // Hmmm...so is this formula yet another way to compute the Shanks trafo with possibly yet other 
   // numerical properties? Figure this out! The book has also this other formula with the epsilon
   // sequences which is supposed to be the best way to compute iterated Shanks trafos. Maybe 
-  // implement that, too.
+  // implement that, too. It is also mentioned here - as "Wynn's epsilon algorithm":
+  // https://en.wikipedia.org/wiki/Shanks_transformation#Motivation
 
 
 
@@ -9826,21 +9827,48 @@ void testShanksTrafo1()
 
 void testShanksFilter()
 {
+  // We try the Shanks filter (i.e. the realtime capable implementaion of the Shanks transform) on
+  // an exponential saturation curve of the form x[n] = 1 - e^(-a*n). 
+
   using Real = float;
   using Vec  = std::vector<Real>;
 
-  int  N = 100;
-
+  int  N = 100;   // Number of samples to produce.
   Real a = 0.1;   // Decay factor of exponential. Smaller means slower.
 
+  // Create the input to the filter:
   Vec x(N);
   for(int n = 0; n < N; n++)
     x[n] = 1 - exp(-a*n);
 
+  // Produce the filter output:
   rsShanksFilter<Real> flt;
   Vec y = filterResponse(flt, N, x);
 
+  // Plot input and output:
   rsPlotVectors(x, y);
+
+
+  // Observations:
+  //
+  // - The first two samples are zero and the it immediately jumps to the convergence value of 1.
+  //   This can be explained by the fact that the Shanks trafo actually estimates the A in a signal
+  //   model of the form x[n] = A + alpha * q^n  with |q| < 1. See 
+  //   https://en.wikipedia.org/wiki/Shanks_transformation#Motivation
+  //
+  //
+  // Questions:
+  //
+  // - What about a signal model where q can be complex? Maybe alpha can be complex, too? But 
+  //   our signal values x[n] are real. Maybe the model should be x[n] = A + Re(alpha * q^n) or 
+  //   something?
+  //
+  //
+  // ToDo:
+  //
+  // - Try using the Shanks filter together with an envelope follower on a signal that is a sine 
+  //   enveloped by an ADSR envelope with exponential segments. Or maybe take just a sine, rectify,
+  //   apply smoothing, apply Shanks. 
 }
 
 void testShanksTransformation()

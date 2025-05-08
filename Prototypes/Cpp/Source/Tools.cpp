@@ -3445,6 +3445,9 @@ void rsMathSequence<T>::shanksTrafo1(const T* x, int N, T* y)
   //
   // - Can we invert the Shanks trafo, i.e. reconstruct x from y? That's probably not very useful 
   //   in practice but it may be of theoretical interest.
+  //
+  // - Move this function out of the class. It should serve only as prototype implementation. Maybe
+  //  call it rsShanksTrafoNaive(). Then rename shanksTrafo2() to shanksTrafo().
 }
 
 
@@ -3516,7 +3519,8 @@ void rsMathSequence<T>::aitkenDeltaSquared(const T* x, int N, T* y)
   // https://en.wikipedia.org/wiki/Aitken%27s_delta-squared_process
   //
   // Hmm - I think, this Aitken "delta-squared process" is actually the same as the Shanks 
-  // transform just shifted to the left by one (I think)
+  // transform just shifted to the left by one (I think). So it doesn't seem to make sense to have
+  // both.
 }
 */
 

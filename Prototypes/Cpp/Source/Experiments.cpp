@@ -9757,6 +9757,9 @@ void testShanksTransformation()
   //   works well when the error in the estimates has alternating signs? Try to figure that out 
   //   experimentally. Try it also on fixed point iteration - the raw iteration always converges 
   //   at least linearly. See: https://de.wikipedia.org/wiki/Konvergenzgeschwindigkeit
+  //   How about applying it to Taylor series expansions? Try it for exp(1) and sin(1) for example.
+  //   Compute expansions of various orders and store them in a sequence. Then apply the 
+  //   acceleration methods.
 
 }
 

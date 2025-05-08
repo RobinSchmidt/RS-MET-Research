@@ -9687,10 +9687,32 @@ void testShanksTransformation()
   Vec V = Seq::shanksTrafo2(U);
 
   // Test different implementations of Shanks trafo:
-  Vec  T2  = Seq::shanksTrafo2(S);
+  Vec  T2  = Seq::shanksTrafo1(S);
   Real tol = 1.e-13;
-  rsPlotVectors(T2-T);
+  //rsPlotVectors(T2-T);
   ok &= rsIsCloseTo(T, T2, tol);
+
+  // Create the 1st difference of the sequence S:
+  Vec dS = S;
+  rsArrayTools::difference(&dS[0], N);
+  //rsPlotVectors(S, dS);
+
+  // Apply Shanks trafo via formula 12.7.5 in Numerical Methods for Scientists and Engineers, 2nd Ed 
+  // (Hamming). The a-sequence used there is the 1st difference of S (S is the running sum of a 
+  // according to page 205 at the bottom):
+  Vec T3(N);
+  for(int n = 0; n < N-1; n++)
+    T3[n] = S[n] + dS[n]*dS[n+1] / (dS[n] - dS[n+1]);
+  //rsPlotVectors(T3-T);
+  //rsPlotVectors(T, T2, T3);
+  //ok &= rsIsCloseTo(T, T3, tol); // Fails because T3[0] != T[0]. The rest is ok.
+  // Hmmm...so is this formula yet another way to compute the Shanks trafo with possibly yet other 
+  // numerical properties? Figure this out! The book has also this other formula with the epsilon
+  // sequences which is supposed to be the best way to compute iterated Shanks trafos. Maybe 
+  // implement that, too.
+
+
+
 
 
   //// Test:

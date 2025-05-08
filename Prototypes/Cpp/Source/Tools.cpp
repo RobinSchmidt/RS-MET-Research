@@ -3454,6 +3454,24 @@ void rsMathSequence<T>::shanksTrafo2(const T* x, int N, T* y)
   // may be a complex or vector or matrix or whatever type)
 
 
+  T dL = x[1] - x[0];               // Left difference
+  for(int n = 1; n < N-1; n++)
+  {
+    T xM  = x[n];                   // Middle input
+    T xR  = x[n+1];                 // Right input
+    T dR  = xR - xM;                // Right difference (forward difference)
+    T num = dR * dR;                // Numerator
+    T den = dR - dL;                // Denominator
+    dL    = dR;                     // State update (right difference becomes left difference)
+
+    if(rsMaxNorm(den) <= tol)
+      y[n] = xM;                    // Avoid division by zero
+    else
+      y[n] = xR - num / den;        // Compute and store result
+  }
+
+
+  /*
   T xL = x[0];                      // Left input
   for(int n = 1; n < N-1; n++)
   {
@@ -3474,6 +3492,7 @@ void rsMathSequence<T>::shanksTrafo2(const T* x, int N, T* y)
 
     xL    = xM;                     // State update (mid input becomes left)
   }
+  */
 
 
   // ToDo:

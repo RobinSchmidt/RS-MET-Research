@@ -3449,6 +3449,11 @@ void rsMathSequence<T>::shanksTrafo1(const T* x, int N, T* y)
 template<class T>
 void rsMathSequence<T>::shanksTrafo2(const T* x, int N, T* y)
 {
+  T tol = std::numeric_limits<T>::epsilon();
+  // ToDo: Make that a function parameter. Maybe it should have its own data type TTol (because T
+  // may be a complex or vector or matrix or whatever type)
+
+
   T xL = x[0];                      // Left input
   for(int n = 1; n < N-1; n++)
   {
@@ -3458,13 +3463,28 @@ void rsMathSequence<T>::shanksTrafo2(const T* x, int N, T* y)
     T dL  = xM - xL;                // Left difference (backward difference)
     T num = dR * dR;                // Numerator
     T den = dR - dL;                // Denominator
-    y[n]  = xR - num / den;         // Compute and store result
+
+    if(rsMaxNorm(den) <= tol)
+      y[n] = xM;                    // Avoid division by zero
+    else
+      y[n] = xR - num / den;        // Compute and store result
+
+    
+    rsAssert(rsIsFiniteNumber(y[n]));
+
     xL    = xM;                     // State update (mid input becomes left)
   }
 
-  // I think, we could simplify/optimize the code by storing dL as state
 
-  // What happens if we use  num = dR * dL; y[n] = xM - num/den;?  This looks more symmetric.
+  // ToDo:
+  //
+  // - Maybe in case of den ~= 0, we should store xR rather than xM? I'm not sure. Maybe look into
+  //   the original, naive formula. What would make more sense there? Use the same strategy here.
+  //
+  // - I think, we could simplify/optimize the code by storing dL as state
+  //
+  // - What happens if we use  num = dR * dL; y[n] = xM - num/den;? This looks more symmetric. Maybe
+  //   implement that in shanksTrafoModified() or something like that.
 }
 
 

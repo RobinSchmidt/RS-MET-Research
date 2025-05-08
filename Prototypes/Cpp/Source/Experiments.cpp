@@ -9682,9 +9682,9 @@ void testShanksTransformation()
 
   // Apply the Shanks transformation to the sequence S to produce our sequence T = T(S). Then apply
   // the Shanks trafo again to T to obtain U which converges even faster:
-  Vec T = Seq::shanksTrafo1(S);
-  Vec U = Seq::shanksTrafo1(T);
-  Vec V = Seq::shanksTrafo1(U);
+  Vec T = Seq::shanksTrafo2(S);
+  Vec U = Seq::shanksTrafo2(T);
+  Vec V = Seq::shanksTrafo2(U);
 
   // Test different implementations of Shanks trafo:
   Vec  T2  = Seq::shanksTrafo2(S);
@@ -9699,7 +9699,7 @@ void testShanksTransformation()
   //// Nah! This doesn't seem to accelerate the convergence.
 
 
-  // Compute relative estimation errors for the sequences S, T, U, v. They all converge to pi, so the
+  // Compute relative estimation errors for the sequences S, T, U, V. They all converge to pi, so the
   // relative error is (pi-S[n])/pi etc.:
   Vec eS(N), eT(N), eU(N), eV(N);
   for(int n = 1; n < N-1; n++)
@@ -9713,7 +9713,7 @@ void testShanksTransformation()
   // eS = Seq::relativeError(S, PI)
 
   // Plot the sequences S and T and the corresponding approximation error sequences:
-  //rsPlotVectors( S,  T,  U,  V);
+  rsPlotVectors( S,  T,  U,  V);
   rsPlotVectors(eS, eT, eU, eV);
 
 
@@ -9725,6 +9725,13 @@ void testShanksTransformation()
   //   looks more like noise. Maybe we hit the numerical precision limits here? Yes - that seems 
   //   plausible. When using "Real = float" instead of "Real = double", U already becomes 
   //   questionable and v even more so.
+  //
+  // - When we repeatedly apply shanksTrafo2 rather than shanksTrafo1 with Real = float, the V and
+  //   eV array contain NaNs. I think, it is because the input sequence has become constant such 
+  //   that num and den are both zero. We need to catch the den == 0 condition and in this case
+  //   assign y[n] = xM or something. OK - done. This fixes the NaN problem. With that tweak, it
+  //   does indeed seem like the 2nd formula is numerically better behaved. When using it with 
+  //   Real = float, eV becomes less erratic.
   //
   // - It's a bit dissatisfying that we don't have formulas for the T[0] and T[N-1], so for these
   //   values, maybe some sort of one-sided variation of the formula would be required. The formula 

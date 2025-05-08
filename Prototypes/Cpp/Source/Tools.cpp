@@ -3401,6 +3401,7 @@ public:
 template<class T>
 void rsMathSequence<T>::shanksTrafo1(const T* x, int N, T* y)
 {
+  y[0] = x[0];
   T xL = x[0];                      // Left input
   for(int n = 1; n < N-1; n++)
   {
@@ -3411,6 +3412,7 @@ void rsMathSequence<T>::shanksTrafo1(const T* x, int N, T* y)
     y[n]  = num / den;              // Compute and store result
     xL    = xM;                     // State update (mid input becomes left)
   }
+  y[N-1] = x[N-1];
 
   // See:
   //
@@ -3449,12 +3451,18 @@ void rsMathSequence<T>::shanksTrafo1(const T* x, int N, T* y)
 template<class T>
 void rsMathSequence<T>::shanksTrafo2(const T* x, int N, T* y)
 {
-  T tol = std::numeric_limits<T>::epsilon();
-  // ToDo: Make that a function parameter. Maybe it should have its own data type TTol (because T
-  // may be a complex or vector or matrix or whatever type)
+  T tol = std::numeric_limits<T>::epsilon();  // Should be a parameter of type TTol
 
+  if(N <= 0)
+    return;
+
+  y[0] = x[0];
+
+  if(N == 1)
+    return;
 
   T dL = x[1] - x[0];               // Left difference
+
   for(int n = 1; n < N-1; n++)
   {
     T xM  = x[n];                   // Middle input
@@ -3470,41 +3478,33 @@ void rsMathSequence<T>::shanksTrafo2(const T* x, int N, T* y)
       y[n] = xR - num / den;        // Compute and store result
   }
 
-
-  /*
-  T xL = x[0];                      // Left input
-  for(int n = 1; n < N-1; n++)
-  {
-    T xM  = x[n];                   // Middle input
-    T xR  = x[n+1];                 // Right input
-    T dR  = xR - xM;                // Right difference (forward difference)
-    T dL  = xM - xL;                // Left difference (backward difference)
-    T num = dR * dR;                // Numerator
-    T den = dR - dL;                // Denominator
-
-    if(rsMaxNorm(den) <= tol)
-      y[n] = xM;                    // Avoid division by zero
-    else
-      y[n] = xR - num / den;        // Compute and store result
-
-    
-    rsAssert(rsIsFiniteNumber(y[n]));
-
-    xL    = xM;                     // State update (mid input becomes left)
-  }
-  */
+  y[N-1] = x[N-1];
 
 
   // ToDo:
   //
-  // - Maybe in case of den ~= 0, we should store xR rather than xM? I'm not sure. Maybe look into
-  //   the original, naive formula. What would make more sense there? Use the same strategy here.
+  // - Make the tolerance a function parameter. Maybe it should have its own data type TTol 
+  //   (because T may be a complex or vector or matrix or whatever type). Maybe the class shouldn't
+  //   have a template parameter. Maybe the functions themselves should declare the template
+  //   parameters like in rsArrayTools. 
   //
-  // - I think, we could simplify/optimize the code by storing dL as state
+  // - Figure out what happens if we use  num = dR * dL; y[n] = xM - num/den;? This looks more 
+  //   symmetric. Maybe implement that in shanksTrafoModified() or something like that.
   //
-  // - What happens if we use  num = dR * dL; y[n] = xM - num/den;? This looks more symmetric. Maybe
-  //   implement that in shanksTrafoModified() or something like that.
+  // - Check what happens if we remove the guard clause and N < 3. I think, for N == 1, we'll get 
+  //   an access violation and for N == 2, we'll just leave y unchanged. Maybe the guard clause 
+  //   should just be: if(N < 3) return. That would be more consistent with the documentation that
+  //   says that the first and last entry of y will be untouched. But maybe we should just 
+  //   generally copy x[0] into y[0] and x[N-1] into y[N-1]? ...done!  
+  //   Update the documentation accordingly!
 }
+// Needs unit tests - especially for the edge cases with N < 1, N == 1, N == 2. The general, 
+// typical case kicks in with N >= 3. Check in-place usage, i.e. y == x. I think, that should work,
+// too. But what if y != x but they do have overlap? That will probably not work. Maybe we should 
+// add an assertion like rsAreDistinctOrEqual(x, y, N). Distinct means: no overlap, equal means: 
+// full overlap. Both cases should be ok - but partial overlap will not work. Well - maybe it will
+// when the y-array has a lower address than the x-array but not work when it's the other way 
+// around. Figure this out and document it - ideally by appropriate assertions in the code.
 
 
 /*

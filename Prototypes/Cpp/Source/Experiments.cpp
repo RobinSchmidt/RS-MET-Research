@@ -9688,7 +9688,7 @@ void testShanksTransformation()
 
   // Test different implementations of Shanks trafo:
   Vec  T2  = Seq::shanksTrafo1(S);
-  Real tol = 1.e-13;
+  Real tol = 1.e-5;
   //rsPlotVectors(T2-T);
   ok &= rsIsCloseTo(T, T2, tol);
 

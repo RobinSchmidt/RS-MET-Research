@@ -9827,6 +9827,46 @@ void testShanksTrafo1()
 
 void testShanksFormula()
 {
+  // The Shanks transformation can be seen as modeling the sequence x[n] via a constant A plus a 
+  // scaled exponentially decaying term a * q^n such that x[n] = A + a * q^n. Here, A,a,q are the 
+  // fixed model parameters. It follows that: x[n-1] = A + a * q^(n-1), x[n+1] = A + a * q^(n+1).
+  // For 3 successive values x[n-1], x[n], x[n+1], this gives a system of 3 equations for the 3 
+  // parameters. The Shanks transformation solves this system and produces the computed A 
+  // parameter as output, i.e. y[n] = A. Without loss of generality, we can set n = 0 (Really? 
+  // Why? ...Hmm - that seems to lead to misestimation of a - but A and q can still be correctly
+  // estimated - figure out why!). That leads to the 3 equations:
+  //
+  //   (1)  x[-1] = xL = A + a/q
+  //   (2)  x[ 0] = xM = A + a
+  //   (3)  x[+1] = xR = A + a*q
+  //
+  // where we have introduced xL, xM, xR as names for the sequence values to the left, in the 
+  // middle and to the right with respect to our current sample index n, which we may set to 0. 
+  // That just means that we solve the system in our relative time frame, with the origin 0 placed
+  // at our "now" instant n. Solving equation (2) for A yields:
+  //
+  //   A = xM - a
+  //
+  // Then solving (3) for a yields:
+  //
+  //   a = (xR-xM) / (q-1) = dR / (q-1)
+  //
+  // where we have assigned the name dR = xR - xM for the right difference, i.e. the forward 
+  // difference x[n+1] - x[n]. Similarly, defining dL = xM - xL = x[n] - x[n-1] for the left 
+  // difference (aka backward difference), we may solve (1) for q as follows:
+  //
+  //   q = -P/2 +- sqrt(P^2/4 - Q)   with  P = -(dL+dR)/dL, Q = dR/dL
+  //
+  // Verify these formulas! I have derived them by hand so there may be mistakes. I suppose, 
+  // backsubstituting and solving for A and then simplifying further will give the formuals used in
+  // the Shanks trafo. But maybe by estimating not only A but also a and q, we can do something 
+  // more? Maybe we can take a sequence x[n] and for each n, compute A[n],a[n],q[n] then apply 
+  // lowpass smoothing to the these 3 and then produce y[n] = A + a? The rationale is that at 
+  // instant n, the q^n term is q^0 in the relative time frame and therefore goes away. ...not sure
+  //
+  // See: https://en.wikipedia.org/wiki/Shanks_transformation#Motivation
+
+
   using Real = double;
   using Vec  = std::vector<Real>;
 
@@ -9834,19 +9874,14 @@ void testShanksFormula()
   Real A  =  2.5;
   Real a  = -0.75;
   Real q  =  0.95;
-  int  N  =   100;   // Number of samples to produce.
-  int  n0 =   N/2;   // Time instant for the estimation. We require 1 <= n0 <= N-2
-
-
-  //n0 = 1;  // Test
+  int  N  =   100;      // Number of samples to produce.
+  int  n0 =   N/2;      // Time instant for the estimation. We require 1 <= n0 <= N-2
 
 
   // Create signal from model:
   Vec x(N);
   for(int n = 0; n < N; n++)
     x[n] = A + a * pow(q, n);
-  rsPlotVectors(x);
-
 
 
   // Try to estimate A,a,q from 3 successive samples x[n0-1], x[n0], x[n0+1] for some arbitrary n0
@@ -9857,12 +9892,13 @@ void testShanksFormula()
   Real xM = x[n0];
   Real xR = x[n0+1];
 
-  // Test - compute xL,xM,xR with correct absolute time intants -1,0,+1:
-  xL = A + a * pow(q, -1);
-  xM = A + a * pow(q,  0);
-  xR = A + a * pow(q, +1);
-  // This fixes the error in the estimation of a. So - for the estimation of a, absolute time 
-  // matters.
+
+  //// Test - compute xL,xM,xR with correct absolute time intants -1,0,+1:
+  //xL = A + a * pow(q, -1);  // == A + a/q
+  //xM = A + a * pow(q,  0);  // == A + a
+  //xR = A + a * pow(q, +1);  // == A + a*q
+  //// This fixes the error in the estimation of a. So - for the estimation of a, absolute time 
+  //// actually matters.
 
 
   // Compute backward (left) and forward (right) difference:
@@ -9884,7 +9920,10 @@ void testShanksFormula()
   Real _a = dR / (_q - 1);
   Real _A = xM - _a;
 
-  int dummy = 0;
+
+  // Plot the produced signal for inspection:
+  rsPlotVectors(x);
+
 
 
   // Observations:
@@ -9960,43 +9999,6 @@ void testShanksTransformation()
   //testShanksTrafo1();
   testShanksFormula();
   testShanksFilter();
-
-  // The Shanks transformation can be seen as modeling the sequence x[n] via a constant A plus a 
-  // scaled exponentially decaying term a * q^n such that x[n] = A + a * q^n. Here, A,a,q are the 
-  // fixed model parameters. It follows that: x[n-1] = A + a * q^(n-1), x[n+1] = A + a * q^(n+1).
-  // For 3 successive values x[n-1], x[n], x[n+1], this gives a system of 3 equations for the 3 
-  // parameters. The Shanks transformation solves this system and produces the computed A 
-  // parameter as output, i.e. y[n] = A. Without loss of generality, we can set n = 0 (Really? 
-  // Why?). That leads to the 3 equations:
-  //
-  //   (1)  x[-1] = xL = A + a/q
-  //   (2)  x[ 0] = xM = A + a
-  //   (3)  x[+1] = xR = A + a*q
-  //
-  // where we have introduced xL, xM, xR as names for the sequence values to the left, in the 
-  // middle and to the right with respect to our current sample index n, which we may set to 0. 
-  // That just means that we solve the system in our relative time frame, with the origin 0 placed
-  // at our "now" instant n. Solving equation (2) for A yields:
-  //
-  //   A = xM - a
-  //
-  // Then solving (3) for a yields:
-  //
-  //   a = (xR-xM) / (q-1) = dR / (q-1)
-  //
-  // where we have assigned the name dR = xR - xM for the right difference, i.e. the forward 
-  // difference x[n+1] - x[n]. Similarly, defining dL = xM - xL = x[n] - x[n-1] for the left 
-  // difference (aka backward difference), we may solve (1) for q as follows:
-  //
-  //   ///q = -dL/2 +- sqrt( (dL+dR)^2/4 - dR )  ...wrong!
-  //   q = -P/2 +- sqrt(P^2/4 - Q)   with  P = -(dL+dR)/dL, Q = dR/dL
-  //
-  // Verify these formulas! I have derived them by hand so there may be mistakes. I suppose, 
-  // backsubstituting and solving for A and then simplifying further will give the formuals used in
-  // the Shanks trafo. But maybe by estimating not only A but also a and q, we can do something 
-  // more? Maybe we can take a sequence x[n] and for each n, compute A[n],a[n],q[n] then apply 
-  // lowpass smoothing to the these 3 and then produce y[n] = A + a? The rationale is that at 
-  // instant n, the q^n term is q^0 in the relative time frame and therefore goes away. ...not sure
 }
 
 

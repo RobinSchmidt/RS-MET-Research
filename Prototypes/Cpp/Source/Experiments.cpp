@@ -9857,6 +9857,14 @@ void testShanksFormula()
   Real xM = x[n0];
   Real xR = x[n0+1];
 
+  // Test - compute xL,xM,xR with correct absolute time intants -1,0,+1:
+  xL = A + a * pow(q, -1);
+  xM = A + a * pow(q,  0);
+  xR = A + a * pow(q, +1);
+  // This fixes the error in the estimation of a. So - for the estimation of a, absolute time 
+  // matters.
+
+
   // Compute backward (left) and forward (right) difference:
   Real dL = xM - xL;
   Real dR = xR - xM;
@@ -9887,7 +9895,8 @@ void testShanksFormula()
   //   Maybe my assumption that we can just set n0 = 0 is wrong? Maybe absolute time matters when
   //   we want to estimate q? It seems like when choosing a smaller n0 (e.g. n0 = 1), our estimate
   //   _a for a gets closer to the actual a. Figure this out! Maybe create xL, xM, xR by actually
-  //   using n0 = 0.
+  //   using n0 = 0. Done: using xL = A + a * q^-1, xM = A + a * q^0, xR = A + a * q^1, we get the 
+  //   right results for all 3 parameters.
   //
   //
   // ToDo: 

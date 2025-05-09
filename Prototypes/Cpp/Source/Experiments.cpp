@@ -9873,7 +9873,7 @@ void testShanksFormula()
   // Model parameters:
   Real A  =  2.5;
   Real a  = -0.75;
-  Real q  =  0.95;
+  Real q  = +0.95;
   int  N  =   100;      // Number of samples to produce.
   int  n0 =   N/2;      // Time instant for the estimation. We require 1 <= n0 <= N-2
 
@@ -9937,10 +9937,12 @@ void testShanksFormula()
   //   using n0 = 0. Done: using xL = A + a * q^-1, xM = A + a * q^0, xR = A + a * q^1, we get the 
   //   right results for all 3 parameters.
   //
+  // - Using a negative q like q = -0.95, the estimation of q and A works also.
+  //
   //
   // ToDo: 
   //
-  // - Test formulas with negative q. Maybe q could also be complex? Try it!
+  // - Try using a complex q. Maybe also a complex a and A.
   //
   // - Maybe rename q to b (for base). Then rename P,Q to p,q in the quadratic formula. Maybe 
   //   rename A to c (for constant). Maybe rename a to s (for scaler). So the model equation would

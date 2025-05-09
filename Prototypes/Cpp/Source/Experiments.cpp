@@ -9861,7 +9861,7 @@ void testShanksFilter()
   //
   // - What about a signal model where q can be complex? Maybe alpha can be complex, too? But 
   //   our signal values x[n] are real. Maybe the model should be x[n] = A + Re(alpha * q^n) or 
-  //   something?
+  //   something? Or maybe we should create a complex signal by using a Hilbert filter?
   //
   //
   // ToDo:

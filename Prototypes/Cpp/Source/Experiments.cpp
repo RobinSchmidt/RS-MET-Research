@@ -9825,6 +9825,81 @@ void testShanksTrafo1()
   //   no way of taking into account different sample rates.
 }
 
+void testShanksFormula()
+{
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+  // Model parameters:
+  Real A  =  2.5;
+  Real a  = -0.75;
+  Real q  =  0.95;
+  int  N  =   100;   // Number of samples to produce.
+  int  n0 =   N/2;   // Time instant for the estimation. We require 1 <= n0 <= N-2
+
+
+  //n0 = 1;  // Test
+
+
+  // Create signal from model:
+  Vec x(N);
+  for(int n = 0; n < N; n++)
+    x[n] = A + a * pow(q, n);
+  rsPlotVectors(x);
+
+
+
+  // Try to estimate A,a,q from 3 successive samples x[n0-1], x[n0], x[n0+1] for some arbitrary n0
+  // with 1 <= n0 <= N-2
+
+  // Extract signal values around n0:
+  Real xL = x[n0-1];
+  Real xM = x[n0];
+  Real xR = x[n0+1];
+
+  // Compute backward (left) and forward (right) difference:
+  Real dL = xM - xL;
+  Real dR = xR - xM;
+
+  // Compute intermediate variables. P,Q are the p,q in the pq-formula for quadratic equations. We 
+  // can't use q because it's already used up for the model parameter q, so we capitalize these 
+  // names here:
+  Real P = -(dL + dR) / dL;
+  Real Q = dR / dL;
+  Real D = 0.25*P*P - Q;      // Discriminant
+  Real S = sqrt(D);
+
+  // Estimate A,a,q:
+  Real q1 = -P/2 + S;
+  Real q2 = -P/2 - S;
+  Real _q = q2;
+  Real _a = dR / (_q - 1);
+  Real _A = xM - _a;
+
+  int dummy = 0;
+
+
+  // Observations:
+  //
+  // - With A = 2.5, a = -0.75, q = 0.95, the correct solution for the estimation of q is q2.
+  //   The value of q2 = 1. What does that mean? Does it mean anything at all? But the estimate for
+  //   a is totally wrong in this case. Nevertheless, the estimate of A still comes out right. 
+  //   Maybe my assumption that we can just set n0 = 0 is wrong? Maybe absolute time matters when
+  //   we want to estimate q? It seems like when choosing a smaller n0 (e.g. n0 = 1), our estimate
+  //   _a for a gets closer to the actual a. Figure this out! Maybe create xL, xM, xR by actually
+  //   using n0 = 0.
+  //
+  //
+  // ToDo: 
+  //
+  // - Test formulas with negative q. Maybe q could also be complex? Try it!
+  //
+  // - Maybe rename q to b (for base). Then rename P,Q to p,q in the quadratic formula. Maybe 
+  //   rename A to c (for constant). Maybe rename a to s (for scaler). So the model equation would
+  //   be x[n] = c + s * b^n. Then maybe also express it as x[n] = c + s * e^(a*n).
+}
+
+
 void testShanksFilter()
 {
   // We try the Shanks filter (i.e. the realtime capable implementaion of the Shanks transform) on
@@ -9874,13 +9949,14 @@ void testShanksFilter()
 void testShanksTransformation()
 {
   //testShanksTrafo1();
+  testShanksFormula();
   testShanksFilter();
 
   // The Shanks transformation can be seen as modeling the sequence x[n] via a constant A plus a 
   // scaled exponentially decaying term a * q^n such that x[n] = A + a * q^n. Here, A,a,q are the 
   // fixed model parameters. It follows that: x[n-1] = A + a * q^(n-1), x[n+1] = A + a * q^(n+1).
   // For 3 successive values x[n-1], x[n], x[n+1], this gives a system of 3 equations for the 3 
-  // parameters. The Shanks transformations solves this system and produces the computed A 
+  // parameters. The Shanks transformation solves this system and produces the computed A 
   // parameter as output, i.e. y[n] = A. Without loss of generality, we can set n = 0 (Really? 
   // Why?). That leads to the 3 equations:
   //
@@ -9890,8 +9966,8 @@ void testShanksTransformation()
   //
   // where we have introduced xL, xM, xR as names for the sequence values to the left, in the 
   // middle and to the right with respect to our current sample index n, which we may set to 0. 
-  // That just means that we solve the system in our relative time frame, with the origin placed at
-  // our "now" instant. Solving equation (2) for A yields:
+  // That just means that we solve the system in our relative time frame, with the origin 0 placed
+  // at our "now" instant n. Solving equation (2) for A yields:
   //
   //   A = xM - a
   //
@@ -9903,13 +9979,21 @@ void testShanksTransformation()
   // difference x[n+1] - x[n]. Similarly, defining dL = xM - xL = x[n] - x[n-1] for the left 
   // difference (aka backward difference), we may solve (1) for q as follows:
   //
-  //   q = ...
+  //   ///q = -dL/2 +- sqrt( (dL+dR)^2/4 - dR )  ...wrong!
+  //   q = -P/2 +- sqrt(P^2/4 - Q)   with  P = -(dL+dR)/dL, Q = dR/dL
+  //
+  // Verify these formulas! I have derived them by hand so there may be mistakes. I suppose, 
+  // backsubstituting and solving for A and then simplifying further will give the formuals used in
+  // the Shanks trafo. But maybe by estimating not only A but also a and q, we can do something 
+  // more? Maybe we can take a sequence x[n] and for each n, compute A[n],a[n],q[n] then apply 
+  // lowpass smoothing to the these 3 and then produce y[n] = A + a? The rationale is that at 
+  // instant n, the q^n term is q^0 in the relative time frame and therefore goes away. ...not sure
 }
 
 
 void testCesaroSum()
 {
-  // Some experiments with Cesaro summation inpired by this video:
+  // Some experiments with Cesaro summation inspired by this video:
   // 
   //   Could 1-1+1-1+1-1+1-1+... actually converge?
   //   https://www.youtube.com/watch?v=AkPZcS8eqmA  

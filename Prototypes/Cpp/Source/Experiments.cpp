@@ -9829,7 +9829,12 @@ void testShanksFormula()
 {
   // The Shanks transformation can be seen as modeling the sequence x[n] via a constant A plus a 
   // scaled exponentially decaying term a * q^n such that x[n] = A + a * q^n. Here, A,a,q are the 
-  // fixed model parameters. It follows that: x[n-1] = A + a * q^(n-1), x[n+1] = A + a * q^(n+1).
+  // fixed model parameters. It follows that: 
+  // 
+  //   (1)  x[n-1] = A + a * q^(n-1)
+  //   (2)  x[n]   = A + a * q^(n  )
+  //   (3)  x[n+1] = A + a * q^(n+1)
+  //
   // For 3 successive values x[n-1], x[n], x[n+1], this gives a system of 3 equations for the 3 
   // parameters. The Shanks transformation solves this system and produces the computed A 
   // parameter as output, i.e. y[n] = A. Without loss of generality, we can set n = 0 (Really? 
@@ -9947,6 +9952,26 @@ void testShanksFormula()
   // - Maybe rename q to b (for base). Then rename P,Q to p,q in the quadratic formula. Maybe 
   //   rename A to c (for constant). Maybe rename a to s (for scaler). So the model equation would
   //   be x[n] = c + s * b^n. Then maybe also express it as x[n] = c + s * e^(a*n).
+  //
+  // - Figure out why we misestimate a and if we can fix that. I think, it's because we set 
+  //   n = 0 in the equations. So, maybe we need to go back to the original forms of (1),(2),(3) 
+  //   before setting n = 0. We could also write them as:
+  //
+  //     (1)  (xL-A)/a = q^(n-1)
+  //     (2)  (xM-A)/a = q^n
+  //     (3)  (xR-A)/a = q^(n+1)
+  //
+  //   We could then form (3)/(2) and (2)/(1) to get q^(n+1)/q^n = q = ((xR-A)/a) / ((xM-A)/a) and
+  //   q^(n)/q^(n-1) = q = ((xM-A)/a) / ((xL-A)/a). But that leads to nowhere because now a and n
+  //   vanish. When we try to put q^n as determined by (2) into (3), we get (xR-A)/a = ((xM-A)/a)*q
+  //   but that also doesn't lead anywhere becaus we also get an equation where no a and n is 
+  //   present anymore. I hoped that we somehow could massage the equations in a way to solve for a
+  //   (and maybe n) when we assume that A and q are known (because apparently we can correctly 
+  //   compute A and q, so we may as well treat them as known now). But so far, that didn't really 
+  //   go anywhere.
+  //
+  // - Maybe in order to correctly estimate a and n, we need to take 4 successive samples into 
+  //   account?
 }
 
 
@@ -9990,6 +10015,14 @@ void testShanksFilter()
   //
   //
   // ToDo:
+  //
+  // - Try using the Shanks filter on filtered noise. Maybe lowpass filtered or bandpass filtered.
+  //   Will it have some meaningful smoothing effect?
+  //
+  // - Try it on lowpass filtered sample-and-hold noise (i.e. a step signal). If the lowpass is 1st
+  //   order, it may reconstruct the stairstep signal (with 1 or 2 samples delay, I think). What 
+  //   will it do, when the lowpass is higher order? Maybe try smoothing filters with equal poles 
+  //   and also Bessel and Gaussian filters.
   //
   // - Try using the Shanks filter together with an envelope follower on a signal that is a sine 
   //   enveloped by an ADSR envelope with exponential segments. Or maybe take just a sine, rectify,

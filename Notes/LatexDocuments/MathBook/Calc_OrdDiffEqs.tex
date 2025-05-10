@@ -374,4 +374,30 @@ https://www.youtube.com/watch?v=lwed4VVYuHo&list=PLybg94GvOJ9FwwFOmp8sGTHZRiTWPY
 -Degree of DE: highest exponent on the highest derivative
 
 
+Ansatz nach Art der rechten Seite:
+-anwendbar auf: lineare DGL mit konstanten Koeffizienten.
+-I think, the rationale is this:
+ -Assume we have a linear inhomgenous ODE with const. coeffs, like this:
+  L[y] = f(x)  where L[y] is a linear differential operator with const coeffs, i.e. something
+  of the form L = a0 + a1 * d/dx + a2 * d^2/dx^2 + a3 * d^3/dx^3 + ...
+  and we have already found a solution h(x) to the homogenous equation L[y] = 0. So we have
+  L[h] = 0. When we now replace the rhs zero by f(x), then we basically want to find solution
+  g = g(x) such that L[h + g] = f. Because the linear differential operator, when applied to g,
+  will typically produce a function of the same kind (e.g. will turn a polynomial into a polynomial
+  (of the same maximum degree), a co/sine into co/sine, an eponential into an exponential, etc.) it
+  seems reasonable to make an ansatz for g that is of the same form as f. When L is applied to 
+  h + g, h will vanish and g shall turn into f. Such that the equation 
+  L[h + g] = = L[h] + L[g] = 0 + f, i.e. L[g] = f needs to be solved. So - yeah - I think, the
+  reasoning is: linear differential operators with constant coeffs tend to turn functions of a given
+  kind into functons of the same kind - and we want to achieve a match between L[g] and f to satisfy
+  the ODE. I have never seen an explanation why this ansatz should make sense - textbooks only tend
+  to wite: "Do this!" without explaining why it should work. But I think, this could be a plausible
+  explanation.
+  
+  
+  
+
+https://studyflix.de/mathematik/ansatz-vom-typ-der-rechten-seite-storfunktion-939
+
+
 \end{comment}

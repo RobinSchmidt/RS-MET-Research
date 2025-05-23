@@ -184,7 +184,42 @@ und der Grund, warum kardinale Addition und Multiplikations wieder Ordinalzahlen
 am Ende wird alles wieder zu einer Ordinalzahl gemacht. Die Struktur der Menge k x l geht dabei 
 verloren.
 
- 
+
+====================================================================================================
+Sets as graphs:
+
+- Start with the empty set.
+
+- In each generation, form all the sets that can be formed from the already existing ones via the
+  axioms. Weed out those that we already had before. Or maybe do not form all sets that are possible
+  by using all axioms but use only specific axioms. Maybe proceed as follows: In each stage, form 
+  all sets that can be formed by using the sets of the previous stages as elements. I think, that 
+  way, we should get everything. But at each stage, we may form sets again that we had previously.
+  We need to filter them out.
+
+- Draw all sets as graph where an edge means: is-subset-of or is-element-of. That should give us
+  two ways to represent the universe of all possible sets as graph. I think, the is-element-of graph
+  is the more important one of the two.
+
+Let E denote the empty set. Then the (new) sets on each level are:
+
+0: E
+
+1: {E}
+
+2: {{E}}, {{E},E}
+
+3: {{{E}}}, ....
+
+This idea is simlar to the one of birthdays in the theory of surreal numbers, I think.
+
+
+https://www.youtube.com/watch?v=c2mYWNShzTA&list=PLzr1oJDUNa9JInlHHH3xVH29Ovzw8YoM2   7:15
+
+
+====================================================================================================
+
+
 
 ToDo:
 

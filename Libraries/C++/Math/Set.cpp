@@ -908,6 +908,9 @@ rsSetNaive rsNeumannInteger::canonical(const rsSetNaive& x)
 
 Ideas:
 
+- Maybe for functions that have different possible implementations, actually do implement them in 
+  all the different possible ways and then give them appropriate names like sub1(), sub2(), etc. 
+  and the veriyf in unit tests that they all produce the same results.
 
 - Maybe try to implement von Neumann ordinals. Maybe we need an array of coeffs a0,a1,a2,a3,...,aN 
   for conceptually building the ordinal as:
@@ -974,7 +977,7 @@ Ideas:
       -take power set: Q = powerSet(U)
       -take power set: R = powerSet(Q)
       -separation:     S = extract those elements from R that have the right structure
-  (2) replacement, union. ...hmm...I'm not sure, if I understand the constuction
+  (2) replacement, union. ...hmm...I'm not sure, if I understand the construction
 
 
 */

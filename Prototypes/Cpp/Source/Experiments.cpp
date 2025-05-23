@@ -10001,7 +10001,7 @@ void testShanksFilter()
 
   // Observations:
   //
-  // - The first two samples are zero and the it immediately jumps to the convergence value of 1.
+  // - The first two samples are zero and then it immediately jumps to the convergence value of 1.
   //   This can be explained by the fact that the Shanks trafo actually estimates the A in a signal
   //   model of the form x[n] = A + alpha * q^n  with |q| < 1. See 
   //   https://en.wikipedia.org/wiki/Shanks_transformation#Motivation
@@ -10031,7 +10031,7 @@ void testShanksFilter()
 
 void testShanksTransformation()
 {
-  //testShanksTrafo1();
+  testShanksTrafo1();
   testShanksFormula();
   testShanksFilter();
 }
@@ -12830,7 +12830,7 @@ void testSet()
     // ...
   }
 
-  // In this block, a names like AB means a set that contain A and B:
+  // In this block, names like AB means a set that contain A and B:
   {
     Set AB;
     AB.addElement(A);
@@ -13089,10 +13089,10 @@ void testRelation()
   // ToDo: create more relations with various combinations of properties and check, if the is...
   // functions return always the right result
 
-
-
   rsAssert(ok);
 }
+
+
 
 void testNeumannNumbers()
 {
@@ -13254,7 +13254,7 @@ void testNeumannNumbers()
     {
       Set x = NN::create(i);
       Set y = NN::create(j);
-      Set t = NN::create(i/j);               // Target value
+      Set t = NN::create(i/j);          // Target value
       Set r = NN::div(x, y);            // Result of computation
       ok &= r == t;
     }
@@ -13329,16 +13329,30 @@ void testNeumannNumbers()
   //
   // ToDo:
   //
-  // -Maybe implement the Neumann numbers as class rsNeumannNumber : public rsSetNaive
-  // -Implement a class rsNeumannInteger that also has negative numbers
-  // -And/or implement rsNeumannPositiveRational
-  // -These classes should have a == operator that uses an equivalence relation internally, i.e.
-  //  does not compare the sets for equality but only for equivalence (which is a weaker form
-  //  of equality)
-  // -Maybe implement exponentiation - define it terms of multplication in a similar way as 
-  //  multiplication is implemented via addition
-  // -Plot memory usage as function of number
-  // -Maybe write similar loops as in the quotient test also for sum, product, etc.
+  // - Maybe implement the Neumann numbers as class rsNeumannNumber : public rsSetNaive
+  //
+  // - Implement a class rsNeumannInteger that also has negative numbers
+  //
+  // - And/or implement rsNeumannPositiveRational
+  //
+  // - These classes should have a == operator that uses an equivalence relation internally, i.e.
+  //   does not compare the sets for equality but only for equivalence (which is a weaker form
+  //   of equality)
+  //
+  // - Maybe implement exponentiation - define it terms of multplication in a similar way as 
+  //   multiplication is implemented via addition
+  //
+  // - Plot memory usage as function of number
+  //
+  // - Maybe write similar loops as in the quotient test also for sum, product, etc.
+  //
+  // - Factor out functions like testNeumannSubtraction/Division/etc. that take a pointer to the
+  //   subtraction/division/etc. functions and then use them with various different implementations
+  //   of these operations. They can be implemented in different ways and I want to try all the 
+  //   different implementations. See also the .tex source file of the math book - there are some
+  //   alternative implementations of subtraction and division in the comments. Maybe these test 
+  //   function should be local helper functions that have access to our n0,n1,n2,... variables.
+  // 
   //
   // Questions:
   //
@@ -13721,14 +13735,16 @@ void testPairingFunctions()
   //   move the into the RAPT library - maybe in a class rsPairingFunctions. This may also contain
   //   functions for mapping between single indices to triples, quadruples, etc. To map to 
   //   quadruples, we would apply pairing functions hierarchically: let the quadruple be (a,b,c,d):
-  //   do q = map(a,b), p = map(d,d), k = map(p,q). For triples (a,b,c), we coould do:
+  //   do q = map(a,b), p = map(d,d), k = map(p,q). For triples (a,b,c), we could do:
   //   q = map(a,b), k = map(c,q)
   // 
-  // -Factor out the testing loops into a function:
-  //   testPairingFunction(pairFunc, unPairFunc, xMax, yMax, zMax)
-  //  taking function pointers to the un/pairing functions and max values for the loops. That 
-  //  avoids the code duplication which will become more important when we implement even more 
-  //  pairing functions
+  // - Factor out the testing loops into a function:
+  //
+  //     testPairingFunction(pairFunc, unPairFunc, xMax, yMax, zMax)
+  //
+  //   taking function pointers to the un/pairing functions and max values for the loops. That 
+  //   avoids the code duplication which will become more important when we implement even more 
+  //   pairing functions
   //
   //
   // See:

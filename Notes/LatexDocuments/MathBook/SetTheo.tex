@@ -36,7 +36,9 @@ In the introductory chapter of this book, we already encountered Georg Cantor's 
 % https://en.wikipedia.org/wiki/Urelement
 %  urelements are in some sense dual to proper classes: urelements cannot have members whereas proper classes cannot be members. 
 
-
+% Explain the Peano axioms as an example of just postulating ceratin things about natural numbers
+% that are needed for basic arithmetic. Real numbers can also just be axiomatically postulated.
+% Figure out if that axiom also has a name
 
 \subsection{Intuitions}
 So, let's take a step back and forget about the existence of numbers and ask ourselves, what kinds of objects a set could possibly contain. So far, we have only postulated the existence of objects that we want to call sets. So, with nothing else in hand, how about letting sets to contain other sets? Using some terminology from computer science, maybe we could build a sort of recursive data structure pretty much like a tree. A tree consists of nodes and each node can have child nodes. Let's apply the idea to sets: a set may consist of sets which we call \emph{elements}. The elements play the role of the child nodes. Let's further postulate that there also exists a set that has no elements whatsoever and let's call that special set the \emph{empty set}. Let's also assume that the identity of a set is determined by its content: if two sets have the same elements, they are the same set. There is no notion of order and it doesn't matter, if an element occurs more than once. It immediately follows that the empty set is unique. It doesn't make sense to talk about \emph{an} empty set. It really is \emph{the} empty set. So far, we have the following: (1) A set can contain sets as elements. (2) There is a special set without any elements. (3) The identity of a set is determined by its elements.
@@ -90,6 +92,8 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 %  the same construction
 
 \paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway - why would anyone assume that a set could contain itself? That clearly immediately triggers an infinite regress\footnote{In itself, infinite regress might not be an insurmountable problem, though. In an implementation, we may actually be able to do it in terms of a graph where nodes represent sets and edges represent the is-element relation. It's no problem for a graph to have a node that has an edge to itself.}. Maybe we should disallow such situations. We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that are cyclic, i.e. loop back on themselves. Of these, $x \in x$ is just the simplest one but the more complicated ones do also seem weird. Away with them!
+
+% I think, in terms of graph theory, we allow only (directed) acyclic graphs - verify!
 
 % https://de.wikipedia.org/wiki/Russellsche_Antinomie
 % https://en.wikipedia.org/wiki/Russell%27s_paradox
@@ -737,7 +741,7 @@ In everyday math, we usually take numbers for granted and do not really think mu
 % https://cs.uwaterloo.ca/~alopez-o/math-faq/node11.html
 
 \subsubsection{Natural Numbers}
-The most basic of all number systems is the system of natural numbers. We can construct the set of natural number from ZF as follows. Given any set $x$, define the successor function as $s(x) = x \cup \{ x \}$. Then we give the names $1,2,3,\ldots$ to the following sets [VERIFY! Maybe format it better]: 
+The most basic of all number systems is the system of natural numbers. We can construct the set of natural number from ZF as follows: Given any set $x$, we define the successor function as $s(x) = x \cup \{ x \}$. Note that to be able to do this, we had to use the axiom of union and the axiom of pairing (which implies the constructibility of singletons). Then we give the names $0,1,2,3,\ldots$ to the following sets:
 
 \medskip
 \begin{tabular}{l l l l l}
@@ -758,18 +762,19 @@ $n=$ & $s(n-1)=$  & & & $\{ 0, 1, 2, \ldots, n-1 \} $
 \end{tabular}
 \medskip
 
-Numbers would be boring if we couldn't do computations with them. So, the next step is to construct our usual arithmetic operations from set theoretic operations.
+[VERIFY! Try to format it better] That means we first define the number $0$ to be the empty set and starting from there, we use the successor function $s(x)$ repeatedly to define all other natural numbers. Numbers would be boring if we couldn't do computations with them. So, the next step is to construct our usual arithmetic operations from set theoretic operations.
+
 
 \paragraph{Successor}
 %The simplest operation that we want to define is the successor function $s(x)$. Here $s$ denotes a function or unary operation and $x$ denotes a set constructed like above. The table above has already shown by way of the first few examples, how we will define that function in general. 
 As we have already mentioned we define: $s(x) = x \cup \{x\}$. The successor of a set $x$ is just that same set $x$ with $x$ itself added to it as new element. For example, we have $3 = s(2) = s(\{0,1\}) = \{0,1\} \cup \{2\} = \{0,1,2\}$. Instead of $s(x)$, we may also write $x+1$ when this is more convenient. So, we define:
 \begin{equation}
-x + 1 = x \cup \{x\}
+x + 1 = s(x) = x \cup \{x\}
 \end{equation}
 With that construction, each natural number $x$ is just the set of all natural numbers that are less than $x$. Note that the universe of all possible sets that we can construct is much larger than those which we can construct with our successor function when starting with the empty set. For example, the set $\{\{\emptyset\}\}$ is not among them i.e. it is not a Neumann natural.
 
 \paragraph{Order}
-On our so constructed natural numbers, we can use the strict subset relation $\subset$ or the element relation $\in$ to model our usual less-than relation of the natural numbers. The subset relation works because a smaller number is indeed always represented by a strict subset of the set that represents the greater number. The element relation works because the set representing the greater number do indeed always have the set representing the smaller number as element but it's never the other way around. We define the $<$ relation between two von Neumann numbers as:
+On our so constructed natural numbers, we can use the strict subset relation $\subset$ or the element relation $\in$ to model our usual less-than relation of the natural numbers. The subset relation works because a smaller number is indeed always represented by a strict subset of the set that represents the greater number. The element relation works because the set representing the greater number do indeed always have the set representing the smaller number as element but it's never the other way around. We define the $<$ relation between two von Neumann numbers $x,y$ as:
 \begin{equation}
 x < y  \quad \Leftrightarrow \quad x \in y \Leftrightarrow x \subset y
 \end{equation}
@@ -785,7 +790,7 @@ Later, we will generalize this to infinite sets of natural numbers. In the (poss
 \paragraph{Predecessor}
 With the so defined maximum operation, we have a way to implement a predecessor function on our von Neumann numbers. To find the predecessor $p(x)$ of a number $x$, we can just use $p(x) = \max(x) = \bigcup x$. Instead of $p(x)$, we may also write $x-1$. We have:
 \begin{equation}
-x - 1 = \max(x) = \bigcup x
+x - 1 = p(x) = \max(x) = \bigcup x
 \end{equation}
 This definition works only when $x > 0$ because $0$ itself has no predecessor. The formula would produce $0$ as the predecessor of $0$ - but that is wrong, so we need to make sure to use it only for $x > 0$.
 
@@ -816,7 +821,7 @@ x^y =\begin{cases}
 \end{cases}
 \end{equation}
 
-\paragraph{Summary} We have constructed a representation or encoding the of natural numbers purely from sets and have expressed the basic arithmetic operations in terms of set theoretic operations. We started with the most basic operation of them all - the successor function - and then worked our way up all the way to exponentiation. TODO: define subtraction, (floor-)division, remainder, roots, logarithms
+\paragraph{Summary} We have constructed a representation or encoding the of natural numbers purely from sets and have expressed the basic arithmetic operations in terms of set theoretic operations. We started with the most basic operation of them all - the successor function - and then worked our way up all the way to exponentiation. TODO: define subtraction, (floor-)division, remainder, roots, logarithms - see C++ implementation - I've already implemented this stuff partially
 
 % ToDo: maybe show some properties of the operations like asscoicativity, distribuitivity, etc.
 % ..or at least meantion them
@@ -829,7 +834,10 @@ x^y =\begin{cases}
 % for roots...well - we can perhaps use a floor-root definition just like with floor-division
 
 % subtraction:    x-y = x when y=0, (x-(y-1))-1 when y != 0
-% floor-divsion:  x/y = 0 when y > x, (x-y) + 1 when y >= x
+% floor-divsion:  x/y = 0 when y > x, (x-y) + 1 when y >= x  ..naah...that makes no sense!
+%                                     (x-y) / y + 1 when y >= x  ...try it!
+% 17/5 = (17-5)/5 + 1 = 12/5 + 1 = (12-5)/5 + 1 + 1 = 7/5 + 2 = (7-5)/5 + 1 + 2 = 2/5 + 3
+%      = 0 + 3 = 3
 % remainder:      x - (x/y)*x   ?
 % logarithm:
 % root:
@@ -843,12 +851,30 @@ x^y =\begin{cases}
 % https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
 % https://en.wikipedia.org/wiki/Peano_axioms
 
-\subsubsection{Integer Numbers} The integers can be constructed from the naturals as equivalence classes of pairs of naturals. Let $x = (a,b)$, i.e. our set that represents the integer $x$ is a pair of two Neumann naturals $a,b$. I will call such numbers "Neumann integers". For two such Neumann integers $x = (a,b)$ and $y = (c,d)$, we define the equivalence relation $\sim$ as follows:
+
+
+\subsubsection{Integer Numbers} The integers can be constructed from the naturals as equivalence classes of (ordered) pairs of naturals. Let $x = (a,b)$, i.e. our set that represents the integer $x$ is a pair of two Neumann naturals $a,b$. I will call such numbers "Neumann integers". For two such Neumann integers $x = (a,b)$ and $y = (c,d)$, we define the equivalence relation $\sim$ as follows:
 \begin{equation}
 (a,b) \sim (c,d) \quad \Leftrightarrow  \quad a+d = c+b
 \end{equation}
-Formally, we could define the set that we construct as $\mathbb{N}^2 / \sim$ which we may read as: "N-squared modulo equivalence" or "N-squared modulo tilde". The pair $(a,b)$ represents the integer $a-b$. The nonnegative integers are recovered by letting $b = 0$. For example, $3$ would be represented by $(3,0)$. However, it could also be represented by $(5,2)$ or any other pair of numbers $(a,b)$ which satisfy $a-b = 3$. A negative number like $-3$ would be represented by $(0,3)$ or by $(2,5)$ etc. So, the negative counterpart to any given number is obtained by swapping the components of the pair. We add such Neumann integers via $(a,b)+(c,d) = (a+c,b+d)$. VERIFY....TBC...explain multiplication, order, exponentiation, canonical representation (one of the components is zero - it's analoguous to represent a fraction in lowest terms)...TODO: explain embedding functions
+Formally, we could define the set that we construct as $\mathbb{N}^2 / \sim$ which we may read as: "N-squared modulo equivalence" or "N-squared modulo tilde". The pair $(a,b)$ represents the integer $a-b$. The nonnegative integers are recovered by letting $b = 0$. For example, $3$ would be represented by $(3,0)$. However, it could also be represented by $(5,2)$ or any other pair of numbers $(a,b)$ which satisfy $a-b = 3$. It may be natural to consider $(3,0)$ as the canonical representation of the number $3$, though
+
+\paragraph{Negation}
+A negative number like $-3$ would be represented by $(0,3)$ or by $(2,5)$ etc. where the former could be seen as canonical representation. The negative counterpart to any given number is obtained by swapping the components of the pair. We could use the notation:
+\begin{equation}
+ -(a,b) = (b,a)
+\end{equation}
+for expressing the unary operation of negation applied to the Neumann integer $(a,b)$. A Neumann integer $(a,b)$ is negative iff $a < b$ according to the $<$ relation on Neumann naturals. A Neumann integer is in canonical representation if $a = 0$ or $b = 0$.
+
+\paragraph{Addition}
+We add such Neumann integers via the formula:
+\begin{equation}
+ (a,b)+(c,d) = (a+c,b+d)
+\end{equation}
+That means, addition of Neumann integers just works element-wise by making use of the previously defined addition of the Neumann naturals. ...VERIFY....TBC...explain multiplication, order, exponentiation, canonical representation (one of the components is zero - it's analogous to represent a fraction in lowest terms)...TODO: explain embedding functions
 % Z is an integral domain (commutative ring with no zero divisors - maybe we need to demand a multiplicative identity? ..see chapter about rings and be consistent with it - there are different convetions for this)
+
+% explain addition, multiplication and exponentiation (but maybe for the latter, we need rational numbers because negative exponents will lead to division)
 
 % (a,b) represents the integer $a-b$
 
@@ -867,7 +893,10 @@ Formally, we could define the set that we construct as $\mathbb{N}^2 / \sim$ whi
 ..TBC...
 % Q is a field
 
-\subsubsection{Real Numbers} The reals can be be constructed from the rationals by a technique called \emph{Dedekind cuts}. That's the most complicated step in the construction of the number system...TBC...
+% What about exponentiaion? first with integers as exponents but then also with other
+% rationals as exponents...radical numbers? What about algebraic numbers?
+
+\subsubsection{Real Numbers} The reals can be constructed from the rationals by a technique called \emph{Dedekind cuts}. That's the most complicated step in the construction of the number system...TBC...
 % in R, the order is complete  ...what does that mean? It's from the math-faq.pdf above
 
 
@@ -1128,7 +1157,7 @@ We can interpret this maximum as: adding finite sets to infinite ones doesn't ch
 \max(|A|,|B|)   \qquad &\text{if at least one of $A, B$ is infinite}
 \end{cases}
 \end{equation}
-This may be a bit harder to swallow. But we have already seen how $\mathbb{N}$ can be bijectively mapped to $\mathbb{N}^2$, so it might be somewhat plausible to believe that the set product of infinite sets does not yield larger sets in terms of cardinality. Although, in the case of mapping $\mathbb{R}$ bijectively to $\mathbb{R}^2$, Cantor himself couldn't believe it at first. But he found a bijection: To bijectively map a real number $z$ to a pair of real numbers $(x,y)$, just take the decimal expansion\footnote{Actually, the decimal expansion of many numbers is not unique - consider $1 = 0.999\ldots$. And one perhaps also has to take some care about how to treat the position the decimal dot. But these are minor complications that can be solved.} of $z$ and alternatingly put digits into $x$ and $y$, i.e. "unzip" the decimal expansion into two. The reverse mapping is just a "zip" operation. So - yeah - it works out to find bijections between $\mathbb{N}$ and $\mathbb{N}^2$ and it works also for  $\mathbb{R}$ and $\mathbb{R}^2$. And it works in general. Of course, these examples are no proof - but they are a plausibility check.
+This may be a bit harder to swallow. But we have already seen how $\mathbb{N}$ can be bijectively mapped to $\mathbb{N}^2$, so it might be somewhat plausible to believe that the set product of infinite sets does not yield larger sets in terms of cardinality. Although, in the case of mapping $\mathbb{R}$ bijectively to $\mathbb{R}^2$, Cantor himself couldn't believe it at first. But he found a bijection: To bijectively map a real number $z$ to a pair of real numbers $(x,y)$, just take the decimal expansion\footnote{Actually, the decimal expansion of many numbers is not unique - consider $1 = 0.999\ldots$. And one perhaps also has to take some care about how to treat the position of the decimal dot. But these are minor complications that can be solved.} of $z$ and alternatingly put digits into $x$ and $y$, i.e. "unzip" the decimal expansion into two. The reverse mapping is just a "zip" operation. So - yeah - it works out to find bijections between $\mathbb{N}$ and $\mathbb{N}^2$ and it works also for  $\mathbb{R}$ and $\mathbb{R}^2$. And it works in general. Of course, these examples are no proof - but they are a plausibility check.
 
 
 % https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_multiplication
@@ -1161,7 +1190,17 @@ Ordinal numbers are, as the name suggests, used to order things, i.e. to put the
 \paragraph{Intuition} ...TODO: explain how different order types can be visualized and how addition and multiplication work in terms of that visualization
 
 \paragraph{Definition of Ordinal Numbers}
-The formal set theoretical definition of an ordinal number is simple: A set $\alpha$ is called an \emph{ordinal number} if it is transitive. Using greek letters from the beginning of the alphabet is common practice in the theory of ordinal numbers, so we will adopt that practice here, too. We first observe that our natural numbers constructed via the von Neumann construction do indeed qualify as ordinal numbers according to this definition. We conclude that natural numbers are ordinal numbers. They are the finite ordinal numbers. There are more ordinal numbers, though ...TBC...
+The formal set theoretical definition of an ordinal number is simple: A set $\alpha$ is called an \emph{ordinal number} if it is transitive. Using greek letters from the beginning of the alphabet is common practice in the theory of ordinal numbers, so we will adopt that practice here, too. We first observe that our natural numbers constructed via the von Neumann construction do indeed qualify as ordinal numbers according to this definition. We conclude that natural numbers are ordinal numbers. They are the finite ordinal numbers. There are more ordinal numbers, though. 
+
+\paragraph{Infinite Ordinals}
+...TBC...
+
+% Let u stand for union. Then:
+% - w = { 0,1,2,3,... } = N
+% - w+1 = w u {w} = { 0,1,2,3,...,w } = N u {N}
+% - w+2 = w+1 u {w+1} = { 0,1,2,3,...,w,w+1 }
+% ...etc.
+
 
 % https://en.wikipedia.org/wiki/Ordinal_number
 % https://de.wikipedia.org/wiki/Ordinalzahl#Limes-_und_Nachfolgerzahlen
@@ -1205,6 +1244,13 @@ The formal set theoretical definition of an ordinal number is simple: A set $\al
 
 % "infinite" arithmetic is strange
 % https://www.youtube.com/watch?v=ZfBT5KhZFQs
+
+% Make a section about "Infinite Ordinals". Start expalining w, then w+1 etc. Then w^2, w^3,...,w^w.
+% Explain what all the inifinite ordinals "are" in terms of sets. Write them down in formal set
+% builder notation. Maybe allow the slightly informal ... notation. Start from the Neumann naturals.
+% Explain what axioms are needed to get to w. I think, we need the axiom of union and pairing
+% (implying singletons) to get from one finite ordinal to the next. I think, to get to w, we
+% additionally need the axiom of infinity?
 
 
 
@@ -1739,6 +1785,13 @@ https://www.youtube.com/watch?v=c4oKdtUtJOk  The Cantor Set
 
 The Most Controversal PARADOX In Mathematics
 https://www.youtube.com/watch?v=Pb3QImXXPcY
+
+Set Theory Part 0: An informal introduction to sets - by cmacypre
+https://www.youtube.com/watch?v=c2mYWNShzTA&list=PLzr1oJDUNa9JInlHHH3xVH29Ovzw8YoM2
+
+
+Zermelo-Fraenkel Set Theory
+https://www.youtube.com/watch?v=IfYP37x6bN4
 
 
 \end{comment}

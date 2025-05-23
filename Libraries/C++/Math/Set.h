@@ -31,7 +31,7 @@ datatype involved. The implementation is rather naive and just for proof/demonst
 theoretical concepts and entirely unpractical. It's purely educational code - basically a math 
 excercise. */
 
-class rsSetNaive  // rename to Set
+class rsSetNaive  // rename to rsSet or rsMathSet
 {
 
 public:
@@ -42,6 +42,8 @@ public:
 
 
   rsSetNaive(const std::vector<rsSetNaive>& s);
+  // Needs documentation. I think, it creates a set from a vector of sets such that the set has the
+  // vector's elements as set elements?
 
   /** Copy constructor.  */
   rsSetNaive(const rsSetNaive& A);
@@ -79,7 +81,7 @@ public:
   // -removeElement(size_t i);
   // -removeElement(const rsSetNaive& a); - this can actually be implemented as set-difference
   //  with the singleton { a }. Not that this would be very practical - but from a theoretical
-  //  perspective, it might be an impoertant observation
+  //  perspective, it might be an important observation
 
 
   //-----------------------------------------------------------------------------------------------
@@ -112,8 +114,8 @@ public:
   /** Returns true iff this set is equal to the given set A. */
   bool equals(const rsSetNaive& A) const;
 
-  /** Returns true, iff this set is an ordered pair as created by the orderedPair() function. This 
-  can be inferred from the structure of the set. */
+  /** Returns true, iff this set is an ordered pair as created, for example, by the orderedPair() 
+  function. This can be inferred from the structure of the set. */
   bool isOrderedPair() const;
 
 
@@ -166,10 +168,10 @@ public:
 
   /** Returns a string that represents this set. This is useful for debugging. */
   static std::string setToString(const rsSetNaive& A);
-  // maybe rename to toString. maybe make it non-static and without argument
+  // Maybe rename to toString. Maybe make it non-static and without argument
 
   /** Assumes that the set A represents an ordered pair and turns it into a string. Of course, you 
-  can also apply the general setToString function to ordered pairs - but them you will get a 
+  can also apply the general setToString function to ordered pairs - but then you will get a 
   different formatting. */
   static std::string orderedPairToString(const rsSetNaive& A);
 
@@ -221,7 +223,7 @@ public:
   /** Given two sets A,B, this function creates a set that may be used to represent the ordered 
   pair (A, B). The normal pair() function could not distinguish between { A, B } and { B, A } and a 
   pair of equal values like { A, A } could not even be formed because it would just collapse into 
-  the singleton { A }. To model ordered pairs uisng only sets, we use Kuratowski's definition of 
+  the singleton { A }. To model ordered pairs using only sets, we use Kuratowski's definition of 
   ordered pairs as (A, B) = { { A }, { A, B } }. With this definition (A, B) is distinguishable 
   from (B, A). We have:
 
@@ -233,8 +235,8 @@ public:
 
     (A_1, A_2, ..., A_n) = ((A_1, A_2, ..., A_{n-1}), A_n)
 
-  Other definitions of ordered pairs are also possible but Kuratowski's seems to be the accepted 
-  standard. ...TBC... */
+  Other definitions of ordered pairs are also possible but Kuratowski's seems to be the most widely
+  accepted standard way to do it. ...TBC... */
   static rsSetNaive orderedPair(const rsSetNaive& A, const rsSetNaive& B);
   // Maybe rename to kuratowskiPair and maybe implement other ways of pair creation, too.
 
@@ -292,7 +294,8 @@ public:
     bool (*less)(const rsSetNaive& left, const rsSetNaive& right));
 
   // Note: I wanted to call these functions min/max but some silly Microsoft header #defines
-  // min/max as macros which messes up the compilation. Maybe we should #undef them?
+  // min/max as macros which messes up the compilation. Maybe we should #undef them? ...done. But
+  // I'm not sure, if this is the best solution to the problem.
 
   // ToDo: Maybe implement functions for min and max that take 2 sets arguments and return the 
   // smaller or larger of the two. Then, implement the min/max that operate on the whole array of
@@ -469,7 +472,7 @@ public:
 //=================================================================================================
 
 /** Implements the von Neumann construction of the natural numbers based on sets. The sets are 
-represented using the class rsSetNaive. In the von Neuman construction, the number zero is 
+represented using the class rsSetNaive. In the von Neumann construction, the number zero is 
 represented by the empty set and higher numbers are defined recursively via a successor function
 s(n) 
 
@@ -492,9 +495,10 @@ exponentially. We can really only use it for numbers up to 10 or so, before it g
 handle with reasonable resources. The class is completely useless for practical purposes. I just
 implemented this for demostration purposes as a math excercise and to clarify the concepts.
 
-The class has no mmembers. It's just a collection of functions that operate on raw sets. You need
-to ensure yourself to feed in the right kinds of sets. You can use the isWellFormed() function to
-verify, if a given set is actually of the right structure to represent a Neumann number.
+The class has no additional members. It just inherits the std::vector of element from its basclass. 
+It's just a collection of functions that operate on raw sets. You need to ensure yourself to feed 
+in the right kinds of sets. You can use the isWellFormed() function to verify, if a given set is 
+actually of the right structure to represent a von Neumann natural number.
 
 References:
 
@@ -503,7 +507,7 @@ References:
 
 */
 
-class rsNeumannNumber : public rsSetNaive
+class rsNeumannNumber : public rsSetNaive   // Maybe rename to rsNeumannNatural
 {
 
 public:
@@ -568,8 +572,8 @@ public:
 
   /** Computes the sum of x and y. Using s() as the successor function, it is defined as:
 
-  x + y    = x           if y == 0
-  x + s(y) = s(x + y)    if y != 0
+    x + y    = x           if y == 0
+    x + s(y) = s(x + y)    if y != 0
 
   See (2). In order to actually implement it, we actually need a predecessor function rather than a
   successor function. */
@@ -578,14 +582,15 @@ public:
   //static rsSetNaive difference(const rsSetNaive& x, const rsSetNaive& y);
   static rsSetNaive sub(const rsSetNaive& x, const rsSetNaive& y);
   // difference is ambiguous because we already have a function with the same name in the baseclass
-  // which computes the set difference. Maybe call it subtract. But this would be inconsisten with 
+  // which computes the set difference. Maybe call it subtract. But this would be inconsistent with 
   // sum, product, etc. - these should them maybe renamed to add, multiply, etc - or maybe shorter
-  // add, mul, div, pow. Maybe successor and predecessor should then be called inc, dec
+  // add, mul, div, pow. Maybe successor and predecessor should then be called inc, dec or maybe
+  // succ, pred
 
   /** Computes the product of x and y. It is defined as:
 
-  x * y    = 0           if y == 0
-  x * s(y) = x * y + x   if y != 0 
+    x * y    = 0           if y == 0
+    x * s(y) = x * y + x   if y != 0 
 
   See (2). So, it is defined recursively using addition internally. */
   static rsSetNaive mul(const rsSetNaive& x, const rsSetNaive& y);
@@ -595,8 +600,8 @@ public:
 
   /** Computes the power of x^y. It is defined as:
 
-  x ^ y    = 1           if y == 0
-  x ^ s(y) = x ^ y * x   if y != 0 
+    x ^ y    = 1           if y == 0
+    x ^ s(y) = x ^ y * x   if y != 0 
 
   This definition in terms of multiplications is entirely analogous to the definition of 
   multiplication in terms of addition. */

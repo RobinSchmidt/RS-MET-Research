@@ -13124,6 +13124,13 @@ void testSetBirthing()
   //   only compute it up to n = 4 before we get into overflow territory. We are really dealing 
   //   with a googology-like function here.
   //
+  // - It looks like F[n] follows the rule: F[n] = pow(F[n-1], F[n-2]) for n > 2. We have:
+  //   F = [1,2,4,16,65536] and 16 = 4^2, 65536 = 16^4. Verify, if this pattern continues! If it 
+  //   does, we may have a simpler formula to compute F and f. First compute F, the take the first 
+  //   difference. It should work because F is defined as the cumulative sum of f and the first 
+  //   difference is the inverse operation of the cumulative sum. If this holds true, then
+  //   the simple function n^n is an upper bound for F[n].
+  //
   //
   // ToDo:
   //

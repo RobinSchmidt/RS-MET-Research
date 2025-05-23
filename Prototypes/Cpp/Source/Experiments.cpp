@@ -13092,7 +13092,50 @@ void testRelation()
   rsAssert(ok);
 }
 
+void testSetBirthing()
+{
+  using Int = uint64_t;
+  using Vec = std::vector<Int>;
 
+  Int nMax = 4;              // Must be >= 2 and <= 4. For values > 4, we get overflow.
+  Vec f(nMax+1);             // Number of sets born on day n
+  Vec F(nMax+1);             // Number of all known sets at day n. == sum_{k=0}^n f[k]
+
+  // Initial values:
+  f[0] = 1;
+  f[1] = 1;
+  F[0] = 1;
+  F[1] = 2;
+
+  // Compute higher values via recursion:
+  for(Int n = 2; n <= nMax; n++)
+  {
+    f[n] = (pow(2, f[n-1]) - 1) * pow(2, F[n-2]);
+    F[n] = F[n-1] + f[n];
+  }
+
+
+
+  int dummy = 0;
+
+  // Observations:
+  //
+  // - The function f is an extremely fast growing function. With 64 bit unsigned integer, we can
+  //   only compute it up to n = 4 before we get into overflow territory. We are really dealing 
+  //   with a googology-like function here.
+  //
+  //
+  // ToDo:
+  //
+  // - Try using a big integer class to compute some more values. But even with that, we may 
+  //   quickly reach the limit of practicality.
+  //
+  //
+  // Notes:
+  //
+  // - See Notes\LatexDocuments\MathBook\Scratch\SetTheory.txt for explanation what we are 
+  //   computing here.
+}
 
 void testNeumannNumbers()
 {

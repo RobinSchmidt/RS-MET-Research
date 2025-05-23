@@ -94,7 +94,8 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   //testSet();
   //testRelation();
-  testNeumannNumbers();
+  testSetBirthing();
+  //testNeumannNumbers();
   //testNeumannIntegers();
   //testNeumannRationals();
   //testPairingFunctions();

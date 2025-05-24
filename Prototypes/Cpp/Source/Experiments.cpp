@@ -13095,9 +13095,10 @@ void testRelation()
 void testSetBirthing()
 {
   using Int = uint64_t;
+  //using Int = double;
   using Vec = std::vector<Int>;
 
-  Int nMax = 4;              // Must be >= 2 and <= 4. For values > 4, we get overflow.
+  Int nMax = 4;              // Must be >= 2. For values > 4, we get overflow with uint_64_t.
   Vec f(nMax+1);             // Number of sets born on day n
   Vec F(nMax+1);             // Number of all known sets at day n. == sum_{k=0}^n f[k]
 
@@ -13129,13 +13130,23 @@ void testSetBirthing()
   //   does, we may have a simpler formula to compute F and f. First compute F, the take the first 
   //   difference. It should work because F is defined as the cumulative sum of f and the first 
   //   difference is the inverse operation of the cumulative sum. If this holds true, then
-  //   the simple function n^n is an upper bound for F[n].
+  //   the simple function n^n is an upper bound for F[n]. ...wait - no - this is false.
   //
   //
   // ToDo:
   //
   // - Try using a big integer class to compute some more values. But even with that, we may 
   //   quickly reach the limit of practicality.
+  //
+  // - Maybe rename f to b and F to p (for birth and population function). Use B(n) and P(n) to 
+  //   denote the set of sets born on day n or up to day n. Then b is the cardinality of B and p 
+  //   the cardinality of P. Or maybe use c,C instead of p,P for "cumulative".
+  //
+  // - Use floating point numbers to get more range (at the expense of precision). ...with double
+  //   instead of uint64_t, we still get overflow at n = 5. :-O
+  //
+  // - Plot the (base-2?) log of the functions. Or maybe log-of-log. Maybe try to reformulate the 
+  //   recursions in terms of the logarithms. Maybe it gets more practical to compute.
   //
   //
   // Notes:

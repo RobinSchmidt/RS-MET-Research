@@ -211,7 +211,9 @@ Let E denote the empty set. Then the (new) sets on each level are:
 
 3: {{{E}}}, {{{E},E}},   ....
 
+
 Maybe let's make it look more convenient by assigning names 0,1,2,3,...to the sets:
+
 
 0:  0 = {}
 

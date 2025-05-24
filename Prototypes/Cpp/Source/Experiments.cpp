@@ -13111,7 +13111,11 @@ void testSetBirthing()
   // Compute higher values via recursion:
   for(Int n = 2; n <= nMax; n++)
   {
-    f[n] = (pow(2, f[n-1]) - 1) * pow(2, F[n-2]);
+    //f[n] = (pow(2, f[n-1]) - 1) * pow(2, F[n-2]);
+
+    Int f1 = pow(2, f[n-1]) - 1;   // 1st factor
+    Int f2 = pow(2, F[n-2]);       // 2nd factor
+    f[n] = f1 * f2;
     F[n] = F[n-1] + f[n];
   }
 
@@ -13130,7 +13134,14 @@ void testSetBirthing()
   //   does, we may have a simpler formula to compute F and f. First compute F, the take the first 
   //   difference. It should work because F is defined as the cumulative sum of f and the first 
   //   difference is the inverse operation of the cumulative sum. If this holds true, then
-  //   the simple function n^n is an upper bound for F[n]. ...wait - no - this is false.
+  //   the simple function n^n is an upper bound for F[n]. ...wait - no - this is false. I think,
+  //   the pattern may be wrong anyway. It doesn't seem to continue. We really need to use a big 
+  //   number class to figure out more. Or maybe try using Python or SageMath
+  //
+  // - When using Int = uint64_t, at n = 5, the line  f[n] = f1 * f2;  produces a different result 
+  //   than directly writing  f[n] = (pow(2, f[n-1]) - 1) * pow(2, F[n-2]);  Apparently, the 
+  //   overflow seems to behave differently when we use intermediate variables for the two factors.
+  //   But why should that be the case? Figure out!
   //
   //
   // ToDo:
@@ -13146,7 +13157,9 @@ void testSetBirthing()
   //   instead of uint64_t, we still get overflow at n = 5. :-O
   //
   // - Plot the (base-2?) log of the functions. Or maybe log-of-log. Maybe try to reformulate the 
-  //   recursions in terms of the logarithms. Maybe it gets more practical to compute.
+  //   recursions in terms of the logarithms. Maybe it gets more practical to compute. Maybe if the
+  //   formula F[n] = pow(F[n-1], F[n-2]) turns out to be correct, this may help the log-based 
+  //   reformulation of the recursion.
   //
   //
   // Notes:

@@ -211,7 +211,22 @@ Let E denote the empty set. Then the (new) sets on each level are:
 
 3: {{{E}}}, ....
 
-This idea is simlar to the one of birthdays in the theory of surreal numbers, I think.
+This idea is simlar to the one of birthdays in the theory of surreal numbers, I think. I think, 
+instead of producing all possible sets and then sieving out those that we already had, we could also
+produce the sets born on day n in a more systematic way. It seems like any set born on day n must 
+contain at least one element that was born on day n-1 because if it doesn't, it would already have
+been produced on a earlier b-day. So it seems to me that all sets born on day n must contain a 
+non-empty susbet of the sets born on day n-1. Let's denote by f(n) the number of sets born on day n 
+and by F(n) the number of sets that have been born up to day n, i.e. F(n) = sum_{k=0}^n f(n). Let's
+call f the set-birthing function and F the set-population function. Let B(n) be the set of sets that
+are born on day n and P(n) set of sets that have been born up to day n. I think, we can write down a recursion for f(n) as follows: 
+
+  f(n) = (2^f(n-1) - 1) * 2^F(n-2)
+
+The first factor is the number of non-empty subsets of B(n-1). The second factor is number of all 
+subsets of P(n-2). All new new born sets on day n have the following structure: they contain a 
+non-empty subset of B(n-1) and a (possibly empty) subset of P(n-2). ...I think so, at least. Verify!
+To initialize, we have: f(0) = f(1) = 1, F(0) = 1, F(1) = 2
 
 
 https://www.youtube.com/watch?v=c2mYWNShzTA&list=PLzr1oJDUNa9JInlHHH3xVH29Ovzw8YoM2   7:15

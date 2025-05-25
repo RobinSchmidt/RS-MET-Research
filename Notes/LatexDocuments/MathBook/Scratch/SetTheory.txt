@@ -243,7 +243,8 @@ been produced on a earlier b-day. So it seems to me that all sets born on day n 
 non-empty susbet of the sets born on day n-1. Let's denote by f(n) the number of sets born on day n 
 and by F(n) the number of sets that have been born up to day n, i.e. F(n) = sum_{k=0}^n f(n). Let's
 call f the set-birthing function and F the set-population function. Let B(n) be the set of sets that
-are born on day n and P(n) set of sets that have been born up to day n. I think, we can write down a recursion for f(n) as follows: 
+are born on day n and P(n) set of sets that have been born up to day n. I think, we can write down a
+recursion for f(n) as follows: 
 
   f(n) = (2^f(n-1) - 1) * 2^F(n-2)
 
@@ -255,6 +256,8 @@ least. Verify! To initialize, we have: f(0) = f(1) = 1, F(0) = 1, F(1) = 2
 
 
 https://www.youtube.com/watch?v=c2mYWNShzTA&list=PLzr1oJDUNa9JInlHHH3xVH29Ovzw8YoM2   7:15
+
+
 
 
 ====================================================================================================

@@ -13099,24 +13099,24 @@ void testSetBirthing()
   using Vec = std::vector<Int>;
 
   Int nMax = 4;              // Must be >= 2. For values > 4, we get overflow with uint_64_t.
-  Vec f(nMax+1);             // Number of sets born on day n
-  Vec F(nMax+1);             // Number of all known sets at day n. == sum_{k=0}^n f[k]
+  Vec b(nMax+1);             // Number of sets born on day n
+  Vec p(nMax+1);             // Number of all known sets at day n. == sum_{k=0}^n f[k]
 
   // Initial values:
-  f[0] = 1;
-  f[1] = 1;
-  F[0] = 1;
-  F[1] = 2;
+  b[0] = 1;
+  b[1] = 1;
+  p[0] = 1;
+  p[1] = 2;
 
   // Compute higher values via recursion:
   for(Int n = 2; n <= nMax; n++)
   {
-    //f[n] = (pow(2, f[n-1]) - 1) * pow(2, F[n-2]);
+    //b[n] = (pow(2, b[n-1]) - 1) * pow(2, p[n-2]);
 
-    Int f1 = pow(2, f[n-1]) - 1;   // 1st factor
-    Int f2 = pow(2, F[n-2]);       // 2nd factor
-    f[n] = f1 * f2;
-    F[n] = F[n-1] + f[n];
+    Int f1 = pow(2, b[n-1]) - 1;   // 1st factor
+    Int f2 = pow(2, p[n-2]);       // 2nd factor
+    b[n] = f1 * f2;
+    p[n] = p[n-1] + b[n];
   }
 
 
@@ -13125,23 +13125,40 @@ void testSetBirthing()
 
   // Observations:
   //
-  // - The function f is an extremely fast growing function. With 64 bit unsigned integer, we can
+  // - b = [1, 1, 2, 12, 65520, ...]
+  //   p = [1, 2, 4, 16, 65536, ...]
+  //
+  // - The function b is an extremely fast growing function. With 64 bit unsigned integer, we can
   //   only compute it up to n = 4 before we get into overflow territory. We are really dealing 
   //   with a googology-like function here.
   //
-  // - It looks like F[n] follows the rule: F[n] = pow(F[n-1], F[n-2]) for n > 2. We have:
-  //   F = [1,2,4,16,65536] and 16 = 4^2, 65536 = 16^4. Verify, if this pattern continues! If it 
-  //   does, we may have a simpler formula to compute F and f. First compute F, the take the first 
-  //   difference. It should work because F is defined as the cumulative sum of f and the first 
+  // - It looks like p[n] follows the rule: p[n] = pow(p[n-1], p[n-2]) for n > 2. We have:
+  //   p = [1,2,4,16,65536] and 16 = 4^2, 65536 = 16^4. Verify, if this pattern continues! If it 
+  //   does, we may have a simpler formula to compute p and b. First compute p, the take the first 
+  //   difference. It should work because p is defined as the cumulative sum of b and the first 
   //   difference is the inverse operation of the cumulative sum. If this holds true, then
-  //   the simple function n^n is an upper bound for F[n]. ...wait - no - this is false. I think,
+  //   the simple function n^n is an upper bound for p[n]. ...wait - no - this is false. I think,
   //   the pattern may be wrong anyway. It doesn't seem to continue. We really need to use a big 
-  //   number class to figure out more. Or maybe try using Python or SageMath
+  //   number class to figure out more. Or maybe try using Python or SageMath. OK - done. Yeah - 
+  //   the pattern fails badly at n = 5. So it was just by accident.
   //
-  // - When using Int = uint64_t, at n = 5, the line  f[n] = f1 * f2;  produces a different result 
-  //   than directly writing  f[n] = (pow(2, f[n-1]) - 1) * pow(2, F[n-2]);  Apparently, the 
+  // - When using Int = uint64_t, at n = 5, the line  b[n] = f1 * f2;  produces a different result 
+  //   than directly writing  b[n] = (pow(2, b[n-1]) - 1) * pow(2, p[n-2]);  Apparently, the 
   //   overflow seems to behave differently when we use intermediate variables for the two factors.
   //   But why should that be the case? Figure out!
+  //
+  // - I think, p[n] might just follow the recursion: p[n] = 2^p[n-1]. It can be verified for n = 5
+  //   with the SageMath code:
+  //
+  //     x = 65536 + (2^65520 - 1) * 2^16
+  //     y = 2^65536
+  //     x-y
+  //
+  //   which produces 0. It makes sense because the number of sets that we can generate in each 
+  //   iteration can be seen as follows: At step n, we have a given population of sets. If we now
+  //   put them all into a set S and ask, what all the subsets of S are, we precisely get all the 
+  //   sets that have been born up to day n. If that number is p[n], then taking the 1st difference
+  //   of that will give us the number b[n] of new sets born on day n.
   //
   //
   // ToDo:
@@ -13149,17 +13166,29 @@ void testSetBirthing()
   // - Try using a big integer class to compute some more values. But even with that, we may 
   //   quickly reach the limit of practicality.
   //
-  // - Maybe rename f to b and F to p (for birth and population function). Use B(n) and P(n) to 
-  //   denote the set of sets born on day n or up to day n. Then b is the cardinality of B and p 
-  //   the cardinality of P. Or maybe use c,C instead of p,P for "cumulative".
-  //
   // - Use floating point numbers to get more range (at the expense of precision). ...with double
   //   instead of uint64_t, we still get overflow at n = 5. :-O
   //
   // - Plot the (base-2?) log of the functions. Or maybe log-of-log. Maybe try to reformulate the 
   //   recursions in terms of the logarithms. Maybe it gets more practical to compute. Maybe if the
-  //   formula F[n] = pow(F[n-1], F[n-2]) turns out to be correct, this may help the log-based 
+  //   formula p[n] = pow(p[n-1], p[n-2]) turns out to be correct, this may help the log-based 
   //   reformulation of the recursion.
+  //
+  // - Compute b[5] and p[5] with SageMath. They are too big to compute them with C++ without a big
+  //   integer library. We have: f1 = 2^65520 - 1, f2 = 2^16
+  //
+  //     b[5] = f1*f2 = (2^65520 - 1) * 2^16
+  //     p[5] = p[4] + b[5]  =  65536 + (2^65520 - 1) * 2^16  
+  //                        ?=  65536^16   ..Nope! The former is far bigger!
+  //                        ?=  2^65536
+  //
+  //   Well - these numbers are massive. Too big to write them down here.
+  //
+  // - Starting from the recursion p[n] = 2^p[n-1] and taking the base-2 logarithm of both sides,
+  //   we get:  ld(p[n]) = p[n-1]. I don't know, if that helps.
+  //
+  // - Maybe write down p[n] explicitly in terms of tetration.
+  //   
   //
   //
   // Notes:

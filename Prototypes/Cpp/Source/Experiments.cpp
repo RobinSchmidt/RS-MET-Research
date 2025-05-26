@@ -13105,7 +13105,7 @@ void testSetBirthing()
   // Initial values:
   b[0] = 1;
   b[1] = 1;
-  p[0] = 1;
+  p[0] = 1;                  // Maybe rename p to a (for "all")
   p[1] = 2;
 
   // Compute higher values via recursion:
@@ -13131,16 +13131,6 @@ void testSetBirthing()
   // - The function b is an extremely fast growing function. With 64 bit unsigned integer, we can
   //   only compute it up to n = 4 before we get into overflow territory. We are really dealing 
   //   with a googology-like function here.
-  //
-  // - It looks like p[n] follows the rule: p[n] = pow(p[n-1], p[n-2]) for n > 2. We have:
-  //   p = [1,2,4,16,65536] and 16 = 4^2, 65536 = 16^4. Verify, if this pattern continues! If it 
-  //   does, we may have a simpler formula to compute p and b. First compute p, the take the first 
-  //   difference. It should work because p is defined as the cumulative sum of b and the first 
-  //   difference is the inverse operation of the cumulative sum. If this holds true, then
-  //   the simple function n^n is an upper bound for p[n]. ...wait - no - this is false. I think,
-  //   the pattern may be wrong anyway. It doesn't seem to continue. We really need to use a big 
-  //   number class to figure out more. Or maybe try using Python or SageMath. OK - done. Yeah - 
-  //   the pattern fails badly at n = 5. So it was just by accident.
   //
   // - When using Int = uint64_t, at n = 5, the line  b[n] = f1 * f2;  produces a different result 
   //   than directly writing  b[n] = (pow(2, b[n-1]) - 1) * pow(2, p[n-2]);  Apparently, the 
@@ -13187,7 +13177,9 @@ void testSetBirthing()
   // - Starting from the recursion p[n] = 2^p[n-1] and taking the base-2 logarithm of both sides,
   //   we get:  ld(p[n]) = p[n-1]. I don't know, if that helps.
   //
-  // - Maybe write down p[n] explicitly in terms of tetration.
+  // - Maybe write down p[n] explicitly in terms of tetration. I think, it's just p[n] = tet(2,n).
+  //   Maybe we can write it as 2^^n using two carets for the two arrows.
+  //   https://en.wikipedia.org/wiki/Tetration
   //   
   //
   //

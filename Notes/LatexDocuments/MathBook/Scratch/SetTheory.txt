@@ -258,7 +258,8 @@ least. Verify! To initialize, we have: f(0) = f(1) = 1, F(0) = 1, F(1) = 2
 https://www.youtube.com/watch?v=c2mYWNShzTA&list=PLzr1oJDUNa9JInlHHH3xVH29Ovzw8YoM2   7:15
 
 
-
+Should go to Googology in the book:
+https://en.wikipedia.org/wiki/Large_numbers#Standardized_system_of_writing
 
 ====================================================================================================
 

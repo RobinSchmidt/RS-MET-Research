@@ -13100,13 +13100,13 @@ void testSetBirthing()
 
   Int nMax = 4;              // Must be >= 2. For values > 4, we get overflow with uint_64_t.
   Vec b(nMax+1);             // Number of sets born on day n
-  Vec p(nMax+1);             // Number of all known sets at day n. == sum_{k=0}^n f[k]
+  Vec a(nMax+1);             // Number of all known sets at day n. == sum_{k=0}^n b[k]
 
   // Initial values:
   b[0] = 1;
   b[1] = 1;
-  p[0] = 1;                  // Maybe rename p to a (for "all")
-  p[1] = 2;
+  a[0] = 1;                  // Maybe rename p to a (for "all")
+  a[1] = 2;
 
   // Compute higher values via recursion:
   for(Int n = 2; n <= nMax; n++)
@@ -13114,9 +13114,9 @@ void testSetBirthing()
     //b[n] = (pow(2, b[n-1]) - 1) * pow(2, p[n-2]);
 
     Int f1 = pow(2, b[n-1]) - 1;   // 1st factor
-    Int f2 = pow(2, p[n-2]);       // 2nd factor
+    Int f2 = pow(2, a[n-2]);       // 2nd factor
     b[n] = f1 * f2;
-    p[n] = p[n-1] + b[n];
+    a[n] = a[n-1] + b[n];
   }
 
 
@@ -13126,18 +13126,18 @@ void testSetBirthing()
   // Observations:
   //
   // - b = [1, 1, 2, 12, 65520, ...]
-  //   p = [1, 2, 4, 16, 65536, ...]
+  //   a = [1, 2, 4, 16, 65536, ...]
   //
   // - The function b is an extremely fast growing function. With 64 bit unsigned integer, we can
   //   only compute it up to n = 4 before we get into overflow territory. We are really dealing 
   //   with a googology-like function here.
   //
   // - When using Int = uint64_t, at n = 5, the line  b[n] = f1 * f2;  produces a different result 
-  //   than directly writing  b[n] = (pow(2, b[n-1]) - 1) * pow(2, p[n-2]);  Apparently, the 
+  //   than directly writing  b[n] = (pow(2, b[n-1]) - 1) * pow(2, a[n-2]);  Apparently, the 
   //   overflow seems to behave differently when we use intermediate variables for the two factors.
   //   But why should that be the case? Figure out!
   //
-  // - I think, p[n] might just follow the recursion: p[n] = 2^p[n-1]. It can be verified for n = 5
+  // - I think, a[n] might just follow the recursion: a[n] = 2^a[n-1]. It can be verified for n = 5
   //   with the SageMath code:
   //
   //     x = 65536 + (2^65520 - 1) * 2^16
@@ -13147,7 +13147,7 @@ void testSetBirthing()
   //   which produces 0. It makes sense because the number of sets that we can generate in each 
   //   iteration can be seen as follows: At step n, we have a given population of sets. If we now
   //   put them all into a set S and ask, what all the subsets of S are, we precisely get all the 
-  //   sets that have been born up to day n. If that number is p[n], then taking the 1st difference
+  //   sets that have been born up to day n. If that number is a[n], then taking the 1st difference
   //   of that will give us the number b[n] of new sets born on day n.
   //
   //
@@ -13160,24 +13160,22 @@ void testSetBirthing()
   //   instead of uint64_t, we still get overflow at n = 5. :-O
   //
   // - Plot the (base-2?) log of the functions. Or maybe log-of-log. Maybe try to reformulate the 
-  //   recursions in terms of the logarithms. Maybe it gets more practical to compute. Maybe if the
-  //   formula p[n] = pow(p[n-1], p[n-2]) turns out to be correct, this may help the log-based 
-  //   reformulation of the recursion.
+  //   recursions in terms of the logarithms. Maybe it gets more practical to compute. 
   //
   // - Compute b[5] and p[5] with SageMath. They are too big to compute them with C++ without a big
   //   integer library. We have: f1 = 2^65520 - 1, f2 = 2^16
   //
   //     b[5] = f1*f2 = (2^65520 - 1) * 2^16
-  //     p[5] = p[4] + b[5]  =  65536 + (2^65520 - 1) * 2^16  
+  //     a[5] = a[4] + b[5]  =  65536 + (2^65520 - 1) * 2^16  
   //                        ?=  65536^16   ..Nope! The former is far bigger!
   //                        ?=  2^65536
   //
   //   Well - these numbers are massive. Too big to write them down here.
   //
-  // - Starting from the recursion p[n] = 2^p[n-1] and taking the base-2 logarithm of both sides,
-  //   we get:  ld(p[n]) = p[n-1]. I don't know, if that helps.
+  // - Starting from the recursion a[n] = 2^a[n-1] and taking the base-2 logarithm of both sides,
+  //   we get:  ld(a[n]) = a[n-1]. I don't know, if that helps.
   //
-  // - Maybe write down p[n] explicitly in terms of tetration. I think, it's just p[n] = tet(2,n).
+  // - Maybe write down a[n] explicitly in terms of tetration. I think, it's just a[n] = tet(2,n).
   //   Maybe we can write it as 2^^n using two carets for the two arrows.
   //   https://en.wikipedia.org/wiki/Tetration
   //   

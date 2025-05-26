@@ -1582,6 +1582,26 @@ By picking a particular set of axioms, one selects a particular mathematical uni
 
 
 %===================================================================================================
+\section{A Graph Theoretical Perspective}
+ToDo: Explain how the world of sets can be visualized as a directed acyclic graph. 
+
+%The nodes are the sets and the edges indicate the element relation: a directed edge from node A to node B means that the set represented by node A has the set represented by node B as element. So and arrow (directed edge) represents the "is-element-of" relation. One could use the other convention of representing the "has-element" relation by reversing the directions of all arrows.
+
+% Explain the construction process by starting at "day" 0 with the empty set and on each follwong day, take all the sets that are currently available and form all sets that can be formed by having these as elements. This can also be formulated as iterated power set operation. It is not a priori obvious, that the previously created sets will also be members of the produced power set at each iteration - but by looking more closely at the proces, it turns out that they are (I think)
+
+% Draw the (partial) graph of all finite sets. maybe up to layer 4 (which has 12 elements). See SetTheory.txt for the construction rule and Experiments.cpp for some code to compute the number of existing sets at each stage of the construction.
+
+% Draw the (partial) graph of all Neumann naturals. Draw also a node for w (omega). It has infinitely many edges - one to each node in the graph of the Neumann naturals. Draw also the w+1 node
+
+% Maybe it makes sense to adopt a new visualization convention for graphs: if we draw a blob around a number of nodes and give that blob a name, then that blob can also be seen as a node - i.e. a node can "contain" other nodes - which translates to: has edges to all nodes that it encircles.
+
+
+% Set Theory Part 0: An informal introduction to sets - by cmacypre
+% https://www.youtube.com/watch?v=c2mYWNShzTA&list=PLzr1oJDUNa9JInlHHH3xVH29Ovzw8YoM2
+
+
+
+%===================================================================================================
 \section{Applications}
 
 %---------------------------------------------------------------------------------------------------
@@ -1794,9 +1814,6 @@ https://www.youtube.com/watch?v=c4oKdtUtJOk  The Cantor Set
 
 The Most Controversal PARADOX In Mathematics
 https://www.youtube.com/watch?v=Pb3QImXXPcY
-
-Set Theory Part 0: An informal introduction to sets - by cmacypre
-https://www.youtube.com/watch?v=c2mYWNShzTA&list=PLzr1oJDUNa9JInlHHH3xVH29Ovzw8YoM2
 
 
 Zermelo-Fraenkel Set Theory

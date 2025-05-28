@@ -1,0 +1,23 @@
+% Needs:
+% \usetikzlibrary{arrows.meta}  % for [>={Stealth[black]} I think
+
+\pgfplotsset{compat=1.12}
+
+
+\begin{tikzpicture}
+
+\begin{scope}[every node/.style={circle,thick,draw}]
+  \node (0) at (0,0)  {0};
+  \node (1) at (2,0)  {1};
+  \node (2) at (4,0)  {2};
+  \node (3) at (6,0)  {3};
+\end{scope}
+
+\begin{scope}[>={Stealth[black]},
+              every edge/.style={draw=black,very thick}]
+  \path [->] (1) edge node {} (0);
+  \path [->] (2) edge node {} (1);
+  \path [->] (3) edge node {} (2);  
+\end{scope}
+
+\end{tikzpicture}

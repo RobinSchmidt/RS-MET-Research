@@ -20,18 +20,18 @@
   \node (C) at ( 8,  0)  {C};
   \node (D) at ( 8, -1)  {D};
   
-  \node (E) at (12,   0)  {E};
-  \node (F) at (12,  -1)  {F};
-  \node (G) at (12,  -2)  {G};
-  \node (H) at (12,  -3)  {H};
-  \node (I) at (12,  -4)  {I};
-  \node (J) at (12,  -5)  {J};
-  \node (K) at (12,  -6)  {K};
-  \node (L) at (12,  -7)  {L};
-  \node (M) at (12,  -8)  {M};
-  \node (N) at (12,  -9)  {N};
-  \node (O) at (12, -10)  {O};
-  \node (P) at (12, -11)  {P};  
+  \node (E) at (14,   0)  {E};
+  \node (F) at (14,  -1)  {F};
+  \node (G) at (14,  -2)  {G};
+  \node (H) at (14,  -3)  {H};
+  \node (I) at (14,  -4)  {I};
+  \node (J) at (14,  -5)  {J};
+  \node (K) at (14,  -6)  {K};
+  \node (L) at (14,  -7)  {L};
+  \node (M) at (14,  -8)  {M};
+  \node (N) at (14,  -9)  {N};
+  \node (O) at (14, -10)  {O};
+  \node (P) at (14, -11)  {P};  
  
 \end{scope}
 
@@ -54,16 +54,23 @@
   \path [->] (G) edge node {} (D);  
  
   \path [->] (H) edge node {} (C);
-  \path [->] (H) edge node {} (B);  
+  \path [->] (H) edge node {} (A);  
  
   \path [->] (I) edge node {} (D);
   \path [->] (I) edge node {} (B);   
   
   \path [->] (J) edge node {} (C);
-  \path [->] (J) edge node {} (A);  
+  \path [->] (J) edge node {} (B);  
   
   \path [->] (K) edge node {} (D);
   \path [->] (K) edge node {} (A);    
+  
+  
+  
+  \path [->] (P) edge node {} (C);
+  \path [->] (P) edge node {} (D);    
+  \path [->] (P) edge node {} (A);
+  \path [->] (P) edge node {} (B);      
   
   
  

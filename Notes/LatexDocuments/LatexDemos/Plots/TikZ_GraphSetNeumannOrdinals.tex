@@ -12,10 +12,10 @@
   \node (2) at (6,0)  {2};
   \node (3) at (9,0)  {3};
   
-  \node (w)  at (0,-2)  {$\omega$};
-  \node (w1) at (3,-2)  {$\omega + 1$};
-  \node (w2) at (6,-2)  {$\omega + 2$};
-  \node (w3) at (9,-2)  {$\omega + 3$};
+  \node (w)  at (0,-3)  {$\omega$};
+  \node (w1) at (3,-3)  {$\omega + 1$};
+  \node (w2) at (6,-3)  {$\omega + 2$};
+  \node (w3) at (9,-3)  {$\omega + 3$};
   
 \end{scope}
 
@@ -26,12 +26,12 @@
   \path [->] (1) edge node {} (0);
   \path [->] (2) edge node {} (1);
   \path [->] (3) edge node {} (2);
-  
+
   \path [->] (2) edge[bend right=20] node {} (0);
   \path [->] (3) edge[bend right=20] node {} (1);
   
-  \path [->] (3) edge[bend right=30] node {} (0);
- 
+  \path [->] (3) edge[bend right=40] node {} (0);
+   
    % Edges between the omegas:
    \path [->] (w1) edge node {} (w);
    \path [->] (w2) edge node {} (w1);
@@ -40,10 +40,28 @@
    \path [->] (w2) edge[bend left=20] node {} (w);
    \path [->] (w3) edge[bend left=20] node {} (w1);
    
-   \path [->] (w3) edge[bend left=30] node {} (w);
+   \path [->] (w3) edge[bend left=40] node {} (w);
   
+   % Edges between the naturals and the omegas: 
+   \path [->] (w) edge node {} (0);
+   \path [->] (w) edge node {} (1);
+   \path [->] (w) edge node {} (2);   
+   \path [->] (w) edge node {} (3); 
+
+   \path [->] (w1) edge node {} (0);
+   \path [->] (w1) edge node {} (1);
+   \path [->] (w1) edge node {} (2);   
+   \path [->] (w1) edge node {} (3);  
  
+   \path [->] (w2) edge node {} (0);
+   \path [->] (w2) edge node {} (1);
+   \path [->] (w2) edge node {} (2);   
+   \path [->] (w2) edge node {} (3); 
  
+   \path [->] (w3) edge node {} (0);
+   \path [->] (w3) edge node {} (1);
+   \path [->] (w3) edge node {} (2);   
+   \path [->] (w3) edge node {} (3);  
  
 \end{scope}
 

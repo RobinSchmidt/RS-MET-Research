@@ -96,6 +96,7 @@ Customize TikZ arrows:
 https://tex.stackexchange.com/questions/288506/customize-arrow-path-tikz
 
 Drawing graphs:
+https://tikz.dev/tikz-shapes
 https://tikz.dev/tikz-graphs
 
 

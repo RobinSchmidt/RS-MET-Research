@@ -37,6 +37,7 @@ https://www.bu.edu/math/files/2013/08/tikzpgfmanual.pdf
 
 TikZ-Tutorials:
 https://www.overleaf.com/learn/latex/TikZ_package
+https://www.overleaf.com/learn/latex/LaTeX_Graphics_using_TikZ%3A_A_Tutorial_for_Beginners_(Part_1)%E2%80%94Basic_Drawing
 
 
 Tikz-Examples:
@@ -99,6 +100,12 @@ Drawing graphs:
 https://tikz.dev/tikz-shapes
 https://tikz.dev/tikz-graphs
 
+
+Pre-rendering vs on-the-fly rendering of the TikZ figures:
+https://tikz.dev/library-external
+https://tex.stackexchange.com/questions/179937/externalize-tikz-with-texstudio-and-miktex
+https://tex.stackexchange.com/questions/255686/which-is-better-practice-rendering-figures-on-the-fly-or-importing-them-as-ima
+https://tex.stackexchange.com/questions/45/how-to-speed-up-latex-compilation-with-several-tikz-pictures
 
 
 https://www.youtube.com/watch?v=i-HAjex6VtM  Principles of Beautiful Figures for Research Papers

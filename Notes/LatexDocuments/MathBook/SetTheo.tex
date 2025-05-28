@@ -931,7 +931,7 @@ That means, addition of Neumann integers just works element-wise by making use o
 A = \{a \in \mathbb{Q} : a^2  <   2 \vee   a   <  0\}, \quad
 B = \{b \in \mathbb{Q} : b^2 \geq 2 \wedge b \geq 0\}
 \end{equation}
-That is: the real number $\sqrt{2}$ is represented as a pair of (infinite) sets of rational numbers $A$ and $B$. All elements of $A$ are strictly less than $\sqrt{2}$ and all elements of $B$ are greater or equal to $\sqrt{2}$. The general idea is that a real number $x$ cuts the number line of the rational numbers into two parts. The left part contains all rational numbers less than $x$ and the right part contains all rational numbers greater or equal to $x$. The number $x$ itself does not need to be rational. If the real number $x$ happens to be rational, then the rational number representing $x$ becomes a member of the right set $B$. In this case, $x$ is the minimum of $B$. If $x$ is irrational, $B$ has no minimum. In this $x$ becomes the infimum (i.e. greatest lower bound) of $B$. ...TBC...explain addition and multiplication (interval arithmetic)
+That is: the real number $\sqrt{2}$ is represented as a pair of sets of rational numbers $A$ and $B$. Note that these sets are infinite. This is what makes Dedekind cuts qualitatively so much more complicated than the construction steps that we took up to now. $A$ is the set of all rational numbers that are strictly less than $\sqrt{2}$ and $B$ is the set of all rational numbers that are greater or equal to $\sqrt{2}$. The general idea is that a real number $x$ cuts the number line of the rational numbers into two parts. The left part contains all rational numbers less than $x$ and the right part contains all rational numbers greater or equal to $x$. The number $x$ itself does not need to be rational. If the real number $x$ happens to be rational, then the rational number representing $x$ becomes a member of the right set $B$. In this case, $x$ is the minimum of $B$. If $x$ is irrational, $B$ has no minimum. In this $x$ case is only the infimum (i.e. greatest lower bound) of $B$ but its not a member of $B$. ...TBC...explain addition and multiplication (interval arithmetic)
 
 % explain how more complicated numbers like pi can be represented. Maybe by the limit of some sequence of numbers?
 
@@ -953,7 +953,7 @@ That is: the real number $\sqrt{2}$ is represented as a pair of (infinite) sets 
 
 
 
-\subsubsection{Complex Numbers} The complex numbers can be constructed from the real numbers as pairs. This time, we don't even need equivalence classes, so this step is actually the simplest...TBC...
+\subsubsection{Complex Numbers} Having the real numbers in hand, constructing the complex numbers is actually very simple. We just define a complex number as a pair of real numbers. That's it. This time, we don't even need equivalence classes or infinite sets. Of course, we still need to define the operations of addition and multiplication. Addition, once again, just works element wise.  ...TBC...explain multiplication
 % C is algebraically complete
 
 % https://en.wikipedia.org/wiki/Computable_number

@@ -212,28 +212,31 @@ Let E denote the empty set. Then the (new) sets on each level are:
 3: {{{E}}}, {{{E},E}},   ....
 
 
-Maybe let's make it look more convenient by assigning names 0,1,2,3,...to the sets:
+Maybe let's make it look more convenient by assigning names A,B,C,D,...to the sets:
 
 
-0:  0 = {}
+0:  A = {}
 
-1:  1 = {0}
+1:  B = {A}
 
-2:  2 = {1}   = {{0}}
-    3 = {0,1} = {0,{0}}
+2:  C = {B}   = {{A}}
+    D = {A,B} = {A,{A}}
 
-3:  4 = {2}
-    5 = {3}
-    6 = {2,0}
-    7 = {2,1}
-    8 = {2,3}
-    9 = {3,0}
-   10 = {3,1}
-   11 = {2,0,1}
-   12 = {2,0,3}
-   13 = {2,1,3}
-   14 = {3,0,1}
-   15 = {2,3,0,1}
+3:  E = {C}
+    F = {D}
+
+    G = {C,A}
+    H = {C,B}
+    I = {C,D}
+    J = {D,A}
+    K = {D,B}
+
+    L = {C,A,B}
+    M = {C,A,D}
+    N = {C,B,D}
+    O = {D,A,B}
+
+    P = {C,D,A,B}
 
 This idea is simlar to the one of birthdays in the theory of surreal numbers, I think. I think, 
 instead of producing all possible sets and then sieving out those that we already had, we could also

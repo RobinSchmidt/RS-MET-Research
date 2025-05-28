@@ -9,7 +9,9 @@
 
 \begin{tikzpicture}
 
-\begin{scope}[every node/.style={rectangle, rounded corners, thick, draw, fill=yellow}]
+% The circles have different sizes! Fix this!
+
+\begin{scope}[every node/.style={circle, thick, draw, fill=yellow}]
 
   \node (A) at ( 0,  0)  {A};
   
@@ -29,7 +31,7 @@
   \node (M) at (12,  -8)  {M};
   \node (N) at (12,  -9)  {N};
   \node (O) at (12, -10)  {O};
-  \node (P) at (12, -10)  {P};  
+  \node (P) at (12, -11)  {P};  
  
 \end{scope}
 
@@ -44,10 +46,26 @@
   \path [->] (D) edge node {} (A);   
   \path [->] (D) edge node {} (B);  
 
-  \path [->] (E) edge node {} (C);   
-  \path [->] (F) edge node {} (C);
-  \path [->] (F) edge node {} (D);  
+  \path [->] (E) edge node {} (C);
+     
+  \path [->] (F) edge node {} (D);
+  
+  \path [->] (G) edge node {} (C);
+  \path [->] (G) edge node {} (D);  
  
+  \path [->] (H) edge node {} (C);
+  \path [->] (H) edge node {} (B);  
+ 
+  \path [->] (I) edge node {} (D);
+  \path [->] (I) edge node {} (B);   
+  
+  \path [->] (J) edge node {} (C);
+  \path [->] (J) edge node {} (A);  
+  
+  \path [->] (K) edge node {} (D);
+  \path [->] (K) edge node {} (A);    
+  
+  
  
 \end{scope}
 

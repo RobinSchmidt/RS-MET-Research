@@ -1,12 +1,14 @@
 % Needs:
 % \usetikzlibrary{arrows.meta}  % for [>={Stealth[black]} I think
 
+% A graph representation of the first few von Neumann ordinal numbers
+
 \pgfplotsset{compat=1.12}
 
 
 \begin{tikzpicture}
 
-\begin{scope}[every node/.style={rectangle, rounded corners,thick,draw}]
+\begin{scope}[every node/.style={rectangle, rounded corners, thick, draw, fill=yellow}]
   \node (0) at (0,0)  {0};
   \node (1) at (3,0)  {1};
   \node (2) at (6,0)  {2};

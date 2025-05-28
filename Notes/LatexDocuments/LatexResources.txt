@@ -92,6 +92,12 @@ https://loopspace.mathforge.org/HowDidIDoThat/TeX/NewKnots/
 https://www.youtube.com/watch?v=n7w8hODwG1g  Explains hwo to make a trefoil knot in grasshopper
 
 
+Customize TikZ arrows:
+https://tex.stackexchange.com/questions/288506/customize-arrow-path-tikz
+
+Drawing graphs:
+https://tikz.dev/tikz-graphs
+
 
 
 https://www.youtube.com/watch?v=i-HAjex6VtM  Principles of Beautiful Figures for Research Papers

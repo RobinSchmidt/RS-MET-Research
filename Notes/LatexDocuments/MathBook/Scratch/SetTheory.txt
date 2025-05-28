@@ -217,26 +217,26 @@ Maybe let's make it look more convenient by assigning names A,B,C,D,...to the se
 
 0:  A = {}
 
-1:  B = {A}
+1:  B = {A} = {{}}
 
-2:  C = {B}   = {{A}}
-    D = {A,B} = {A,{A}}
+2:  C = {B}   = {{A}}   = {{{}}}
+    D = {B,A} = {{A},A} = {{{}},{}}
 
-3:  E = {C}
-    F = {D}
+3:  E = {C} = {{{{}}}}
+    F = {D} = {{{},{{}}}}
 
-    G = {C,A}
-    H = {C,B}
-    I = {C,D}
-    J = {D,A}
-    K = {D,B}
+    G = {C,A} = {{{{}}},{}}
+    H = {C,B} = {{{{}}},{{}}}
+    I = {C,D} = {{{{}}},{{{}},{}}}
+    J = {D,A} = {{{{}},{}},{}}
+    K = {D,B} = {{{{}},{}},{{}}}
 
-    L = {C,A,B}
-    M = {C,A,D}
-    N = {C,B,D}
-    O = {D,A,B}
+    L = {C,A,B} = {{{{}}},{},{{}}}
+    M = {C,A,D} = {{{{}}},{},{{{}},{}}}
+    N = {C,B,D} = {{{{}}},{{}},{{{}},{}}}
+    O = {D,A,B} = {{{{}},{}},{},{{}}}
 
-    P = {C,D,A,B}
+    P = {C,D,A,B} = {{{{}}},{{{}},{}},{},{{}}}
 
 This idea is simlar to the one of birthdays in the theory of surreal numbers, I think. I think, 
 instead of producing all possible sets and then sieving out those that we already had, we could also

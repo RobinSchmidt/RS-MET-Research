@@ -925,7 +925,16 @@ That means, addition of Neumann integers just works element-wise by making use o
 % What about exponentiaion? first with integers as exponents but then also with other
 % rationals as exponents...radical numbers? What about algebraic numbers?
 
-\subsubsection{Real Numbers} The reals can be constructed from the rationals by a technique called \emph{Dedekind cuts}. That's the most complicated step in the construction of the number system...TBC...
+\subsubsection{Real Numbers} The reals can be constructed from the rationals by a technique called \emph{Dedekind cuts}. That's the most complicated step in the construction of the number system. Let's approach it by using the irrational number $\sqrt{2}$ as example. As a Dedekind cut, we represent it as follows:
+\begin{equation}
+\sqrt{2} = (A, B) \qquad \text{where} \qquad
+A = \{a \in \mathbb{Q} : a^2  <   2 \vee   a   <  0\}, \quad
+B = \{b \in \mathbb{Q} : b^2 \geq 2 \wedge b \geq 0\}
+\end{equation}
+That is: the real number $\sqrt{2}$ is represented as a pair of (infinite) sets of rational numbers $A$ and $B$. All elements of $A$ are strictly less than $\sqrt{2}$ and all elements of $B$ are greater or equal to $\sqrt{2}$. The general idea is that a real number $x$ cuts the number line of the rational numbers into two parts. The left part contains all rational numbers less than $x$ and the right part contains all rational numbers greater or equal to $x$. The number $x$ itself does not need to be rational. If the real number $x$ happens to be rational, then the rational number representing $x$ becomes a member of the right set $B$. In this case, $x$ is the minimum of $B$. If $x$ is irrational, $B$ has no minimum. In this $x$ becomes the infimum (i.e. greatest lower bound) of $B$. ...TBC...explain addition and multiplication (interval arithmetic)
+
+% explain how more complicated numbers like pi can be represented. Maybe by the limit of some sequence of numbers?
+
 % in R, the order is complete  ...what does that mean? It's from the math-faq.pdf above
 
 
@@ -938,6 +947,8 @@ That means, addition of Neumann integers just works element-wise by making use o
 % -alternative construction: equivalence class of all Cauchy sequences that converge to x
 
 % https://en.wikipedia.org/wiki/Dedekind_cut
+% https://en.wikipedia.org/wiki/Interval_arithmetic
+
 % https://de.wikipedia.org/wiki/Dedekindscher_Schnitt
 
 
@@ -1392,6 +1403,8 @@ So far, we have constructed the ordinal numbers from the natural numbers and, on
 
 % https://en.wikipedia.org/wiki/Superreal_number
 % https://en.wikipedia.org/wiki/Hyperreal_number
+
+% https://de.wikipedia.org/wiki/Surreale_Zahl
 
 % explain also surcomplex numbers
 

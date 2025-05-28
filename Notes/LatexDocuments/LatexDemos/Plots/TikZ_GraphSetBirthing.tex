@@ -1,0 +1,54 @@
+% Needs:
+% \usetikzlibrary{arrows.meta}  % for [>={Stealth[black]} I think
+
+% A graph representation of the first few von Neumann ordinal numbers. A directed edge between two
+% Neumann numbers means "is-element-of".
+
+\pgfplotsset{compat=1.12}
+
+
+\begin{tikzpicture}
+
+\begin{scope}[every node/.style={rectangle, rounded corners, thick, draw, fill=yellow}]
+
+  \node (A) at ( 0,  0)  {A};
+  
+  \node (B) at ( 4,  0)  {B};
+  
+  \node (C) at ( 8,  0)  {C};
+  \node (D) at ( 8, -1)  {D};
+  
+  \node (E) at (12,   0)  {E};
+  \node (F) at (12,  -1)  {F};
+  \node (G) at (12,  -2)  {G};
+  \node (H) at (12,  -3)  {H};
+  \node (I) at (12,  -4)  {I};
+  \node (J) at (12,  -5)  {J};
+  \node (K) at (12,  -6)  {K};
+  \node (L) at (12,  -7)  {L};
+  \node (M) at (12,  -8)  {M};
+  \node (N) at (12,  -9)  {N};
+  \node (O) at (12, -10)  {O};
+  \node (P) at (12, -10)  {P};  
+ 
+\end{scope}
+
+\begin{scope}[>={Stealth[black]},
+              every edge/.style={draw=black, thick}]
+              
+  % Edges:
+  \path [->] (B) edge node {} (A);
+  
+  \path [->] (C) edge node {} (B);
+   
+  \path [->] (D) edge node {} (A);   
+  \path [->] (D) edge node {} (B);  
+
+  \path [->] (E) edge node {} (C);   
+  \path [->] (F) edge node {} (C);
+  \path [->] (F) edge node {} (D);  
+ 
+ 
+\end{scope}
+
+\end{tikzpicture}

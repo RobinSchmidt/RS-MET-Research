@@ -18,7 +18,42 @@ Summation calculus is the part of discrete calculus that is analogous to the usu
 %\section{Function Approximation}
 % -develope the Newton-Gregory formula as analogon for Taylor series
 
+%\paragraph{Evaluating Sums at Non-Integers}
+\paragraph{Interpolation of Sums}
+Suppose we are given a function $f(x)$ and suppose that for some order $m$, the difference $\Delta^m$ of $f$ vanishes for large values of $x$ such that $\lim_{x \rightarrow \infty} \Delta^m f(x) = 0$. We want to evaluate the sum $S(x)$ defined via $S(x) = \sum_{k=1}^{x} f(k)$. We have suggestively used $x$ as variable name to indicate that we want to evaluate the sum at non integers. But the $x$ occurs as upper summation limit so we can use the defining formula for evaluating $S$ only for integer $x$. The following formula provides a nice, smooth and "natural" interpolation for $S(x)$ for non-integer values of $x$:
+\begin{equation}
+S(x) = \lim_{n \rightarrow \infty} 
+\left(   \sum_{k=1}^{n-1} \left(f(k) - f(x+k) \right) 
+       + \sum_{k=1}^{m} \binom{x}{k} \Delta^{k-1} f(n)  \right)
+\end{equation}
+where
+\begin{equation}
+\binom{x}{k} = \frac{x (x-1) (x-2) \ldots (x-(k-1)) }{k!}
+\end{equation}
+...TBC...Explain where the formula comes from, give some examples.
 
+% Maybe move the definition of binomial coeffs for real x into the early section about binomial coeffs. Maybe also give a generalization for (n,k) where k is real and n is still integer. Finally, give one where both are real. Maybe it can use the product function \Pi(x) that reduces to the factorial when x is natural. Then use the formula that defines binomial coeffs in terms of the product function.
+
+% Q: Does it also work when we define $S(x) = \sum_{k=0}^{x} f(k)$? It seems more natural to me to let start k at 0 rather than 1.
+
+% Q: Can the formula be applied to interpolate functions that are not defined via sums? Looks like we could just write an arbitrary function as sum of its first difference and then apply the formula to that. That means, for any function g(x), just set f(x) = \Delta g(x) and then apply the above formula.
+
+% ToDo: implement it numerically
+
+% How to Extend the Sum of Any* Function
+% https://www.youtube.com/watch?v=hkn9zeRuzHs
+% -Final formula appears at 34:50, Definition of S(x) at around 4:00
+% -Code for the animations:
+%  https://github.com/LinesThatConnect/How-to-Extend-the-Sum-of-Any-Function
+
+% How to Add a Noninteger Number of Terms: From Axioms to New Identities (Müller, Schleicher)
+% https://arxiv.org/abs/1001.4695
+
+% How to add a non-integer number of terms, and how to produce unusual infinite summations
+% https://www.sciencedirect.com/science/article/pii/S0377042704003851
+
+% Fractional sums and Euler-like identities
+% https://link.springer.com/article/10.1007/s11139-009-9214-9
 
 \section{Difference Equations}
 The calculus of difference equations is the part of discrete calculus that is analogous to the calculus of differential equations. ...TBC...
@@ -53,6 +88,11 @@ https://www.youtube.com/watch?v=1-Q7Z-F4KVs
 
 Another World Similar to Calculus | Discrete Calculus
 https://www.youtube.com/watch?v=mVjBSWHlTnY
+
+
+
+
+
 
 
 \end{comment}

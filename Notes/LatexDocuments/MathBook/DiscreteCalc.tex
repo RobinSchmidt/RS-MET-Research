@@ -36,7 +36,7 @@ where
 
 % Q: Does it also work when we define $S(x) = \sum_{k=0}^{x} f(k)$? It seems more natural to me to let start k at 0 rather than 1.
 
-% Q: Can the formula be applied to interpolate functions that are not defined via sums? Looks like we could just write an arbitrary function as sum of its first difference and then apply the formula to that. That means, for any function g(x), just set f(x) = \Delta g(x) and then apply the above formula.
+% Q: Can the formula be applied to interpolate functions that are not defined via sums? Looks like we could just write an arbitrary function as sum of its first difference and then apply the formula to that. That means, for any given function S(x), just set f(x) = \Delta S(x) and then apply the above formula. That just increases the power of the Delta in the formula by 1: f becomes \Delta S, and $\Delta^{k-1} f$ becomes $\Delta^{k} S$
 
 % ToDo: implement it numerically
 

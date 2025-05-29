@@ -74,7 +74,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //eulersNumberViaPascalsTriangle();
   //testBellTriangle();
   //testEulerTransformation();
-  //testShanksTransformation();
+  testShanksTransformation();
   //testCesaroSum();
   //testFejerSum();
   //testGreensFunction();  // stub

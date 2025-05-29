@@ -32,7 +32,8 @@ where
 \end{equation}
 ...TBC...Explain where the formula comes from, give some examples.
 
-% Maybe move the definition of binomial coeffs for real x into the early section about binomial coeffs. Maybe also give a generalization for (n,k) where k is real and n is still integer. Finally, give one where both are real. Maybe it can use the product function \Pi(x) that reduces to the factorial when x is natural. Then use the formula that defines binomial coeffs in terms of the product function.
+% Maybe move the definition of binomial coeffs for real x into the early section about binomial coeffs. Maybe also give a generalization for (n,k) where k is real and n is still integer. Finally, give one where both are real. Maybe it can use the product function \Pi(x) that reduces to the factorial when x is natural. Then use the formula that defines binomial coeffs in terms of the product function. Like binom(x,y) = prod(x) * prod(x-y) / prod(y). Maybe express it in terms of the logarithms: log(binom(x,y)) = log(prod(x)) + log(prod(x-y)) - log(prod(y)) to tame the intermediate numbers to avoid overflow in numeric computations
+
 
 % Q: Does it also work when we define $S(x) = \sum_{k=0}^{x} f(k)$? It seems more natural to me to let start k at 0 rather than 1.
 
@@ -58,6 +59,7 @@ where
 \section{Difference Equations}
 The calculus of difference equations is the part of discrete calculus that is analogous to the calculus of differential equations. ...TBC...
 
+% They are actually also known as recurrence relations. They are a ceratin type of functional equations, I think.
 
 \subsection{The Z-Transform}
 

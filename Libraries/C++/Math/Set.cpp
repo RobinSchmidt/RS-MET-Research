@@ -979,5 +979,27 @@ Ideas:
       -separation:     S = extract those elements from R that have the right structure
   (2) replacement, union. ...hmm...I'm not sure, if I understand the construction
 
+- Write functions like isSorted/isRecursivelySorted for sets. Use the following convention: a set 
+  is sorted, if the cardinalities of its elements are (non strictly!) monotonically increasing. 
+  It's recursively sorted if it is itself sorted and all of its elements are also recursively 
+  sorted. I think, that gives us a unique and unambiguous way to sort sets and thereby gives us a 
+  canonical representation of each set, namely the recursively sorted one.
+
+- Write a less-than comparison function for sets. Let's define it as follows: We say that set A is 
+  less than another set B if A has a smaller cardinality than B. Likewise, B is less than A if B 
+  has a smaller cardinality. If A and B have the same cardinality, we need to assume that the sets 
+  A and B are recursively sorted. Then we may loop through the elements of A and B and compare all 
+  of them. As soon as A[i] has a smaller cardinality than B[i], we decide that A is less than B. 
+  Likewise the other way around. 
+
+- Write functions sort/sortRecursively. I think, it needs a less-than comparison function. This way 
+  of sorting sets is a mix of sorting by size and sorting lexicographically where the latter only 
+  kicks in for sets of the same size.
+
+- This sort/less-than business seems like we are dealing with mutual recursion here. Make sure that
+  it will always hit the base case!
+
+- Write functions canonicalize/isCanonical. A set is canonical, if it is recursively sorted and has
+  no duplicate elements. Canonicalization consists of sorting and throwing away duplicates, if any.
 
 */

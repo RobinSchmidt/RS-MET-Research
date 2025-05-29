@@ -983,7 +983,8 @@ Ideas:
   is sorted, if the cardinalities of its elements are (non strictly!) monotonically increasing. 
   It's recursively sorted if it is itself sorted and all of its elements are also recursively 
   sorted. I think, that gives us a unique and unambiguous way to sort sets and thereby gives us a 
-  canonical representation of each set, namely the recursively sorted one.
+  canonical representation of each set, namely the recursively sorted one - but we need to 
+  additionally require that no element occurrs more than once.
 
 - Write a less-than comparison function for sets. Let's define it as follows: We say that set A is 
   less than another set B if A has a smaller cardinality than B. Likewise, B is less than A if B 
@@ -1001,5 +1002,10 @@ Ideas:
 
 - Write functions canonicalize/isCanonical. A set is canonical, if it is recursively sorted and has
   no duplicate elements. Canonicalization consists of sorting and throwing away duplicates, if any.
+
+- All of this sorting/comparing/canonicalization stuff should probably be implemented in free 
+  functions rather than member functions because it is not a type of functionality that one would 
+  expect from a mathematical set. It's something on top of what sets can do.
+
 
 */

@@ -11622,6 +11622,15 @@ void testGcdLcm()
   //   Then show that if it holds for numbers a,b,c and x,y,z then it follows that it must also 
   //   hold for ax,by,cz. It's a sort of variation of proof by induction using prime 
   //   factorizations.
+  //
+  //
+  // Notes:
+  //
+  // - Here, it lists these laws but calls them "distributive" rather than "anti-distributive":
+  //   https://en.wikipedia.org/wiki/Least_common_multiple#Lattice-theoretic
+  //   It seems to reference this notion of distributivity:
+  //   https://en.wikipedia.org/wiki/Distributive_lattice
+  //   But this is not how gcd and lcm behave. They involve this additional swap of the operations. 
 }
 
 void testSquarity()

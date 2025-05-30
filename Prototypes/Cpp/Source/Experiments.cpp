@@ -11558,7 +11558,10 @@ void testGcdLcm()
 
   using UInt = uint32_t;
 
-  UInt  nMax = 20;
+  UInt nMin =  1;
+  UInt nMax = 20;
+
+  nMin = 10, nMax = 15;  // Test
 
   bool ok = true;
 
@@ -11567,6 +11570,29 @@ void testGcdLcm()
   auto lcm = [](UInt a, UInt b) { return RAPT::rsLcm(a, b); };
   //auto mul = [](UInt a, UInt b) { return a * b; };
   // ToDo: maybe use std::function for compatibility with rsIsDistributive() etc.
+
+  for(UInt a = nMin; a <= nMax; a++)
+  {
+    for(UInt b = nMin; b <= nMax; b++)
+    {
+      for(UInt c = nMin; c <= nMax; c++)
+      {
+        UInt r1,r2,r3,r4,r5;
+
+        r1 = lcm(a, gcd(b, c));
+        r2 = lcm(gcd(a,b), gcd(a,c));
+        r3 = gcd(a, lcm(b, c));
+        r4 = gcd(lcm(a,b), lcm(a,c));
+
+
+
+
+
+        int dummy = 0;
+      }
+    }
+  }
+
 
 
   RAPT::rsAssert(ok);

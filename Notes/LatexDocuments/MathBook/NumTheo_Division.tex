@@ -180,7 +180,10 @@ A concept that is closely related to the idea of a greatest common divisor is th
 % we could call that feature mutually antidistributive or bi-antidistributive? Compare that to the
 % de morgan rules of logic and set theory - they are mutually dsitributive, I think. And/or maybe
 % they are self distributive? And/or maybe distributive with respect to multiplication? Figure 
-% that out!
+% that out! If that's the case, maybe it may make sense to introduce infix operators for gcd and 
+% lcm. Due to commutativity, they should be horizontally symmetric. Maybe a downard arrow for gcd
+% and an upward arrow for lcm could make sense. It's suggestive as: divide-down/multiply-up.
+
 
 
 
@@ -257,6 +260,14 @@ https://www.youtube.com/watch?v=SPYf1M_DqHU
 -Fermat's little theorem: a^p = p  (mod p)   for p prime an a integer. If a is no multiple of p then
  a^(p-1) = 1  (mod p)
 -Lucas-Lehmer test
+
+
+Idea for proof by induction for number-theorectical theorems:
+-Base case: Show that the theorem holds for prime numbers 
+-Induction step: Show that if the theorem holds for two numbers a and b, it follows that it also
+ holds for their product a*b. 
+-That shows that it holds for all natural numbers. Maybe call it induction over factorizations or
+ shorter: factor induction.
 
 
 \end{comment}

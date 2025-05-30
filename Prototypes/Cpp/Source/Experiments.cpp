@@ -11560,10 +11560,12 @@ void testGcdLcm()
 
   using UInt = uint32_t;
 
+
   // Range of values for a,b,c to check the properties for:
   UInt  nMin =   1;
   UInt  nMax = 100;
-  //nMin = 10, nMax = 15;  // Test - for faster evaluation
+
+  nMin = 10, nMax = 15;  // Test - for faster evaluation
 
 
   // Some abbreviations:
@@ -11599,6 +11601,45 @@ void testGcdLcm()
       }
     }
   }
+
+
+
+
+
+
+  // Let a = gcd(x,y), b = lcm(x,y). Can we reconstruct x,y from a,b (up to symmetry, i.e. swapping
+  // x and y)? To be able to do so, we need that the function (x,y) -> (gcd(x,y),lcm(x,y)) is 
+  // injective (up to swapping x,y). But is it? Let's try to figure it out experimentally for 
+  // values of x,y between nMin and nMax.
+
+  nMin = 2, nMax = 8;  // Preliminary - get rid later!
+
+  using Vec2 = rsVector2D<UInt>;
+  using Mat2 = rsMatrix<Vec2>;
+
+  int N = nMax - nMin + 1;
+  
+  Mat2 A(N, N);
+  for(int i = 0; i < N; i++)
+  {
+    for(int j = 0; j < N; j++)
+    {
+      UInt x = i + nMin;
+      UInt y = j + nMin;
+      UInt a = gcd(x, y);
+      UInt b = lcm(x, y);
+      A(i,j) = Vec2(a, b);
+    }
+  }
+  // The elements of A cannot unique due to symmetry because gcd and lcm are commutative. But are
+  // the entries in the bottom-left or top-right triangular section unique?
+
+  // ToDo: Check uniqueness of each element in lower triangular section. Or maybe count the number 
+  // of occurrences of each element. It should be 2 for each non-diagonal and 1 for each diagonal
+  // element.
+
+
+
 
   RAPT::rsAssert(ok);
 

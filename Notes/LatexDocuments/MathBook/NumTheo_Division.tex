@@ -170,6 +170,17 @@ A concept that is closely related to the idea of a greatest common divisor is th
 
 % lcm(a,b) * gcd(a,b) = a*b
 
+% Can we invert gcd or lcm?. Like gcd(8,12) = 4. If we know 8 and 4, can we reproduce 12? No!
+% It could also have been e.g. 20. But maybe we can reproduce a,b if we know gcd(a,b) and 
+% lcm(a,b)? For a numeric experiment, we could loop through a,b (from 1 to N, say), produce
+% gcd and lcm for the N^2 possible pairs and check, if they are all unique. If one of the pairs
+% appears more than once, we have to chance of inverting this 2-in/2-out function. If the pairs
+% are all unique, we could invert the function by tabulation. But maybe there could be a better
+% algorithm?
+
+% What about lcm(a,b) / gcd(a,b)? Is this an interesting function? Has it some interpretation? Can
+% we state some interesting laws for that?
+
 % Are there any interesting properties of gcd and lcm? Like - maybe a distributive rule? But no:
 %
 %   lcm(10,gcd(12,15)) = 30 != 10 = lcm(gcd(10,12),gcd(10,15))

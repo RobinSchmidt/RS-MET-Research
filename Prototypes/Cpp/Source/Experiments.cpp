@@ -11610,6 +11610,14 @@ void testGcdLcm()
 
         // ToDo: check, if there's an anti-distribuitive law
 
+        //r1 = gcd(a, mul(b, c));
+        //r2 = gcd(mul(a,b), mul(a,c));
+        //ok &= r1 == r2;                  // gcd antidistributes over mul? Nope!
+
+        //r1 = lcm(a, mul(b, c));
+        //r2 = lcm(mul(a,b), mul(a,c));
+        //ok &= r1 == r2;                  // lcm antidistributes over mul? Nope!
+
 
         r1 = mul(a, gcd(b, c));
         r2 = gcd(mul(a,b), mul(a,c));
@@ -11619,7 +11627,7 @@ void testGcdLcm()
         r2 = lcm(mul(a,b), mul(a,c));
         ok &= r1 == r2;                  // mul distributes over lcm
 
-        //RAPT::rsAssert(ok);
+        RAPT::rsAssert(ok);
       }
     }
   }
@@ -11628,13 +11636,18 @@ void testGcdLcm()
 
 
 
+  /*
+
+  // Move this code into an extra function:
 
   // Let a = gcd(x,y), b = lcm(x,y). Can we reconstruct x,y from a,b (up to symmetry, i.e. swapping
   // x and y)? To be able to do so, we need that the function (x,y) -> (gcd(x,y),lcm(x,y)) is 
   // injective (up to swapping x,y). But is it? Let's try to figure it out experimentally for 
   // values of x,y between nMin and nMax.
+  //
+  // Nope! Apparently, it doesn't work.
 
-  nMin = 2, nMax = 8;  // Preliminary - get rid later!
+  nMin = 2, nMax = 20;  // Preliminary - get rid later!
 
   using Vec2 = rsVector2D<UInt>;
   using Mat2 = rsMatrix<Vec2>;
@@ -11660,10 +11673,38 @@ void testGcdLcm()
   // of occurrences of each element. It should be 2 for each non-diagonal and 1 for each diagonal
   // element.
 
+  // Helper function to count the number of occurrences of x in the lower left triangle of the 
+  // given matrix A:
+  auto countInLowerTriangle = [](const Mat2& A, Vec2 x)
+  {
+    rsAssert(A.isSquare(), "Works only for square matrices");
+    UInt count = 0;
+    for(int i = 0; i < A.getNumRows(); i++) {
+      for(int j = 0; j <= i; j++) {
+        if(A(i,j) == x)
+          count++; }}
+    return count;
+  };
 
 
-
+  // Count the number of occurrences of each element within the lower left triangluar section of 
+  // the matrix. If the count is 1 for all of them, then we have an injective function:
+  for(int i = 0; i < A.getNumRows(); i++) 
+  {
+    for(int j = 0; j <= i; j++) 
+    {
+      Vec2 x = A(i,j);
+      UInt n = countInLowerTriangle(A, x);
+      ok &= n == 1;
+      rsAssert(ok);
+    }
+  }
+ 
   RAPT::rsAssert(ok);
+
+  */
+
+
 
   // Observations:
   //

@@ -108,7 +108,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSylvesterMatrix();
   //testBezoutMatrix();
   //testMatrixMulAdapter();              // stub
-  testGeneralizedMatrixOperations();   // Generalize matrix add/mul to arbitrary shaped matrices
+  //testGeneralizedMatrixOperations();   // Generalize matrix add/mul to arbitrary shaped matrices
 
   // Modular forms, lattices, elliptic functions:
   //testModularGroup();         // maybe move down, closer to the other 2x2 matrix stuff

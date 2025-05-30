@@ -11611,6 +11611,12 @@ void testGcdLcm()
   //
   //     a ^ (b v c) = (a v b) ^ (a v c)     lcm anti-distributes over gcd
   //     a v (b ^ c) = (a ^ b) v (a ^ c)     gcd anti-dsitributes over lcm
+  //
+  // - Try to prove it. Show it first for prime numbers a,b,c. Maybe we need to include the case
+  //   for any one of them being 1, too. So the base case would be: a,b,c are either primes or 1.
+  //   Then show that if it holds for numbers a,b,c and x,y,z then it follows that it must also 
+  //   hold for ax,by,cz. It's a sort of variation of proof by induction using prime 
+  //   factorizations.
 }
 
 void testSquarity()

@@ -9985,6 +9985,9 @@ void testShanksFormula()
   //   could have an aggressive lowpass and a1 a less aggressive one and a2 and even less aggrssive 
   //   one? Where by "aggressive" I mean: has low cutoff. Maybe we could express the parabola in 
   //   terms of a scale factor and its roots and apply different scaling/filtering to these.
+  //   Outputting a0 amount to evaluating the polynomial at t=0. Evaluating it at t=1 or t=1 would
+  //   amount to output a0+a1+a2 or a0-a1+a2 respectively. Maybe these could be used as 
+  //   alternatives. 
 }
 
 
@@ -11545,6 +11548,35 @@ void testDivisors()
 
 
   RAPT::rsAssert(ok);
+}
+
+void testGcdLcm()
+{
+  // We experimentally test some properties of the greatest common divisor (gcd) and least common
+  // multiple (lcm) function. ...TBC...
+
+
+  using UInt = uint32_t;
+
+  UInt  nMax = 20;
+
+  bool ok = true;
+
+  // Some abbreviations:
+  auto gcd = [](UInt a, UInt b) { return RAPT::rsGcd(a, b); };
+  auto lcm = [](UInt a, UInt b) { return RAPT::rsLcm(a, b); };
+  //auto mul = [](UInt a, UInt b) { return a * b; };
+  // ToDo: maybe use std::function for compatibility with rsIsDistributive() etc.
+
+
+  RAPT::rsAssert(ok);
+
+
+  // ToDo: 
+  //
+  // - Move the functions rsIsDistributive(), etc. that we have used to check the generalized 
+  //   matrix operations into a file that we include here (like Tools.cpp) such that they become
+  //   available here. Then use them here.
 }
 
 void testSquarity()

@@ -170,6 +170,17 @@ A concept that is closely related to the idea of a greatest common divisor is th
 
 % lcm(a,b) * gcd(a,b) = a*b
 
+% Are there any interesting properties of gcd and lcm? Like - maybe a distributive rule? But no:
+%
+%   lcm(10,gcd(12,15)) = 30 != 10 = lcm(gcd(10,12),gcd(10,15))
+%   gcd(10,lcm(12,15)) = 10 != 30 = gcd(lcm(10,12),lcm(10,15))
+%
+% But it looks like they are sort of anti-distributive, if that's a thing? They actually seem to
+% be anti-distributive in both possible ways: lcm anti-distributes over gcd and vice versa. Maybe
+% we could call that feature mutually antidistributive or bi-antidistributive? Compare that to the
+% de morgan rules of logic and set theory - they are mutually dsitributive, I think. And/or maybe
+% they are self distributive? And/or maybe distributive with respect to multiplication? Figure 
+% that out!
 
 
 
@@ -246,5 +257,6 @@ https://www.youtube.com/watch?v=SPYf1M_DqHU
 -Fermat's little theorem: a^p = p  (mod p)   for p prime an a integer. If a is no multiple of p then
  a^(p-1) = 1  (mod p)
 -Lucas-Lehmer test
+
 
 \end{comment}

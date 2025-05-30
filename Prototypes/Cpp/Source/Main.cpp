@@ -74,7 +74,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //eulersNumberViaPascalsTriangle();
   //testBellTriangle();
   //testEulerTransformation();
-  testShanksTransformation();
+  //testShanksTransformation();
   //testCesaroSum();
   //testFejerSum();
   //testGreensFunction();  // stub
@@ -86,6 +86,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPrimeFactorTable();
   //testPrimesAndMore();
   //testDivisors();
+  testGcdLcm();                    // stub
   //testSquarity();
   //testFiniteField();
   //testFieldExtensions();
@@ -94,7 +95,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   //testSet();
   //testRelation();
-  testSetBirthing();
+  //testSetBirthing();
   //testNeumannNumbers();
   //testNeumannIntegers();
   //testNeumannRationals();
@@ -106,8 +107,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testWeightedAverages();
   //testSylvesterMatrix();
   //testBezoutMatrix();
-  //testMatrixMulAdapter();            // stub
-  //testGeneralizedMatrixOperations();
+  //testMatrixMulAdapter();              // stub
+  testGeneralizedMatrixOperations();   // Generalize matrix add/mul to arbitrary shaped matrices
 
   // Modular forms, lattices, elliptic functions:
   //testModularGroup();         // maybe move down, closer to the other 2x2 matrix stuff

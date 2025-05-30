@@ -9972,6 +9972,19 @@ void testShanksFormula()
   //
   // - Maybe in order to correctly estimate a and n, we need to take 4 successive samples into 
   //   account?
+  //
+  //
+  // Ideas:
+  //
+  // - The Shanks trafo is based on fitting a parametric model function to 3 subsequent data points
+  //   and its output is one of the estimated parameters. In this case, it's the constant part. How
+  //   about fitting a different function and using its constant part as output? For example, fit a
+  //   parabola a0 + a1*t + a2*t^2 to 3 signal values x[t-1], x[t], x[t+1] and output a0? We could
+  //   also output a1,a2 as additional outputs. Then we could do the reconstruction from them, 
+  //   possibly after scaling them and/or apply different filters to them. Maybe the constant a0 
+  //   could have an aggressive lowpass and a1 a less aggressive one and a2 and even less aggrssive 
+  //   one? Where by "aggressive" I mean: has low cutoff. Maybe we could express the parabola in 
+  //   terms of a scale factor and its roots and apply different scaling/filtering to these.
 }
 
 

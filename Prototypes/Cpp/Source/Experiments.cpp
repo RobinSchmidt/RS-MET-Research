@@ -11558,10 +11558,10 @@ void testGcdLcm()
 
   using UInt = uint32_t;
 
-  UInt nMin =  1;
-  UInt nMax = 20;
+  UInt nMin =   1;
+  UInt nMax = 100;
 
-  nMin = 10, nMax = 15;  // Test
+  //nMin = 10, nMax = 15;  // Test
 
   bool ok = true;
 
@@ -11581,14 +11581,15 @@ void testGcdLcm()
 
         r1 = lcm(a, gcd(b, c));
         r2 = lcm(gcd(a,b), gcd(a,c));
+
         r3 = gcd(a, lcm(b, c));
         r4 = gcd(lcm(a,b), lcm(a,c));
 
+        bool lcm_ad_gcd = r1 == r4;  // lcm anti-distributes over gcd
+        bool gcd_ad_lcm = r2 == r3;  // gcd anti-distributes over lcm
 
-
-
-
-        int dummy = 0;
+        ok &= lcm_ad_gcd;
+        ok &= gcd_ad_lcm;
       }
     }
   }

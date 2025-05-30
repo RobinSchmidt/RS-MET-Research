@@ -11602,14 +11602,26 @@ void testGcdLcm()
 
   RAPT::rsAssert(ok);
 
-
+  // Observations:
+  //
+  // - lcm distributes over gcd and gcd distributes over lcm. Moreover, both gcd and lcm distribute
+  //   over themselves. Maybe we could call that "self-distributive" or "auto-distributive"? Look 
+  //   up if there already is a term for that. Maybe that autodistributivity has to do with 
+  //   idempotence?
+  //
+  //
   // ToDo:
   //
   // - Move the functions rsIsDistributive(), etc. that we have used to check the generalized 
   //   matrix operations into a file that we include here (like Tools.cpp) such that they become
-  //   available here. Maybe also add something like rsIsIdempotent. This means that if we give it
-  //   the same operand for both arguments, it returns that same number. But idempotence may make 
-  //   more sense for a unary operator. Or does it? Not sure.
+  //   available here. Then use them here. That may reduce the inner loop body to four lines.
+  
+  // - Maybe also add something like rsIsIdempotent. This means that if we give it the same operand
+  //   for both arguments, it returns that same number. But idempotence may make more sense for a 
+  //   unary operator. Or does it? Not sure. I think, when we consider, for example, a projection
+  //   in linear algebra as an idempotent operator, we consider the subspace that we project onto 
+  //   as baked into the operator rather than as a second operand such that the projection operator
+  //   becomes unary, i.e. takes only one vector as input. It feels a bit like currying.
   //
   // - Maybe introduce infix operators for gcd and lcm to write down the distributivity laws in a 
   //   nice way. Maybe use v for gcd and ^ for lcm. They should look like downward and upward 

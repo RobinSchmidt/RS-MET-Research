@@ -998,14 +998,16 @@ Ideas:
   kicks in for sets of the same size.
 
 - This sort/less-than business seems like we are dealing with mutual recursion here. Make sure that
-  it will always hit the base case!
+  it will always hit the base case! Maybe we need an additional sotion of "being-sorted" - not only 
+  based on cardinalities but based on the "less-than" relation?
 
 - Write functions canonicalize/isCanonical. A set is canonical, if it is recursively sorted and has
   no duplicate elements. Canonicalization consists of sorting and throwing away duplicates, if any.
 
 - All of this sorting/comparing/canonicalization stuff should probably be implemented in free 
   functions rather than member functions because it is not a type of functionality that one would 
-  expect from a mathematical set. It's something on top of what sets can do.
+  expect from a mathematical set. It's something on top of what sets can do. Sets by themsleves 
+  should not support these notions.
 
 
 */

@@ -11556,14 +11556,15 @@ void testGcdLcm()
   // multiple (lcm) function. ...TBC...
 
 
+  bool ok = true;
+
   using UInt = uint32_t;
 
-  UInt nMin =   1;
-  UInt nMax = 100;
+  // Range of values for a,b,c to check the properties for:
+  UInt  nMin =   1;
+  UInt  nMax = 100;
+  //nMin = 10, nMax = 15;  // Test - for faster evaluation
 
-  //nMin = 10, nMax = 15;  // Test
-
-  bool ok = true;
 
   // Some abbreviations:
   auto gcd = [](UInt a, UInt b) { return RAPT::rsGcd(a, b); };
@@ -11571,13 +11572,14 @@ void testGcdLcm()
   //auto mul = [](UInt a, UInt b) { return a * b; };
   // ToDo: maybe use std::function for compatibility with rsIsDistributive() etc.
 
+
   for(UInt a = nMin; a <= nMax; a++)
   {
     for(UInt b = nMin; b <= nMax; b++)
     {
       for(UInt c = nMin; c <= nMax; c++)
       {
-        UInt r1,r2,r3,r4,r5;
+        UInt r1, r2, r3, r4;             // For the computation results
 
         r1 = lcm(a, gcd(b, c));
         r2 = lcm(gcd(a,b), gcd(a,c));
@@ -11585,25 +11587,30 @@ void testGcdLcm()
         r3 = gcd(a, lcm(b, c));
         r4 = gcd(lcm(a,b), lcm(a,c));
 
-        bool lcm_ad_gcd = r1 == r4;  // lcm anti-distributes over gcd
-        bool gcd_ad_lcm = r2 == r3;  // gcd anti-distributes over lcm
-
-        ok &= lcm_ad_gcd;
-        ok &= gcd_ad_lcm;
+        ok &= r1 == r4;                  // lcm anti-distributes over gcd
+        ok &= r2 == r3;                  // gcd anti-distributes over lcm
       }
     }
   }
 
-
-
   RAPT::rsAssert(ok);
 
 
-  // ToDo: 
+  // ToDo:
+  //
+  // - Test (anti)distributivity of gcd/lcm over mul and vice versa.
   //
   // - Move the functions rsIsDistributive(), etc. that we have used to check the generalized 
   //   matrix operations into a file that we include here (like Tools.cpp) such that they become
-  //   available here. Then use them here.
+  //   available here. Then use them here. But actually, we need to implement a new function 
+  //   rsIsAntiDistributive
+  //
+  // - Maybe introduce infix operators for gcd and lcm to write down the anti-distributivity laws
+  //   in a nice way. Maybe use v for gcd and ^ for lcm. They should look like downward and upward
+  //   arrows to suggest "divide down"/"multiply up". Then we can write:
+  //
+  //     a ^ (b v c) = (a v b) ^ (a v c)     lcm anti-distributes over gcd
+  //     a v (b ^ c) = (a ^ b) v (a ^ c)     gcd anti-dsitributes over lcm
 }
 
 void testSquarity()

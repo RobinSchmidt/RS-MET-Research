@@ -11571,7 +11571,7 @@ void testGcdLcm()
   // Some abbreviations:
   auto gcd = [](UInt a, UInt b) { return RAPT::rsGcd(a, b); };
   auto lcm = [](UInt a, UInt b) { return RAPT::rsLcm(a, b); };
-  //auto mul = [](UInt a, UInt b) { return a * b; };
+  auto mul = [](UInt a, UInt b) { return a * b; };
   // ToDo: maybe use std::function for compatibility with rsIsDistributive() etc.
 
 
@@ -11581,7 +11581,7 @@ void testGcdLcm()
     {
       for(UInt c = nMin; c <= nMax; c++)
       {
-        UInt r1, r2;                     // For the computation results
+        UInt r1, r2, r3, r4;             // For the computation results
 
         r1 = gcd(a, gcd(b, c));
         r2 = gcd(gcd(a,b), gcd(a,c));
@@ -11595,14 +11595,30 @@ void testGcdLcm()
         r2 = gcd(lcm(a,b), lcm(a,c));
         ok &= r1 == r2;                  // lcm distributes over gcd
 
-        r1 = lcm(gcd(a,b), gcd(a,c));
-        r2 = gcd(a, lcm(b, c));
+        r1 = gcd(a, lcm(b, c));
+        r2 = lcm(gcd(a,b), gcd(a,c));
         ok &= r1 == r2;                  // gcd distributes over lcm
+
+
+        //r1 = gcd(a, mul(b, c));
+        //r2 = mul(gcd(a,b), gcd(a,c));
+        //ok &= r1 == r2;                  // gcd distributes over mul
+
+
+        r1 = mul(a, gcd(b, c));
+        r2 = gcd(mul(a,b), mul(a,c));
+        ok &= r1 == r2;
+
+        RAPT::rsAssert(ok);
+        
+        
+        //ok &= r1 == r2;                  // gcd distributes over mul
+
       }
     }
   }
 
-
+  RAPT::rsAssert(ok);
 
 
 
@@ -11679,6 +11695,9 @@ void testGcdLcm()
   //   Then show that if it holds for numbers a,b,c and x,y,z then it follows that it must also 
   //   hold for ax,by,cz. It's a sort of variation of proof by induction using prime 
   //   factorizations.
+  //
+  // - Check if lcm and gcd also distribute over multiplication (and/or vice versa). Or maybe it
+  //   anti-distributes (i.e. involving a swap of the operations)?
   //
   //
   // Notes:

@@ -1001,6 +1001,21 @@ Ideas:
   it will always hit the base case! Maybe we need an additional sotion of "being-sorted" - not only 
   based on cardinalities but based on the "less-than" relation?
 
+- Maybe try a different variant of the less-than operation. The base case is: when A is empty and B 
+  nonempty, then A < B. If B is empty and A nonempty, then B < A. If both are non-empty, use a 
+  lexicographical comparison. This does not check for size(A) < size(B).
+
+- Or maybe compare sizes of A, B first and if they are the same, compare the sizes of the largest 
+  elements. But: A as well as B can have multiple elements that have the same size. Hmm...it's not
+  easy to construct a conveniently implementable order.
+
+- Maybe use the empty set base case together with the rule: extract the maximum of all elements of 
+  A and the maximum of all elements of B and then compare max(A) with max(B). The implementation of
+  max() could contain the (mutually) recursive call to less(). Then we would have less() in terms 
+  of max() and also max() in terms of less(). This definition does not explicitly reference the set
+  sizes except for the base case (it just checks, if a set is empty or non-empty). But maybe we can
+  use the size-based base-case together with the maximum-of-elements approach.
+
 - Write functions canonicalize/isCanonical. A set is canonical, if it is recursively sorted and has
   no duplicate elements. Canonicalization consists of sorting and throwing away duplicates, if any.
 

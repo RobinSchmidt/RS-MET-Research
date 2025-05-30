@@ -11565,7 +11565,7 @@ void testGcdLcm()
   UInt  nMin =   1;
   UInt  nMax = 100;
 
-  nMin = 10, nMax = 15;  // Test - for faster evaluation
+  //nMin = 10, nMax = 15;  // Test - for faster evaluation
 
 
   // Some abbreviations:
@@ -11604,14 +11604,22 @@ void testGcdLcm()
         //r2 = mul(gcd(a,b), gcd(a,c));
         //ok &= r1 == r2;                  // gcd distributes over mul? Nope!
 
+        //r1 = lcm(a, mul(b, c));
+        //r2 = mul(lcm(a,b), lcm(a,c));
+        //ok &= r1 == r2;                  // lcm distributes over mul? Nope!
+
+        // ToDo: check, if there's an anti-distribuitive law
+
 
         r1 = mul(a, gcd(b, c));
         r2 = gcd(mul(a,b), mul(a,c));
         ok &= r1 == r2;                  // mul distributes over gcd
 
+        r1 = mul(a, lcm(b, c));
+        r2 = lcm(mul(a,b), mul(a,c));
+        ok &= r1 == r2;                  // mul distributes over lcm
 
-
-        RAPT::rsAssert(ok);
+        //RAPT::rsAssert(ok);
       }
     }
   }

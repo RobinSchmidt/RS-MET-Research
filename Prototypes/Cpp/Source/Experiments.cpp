@@ -11579,16 +11579,23 @@ void testGcdLcm()
     {
       for(UInt c = nMin; c <= nMax; c++)
       {
-        UInt r1, r2, r3, r4;             // For the computation results
+        UInt r1, r2;                     // For the computation results
+
+        r1 = gcd(a, gcd(b, c));
+        r2 = gcd(gcd(a,b), gcd(a,c));
+        ok &= r1 == r2;                  // gcd distributes over gcd
+
+        r1 = lcm(a, lcm(b, c));
+        r2 = lcm(lcm(a,b), lcm(a,c));
+        ok &= r1 == r2;                  // lcm distributes over lcm
 
         r1 = lcm(a, gcd(b, c));
-        r2 = lcm(gcd(a,b), gcd(a,c));
+        r2 = gcd(lcm(a,b), lcm(a,c));
+        ok &= r1 == r2;                  // lcm distributes over gcd
 
-        r3 = gcd(a, lcm(b, c));
-        r4 = gcd(lcm(a,b), lcm(a,c));
-
-        ok &= r1 == r4;                  // lcm anti-distributes over gcd
-        ok &= r2 == r3;                  // gcd anti-distributes over lcm
+        r1 = lcm(gcd(a,b), gcd(a,c));
+        r2 = gcd(a, lcm(b, c));
+        ok &= r1 == r2;                  // gcd distributes over lcm
       }
     }
   }
@@ -11598,21 +11605,18 @@ void testGcdLcm()
 
   // ToDo:
   //
-  // - Test (anti)distributivity of gcd/lcm over mul and vice versa.
-  //
   // - Move the functions rsIsDistributive(), etc. that we have used to check the generalized 
   //   matrix operations into a file that we include here (like Tools.cpp) such that they become
-  //   available here. Then use them here. But actually, we need to implement a new function 
-  //   rsIsAntiDistributive. Maybe also add something like rsIsIdempotent. This means that if we
-  //   give it the same operand for both arguments, it returns that same number. But idempotence
-  //   may make more sense for a unary operator. Or does it? Not sure.
+  //   available here. Maybe also add something like rsIsIdempotent. This means that if we give it
+  //   the same operand for both arguments, it returns that same number. But idempotence may make 
+  //   more sense for a unary operator. Or does it? Not sure.
   //
-  // - Maybe introduce infix operators for gcd and lcm to write down the anti-distributivity laws
-  //   in a nice way. Maybe use v for gcd and ^ for lcm. They should look like downward and upward
+  // - Maybe introduce infix operators for gcd and lcm to write down the distributivity laws in a 
+  //   nice way. Maybe use v for gcd and ^ for lcm. They should look like downward and upward 
   //   arrows to suggest "divide down"/"multiply up". Then we can write:
   //
-  //     a ^ (b v c) = (a v b) ^ (a v c)     lcm anti-distributes over gcd
-  //     a v (b ^ c) = (a ^ b) v (a ^ c)     gcd anti-dsitributes over lcm
+  //     a ^ (b v c) = (a ^ b) v (a ^ c)     lcm distributes over gcd
+  //     a v (b ^ c) = (a v b) ^ (a v c)     gcd dsitributes over lcm
   //
   //   A comment here says that the wedge/vee notation is used in lattice theory:
   //   https://math.stackexchange.com/questions/853779/notation-for-the-least-common-multiple-and-greatest-common-divisor
@@ -11626,11 +11630,10 @@ void testGcdLcm()
   //
   // Notes:
   //
-  // - Here, it lists these laws but calls them "distributive" rather than "anti-distributive":
+  // - Here, it lists these laws:
   //   https://en.wikipedia.org/wiki/Least_common_multiple#Lattice-theoretic
   //   It seems to reference this notion of distributivity:
   //   https://en.wikipedia.org/wiki/Distributive_lattice
-  //   But this is not how gcd and lcm behave. They involve this additional swap of the operations. 
 }
 
 void testSquarity()

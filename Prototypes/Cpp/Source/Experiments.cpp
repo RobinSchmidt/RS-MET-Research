@@ -11603,7 +11603,9 @@ void testGcdLcm()
   // - Move the functions rsIsDistributive(), etc. that we have used to check the generalized 
   //   matrix operations into a file that we include here (like Tools.cpp) such that they become
   //   available here. Then use them here. But actually, we need to implement a new function 
-  //   rsIsAntiDistributive
+  //   rsIsAntiDistributive. Maybe also add something like rsIsIdempotent. This means that if we
+  //   give it the same operand for both arguments, it returns that same number. But idempotence
+  //   may make more sense for a unary operator. Or does it? Not sure.
   //
   // - Maybe introduce infix operators for gcd and lcm to write down the anti-distributivity laws
   //   in a nice way. Maybe use v for gcd and ^ for lcm. They should look like downward and upward
@@ -11611,6 +11613,9 @@ void testGcdLcm()
   //
   //     a ^ (b v c) = (a v b) ^ (a v c)     lcm anti-distributes over gcd
   //     a v (b ^ c) = (a ^ b) v (a ^ c)     gcd anti-dsitributes over lcm
+  //
+  //   A comment here says that the wedge/vee notation is used in lattice theory:
+  //   https://math.stackexchange.com/questions/853779/notation-for-the-least-common-multiple-and-greatest-common-divisor
   //
   // - Try to prove it. Show it first for prime numbers a,b,c. Maybe we need to include the case
   //   for any one of them being 1, too. So the base case would be: a,b,c are either primes or 1.

@@ -11602,18 +11602,16 @@ void testGcdLcm()
 
         //r1 = gcd(a, mul(b, c));
         //r2 = mul(gcd(a,b), gcd(a,c));
-        //ok &= r1 == r2;                  // gcd distributes over mul
+        //ok &= r1 == r2;                  // gcd distributes over mul? Nope!
 
 
         r1 = mul(a, gcd(b, c));
         r2 = gcd(mul(a,b), mul(a,c));
-        ok &= r1 == r2;
+        ok &= r1 == r2;                  // mul distributes over gcd
+
+
 
         RAPT::rsAssert(ok);
-        
-        
-        //ok &= r1 == r2;                  // gcd distributes over mul
-
       }
     }
   }

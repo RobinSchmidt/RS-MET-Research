@@ -86,7 +86,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPrimeFactorTable();
   //testPrimesAndMore();
   //testDivisors();
-  testGcdLcm();                    // stub
+  //testGcdLcm();                    // stub
   //testSquarity();
   //testFiniteField();
   //testFieldExtensions();
@@ -96,6 +96,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSet();
   //testRelation();
   //testSetBirthing();
+  testSetSorting();
   //testNeumannNumbers();
   //testNeumannIntegers();
   //testNeumannRationals();

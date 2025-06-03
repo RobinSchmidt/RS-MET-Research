@@ -255,7 +255,18 @@ The first factor is the number of non-empty subsets of B(n-1). The second factor
 all subsets of P(n-2). All new born sets on day n have the following structure: they contain a 
 non-empty subset of B(n-1) and a (possibly empty) subset of P(n-2). To get the number of all sets 
 that can be produced that way, we need to multiply the cardinalities of these sets. I think so, at 
-least. Verify! To initialize, we have: f(0) = f(1) = 1, F(0) = 1, F(1) = 2
+least. Verify! To initialize, we have: f(0) = f(1) = 1, F(0) = 1, F(1) = 2.
+
+Ah. It's actually simpler! The above is true though - but it's more easy to consider the recursion
+for the total number of sets at each b-day instead of the number of new born sets. The recursion is:
+
+   F(n) = 2^F(n-1)
+
+That means that we can explicitly (non-recursively) state that number in term of tetration: 
+
+  F(n) = 2 ^^ n 
+
+where ^^ should mean tetration (similar to Knuth's double arrow notation).
 
 
 https://www.youtube.com/watch?v=c2mYWNShzTA&list=PLzr1oJDUNa9JInlHHH3xVH29Ovzw8YoM2   7:15
@@ -263,6 +274,10 @@ https://www.youtube.com/watch?v=c2mYWNShzTA&list=PLzr1oJDUNa9JInlHHH3xVH29Ovzw8Y
 
 Should go to Googology in the book:
 https://en.wikipedia.org/wiki/Large_numbers#Standardized_system_of_writing
+
+
+
+
 
 ====================================================================================================
 

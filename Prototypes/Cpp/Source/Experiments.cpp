@@ -13408,6 +13408,12 @@ void testSetBirthing()
   //   computing here.
 }
 
+void testSetSorting()
+{
+
+
+}
+
 void testNeumannNumbers()
 {
   using Set = rema::rsSetNaive;

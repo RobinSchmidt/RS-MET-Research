@@ -1014,7 +1014,12 @@ Ideas:
   max() could contain the (mutually) recursive call to less(). Then we would have less() in terms 
   of max() and also max() in terms of less(). This definition does not explicitly reference the set
   sizes except for the base case (it just checks, if a set is empty or non-empty). But maybe we can
-  use the size-based base-case together with the maximum-of-elements approach.
+  use the size-based base-case together with the maximum-of-elements approach. ..but no - that's 
+  still not good enough - what if max(A) and max(B) are the same? Then we would need to iterate 
+  further - extract the 2nd largest element of both, etc. Maybe it would actually make more sense
+  to make the comparison based on the min() rather than the max().
+
+- Maybe sort first by nesting level ("birthday"), then by size, then (recursively) by elements.
 
 - Write functions canonicalize/isCanonical. A set is canonical, if it is recursively sorted and has
   no duplicate elements. Canonicalization consists of sorting and throwing away duplicates, if any.

@@ -734,7 +734,7 @@ Transfinite recursion is a method of constructing a sequence of objects - one fo
 
 %===================================================================================================
 \section{Numbers as Sets}
-In set theory, sets are the only thing that exists. Every mathematical object must somehow be viewed as some sort of set. To do all the cool math things that we love (or hate) so much, we obviously need numbers. So, we somehow need to build numbers from sets. Set theorists will talk about things like subsets of a number. This will at first sound totally nonsensical - what the heck is a subset of $10$ or $3/7$ or $\pi$ supposed to mean? We are used to think of numbers as atomic entities. But in set theory, numbers indeed \emph{are} sets (and therefore can have subsets) and we need to get used to this point of view.
+In set theory, sets are the fundamental objects from which everything else is built up. Every mathematical object must somehow be encoded as some sort of set. To do all the cool math things that we love (or hate) so much, we obviously need numbers. So, we somehow need to construct sets that behave like numbers. Set theorists will sometimes casually talk about things like the subsets of a number. This will at first sound totally nonsensical - what the heck is a subset of $10$ or $3/7$ or $\pi$ supposed to mean? We are used to think of numbers as atomic entities. But in set theory, numbers indeed \emph{are} sets (and therefore can have subsets) and we need to get used to this point of view.
 
 % 
 
@@ -761,7 +761,7 @@ In everyday math, we usually take numbers for granted and do not really think mu
 % https://cs.uwaterloo.ca/~alopez-o/math-faq/node11.html
 
 \subsubsection{Natural Numbers}
-The most basic of all number systems is the system of natural numbers. We can construct the set of natural number from ZF as follows: Given any set $x$, we define the successor function as $s(x) = x \cup \{ x \}$. Note that to be able to do this, we had to use the axiom of union and the axiom of pairing (which implies the constructibility of singletons). Then we give the names $0,1,2,3,\ldots$ to the following sets:
+The most basic of all number systems is the system of natural numbers. We can construct the set of natural numbers from ZF as follows: Given any set $x$, we define the successor function as $s(x) = x \cup \{ x \}$. Note that to be able to do this, we had to use the axiom of union and the axiom of pairing (which implies the constructibility of singletons). Then we give the names $0,1,2,3,\ldots$ to the following sets:
 
 \medskip
 \begin{tabular}{l l l l l}
@@ -890,6 +890,11 @@ x^y =\begin{cases}
 
 % What IS a Number? As Explained by a Mathematician
 % https://www.youtube.com/watch?v=dKtsjQtigag
+
+% What is a Number? - Numberphile
+% https://www.youtube.com/watch?v=NHZt8eBKcRA
+% - We use sets to "encode" numbers. I usually say, we "model" numbers by sets - but "encoding"
+%   may capture it better what is going on here.
 
 \subsubsection{Integer Numbers} The integers can be constructed from the naturals as equivalence classes of (ordered) pairs of naturals. Let $x = (a,b)$, i.e. our set that represents the integer $x$ is a pair of two Neumann naturals $a,b$. I will call such numbers "Neumann integers". For two such Neumann integers $x = (a,b)$ and $y = (c,d)$, we define the equivalence relation $\sim$ as follows:
 \begin{equation}
@@ -1048,6 +1053,9 @@ The purpose of cardinal numbers is to quantify the size of a set - finite or inf
 
 \paragraph{Size Comparisons}
 For finite sets, size comparisons are easy: We just count the number of elements, which results in a natural number, and whichever set has the greater count, has the greater size. Simple enough. But what if we can't quantify the size of a set with a natural number? The idea is to observe that for finite sets, two sets of equal size can always be put into a bijection with one another. That means that for sets of equal size, we can find a function that maps one set to the other bijectively. Usually many such functions exist, but finding one is enough to demonstrate that the two sets have equal size. The idea is now to generalize this to infinite sets: Two sets are considered to be of equal size whenever we can find a bijective function between them.
+
+% The Neumann naturals can serve as prototypes for sets of a given size. Any set that can be put
+% into a bijection with 4 = {0,1,2,3} has the same size as 4
 
 \medskip
 We do not only want to answer the question whether or not two sets are of equal size. We also want to know, which of the two sets is bigger in the case of non equal sizes. To this end, we observe that for finite sets, whenever we can find an injective but not bijective function $f$ from one set $A$ to another set $B$, then the set $A$ is smaller. Injective means that every element from $A$ is mapped to a different element in $B$. If an injective map is not bijective, i.e. it fails to be surjective, then that means that there are leftover elements in $B$ which are not reached by $f$. We interpret that circumstance as $B$ having a greater size than $A$ such that we cannot establish a one-to-one correspondence. 

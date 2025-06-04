@@ -843,6 +843,13 @@ x^y =\begin{cases}
 
 \paragraph{Summary} We have constructed a representation or encoding the of natural numbers purely from sets and have expressed the basic arithmetic operations in terms of set theoretic operations. We started with the most basic operation of them all - the successor function - and then worked our way up all the way to exponentiation. TODO: define subtraction, (floor-)division, remainder, roots, logarithms - see C++ implementation - I've already implemented this stuff partially
 
+% Mention that the so constructed Neumann numbers can serve as a sort of canonical/prototypical set
+% that we can use to make size comparisons against using the criterion of being able to construct
+% a bijection. The set 4 = { 0,1,2,3 } has cardinality 4 and can therefore be used to compare all
+% sets against. By the way: We thereby establish an equivalence relation between all sets. We can
+% define the idea of four as the set of all sets that have the same cardinalilty as the set 4. I'm
+% not sure, if that's the way mathematiciancs think about it, though.
+
 % ToDo: maybe show some properties of the operations like asscoicativity, distribuitivity, etc.
 % ..or at least meantion them
 
@@ -881,6 +888,8 @@ x^y =\begin{cases}
 % What is a Number? The Story of Math Starting from Zero
 % https://www.youtube.com/watch?v=rhJt5AUXsl8
 
+% What IS a Number? As Explained by a Mathematician
+% https://www.youtube.com/watch?v=dKtsjQtigag
 
 \subsubsection{Integer Numbers} The integers can be constructed from the naturals as equivalence classes of (ordered) pairs of naturals. Let $x = (a,b)$, i.e. our set that represents the integer $x$ is a pair of two Neumann naturals $a,b$. I will call such numbers "Neumann integers". For two such Neumann integers $x = (a,b)$ and $y = (c,d)$, we define the equivalence relation $\sim$ as follows:
 \begin{equation}

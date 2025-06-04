@@ -13409,20 +13409,39 @@ void testSetBirthing()
 }
 
 
+
+
+// Under construction:
 void rsRemoveDuplicates(rema::rsSetNaive* A, bool recursively)
 {
+  size_t N = A->getCardinality();
+  for(size_t i = 0; i < N; i++)
+  {
+    for(size_t j = i+1; j < N; j++)
+    {
+      if(A[i] == A[j])
+      {
+        //rsRemove(&A, i);  // Nope! rsRemove expects a std::vector. we need to use something like A.removeElememnt(i)
+        i--;                    // Verify!
+        N--;
+      }
+    }
+  }
 
 
+  if(recursively)
+  {
+    for(size_t i = 0; i < N; i++)
+      rsRemoveDuplicates(&A[i], true);
+  }
 }
-
-
 
 // Under construction:
 bool rsLess(rema::rsSetNaive A, rema::rsSetNaive B)
 {
   // The first test compares the nesting levels:
-  int nestA = A.getNestingDepth();
-  int nestB = B.getNestingDepth();
+  size_t nestA = A.getNestingDepth();
+  size_t nestB = B.getNestingDepth();
   if(nestA < nestB)
     return true;
   if(nestB < nestA)
@@ -13431,8 +13450,8 @@ bool rsLess(rema::rsSetNaive A, rema::rsSetNaive B)
   // The second test compares the sizes/cardinalities:
   rsRemoveDuplicates(&A, false);
   rsRemoveDuplicates(&B, false);
-  int sizeA = A.getCardinality();
-  int sizeB = B.getCardinality();
+  size_t sizeA = A.getCardinality();
+  size_t sizeB = B.getCardinality();
   if(sizeA < sizeB)
     return true;
   if(sizeB < sizeA)
@@ -13444,7 +13463,7 @@ bool rsLess(rema::rsSetNaive A, rema::rsSetNaive B)
 
   // The third test applies only to sets of the same nesting depth and with the same number of 
   // elements. It compares the sets "lexicographically":
-  for(int i = 0; i < sizeA; i++)   // sizeA == sizeB here
+  for(size_t i = 0; i < sizeA; i++)   // sizeA == sizeB here
     if(rsLess(A[i], B[i]))
       return true;
 

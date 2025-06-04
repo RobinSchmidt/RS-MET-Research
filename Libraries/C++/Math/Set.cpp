@@ -1029,5 +1029,10 @@ Ideas:
   expect from a mathematical set. It's something on top of what sets can do. Sets by themsleves 
   should not support these notions.
 
+- Maybe categorize the get/set according to if the function relies on implementation details (like
+  removeElement(size_t index)) or if it relies only on universal properties of mathematical sets 
+  like removeElement(const Set& elem). The latter may need a more complicated implementation 
+  because it should really remove all occurrences of the given elem.
+
 
 */

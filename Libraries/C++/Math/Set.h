@@ -77,6 +77,11 @@ public:
   /** Adds the given set as element to this set. */
   void addElement(const rsSetNaive& a);
 
+  /** Removes the element with the given index from the set. */
+  void removeElement(size_t i) { rsRemove(elements, i); }
+
+
+
   // ToDo: 
   // -removeElement(size_t i);
   // -removeElement(const rsSetNaive& a); - this can actually be implemented as set-difference

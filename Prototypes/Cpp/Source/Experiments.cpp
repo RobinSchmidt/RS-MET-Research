@@ -13414,15 +13414,15 @@ void testSetBirthing()
 // Under construction:
 void rsRemoveDuplicates(rema::rsSetNaive* A, bool recursively)
 {
-  size_t N = A->getCardinality();
+  size_t N = A->getCardinality();      // Use getArraySize()
   for(size_t i = 0; i < N; i++)
   {
     for(size_t j = i+1; j < N; j++)
     {
       if(A[i] == A[j])
       {
-        //rsRemove(&A, i);  // Nope! rsRemove expects a std::vector. we need to use something like A.removeElememnt(i)
-        i--;                    // Verify!
+        A->removeElement(i);
+        i--;                           // Verify!
         N--;
       }
     }
@@ -13430,16 +13430,16 @@ void rsRemoveDuplicates(rema::rsSetNaive* A, bool recursively)
 
 
   if(recursively)
-  {
     for(size_t i = 0; i < N; i++)
       rsRemoveDuplicates(&A[i], true);
-  }
 }
+// Needs test!
 
 // Under construction:
 bool rsLess(rema::rsSetNaive A, rema::rsSetNaive B)
 {
-  // The first test compares the nesting levels:
+  // The first test compares the nesting levels. Sizes with smaller nesting depth are considered to
+  // be less that those with greater nesting depth.
   size_t nestA = A.getNestingDepth();
   size_t nestB = B.getNestingDepth();
   if(nestA < nestB)
@@ -13447,10 +13447,12 @@ bool rsLess(rema::rsSetNaive A, rema::rsSetNaive B)
   if(nestB < nestA)
     return false;
 
-  // The second test compares the sizes/cardinalities:
-  rsRemoveDuplicates(&A, false);
+  // At this point, we know that the sets A and B have the same nesting depth. The second test 
+  // compares the sizes/cardinalities of the sets. Before doing that, we must ensure that the sets
+  // do not contain any duplicate elements:
+  rsRemoveDuplicates(&A, false);          // Duplicate removal must be done before...
   rsRemoveDuplicates(&B, false);
-  size_t sizeA = A.getCardinality();
+  size_t sizeA = A.getCardinality();      // ...extracting the sizes
   size_t sizeB = B.getCardinality();
   if(sizeA < sizeB)
     return true;
@@ -13461,12 +13463,19 @@ bool rsLess(rema::rsSetNaive A, rema::rsSetNaive B)
   // actually a bug: getCardinality should ignore duplicates. But that makes the algorithm much 
   // more costly.
 
-  // The third test applies only to sets of the same nesting depth and with the same number of 
-  // elements. It compares the sets "lexicographically":
-  for(size_t i = 0; i < sizeA; i++)   // sizeA == sizeB here
+  // At this point, we know that the sets A and B have the same nesting depth and same cardinality.
+  // The third test compares the sets element-wise "lexicographically" using the rsLess function 
+  // recursively. Before we do that, we must ensure that the element arrays are sorted. This also 
+  // makes use of rsLess recursively:
+  //rsSort(A, rsLess);                    // Sorting must be done before...
+  //rsSort(B, rsLess);
+  for(size_t i = 0; i < sizeA; i++)       // ...doing the element-wise comparisons
     if(rsLess(A[i], B[i]))
       return true;
 
+  // At this point, we know that none of the elements of A has been less than the corresponding 
+  // element of B. That means that all elements in B are >= the corrsponding element in A. That 
+  // means that either B == A or B > A such that A < B must be false:
   return false;
 }
 // Needs tests

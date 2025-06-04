@@ -1034,5 +1034,9 @@ Ideas:
   like removeElement(const Set& elem). The latter may need a more complicated implementation 
   because it should really remove all occurrences of the given elem.
 
+- Implement function to create the power set, set product, the set of all relations (power set of 
+  the product), set of all functions from A to B, set of all bijections/injections/surjections 
+  (these need to make assertions about the cardinalities of A and B).
+
 
 */

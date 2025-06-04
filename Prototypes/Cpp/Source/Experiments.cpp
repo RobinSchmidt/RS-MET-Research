@@ -13411,6 +13411,7 @@ void testSetBirthing()
 
 
 
+
 // Under construction:
 void rsRemoveDuplicates(rema::rsSetNaive* A, bool recursively)
 {
@@ -13479,7 +13480,49 @@ bool rsLess(rema::rsSetNaive A, rema::rsSetNaive B)
   return false;
 }
 // Needs tests
+// Verify that it is transitive, satisfies the trichotomy etc. - all the features that we expect 
+// from and order relation.
 
+
+// Under construction:
+bool rsHasDuplicates(rema::rsSetNaive* A)
+{
+  size_t N = A->getCardinality();      // Use getArraySize()
+  for(size_t i = 0; i < N; i++)
+    for(size_t j = i+1; j < N; j++)
+      if(A[i] == A[j])
+        return true;
+
+  return false;
+}
+// Needs tests.
+
+// Under construction:
+bool rsIsCanonical(rema::rsSetNaive* A, bool recursively)
+{
+  //// Superfluous?:
+  //if(A->isEmpty())
+  //  return true;
+
+  if(rsHasDuplicates(A))
+    return false;
+
+  // Maybe factor out into function rsIsStrictlySorted:
+  size_t N = A->getCardinality();      // Use getArraySize()
+  for(size_t i = 1; i < N; i++)
+  {
+    if(!rsLess(A[i-1], A[i]))
+      return false;
+  }
+  // ...actually, if a set A is strictly sorted, than this already implies that there are no 
+  // duplicates so the explicit check for duplicates above may be superfluous. Verify that an then
+  // maybe get rid of the  " if(rsHasDuplicates(A)) ..."  stuff
+
+
+  return true;
+}
+
+// Under construction:
 void testSetSorting()
 {
   using Set = rema::rsSetNaive;

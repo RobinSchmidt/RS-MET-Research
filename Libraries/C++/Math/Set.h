@@ -90,6 +90,8 @@ public:
   /** Returns the cardinality, i.e. the number of elements of this set. */
   size_t getCardinality() const { return elements.size(); }
   // maybe rename to size (or make an alias)
+  // BUG! If the set contains the same element more than once, it will be counted more that once. 
+  // But that's not how sets are supposed to behave!
 
   /** Returns true, iff this set is the empty set. */
   bool isEmpty() const { return elements.size() == 0; }

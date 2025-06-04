@@ -13408,9 +13408,81 @@ void testSetBirthing()
   //   computing here.
 }
 
-void testSetSorting()
+
+void rsRemoveDuplicates(rema::rsSetNaive* A, bool recursively)
 {
 
+
+}
+
+
+
+// Under construction:
+bool rsLess(rema::rsSetNaive A, rema::rsSetNaive B)
+{
+  // The first test compares the nesting levels:
+  int nestA = A.getNestingDepth();
+  int nestB = B.getNestingDepth();
+  if(nestA < nestB)
+    return true;
+  if(nestB < nestA)
+    return false;
+
+  // The second test compares the sizes/cardinalities:
+  rsRemoveDuplicates(&A, false);
+  rsRemoveDuplicates(&B, false);
+  int sizeA = A.getCardinality();
+  int sizeB = B.getCardinality();
+  if(sizeA < sizeB)
+    return true;
+  if(sizeB < sizeA)
+    return false;
+  // Maybe instead of getCardinality(), use some function like getArraySize() which should just
+  // return the size of the elements array. That's what getCardinality currently does - but that's
+  // actually a bug: getCardinality should ignore duplicates. But that makes the algorithm much 
+  // more costly.
+
+  // The third test applies only to sets of the same nesting depth and with the same number of 
+  // elements. It compares the sets "lexicographically":
+  for(int i = 0; i < sizeA; i++)   // sizeA == sizeB here
+    if(rsLess(A[i], B[i]))
+      return true;
+
+  return false;
+}
+// Needs tests
+
+void testSetSorting()
+{
+  using Set = rema::rsSetNaive;
+  bool  ok  = true;
+
+
+
+  rsAssert(ok);
+
+
+  // ToDo:
+  //
+  //
+  // - Define a less-than relation between sets. It should sort according to the following 
+  //   criteria: 
+  //
+  //     (1) Nesting level / birthday. Sets with small birthday come first.
+  //     (2) Size / cardinality. Sets with small size come first.
+  //     (3) Order of the elements. Applies only to sets of equal size. Uses "lexicographical" 
+  //         order by applying the less-than relation recursively to the elements.
+  //
+  //   Not that for this to work, we need to assume that the set doesn't contain any duplicates 
+  //   because otheriwse, the comparison by size would not work as intended.
+  //
+  // - Write a function that compares sets for this so defined less-than operation.
+  //
+  // - Write a function to canonicalize the representation of a given set. A canonical 
+  //   representation should be sorted and not contain any duplicates. This property should hold
+  //   recursively for all elements.
+  //
+  // - Write unit tests for the less-than and canonicalization function.
 
 }
 

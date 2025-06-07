@@ -94,9 +94,15 @@ public:
 
   /** Returns the cardinality, i.e. the number of elements of this set. */
   size_t getCardinality() const { return elements.size(); }
-  // maybe rename to size (or make an alias)
-  // BUG! If the set contains the same element more than once, it will be counted more that once. 
-  // But that's not how sets are supposed to behave!
+  // Maybe rename to size (or make an alias)
+  // BUG! If the set contains the same element more than once, it will also be counted more that 
+  // once. But that's not how sets are supposed to behave! Multiplicity of occurrence shouldn't 
+  // matter for cardinality. It seems like we really need to *count* the *unique* elements in the 
+  // array. I think, that will raise the computational cost from O(1) to O(N^2) which kinda sucks.
+  // Wait! No! I think, it's all fine because the addElement() function adds the element only to
+  // the array, if it's not already there, so it's actually guaranteed that there are no 
+  // duplicates! We need to clearly state that in the documentation. It's an implementation detail
+  // but I think, it's still worth to document.
 
   /** Returns true, iff this set is the empty set. */
   bool isEmpty() const { return elements.size() == 0; }

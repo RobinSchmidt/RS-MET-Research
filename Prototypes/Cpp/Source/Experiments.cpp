@@ -9985,8 +9985,8 @@ void testShanksFormula()
   //   could have an aggressive lowpass and a1 a less aggressive one and a2 and even less aggrssive 
   //   one? Where by "aggressive" I mean: has low cutoff. Maybe we could express the parabola in 
   //   terms of a scale factor and its roots and apply different scaling/filtering to these.
-  //   Outputting a0 amount to evaluating the polynomial at t=0. Evaluating it at t=1 or t=1 would
-  //   amount to output a0+a1+a2 or a0-a1+a2 respectively. Maybe these could be used as 
+  //   Outputting a0 amounts to evaluating the polynomial at t=0. Evaluating it at t=1 or t=-1 
+  //   would amount to output a0+a1+a2 or a0-a1+a2 respectively. Maybe these could be used as 
   //   alternatives. 
 }
 
@@ -13554,6 +13554,10 @@ void testSetSorting()
   //   recursively for all elements.
   //
   // - Write unit tests for the less-than and canonicalization function.
+  //
+  // - I think, the functions rsHasDuplicates(), rsRemoveDuplicates() are superfluous for sets
+  //   because the non-existence of duplicates is already ensured by the set class via the 
+  //   implementation of addElement(), so it's a class invariant.
 
 }
 

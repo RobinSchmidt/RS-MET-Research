@@ -24,7 +24,7 @@ Logical connectives are symbols that are used to create more complex logical exp
   $p \vee q$       & Disjunction           & $p$ or $q$ (maybe both)   \\
   $p \then q$      & Material Implication  & $p$ implies $q$, if $p$ then $q$   \\  
   $p \mequiv q$    & Material Equivalence  & $p$ if and only if $q$, $p$ iff $q$   \\    
-  $p \xor q$       & Exclusive or, Xor     & either $p$ or $q$, $p$ or $q$ but not both   \\ 
+  $p \xor q$       & Exclusive or, Xor     & either $p$ or $q$ but not both   \\ 
   $p \nand q$      & Non-Conjunction, Nand & Not both, Not ($p$ and $q$)   \\   
 \end{tabular}
 \medskip
@@ -49,6 +49,8 @@ As said, the list is not exhaustive. There are 16 possible different functions $
 % How to Read Logic
 % https://www.youtube.com/watch?v=JVjv0CCzHok
 
+% Can we find a pair of logical connectives that behave like addition and multiplication of numbers,
+% i.e. obey all the required laws (assiciativity, etc.)?
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Boolean Algebra}
@@ -70,7 +72,10 @@ It turns out that some of the logical connectives obey certain rules of calculat
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Deduction}
-Logical \emph{deduction} is the process of deriving new true statements from given true statements. In this context, the given statements are called \emph{premises} and the derived statements are called \emph{conclusions}. The process of deriving new statements from known ones is called \emph{inference} and there are certain rules that we need to obey to draw valid conclusions from a given set of premises. When we write a statement like $p,q \,\vdash\, r$ then this means that if $p$ and $q$ on the left hand side are both true propositions, then the proposition $r$ on the right hand side is also true. In this notation, $p,q$ are the premises and $r$ is the conclusion. The symbol $\vdash$ is called the "turnstile" or "tee" and means something like "proves", "entails", "yields"  ...tbc
+Logical \emph{deduction} is the process of deriving new true statements from given true statements. In this context, the given statements are called \emph{premises} and the derived statements are called \emph{conclusions}. The process of deriving new statements from known ones is called \emph{inference} and there are certain rules that we need to obey to draw valid conclusions from a given set of premises. When we write a statement like $p,q \,\vdash\, r$ then this means that if $p$ and $q$ on the left hand side are both true propositions, then the proposition $r$ on the right hand side is also true. In this notation, $p,q$ are the premises and $r$ is the conclusion. The symbol $\vdash$ is called the "turnstile" or "tee" and means something like "proves", "entails", "yields"  ...TBC...
+
+% A logical deduction formula writes down the (comma separated) premises on the left hand side of
+% the tee symbol and the conclusion on the right hand side
 
 % https://en.wikipedia.org/wiki/Turnstile_(symbol)
 % or propositional logic, it may be shown that semantic consequence and derivability are equivalent
@@ -277,6 +282,8 @@ In 1st order logic, the variables that were formerly just atomic truth values no
 
 \medskip
 In 2nd order logic, we can additionally quantify over predicates. For example, we could write down the law of the excluded middle as: $\forall \varphi \forall x: (\varphi(x) \vee \neg \varphi(x))$. The formula says that for any predicate $\varphi$ and for any variable $x$, either $\varphi(x)$ or $\neg \varphi(x)$ is true\footnote{Shouldn't the law use an exclusive or, i.e. say $\varphi(x) \xor \neg \varphi(x)$? I mean, the use of inclusive or does not render the statement wrong (in fact, it turns it into a tautology) - but it doesn't seem to express that $\varphi$ and $\neg \varphi$ are mutually exclusive which is clearly the intended meaning when calling it law of the \emph{excluded} middle. Figure out!}.
+
+% The "middle" in this context could either mean: "p is neither true nor false" or it could mean: "p is true and false at the same time". The formula using the inclusive or onyl excludes the first of these possibilities, I think.
 
 % https://www.youtube.com/watch?v=niqqm1DRTkE
 % Mentions law of excluded middle at 6:20

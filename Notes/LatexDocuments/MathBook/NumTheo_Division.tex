@@ -82,7 +82,7 @@ Another question besides "what is the $n$th prime" could be that we have some nu
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Prime Factorization - The Fundamental Theorem of Arithmetic}
-Any positive natural number $n \geq 1$ can be written as a product of prime numbers in a way that unique up to ordering of the factors. That statement is an important theorem, called the \emph{"Fundamental Theorem of Arithmetic"}. In such a product, a prime number is allowed to occur multiple times so you may also hear the statement in the form: "...as a product of powers of prime numbers". The theorem can be expressed as a formula as:
+Any positive natural number $n \geq 1$ can be written as a product of prime numbers in a way that is unique up to ordering of the factors. That statement is an important theorem, called the \emph{"Fundamental Theorem of Arithmetic"}. In such a product, a prime number is allowed to occur multiple times so you may also hear the statement in the form: "...as a product of powers of prime numbers". The theorem can be expressed as a formula as:
 \begin{equation}
  n = p_1^{e_1} \cdot p_2^{e_2} \cdot \ldots \cdot p_m^{e_m}
    = \prod_{k=1}^{m} p_k^{e_k}
@@ -210,7 +210,9 @@ Two numbers $n$ and $m$ are said to be \emph{coprime} or \emph{mututally prime} 
 %===================================================================================================
 % maybe this should be a section rather than a subsection:
 \subsection{Number Theoretic Functions}
-\emph{Number theoretic functions}, sometimes also called \emph{arithmetic functions}, are functions that take a natural number $n$ as input and produce as output another number. Real or complex outputs are allowed in general but more typically, the outputs are also integers [VERIFY]. These functions encode some property about the natural numbers. We have already encountered the number of divisors function $d(n)$ as an example of such a number theoretic function. But there are many more. Before introducing them one by one, we'll first talk about some general features that these functions may or may not have.
+\emph{Number theoretic functions}, sometimes also called \emph{arithmetic functions}, are functions that take a natural number $n$ as input and produce as output another number. Real or complex outputs are allowed in general but more typically, the outputs are also integers [VERIFY]. These functions encode some property about the natural numbers. We have already encountered the number of divisors function $d(n)$ as an example of such a number theoretic function. But there are many more. Before introducing them one by one, we'll first talk about some general features that these functions may or may not have. ...TBC...
+
+% explain multiplicativity as an important feature. I think, it means that f(m*n) = f(m) * f(n)
 
 % https://en.wikipedia.org/wiki/Arithmetic_function
 
@@ -230,7 +232,7 @@ It's equivalent to saying that the $n$th prime number is approximately to be fou
 There are other asymptotically equivalent functions that are still better, though. With the simple tweak to the function to use $n / (\log(n) - 1)$ instead, one can already improve the approximation quite a bit. One might also try to use $n / (\log(n) - B)$ for some constant $B$ that one should pick in an optimal way\footnote{ToDo: Explain the optimality criterion. Are we doing some sort of least squares fitting here?}. In his first experiments, Legendre determined an optimal value of $B = 1.08366$ which was dubbed Legendre's constant at the time. But it appeared only to be that value because Legendre looked at a small amount of data. It later turned out that the optimal value is indeed exactly $1$.
 
 \medskip
-There is a still better way to approximate $\pi(n)$. It is in terms of the so integral logarithm function $\Li(n)$ (see page \pageref{Eq:LogarithmicIntegral}). This approximation just uses $\pi(n) \approx \Li(n)$. This approximation is used in a stronger version of the prime number theorem that is still unproven - the famous Riemann hypothesis. If that hypothesis is true, then the approximation error between $\pi(n)$ and $\Li(n)$ will approach zero even faster ...TBC...
+There is a still better way to approximate $\pi(n)$. It is in terms of the integral logarithm function $\Li(n)$ (see page \pageref{Eq:LogarithmicIntegral}). This approximation just uses $\pi(n) \approx \Li(n)$. This approximation is used in a stronger version of the prime number theorem that is still unproven - the famous Riemann hypothesis. If that hypothesis is true, then the approximation error between $\pi(n)$ and $\Li(n)$ will approach zero even faster ...TBC...
 
 %...TBC...ToDo: Give better approximation in terms of $\Li(x)$ 
 

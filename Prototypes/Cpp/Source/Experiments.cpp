@@ -11487,6 +11487,10 @@ void testPrimesAndMore()
   // ToDo:
   // -maybe use a different plotting style (dots) - maybe let plotMaxtrixRows take an optional
   //  string with gnuplot options
+  // -Implement different algorithms to produce the array of primes up to some number n. I already
+  //  have the sieve of Erathostenes implemented. Implement also trial division and Dijkstra's 
+  //  algo. See: https://www.youtube.com/watch?v=fwxjMKBMR7s  
+  //  "Dijkstra's Hidden Prime Finding Algorithm"
 }
 
 

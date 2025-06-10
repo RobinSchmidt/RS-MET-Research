@@ -694,12 +694,31 @@ rsSetNaive rsNeumannNumber::sub(const rsSetNaive& x, const rsSetNaive& y)
 
 
   //// Alternative implementation:
+  //
   //if(isZero(y))
   //  return x;
   //else
   //  return sub(predecessor(x), predecessor(y));
+  //
+  // or:
+  //
+  //if(isZero(y))
+  //  return x;
+  //else
+  //  return predecessor(sub(x, predecessor(y)));
 
-  // -There are alternative implementations. We could count down from x to y, for example.
+  // -There are alternative implementations. We could count down from x to y, for example. Like so 
+  //  (I think - needs to be verified):
+  //
+  //  rsSetNaive d = zero();
+  //  while(x > y)
+  //  {
+  //    x = predecessor(x);
+  //    d = successor(d);
+  //  }
+  //
+  // I think, the recursive implementations are nicer for the theoretical exposition in the math 
+  // book
 }
 // Needs test
 

@@ -217,10 +217,6 @@ public:
   size_t getNestingDepth() const;
 
 
-  //
-  // rsSetNaive
-
-
   //-----------------------------------------------------------------------------------------------
   // \name Factory
 
@@ -310,7 +306,7 @@ public:
   // min/max as macros which messes up the compilation. Maybe we should #undef them? ...done. But
   // I'm not sure, if this is the best solution to the problem.
 
-  // ToDo: Maybe implement functions for min and max that take 2 sets arguments and return the 
+  // ToDo: Maybe implement functions for min and max that take 2 sets as arguments and return the 
   // smaller or larger of the two. Then, implement the min/max that operate on the whole array of
   // elements in terms of these...but maybe not.
 
@@ -321,7 +317,7 @@ public:
 
   // ToDo: Implement the set exponentiation function, i.e. the set of all functions from a set A
   // to another set B. If A has M and B has N elements, the result will have N^M elements (or is it
-  // M^N?). Maybe call it pow(Set A, Set B) and/or use the ^ operator
+  // M^N?). Maybe call it pow(Set A, Set B) and/or use the ^ operator. 
 
   /** UNDER CONSTRUCTION - NEEDS TESTS */
   static rsSetNaive powerSet(const rsSetNaive& A);

@@ -698,14 +698,14 @@ rsSetNaive rsNeumannNumber::sub(const rsSetNaive& x, const rsSetNaive& y)
   //if(isZero(y))
   //  return x;
   //else
-  //  return sub(predecessor(x), predecessor(y));
+  //  return sub(predecessor(x), predecessor(y));  // x - y = (x-1) - (y-1)
   //
   // or:
   //
   //if(isZero(y))
   //  return x;
   //else
-  //  return predecessor(sub(x, predecessor(y)));
+  //  return predecessor(sub(x, predecessor(y)));  // x - y = (x - (y-1)) - 1
 
   // -There are alternative implementations. We could count down from x to y, for example. Like so 
   //  (I think - needs to be verified):

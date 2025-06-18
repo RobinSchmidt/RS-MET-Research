@@ -37,6 +37,7 @@ P_n^{(m_1,m_2,\ldots,m_k)}
 \end{equation}
 distinguishable permutations. These ares sometimes called \emph{multiset permutations} or \emph{permutations with repetition} [VERIFY!]. The numbers $m_i$ are called the \emph{multiplicities}. The quantity is also called the multinomial coefficient and it is a generalization of the binomial coefficient "$n$-choose-$k$" and the notation on the right hand side is a corresponding generalization of the usual binomial coefficient notation $\binom{n}{k}$. ...TBC... mention asymptotic approximations such as Stirling's formula and continuous variants as the product function(or its shifted version, the Gamma-function, point out relation to expanding an expression like $(\sum_{i=1}^{n} x_i)^p$ - here $n$ is the number of variables and $p$ is the power/exponent)
 
+
 % Leupold, pg 329
 % https://en.wikipedia.org/wiki/Permutation#Permutations_of_multisets
 % https://en.wikipedia.org/wiki/Multinomial_theorem#Multinomial_coefficients
@@ -72,7 +73,7 @@ where the top-left superscript $r$ stands for "with repetition"and the right not
 
 \paragraph{Variations}
 %The number of \emph{variations} of $n$ distinguishable objects is given by:
-Now we have given a set of size $n$ and the task is to choose $k$ objects from it and put them into a given order. How many ways are there to do this? That is, how many different $k$-tuples can be formed from elements of a set of size $n$? If we allow an object to be chosen more than once, these tuples are is called \emph{variations with repetition} or \emph{arrangements with repetition} and there are:
+Now we consider a situation where we have a given set of size $n$ and the task is to choose $k$ objects from it and put them into a given order. How many ways are there to do this? That is, how many different $k$-tuples can be formed from elements of a set of size $n$? If we allow an object to be chosen more than once, these tuples are is called \emph{variations with repetition} or \emph{arrangements with repetition} and there are:
 \begin{equation}
 \prescript{r}{}{V}_n^k = n^k
 \end{equation}
@@ -96,7 +97,8 @@ of them. ...VERIFY! ...TBC...
 % https://stackoverflow.com/questions/2366074/code-for-variations-with-repetition-combinatorics
 
 \paragraph{Partitions}
-A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empty subsets whose union gives back the original set. For example, take the set $\{a,b,c\}$. We can partition it in the following 5 ways: $\{\{a\},\{b\},\{c\}\}, \{\{a\},\{b,c\}\}, \{\{a,b\},\{c\}\}, \{\{a,c\},\{b\}\}, \{\{a,b,c\}\}$. For a set with $n$ elements, the number of possible partitions is given by the $n$th \emph{Bell number} $B_n$. Partitions of a set can also be interpreted in terms of equivalence classes. Therefore, the number $B_n$ gives the number of possible different equivalence relations on a set of size $n$. The first $7$ Bell numbers are: $B_0=1, B_1=1, B_2=2, B_3=5, B_4=15, B_5=52, B_6=203$. The Bell numbers can be computed algorithmically in a similar way as binomial coefficients. For those, we could use Pascal's triangle. For the Bell numbers, there's Bell's triangle. It looks as follows:
+\label{Sec:PartitionsOfSets}
+A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empty subsets whose union gives back the original set. For example, take the set $\{a,b,c\}$. We can partition it in the following 5 ways: $\{\{a\},\{b\},\{c\}\}, \{\{a\},\{b,c\}\}, \{\{a,b\},\{c\}\}, \{\{a,c\},\{b\}\}, \{\{a,b,c\}\}$. For a set with $n$ elements, the number of possible partitions is given by the $n$th \emph{Bell number} $B_n$. Partitions of a set can also be interpreted in terms of equivalence classes. That is: We can consider each of the subsets as being an equivalence class [VERIFY!]. Therefore, the number $B_n$ gives the number of possible different equivalence relations on a set of size $n$. The first $7$ Bell numbers are: $B_0=1, B_1=1, B_2=2, B_3=5, B_4=15, B_5=52, B_6=203$. The Bell numbers can be computed algorithmically in a similar way as the binomial coefficients can be computed via Pascal's triangle. For the Bell numbers, there's Bell's triangle. It looks as follows:
 \begin{center}  % doesn't work!
 \begin{verbatim}
                     1
@@ -108,9 +110,9 @@ A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empt
 203   255   322   409   523   674   877
 \end{verbatim}
 \end{center}
-The rules to compute the numbers are as follows: Start with the single $1$ in the first row. To start the next row, copy the last number from the previous row into the first position of the next row. All other numbers in the row are computed by adding the left and top-left neighbors until the row is completely filled. Then copy the last number of the row into the first position of the next row again. And so on. The sequence of Bell numbers appears in the leftmost column, i.e. in the row start numbers. They also appear in the row end numbers but index-shifted by one. 
+The rules to compute the numbers are as follows: Start with the single $1$ in the first row. To start the next row, copy the last number from the previous row into the first position of the next row. All other numbers in the row are computed by adding the left and top-left neighbors until the row is completely filled. Then copy the last number of the row into the first position of the next row again. And so on. The sequence of Bell numbers appears in the leftmost column, i.e. in the row start numbers. They also appear in the row end numbers but index-shifted by one with $B_0$ missing. 
 
-...TBC... Q: Do the inner numbers of the Bell triangle have some meaning, too? ToDo: mention integer partitions (don't confuse these concepts).
+...TBC... Q: Do the inner numbers of the Bell triangle have some meaning, too? ToDo: mention integer partitions (and warn about confusing these concepts - they have nothing to with one another, I think).
 
 % https://en.wikipedia.org/wiki/Partition_of_a_set
 % https://en.wikipedia.org/wiki/Bell_number
@@ -147,7 +149,9 @@ Aside from counting ways how to do certain things with sets, combinatorics is al
 
 
 \paragraph{Parenthesations and Catalan Numbers}
-Consider the task of computing a product of 4 numbers $p = a \cdot b \cdot c  \cdot d = abcd$. Now we ask how many ways there are to evaluate this product assuming that in each step, we compute a product of two numbers. That is: we ask how many ways are there to set the parentheses. The answer is 5. These are the 5 ways to compute the product: $((ab)c)d, (a(bc))d, (ab)(cd), a((bc)d), a(b(cd))$. In general, the number of ways to evaluate/parenthesize a product of $n$ factors is given by the $n$th Catalan number. ...TBC...
+Consider the task of computing a product of 4 numbers $p = a \cdot b \cdot c  \cdot d = abcd$. Now we ask how many ways there are to evaluate this product assuming that in each step, we compute a product of two numbers. That is: we ask how many ways are there to set the parentheses. The answer is 5. These are the 5 ways to compute the product: $((ab)c)d, (a(bc))d, (ab)(cd), a((bc)d), a(b(cd))$. In general, the number of ways to evaluate/parenthesize a product of $n$ factors is given by the $n$th Catalan number. The Catalan number pop up in various other settings as well  ...TBC...
+
+%Parenthisations?, Parenthesisations?
 
 
 %The number of different way
@@ -181,6 +185,22 @@ Consider the task of computing a product of 4 numbers $p = a \cdot b \cdot c  \c
 % My favorite Sequence of Numbers
 % https://www.youtube.com/watch?v=X6NQMB6JaF0
 
+
+%\paragraph{Super-Catalan Numbers}
+%https://en.wikipedia.org/wiki/Catalan_number#Generalizations
+
+
+%\paragraph{Hyper-Catalan Numbers}
+
+% https://www.tandfonline.com/doi/full/10.1080/00029890.2025.2460966#d1e755
+% A Hyper-Catalan Series Solution to Polynomial Equations, and the Geode
+
+
+
+
+% https://arxiv.org/pdf/2102.05121
+% GENERALIZED CATALAN NUMBERS FROM HYPERGRAPHS
+
 \begin{comment}
 
 
@@ -194,6 +214,10 @@ https://en.wikipedia.org/wiki/Double_factorial
 https://mathworld.wolfram.com/DoubleFactorial.html
 https://mathworld.wolfram.com/Multifactorial.html
 
+
+About an unintuitive concept that explains unsolvable Puzzles
+https://www.youtube.com/watch?v=p6kCYbKIMak
+-Is about parity - not sure if that fits in Combinatorics or elsewhere
 
 \end{comment}
 

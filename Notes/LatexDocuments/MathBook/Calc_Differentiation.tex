@@ -220,10 +220,22 @@ I'll refrain from giving a general formula because I would have to introduce an 
 % https://en.wikipedia.org/wiki/Differential_of_a_function#General_formulation
 
 \paragraph{Higher Order Derivatives of Composite Functions}
-There is also a formula for higher order derivatives of a composition of two functions. It's called \emph{Faa di Bruno's formula} and it is very messy. You may look it up on Wikipedia if you need it. ToDo: Give the formula here. Perhaps it would make more sense to express it in the form of an algorithm in pseudocode or in python? Maybe figure out an even more general formula for higher order derivatives of composites of multiple functions - but that would then probably be unmanagably messy? 
+There is also a formula for higher order derivatives of a composition of two functions. It's called \emph{Faa di Bruno's formula} and it says:
+\begin{equation}
+\frac{d^n}{d x^n} f(g(x)) = 
+\sum_{A \in P_n} f^{(|A|)}(g(x)) \prod_{a \in A} g^{(|a|)}(x) 
+\end{equation}
+where $P_n$ is the set of all partitions\footnote{A partition of a set is a way of decomposing it into disjoint subsets. See page \pageref{Sec:PartitionsOfSets} for more details.} of the set $\{1,2\ldots,n\}$, $|A|$ the number of parts of partition $A$, i.e. the cardinality of $A$ and $|a|$ is the number of elements in the given part $a$ of a partition $A$. Let's unpack this formula with the example of $n=3$. First, we need to form the set $P_3$, i.e. the set of partitions of the set $\{1,2,3\}$. ...TBC...
+
+
+
+%You may look it up on Wikipedia if you need it. ToDo: Give the formula here. Perhaps it would make more sense to express it in the form of an algorithm in pseudocode or in python? Maybe figure out an even more general formula for higher order derivatives of composites of multiple functions - but that would then probably be unmanagably messy? 
 
 % https://en.wikipedia.org/wiki/Fa%C3%A0_di_Bruno%27s_formula
 
+% the chain rule that your professor hid from you
+% https://www.youtube.com/watch?v=hAl3b-0N34E
+% -has a nice way to write down the formula.
 
 
 \subsubsection{The Inverse Function Rule} ...TBC...
@@ -283,7 +295,7 @@ Common to the definitions of the derivative above is that they involved an initi
 \begin{equation}
  f'(x) = \lim_{q \rightarrow 1} \frac{f(q x) - f(x)}{ q x - x }
 \end{equation}
-Instead of letting an additive constant $h$ got to zero, we let a multiplicative constant $q$ go to $1$. Without the limit, we would get what is also known as $q$-calculus. If we apply this definition to the function $f(x) = x^2$, we get:
+Instead of letting an additive constant $h$ go to zero, we let a multiplicative constant $q$ go to $1$. Without the limit, we would get what is also known as $q$-calculus. If we apply this definition to the function $f(x) = x^2$, we get:
 \begin{equation}
 f'(x) = \lim_{q \rightarrow 1} \frac{(q x)^2 - x^2}{ q x - x }
       = \lim_{q \rightarrow 1} \frac{q^2 x^2 - x^2}{ q x - x }
@@ -386,7 +398,7 @@ There are certain derivative-like operations that can be applied to other things
 % ...maybe belongs into number theory
 
 \paragraph{Algebraic Derivations}
-In the field of abstract algebra, specifically in \emph{differential algebra}, there is the notion of a so called \emph{derivation}. In this context, we start with a vector space and we assume that there is product $a b$ defined between any two vectors $a$ and $b$ which are elements of this vector space. When we equip such a vector space with a product (in addition to the usual vector space operations of addition and scalar multiplication), it is called an \emph{algebra}. When we equip that algebra with yet another (unary) operation $D$ that satisfies the product rule $D(a b) = a D(b) + D(a) b$, then we call the operation $D$ a \emph{derivation}. Note that the order of the factors in this formula may be important when the product is non-commutative. A commutative algebra equipped with a derivation is called a \emph{ordinary differential ring}. [VERIFY!]. If we have multiple derivations $D_1, D_2, \ldots$ which pairwise commute (i.e. $D_1(D_2(\ldots)) = D_2(D_1(\ldots))$), then we have a \emph{partial differential ring}. These structures model the behavior of ordinary or partial differential equations in the ways of abstract algebra. [VERIFY]. As an example for an ordinary differential ring, we can take the vector space of all polynomials (or maybe power series, if we allow "infinite polynomials"). The product would be defined by polynomial multiplication and the derivation would be defined by the usual way in which we take derivatives of polynomials. That immediately gives us a way to define products and derivations on (possibly infinite) sequences - we just interpret the sequence elements as polynomial coefficients and use the rules for multiplying and differentiating polynomials (or power series). That means: multiplication on sequences is convolution and derivation on sequences is multiplying by index and then left-shifting. [VERIFY!] ...TBC...
+In the field of abstract algebra, specifically in \emph{differential algebra}, there is the notion of a so called \emph{derivation}. In this context, we start with a vector space and we assume that there is product $a b$ defined between any two vectors $a$ and $b$ which are elements of this vector space. When we equip such a vector space with a product (in addition to the usual vector space operations of addition and scalar multiplication), it is called an \emph{algebra}. When we equip that algebra with yet another (unary) operation $D$ that satisfies the product rule $D(a b) = a D(b) + D(a) b$, then we call the operation $D$ a \emph{derivation}. Note that the order of the factors in this formula may be important when the product is non-commutative. A commutative algebra equipped with a derivation is called an \emph{ordinary differential ring}. [VERIFY!]. If we have multiple derivations $D_1, D_2, \ldots$ which pairwise commute (i.e. $D_1(D_2(\ldots)) = D_2(D_1(\ldots))$), then we have a \emph{partial differential ring}. These structures model the behavior of ordinary or partial differential equations in the ways of abstract algebra. [VERIFY]. As an example for an ordinary differential ring, we can take the vector space of all polynomials (or maybe power series, if we allow "infinite polynomials"). The product would be defined by polynomial multiplication and the derivation would be defined by the usual way in which we take derivatives of polynomials. That immediately gives us a way to define products and derivations on (possibly infinite) sequences - we just interpret the sequence elements as polynomial coefficients and use the rules for multiplying and differentiating polynomials (or power series). That means: multiplication on sequences is convolution and derivation on sequences is multiplying by index and then left-shifting. [VERIFY!] ...TBC...
 
 % https://en.wikipedia.org/wiki/Differential_algebra#Differential_rings
 

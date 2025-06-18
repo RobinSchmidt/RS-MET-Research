@@ -18470,10 +18470,12 @@ void testCatalanNumbers()
   // We implement some algorithms to compute Catalan numbers. They seem to be rather important in 
   // combinatorics and they tend to pop up whenever a problem involves (or can be related to) a 
   // binary tree, so maybe we'll need such an algorithm at some point. The first few are:
+  //
   // 	 1,1,2,5,14,42,132,429,1430,4862,16796,58786,208012,742900,2674440,9694845,35357670,
   //   129644790,477638700,1767263190,6564120420,24466267020,91482563640,343059613650,
   //   1289904147324,4861946401452,18367353072152,69533550916004,263747951750360,1002242216651368,
   //   3814986502092304,...
+  //
   // They also show up as the number of triangulations of an n-sided polygon. C_n is also the 
   // number of full binary trees with 2*n+1 nodes
 
@@ -18577,7 +18579,7 @@ void testCatalanNumbers()
   //  at each step. That may avoid the overflow for a while longer. We'll probably end up with an 
   //  algo similar to the recursion formula?
   // -Plot the Catalan numbers and their asymptotic approximation: 4^n / (sqrt(pi) * n^(3/2)). 
-  //  Maybe figure out if there are more accurate approximations formulas. Maybe do the same for
+  //  Maybe figure out if there are more accurate approximation formulas. Maybe do the same for
   //  the factorial and Stirling's formula.
 
   // See:

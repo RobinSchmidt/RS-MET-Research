@@ -83,8 +83,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testLeveledNumber();   // stub
   //testCommutativeHyperOperations();
   //testNewtonFractal();       // move up to image processing, compare to stuff in main repo - may be redundant
-  testPrimeFactorTable();
-  testPrimesAndMore();
+  //testPrimeFactorTable();
+  //testPrimesAndMore();
   //testDivisors();
   //testGcdLcm();                    // stub
   //testSquarity();
@@ -96,7 +96,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSet();
   //testRelation();
   //testSetBirthing();
-  testSetSorting();
+  //testSetSorting();
   //testNeumannNumbers();
   //testNeumannIntegers();
   //testNeumannRationals();
@@ -142,7 +142,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testChebychevExpansion();        // stub
   //testChebychevEconomization();    // stub
   //testGeneratingFunction();
-  //testCatalanNumbers();
+  testCatalanNumbers();
   //testSmoothCrossFade();
   //testSmoothCrossFade2();
   //testSmoothMax();                   // stub

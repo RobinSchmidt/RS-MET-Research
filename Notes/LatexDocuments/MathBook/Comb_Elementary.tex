@@ -24,8 +24,8 @@
 
 % The terminology seems a mess
 
-\paragraph{Permutations}
-Let's say that we have $n$ different (i.e. distinguishable) objects and we want to know, how many ways there are, to put these objects into a different order. For example, the possible orders for the $3$ objects $a,b,c$ are $abc$, $acb$, $bac$, $bca$, $cab$, $cba$. These are $6$ different orders. We call these different orderings of a number of $n$ different objects \emph{permutations}. The term "permute" means something like "reorder" where identity (i.e. do-nothing) reordering also counts as trivial edge case (as is typical in math). The number of \emph{permutations} of $n$ distinguishable objects is given by factorial of $n$:
+\paragraph{Permutations and Factorials}
+Let's say that we have $n$ different (i.e. distinguishable) objects and we want to know, how many ways there are, to put these objects into a different order. For example, the possible orders for the $3$ objects $a,b,c$ are $abc$, $acb$, $bac$, $bca$, $cab$, $cba$. These are $6$ different orders. We call these different orderings of a number of $n$ different objects \emph{permutations}. The term "permute" means something like "reorder" where identity (i.e. do-nothing) reordering also counts as trivial edge case (as is typical in math). The number of permutations of $n$ distinguishable objects is given by \emph{factorial} of $n$:
 \begin{equation}
 P_n = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n = n!
 \end{equation}
@@ -47,8 +47,8 @@ distinguishable permutations. These ares sometimes called \emph{multiset permuta
 
 % %\pageref{Sec:FactorialsAndBinomCoeffs}
 
-\paragraph{Combinations}
-Imagine we have a set of size $n$ and we are asked how many different subsets of size $k$ we can form from this set. That is: how many different ways are there to choose $k$ elements from a set of $n$ elements. It doesn't matter in which order we chose the elements - as long as the total set of chosen elements is the same, our created subset is considered to be the same (remember that in sets, order doesn't matter - it isn't even a thing\footnote{Unless you \emph{define} an order \emph{on top} of the set - but a set all by itself does not have a notion of order built into it.}). We call these different subsets of size $k$ of a given set of size $n$ \emph{combinations} or, more specifically, $k$-combinations. The number of possible $k$-combinations from a set of size $n$ is given by the binomial coefficient:
+\paragraph{Combinations and Binomial Coefficients}
+Imagine we have a set of size $n$ and we are asked how many different subsets of size $k$ we can form from this set. That is: how many different ways are there to choose $k$ elements from a set of $n$ elements. It doesn't matter in which order we chose the elements - as long as the total set of chosen elements is the same, our created subset is considered to be the same (remember that in sets, order doesn't matter - it isn't even a thing\footnote{Unless you \emph{define} an order relation \emph{on top} of the set - but a set all by itself does not have a notion of order built into it.}). We call these different subsets of size $k$ of a given set of size $n$ \emph{combinations} or, more specifically, $k$-combinations. The number of possible $k$-combinations from a set of size $n$ is given by the \emph{binomial coefficient}:
 \begin{equation}
 C_n^k = \binom{n}{k} 
       = \frac{n!}{k! (n-k)!} 
@@ -71,7 +71,7 @@ where the top-left superscript $r$ stands for "with repetition"and the right not
 % https://en.wikipedia.org/wiki/Combination
 
 
-\paragraph{Variations}
+\paragraph{Variations and Falling Factorials}
 %The number of \emph{variations} of $n$ distinguishable objects is given by:
 Now we consider a situation where we have a given set of size $n$ and the task is to choose $k$ objects from it and put them into a given order. How many ways are there to do this? That is, how many different $k$-tuples can be formed from elements of a set of size $n$? If we allow an object to be chosen more than once, these tuples are is called \emph{variations with repetition} or \emph{arrangements with repetition} and there are:
 \begin{equation}
@@ -83,7 +83,7 @@ V_n^k = \frac{n!}{(n-k)!}
       = n \cdot (n-1) \cdot (n-2) \cdot \ldots \cdot (n-k+1) 
       = \prod_{m=n-k+1}^{n} m
 \end{equation}
-of them. ...VERIFY! ...TBC...
+of them. These numbers $V_n^k$ are also known as \emph{falling factorials} and sometimes denoted as $n^{\underline{k}}$. In this notation, the special case  $n^{\underline{n}}$ reduces to the regular factorial: $n^{\underline{n}} = n!$. ...VERIFY! ...TBC...
 
 % https://en.wikipedia.org/wiki/Permutation#Other_uses_of_the_term_permutation
 % k-permutation of n, partial permutation, sequence without repetition, variation, or arrangement
@@ -96,7 +96,7 @@ of them. ...VERIFY! ...TBC...
 % 
 % https://stackoverflow.com/questions/2366074/code-for-variations-with-repetition-combinatorics
 
-\paragraph{Partitions}
+\paragraph{Partitions and Bell Numbers}
 \label{Sec:PartitionsOfSets}
 A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empty subsets whose union gives back the original set. For example, take the set $\{a,b,c\}$. We can partition it in the following 5 ways: $\{\{a\},\{b\},\{c\}\}, \{\{a\},\{b,c\}\}, \{\{a,b\},\{c\}\}, \{\{a,c\},\{b\}\}, \{\{a,b,c\}\}$. For a set with $n$ elements, the number of possible partitions is given by the $n$th \emph{Bell number} $B_n$. Partitions of a set can also be interpreted in terms of equivalence classes. That is: We can consider each of the subsets as being an equivalence class [VERIFY!]. Therefore, the number $B_n$ gives the number of possible different equivalence relations on a set of size $n$. The first $7$ Bell numbers are: $B_0=1, B_1=1, B_2=2, B_3=5, B_4=15, B_5=52, B_6=203$. The Bell numbers can be computed algorithmically in a similar way as the binomial coefficients can be computed via Pascal's triangle. For the Bell numbers, there's Bell's triangle. It looks as follows:
 \begin{center}  % doesn't work!
@@ -150,6 +150,8 @@ Aside from counting ways how to do certain things with sets, combinatorics is al
 
 \paragraph{Parenthesations and Catalan Numbers}
 Consider the task of computing a product of 4 numbers $p = a \cdot b \cdot c  \cdot d = abcd$. Now we ask how many ways there are to evaluate this product assuming that in each step, we compute a product of two numbers. That is: we ask how many ways are there to set the parentheses. The answer is 5. These are the 5 ways to compute the product: $((ab)c)d, (a(bc))d, (ab)(cd), a((bc)d), a(b(cd))$. In general, the number of ways to evaluate/parenthesize a product of $n$ factors is given by the $n$th Catalan number. The Catalan number pop up in various other settings as well  ...TBC...
+
+% ToDo: explain where the parethisation of an expression may matter - for example in evaluating a matrix a product, it may make a (big) difference in terms of computational cost. Give an example where it matters a lot. Maybe a scalar prodcut of the form x^T A y where A = a b^T such that we have x^T a b^T y. Evaluating it like (x^T (a b^T)) y would be vastly more inefficient than x^T (a b^T) y, I think. I assume that x,y,a,b are column vectors. ...or maybe try to create an example with just 3 factors
 
 %Parenthisations?, Parenthesisations?
 

@@ -225,7 +225,27 @@ There is also a formula for higher order derivatives of a composition of two fun
 \frac{d^n}{d x^n} f(g(x)) = 
 \sum_{A \in P_n} f^{(|A|)}(g(x)) \prod_{a \in A} g^{(|a|)}(x) 
 \end{equation}
-where $P_n$ is the set of all partitions\footnote{A partition of a set is a way of decomposing it into disjoint subsets. See page \pageref{Sec:PartitionsOfSets} for more details.} of the set $\{1,2\ldots,n\}$, $|A|$ the number of parts of partition $A$, i.e. the cardinality of $A$ and $|a|$ is the number of elements in the given part $a$ of a partition $A$. Let's unpack this formula with the example of $n=3$. First, we need to form the set $P_3$, i.e. the set of partitions of the set $\{1,2,3\}$. ...TBC...
+where $P_n$ is the set of all partitions\footnote{A partition of a set is a way of decomposing it into disjoint subsets. See page \pageref{Sec:PartitionsOfSets} for more details.} of the set $\{1,2\ldots,n\}$, $|A|$ the number of parts of partition $A$, i.e. the cardinality of $A$ and $|a|$ is the number of elements in the given part $a$ of a partition $A$. 
+
+\medskip
+Let's unpack this formula with the example of $n=3$. First, we need to form the set $P_3$, i.e. the set of partitions of the set $\{1,2,3\}$. This is given by: 
+\begin{eqnarray}
+P_3 = 
+\{                                 \\
+   &A_1 &= \{ \{1\},\{2\},\{3\} \}, \\
+   &A_2 &= \{ \{1\},\{2,3\} \},     \\
+   &A_3 &= \{ \{2\},\{1,3\} \},     \\
+   &A_4 &= \{ \{3\},\{1,2\} \},     \\
+   &A_5 &= \{ \{1,2,3\} \},         \\   
+\}
+\end{eqnarray}
+There are a lot of curly braces here and we indeed need them all. $P_3$ is a set of sets each of which is a partition. A partition is also a set of sets - namely the set of subsets of, in this case, $\{1,2,3\}$. So, each element of a partition is itself a set. For each of these partitions, we will get a term in outer sum. These terms look like:
+\begin{eqnarray}
+&f'''(g(x)) \cdot (g(x))^3              & \text{for $A_1$} \\
+&f''(g(x)) \cdot g''(x) \cdot g'(x)     & \text{for $A_2,A_3,A_4$} \\
+\end{eqnarray}
+
+...TBC...
 
 
 

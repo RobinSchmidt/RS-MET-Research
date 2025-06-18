@@ -130,7 +130,7 @@ whose usefulness lies mostly in its generalizations to the directional derivativ
 
 
 \subsubsection{The Product Rule}
-In the list above, we already mentioned the product rule which is also known as the Leibniz rule. It says:
+In the list above, we already mentioned the product rule which is also known as the Leibniz rule. In its basic form, it says:
 \begin{equation}
  (f g)'  = f' g + g' f
 \end{equation}
@@ -186,7 +186,7 @@ Note the structural similarity with the binomial theorem. The $n$-th power would
 
 
 \subsubsection{The Chain Rule}
-We have also already seen the chain rule in our table above. There, it was given in terse form with suppressed argument. With unsuppressed argument, it would look like:
+We have also already seen the (basic form of the) chain rule in our table above. There, it was given in terse form with suppressed argument. With unsuppressed argument, it would look like:
 \begin{equation}
  (f( g(x)))' = g'(x) \cdot f'(g(x))
 \end{equation}
@@ -223,29 +223,50 @@ I'll refrain from giving a general formula because I would have to introduce an 
 There is also a formula for higher order derivatives of a composition of two functions. It's called \emph{Faa di Bruno's formula} and it says:
 \begin{equation}
 \frac{d^n}{d x^n} f(g(x)) = 
-\sum_{A \in P_n} f^{(|A|)}(g(x)) \prod_{a \in A} g^{(|a|)}(x) 
+\sum_{A \in P_n} 
+%\left( 
+\Bigl(
+f^{(|A|)}(g(x)) \cdot \prod_{a \in A} g^{(|a|)}(x) 
+\Bigr)
+%\right)
 \end{equation}
 where $P_n$ is the set of all partitions\footnote{A partition of a set is a way of decomposing it into disjoint subsets. See page \pageref{Sec:PartitionsOfSets} for more details.} of the set $\{1,2\ldots,n\}$, $|A|$ the number of parts of partition $A$, i.e. the cardinality of $A$ and $|a|$ is the number of elements in the given part $a$ of a partition $A$. 
 
 \medskip
-Let's unpack this formula with the example of $n=3$. First, we need to form the set $P_3$, i.e. the set of partitions of the set $\{1,2,3\}$. This is given by: 
+Let's unpack this formula with the example of $n=3$. First, we need to form the set $P_3$, i.e. the set of partitions of the set $\{1,2,3\}$. This is given by:
+\begin{equation}
+P_3 = \{ A_1, A_2, A_3, A_4, A_5 \}
+\end{equation}
+where
+\begin{equation}
+A_1 = \{ \{1\},\{2\},\{3\} \},  \;
+A_2 = \{ \{1\},\{2,3\} \},      \;
+A_3 = \{ \{2\},\{1,3\} \},      \;
+A_4 = \{ \{3\},\{1,2\} \},      \;
+A_5 = \{ \{1,2,3\} \}
+\end{equation}
+$P_3$ is a set of sets each of which is a partition $A_i$. A partition is also a set of sets - namely the set of subsets of, in this case, $\{1,2,3\}$. So, each element of a partition is itself a set. For each of these $5$ partitions $A_1,\ldots,A_5$, we will get a term in the outer sum. These terms look like:
+%\begin{equation}
+%\begin{aligned}
+%&f'''(g(x)) & \cdot & (g'(x))^3        & \text{for $A_1$}  &\\
+%&f''(g(x))  & \cdot & g''(x) g'(x)     & \text{for $A_2,A_3,A_4$} &\\
+%&f'(g(x))   & \cdot & g'''(x)          & \text{for $A_5$} &\\
+%\end{aligned}
+%\end{equation}
 \begin{eqnarray}
-P_3 = 
-\{                                 \\
-   &A_1 &= \{ \{1\},\{2\},\{3\} \}, \\
-   &A_2 &= \{ \{1\},\{2,3\} \},     \\
-   &A_3 &= \{ \{2\},\{1,3\} \},     \\
-   &A_4 &= \{ \{3\},\{1,2\} \},     \\
-   &A_5 &= \{ \{1,2,3\} \},         \\   
-\}
+&f'''(g(x)) \cdot (g'(x))^3        & \text{for $A_1$} \\
+&f''(g(x))  \cdot g''(x) g'(x)     & \text{for $A_2,A_3,A_4$} \\
+&f'(g(x))   \cdot g'''(x)          & \text{for $A_5$} \\
 \end{eqnarray}
-There are a lot of curly braces here and we indeed need them all. $P_3$ is a set of sets each of which is a partition. A partition is also a set of sets - namely the set of subsets of, in this case, $\{1,2,3\}$. So, each element of a partition is itself a set. For each of these partitions, we will get a term in outer sum. These terms look like:
-\begin{eqnarray}
-&f'''(g(x)) \cdot (g(x))^3              & \text{for $A_1$} \\
-&f''(g(x)) \cdot g''(x) \cdot g'(x)     & \text{for $A_2,A_3,A_4$} \\
-\end{eqnarray}
-
-...TBC...
+% ToDo: try to format it better!
+where we note that for $A_2,A_3,A_4$, we'll get the same expression. The first factor in these terms is always the $|A_i|$-th derivative of $f(g(x))$. The second factor comes from the product $\prod_{a \in A}$ in the general formula, so it's itself a product which has 3,2 and 1 factors respectively where in the 1st line, the 3 equal factors of $g'(x)$ are abbreviated by cubing it. Putting it all together, we obtain:
+\begin{equation}
+\frac{d^3}{d x^3} f(g(x)) = 
+  f'''(g(x)) \cdot (g'(x))^3 +
+3 f''(g(x))  \cdot g''(x)    g'(x)  + 
+  f'(g(x))   \cdot g'''(x) 
+\end{equation}
+For more explanations (including a proof sketch), see ...TBC...ToDo: include bibliography reference to \href{ https://www.youtube.com/watch?v=hAl3b-0N34E}{www.youtube.com/watch?v=hAl3b-0N34E} and verify everything
 
 
 

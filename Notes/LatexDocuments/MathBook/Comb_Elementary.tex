@@ -57,14 +57,30 @@ C_n^k = \binom{n}{k}
       = \frac{n \cdot (n-1) \cdot (n-2) \cdot \ldots \cdot (n-k+1)}{k!}
       = \frac{\prod_{m=n-k+1}^{n} m}{k!}
 \end{equation}
-which is, for this reason, typically pronounced as "$n$-choose-$k$". In some situations, we may be allowed to choose an element more than once such that we do not form a (sub)set anymore but instead a multiset with elements picked from a given set. For the number different possible such combinations with repetition we get:
+which is, for this reason, typically pronounced as "$n$-choose-$k$". The formula above in terms of factorials is not the only way to compute binomial coefficents. A nice way to compute them is via \emph{Pascal's triangle} which looks like this:
+\begin{center}  % doesn't work!
+\begin{verbatim}
+                    1
+                 1     1
+              1     2     1
+           1     3     3    1
+       1      4     6     4    1
+    1      5    10    10     5   1
+ 1     6     15    20    15    6   1
+\end{verbatim}
+\end{center}
+One starts with writing down the two outer edges consisting of all ones. Then, to fill a row, one  just forms the sums of the two numbers north-west and north-east of the current position. For example, the two 10s in the 6th row are formed as $4+6$ and $6+4$ from the entries in the 5th row.
+ToDo: give recursion formula that can be interpreted in terms of Pascal's triangle. Maybe give more recursion formulas
+
+\medskip
+In some situations, we may be allowed to choose an element more than once such that we do not form a (sub)set anymore but instead a multiset with elements picked from a given set. For the number different possible such combinations with repetition we get:
 \begin{equation}
 \prescript{r}{}{C}_n^k
 = \binom{n+k-1}{k}
 = \frac{n+k-1}{(n-1)! k!}
 = \left(\!\!{n\choose k}\!\!\right)
 \end{equation}
-where the top-left superscript $r$ stands for "with repetition"and the right notation that looks like binomial coefficient notation with double parentheses is sometimes used for this. This number is sometimes pronounced as "$n$-multichoose-$k$". VERIFY...TBC...Explain Pascal's triangle
+where the top-left superscript $r$ stands for "with repetition"and the right notation that looks like binomial coefficient notation with double parentheses is sometimes used for this. This number is sometimes pronounced as "$n$-multichoose-$k$". VERIFY...TBC...
 
 % https://en.wikipedia.org/wiki/Combination#Number_of_combinations_with_repetition
 % notation with double parentheses, "n-multichoose-k"
@@ -100,7 +116,7 @@ of them. These numbers $V_n^k$ are also known as \emph{falling factorials} and s
 
 \paragraph{Partitions and Bell Numbers}
 \label{Sec:PartitionsOfSets}
-A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empty subsets whose union gives back the original set. For example, take the set $\{a,b,c\}$. We can partition it in the following 5 ways: $\{\{a\},\{b\},\{c\}\}, \{\{a\},\{b,c\}\}, \{\{a,b\},\{c\}\}, \{\{a,c\},\{b\}\}, \{\{a,b,c\}\}$. For a set with $n$ elements, the number of possible partitions is given by the $n$th \emph{Bell number} $B_n$. Partitions of a set can also be interpreted in terms of equivalence classes. That is: We can consider each of the subsets as being an equivalence class [VERIFY!]. Therefore, the number $B_n$ gives the number of possible different equivalence relations on a set of size $n$. The first $7$ Bell numbers are: $B_0=1, B_1=1, B_2=2, B_3=5, B_4=15, B_5=52, B_6=203$. The Bell numbers can be computed algorithmically in a similar way as the binomial coefficients can be computed via Pascal's triangle. For the Bell numbers, there's Bell's triangle. It looks as follows:
+A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empty subsets whose union gives back the original set. For example, take the set $\{a,b,c\}$. We can partition it in the following 5 ways: $\{\{a\},\{b\},\{c\}\}, \{\{a\},\{b,c\}\}, \{\{a,b\},\{c\}\}, \{\{a,c\},\{b\}\}, \{\{a,b,c\}\}$. For a set with $n$ elements, the number of possible partitions is given by the $n$th \emph{Bell number} $B_n$. Partitions of a set can also be interpreted in terms of equivalence classes. That is: We can consider each of the subsets as being an equivalence class [VERIFY!]. Therefore, the number $B_n$ gives the number of possible different equivalence relations on a set of size $n$. The first $7$ Bell numbers are: $B_0=1, B_1=1, B_2=2, B_3=5, B_4=15, B_5=52, B_6=203$. The Bell numbers can be computed algorithmically in a similar way as the binomial coefficients can be computed via Pascal's triangle. For the Bell numbers, there's \emph{Bell's triangle}. It looks as follows:
 \begin{center}  % doesn't work!
 \begin{verbatim}
                     1
@@ -141,6 +157,11 @@ The rules to compute the numbers are as follows: Start with the single $1$ in th
 %  https://www.youtube.com/@WrathofMath/videos
 
 % What about the double factorial?
+
+
+
+% https://en.wikipedia.org/wiki/Alternating_permutation
+% https://de.wikipedia.org/wiki/Euler-Zahlen
 
 
 \subsection{Trees and Graphs}
@@ -214,6 +235,7 @@ https://en.wikipedia.org/wiki/Stirling_number
 https://en.wikipedia.org/wiki/Stirling_numbers_of_the_first_kind
 https://en.wikipedia.org/wiki/Gaussian_binomial_coefficient#Combinatorial_descriptions
 
+
 https://en.wikipedia.org/wiki/Double_factorial
 https://mathworld.wolfram.com/DoubleFactorial.html
 https://mathworld.wolfram.com/Multifactorial.html
@@ -222,6 +244,9 @@ https://mathworld.wolfram.com/Multifactorial.html
 About an unintuitive concept that explains unsolvable Puzzles
 https://www.youtube.com/watch?v=p6kCYbKIMak
 -Is about parity - not sure if that fits in Combinatorics or elsewhere
+
+
+
 
 \end{comment}
 

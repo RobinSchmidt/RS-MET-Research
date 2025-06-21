@@ -31,7 +31,13 @@ Let's say that we have $n$ different (i.e. distinguishable) objects and we want 
 \begin{equation}
 P_n = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n = n!
 \end{equation}
-This is easy to understand when we recognize that there are exactly $n$ different ways to choose an element for the first position because we have $n$ elements to choose from. Then, after the first element has been chosen, we have left $n-1$ elements to choose for the second position, then $n-2$ for the third and so on. We get $n\cdot(n-1)\cdot(n-2)\cdot\ldots\cdot1$ ways all in all. I stressed the point that the objects need to be distinguishable. This is the usual case when the objects are elements of a mathematical \emph{set} because set elements are by definition distinguishable. There is a more general notion of a \emph{multiset} in which there may be indistinguishable objects. If the $n$ objects are not all distinguishable such that they fall into $k$ equivalence classes of sizes $m_1, m_2, \ldots, m_k$ with $m_1 + m_2 + \ldots + m_k = n$, then there are:
+This is easy to understand when we recognize that there are exactly $n$ different ways to choose an element for the first position because we have $n$ elements to choose from. Then, after the first element has been chosen, we have left $n-1$ elements to choose for the second position, then $n-2$ for the third and so on. We get $n\cdot(n-1)\cdot(n-2)\cdot\ldots\cdot1$ ways all in all. It is easy to see that the factorial function obeys the simple recursion formula:
+\begin{equation}
+n! = n \cdot (n-1)!
+\end{equation}
+
+\medskip
+I stressed the point that the objects need to be distinguishable. This is the usual case when the objects are elements of a mathematical \emph{set} because set elements are by definition distinguishable. There is a more general notion of a \emph{multiset} in which there may be indistinguishable objects. If the $n$ objects are not all distinguishable such that they fall into $k$ equivalence classes of sizes $m_1, m_2, \ldots, m_k$ with $m_1 + m_2 + \ldots + m_k = n$, then there are:
 \begin{equation}
 P_n^{(m_1,m_2,\ldots,m_k)} 
 = \frac{n!}{m_1! m_2! \ldots m_k!} 
@@ -88,6 +94,9 @@ where the top-left superscript $r$ stands for "with repetition"and the right not
 % https://tex.stackexchange.com/questions/5816/multiset-notation-in-latex
 % https://en.wikipedia.org/wiki/Combination
 
+% https://de.wikipedia.org/wiki/Binomialkoeffizient#Verallgemeinerung
+
+% https://mathworld.wolfram.com/Multichoose.html
 
 \paragraph{Variations and Falling Factorials}
 %The number of \emph{variations} of $n$ distinguishable objects is given by:
@@ -159,10 +168,20 @@ The rules to compute the numbers are as follows: Start with the single $1$ in th
 % What about the double factorial?
 
 
+\paragraph{Derangements and Subfactorials}
+The factorial give the number of ways, we can order $n$ items. What if we assume that our $n$ items have some natural order like $1,2,3,\ldots,n$ and we now asks how many ways there are to reorder them such that none of the items is in its original position. Such a messed up ordering is called a \emph{derangement} and the number of possible derangements of $n$ items is given by the subfactorial function. It is denoted by $!n$ and can be computed from the normal factorial via the formula: ...TBC...
+
+
+%https://mathworld.wolfram.com/Subfactorial.html
+%https://en.wikipedia.org/wiki/Derangement
+%https://de.wikipedia.org/wiki/Subfakult%C3%A4t
+%-Number of permutations in which none of the items is in its original place
+
+% https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle#Counting_derangements
+
 
 % https://en.wikipedia.org/wiki/Alternating_permutation
 % https://de.wikipedia.org/wiki/Euler-Zahlen
-
 
 \subsection{Trees and Graphs}
 Aside from counting ways how to do certain things with sets, combinatorics is also used to count things that have to do with \emph{trees} or more general \emph{networks} of nodes (also known as \emph{graphs}, although that may be confused with the notion of function graphs). These ideas come up frequently in certain more specialized fields of mathematics such as graph theory and and in scientific and engineering fields like computer science.
@@ -241,10 +260,21 @@ https://mathworld.wolfram.com/DoubleFactorial.html
 https://mathworld.wolfram.com/Multifactorial.html
 
 
+
+
 About an unintuitive concept that explains unsolvable Puzzles
 https://www.youtube.com/watch?v=p6kCYbKIMak
 -Is about parity - not sure if that fits in Combinatorics or elsewhere
 
+
+https://en.wikipedia.org/wiki/Twelvefold_way
+https://en.wikipedia.org/wiki/Twelvefold_way#Formulas
+
+https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics)
+
+
+
+https://mathworld.wolfram.com/FigurateNumber.html
 
 
 

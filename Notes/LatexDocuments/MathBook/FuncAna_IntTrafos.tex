@@ -23,4 +23,27 @@ eigenfuncs of fourier-trafo:
 http://www.systems.caltech.edu/dsp/ppv/papers/journal08post/PPVIETEeigenFT.pdf
 https://www.tandfonline.com/doi/abs/10.1080/09747338.2008.11673800?journalCode=tije20
 
+The Fourier Transform on L2 - What they don't tell you
+https://www.youtube.com/watch?v=etZy8a32kcc
+-Hermite functions are eigenfunctions of Fourier transform (they are an eigenbasis)
+
+See also:
+https://en.wikipedia.org/wiki/Hermitian_wavelet
+https://en.wikipedia.org/wiki/Hermite_transform
+https://en.wikipedia.org/wiki/Hermite_polynomials
+
+I think, the Hermite polynomials can be obtained from successively differentiating 
+f(x) = e^(-x^2). See the following SageMath code:
+
+f0 = exp(-x^2)
+f1 = diff(f0, x)
+f2 = diff(f1, x)
+f3 = diff(f2, x)
+f4 = diff(f3, x)
+f5 = diff(f4, x)
+f0, f1, f2, f3, f4, f5
+
+The result is always some polynomial times e^(-x^2). Although, the actualy Hermite polynomials seem
+to have different signs in the coefficients.
+
 \end{comment} 

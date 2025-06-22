@@ -97,7 +97,7 @@ Now there's no $g'$ anymore in the right hand side. Instead, we have to differen
 \end{equation}
 So, we may compute the functional $G'(f)$ for any test function $f$ even for a non-differentiable inducing function $g$ by simply moving the prime from $g$ to $f$ and prepending a minus sign. This motivates the following definition of the \emph{distributional derivative}:
 \begin{equation}
-  ...
+  G'(f) = -G(f')
 \end{equation}
 The distributional derivative is also called the \emph{weak derivative}. ...TBC...
 % give general formula for the n-th distributional derivative using the scalar-product notation
@@ -121,7 +121,7 @@ f'(x) =
  +1 \qquad  x > 0
  \end{cases}
 \end{equation}
-But note that this doesn't say anything about $f'(x)$ at $x = 0$ because is not differentiable at $x = 0$ in the usual sense. But it is differentiable in the weak sense. The derivative given above has only values for $x \neq 0$. But that is no problem if we view $f'$ as a distribution. Distributions are not supposed to have values everywhere - or anywhere at all, for that matter. All that we want from a distribution is to test it with a test function. We do not generally expect to be able to evaluate it a a point in the sense of asking: "What's your value there?".
+But note that this doesn't say anything about $f'(x)$ at $x = 0$. We can't assign a value there because $f(x) = |x|$ not differentiable at $x = 0$ in the usual sense. But it is differentiable in the weak sense. The derivative given above has only values for $x \neq 0$. But that is no problem if we view $f'$ as a distribution. Distributions are not supposed to have values everywhere - or anywhere at all, for that matter. All that we want from a distribution is to test it with a test function. We do not generally expect to be able to evaluate it a an arbitrary point in the sense of asking: "What's your value there?". If we can, that's a bonus but it's not required. ...TBC...explain the Heaviside step function - if shift and scale $f'$ above appropriately and arbitrarily define the value at zero to 1, we obtain it.
 
 
 

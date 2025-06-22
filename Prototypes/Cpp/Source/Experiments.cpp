@@ -22311,3 +22311,19 @@ provide a more stack- and queue appropriate API - or maybe better use compisitio
 
 
 */
+
+
+/*=================================================================================================
+
+Ideas
+
+- Maybe experiment with matrices of strings that represent mathematical expressions. Adding two 
+  strings just puts them in parentheses and puts a '+' in between. Similar for -,*,/. But how would
+  pivoting work in this case? The expressions should be compatible with the ExprEval engine that I 
+  use in FuncShaper. Maybe we should first define a datatype rsExpression that defines the 
+  arithmetic operators appropriately. Maybe it should be called rsExpressionString to distinguish
+  it from an abstract notion of an expression (which could be a tree-like structure).
+
+
+
+*/

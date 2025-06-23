@@ -60,6 +60,12 @@ The so constructed functionals are what we will call \emph{regular distributions
 % Maybe mention that the integral may, in general, be understood as Lebesgue integral because the
 % theory applies also to function which are not Riemann integrable (I think)
 
+% Explain what functions g are suitable for defining regular distributions. They must be such that the integral above exists for any given f. I think, that means the ymust be locally integrable
+
+% https://en.wikipedia.org/wiki/Locally_integrable_function
+% https://de.wikipedia.org/wiki/Lokal_integrierbare_Funktion
+% https://mathworld.wolfram.com/LocallyIntegrable.html
+
 \subsubsection{Evaluating Distributions} ...TBC...ToDo: Explain that for distributions, it doesn't make sense (in general) to ask what value they have at a given point. 
 
 % Instead, we are only allowed to ask questions about what the integral above evaluates to for a given test function $f$. We can "test" the distribution $g$ with $f$, where $f$ may be localized (I guess) but we cannot ask for the value of $g$ at a specific $x$. So, "evaluating" a distribution amounts to testing / probing it with a test function? Maybe that is the reason for the term distribution? We are not allowed to evaluate the function *at* a point but we are only allowed to evaluate a (weighted) average *around* a point - that is: we can figure out how the function values are "distributed" around that point? Could that even hint to a connection to probability distributions? ...or more like: probability density function? 
@@ -70,12 +76,19 @@ The so constructed functionals are what we will call \emph{regular distributions
 %   given above for *any* (test) function f
 %  -Two functions g and h are weakly equal if their associated regular distributions are equal
 %  -weakly equal functions may differ from one another in isolated points as long as their values
-%   are finite in these points
+%   are finite in these points. This is because integrals don't care about the function values at 
+%   isolated points (at least, as long as these values are finite)
 %  -This notion of weak equality establishes an equivalence relation of the set of (suitable)
-%   functions
+%   functions. Maybe bring as example two variations of the sign function. One that defines 
+%   sign(0) = 0 and another that defines sign(0) = 1
 %  -Maybe define a symbol for weak equality - maybe a variation of the equals sign. Maybe with
 %   subscript w or maybe with a w above the sign. Or maybe use the symbol that is commonly used for
 %   equivalence realtions - maybe the tilde?
+%
+% Google's AI says:
+% "Functional Analysis and Measure Theory: Two functions, f and g, are considered weakly equal (or equal almost everywhere, denoted f = g a.e.) if the set of points where they differ has measure zero."
+% when searching for weakly equal function
+
 
 \subsubsection{The Dirac Delta-Distribution}
 One very important example of such a singular distribution is the Dirac delta distribution that just maps any given function $f$ to its value at $x = 0$:
@@ -115,6 +128,8 @@ Because we assumed that the interval $(-\epsilon, \epsilon)$ is completely conta
 % -Very well writtrn lecture notes. It's like a tutorial.
 % -Has an example for when one cannot exchange limits and differentiation. Maybe that example could
 %  be brought up int the Differentiation section
+% -I have a copy with highlighting here:
+%  https://drive.google.com/drive/folders/1THzpUt9L0vX10yvBjMoOMEd6xmF4YMk0
 
 \subsubsection{Distributional Derivatives}
 One of the motivations to develop this theory was to make sense of situations where we need to take derivatives, for example in differential equations, but the functions we have to deal with are not necessarily differentiable in the usual sense. What we want is a generalization of the derivative that is applicable to a wider class of functions or function-like objects. This wider class is the set of distributions. Remember that our plain old functions can be identified with the regular distributions which are a subset of all distributions. A distribution, seen as a functional, is completely defined by its input/output relation: if we know what it does to any input function $f$, i.e. which output number it produces, we know everything there is to know about the functional. Let's revisit our definition of a regular distribution $G(f)$, which was defined via an integral over a product of $f$ and some inducing function $g$, and see what happens, when we take the derivative $g'$ of $g$ instead of $g$ itself inside this integral. Let's call the resulting functional $G'$:
@@ -164,6 +179,8 @@ But note that this doesn't say anything about $f'(x)$ at $x = 0$. We can't assig
 % We only care about weak equality between LHS and RHS, i.e. equality "under the averaging integral" rather than exact pointwise equality
 
 % Maybe the subsection should be named Applications and may we can list some more. ODEs (The right hand side could be a Dirac delta), PDEs (The initial condition could be non-differentiable - like a triangular shape - maybe even a Dirac spike), embedding discrete probability distributions into the continuous framework (by placing scaled Dirac deltas at the integers, for example), modeling point masses and infinitely short hammer strikes in physics.
+
+% https://en.wikipedia.org/wiki/Weak_derivative
 
 \begin{comment}
 

@@ -352,6 +352,20 @@ where the weights $a_k$ in the sum form are called the \emph{coefficients} of th
 % product of the polynomials, possibly weighted by some weighting function. The explanation of that 
 % it needs some calculus as well.
 
+% ToDo: Maybe give the other roots based form of a polynomial that is common in digital filter
+% theory (see Julius Smith's book on filters):
+%
+% p(x) = k \prod_{k=1}^{n} (1 - x / r_k)
+%
+% I think, the constant k is given by the product over the r_k times the leading coeff a_n. I think
+% there's also a (-1)^degree factor and this representation is only valid when all the r_k are
+% nonzero. Maybe when swapping the terms by writing (x / r_k - 1) instead of (1 - x / r_k) we can
+% get rid of this ugly (-1)^degree fudge factor. Figure all of that out and maybe explain all these
+% things in a paragraph about transforming a polynomial representation into another. This paragraph
+% should explain how to multiply out the product form to get the sum form, how the other direction 
+% is more difficult and involves root finding, how it works to split off a linear factor from a
+% given polynomial by polynomial division.
+
 \paragraph{$\star$ Some Applications - Preview}
 The practical importance of such affine functions is that we will often use them to approximate more complicated functions - a process known as \emph{linearization}\footnote{But shouldn't it then be called "affinization"? Math terminology is unfortunately not always totally consistent. I digress...}. This linearized function will have the same function value as the original function at some point of interest and will, moreover, also have the same slope (i.e. the same first derivative). A polynomial of degree 2, i.e. a function of the form $f(x) = a_0 + a_1 x + a_2 x^2$, is also called a quadratic polynomial. Such polynomials are often used to approximate an arbitrary function around a minimum or maximum in the context of \emph{optimization} problems. A linear approximation is not suitable in this case because the $a_1$ coefficient will be zero anyway so we need to go one degree higher if we don't just want a constant "approximation" (which doesn't really deserve this name - therefore the quotes). A quadratic approximation can also be used as a more accurate approximation than a linear one around arbitrary points and sometimes this is useful, too. And, of course, one can also use higher order polynomial approximations, as well. For some functions, when we approximate them with polynomials and crank up the degree, the approximations will actually converge to the original function. This happens, for example, in a \emph{Taylor expansion} or in \emph{Lagrange interpolation} (VERIFY!). We'll look into the details of these applications later. Polynomials are generally used to do all sorts of approximations because polynomials are often much easier to deal with than other types of functions - especially when it comes to problems involving some calculus because polynomials are easy to integrate and differentiate in closed form. For example, if all you want is a numerical value for some definite integral over a function that is hard (or impossible) to integrate in closed form, you can take a (piecewise) polynomial approximation and integrate that instead and thereby obtain an approximation of your desired integral. This is done in \emph{numerical integration}. Generally, polynomials are used extensively in \emph{numerical analysis} which includes, besides numerical integration also \emph{numerical differentiation} and the numerical solution of (ordinary and partial) \emph{differential equations}. These things are all super important for applications in the natural sciences and in engineering. In data analysis and visualization, polynomials are also important for tasks like \emph{interpolation}, \emph{curve fitting}, etc.
 

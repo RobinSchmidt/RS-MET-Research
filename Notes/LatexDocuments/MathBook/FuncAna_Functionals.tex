@@ -1,13 +1,6 @@
 \section{Functionals} 
 
-% This is now obsolete - Lebesgue integration is now treated in Calculus/Integration
-%\subsection{Lebesgue Integration}
-%In functional analysis, we will encounter a lot of integrals. Sometimes, however, we will have to deal with functions or function-like objects that are not Riemann integrable. A new notion of integrals is desired that will give the same results in the case of Riemann integrable functions but is applicable to a wider range of objects. That's what the Lesbesgue integral does for us. To define the Lebesgue integral, we will first need to define the notion of a measure.
-
-%\subsubsection{The Lebesgue Integral}
-
-
-\subsection{Test Functions  [TODO: move to function spaces]}
+\subsection{Test Functions}
 For the following material, we will need to work with a set of functions with some special properties. We want them to be smooth, which means they should be differentiable infinitely often everywhere. We also want them to have a finite support, which means they should be identically zero everywhere except within some finite interval $(a,b)$. This interval is assumed to be fixed and the same for each of the functions within the set. [VERIFY! Nope! I think, that's wrong!] The set of all functions that satisfy these two requirements will be called the set of "test functions". . At first glance, it may be a bit surprising that functions that satisfy both of these criteria even exist (it certainly suprised me). To make a function identically zero outside a given interval typically requires a piecewise definition and such piecewise definitions tend to make the functions non-smooth at the junctions of the pieces. However, such smooth, piecewise-defined functions do indeed exist, and a standard example is the so called bump function:
 \begin{equation}
 f(x) = 
@@ -23,6 +16,8 @@ It is indeed infinitely often differentiable everywhere, even at the potentially
 % https://en.wikipedia.org/wiki/Schwartz_space
 
 % ToDo:
+% -Maybe move eplanation of test functions move to function space (it is an example of such a
+%  function space). But maybe it's more appropriate to keep it here. We'll see.
 % -explain where the name "test function" comes from
 % -show smoothness of bump function
 % -show that the Taylor series of the bump function around -1 and +1 does not converge to the
@@ -46,6 +41,8 @@ In general, a dual space $V^*$ with respect to a given vector space $V$ is defin
 
 % https://en.wikipedia.org/wiki/Distribution_(mathematics)
 
+% Point out that we should not confuse the term distribtuion used here with the usage in probability theory. It's a different condept. But maybe there is some connection between the two? Figure out!
+
 \subsubsection{Regular Distributions}
 One way to construct such a linear functional is to multiply the input (test) function $f$ with some fixed other function $g$ and integrate the product over the interval $(a,b)$ over which our test function $f$ is nonzero\footnote{Which is obviously equivalent to integrating from $-\infty$ to $\infty$}. Let's call the resulting functional $G$, so we have:
 \begin{equation}
@@ -60,9 +57,12 @@ The so constructed functionals are what we will call \emph{regular distributions
 
 % Q: what do we need to assume about g? does it need to be square-integrable, for example? or will any arbitrary function do?
 
+% Maybe mention that the integral may, in general, be understood as Lebesgue integral because the
+% theory applies also to function which are not Riemann integrable (I think)
+
 \subsubsection{Evaluating Distributions} ...TBC...ToDo: Explain that for distributions, it doesn't make sense (in general) to ask what value they have at a given point. 
 
-% Instead, we are only allowed to ask questions about what the integral above evaluates to for a given test function $f$. We can "test" the distribution $g$ with $f$, where $f$ may be localized (I guess) but we cannot ask for the value of $g$ at a specific $x$. So, "evaluating" a distribution amounts to testing / probing it with a test function?
+% Instead, we are only allowed to ask questions about what the integral above evaluates to for a given test function $f$. We can "test" the distribution $g$ with $f$, where $f$ may be localized (I guess) but we cannot ask for the value of $g$ at a specific $x$. So, "evaluating" a distribution amounts to testing / probing it with a test function? Maybe that is the reason for the term distribution? We are not allowed to evaluate the function *at* a point but we are only allowed to evaluate a (weighted) average *around* a point - that is: we can figure out how the function values are "distributed" around that point? Could that even hint to a connection to probability distributions? ...or more like: probability density function? 
 
 % ToDo:
 % -explain equality of distributions and its relation to weak equality of functions - I think:
@@ -73,6 +73,9 @@ The so constructed functionals are what we will call \emph{regular distributions
 %   are finite in these points
 %  -This notion of weak equality establishes an equivalence relation of the set of (suitable)
 %   functions
+%  -Maybe define a symbol for weak equality - maybe a variation of the equals sign. Maybe with
+%   subscript w or maybe with a w above the sign. Or maybe use the symbol that is commonly used for
+%   equivalence realtions - maybe the tilde?
 
 \subsubsection{The Dirac Delta-Distribution}
 One very important example of such a singular distribution is the Dirac delta distribution that just maps any given function $f$ to its value at $x = 0$:
@@ -160,6 +163,7 @@ But note that this doesn't say anything about $f'(x)$ at $x = 0$. We can't assig
 
 % We only care about weak equality between LHS and RHS, i.e. equality "under the averaging integral" rather than exact pointwise equality
 
+% Maybe the subsection should be named Applications and may we can list some more. ODEs (The right hand side could be a Dirac delta), PDEs (The initial condition could be non-differentiable - like a triangular shape - maybe even a Dirac spike), embedding discrete probability distributions into the continuous framework (by placing scaled Dirac deltas at the integers, for example), modeling point masses and infinitely short hammer strikes in physics.
 
 \begin{comment}
 

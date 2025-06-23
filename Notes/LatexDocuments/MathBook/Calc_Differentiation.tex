@@ -297,11 +297,11 @@ For more explanations including a proof sketch, see \cite{YT_FaaDiBruno}.
 % https://en.wikipedia.org/wiki/Fa%C3%A0_di_Bruno%27s_formula
 
 \subsubsection{The Inverse Function Rule}
-Given an invertible function $f$ that assigns a value $y = f(x)$ to every $x$ and has an inverse function  $f^{-1}$ that brings us back from $y$ to $x$ such that $x = f^{-1}(y)$, the \emph{inverse function rule} tells us how to find the derivative of  $f^{-1}$ from the derivative of $f$
+Given an invertible function $f$ that assigns a value $y = f(x)$ to every $x$ and has an inverse function  $f^{-1}$ that brings us back from $y$ to $x$ such that $x = f^{-1}(y)$, the \emph{inverse function rule} tells us how to find the derivative of  $f^{-1}$ at $y$ from the derivative of $f$ at $x = f^{-1}(y)$. It's the reciprocal:
 \begin{equation}
  (f^{-1})'(y) = \frac{1}{f'(f^{-1}(y))}
 \end{equation}
-Be careful to not confuse the inverse function $f^{-1}$ with the reciprocal of $f$ given by $1/f(x)$. These are very different things. The important part is that the evaluation point of $f'$ in the right hand side is obtained by applying the inverse $f^{-1}$ to the argument $y$. That means, the formula relates two different evaluation points. On the left we evaluate $(f^{-1})'$ at $y$. On the right hand side, we evaluate $f'$ at the $x$ value that corresponds to that $y$. Note furthermore that the choice to call the argument to $f$ by the name $x$ and to call the argument of $f^{-1}$ by the name $y$ is just for clarity. These are just dummy names and we could also have written the rule as $(f^{-1})'(x) = \frac{1}{f'(f^{-1}(x))}$. 
+Be careful to not confuse the inverse function $f^{-1}$ with the reciprocal of $f$ given by $1/f(x) = (f(x))^{-1}$. These are very different things. Another potential source of confusion is that the evaluation point of $f'$ in the right hand side is obtained by applying the inverse $f^{-1}$ to the argument $y$. That means, the formula relates function values at different evaluation points. This is a noteworthy difference from the other rules that we have seen so far. On the left we evaluate $(f^{-1})'$ at $y$. On the right hand side, we evaluate $f'$ at the $x$ value that corresponds to that $y$. Note furthermore that the choice to call the argument to $f$ by the name $x$ and to call the argument of $f^{-1}$ by the name $y$ is just for clarity. These are just dummy names and we could also have written the rule as $(f^{-1})'(x) = \frac{1}{f'(f^{-1}(x))}$. 
 
 %In the right hand side, we have to evaluate $f'(f^{-1}(x))$. This may be a bit confusing
 
@@ -314,11 +314,11 @@ Be careful to not confuse the inverse function $f^{-1}$ with the reciprocal of $
 
 
 \subsubsection{Logarithmic Differentiation} 
-If a function $f$ is composed with the logarithm function such that $y = \ln(f(x))$, application the chain rule gives the rule for logarithmic differentiation:
+If a function $f$ is composed with the logarithm function such that $y = \ln(f(x))$, application of the chain rule gives the rule for logarithmic differentiation:
 \begin{equation}
  \Bigl( \ln(f(x)) \Bigr)' = \frac{f'(x)}{f(x)}
 \end{equation}
-For this to work, $f(x)$ must be positive at the evaluation point $x$. ...TBC...ToDo: give examples for using this rule
+For this to work, $f(x)$ must be positive at the evaluation point $x$ because otherwise the logarithm is undefined (Q: What about complex logarithms? They work for negative numbers, too.). ...TBC...ToDo: give examples for using this rule
 
 % https://en.wikipedia.org/wiki/Differentiation_rules#Logarithmic_derivatives
 % https://en.wikipedia.org/wiki/Logarithmic_derivative
@@ -339,7 +339,7 @@ Or, with unsurpressed argument $x$:
  = \Bigl( \exp(g(x) \, \ln(f(x)) \Bigr) '
  = f(x)^{g(x)} \Bigl(f(x)^{g(x)} \, \frac{g(x)}{f(x)} + g'(x) \, \ln(f(x)) \Bigr)
 \end{equation}
-...TBC...VERIFY. Give examples and special cases, give sources.
+...TBC...VERIFY. Give examples and special cases, give sources. Q: Do we need to require $f$ to be positive? It appears inside a logarithm on the RHS.
 
 % The reciprocal rule may be derived as the special case where g = -1
 

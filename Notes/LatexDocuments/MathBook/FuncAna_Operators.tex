@@ -1,13 +1,11 @@
-\section{Operators}
-Operators take a function as input and produce another function as output. Domain and range of input and output do not necessarily have to be the same, but often are. Some examples are taking derivatives, applying a Fourier transform, computing the inverse function (assuming, it exists), multiplying the function by a fixed other function, composing the function with a fixed other function from the left or right, computing evolutes and involutes of curves, etc. Again, an important subset of all operators are the linear operators. We will denote operators by upper case letters and the function that is their argument in brackets. So, if the function $g$ is the result of applying an operator $T$ to a function $f$, we write $g = T[f]$. You may interpret the letter $T$ as "transformation". The operator $T$ transforms a function $f$ into another function $g$. In the literature, you will also find a notation where the brackets are omitted, e.g. $g = T f$. To avoid confusion with multiplication, I'll use the bracket notation. Sometimes, we may want to evaluate the resulting function at a particular input argument $x$. For this, we'll write $T[f](x)$. There are two levels of evaluation here: first $T[f]$ is evaluated to give some function and then that function is evaluated at the argument $x$.
-
-...tbc...
+\section{Operator Theory}
+Operators take a function as input and produce another function as output. Domain and range of input and output do not necessarily have to be the same, but often are. Some examples are taking derivatives, applying a Fourier transform, computing the inverse function (assuming, it exists), multiplying the function by a fixed other function, composing the function with a fixed other function from the left or right, computing evolutes and involutes of curves, etc. Again, an important subset of all operators are the linear operators. We will denote operators by upper case letters and the function that is their argument in brackets. So, if the function $g$ is the result of applying an operator $T$ to a function $f$, we write $g = T[f]$. You may interpret the letter $T$ as "transformation". The operator $T$ transforms a function $f$ into another function $g$. In the literature, you will also find a notation where the brackets are omitted, e.g. $g = T f$. To avoid confusion with multiplication, I'll use the bracket notation. Sometimes, we may want to evaluate the resulting function at a particular input argument $x$. For this, we'll write $T[f](x)$. There are two levels of evaluation here: first $T[f]$ is evaluated to give some function $g$ and then that function is evaluated at the argument $x$ to give some number $y$. ...TBC...
 
 
 
 
 \subsection{Linear Operators}
-The definition of linearity for operators is as always: for any two functions $f,g$ and any scalar $a$, an operator $L$ is said to be linear if satisfies the conditions of homogeneity: $L[a g] = a L[g]$ and additivity: $L[f+g] = L[f] + L[g]$. The theory of linear operators parallels the theory of matrices. Matrices represent linear transformations of finite-dimensional vectors. Operators transform vectors in general - including also the infinite-dimensional ones, such as functions. ...tbc...
+The definition of linearity for operators is as always: for any two functions $f,g$ and any scalar $a$, an operator $L$ is said to be linear if satisfies the conditions of homogeneity: $L[a g] = a L[g]$ and additivity: $L[f+g] = L[f] + L[g]$. The two conditions can, again as always, combined into the single condition $L[af+bg] = aL[f] + bL[g]$ where $b$ is another scalar. The theory of linear operators parallels the theory of matrices. Matrices represent linear transformations of finite-dimensional vectors. Operators transform vectors in general - including also the infinite-dimensional ones, such as functions. ...TBC...
 
 % notes: could "homogeneity" also be called "multiplicativity"? i think, in number theory, multiplicative functions are defined exactly that way - oh - nope, it's not, it's defined as f(a*b) = f(a)*f(b)
 
@@ -29,6 +27,13 @@ For this operator exponential, the familiar relation $e^A e^B = e^{A + B}$ holds
 \end{equation}
 This formula can be derived by considering the Taylor series of an arbitrary function $f$ with respect to $a$ around a point $x$ and treating $a$ as the deviation from the expansion point (...tbc...).
 
+% ToDo:
+% -Before defining the exponential (which involves a sum), define addition of two operators:
+%  for operators T,U their sum S=T+U is defined to be the operator that operates as follows on
+%  any given function f: S[f] = (T+U)[f] = T[f] + U[f]. Addition is a bivariate function on 
+%  operators
+% -explain associativity and define sums of operators using summation notation (which is well
+%  defined due to this associativity)
 
 
 %https://en.wikipedia.org/wiki/Baker%E2%80%93Campbell%E2%80%93Hausdorff_formula

@@ -15,6 +15,11 @@ In this notation, the $\int$ symbol is called the integral sign and it is meant 
 \medskip
 The given description is not quite Riemann's exact definition, but it's close enough to capture the idea. Riemann does not require the intervals to be equally sized but only demands that the largest of them should shrink to a width of zero as $n$ approaches infinity. He also additionally demands that it should not matter, where exactly inside the $i$th interval we pick $x_i$ to be. It could be at the left or right boundary, right in the middle, at the lowest or highest point\footnote{More strictly speaking, one would use the infimum and supremum for the lowest and highest $y$-value within the subinterval - but you may ignore that technical detail.} or whereever. The Riemann integral is only defined if it doesn't matter, i.e. if the above limit will always give the same result. If that isn't the case, the function is not considered to be Riemann-integrable. For continuous functions, it will always be the case, though.
 
+% Your Calc Teacher SPARED YOU: Here's the REAL Definition of the Integral
+% https://www.youtube.com/watch?v=cIqcGM_MTTg
+% -Gives the formal definition in terms of the lower and upper sums (using the infimum and 
+%  supremumu in each interval)
+
 \medskip
 The interpretation of the Riemann integral as an area is actually a somewhat sloppy interpretation: it works only when we assume that the function graph is above the $x$-axis for the whole integration interval. If this is not the case, the portions below the $x$-axis will actually produce negative contributions to the total area because the $f(x_i)$ factors will be negative in this case (the $\Delta x_i$ factors are always positive by construction). If the function has more "weight" below the $x$-axis than above, the "area" may even become negative. It is more useful to think about the integral as a sort of \emph{"signed area"} or an \emph{"area balance"} over the interval $[a,b]$. If we divide the value $I$ of the integral by the width of the integration interval, i.e. by $b-a$, we obtain an \emph{average} value of the function over the interval $[a,b]$. This average would be the unique value $c$ that a constant function would need to have, such that the (signed) area of the rectangle with width $b-a$ and height $c$ gives rise to the same signed area as the integral over $f$.
 
@@ -72,6 +77,9 @@ This notation is useful when instead of the symbolic $F(x)$, we deal with a writ
 % Note how only the boundary values actually count - this will later generalize to other integral theorems
 
 % Introduce the two notations with the brackets and the vertical line for F(b) - F(a)
+
+% Maybe write the theorem also as
+% \int_a^b f'(x) = f(b) - f(a)
 
 \subsection{Integration Laws} 
 ToDo: Explain rules for linearity, reversal, splitting, ...

@@ -8,12 +8,28 @@
 
 
 \subsection{Test Functions  [TODO: move to function spaces]}
-For the following material, we will need to work with a set of functions with some special properties. We want them to be smooth, which means they should be differentiable infinitely often everywhere. We also want them to have a finite support, which means they should be identically zero everywhere except within some finite interval $(a,b)$. This interval is assumed to be fixed and the same for each of the functions within the set. [VERIFY!] The set of all functions that satisfy these two requirements will be called the set of "test functions". [TODO: explain where the name comes from]. At first glance, it may be a bit surprising that functions that satisfy both of these criteria even exist (it certainly suprised me). To make a function identically zero outside a given interval typically requires a piecewise definition and such piecewise definitions tend to make the functions non-smooth at the junctions of the pieces. However, such smooth, piecewise-defined functions do indeed exist, and a standard example is the so called bump function:
+For the following material, we will need to work with a set of functions with some special properties. We want them to be smooth, which means they should be differentiable infinitely often everywhere. We also want them to have a finite support, which means they should be identically zero everywhere except within some finite interval $(a,b)$. This interval is assumed to be fixed and the same for each of the functions within the set. [VERIFY! Nope! I think, that's wrong!] The set of all functions that satisfy these two requirements will be called the set of "test functions". . At first glance, it may be a bit surprising that functions that satisfy both of these criteria even exist (it certainly suprised me). To make a function identically zero outside a given interval typically requires a piecewise definition and such piecewise definitions tend to make the functions non-smooth at the junctions of the pieces. However, such smooth, piecewise-defined functions do indeed exist, and a standard example is the so called bump function:
 \begin{equation}
- f(x) = ...
+f(x) = 
+ \begin{cases}
+ \exp \Bigl( \frac{1}{x^2-1} \Bigr)  \qquad &  |x|   <  1 \\
+ 0                                   \qquad &  |x| \geq 1
+ \end{cases}
 \end{equation}
-It is indeed infinitely often differentiable everywhere, even at the potentially problematic junctions [TODO: show it]. It is, however, not analytic there: a power series expansion centered at these points will not converge to the function $f$ [TODO: figure out to what it converges, if at all (maybe to the zero-function?)].
+It is indeed infinitely often differentiable everywhere, even at the potentially problematic junctions at $-1$ and $+1$. It is, however, not analytic there: a power series expansion centered at these points will not converge to the function $f$.
 
+% https://en.wikipedia.org/wiki/Bump_function
+% https://en.wikipedia.org/wiki/Spaces_of_test_functions_and_distributions
+% https://en.wikipedia.org/wiki/Schwartz_space
+
+% ToDo:
+% -explain where the name "test function" comes from
+% -show smoothness of bump function
+% -show that the Taylor series of the bump function around -1 and +1 does not converge to the
+%  function. Figure out to what it converges, if at all (maybe to the zero-function?).
+% -Plot the bump function. Maybe try to make a small plot next to the formula. Maybe that would be
+%  a nice general way to do it throughout the book - it would be space efficient. There's typically
+%  a lot of whitespace around formulas anyway
 
 
 \paragraph{Notation}
@@ -27,6 +43,8 @@ As mentioned above, the set of functions that are continuous on a given interval
 
 \subsection{Distributions}
 In general, a dual space $V^*$ with respect to a given vector space $V$ is defined as the set of all linear functions that take as input an element of the set $V$ and spit out a scalar, i.e. a (typically real) number. What we want to define here is the space that is dual to the space of our test functions. This is the space of all linear functionals that take as input a test function and produce a real number as output. Elements of this set are called distributions and in a certain sense, they can be seen as a generalization of the idea of a function. 
+
+% https://en.wikipedia.org/wiki/Distribution_(mathematics)
 
 \subsubsection{Regular Distributions}
 One way to construct such a linear functional is to multiply the input (test) function $f$ with some fixed other function $g$ and integrate the product over the interval $(a,b)$ over which our test function $f$ is nonzero\footnote{Which is obviously equivalent to integrating from $-\infty$ to $\infty$}. Let's call the resulting functional $G$, so we have:
@@ -45,6 +63,16 @@ The so constructed functionals are what we will call \emph{regular distributions
 \subsubsection{Evaluating Distributions} ...TBC...ToDo: Explain that for distributions, it doesn't make sense (in general) to ask what value they have at a given point. 
 
 % Instead, we are only allowed to ask questions about what the integral above evaluates to for a given test function $f$. We can "test" the distribution $g$ with $f$, where $f$ may be localized (I guess) but we cannot ask for the value of $g$ at a specific $x$. So, "evaluating" a distribution amounts to testing / probing it with a test function?
+
+% ToDo:
+% -explain equality of distributions and its relation to weak equality of functions - I think:
+%  -Two (regular) distributions G and H are equal, if they produce the same value of the integral
+%   given above for *any* (test) function f
+%  -Two functions g and h are weakly equal if their associated regular distributions are equal
+%  -weakly equal functions may differ from one another in isolated points as long as their values
+%   are finite in these points
+%  -This notion of weak equality establishes an equivalence relation of the set of (suitable)
+%   functions
 
 \subsubsection{The Dirac Delta-Distribution}
 One very important example of such a singular distribution is the Dirac delta distribution that just maps any given function $f$ to its value at $x = 0$:

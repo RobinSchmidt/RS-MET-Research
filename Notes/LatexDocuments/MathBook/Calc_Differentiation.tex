@@ -171,8 +171,25 @@ Note the structural similarity with the binomial theorem. The $n$-th power would
 
 % https://en.wikipedia.org/wiki/General_Leibniz_rule
 
+\subsubsection{The Quotient Rule} 
+As we have already seen in the list above, the rule for computing the derivative of a quotient of two functions $f = f(x)$ and $g = g(x)$ is given by:
+\begin{equation}
+\left( \frac{f(x)}{g(x)} \right) ' = 
+\frac{f'(x) g(x) - g'(x) f(x)}{(g(x))^2}
+\end{equation}
+In the special case for $f(x) = 1$, we obtain the so called \emph{reciprocal rule} which says:
+\begin{equation}
+\left( \frac{1}{g(x)} \right) ' = 
+- \frac{g'(x)}{(g(x))^2}
+\end{equation}
 
-\subsubsection{The Quotient Rule} ...TBC...
+\paragraph{Higher Order Derivatives of Quotients}
+There is also a generalization of the quotient rules to higher order derivatives of quotients of functions. It can be obtained from combining the (generalized) product rule with the reciprocal rule. This results in:
+\begin{equation}
+\left( \frac{f}{g} \right) ^{(n)} = 
+\frac{1}{g} \sum_{k=0}^{n} (-1)^k \binom{n+1}{k+1} \frac{(f g^k)^{(n)}}{g^k}
+\end{equation}
+where we have again supressed the argument to make it bearable. VERIFY! TODO: maybe give different formulas - there are more. Maybe work through an example - maybe take the 3rd derivative. Q: Is there a genralization for quotients of multiple functions - but what would that even mean? Maybe a continued fraction expression?
 
 % Quotient rule for higher derivatives:
 % https://math.stackexchange.com/questions/5357/whats-the-generalisation-of-the-quotient-rule-for-higher-derivatives
@@ -184,6 +201,10 @@ Note the structural similarity with the binomial theorem. The $n$-th power would
 % as a consequence of the reciprocal rule together with the product rule.
 
 
+% How Not to Repeatedly Differentiate a Reciprocal
+% https://www.jstor.org/stable/2324425
+
+% Is there a genralization for quotients of mupltiple functions - but what would that even mean? maybe a continued fraction expression?
 
 \subsubsection{The Chain Rule}
 We have also already seen the (basic form of the) chain rule in our table above. There, it was given in terse form with suppressed argument. With unsuppressed argument, it would look like:
@@ -289,7 +310,16 @@ Be careful to not confuse the inverse function $f^{-1}$ with the reciprocal of $
 % https://en.wikipedia.org/wiki/Inverse_function_rule
 
 
-\subsubsection{Logarithmic Differentiation} ...TBC...
+\subsubsection{Logarithmic Differentiation} 
+If a function $f$ is composed with the logarithm function such that $y = \ln(f(x))$, application the chain rule gives the rule for logarithmic differentiation:
+\begin{equation}
+ \Bigl( \ln(f(x)) \Bigr)' = \frac{f'(x)}{f(x)}
+\end{equation}
+For this to work, $f(x)$ must be positive at the evaluation point $x$. ...TBC...ToDo: give examples for using this rule
+
+% https://en.wikipedia.org/wiki/Differentiation_rules#Logarithmic_derivatives
+% https://en.wikipedia.org/wiki/Logarithmic_derivative
+% https://en.wikipedia.org/wiki/Logarithmic_differentiation
 
 % Give example to differentiate f(x) = x^x
 
@@ -300,7 +330,13 @@ The power rule $(x^n)' = n x^{n-1}$ has the following generalization:
  (f^g)' = \Bigl( \exp(g \, \ln(f) \Bigr) '
         = f^g \Bigl(f^g \, \frac{g}{f} + g' \, \ln(f) \Bigr)
 \end{equation}
-...TBC...
+Or, with unsurpressed argument $x$:
+\begin{equation}
+ \Bigl(f(x)^{g(x)}\Bigr)' 
+ = \Bigl( \exp(g(x) \, \ln(f(x)) \Bigr) '
+ = f(x)^{g(x)} \Bigl(f(x)^{g(x)} \, \frac{g(x)}{f(x)} + g'(x) \, \ln(f(x)) \Bigr)
+\end{equation}
+...TBC...VERIFY. Give examples and special cases, give sources.
 
 % The reciprocal rule may be derived as the special case where g = -1
 

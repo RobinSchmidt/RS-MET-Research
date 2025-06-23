@@ -233,7 +233,7 @@ f^{(|A|)}(g(x)) \cdot \prod_{a \in A} g^{(|a|)}(x)
 where $P_n$ is the set of all partitions\footnote{A partition of a set is a way of decomposing it into disjoint subsets. See page \pageref{Sec:PartitionsOfSets} for more details.} of the set $\{1,2\ldots,n\}$, $|A|$ the number of parts of partition $A$, i.e. the cardinality of $A$ and $|a|$ is the number of elements in the given part $a$ of a partition $A$. 
 
 \medskip
-Let's unpack this formula with the example of $n=3$. First, we need to form the set $P_3$, i.e. the set of partitions of the set $\{1,2,3\}$. This is given by:
+There's a lot going on in this formula, so let's unpack it with the example case of $n=3$. First, we need to form the set $P_3$, i.e. the set of partitions of the set $\{1,2,3\}$. This is given by:
 \begin{equation}
 P_3 = \{ A_1, A_2, A_3, A_4, A_5 \}
 \end{equation}
@@ -266,20 +266,24 @@ where we note that for $A_2,A_3,A_4$, we'll get the same expression. The first f
 3 f''(g(x))  \cdot g''(x)    g'(x)  + 
   f'(g(x))   \cdot g'''(x) 
 \end{equation}
-For more explanations (including a proof sketch), see ...TBC...ToDo: include bibliography reference to \href{ https://www.youtube.com/watch?v=hAl3b-0N34E}{www.youtube.com/watch?v=hAl3b-0N34E} and verify everything
+For more explanations including a proof sketch, see \cite{YT_FaaDiBruno}.
 
-
-
-%You may look it up on Wikipedia if you need it. ToDo: Give the formula here. Perhaps it would make more sense to express it in the form of an algorithm in pseudocode or in python? Maybe figure out an even more general formula for higher order derivatives of composites of multiple functions - but that would then probably be unmanagably messy? 
+%Perhaps it would make sense to express it in the form of an algorithm in pseudocode or in python? Maybe figure out an even more general formula for higher order derivatives of composites of multiple functions - but that would then probably be unmanagably messy? Maybe implement it in C++ and link the implementation
 
 % https://en.wikipedia.org/wiki/Fa%C3%A0_di_Bruno%27s_formula
 
-% the chain rule that your professor hid from you
-% https://www.youtube.com/watch?v=hAl3b-0N34E
-% -has a nice way to write down the formula.
+\subsubsection{The Inverse Function Rule}
+Given an invertible function $f$ that assigns a value $y = f(x)$ to every $x$ and has an inverse function  $f^{-1}$ that brings us back from $y$ to $x$ such that $x = f^{-1}(y)$, the \emph{inverse function rule} tells us how to find the derivative of  $f^{-1}$ from the derivative of $f$
+\begin{equation}
+ (f^{-1})'(y) = \frac{1}{f'(f^{-1}(y))}
+\end{equation}
+Be careful to not confuse the inverse function $f^{-1}$ with the reciprocal of $f$ given by $1/f(x)$. These are very different things. Note furthermore that the choice to call the argument to $f$ by the name $x$ and to call the argument of $f^{1}$ by the name $y$ is just for clarity. These are just dummy names and we could also have written the rule as $(f^{-1})'(x) = \frac{1}{f'(f^{-1}(x))}$.
 
+%In the right hand side, we have to evaluate $f'(f^{-1}(x))$. This may be a bit confusing
 
-\subsubsection{The Inverse Function Rule} ...TBC...
+%That means we first must find
+
+% ...TBC...
 
 % What about inverse function rule? (f^-1)'(x) = 1/f'(f^-1(x))
 % https://en.wikipedia.org/wiki/Inverse_function_rule

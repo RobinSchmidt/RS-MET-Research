@@ -213,6 +213,8 @@ Aside from counting ways how to do certain things with sets, combinatorics is al
 \paragraph{Parenthesations and Catalan Numbers}
 Consider the task of computing a product of 4 numbers $p = a \cdot b \cdot c  \cdot d = abcd$. Now we ask how many ways there are to evaluate this product assuming that in each step, we compute a product of two numbers. That is: we ask how many ways are there to set the parentheses. The answer is 5. These are the 5 ways to compute the product: $((ab)c)d, (a(bc))d, (ab)(cd), a((bc)d), a(b(cd))$. In general, the number of ways to evaluate/parenthesize a product of $n$ factors is given by the $n$th Catalan number. The Catalan number pop up in various other settings as well  ...TBC...
 
+% Is there some sort of recursion relation that allows efficient computation?
+
 % ToDo: explain where the parethisation of an expression may matter - for example in evaluating a matrix a product, it may make a (big) difference in terms of computational cost. Give an example where it matters a lot. Maybe a scalar prodcut of the form x^T A y where A = a b^T such that we have x^T a b^T y. Evaluating it like (x^T (a b^T)) y would be vastly more inefficient than x^T (a b^T) y, I think. I assume that x,y,a,b are column vectors. ...or maybe try to create an example with just 3 factors
 
 %Parenthisations?, Parenthesisations?
@@ -226,6 +228,7 @@ Consider the task of computing a product of 4 numbers $p = a \cdot b \cdot c  \c
 
 % https://www.johndcook.com/blog/2013/10/03/parenthesize-expression-catalan/
 % https://en.wikipedia.org/wiki/Catalan_number
+% https://de.wikipedia.org/wiki/Catalan-Zahl
 
 % What are Catalan Numbers?
 % https://www.youtube.com/watch?v=vS1Ye2ArjNY
@@ -259,11 +262,26 @@ Consider the task of computing a product of 4 numbers $p = a \cdot b \cdot c  \c
 % https://www.tandfonline.com/doi/full/10.1080/00029890.2025.2460966#d1e755
 % A Hyper-Catalan Series Solution to Polynomial Equations, and the Geode
 
-
-
-
 % https://arxiv.org/pdf/2102.05121
 % GENERALIZED CATALAN NUMBERS FROM HYPERGRAPHS
+
+
+
+%\subsection{Counting in Geometry}
+
+%\paragraph{Tiling a Rectangle} 
+
+% https://en.wikipedia.org/wiki/Fibonacci_sequence#Combinatorial_identities
+%https://math.stackexchange.com/questions/4242678/relation-between-fibonacci-numbers-and-combinations-counting
+% https://math.stackexchange.com/questions/81805/how-to-show-that-this-binomial-sum-satisfies-the-fibonacci-relation
+
+% Maybe this should be explained in terms of dividing a line. The 2nd dimensions seems irrelevant. I think, we ask for the number of different ways to divide a line of length n into pieces each of which is and integer. The pieces should have a length of at least 1 and at most n-1.
+% ah - no - i think, the length is at most 2 - the discussion says: "squares and dominos"
+
+%\paragraph{Dividing a Circle by Secant Lines}
+
+%https://en.wikipedia.org/wiki/Dividing_a_circle_into_areas
+%https://oeis.org/A000127
 
 \begin{comment}
 
@@ -278,6 +296,11 @@ https://en.wikipedia.org/wiki/Gaussian_binomial_coefficient#Combinatorial_descri
 https://en.wikipedia.org/wiki/Double_factorial
 https://mathworld.wolfram.com/DoubleFactorial.html
 https://mathworld.wolfram.com/Multifactorial.html
+
+
+Counting in Geometry:
+
+
 
 
 

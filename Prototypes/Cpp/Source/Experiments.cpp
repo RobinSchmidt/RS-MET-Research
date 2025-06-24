@@ -19519,12 +19519,17 @@ std::vector<T> forwardDiff(const std::vector<T>& f)
   std::vector<T> df(N-1);
   for(size_t n = 0; n < N-1; n++)
     df[n] = f[n+1] - f[n];
+
+  return df;
 }
 
 void testDiscreteCalculus()
 {
+  bool ok = true;
+
   using Num = int64_t;
   using Vec = std::vector<Num>;
+
 
   int N = 20;
 
@@ -19545,7 +19550,19 @@ void testDiscreteCalculus()
   // Take the forward differences:
   Vec D_squares = forwardDiff(squares);
   Vec D_cubes   = forwardDiff(cubes);
+  Vec D_powsOf2 = forwardDiff(powsOf2);
+  Vec D_powsOf3 = forwardDiff(powsOf3);
+
   // ...
+
+
+  // Check the elementary differencing rules:
+  for(int n = 0; n < N-1; n++)
+  {
+    ok &= D_squares[n] = 2*n + 1;
+
+
+  }
 
 
 
@@ -19553,8 +19570,9 @@ void testDiscreteCalculus()
   // ...
 
 
+  rsAssert(ok);
 
-  int dummy = 0;
+  //int dummy = 0;
 
   // ToDo:
   //

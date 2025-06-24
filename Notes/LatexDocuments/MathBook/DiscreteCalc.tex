@@ -13,7 +13,20 @@ Difference calculus is the part of discrete calculus that is analogous to the us
 
 %ToDo: define forward and backward difference, mention connection to numerical approximation of derivatives (maybe mention the central difference although it plays no big role in difference calculus)
 
-\subsection{The Forward Difference Operator}  ...TBC...
+\subsection{Difference Operators}  ...TBC...
+
+
+\subsubsection{Forward Difference}
+
+% Introduce \Delta_h f(n) = f(n+h) - f(n)
+
+
+\subsubsection{Backward Difference}
+% Point out that in DSP, the formward difference would count as a noncausal operation and therefore can't be implemented in realtime (except when accepting a latency of 1 sample)
+
+%\subsubsection{Central Difference}
+% Mostly useful for approximating derivatives by finite differences. But that is not the point of difference calculus, so the central difference usually plays no role here.
+
 
 % Maybe call the subsection "Difference Operators" and give some alternatives:
 % backward difference, central difference, differences with arbitrary stepsize h,
@@ -37,7 +50,7 @@ As we have seen, the differences of power functions are a bit messy. Not so nice
 % Give alternative notations. Mention rising powers (Pochhammer symbol)
 
 \paragraph{Exponential Functions}
-Let's now look at the differences of exponential functions of the form $f(n) = a^n$. The general rule is: $\Delta a^n = (a-1) a^n$. For the special case of $a=2$, we get $Delta 2^n = (2-1) 2^n = 2^n$. We see that the difference of the function $2^n$ is itself. That's analogous to how $\e^x$ is its own derivative in ordinary calculus.
+Let's now look at the differences of exponential functions of the form $f(n) = a^n$. The general rule is: $\Delta a^n = (a-1) a^n$. For the special case of $a=2$, we get $\Delta 2^n = (2-1) \cdot 2^n = 2^n$. We see that the difference of the function $2^n$ is itself. That's analogous to how $\e^x$ is its own derivative in ordinary calculus.
 
 % Give general rule \Delta a^n = (a-1) a^n. With a=2, we get Delta 2^n = (2-1) 2^n = 2^n. The number 2 plays the same role as the number \e in continuous calculus
 
@@ -49,28 +62,27 @@ Let's now look at the differences of exponential functions of the form $f(n) = a
 
 
 
-\subsubsection{Differencing Rules}  ...TBC...ToDo: power rule, rule for exponential functions, product rule, ...
+\subsubsection{Differencing Rules}  
+
+%...TBC...ToDo: power rule, rule for exponential functions, product rule, ...
 
 % https://en.wikipedia.org/wiki/Discrete_calculus#Calculus_of_differences_and_sums
+
+\paragraph{Linearity}
 
 \paragraph{Product Rule}
 \begin{equation}
  \Delta (f g) = f \cdot \Delta g + g \cdot \Delta f + \Delta f \cdot \Delta g
 \end{equation}
 
+\paragraph{Quotient Rule}
+% See Hamming book
 
+% What about a chain rule?
 
 
 \section{Summation Calculus}
 Summation calculus is the part of discrete calculus that is analogous to the usual integral calculus. ...TBC...
-
-\subsection{Summation Rules}
-
-%\paragraph{Summation by Parts}
-
-
-% https://en.wikipedia.org/wiki/Summation_by_parts
-
 
 \subsection{Fundamental Theorem}
 Given two functions $F$ and $f$ from $\mathbb{Z}$ to $\mathbb{R}$ such that $f(n) = \Delta F(n)$, the following holds:
@@ -85,6 +97,18 @@ Given two functions $F$ and $f$ from $\mathbb{Z}$ to $\mathbb{R}$ such that $f(n
 
 %\section{Function Approximation}
 % -develop the Newton-Gregory formula as analogon for Taylor series
+
+
+
+
+\subsection{Summation Rules}
+
+\paragraph{Summation by Parts}
+
+% https://en.wikipedia.org/wiki/Summation_by_parts
+
+% is there a substitution rule?
+
 
 
 

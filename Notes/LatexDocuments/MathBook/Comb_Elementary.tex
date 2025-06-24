@@ -3,7 +3,7 @@
 
 %\subsection{Selecting Elements from a Set} 
 \subsection{Collections of Set Elements} 
-Some of the most basic combinatorial concepts come from counting certain things that we can do with mathematical sets. Because sets are so ubiquitous and fundamental in mathematics, these concepts tend to pop up in many different fields of mathematics.
+Some of the most basic combinatorial concepts come from counting certain things that we can do with mathematical sets. Because sets are so ubiquitous and fundamental in mathematics, these concepts tend to pop up in many different fields of mathematics. There are a lot of things we can do with sets and ask how many different ways there are to do that thing. For any of these actions, we can also cook up arbitrary constraints which throw out certain possibilities to lower our count. Some of the actions with or without constraints are important enough to have their own names. Let's have look at some of them.
 
 % Maybe rename to "Element Selections", "Choices", "Collections"
 
@@ -104,7 +104,7 @@ Now we consider a situation where we have a given set of size $n$ and the task i
 \begin{equation}
 \prescript{r}{}{V}_n^k = n^k
 \end{equation}
-of them. Again, the $r$ stands for "with repetition". In this setup, the number $k$ can even be greater than $n$. In such a case, obviously, there \emph{must} be repetitions. We could, for example, ask how many different strings of length $7$ could be formed from the $3$ letters $a,b,c$. The answer is $3^7 = 2187$. If repetitions are not allowed, we call it \emph{variations/arrangements with repetition} and there are:
+of them. Again, the $r$ stands for "with repetition". In this setup, the number $k$ can even be greater than $n$. In such a case, obviously, there \emph{must} be repetitions. We could, for example, ask how many different strings of length $7$ could be formed from the $3$ letters $a,b,c$. The answer is $3^7 = 2187$. If repetitions are not allowed, we call it \emph{variations/arrangements without repetition} and there are:
 \begin{equation}
 V_n^k = \frac{n!}{(n-k)!} 
       = n \cdot (n-1) \cdot (n-2) \cdot \ldots \cdot (n-k+1) 
@@ -133,7 +133,7 @@ of them. These numbers $V_n^k$ are also known as \emph{falling factorials} and s
 
 \paragraph{Partitions and Bell Numbers}
 \label{Sec:PartitionsOfSets}
-A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empty subsets whose union gives back the original set. For example, take the set $\{a,b,c\}$. We can partition it in the following 5 ways: $\{\{a\},\{b\},\{c\}\}, \{\{a\},\{b,c\}\}, \{\{a,b\},\{c\}\}, \{\{a,c\},\{b\}\}, \{\{a,b,c\}\}$. For a set with $n$ elements, the number of possible partitions is given by the $n$th \emph{Bell number} $B_n$. Partitions of a set can also be interpreted in terms of equivalence classes. That is: We can consider each of the subsets as being an equivalence class [VERIFY!]. Therefore, the number $B_n$ gives the number of possible different equivalence relations on a set of size $n$. The first $7$ Bell numbers are: $B_0=1, B_1=1, B_2=2, B_3=5, B_4=15, B_5=52, B_6=203$. The Bell numbers can be computed algorithmically in a similar way as the binomial coefficients can be computed via Pascal's triangle. For the Bell numbers, there's \emph{Bell's triangle}. It looks as follows:
+A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empty subsets whose union gives back the original set. For example, take the set $\{a,b,c\}$. We can partition it in the following 5 ways: $\{\{a\},\{b\},\{c\}\}, \{\{a\},\{b,c\}\}, \{\{b\},\{a,c\}\}, \{\{c\},\{a,b\}\}, \{\{a,b,c\}\}$. For a set with $n$ elements, the number of possible partitions is given by the $n$th \emph{Bell number} $B_n$. Partitions of a set can also be interpreted in terms of equivalence classes. That is: We can consider each of the subsets as being an equivalence class [VERIFY!]. Therefore, the number $B_n$ gives the number of possible different equivalence relations on a set of size $n$. The first $7$ Bell numbers are: $B_0=1, B_1=1, B_2=2, B_3=5, B_4=15, B_5=52, B_6=203$. The Bell numbers can be computed algorithmically in a similar way as the binomial coefficients can be computed via Pascal's triangle. For the Bell numbers, there's \emph{Bell's triangle}. It looks as follows:
 \begin{center}  % doesn't work!
 \begin{verbatim}
                     1
@@ -145,7 +145,7 @@ A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empt
 203   255   322   409   523   674   877
 \end{verbatim}
 \end{center}
-The rules to compute the numbers are as follows: Start with the single $1$ in the first row. To start the next row, copy the last number from the previous row into the first position of the next row. All other numbers in the row are computed by adding the left and top-left neighbors until the row is completely filled. Then copy the last number of the row into the first position of the next row again. And so on. The sequence of Bell numbers appears in the leftmost column, i.e. in the row start numbers. They also appear in the row end numbers but index-shifted by one with $B_0$ missing. 
+The rules to compute the numbers are as follows: Start with the single $1$ in the first row. To start the next row, copy the last number from the previous row into the first position of the next row. All other numbers in the row are computed by adding the left and top-left neighbors until the row is completely filled. Then copy the last number of the row into the first position of the next row again. And so on. The sequence of Bell numbers appears in the leftmost column, i.e. in the row start numbers. They also appear in the row end numbers but index-shifted by one with $B_0$ missing. This is obvious from the fact that in the algorithm, we always copy the last number of one row into the first position of the next row.
 
 ...TBC... Q: Do the inner numbers of the Bell triangle have some meaning, too? ToDo: mention integer partitions (and warn about confusing these concepts - they have nothing to with one another, I think).
 
@@ -177,7 +177,19 @@ The rules to compute the numbers are as follows: Start with the single $1$ in th
 
 
 \paragraph{Derangements and Subfactorials}
-The factorial give the number of ways, we can order $n$ items. What if we assume that our $n$ items have some natural order like $1,2,3,\ldots,n$ and we now asks how many ways there are to reorder them such that none of the items is in its original position. Such a messed up ordering is called a \emph{derangement} and the number of possible derangements of $n$ items is given by the subfactorial function. It is denoted by $!n$ and can be computed from the normal factorial via the formula: ...TBC...
+The factorial of $n$ gives the number of ways, we can order $n$ items. What if we assume that our $n$ items have some natural order like $1,2,3,\ldots,n$ and we now ask how many ways there are to reorder them such that none of the items is in its original position. Such a messed up ordering is called a \emph{derangement} and the number of possible derangements of $n$ items is given by the subfactorial function. It is denoted by $!n$ and can be computed from the normal factorial via the formulas: 
+\begin{equation}
+!n = n! \sum_{k=0}^{n} \frac{(-1)^k}{k!} 
+   = n! - \sum_{k=1}^{n} \binom{n}{k} \cdot !(n-k)
+   = \floor{ \frac{n! + 1}{\e} }
+   = round(n! / e)
+\end{equation}
+It also obeys the following recursion relations:
+\begin{equation}
+!n = (n-1) \cdot (!(n-1) + !(n-2))
+   = n \cdot (!(n-1)) + (-1)^n
+\end{equation}
+Some of the formulas do only hold for $n > 0$ and some only for $n > 1$, so take care\footnote{You may look the stuff up on Wikipedia for more details} about some special rules for the initial values when using the formulas. The initial values of the sequence are: $1,0,1,2,9,44,265,\ldots$. Since we are now looking at permutations but with an additional constraint to what kind of permutation we consider valid, it is clear that the number of ways to achieve that must be less than without the constraint. So, we conclude that the number must be lower than the factorial. Maybe that's the motivation for calling it subfactorial. This is my own speculation. Of course, using other constraints would also lower the number but that particular one seems to have some importance. When looking at the graphs of the factorial and the subfactorial, they look very similar with regard to their growth behavior. With a log-scaled $y$-axis (and linear $x$-axis), they look almost parallel and the subfactorial is, of course, always below the factorial. ...TBC...ToDo: verify the formulas numerically!
 
 
 %https://mathworld.wolfram.com/Subfactorial.html

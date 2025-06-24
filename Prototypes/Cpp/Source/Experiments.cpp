@@ -19504,7 +19504,62 @@ void testKroneckerTrafo2D()
 }
 
 
+// Implements the forward difference operator for the sequence f.
+template<class T>
+std::vector<T> forwardDiff(const std::vector<T>& f)
+{
+  size_t N = f.size();
 
+  if(N < 2)
+  {
+    rsError("Sequence f must be at least of length 2.");
+    return std::vector<T>();
+  }
+
+  std::vector<T> df(N-1);
+  for(size_t n = 0; n < N-1; n++)
+    df[n] = f[n+1] - f[n];
+}
+
+void testDiscreteCalculus()
+{
+  using Num = int64_t;
+  using Vec = std::vector<Num>;
+
+  int N = 20;
+
+  // Create some example sequences:
+  Vec squares(N);
+  Vec cubes(N);
+  Vec powsOf2(N);
+  Vec powsOf3(N);
+  // ToDo: falling powers
+  for(int n = 0; n < N; n++)
+  {
+    squares[n] = n*n;
+    cubes[n]   = n*n*n;
+    powsOf2[n] = pow(2, n);
+    powsOf3[n] = pow(3, n);
+  }
+
+  // Take the forward differences:
+  Vec D_squares = forwardDiff(squares);
+  Vec D_cubes   = forwardDiff(cubes);
+  // ...
+
+
+
+  // Take sums:
+  // ...
+
+
+
+  int dummy = 0;
+
+  // ToDo:
+  //
+  // - Check validity of mathematical formulas (summation formulas, rules for differencing, etc.)
+}
 
 
 /** UNDER CONSTRUCTION. Does not work yet. I try to come up with an in-place merge algorithm that 

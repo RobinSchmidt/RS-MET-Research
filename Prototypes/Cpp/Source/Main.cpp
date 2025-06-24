@@ -142,13 +142,16 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testChebychevExpansion();        // stub
   //testChebychevEconomization();    // stub
   //testGeneratingFunction();
-  testCatalanNumbers();
+  //testCatalanNumbers();
   //testSmoothCrossFade();
   //testSmoothCrossFade2();
   //testSmoothMax();                   // stub
   //testNewtonOptimizer1D();
   //testFourierTrafo2D();
   //testKroneckerTrafo2D();
+  testDiscreteCalculus();             // stub
+
+
 
   // Misc:
   //testMerge();  // Trying to find an in-place merge algorithm - not sure, if that's possible, though

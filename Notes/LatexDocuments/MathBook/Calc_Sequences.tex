@@ -219,6 +219,9 @@ A transformation of a sequence is, very generally speaking, a process that we ap
 % A Visual Attempt at 1 + 2 + 3 + 4 + 5 + ... = -1/12
 % https://www.youtube.com/watch?v=hB2F9lyr2_k
 
+% The Euler transform of a series.
+% https://www.youtube.com/watch?v=s873ihX7yuM
+
 \subsubsection{Convolution as Transformation}
 One way to transform a sequence into a new one is to convolve it with some fixed other sequence. For a simple example, let this other sequence be given by $(\frac{1}{2}, \frac{1}{2}, 0, 0, 0, \ldots)$. In effect, the convolution with the given kernel will just let our new transformed sequence consist of 2-point averages of the old sequence. This will clearly not change the limit of a given sequence if it exists - because if the limit exists, it means that the sequence converges to some fixed value which also implies that two neighboring points will tend to have the same value - and taking the average of two values that are actually one and the same value will not change anything. So, we have our first example of a regular transformation. It's very simple and not very powerful. It will not help much in accelerating convergence of sequences - let alone turning divergent into convergent ones\footnote{Well - maybe it could actually do some good with alternating sequences. Figure out!}. But at least, we get a sense of how such regular transformations may look like. ...TBC... explain the general condition for a convolution kernel to be "regular" in the sense of not affecting the limit. I guess it must go down to zero (fast enough?) and sum up to one? I think, these two conditions should be sufficient for regularity - but are they necessary? 
 

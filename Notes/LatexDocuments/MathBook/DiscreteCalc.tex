@@ -3,6 +3,8 @@
 
 % To indicate that the input to our functions are integers, we'll use the notation f(n) rather than f(x) here. Some authors use $x$ regardless but I prefer $n$ because its also very common in signal processing (which is my home turf)
 
+% Maybe use brackets like f[n] instead of f(n)
+
 % Examples: lambda calculus, residue (? ...other calculi?)
 
 
@@ -13,11 +15,41 @@ Difference calculus is the part of discrete calculus that is analogous to the us
 
 \subsection{The Forward Difference Operator}  ...TBC...
 
-\subsection{Falling Powers} ...TBC...
+% Maybe call the subsection "Difference Operators" and give some alternatives:
+% backward difference, central difference, differences with arbitrary stepsize h,
+
+%\paragraph{}
+
+
+\subsubsection{Differencing some Functions} ...TBC...
+
+\paragraph{Powers}
+Having defined our difference operator, let's investigate what it does to power functions $f(n) = n^p$ ...TBC...
+
+
+\paragraph{Falling Powers}
+As we have seen, the differences of power functions are a bit messy. Not so nicely clean as the derivatives are. However, there is another type of function that does indeed behave nicely under the differencing operator. I'm talking about the so called \emph{falling powers}. They are denoted by $n^{\underline{m}}$ ...TBC...
+
+
+
+% In combinatorics, they are also called falling factorials. 
+
+% Give alternative notations. Mention rising powers (Pochhammer symbol)
+
+\paragraph{Exponential Functions}
+Let's now look at the differences of exponential functions of the form $f(n) = a^n$. The general rule is: $\Delta a^n = (a-1) a^n$. For the special case of $a=2$, we get $Delta 2^n = (2-1) 2^n = 2^n$. We see that the difference of the function $2^n$ is itself. That's analogous to how $\e^x$ is its own derivative in ordinary calculus.
+
+% Give general rule \Delta a^n = (a-1) a^n. With a=2, we get Delta 2^n = (2-1) 2^n = 2^n. The number 2 plays the same role as the number \e in continuous calculus
+
 
 % ToDo: power rule, falling powers, rule for exponential functions
 
-\subsection{Differencing Rules}  ...TBC...ToDo: power rule, rule for exponential functions, product rule, ...
+
+
+
+
+
+\subsubsection{Differencing Rules}  ...TBC...ToDo: power rule, rule for exponential functions, product rule, ...
 
 % https://en.wikipedia.org/wiki/Discrete_calculus#Calculus_of_differences_and_sums
 
@@ -45,9 +77,14 @@ Given two functions $F$ and $f$ from $\mathbb{Z}$ to $\mathbb{R}$ such that $f(n
 \begin{equation}
  \sum_{n=a}^{b-1} f(n) = F(b) - F(a)
 \end{equation}
+% Point out relation to Riemann sum. This is well explained here:
+% https://www.youtube.com/watch?v=Cmfbpo0D0uk
+% which also makes clear where the ugly b-1 comes from
+
+% Maybe also derive the formula from the definition of the differencing operator. This involves recognizing that the sum is telescopic
 
 %\section{Function Approximation}
-% -develope the Newton-Gregory formula as analogon for Taylor series
+% -develop the Newton-Gregory formula as analogon for Taylor series
 
 
 
@@ -56,13 +93,16 @@ Given two functions $F$ and $f$ from $\mathbb{Z}$ to $\mathbb{R}$ such that $f(n
 
 
 \section{Difference Equations}
-The calculus of difference equations is the part of discrete calculus that is analogous to the calculus of differential equations. ...TBC...
-
-% They are actually also known as recurrence relations. They are a certain type of functional equations, I think. 
+The calculus of difference equations is the part of discrete calculus that is analogous to the calculus of differential equations. Difference equations are also known as recurrence relations and they can also be ssen as a particular type of functional equations. ...TBC...
 
 % See: Numerical Methods for Scientists and Engineers (Hamming)
 
 \subsection{The Z-Transform}
+An important tool for solving linear differential equations in continuous calculus is the Laplace transform. The analogon in discrete calculus is the $Z$-transform.
+
+% Point out anaolgy to the Laplace transform
+
+
 
 % Generating Functions , the Z-Transform
 
@@ -71,9 +111,45 @@ The calculus of difference equations is the part of discrete calculus that is an
 %  for n < 0. ...adn the z-trafo usually assumes a complex argument
 % -Exponential generating functions can transform recurrence relations into ODEs.
 
+\subsection{Generating Functions}
 
 
-\section{Misc Topics}
+
+
+\section{Bridges to Continuous Calculus}
+
+
+\subsection{Stirling Numbers}
+
+% Numbers to be used as coefficients to translate between normal powers and falling powers
+
+\subsection{The Bilinear Transform}
+
+% Introduce bilinear transform
+
+\subsection{Umbral Calculus}
+
+% The Shadowy World of Umbral Calculus
+% https://www.youtube.com/watch?v=D0EUFP7-P1M
+
+% The Strange Case of the Umbral Calculus
+% https://www.youtube.com/watch?v=ytZkmV-7EbM
+
+
+
+
+
+
+
+
+
+\section{Applications}
+% Maybe rename to Applications
+
+\subsection{Solving Nasty Sums}
+
+\subsection{Solving Difference Equations}
+
 
 %\paragraph{Evaluating Sums at Non-Integers}
 \subsection{Interpolation of Sums}
@@ -125,19 +201,7 @@ where
 % -Motivates/derives falling powers - why they do work so nicely with the discrete derivative
 % -has Stirlings's triangle
 
-\subsection{Stirling Numbers}
 
-% Numbers to be used as coefficients to translate between normal powers and falling powers
-
-
-\subsection{Umbral Calculus}
-
-% The Shadowy World of Umbral Calculus
-% https://www.youtube.com/watch?v=D0EUFP7-P1M
-
-
-% The Strange Case of the Umbral Calculus
-% https://www.youtube.com/watch?v=ytZkmV-7EbM
 
 
 
@@ -167,6 +231,7 @@ Questions:
 
 Why don't they teach Newton's calculus of 'What comes next?'
 https://www.youtube.com/watch?v=4AuV93LOPcE
+-Newton Gregory formula (analogon to Taylor fomrula?)
 
 Differenzenrechnung: Vom Kalkül der diskreten Analysis
 https://www.youtube.com/watch?v=1-Q7Z-F4KVs
@@ -185,6 +250,10 @@ https://www.youtube.com/watch?v=mVjBSWHlTnY
 Discrete Calculus - The Calculus of Finite Differences
 https://www.youtube.com/watch?v=0YRg2utZEoQ
 -Good overview
+
+
+Intro to Discrete Calculus
+https://www.youtube.com/watch?v=Cmfbpo0D0uk
 
 
 

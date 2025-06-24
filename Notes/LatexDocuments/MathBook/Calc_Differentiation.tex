@@ -1,7 +1,7 @@
 \section{Differentiation}
 
 \subsection{The Derivative}
-Consider an arbitrary function $f(x)$ and imagine that we want to compute the slope of the graph at a given $x_0$. We could approximate it by considering the point $(x_0, f(x_0))$ and another point on the graph a small distance $h$ further to the right $(x_0+h, f(x_0+h))$ and compute the "rise over run" quotient $(f(x_0+h) - f(x_0)) / h$ which would give us the slope of a secant. For smaller and smaller $h$, the approximation would get better and better because the secant would approach the tangent. Now we consider the limit as $h$ approaches zero. If that limit exists, it actually \emph{is} our desired slope of the tangent. We denote that tangent slope at $x_0$ as $f'(x_0)$. This leads us to the following definition:
+Consider an arbitrary function $f(x)$ and imagine that we want to compute the slope of the graph at a particular $x$ value that we denote by $x_0$. We could approximate it by considering the point $(x_0, f(x_0))$ and another point on the graph a small distance $h$ further to the right $(x_0+h, f(x_0+h))$ and compute the "rise over run" quotient $(f(x_0+h) - f(x_0)) / h$ which would give us the slope of a secant. For smaller and smaller $h$, the approximation would get better and better because the secant would approach the tangent. Now we consider the limit as $h$ approaches zero. If that limit exists, it actually \emph{is} our desired slope of the tangent. We denote that tangent slope at $x_0$ as $f'(x_0)$. This leads us to the following definition:
 \begin{equation}
 \label{Eq:Derivative}
   f'(x_0) = \lim_{h \rightarrow 0} \frac{f(x_0 + h) - f(x_0)}{h}
@@ -18,26 +18,51 @@ We note that we could compute this limit at any value of $x_0$ where that limit 
 \end{equation}
 so the derivative of $f(x) = x^2$ is $f'(x) = 2 x$.
 
-\paragraph{Notations} Writing $f'$ with the prime for the derivative of $f$ is only one of several different notations. It is called the Lagrange notation. Especially in physics and when the independent variable is time $t$, you will also often see a notation with a dot above the function name, here $f$, such that the derivative of $f(t)$ with respect to $t$ would be written as: $\dot{f}(t)$. This is called Newton notation. In Newton notation, we also typically use letters like $x$ or $y$ to denote the function, i.e. use $x$ instead of $f$. When you see something like $\dot{x}(t)$, it means that $x$ is a function of time $t$ and $\dot{x}(t)$ is its derivative with respect to time. So, in this notation, $x$ would be a dependent variable and it depends on $t$ which is the independent variable in this case. Yet another notation is due to Leibniz and that notation writes a $\frac{d}{dx}$ in front of the $f$ such that $f'(x) = \frac{d}{dx} f(x) = \frac{d f(x)}{dx}$. The Leibniz notation can be convenient when manipulating equations because in certain algebraic transformations, the $dx$ can indeed be treated like a denominator in a fraction\footnote{Care needs to be taken, though. It isn't \emph{really} a fraction. But let's leave the rigor to the mathematicians}. The $\frac{d}{dx}$ in front of the $f$ can actually also be seen as an \emph{operator} that "acts on" the function $f$. There is another such operator notation that uses just a $D$ instead, i.e. $f' = D f$. I have suppressed the argument here, i.e. wrote just $f$ instead of $f(x)$. This is also common practice. In another operator notation, the argument of the operator $D$, which is the function $f$, is put into brackets: $f' = D[f]$. You may also encounter notations like this:
+\paragraph{Notations} Writing $f'$ with the prime for the derivative of $f$ is only one of several different notations. It is called the Lagrange notation. Especially in physics and when the independent variable is time $t$, you will also often see a notation with a dot above the function name, here $f$, such that the derivative of $f(t)$ with respect to $t$ would be written as: $\dot{f}(t)$. This is called Newton notation. In Newton notation, we also typically use letters like $x$ or $y$ to denote the function, i.e. use $x$ instead of $f$. When you see something like $\dot{x}(t)$, it means that $x$ is a function of time $t$ and $\dot{x}(t)$ is its derivative with respect to time. So, in this notation, $x$ would be a dependent variable and it depends on $t$ which is the independent variable in this case. Yet another notation is due to Leibniz and that notation writes a $\frac{d}{dx}$ in front of the $f$ such that $f'(x) = \frac{d}{dx} f(x) = \frac{d f(x)}{dx}$. The Leibniz notation can be convenient when manipulating equations because in certain algebraic transformations, the $dx$ can indeed be treated like a denominator in a fraction\footnote{Care needs to be taken, though. It isn't \emph{really} a fraction. But let's leave the rigor to the mathematicians}. Leibniz notation is also useful when we later deal with functions that have multiple input variables because it explicitly tells us with respect to which variable we need to differentiate - an information that is not needed in Lagrange notation because this notation applies only to function with just one input variable (usually $x$). The $\frac{d}{dx}$ in front of the $f$ can actually also be seen as an \emph{operator} that "acts on" the function $f$. There is another such operator notation that uses just a $D$ instead, i.e. $f' = D f$. I have suppressed the argument here, i.e. wrote just $f$ instead of $f(x)$. This is also common practice. In another operator notation, the argument of the operator $D$, which is the function $f$, is put into brackets: $f' = D[f]$. Using brackets for the argument of the operator avoids confusion with multiplication. You may also encounter notations like this:
 \begin{equation}
 	\frac{d}{d x} f(x) \bigg\rvert_{x=a}
 \end{equation}
-This means: take the derivative of $f$ with respect to $x$, then evaluate the resulting expression at $x = a$.
+This means: take the derivative of $f$ with respect to $x$, then evaluate the resulting expression at $x = a$. ToDo: Mention also Leibniz notation for multivariate functions $\partial / \partial x$ and the abbreviation $\partial_x$ that is common in tensor calculus. Also, in PDE contexts, partial derivatives are often denoted as subscript like $u_{xx}$ for the second derivative of $u = u(x,\ldots)$ wrt $x$
 
-%ToDo: also introduce the notation with the brackets
+% ToDo: also introduce the notation with the brackets for operatoprs D[f] ...done
 
 
 \subsection{Higher Order Derivatives}
-With the derivative, we have an operation to produce a new "derived" function $f'$ from a given function $f$. There's nothing that stops us to apply the same operation to the derived function as well. And then iterate that process as often as we like. That's the way, higher order derivatives are created. The second derivative of a function $f(x)$ is denoted as $f''(x)$ in Lagrange notation, the third as $f'''(x)$. From the fourth one onwards, the "dash" or "prime" notation becomes impractical so one often sees the notation $f^{(n)}(x)$ to denote the $n$-th order derivative of the function $f$. In this notation, the $0$-th order derivative means the function $f$ itself. This makes sense because taking the derivative zero times should be a "do-nothing" operation. To translate this into Leibniz notation, one would write $f^{(n)}(x) = \frac{d^n}{d x^n} f(x) = \frac{d^n f(x)}{d x^n}$. In operator notation with suppressed argument $x$, one would write $f^{(n)} = D^n f$ or $D^n[f]$. Higher order derivatives in Newton notation use multiple dots above the function as in $\dot{x}(t), \ddot{x}(t), \dddot{x}(t), \ddddot{x}(t)$. I have seen up to 4 dots but there, the usefulness of this notation ends (and for more than 2, it's already questionable). Time derivatives of order higher than 4 typically do not occur in physics which is the place where Newton's notation is used. Mostly, we deal only with first and second derivatives anyway - and for these, Newton notation works fine. [ToDo: figure out if there's a general way to write an $n$-th time derivative in Newton notation - maybe something $\overset{n}{x}(t)$?]
+With the derivative, we have an operation to produce a new "derived" function $f'$ from a given function $f$. There's nothing that stops us to apply the same operation to the derived function as well. And then iterate that process as often as we like. That's the way, higher order derivatives are created. 
+
+\paragraph{Notations} The second derivative of a function $f(x)$ is denoted as $f''(x)$ in Lagrange notation, the third as $f'''(x)$. From the fourth one onwards, the "dash" or "prime" notation becomes impractical so one often sees the notation $f^{(n)}(x)$ to denote the $n$-th order derivative of the function $f$. In this notation, the $0$-th order derivative means the function $f$ itself. This makes sense because taking the derivative zero times should be a "do-nothing" operation. To translate this into Leibniz notation, one would write $f^{(n)}(x) = \frac{d^n}{d x^n} f(x) = \frac{d^n f(x)}{d x^n}$. In operator notation with suppressed argument $x$, one would write $f^{(n)} = D^n f$ or $D^n[f]$. That is: in operator notation, putting a superscript like $n$ on an operator usually means: apply the operator $n$ times. It does not mean: apply the operator and then take the $n$th power of the result. This is different to putting a superscript on functions. Something like $f^2(x)$ does indeed usually\footnote{To make matters worse, there are exceptions to that, too. For example: in complex dynamics, $f^n(x)$ indeed means: apply $f$ $n$ times.} means: apply the function $f$, then square the result. This is the reason why in Lagrange notation for arbitrary derivatives, we need to uses these additional parentheses in the superscript to avoid confusion. Higher order derivatives in Newton notation use multiple dots above the function as in $\dot{x}(t), \ddot{x}(t), \dddot{x}(t), \ddddot{x}(t)$. I have seen up to 4 dots but there, the usefulness of this notation ends (and for more than 2, it's already questionable). Time derivatives of order higher than 4 typically do not occur in physics which is the place where Newton's notation is used. Mostly, we deal only with first and second derivatives anyway - and for these, Newton notation works fine. 
+
+%[ToDo: figure out if there's a general way to write an $n$-th time derivative in Newton notation - maybe something $\overset{n}{x}(t)$?]
 
 % ToDo:
 % -derive a formula for the definition of f'' based on using the definition of f'
 % -interpret the formula in terms of a numeric 2nd derivative when h is small.
 
 \subsection{Elementary Derivatives}
-We'll now give a list of some of the most important derivatives of elementary functions. This list (or a more comprehensive version of it that can be found elsewhere), together with the differentiation rules above, will allow us to mechanically evaluate derivatives of all functions that can be constructed from these elementary functions by algebraic operations or composition (i.e. nesting). ...TBC...
+We'll now give a short list of some of the most important derivatives of elementary functions. This list, together with the differentiation rules above, will allow us to mechanically evaluate derivatives of all functions that can be constructed from these elementary functions by algebraic operations or composition (i.e. nesting). 
+
+\medskip
+$(x^a)' = a x^{a-1}$, $(a^x)' = \ln(a) \, a^x$, $(\e^x)' = \e^x$, $(\sin x)' = \cos x$, $(\cos x)' = -\sin x$, $(\sinh x)' = \cosh x$, $(\cosh x)' = -\sinh x$, ......TBC...Maybe format the list nicely and gives the names of the rules or some comments in the right column
+
+\medskip
+Much more comprehensive versions of such a list can be found in many mathematical handbooks or on various websites. Also, computer algebra systems "know" all of these elementary derivatives as well and they also know all the rules how to find derivatives of more complicated functions such that they can be used as glorified tables as well. So, there is no need to waste a lot of space to give a comprehensive list here.
 
 %todo: list derivatives of elementary functions
+% x^n      ->  n x^{n-1}     does n need to be an integer? No - I don't think so
+% a^x      ->  ln(a) a^x     implying that e^x  ->  e^x
+% ln(x)    ->  1/x           what about \log_a (x) ?
+% sin(x)   ->  cos(x)
+% cos(x)   ->  -sin(x)
+% sinh(x)  ->   cosh(x)
+% cosh(x)  ->   sinh(x)
+
+% maybe also list derivatives of tan, tanh, etc and also the inverses asin, acos, atan
+
+% -Give links to more comprehensive lists
+% -Metion that its easy to evaluate derivatives with a CAS such it can be used as a glorified table
+
+
+% Maybe list also the antiderivatives, although we do not yet have introduced the concept
 
 % State also some tricks to evaluate certain functions togther with their derivatives without much extra cost
 
@@ -517,6 +542,11 @@ In the field of abstract algebra, specifically in \emph{differential algebra}, t
 
 
 \begin{comment}
+	
+ToDo:
+- Use Lagrange notation ocnsistently throughout the chapter. Currently, there are places where we
+  Lagrange notation, in other places we use Leibniz notation, in other places we use both. That's
+  not nice!
 	
 This video has an interesting alternative definition of the derivative:
 

@@ -19523,6 +19523,23 @@ std::vector<T> rsForwardDiff(const std::vector<T>& f)
   return df;
 }
 
+// Under construction:
+// Implements the summation operation which is the inverse of rsForwardDiff
+template<class T>
+std::vector<T> rsSummation(const std::vector<T>& f, T C = T(0))
+{
+  size_t N = f.size();
+
+  std::vector<T> sf(N+1);
+  sf[0] = C;
+  for(size_t n = 1; n <= N; n++)
+    sf[n] = sf[n-1] + f[n-1];
+
+  return sf;
+}
+
+
+
 // Does not yet work. I think, it works only for x > n or x >= n. Otherwise, the result is always
 // zero because a zero occurs as factor in the product. Im' not sure, if that's correct. Figure 
 // that out!
@@ -19545,6 +19562,7 @@ T rsFallingPower(T x, int n)
   //
   // https://en.wikipedia.org/wiki/Falling_and_rising_factorials
 }
+
 
 void testDiscreteCalculus()
 {
@@ -19593,8 +19611,10 @@ void testDiscreteCalculus()
     ok &= D_fallPows5[n] == 5 * rsFallingPower(n, 4);
   }
 
-
-  // Take sums:
+  // Take sums of differences and verify that summation indeed undoes differencing if we provide 
+  // appropriate initial value:
+  Vec SD_squares = rsSummation(D_squares, squares[0]);  ok &= SD_squares == squares;
+  Vec SD_cubes   = rsSummation(D_cubes,   cubes[0]  );  ok &= SD_cubes   == cubes;
   // ...
 
 

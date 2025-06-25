@@ -9,7 +9,7 @@ f(x) =
  0                                   \qquad &  |x| \geq 1
  \end{cases}
 \end{equation}
-It is indeed infinitely often differentiable everywhere, even at the potentially problematic junctions at $-1$ and $+1$. It is, however, not analytic there: a power series expansion centered at these points will not converge to the function $f$.
+It is indeed infinitely often differentiable everywhere, even at the potentially problematic junctions at $-1$ and $+1$. It is, however, not analytic there: a power series expansion centered at these points will not converge to the function $f$. It think, it will converge to the zero function instead (VERIFY!).
 
 % https://en.wikipedia.org/wiki/Bump_function
 % https://en.wikipedia.org/wiki/Spaces_of_test_functions_and_distributions
@@ -26,6 +26,8 @@ It is indeed infinitely often differentiable everywhere, even at the potentially
 %  a nice general way to do it throughout the book - it would be space efficient. There's typically
 %  a lot of whitespace around formulas anyway
 
+% Ableitungen à la carte (Borels Lemma)
+% https://www.youtube.com/watch?v=Jz8VCv1MIYE
 
 \paragraph{Notation}
 As mentioned above, the set of functions that are continuous on a given interval $(a,b)$ is denoted as $C(a,b)$ and the set of functions that are continuously differentiable $k$ times on $(a,b)$ is denoted as $C^k(a,b)$. A smooth function is continuously differentiable infinitely often, so here $k = \infty$ and hence the set of smooth functions on $(a,b)$ is denoted as $C^{\infty}(a,b)$. Finally, the set of smooth functions that are zero outside the interval $(a,b)$, i.e. the set of our test functions, is denoted as  $C_0^{\infty}(a,b)$.
@@ -34,6 +36,8 @@ As mentioned above, the set of functions that are continuous on a given interval
 
 % ToDo:
 % Explain interpretation of test functions as weighting functions in a weighted average.
+
+
 
 
 \subsection{Distributions}
@@ -188,6 +192,9 @@ But note that this doesn't say anything about $f'(x)$ at $x = 0$. We can't assig
 % Maybe the subsection should be named Applications and may we can list some more. ODEs (The right hand side could be a Dirac delta), PDEs (The initial condition could be non-differentiable - like a triangular shape - maybe even a Dirac spike), embedding discrete probability distributions into the continuous framework (by placing scaled Dirac deltas at the integers, for example), modeling point masses and infinitely short hammer strikes in physics.
 
 % https://en.wikipedia.org/wiki/Weak_derivative
+
+% I finally understood the Weak Formulation for Finite Element Analysis  by Dr. Simulate
+% https://www.youtube.com/watch?v=xZpESocdvn4
 
 \begin{comment}
 

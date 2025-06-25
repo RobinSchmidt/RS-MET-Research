@@ -1,5 +1,7 @@
 \chapter{Discrete Calculus}
-[This is all very preliminary] Calculus, in the most commonly used sense of the word, refers to the field of mathematics that deals with derivatives, integrals, differential equations, sequences and series expansions. In a broader sense \emph{a} calculus is a system of rules for doing calculations. The so called \emph{discrete calculus} also known as \emph{calculus of finite differences} is a calculus that is analogous to the usual differential and integral calculus, just that we do not go the limiting step where some quantity (like a $\Delta x$ or $h$, say) approaches zero. Instead, our $h$ remains a fixed finite (i.e. non-infinitesimal) value that is chosen upfront - usually taken to be $1$. It turns out that you can always reformulate the problem into a form where $h = 1$ such it doesn't really matter which value you choose, and choosing $1$ turns out to be most convenient. Continuous calculus is concerned with functions from the reals to the reals, i.e. functions of the type $f: \mathbb{R} \rightarrow \mathbb{R}$. In discrete calculus, we look at functions from the integers into the reals, i.e. functions of the type $f: \mathbb{Z} \rightarrow \mathbb{R}$. In the section about sequences, we defined them as functions $f: \mathbb{N} \rightarrow \mathbb{R}$ but the idea can readily be generalized to allow $\mathbb{Z}$ as the domain. With that generalization, we may also view the discrete calculus as the calculus of sequences. ...TBC...
+[This is all very preliminary] Calculus, in the most commonly used sense of the word, refers to the field of mathematics that deals with derivatives, integrals, differential equations, sequences and series expansions. In a broader sense \emph{a} calculus is a system of rules for doing calculations. The so called \emph{discrete calculus} also known as \emph{calculus of finite differences} is a calculus that is analogous to the usual differential and integral calculus, just that we do not go the limiting step where some quantity (like a $\Delta x$ or $h$, say) approaches zero. Instead, our $h$ remains a fixed finite (i.e. non-infinitesimal) value that is chosen upfront - usually taken to be $1$. It turns out that you can always reformulate the problem into a form where $h = 1$ such it doesn't really matter which value you choose, and choosing $1$ turns out to be most convenient. Continuous calculus is concerned with functions from the reals to the reals, i.e. functions of the type $f: \mathbb{R} \rightarrow \mathbb{R}$. In discrete calculus, we look at functions from the integers into the reals, i.e. functions of the type $f: \mathbb{Z} \rightarrow \mathbb{R}$. To emphasize the discrete nature of the input variable, we will typically use $n$ rather than $x$ for the input to our functions $f$ so we will write $f(n)$ rather than $f(x)$. In the section about sequences, we defined them as functions $f: \mathbb{N} \rightarrow \mathbb{R}$ but the idea can readily be generalized to allow $\mathbb{Z}$ as the domain. With that generalization, we may also view the discrete calculus as the calculus of sequences. That's why some authors also use sequence notation and write $f_n$ rather than $f(n)$. You may also sometimes see square bracket notation like $f[n]$. In some application domains, for example in signal processing, it is a convention to use parentheses to denote functions of continuous inputs $f(x)$ and brackets to denote functions of integers $f[n]$. Here, we'll stick to the notation $f(n)$.
+
+%...TBC...
 
 % also konwn as "calculus of finite differences"
 
@@ -11,11 +13,31 @@
 
 
 \section{Difference Calculus}
-Difference calculus is the part of discrete calculus that is analogous to the usual differential calculus. ...TBC...
+Difference calculus is the part of discrete calculus that is analogous to the usual differential calculus. Difference calculus is about difference operators which are the discrete analogon to derivatives.
 
 %ToDo: define forward and backward difference, mention connection to numerical approximation of derivatives (maybe mention the central difference although it plays no big role in difference calculus)
 
-\subsection{Difference Operators}  ...TBC...
+\subsection{Difference Operators}
+Let's recall the definition of the derivative from ordinary calculus given in equation (\ref{Eq:Derivative}). It was defined as:
+\begin{equation}
+ f'(x) = \frac{d}{dx} f(x) = \lim_{h \rightarrow 0} \frac{f(x + h) - f(x)}{h}
+\end{equation}
+The function $f$ was supposed to be continuous, i.e. map real numbers $x$ to real numbers $y = f(x)$. In discrete calculus, we work with functions that are only defined at the integers, so our input $x$ will always be an integer. In such a setting taking a limit where some difference between input values approaches zero is not possible. The minimal possible distance between two input values is $1$. So, let's look at the following definition:
+\begin{equation}
+\label{Eq:ForwardDifference}
+ \Delta f(n) = f(n+1) - f(n)
+\end{equation}
+
+
+%In discrete calculus, we define an operation that is very similar. The crucial difference is that we do not let $h$ approach zero, though. Instead, we choose a fixed value for $h$. We define:
+%\begin{equation}
+% \Delta_h f(x) = \frac{f(x + h) - f(x)}{h}
+%\end{equation}
+
+% We can interpret differentiation (i.e. the process of taking the derivative) of a function as applying an operator to the function. 
+
+
+...TBC...
 
 
 \subsubsection{Forward Difference}

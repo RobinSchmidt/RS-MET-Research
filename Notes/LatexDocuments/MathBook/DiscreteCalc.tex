@@ -141,6 +141,23 @@ Let's now look at the differences of exponential functions of the form $f(n) = a
 \section{Summation Calculus}
 Summation calculus is the part of discrete calculus that is analogous to the usual integral calculus. ...TBC...
 
+
+% Summation and differencing are inverses - taking the difference of a summation of a function gives back the original function:
+%\begin{equation}
+% \Delta \sum_{k=a}^{n-1} f(n)
+%=  \sum_{k=a}^{n} f(n) - \sum_{k=a}^{n-1} f(n) = f(n)
+%\end{equation}
+%is analog to:
+%\begin{equation}
+% \frac{d}{dx} \int_{a}^{x} f(x) \, dx = f(x)
+%\end{equation}
+% Doing it the other way around, i.e. differencing first and then applying summation, we get the original back up to an additive constant.
+
+% VERIFY these! See here at 10:30:
+% https://www.youtube.com/watch?v=mVjBSWHlTnY
+
+
+
 \subsection{Fundamental Theorem}
 Given two functions $F$ and $f$ from $\mathbb{Z}$ to $\mathbb{R}$ such that $f(n) = \Delta F(n)$, the following holds:
 \begin{equation}
@@ -155,6 +172,8 @@ Given two functions $F$ and $f$ from $\mathbb{Z}$ to $\mathbb{R}$ such that $f(n
 
 %\section{Function Approximation}
 % -develop the Newton-Gregory formula as analogon for Taylor series
+
+
 
 
 

@@ -61,11 +61,20 @@ The function $f$ was supposed to be continuous, i.e. map real numbers $x$ to rea
 \subsubsection{Differencing some Functions} ...TBC...
 
 \paragraph{Powers}
-Having defined our difference operator, let's investigate what it does to power functions $f(n) = n^p$ ...TBC...
+Having defined our difference operator, let's investigate what it does to power functions $f(n) = n^m$. We need to compute $(n+1)^m - n^m$. The first term $(n+1)^m$ needs to be expanded according to the binomial theorem. We get:
+\begin{equation}
+\Delta n^m = (n+1)^m                           - n^m
+           = \sum_{k=0}^{m}   \binom{m}{k} n^k - n^m
+           = \sum_{k=0}^{m-1} \binom{m}{k} n^k
+\end{equation}
+We see that the first difference of the function $n^m$ is a polynomial of degree $m-1$ with coefficients given by binomial coefficients. Comparing that to the neat result of the derivative of $n^m$ which is just $m n^{m-1}$, this expression here is a lot messier. 
 
+% Verify this formula numerically!
 
 \paragraph{Falling Powers}
-As we have seen, the differences of power functions are a bit messy. Not so nicely clean as the derivatives are. However, there is another type of function that does indeed behave nicely under the differencing operator. I'm talking about the so called \emph{falling powers}. They are denoted by $n^{\underline{m}}$ ...TBC...
+As we have seen, the differences of power functions are a bit messy. However, there is another type of function that does indeed behave nicely under the differencing operator. I'm talking about the so called \emph{falling powers}. They are denoted by $n^{\underline{m}}$ and are defined as
+
+...TBC...
 
 
 

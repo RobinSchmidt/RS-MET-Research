@@ -19510,7 +19510,6 @@ void testKroneckerTrafo2D()
 
 We use D here to denote the difference operator. In the literature, that would usually be an 
 uppercase delta. The length of the output array D f is one value shorter than the input array f. */
-
 template<class T>
 std::vector<T> rsForwardDiff(const std::vector<T>& f)
 {
@@ -19632,6 +19631,9 @@ void testDiscreteCalculus()
   // ToDo:
   //
   // - Check validity of mathematical formulas (summation formulas, rules for differencing, etc.)
+  //
+  // - Maybe create some random sequences f,g (maybe with range -9..+9) and use them to check 
+  //   differencing and summation rules
   //
   //
   // Notes:

@@ -181,7 +181,7 @@ The factorial of $n$ gives the number of ways, we can order $n$ items. What if w
 \begin{equation}
 !n = n! \sum_{k=0}^{n} \frac{(-1)^k}{k!} 
    = n! - \sum_{k=1}^{n} \binom{n}{k} \cdot !(n-k)
-   = \floor{ \frac{n! + 1}{\e} }
+   = \floor*{ \frac{n! + 1}{\e} }
    = round(n! / e)
 \end{equation}
 It also obeys the following recursion relations:
@@ -189,7 +189,7 @@ It also obeys the following recursion relations:
 !n = (n-1) \cdot (!(n-1) + !(n-2))
    = n \cdot (!(n-1)) + (-1)^n
 \end{equation}
-Some of the formulas do only hold for $n > 0$ and some only for $n > 1$, so take care\footnote{You may look the stuff up on Wikipedia for more details} about some special rules for the initial values when using the formulas. The initial values of the sequence are: $1,0,1,2,9,44,265,\ldots$. Since we are now looking at permutations but with an additional constraint to what kind of permutation we consider valid, it is clear that the number of ways to achieve that must be less than without the constraint. So, we conclude that the number must be lower than the factorial. Maybe that's the motivation for calling it subfactorial. This is my own speculation. Of course, using other constraints would also lower the number but that particular one seems to have some importance. When looking at the graphs of the factorial and the subfactorial, they look very similar with regard to their growth behavior. With a log-scaled $y$-axis (and linear $x$-axis), they look almost parallel and the subfactorial is, of course, always below the factorial. ...TBC...ToDo: verify the formulas numerically!
+Some of the formulas do only hold for $n > 0$ and some only for $n > 1$, so take care\footnote{You may look the stuff up on Wikipedia for more details} about some special rules for the initial values when using the formulas. The initial values of the sequence are: $1,0,1,2,9,44,265,\ldots$. Since we are now looking at permutations but with an additional constraint to what kind of permutation we consider valid, it is clear that the number of ways to achieve that must be less than without the constraint. So, we conclude that the number must be lower than the factorial. Maybe that's the motivation for calling it subfactorial. This is my own speculation. Of course, using other constraints would also lower the number but that particular one seems to have some importance. When looking at the graphs of the factorial and the subfactorial, they look very similar with regard to their growth behavior. With a log-scaled $y$-axis (and linear $x$-axis), they look parallel and the subfactorial is, of course, always below the factorial. ...TBC...ToDo: verify the formulas numerically!
 
 
 %https://mathworld.wolfram.com/Subfactorial.html

@@ -19539,10 +19539,17 @@ T rsFallingPower(T x, int n)
   // ToDo:
   //
   // - Make it work for negative n
+  //
+  //
+  // See:
+  //
+  // https://en.wikipedia.org/wiki/Falling_and_rising_factorials
 }
 
 void testDiscreteCalculus()
 {
+  // We numerically check some rules from discrete calculus (aka finite difference calculus)
+
   bool ok = true;
 
   using Num = int64_t;
@@ -19555,6 +19562,7 @@ void testDiscreteCalculus()
   Vec cubes(N);                // x_n = n^3
   Vec powsOf2(N);              // x_n = 2^n
   Vec powsOf3(N);              // x_n = 3^n
+  Vec fallPows4(N);            // x_n = (n)_4
   Vec fallPows5(N);            // x_n = (n)_5
   for(int n = 0; n < N; n++)
   {
@@ -19562,6 +19570,7 @@ void testDiscreteCalculus()
     cubes[n]     = n*n*n;
     powsOf2[n]   = pow(2, n);
     powsOf3[n]   = pow(3, n);
+    fallPows4[n] = rsFallingPower(n, 4);
     fallPows5[n] = rsFallingPower(n, 5);
   }
 
@@ -19570,7 +19579,8 @@ void testDiscreteCalculus()
   Vec D_cubes     = rsForwardDiff(cubes);
   Vec D_powsOf2   = rsForwardDiff(powsOf2);
   Vec D_powsOf3   = rsForwardDiff(powsOf3);
-  Vec D_fallPows5 = rsForwardDiff(fallPows5);            // Implementation may still be wrong!
+  Vec D_fallPows5 = rsForwardDiff(fallPows5);
+  Vec D_fallPows4 = rsForwardDiff(fallPows4);
 
   // Check the elementary differencing rules:
   for(int n = 0; n < N-1; n++)
@@ -19578,8 +19588,9 @@ void testDiscreteCalculus()
     ok &= D_squares[n]   == 2*n + 1;
     ok &= D_cubes[n]     == 3*n*n + 3*n + 1;
     ok &= D_powsOf2[n]   == pow(2, n);
-    ok &= D_powsOf3[n]   == pow(3, n) * 2;
-    //ok &= D_fallPows5[n] == n * rsFallingPower(n, 4);  // Does not yet work!
+    ok &= D_powsOf3[n]   == pow(3, n) * 2;             // D a^n   = (a-1) * a^n
+    ok &= D_fallPows4[n] == 4 * rsFallingPower(n, 3);  // D (n)_k = k * (n)_(k-1)
+    ok &= D_fallPows5[n] == 5 * rsFallingPower(n, 4);
   }
 
 

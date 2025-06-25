@@ -52,6 +52,16 @@ Each coefficient $c_n$ of the resulting sequence is given by a sum of products o
 \paragraph{Deconvolution}
 With some caveats, it is actually possible to undo a convolution. We will call this operation \emph{deconvolution}. ...TBC...
 
+% Can we express decovolution as convolution with a sort of "inverse sequence"? Maybe at least
+% in certin special cases? It should be possible because inverse filters exist in DSP. Maybe we have
+% broaden our scope to sequences defined over the integers because maybe in certin cases, the
+% inverse filter may be acausal?
+
+% What about a sequence square root? I have some experimental code somewhere that tries to compute
+% such a thing. IIRC it kinda works but it may produce infinite output sequences for finite input
+% sequences - which is not really a problem here because we assume to be working with infinite 
+% sequences anyway.
+
 \paragraph{$\star$ Continuous Convolution}
 As a side note, an analogous operation of convolution can also be defined between two functions $f,g: \mathbb{R} \rightarrow \mathbb{R}$. In this case, the convolution is defined via an integral instead of a sum:
 \begin{equation}

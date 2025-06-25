@@ -19559,9 +19559,10 @@ void testDiscreteCalculus()
   // Check the elementary differencing rules:
   for(int n = 0; n < N-1; n++)
   {
-    ok &= D_squares[n] = 2*n + 1;
-
-
+    ok &= D_squares[n] == 2*n + 1;
+    ok &= D_cubes[n]   == 3*n*n + 3*n + 1;
+    ok &= D_powsOf2[n] == pow(2, n);
+    ok &= D_powsOf3[n] == pow(3, n) * 2;
   }
 
 

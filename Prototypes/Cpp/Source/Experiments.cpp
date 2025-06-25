@@ -19506,7 +19506,7 @@ void testKroneckerTrafo2D()
 
 // Implements the forward difference operator for the sequence f.
 template<class T>
-std::vector<T> forwardDiff(const std::vector<T>& f)
+std::vector<T> rsForwardDiff(const std::vector<T>& f)
 {
   size_t N = f.size();
 
@@ -19523,6 +19523,24 @@ std::vector<T> forwardDiff(const std::vector<T>& f)
   return df;
 }
 
+// Does not yet work. I think, it works only for x > n or x >= n. Otherwise, the result is always
+// zero because a zero occurs as factor in the product. Im' not sure, if that's correct. Figure 
+// that out!
+template<class T>
+T rsFallingPower(T x, int n)
+{
+  rsAssert(n >= 0); // Does not (yet) work for negative exponents!
+
+  T y = T(1);
+  for(int k = 0; k < n; k++)
+    y *= (x - T(k));
+  return y;
+
+  // ToDo:
+  //
+  // - Make it work for negative n
+}
+
 void testDiscreteCalculus()
 {
   bool ok = true;
@@ -19530,54 +19548,58 @@ void testDiscreteCalculus()
   using Num = int64_t;
   using Vec = std::vector<Num>;
 
-
-  int N = 20;
+  int N = 20;                  // Length of our example sequences
 
   // Create some example sequences:
-  Vec squares(N);
-  Vec cubes(N);
-  Vec powsOf2(N);
-  Vec powsOf3(N);
-  // ToDo: falling powers
+  Vec squares(N);              // x_n = n^2
+  Vec cubes(N);                // x_n = n^3
+  Vec powsOf2(N);              // x_n = 2^n
+  Vec powsOf3(N);              // x_n = 3^n
+  Vec fallPows5(N);            // x_n = (n)_5
   for(int n = 0; n < N; n++)
   {
-    squares[n] = n*n;
-    cubes[n]   = n*n*n;
-    powsOf2[n] = pow(2, n);
-    powsOf3[n] = pow(3, n);
+    squares[n]   = n*n;
+    cubes[n]     = n*n*n;
+    powsOf2[n]   = pow(2, n);
+    powsOf3[n]   = pow(3, n);
+    fallPows5[n] = rsFallingPower(n, 5);
   }
 
   // Take the forward differences:
-  Vec D_squares = forwardDiff(squares);
-  Vec D_cubes   = forwardDiff(cubes);
-  Vec D_powsOf2 = forwardDiff(powsOf2);
-  Vec D_powsOf3 = forwardDiff(powsOf3);
-
-  // ...
-
+  Vec D_squares   = rsForwardDiff(squares);
+  Vec D_cubes     = rsForwardDiff(cubes);
+  Vec D_powsOf2   = rsForwardDiff(powsOf2);
+  Vec D_powsOf3   = rsForwardDiff(powsOf3);
+  Vec D_fallPows5 = rsForwardDiff(fallPows5);            // Implementation may still be wrong!
 
   // Check the elementary differencing rules:
   for(int n = 0; n < N-1; n++)
   {
-    ok &= D_squares[n] == 2*n + 1;
-    ok &= D_cubes[n]   == 3*n*n + 3*n + 1;
-    ok &= D_powsOf2[n] == pow(2, n);
-    ok &= D_powsOf3[n] == pow(3, n) * 2;
+    ok &= D_squares[n]   == 2*n + 1;
+    ok &= D_cubes[n]     == 3*n*n + 3*n + 1;
+    ok &= D_powsOf2[n]   == pow(2, n);
+    ok &= D_powsOf3[n]   == pow(3, n) * 2;
+    //ok &= D_fallPows5[n] == n * rsFallingPower(n, 4);  // Does not yet work!
   }
-
 
 
   // Take sums:
   // ...
 
 
+
   rsAssert(ok);
 
-  //int dummy = 0;
 
   // ToDo:
   //
   // - Check validity of mathematical formulas (summation formulas, rules for differencing, etc.)
+  //
+  //
+  // Notes:
+  //
+  // - We use the falling power notation (x)_n = x(x-1)(x-2)...(x-n+1) from here:
+//     https://mathworld.wolfram.com/FallingFactorial.html
 }
 
 

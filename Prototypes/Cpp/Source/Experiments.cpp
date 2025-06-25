@@ -19504,7 +19504,13 @@ void testKroneckerTrafo2D()
 }
 
 
-// Implements the forward difference operator for the sequence f.
+/** Implements the forward difference operator for the sequence f. It is defined as:
+
+   D f[n] = f[n+1] - f[n]
+
+We use D here to denote the difference operator. In the literature, that would usually be an 
+uppercase delta. The length of the output array D f is one value shorter than the input array f. */
+
 template<class T>
 std::vector<T> rsForwardDiff(const std::vector<T>& f)
 {
@@ -19523,8 +19529,8 @@ std::vector<T> rsForwardDiff(const std::vector<T>& f)
   return df;
 }
 
-// Under construction:
-// Implements the summation operation which is the inverse of rsForwardDiff
+// Implements the summation operation which is the inverse of rsForwardDiff ...TBC...
+// The length of the output array S f is one value longer than the input array f.
 template<class T>
 std::vector<T> rsSummation(const std::vector<T>& f, T C = T(0))
 {
@@ -19615,6 +19621,7 @@ void testDiscreteCalculus()
   // appropriate initial value:
   Vec SD_squares = rsSummation(D_squares, squares[0]);  ok &= SD_squares == squares;
   Vec SD_cubes   = rsSummation(D_cubes,   cubes[0]  );  ok &= SD_cubes   == cubes;
+  Vec SD_powsOf3 = rsSummation(D_powsOf3, powsOf3[0]);  ok &= SD_powsOf3 == powsOf3;
   // ...
 
 

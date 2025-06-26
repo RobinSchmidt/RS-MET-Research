@@ -12,6 +12,7 @@
 
 % https://mathworld.wolfram.com/FiniteDifference.html
 
+%===================================================================================================
 \section{Difference Calculus}
 Difference calculus is the part of discrete calculus that is analogous to the usual differential calculus. Difference calculus is about difference operators which are the discrete analogon to derivatives.
 
@@ -135,7 +136,7 @@ Let's now look at the differences of exponential functions of the form $f(n) = a
 
 % What about a chain rule?
 
-
+%===================================================================================================
 \section{Summation Calculus}
 Summation calculus is the part of discrete calculus that is analogous to the usual integral calculus. ...TBC...
 
@@ -202,14 +203,14 @@ VERIFY!
 
 
 
-
+%===================================================================================================
 \section{Difference Equations}
-The calculus of difference equations is the part of discrete calculus that is analogous to the calculus of differential equations. Difference equations are also known as recurrence relations and they can also be ssen as a particular type of functional equations. ...TBC...
+The calculus of difference equations is the part of discrete calculus that is analogous to the calculus of differential equations. Consider the very simple differential equation $y' = y$ for an unknown function $y = y(x)$. We know that the solution to this equation is $y = \e^x$. Now let's look at the equation $\Delta y = y$ for an unknown function $y = y(n)$. Such a kind of equation is called a \emph{difference equation} which makes sense because its formulated using the difference operator. The solution is $y(n) = 2^n$, as we noted earlier, but let's focus on the equation itself a bit more. On the left hand side, we have the expression $\Delta y$ and we know that $\Delta y = y(n+1) - y(n)$, so we could also write $y(n+1) - y(n) = y(n)$ which we could solve for $y(n+1)$ to write it down in the form $y(n+1) = 2 y(n)$. In this form, no difference operator $\Delta$ is present anymore. Instead, we impose a particular relation between function values at different evaluation points. That means what we are dealing with here is actually a particular kind of \emph{functional equation}.  We could also further rewrite this as $y(n) = 2 y(n-1)$ by just shifting the index by one (it's just a dummy variable that takes on all integer values anyway). This way, we are expressing the value of $y$ at $n$ in terms of a value of $y$ at $n-1$, i.e. a value that came "before" $n$, if we want to interpret $n$ as a time instant\footnote{Which is my preferred way of thinking about it because I'm a DSP guy.}. Difference equations can always be rewritten as functional equations that relate the function value at one input to one or more equally spaced function values at inputs further to the left (i.e. values that came before). That is: instead of writing down difference equations in terms of the difference operator, they can also be written down in terms of shifts. Such equations are also called \emph{recurrence relations}. The takeaway is that, by expanding the difference operator, we can always rewrite difference equations in terms of shifts rather than differences and the formulation in terms of shifts is indeed the canonical way to write them down. ...TBC...
 
 % See: Numerical Methods for Scientists and Engineers (Hamming)
 
 \subsection{The Z-Transform}
-An important tool for solving linear differential equations in continuous calculus is the Laplace transform. The analogon in discrete calculus is the $Z$-transform.
+An important tool for solving linear differential equations in continuous calculus is the Laplace transform. The analogon in discrete calculus is the $Z$-transform. 
 
 % Point out anaolgy to the Laplace transform
 
@@ -226,7 +227,7 @@ An important tool for solving linear differential equations in continuous calcul
 
 
 
-
+%===================================================================================================
 \section{Bridges to Continuous Calculus}
 
 
@@ -255,7 +256,7 @@ An important tool for solving linear differential equations in continuous calcul
 
 
 
-
+%===================================================================================================
 \section{Applications}
 % Maybe rename to Applications
 

@@ -194,9 +194,31 @@ Another generalization of the product rule applies to higher order derivatives o
 \begin{equation}
  (f g)^{(n)} = \sum_{k=0}^n \binom{n}{k}   f^{(n-k)} g^{(k)}
 \end{equation}
-Note the structural similarity with the binomial theorem. The $n$-th power would be replaced by the $n$-th derivative and instead of a sum of two variables, we have a product of two functions inside the parentheses. ToDo: Figure out the general case for derivatives of arbitrary order and an arbitrary number of factors. Maybe it would look structurally similar to the multinomial theorem?
+Note the structural similarity with the binomial theorem. The $n$-th power would be replaced by the $n$-th derivative and instead of a sum of two variables, we have a product of two functions inside the parentheses. 
+
+%ToDo: Figure out the general case for derivatives of arbitrary order and an arbitrary number of factors. Maybe it would look structurally similar to the multinomial theorem?
 
 % https://en.wikipedia.org/wiki/General_Leibniz_rule
+
+
+\paragraph{Higher Derivatives for Multiple Factors}
+The natural question to ask next is: How about higher order derivatives for products with arbitrary many factors? Yep - there's a formula for that, too. The formula for the $n$-th derivative for a product with $m$ factors is:
+\begin{equation}
+\frac{d^n}{d x^n} (f_1(x) \cdots f_m(x) ) =
+\sum_{\substack{k_1 + \cdots + k_m = n \\ k_i \geq 0}} 
+\frac{n!}{k_1! \cdots k_m!} \cdot 
+f_1^{(k_1)}(x) \cdots f_m^{(k_m)}(x) \cdot
+\frac{d^{n+1}}{dx^{n+1}} (f_1(x) \cdots f_m(x))
+\end{equation}
+...TBC... ToDo: explain multnomial coeffs, give example with 2nd derivative of 3 factors.
+Maybe write the formula down with product notation rather than using things like $f_1^{(k_1)}(x) \cdots f_m^{(k_m)}(x)$
+
+
+% the "ultimate" product rule
+% https://www.youtube.com/watch?v=wBtff6I_YSI
+
+% https://en.wikipedia.org/wiki/Multinomial_theorem
+
 
 \subsubsection{The Quotient Rule} 
 As we have already seen in the list above, the rule for computing the derivative of a quotient of two functions $f = f(x)$ and $g = g(x)$ is given by:

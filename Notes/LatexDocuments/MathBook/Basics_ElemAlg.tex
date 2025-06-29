@@ -94,6 +94,8 @@ That would mean to sum over all primes less than or equal to $n$. If the index r
 % Ein paar einfache Regeln für Summen - Indexverschiebung, Aufsplitten, ...
 
 
+
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Factorials and Binomial Coefficients}
 \label{Sec:FactorialsAndBinomCoeffs}
@@ -120,7 +122,11 @@ They arise from multiplying out a multinomial:
 (a_1 + a_2 + \ldots + a_m)^n 
 = \sum_{k_1+\ldots+k_m = n} \binom{n}{k_1, \ldots, k_m} a_1^{k_1} a_2^{k_2} \ldots a_m^{k_m}
 \end{equation}
-This sum is to be interpreted as follows. The indices $k_i$ run over all possible combinations that give a total sum of $n$. ...TBC...VERIFY...TODO: explain Pascal's triangle, maybe give a preview to multi-indices
+This sum is to be interpreted as follows. The indices $k_i$ run over all possible combinations that give a total sum of $n$. ...TBC...VERIFY...TODO: explain Pascal's triangle 
+
+% Pascal's triangle is actually already prsented in the combinatorics chapter - maybe move that to here and then there, just out a reference. Or maybe include a forward reference here.
+
+%, maybe give a preview to multi-indices
 
 
 % What Lies Above Pascal's Triangle?
@@ -143,6 +149,17 @@ This sum is to be interpreted as follows. The indices $k_i$ run over all possibl
 
 % How to Take the Factorial of Any Number
 % https://www.youtube.com/watch?v=v_HeaeUUOnc
+
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{$\star$ Multi-Index Notation}
+Certain formulas in mathematics require juggling with multiple indices an there are some operations on these sets of indices that are common enough to justify the introduction of a condensed notation for them. The formula for the multinomial coefficients is an example for that. ...TBC...
+
+
+
+% https://en.wikipedia.org/wiki/Multi-index_notation
+
 
 
 %---------------------------------------------------------------------------------------------------

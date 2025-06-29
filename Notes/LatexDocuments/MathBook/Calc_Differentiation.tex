@@ -204,20 +204,33 @@ Note the structural similarity with the binomial theorem. The $n$-th power would
 \paragraph{Higher Derivatives for Multiple Factors}
 The natural question to ask next is: How about higher order derivatives for products with arbitrary many factors? Yep - there's a formula for that, too. The formula for the $n$-th derivative for a product with $m$ factors is:
 \begin{equation}
-\frac{d^n}{d x^n} (f_1(x) \cdots f_m(x) ) =
+\frac{d^n}{d x^n} \Bigl( \prod_{k=1}^{n} f_k \Bigr) =
 \sum_{\substack{k_1 + \cdots + k_m = n \\ k_i \geq 0}} 
-\frac{n!}{k_1! \cdots k_m!} \cdot 
-f_1^{(k_1)}(x) \cdots f_m^{(k_m)}(x) \cdot
-\frac{d^{n+1}}{dx^{n+1}} (f_1(x) \cdots f_m(x))
+\Bigl(
+\frac{n!}{k_1! \cdots k_m!}
+\prod_{i=1}^{m} f_i^{(k_i)} 
+\Bigr)
 \end{equation}
-...TBC... ToDo: explain multnomial coeffs, give example with 2nd derivative of 3 factors.
-Maybe write the formula down with product notation rather than using things like $f_1^{(k_1)}(x) \cdots f_m^{(k_m)}(x)$
+%\begin{equation}
+%\frac{d^n}{d x^n} (f_1(x) \cdots f_m(x) ) =
+%\sum_{\substack{k_1 + \cdots + k_m = n \\ k_i \geq 0}} 
+%\frac{n!}{k_1! \cdots k_m!} \cdot 
+%f_1^{(k_1)}(x) \cdots f_m^{(k_m)}(x)
+%\end{equation}
+...TBC... ToDo: explain multinomial coeffs, give example with 2nd derivative of 3 factors.
+%Maybe write the formula down with product notation Maybe suppress argument x
+
+
+
 
 
 % the "ultimate" product rule
 % https://www.youtube.com/watch?v=wBtff6I_YSI
 
 % https://en.wikipedia.org/wiki/Multinomial_theorem
+
+% Maybe write it down in multi-index notation:
+% https://en.wikipedia.org/wiki/Multi-index_notation
 
 
 \subsubsection{The Quotient Rule} 

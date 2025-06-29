@@ -110,19 +110,35 @@ The factorial of $0$ is defined to be $1$. This is in line with the definition o
 \end{equation}
 They get their name from the fact that they give the coefficients that arise from expanding a so called \emph{binomial} $(a+b)^n$. Expanding it yields:
 \begin{equation}
+\label{Eq:BinomialTheorem}
 (a+b)^n = \sum_{k=0}^{n} \binom{n}{k} a^k b^{n-k}
 \end{equation}
-They also arise in combinatorics. There, they give the number of different ways that one may pick $k$ objects from a set of $n$ objects. That's why they are pronounced as "n-choose-k". A generalization of the binomial coefficients are the \emph{multinomial coefficients} defined as:
+They also arise in combinatorics. There, they give the number of different ways that one may pick $k$ objects from a set of $n$ objects. That's why they are pronounced as "n-choose-k". The formula above is important enough to have a name: It's the \emph{binomial theorem}.
+
+\paragraph{$\star$ Multinomial Coefficients}
+A generalization of the binomial coefficients are the \emph{multinomial coefficients} defined as:
 \begin{equation}
 \label{Eq:MultinomialCoeffs}
- \binom{n}{k_1,k_2,\ldots,k_m} = \frac{n!}{k_1! k_2! \ldots k_m!}
+ \binom{n}{k_1,k_2,\ldots,k_m} 
+= \frac{n!}{k_1! k_2! \ldots k_m!}
+= \frac{n!}{ \prod_{i=1}^{m} k_i ! }
 \end{equation}
 They arise from multiplying out a multinomial:
 \begin{equation}
+\label{Eq:MultinomialTheorem}
 (a_1 + a_2 + \ldots + a_m)^n 
 = \sum_{k_1+\ldots+k_m = n} \binom{n}{k_1, \ldots, k_m} a_1^{k_1} a_2^{k_2} \ldots a_m^{k_m}
 \end{equation}
-This sum is to be interpreted as follows. The indices $k_i$ run over all possible combinations that give a total sum of $n$. ...TBC...VERIFY...TODO: explain Pascal's triangle 
+This sum is to be interpreted as follows. The indices $k_i$ run over all possible combinations that give a total sum of $n$. It is understood that the $k_i$ cannot become negative, i.e. $k_i \geq 0 \; \forall i$. The formula is unsurprisingly called the \emph{multinomial theorem}. To really show off our new notational skills, we could also write this as:
+\begin{equation}
+\Bigl( \sum_{i=1}^{m} a_i \Bigr)^n
+%= \sum_{k_1+\ldots+k_m = n} n! \frac{\prod_{i=1}^{m} a_i^{k_i}} {\prod_{i=1}^{m} k_i!}
+= \sum_{\sum k_i = n} \Bigl( n! \frac{\prod_{i=1}^{m} a_i^{k_i}} {\prod_{i=1}^{m} k_i!} \Bigr)
+\end{equation}
+although that may look a bit obscure and it is rarely written down like this.
+
+%...TBC...VERIFY...TODO: explain Pascal's triangle 
+% Maybe use substack for the k_i >= 0 conditio. Maybe use product notation in the rhs and sum notation in the lhs
 
 % Pascal's triangle is actually already prsented in the combinatorics chapter - maybe move that to here and then there, just out a reference. Or maybe include a forward reference here.
 

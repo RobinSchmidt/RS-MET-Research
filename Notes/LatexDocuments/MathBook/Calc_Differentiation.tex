@@ -170,9 +170,9 @@ There is a generalization for the product rule for products with more than two f
 \end{equation}
 For a general product of an arbitrary number $n$ of functions $f_1, f_2, \ldots, f_n$:
 \begin{equation}
-\frac{d}{dx} \prod_k f_k(x)  
-= \Bigl(  \prod_k f_k(x)   \Bigr) '
-= \sum_k \Bigl( f_k'(x) \prod_{i \neq k} f_i(x)  \Bigr) 
+%\frac{d}{dx} \prod_k f_k(x) = 
+\Bigl(  \prod_k f_k   \Bigr) '
+= \sum_k \Bigl( f_k' \prod_{i \neq k} f_i  \Bigr) 
 \end{equation}
 where the indices $k,i$ range from $1$ to $n$.
 
@@ -204,7 +204,7 @@ Note the structural similarity with the binomial theorem. The $n$-th power would
 \paragraph{Higher Derivatives for Multiple Factors}
 The natural question to ask next is: How about higher order derivatives for products with arbitrary many factors? Yep - there's a formula for that, too. The formula for the $n$-th derivative for a product with $m$ factors is:
 \begin{equation}
-\frac{d^n}{d x^n} \Bigl( \prod_{k=1}^{n} f_k \Bigr) =
+\Bigl( \prod_{k=1}^{n} f_k \Bigr)^{(n)} =
 \sum_{\substack{k_1 + \cdots + k_m = n \\ k_i \geq 0}} 
 \Bigl(
 \frac{n!}{k_1! \cdots k_m!}
@@ -218,7 +218,7 @@ The natural question to ask next is: How about higher order derivatives for prod
 %f_1^{(k_1)}(x) \cdots f_m^{(k_m)}(x)
 %\end{equation}
 ...TBC... ToDo: explain multinomial coeffs, give example with 2nd derivative of 3 factors.
-%Maybe write the formula down with product notation Maybe suppress argument x
+%Maybe write the formula down with product notation Maybe suppress argument x and use Lagrange notation
 
 
 

@@ -236,13 +236,13 @@ The natural question to ask next is: How about higher order derivatives for prod
 \subsubsection{The Quotient Rule} 
 As we have already seen in the list above, the rule for computing the derivative of a quotient of two functions $f = f(x)$ and $g = g(x)$ is given by:
 \begin{equation}
-\left( \frac{f(x)}{g(x)} \right) ' = 
-\frac{f'(x) g(x) - g'(x) f(x)}{(g(x))^2}
+\left( \frac{f}{g} \right) ' = 
+\frac{f' g - g' f}{g^2}
 \end{equation}
 In the special case for $f(x) = 1$, we obtain the so called \emph{reciprocal rule} which says:
 \begin{equation}
-\left( \frac{1}{g(x)} \right) ' = 
-- \frac{g'(x)}{(g(x))^2}
+\left( \frac{1}{g} \right) ' = 
+- \frac{g'}{g^2}
 \end{equation}
 
 % https://en.wikipedia.org/wiki/Reciprocal_rule
@@ -308,7 +308,7 @@ I'll refrain from giving a general formula because I would have to introduce an 
 \paragraph{Higher Order Derivatives of Composite Functions}
 There is also a formula for higher order derivatives of a composition of two functions. It's called \emph{Faa di Bruno's formula}\footnote{Named after Faa di Bruno.} and it says:
 \begin{equation}
-\frac{d^n}{d x^n} f(g(x)) = 
+f(g(x))^{(n)} = 
 \sum_{A \in P_n} 
 %\left( 
 \Bigl(
@@ -347,7 +347,7 @@ $P_3$ is a set of sets each of which is a partition $A_i$. A partition is also a
 % ToDo: try to format it better!
 where we note that for $A_2,A_3,A_4$, we'll get the same expression. The first factor in these terms is always the $|A_i|$-th derivative of $f(g(x))$. The second factor comes from the product $\prod_{a \in A}$ in the general formula, so it's itself a product which has 3,2 and 1 factors respectively where in the 1st line, the 3 equal factors of $g'(x)$ are abbreviated by cubing it. Putting it all together, we obtain:
 \begin{equation}
-\frac{d^3}{d x^3} f(g(x)) = 
+f(g(x))''' = 
   f'''(g(x)) \cdot (g'(x))^3 +
 3 f''(g(x))  \cdot g''(x)    g'(x)  + 
   f'(g(x))   \cdot g'''(x) 

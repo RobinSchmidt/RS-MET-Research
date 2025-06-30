@@ -194,17 +194,14 @@ Another generalization of the product rule applies to higher order derivatives o
 \begin{equation}
  (f g)^{(n)} = \sum_{k=0}^n \binom{n}{k}   f^{(n-k)} g^{(k)}
 \end{equation}
-Note the structural similarity with the binomial theorem. The $n$-th power would be replaced by the $n$-th derivative and instead of a sum of two variables, we have a product of two functions inside the parentheses. 
-
-%ToDo: Figure out the general case for derivatives of arbitrary order and an arbitrary number of factors. Maybe it would look structurally similar to the multinomial theorem?
+Note the structural similarity with the binomial theorem given in equation (\ref{Eq:BinomialTheorem}). The $n$-th power would be replaced by the $n$-th derivative and instead of a sum of two variables, we have a product of two functions inside the parentheses. 
 
 % https://en.wikipedia.org/wiki/General_Leibniz_rule
-
 
 \paragraph{Higher Derivatives for Multiple Factors}
 The natural question to ask next is: How about higher order derivatives for products with arbitrary many factors? Yep - there's a formula for that, too. The formula for the $n$-th derivative for a product with $m$ factors is:
 \begin{equation}
-\Bigl( \prod_{k=1}^{n} f_k \Bigr)^{(n)} =
+\Bigl( \prod_{k=1}^{m} f_k \Bigr)^{(n)} =
 \sum_{\substack{k_1 + \cdots + k_m = n \\ k_i \geq 0}} 
 \Bigl(
 \frac{n!}{k_1! \cdots k_m!}
@@ -219,10 +216,6 @@ The natural question to ask next is: How about higher order derivatives for prod
 %\end{equation}
 This formula is structurally similar to the multinomial theorem given in equation (\ref{Eq:MultinomialTheorem}). To see this formula in action, let's consider the example of computing the 2nd derivative of 3 factors ...TBC...
 %...TBC... ToDo: explain multinomial coeffs, give example with 2nd derivative of 3 factors.
-%Maybe write the formula down with product notation Maybe suppress argument x and use Lagrange notation
-
-
-
 
 
 % the "ultimate" product rule
@@ -284,7 +277,41 @@ There is also a generalization of the chain rule for compositions of more than t
 \begin{equation}
 f(g(h(x)))' =  f'(g(h(x))) \cdot g'(h(x)) \cdot h'(x)
 \end{equation}
-I'll refrain from giving a general formula because I would have to introduce an uncommon notation for it. Instead, I'll appeal to your ability to see the pattern. It's basically just a product of all the derivatives and each derivative is taken at the appropriate argument of the respective function. For example, the derivative of $g$ is taken at $h(x)$ because $h(x)$ is the argument of $g$ etc. ...TBC... ToDo: explain relation to backpropagation algorithm. There, we make use of a multivariable version of it.
+It's basically just a product of all the derivatives and each derivative is taken at the appropriate argument of the respective function. For example, the derivative of $g$ is taken at $h(x)$ because $h(x)$ is the argument of $g$ and so on. With some informal dot dot dot notation, one could write the general rule as:
+\begin{equation}
+(f_{n}(f_{n-1}(\ldots f_2(f_1(x)))) )' 
+ = f_{n}'(f_{n-1}(\ldots f_1(x)))  
+   \cdot f_{n-1}'(f_{n-2}(\ldots f_1(x)))  
+   \cdot \ldots 
+   \cdot  f_2'(f_1(x)) 
+   \cdot f_1'(x)
+\end{equation}
+A multivariable version of this generalized chain rule is the basis of the backpropagation algorithm which is the backbone of neural network training algorithms.
+
+%[ToDo: explain relation to backpropagation algorithm. There, we make use of a multivariable version of it. Maybe introduce the notation $f_{m..n} (x) = f_m( \ldots f_n(x))$ for compositing functions in the wikipedia article and write down the rule with this notation.]
+
+% Maybe introduce this notation already in the section where we introduce sum and product notation. Maybe we could also introduce a "big-circle" notation. Maybe use an uppercase omega? Or maybe omikron or theta?
+
+% To create the two ldots, wikipedia uses this latex code:
+% $ f_{a\,.\,.\,b}=f_{a}\circ f_{a+1}\circ \cdots \circ f_{b-1}\circ f_{b}} $
+
+% Here is another way to achieve this:
+% https://tex.stackexchange.com/questions/668325/how-do-i-get-only-two-dots-using-ldots
+
+%I'll refrain from giving a general formula because I would have to introduce an uncommon notation for it. Instead, I'll appeal to your ability to see the pattern. 
+
+
+%...TBC... 
+
+% https://tex.stackexchange.com/questions/668325/how-do-i-get-only-two-dots-using-ldots
+
+% Maybe write the general rule as:
+
+%   (f_{n}(f_{n-1}(\cdots f_2(f_1(x)))) )' 
+% = f_{n}'(f_{n-1}(\cdots f_1(x)))  \cdot
+%   f_{n-1}'(f_{n-2}(\cdots f_1(x)))  \cdot
+%   f_2'(f_1(x)) \cdot
+%   f_1'(x)
 
 % https://en.wikipedia.org/wiki/Chain_rule#Composites_of_more_than_two_functions
 

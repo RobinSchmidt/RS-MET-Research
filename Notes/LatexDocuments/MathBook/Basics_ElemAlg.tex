@@ -94,7 +94,9 @@ That would mean to sum over all primes less than or equal to $n$. If the index r
 % Ein paar einfache Regeln für Summen - Indexverschiebung, Aufsplitten, ...
 
 \paragraph{$\star$ Iterated Binary Operations}
-The sum and product notation are the most common examples for an idea in math known as \emph{iterated binary operations}. The general idea is to take a binary operation and turn it into an operation that can take any number of arguments. Other examples include the set theoretical intersections and unions of arbitrary many sets. ...TBC...ToDo: explain requirements on the binary operation (I think, it needs to be associative and commutative), give more examples, give the notations
+The sum and product notation are the most common examples for an idea in math known as \emph{iterated binary operations}. The general idea is to take a binary operation and turn it into an operation that can take any number of arguments. Other examples include the set theoretical intersections and unions of arbitrary many sets. ...TBC...ToDo: explain requirements on the binary operation (I think, it needs to be associative and commutative), give more examples, give the notations, explain relations to fold aka reduce in functional programming
+
+% If it's associative, it doesn't make a difference if we left-fold or right-fold (aka reduce). If it's also commutative, we can reorder the arguments in any way we like. If the operation has a neutral element, we can define the empty iterated operation to be that element (an iteration over just one element is always that element itself). We may even be abel to define countably infinite numbers of iterations if a suitable idea of convergence is available.
 
 % Sums and products are examples of iterated binary operations:
 % https://en.wikipedia.org/wiki/Iterated_binary_operation

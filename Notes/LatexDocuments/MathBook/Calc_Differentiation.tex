@@ -286,16 +286,24 @@ It's basically just a product of all the derivatives and each derivative is take
    \cdot  f_2'(f_1(x)) 
    \cdot f_1'(x)
 \end{equation}
-A multivariable version of this generalized chain rule is the basis of the backpropagation algorithm which is the backbone of neural network training algorithms.
+By introducing the following notation for composing functions:
+\begin{equation}
+f_{m..n} = f_m \circ f_{m+1} \circ \ldots \circ f_{n-1} \circ f_n
+%        = \mathop{\bigcirc}_{i=n}^m  f_i  % not well defined unless evaluation order is specified
+\end{equation}
+starting with $f_n$ as the innermost one and ending with $f_m$ as the outermost one such that:
+\begin{equation}
+f_{m..n}(x) = f_m(f_{m+1}( \ldots f_{n-1}( f_n(x))))
+\end{equation}
+we can write down this rule as ...TBC...
+
+%A multivariable version of this generalized chain rule is the basis of the backpropagation algorithm which is the backbone of neural network training algorithms.
 
 %\begin{equation}
 %f_{m..n} = \bigcirc_{i=m}^n \; f_i = f_m \circ f_{m-1} \circ \ldots \circ f_{n+1} \circ f_n
 %\end{equation}
 
-%\begin{equation}
-%f_{m..n} = \mathop{\bigcirc}_{i=n}^m  f_i 
-%         = f_m \circ f_{m+1} \circ \ldots \circ f_{n-1} \circ f_n
-%\end{equation}
+
 
 % Maybe the big-circle notation is not well defined because function composition is not commutative, i.e. the order matters but the big circle says nothing about evaluation order? But what about product notation with matrices? This should have the same problem - but I think, it is used anyway. or is it? Maybe if so, there's a convention to evaluate the product in order (from lo index to high index)?
 

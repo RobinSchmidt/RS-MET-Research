@@ -288,6 +288,27 @@ It's basically just a product of all the derivatives and each derivative is take
 \end{equation}
 A multivariable version of this generalized chain rule is the basis of the backpropagation algorithm which is the backbone of neural network training algorithms.
 
+%\begin{equation}
+%f_{m..n} = \bigcirc_{i=m}^n \; f_i = f_m \circ f_{m-1} \circ \ldots \circ f_{n+1} \circ f_n
+%\end{equation}
+
+%\begin{equation}
+%f_{m..n} = \mathop{\bigcirc}_{i=n}^m  f_i 
+%         = f_m \circ f_{m+1} \circ \ldots \circ f_{n-1} \circ f_n
+%\end{equation}
+
+% Maybe the big-circle notation is not well defined because function composition is not commutative, i.e. the order matters but the big circle says nothing about evaluation order? But what about product notation with matrices? This should have the same problem - but I think, it is used anyway. or is it? Maybe if so, there's a convention to evaluate the product in order (from lo index to high index)?
+
+% https://en.wikipedia.org/wiki/Iterated_binary_operation
+
+% https://en.wikipedia.org/wiki/Chain_rule#Composites_of_more_than_two_functions
+
+% For creating thebig circle notation
+% stackrel, overset, underset, mathop
+% https://tex.stackexchange.com/questions/39225/differences-between-stackrel-and-stackbin/39230#39230
+
+% Maybe sort the factors in reverse order - from innermost to outermost
+
 %[ToDo: explain relation to backpropagation algorithm. There, we make use of a multivariable version of it. Maybe introduce the notation $f_{m..n} (x) = f_m( \ldots f_n(x))$ for compositing functions in the wikipedia article and write down the rule with this notation.]
 
 % Maybe introduce this notation already in the section where we introduce sum and product notation. Maybe we could also introduce a "big-circle" notation. Maybe use an uppercase omega? Or maybe omikron or theta?

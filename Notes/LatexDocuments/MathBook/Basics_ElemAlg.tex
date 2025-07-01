@@ -93,8 +93,18 @@ That would mean to sum over all primes less than or equal to $n$. If the index r
 % https://www.youtube.com/watch?v=O_MI8V8MEkU
 % Ein paar einfache Regeln für Summen - Indexverschiebung, Aufsplitten, ...
 
+\paragraph{$\star$ Iterated Binary Operations}
+The sum and product notation are the most common examples for an idea in math known as \emph{iterated binary operations}. The general idea is to take a binary operation and turn it into an operation that can take any number of arguments. Other examples include the set theoretical intersections and unions of arbitrary many sets. ...TBC...ToDo: explain requirements on the binary operation (I think, it needs to be associative and commutative), give more examples, give the notations
 
-
+% Sums and products are examples of iterated binary operations:
+% https://en.wikipedia.org/wiki/Iterated_binary_operation
+% - Other examples are: set theoretic union and intersection, logical conjunction and disjunction,
+%   tensor products, direct sums of vector spaces, etc.
+% - I think, the binary operator needs to be associative and maybe also commutative to arrive at
+%   a unique definition. Otherwise, one may have to introduce conventions about the evaluation
+%   order.
+% - In this discussion, some profesor seems to be using a curved arrow to indicate a chaining
+%   order:  https://math.stackexchange.com/questions/1391874/matrix-product-notation
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Factorials and Binomial Coefficients}
@@ -140,6 +150,8 @@ although that may look a bit obscure and it is rarely written down like this.
 % toDo: give formula for sum of multinomial coeffs
 % https://en.wikipedia.org/wiki/Multinomial_theorem#Sum_of_all_multinomial_coefficients
 % it specializes to 2^n for m = 2 which is also an important factor about binomial coeffs.
+% I think, there's also a formula that expresses the multinomial coeffs in terms of binomial coeffs.
+% I think, it may be implemented in the codebase...not sure, though.
 
 %...TBC...VERIFY...TODO: explain Pascal's triangle 
 % Maybe use substack for the k_i >= 0 conditio. Maybe use product notation in the rhs and sum notation in the lhs

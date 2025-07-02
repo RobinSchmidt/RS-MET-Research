@@ -1,0 +1,34 @@
+\pgfplotsset{compat=1.12}
+
+\begin{equation}
+f = f(x,y), \quad 
+x = x(t),   \;
+y = y(t)
+\end{equation}
+
+\begin{tikzpicture}
+
+\begin{scope}[every node/.style={rectangle, rounded corners, thick, draw, fill=yellow}]
+
+  \node (f) at (0,1)  {$f$};
+  \node (x) at (2,0)  {$x$};
+  \node (y) at (2,2)  {$y$};
+  \node (t) at (4,1)  {$t$};
+  
+\end{scope}
+
+\begin{scope}[>={Stealth[black]},
+              every edge/.style={draw=black, thick}]
+              
+  % Edges:
+  \path [->] (f) edge node {} (x);
+  \path [->] (f) edge node {} (y);
+  \path [->] (x) edge node {} (t);
+  \path [->] (y) edge node {} (t);
+      
+\end{scope}
+
+\end{tikzpicture}
+
+
+

@@ -140,6 +140,11 @@ I find the statement "groups are an abstraction of symmetry" a bit confusing bec
 % -x is an element of X where X is the set of objects on which G acts.
 
 
+
+% The most misunderstood equation in math (associative property)
+% https://www.youtube.com/watch?v=Oq71Ev9-aQE
+% -Object-action duality
+
 %===================================================================================================
 \subsection{Multiplication Tables}
 Let's assume that we have a finite set $A$ with $N$ elements and let's assume that we have labeled all set elements by a unique index between $1$ and $N$, so our set is $A = \{ a_1, a_2, a_3, \ldots, a_N \}$. To define a binary operation on such a set, we may write down a table in which the headers of the rows and columns are the set elements and the cells tell us, what output the operation will produce, when we combine the elements that appear in the headers of our rows and columns. That means, when we view the table as a matrix $T$, the element $t_{ij}$ of the matrix will be given by the product $a_i a_j$. I call it a "matrix" here because that's the data structure one might naturally want to use for this in an (naive) implementation - but we do not intend to do any linear algebra with it. For our purposes here, it's just a 2D table of elements which we want to read out and I may use the terms "matrix" and "table" interchangably. For $N=5$, such a table would look like this:

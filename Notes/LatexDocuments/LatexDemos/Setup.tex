@@ -29,11 +29,17 @@
 
 
 %\usepgfplotslibrary{external} 
+%\usetikzlibrary{external}        % alternative to \usepgfplotslibrary{external} ?
 %\tikzexternalize
 % Reduces memory requirements and may speed up compilation time by rendering plots into individual
 % external files (or something like that). See:
 % https://tex.stackexchange.com/questions/7953/how-to-expand-texs-main-memory-size-pgfplots-memory-overload
 % ...but this gives errors
+
+% ...using this instead:
+%\tikzexternalize[mode=graphics if exists,prefix=./TikzFigures/]
+% does not produce any compilation errors but I don't see any pre-generated pdf figures anywhere so
+% it's very doubtful that the extrernalization actually works as intended.
 
 %---------------------------------------------------------------------------------------------------
 % Colors:

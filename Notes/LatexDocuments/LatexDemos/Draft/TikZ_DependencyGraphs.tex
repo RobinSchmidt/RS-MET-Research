@@ -1,15 +1,28 @@
 \pgfplotsset{compat=1.12}
 
+
+% Ambiguity With Partial ∂ Notation, and How to Resolve It
+% https://www.youtube.com/watch?v=mICbKwwHziI
+
 \begin{equation}
 f = f(x,y), \quad 
 x = x(t),   \;
 y = y(t)
 \end{equation}
 
+% Too much vertical distance!
+
+\begin{equation}
+\frac{df}{dt} =
+\frac{\partial f}{\partial x} \frac{dx}{dt} +
+\frac{\partial f}{\partial y} \frac{dy}{dt} 
+\end{equation}
+
 \begin{tikzpicture}
 
 \begin{scope}[every node/.style={rectangle, rounded corners, thick, draw, fill=yellow}]
 
+  % Nodes:
   \node (f) at (0,1)  {$f$};
   \node (x) at (2,0)  {$x$};
   \node (y) at (2,2)  {$y$};
@@ -30,5 +43,57 @@ y = y(t)
 
 \end{tikzpicture}
 
+%---------------------------------------------------------------------------------------------------
+
+\medskip \medskip \medskip 
+
+\begin{equation}
+f = f(x,y), \quad 
+x = x(s,t),  \;
+y = y(s,t)
+\end{equation}
+
+\begin{equation}
+\frac{\partial f}{\partial s} =
+\frac{\partial f}{\partial x} \frac{dx}{ds} +
+\frac{\partial f}{\partial y} \frac{dy}{ds} ,  \qquad
+\frac{\partial f}{\partial t} =
+\frac{\partial f}{\partial x} \frac{dx}{dt} +
+\frac{\partial f}{\partial y} \frac{dy}{dt} ,  \qquad
+\end{equation}
 
 
+
+
+\begin{tikzpicture}
+
+\begin{scope}[every node/.style={rectangle, rounded corners, thick, draw, fill=yellow}]
+
+  \node (f) at (0,1)  {$f$};
+  \node (x) at (2,0)  {$x$};
+  \node (y) at (2,2)  {$y$};
+  \node (s) at (4,0)  {$s$};
+  \node (t) at (4,2)  {$t$};
+
+  
+\end{scope}
+
+\begin{scope}[>={Stealth[black]},
+              every edge/.style={draw=black, thick}]
+              
+  \path [->] (f) edge node {} (x);
+  \path [->] (f) edge node {} (y);
+  \path [->] (x) edge node {} (s);
+  \path [->] (y) edge node {} (s);
+  \path [->] (x) edge node {} (t);
+  \path [->] (y) edge node {} (t);
+      
+\end{scope}
+
+\end{tikzpicture}
+
+
+% ToDo:
+% -mention also dependency trees and draw some examples of them , too
+% -explain terminal (independent) variables
+% -explain explicit partial derivative and total partial derivative

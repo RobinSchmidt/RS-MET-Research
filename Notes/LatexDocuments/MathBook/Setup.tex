@@ -49,6 +49,28 @@
 \usetikzlibrary{positioning}
 \usetikzlibrary{arrows,intersections}
 
+% This is supposed to optimize the graphics rendering such that they are no re-rendered when not
+% necessary:
+\usetikzlibrary{external}
+%\tikzexternalize % Gives error!
+%\tikzexternalize[mode=graphics if exists,figure list=true,prefix=TikzFigures/] % No error!
+%\tikzexternalize[mode=graphics if exists,figure list=true,prefix=./TikzFigures/] % also ok
+\tikzexternalize[mode=graphics if exists,prefix=./TikzFigures/]
+% See: https://tikz.dev/library-external
+%      https://stackoverflow.com/questions/33675212/use-of-tikzexternalize
+%      https://github.com/pgf-tikz/pgfplots/issues/348
+% ToDo: check, if we need to do this before or after all the other \usetikzlibrary commands or if
+% it doesn't matter
+% BUT: it produces an error: 
+% Package tikz Error: Sorry, the system call 'pdflatex -halt-on-error -interact
+% This error happens also when I move the  other \usetikzlibrary below the \tikzexternalize command
+% ...ok - using "\tikzexternalize[mode=graphics if exists,prefix=./TikzFigures/]" seems to solve it.
+% But in the TikzFigures folder are only md5 files of size 1 kB each so that can't really be the
+% full graphics.
+
+
+
+
 
 \usepackage{mathtools}                        % for "\DeclarePairedDelimiter" macro
 

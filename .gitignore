@@ -30,6 +30,7 @@
 *.aux
 *.auxlock
 *.bbl
+*.figlist
 *.log
 *.md5
 *.out

@@ -7,7 +7,7 @@
 
 
 \begin{equation}
-f = f(x,y), \quad 
+z = z(x,y), \quad
 x = x(t),   \;
 y = y(t)
 \end{equation}
@@ -23,19 +23,17 @@ y = y(t)
 % would set up the spacing globally.
 
 \begin{equation}
-\frac{df}{dt} =
-\frac{\partial f}{\partial x} \frac{dx}{dt} +
-\frac{\partial f}{\partial y} \frac{dy}{dt} 
+\frac{dz}{dt} =
+\frac{\partial z}{\partial x} \frac{dx}{dt} +
+\frac{\partial z}{\partial y} \frac{dy}{dt} 
 \end{equation}
-
-
 
 
 \begin{tikzpicture}
 
 % Nodes:
 \begin{scope}[every node/.style={rectangle, rounded corners, thick, draw, fill=yellow}]
-  \node (f) at (0,1)  {$f$};
+  \node (z) at (0,1)  {$z$};
   \node (x) at (2,2)  {$x$};
   \node (y) at (2,0)  {$y$};
   \node (t) at (4,1)  {$t$};
@@ -43,20 +41,20 @@ y = y(t)
 
 % Edges:
 \begin{scope}[>={Stealth[black]}, every edge/.style={draw=black, thick}]
-  \path [->] (f) edge node {} (x);
-  \path [->] (f) edge node {} (y);
+  \path [->] (z) edge node {} (x);
+  \path [->] (z) edge node {} (y);
   \path [->] (x) edge node {} (t);
   \path [->] (y) edge node {} (t);
 \end{scope}
 
 % Equations:
 \begin{scope}[every node/.style={rectangle}]
-  \node (f_eq)  at (-1.5,   1.0) {$f = f(x,y)$ };
+  \node (z_eq)  at (-1.5,   1.0) {$z = z(x,y)$ };
   \node (x_eq)  at ( 2.25,  2.5) {$x = x(t)$   };
   \node (y_eq)  at ( 2.25, -0.5) {$y = y(t)$   };
-  \node (df_dt) at ( 6.0,   1.0) {$\frac{df}{dt} =
-                                   \frac{\partial f}{\partial x} \frac{dx}{dt} +
-                                   \frac{\partial f}{\partial y} \frac{dy}{dt}$ };
+  \node (dz_dt) at ( 6.0,   1.0) {$\frac{dz}{dt} =
+                                   \frac{\partial z}{\partial x} \frac{dx}{dt} +
+                                   \frac{\partial z}{\partial y} \frac{dy}{dt}$ };
 \end{scope}
 % This section may be commented out if it turns out to be undesirable to render the formulas 
 % redundantly next to the nodes.
@@ -122,4 +120,5 @@ y = y(s,t)
 % -explain terminal (independent) variables
 % -explain explicit partial derivative and total partial derivative
 % -Maybe use z(x,y) instead of f(x,y). This fits better with the explanation in the video for 
-%  using functional notation. Then f,g,h etc. are still free
+%  using functional notation. Then f,g,h etc. are still free. We use s,t,u,v,w,x,y,z for variables,
+%  f,g,h for functions

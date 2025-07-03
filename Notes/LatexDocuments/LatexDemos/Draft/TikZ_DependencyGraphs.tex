@@ -4,19 +4,32 @@
 % Ambiguity With Partial ∂ Notation, and How to Resolve It
 % https://www.youtube.com/watch?v=mICbKwwHziI
 
+
+
 \begin{equation}
 f = f(x,y), \quad 
 x = x(t),   \;
 y = y(t)
 \end{equation}
 
-% Too much vertical distance!
+\vspace{-20pt} % Reduces vertical distance between equations
+% But one could also use "gather", see here:
+% https://www.quora.com/How-can-the-vertical-space-between-two-equations-in-LaTeX-be-decreased
+% I think, using these: 
+%\abovedisplayshortskip=0pt
+%\belowdisplayshortskip=0pt
+%\abovedisplayskip=0pt
+%\belowdisplayskip=0pt
+% would set up the spacing globally.
 
 \begin{equation}
 \frac{df}{dt} =
 \frac{\partial f}{\partial x} \frac{dx}{dt} +
 \frac{\partial f}{\partial y} \frac{dy}{dt} 
 \end{equation}
+
+
+
 
 \begin{tikzpicture}
 
@@ -45,8 +58,11 @@ y = y(t)
                                    \frac{\partial f}{\partial x} \frac{dx}{dt} +
                                    \frac{\partial f}{\partial y} \frac{dy}{dt}$ };
 \end{scope}
+% This section may be commented out if it turns out to be undesirable to render the formulas 
+% redundantly next to the nodes.
 
 \end{tikzpicture}
+
 
 %---------------------------------------------------------------------------------------------------
 \medskip \medskip \medskip 
@@ -56,6 +72,8 @@ f = f(x,y), \quad
 x = x(s,t),  \;
 y = y(s,t)
 \end{equation}
+
+\vspace{-20pt}
 
 \begin{equation}
 \frac{\partial f}{\partial s} =

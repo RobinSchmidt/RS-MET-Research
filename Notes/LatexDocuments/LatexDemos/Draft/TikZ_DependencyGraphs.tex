@@ -20,25 +20,26 @@ y = y(t)
 
 \begin{tikzpicture}
 
+% Nodes:
 \begin{scope}[every node/.style={rectangle, rounded corners, thick, draw, fill=yellow}]
-
-  % Nodes:
   \node (f) at (0,1)  {$f$};
   \node (x) at (2,2)  {$x$};
   \node (y) at (2,0)  {$y$};
   \node (t) at (4,1)  {$t$};
-  
 \end{scope}
 
-\begin{scope}[>={Stealth[black]},
-              every edge/.style={draw=black, thick}]
-              
-  % Edges:
+% Edges:
+\begin{scope}[>={Stealth[black]}, every edge/.style={draw=black, thick}]
   \path [->] (f) edge node {} (x);
   \path [->] (f) edge node {} (y);
   \path [->] (x) edge node {} (t);
   \path [->] (y) edge node {} (t);
-      
+\end{scope}
+
+% Equations:
+\begin{scope}[every node/.style={rectangle}]
+  \node (f_eq) at (-1.5,1) {$f = f(x,y)$ };
+  % ...TBC...
 \end{scope}
 
 \end{tikzpicture}

@@ -38,8 +38,12 @@ y = y(t)
 
 % Equations:
 \begin{scope}[every node/.style={rectangle}]
-  \node (f_eq) at (-1.5,1) {$f = f(x,y)$ };
-  % ...TBC...
+  \node (f_eq)  at (-1.5,   1.0) {$f = f(x,y)$ };
+  \node (x_eq)  at ( 2.25,  2.5) {$x = x(t)$   };
+  \node (y_eq)  at ( 2.25, -0.5) {$y = y(t)$   };
+  \node (df_dt) at ( 6.0,   1.0) {$\frac{df}{dt} =
+                                   \frac{\partial f}{\partial x} \frac{dx}{dt} +
+                                   \frac{\partial f}{\partial y} \frac{dy}{dt}$ };
 \end{scope}
 
 \end{tikzpicture}

@@ -5,6 +5,8 @@
 % https://www.youtube.com/watch?v=mICbKwwHziI
 
 
+\paragraph{One Dependent, Two Intermediates, One Independent}
+We first consider the simplest case of one dependent variable $z$ that indirectly depends on one independent variable $t$ where the dependency goes through two intermediate variables $x,y$. That means, we are dealing with the following setup:
 
 \begin{equation}
 z = z(x,y), \quad
@@ -12,7 +14,7 @@ x = x(t),   \;
 y = y(t)
 \end{equation}
 
-\vspace{-20pt} % Reduces vertical distance between equations
+%\vspace{-20pt} % Reduces vertical distance between equations
 % But one could also use "gather", see here:
 % https://www.quora.com/How-can-the-vertical-space-between-two-equations-in-LaTeX-be-decreased
 % I think, using these: 
@@ -22,13 +24,7 @@ y = y(t)
 %\belowdisplayskip=0pt
 % would set up the spacing globally.
 
-\begin{equation}
-\frac{dz}{dt} =
-\frac{\partial z}{\partial x} \frac{dx}{dt} +
-\frac{\partial z}{\partial y} \frac{dy}{dt} 
-\end{equation}
-% Note the use of $\partial$ whenever the dependent variable depends on multiple variables and $d$ when the variable depends only on one variable.
-
+The dependency graph of this situation looks like this:
 
 \begin{tikzpicture}
 
@@ -48,40 +44,44 @@ y = y(t)
   \path [->] (y) edge node {} (t);
 \end{scope}
 
-% Equations:
-\begin{scope}[every node/.style={rectangle}]
-  \node (z_eq)  at (-1.5,   1.0) {$z = z(x,y)$ };
-  \node (x_eq)  at ( 2.25,  2.5) {$x = x(t)$   };
-  \node (y_eq)  at ( 2.25, -0.5) {$y = y(t)$   };
-  \node (dz_dt) at ( 6.0,   1.0) {$\frac{dz}{dt} =
-                                   \frac{\partial z}{\partial x} \frac{dx}{dt} +
-                                   \frac{\partial z}{\partial y} \frac{dy}{dt}$ };
-\end{scope}
+%% Equations:
+%\begin{scope}[every node/.style={rectangle}]
+%  \node (z_eq)  at (-1.5,   1.0) {$z = z(x,y)$ };
+%  \node (x_eq)  at ( 2.25,  2.5) {$x = x(t)$   };
+%  \node (y_eq)  at ( 2.25, -0.5) {$y = y(t)$   };
+%  \node (dz_dt) at ( 6.0,   1.0) {$\frac{dz}{dt} =
+%                                   \frac{\partial z}{\partial x} \frac{dx}{dt} +
+%                                   \frac{\partial z}{\partial y} \frac{dy}{dt}$ };
+%\end{scope}
 % This section may be commented out if it turns out to be undesirable to render the formulas 
 % redundantly next to the nodes.
 
 \end{tikzpicture}
 
+We are interested in the derivative of the dependent variable $z$ with respect to the independent variable $t$. Because $z$ depends only on $t$, this is a total derivative and we write this as $\frac{\partial z}{\partial t}$. It's given by the formula:
+
+\begin{equation}
+\frac{dz}{dt} =
+\frac{\partial z}{\partial x} \frac{dx}{dt} +
+\frac{\partial z}{\partial y} \frac{dy}{dt} 
+\end{equation}
+% Note the use of $\partial$ whenever the dependent variable depends on multiple variables and $d$ when the variable depends only on one variable.
+
 
 %---------------------------------------------------------------------------------------------------
 \medskip \medskip \medskip 
+
+
+\paragraph{One Dependent, Two Intermediates, Two Independents}
+
 
 \begin{equation}
 z = z(x,y), \quad 
 x = x(s,t),  \;
 y = y(s,t)
 \end{equation}
+%\vspace{-20pt}
 
-\vspace{-20pt}
-
-\begin{equation}
-\frac{\partial z}{\partial s} =
-\frac{\partial z}{\partial x} \frac{dx}{ds} +
-\frac{\partial z}{\partial y} \frac{dy}{ds} ,  \qquad
-\frac{\partial z}{\partial t} =
-\frac{\partial z}{\partial x} \frac{\partial x}{\partial t} +
-\frac{\partial z}{\partial y} \frac{\partial y}{\partial t} ,  \qquad
-\end{equation}
 
 
 \begin{tikzpicture}
@@ -117,6 +117,17 @@ y = y(s,t)
 \end{scope}
 
 \end{tikzpicture}
+
+
+
+\begin{equation}
+\frac{\partial z}{\partial s} =
+\frac{\partial z}{\partial x} \frac{dx}{ds} +
+\frac{\partial z}{\partial y} \frac{dy}{ds} ,  \qquad
+\frac{\partial z}{\partial t} =
+\frac{\partial z}{\partial x} \frac{\partial x}{\partial t} +
+\frac{\partial z}{\partial y} \frac{\partial y}{\partial t} ,  \qquad
+\end{equation}
 
 %---------------------------------------------------------------------------------------------------
 \medskip \medskip \medskip 

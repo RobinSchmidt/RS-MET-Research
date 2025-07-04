@@ -67,7 +67,7 @@ y = y(t)
 \medskip \medskip \medskip 
 
 \begin{equation}
-f = f(x,y), \quad 
+z = z(x,y), \quad 
 x = x(s,t),  \;
 y = y(s,t)
 \end{equation}
@@ -75,37 +75,45 @@ y = y(s,t)
 \vspace{-20pt}
 
 \begin{equation}
-\frac{\partial f}{\partial s} =
-\frac{\partial f}{\partial x} \frac{dx}{ds} +
-\frac{\partial f}{\partial y} \frac{dy}{ds} ,  \qquad
-\frac{\partial f}{\partial t} =
-\frac{\partial f}{\partial x} \frac{dx}{dt} +
-\frac{\partial f}{\partial y} \frac{dy}{dt} ,  \qquad
+\frac{\partial z}{\partial s} =
+\frac{\partial z}{\partial x} \frac{dx}{ds} +
+\frac{\partial z}{\partial y} \frac{dy}{ds} ,  \qquad
+\frac{\partial z}{\partial t} =
+\frac{\partial z}{\partial x} \frac{\partial x}{\partial t} +
+\frac{\partial z}{\partial y} \frac{\partial y}{\partial t} ,  \qquad
 \end{equation}
 
 
 \begin{tikzpicture}
 
 \begin{scope}[every node/.style={rectangle, rounded corners, thick, draw, fill=yellow}]
-
-  \node (f) at (0,1)  {$f$};
+  \node (z) at (0,1)  {$z$};
   \node (x) at (2,2)  {$x$};
   \node (y) at (2,0)  {$y$};
   \node (s) at (4,2)  {$s$};
   \node (t) at (4,0)  {$t$};
- 
 \end{scope}
 
 \begin{scope}[>={Stealth[black]},
-              every edge/.style={draw=black, thick}]
-              
-  \path [->] (f) edge node {} (x);
-  \path [->] (f) edge node {} (y);
+              every edge/.style={draw=black, thick}]       
+  \path [->] (z) edge node {} (x);
+  \path [->] (z) edge node {} (y);
   \path [->] (x) edge node {} (s);
   \path [->] (y) edge node {} (s);
   \path [->] (x) edge node {} (t);
   \path [->] (y) edge node {} (t);
-      
+\end{scope}
+
+\begin{scope}[every node/.style={rectangle}]
+  \node (z_eq)  at (-1.5,   1.0) {$z = z(x,y)$ };
+  \node (x_eq)  at ( 2.25,  2.5) {$x = x(s,t)$ };
+  \node (y_eq)  at ( 2.25, -0.5) {$y = y(s,t)$ };
+  \node (dz_dt) at ( 6.0,   2.0) {$\frac{dz}{ds} =
+                                   \frac{\partial z}{\partial x} \frac{\partial x}{\partial s} +
+                                   \frac{\partial z}{\partial y} \frac{\partial y}{\partial s}$ };
+  \node (dz_dt) at ( 6.0,   0.0) {$\frac{dz}{dt} =
+                                   \frac{\partial z}{\partial x} \frac{\partial x}{\partial t} +
+                                   \frac{\partial z}{\partial y} \frac{\partial y}{\partial t}$ };
 \end{scope}
 
 \end{tikzpicture}

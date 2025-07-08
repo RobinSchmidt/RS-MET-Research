@@ -705,7 +705,6 @@ It turns out that the real part of $\e^{\i x}$ is actually the cosine function a
 \cos(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}  }{(2n)!}
 \end{equation}
 These series expansions look very similar to those of $\sinh$ and $\cosh$ but they have this additional sign alternation factor $(-1)^n$ going on. The sine and cosine functions for real input arguments are depicted in figure \ref{Fig:SineAndCosine}.
-
 \begin{figure}[h]
 \centering
 \caption{Sine and cosine function}
@@ -735,7 +734,6 @@ These series expansions look very similar to those of $\sinh$ and $\cosh$ but th
     
 \end{tikzpicture}
 \end{figure}
-
 There are also differential and functional equations for sine and cosine that are reminiscent of the corresponding equations for the exponential function. Sine and cosine satisfy the following system of coupled differential equations:
 \begin{equation}
 \frac{d}{dx} \sin(x) = \cos(x), \quad
@@ -1055,6 +1053,39 @@ The first equation is a statement that $\Gamma$ interpolates the shifted factori
 % Explain how curve fitting can be seen as starting with a parametrized function family and trying to find the parameters such that the resulting function is a best fit to some given data. The data analyst must decide, which function family is appropriate - maybe from theoretical domain knowledge, maybe from looking at the data. Then, an algorithm must find the optimal parameters. Maybe it needs an initial guess or maybe it can produce such an initial guess by itself. Then, it's generally an iterative process - unless the dependency of the matching criterion (aka error function) on the parameters is linear. In this case, it can be solved with linear algebra. The dependency on the input arguments does not need to be linear. It can be anything. Sometimes it's possible to turn a nonlinear dependency on the parameters into a linear one. If that's possible, the algorithm could operate on the transformed probelm with liner algebra techniques and then transform the solution back to the original problem.
 
 
+
+%===================================================================================================
+%\subsection{Functional Equations}
+% These are equations that establish a relation between function values at different evaluation points (typically 2 or 3 of them). 
+
+% Examples:
+%
+% Factorial: n! = n * (n-1)!  or  f(n) = n * f(n-1)
+% - Is a relation between 2 evaluations points (namely n and n-1)
+% - The product function (or its shifted version, the Gamma function) is a continuous interpolation
+%   of the factorial that also satisfies this functional equation at all points.
+% - This may be a general method for finding continuous generalizations of discrete functions: Ask 
+%   which functional equation does the discrete function satisfy and then try to find a continuous
+%   function that still satisfies it. Maybe a similar idea could be applied by using differential 
+%   (rather than functional) equations? Can we also relate this to a limiting process of polynomial
+%   interpolation? Like: Make a power series ansatz and then find the (infinite degree) "polynomial"
+%   that passes through all the (countably many) discrete datapoints? How does all of this relate
+%   to analytic continuation (if at all)?
+%
+% Fibonacci sequence: f(n) = f(n-2) + f(n-1)
+% - Is a relation between 3 evaluation points (namely n, n-1, n-2)
+% - Can we make a continuous version that satisfies this functional equation? Maybe the closed form
+%   expression with the golden ratio?
+%
+% Exponential: a^(x+y) = a^x * a^y  or  f(x+y) = f(x) * f(y)
+% - Relates 3 evaluation points (x, y, x+y)
+%
+% Sine and cosine:
+% - Addition theorems and multiple angle formulas establish relations between two functions at 
+%   different evaluation points. I think, that means we are dealing with a system of 2 functional
+%   equations. Together, they determine two functions - namely sine and cosine.
+%
+% Riemann Zeta:
 
 \begin{comment}
 

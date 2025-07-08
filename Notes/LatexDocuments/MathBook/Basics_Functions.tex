@@ -990,10 +990,10 @@ The first equation is a statement that $\Gamma$ interpolates the shifted factori
 %   (1)  sqrt(2 \pi n) (n/e)^n  <  n!  <  e sqrt(n) (n/e)^n
 %   (2)  ((n+1)/3)^n  <  n!  <   ((n+1)/2)^n
 % Maybe these approximations could be useful in some contexts. The first formula in (1) is 
-% Stirling's approximations. It may be useful to know that it is an approximation from below. Maybe
-% we can construct a prcatically useful better approximatiosn by somehow averaging an approximation
+% Stirling's approximation. It may be useful to know that it is an approximation from below. Maybe
+% we can construct a practically useful better approximations by somehow averaging an approximation
 % from above with one from below? We could experiment with different kinds of (weighted) averages. 
-% Or maybe we could somehow constrcut an intermediate approximation. For example, we could use
+% Or maybe we could somehow construct an intermediate approximation. For example, we could use
 % ((n+1)/2.5)^n  which is in between  ((n+1)/3)^n  and  ((n+1)/2)^n
 
 % Stirling-Formel (Mathe-Song)
@@ -1007,7 +1007,7 @@ The first equation is a statement that $\Gamma$ interpolates the shifted factori
 %https://www.youtube.com/watch?v=R7djflEwPwQ
 % gamma, bessel, elliptic integrals
 
-% Inlcude the Lambert W function
+% Include the Lambert W function
 
 % https://en.wikipedia.org/wiki/Wright_omega_function
 % https://www.uwo.ca/apmaths/faculty/jeffrey/pdfs/wrightomega.pdf
@@ -1017,6 +1017,44 @@ The first equation is a statement that $\Gamma$ interpolates the shifted factori
 % https://www.youtube.com/watch?v=yakZbWmnnLw
 % -explains how binomial coeffs can be extended to let n be a real number
 %  -> binomial series (has geometric series as special case for a -> -1, and x -> -x)
+
+% Riemann Zeta Function, L-Functions
+
+
+%===================================================================================================
+\subsection{Function Families}
+
+% Explain that a function family is a set of related functions that can usually be expressed in terms of one or more adjustable parameters (like a,b,c,d,...) or (a1,a2,...). Mathematically, these parameters can just be viewed as additional input arguments (x,y,z,...) or (x1,x2,...). There is no real formal difference between parameters and arguments. However: parameters play a different role than the actual input arguments. They are usually assumed to be fixed (but possibly adjustable) constants rather than variables. Maybe we should have a little section on multivariable functions before. Maybe link some desmos or geogebra plot - a function f(x,y) with two inputs and some adjustable parameters (via sliders).
+
+%\subsubsection{Scaling and Shifting}
+% Explain how to scale and shift functions in the x- and y direction and how these operations turn any given function into a 4-parametric family
+
+
+%\subsubsection{Sinusoidal Functions}
+% parameters: amplitude (y-scaling), phase (x-shifting), frequency (x-scaling)
+
+
+%\subsubsection{Exponential Functions}
+% Explain what different exponents do, introduce a scaling factor, maybe a shift
+
+
+
+%\subsubsection{Damped Sinusoids}
+
+
+%\subsubsection{Linear Fractional Transforms}
+% (a x +b) / (c x + d)
+% -this family forms a group under composition
+
+
+% Gaussians with different mean and variance
+% Powers
+% Polynomials (these are an infinite family - but for any given degree n, we have a family of n+1 parameters)
+
+%\subsubsection{Curve Fitting}
+% Explain how curve fitting can be seen as starting with a parametrized function family and trying to find the parameters such that the resulting function is a best fit to some given data. The data analyst must decide, which function family is appropriate - maybe from theoretical domain knowledge, maybe from looking at the data. Then, an algorithm must find the optimal parameters. Maybe it needs an initial guess or maybe it can produce such an initial guess by itself. Then, it's generally an iterative process - unless the dependency of the matching criterion (aka error function) on the parameters is linear. In this case, it can be solved with linear algebra. The dependency on the input arguments does not need to be linear. It can be anything. Sometimes it's possible to turn a nonlinear dependency on the parameters into a linear one. If that's possible, the algorithm could operate on the transformed probelm with liner algebra techniques and then transform the solution back to the original problem.
+
+
 
 \begin{comment}
 

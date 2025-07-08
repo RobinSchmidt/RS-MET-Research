@@ -1002,6 +1002,10 @@ The first equation is a statement that $\Gamma$ interpolates the shifted factori
 % https://mathworld.wolfram.com/GammaFunction.html
 % https://en.wikipedia.org/wiki/Gamma_function
 
+% Gamma Function - Explained
+% https://www.youtube.com/watch?v=UZuszwqW_Qo
+% - Kind of derives the integral based definition.
+
 %https://www.youtube.com/watch?v=R7djflEwPwQ
 % gamma, bessel, elliptic integrals
 
@@ -1056,7 +1060,7 @@ The first equation is a statement that $\Gamma$ interpolates the shifted factori
 
 %===================================================================================================
 %\subsection{Functional Equations}
-% These are equations that establish a relation between function values at different evaluation points (typically 2 or 3 of them). 
+% These are equations that establish a relation between function values at different evaluation points (typically 2 or 3 of them). They can be used to "connect the dots", i.e. to smoothly interpolate functions that are initially defined only at discrete points.
 
 % Examples:
 %
@@ -1070,7 +1074,14 @@ The first equation is a statement that $\Gamma$ interpolates the shifted factori
 %   (rather than functional) equations? Can we also relate this to a limiting process of polynomial
 %   interpolation? Like: Make a power series ansatz and then find the (infinite degree) "polynomial"
 %   that passes through all the (countably many) discrete datapoints? How does all of this relate
-%   to analytic continuation (if at all)?
+%   to analytic continuation (if at all)? Maybe we can derive an expression for the coeffs of a 
+%   power series from Newton's interpolation formula? The nice thing about Newton interpolation is
+%   that it allows to "add datapoints" one at a time. That might needed when deriving such a 
+%   formula. Could this give us a general recipe to obtain power series coeffs from functions 
+%   defined only at the integers? But I think, the lower order coeffs would not be stable. If we go
+%   from a degree n to a degree n+1 approximations all coeffs a_k with k <= n would change - so we
+%   would need two indices: one for the approximation order (which we intend to go to infinity) and
+%   one form the coefficient index (equal to the power of x that it scales)
 %
 % Fibonacci sequence: f(n) = f(n-2) + f(n-1)
 % - Is a relation between 3 evaluation points (namely n, n-1, n-2)

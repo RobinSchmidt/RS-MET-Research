@@ -9,9 +9,16 @@ Tensors are a generalization of scalars and vectors and are used to represent ph
 Our eventual goal is to develop an algebra that is suitable to represent quantities whose real-world meaning is independent from the arbitrariness of our choice of a coordinate system. However, in actual calculations, we have to make such a choice, so we can assign numbers to things. For example, a velocity can be represented by its velocity vector $\mathbf{v}$. The direction of movement in the real world does not depend on our chosen coordinate system but the components of the vector, i.e. the numbers in our 1D array, will. We could represent the \emph{same} vector in a different coordinate system as well. Then we would have different numbers, but the vector itself as an abstract entity would still be the same. Imagine a 2D vector and assume that we would obtain a new coordinate system by rotating both basis vectors of our old coordinate system by 30 degrees counterclockwise. The same vector in this new coordinate system would have components that appear rotated 30 degrees clockwise with respect to the vector's components in the old coordinate system. The clockwise rotation of the vector components compensates for the counterclockwise rotation of our basis vectors. We say that the vector is \emph{contravariant}: in the event of a change of the coordinate basis vectors, the components of the vector change in a way that is contrary to the change in the basis vectors. There can also be vector-like quantities that change in the same way as our basis vectors (TODO: give an example). Such quantities are called \emph{covariant}. Finally, scalars represent quantities whose numerical value never changes at all. Their values are not dependent on our choice of coordinate system. Therefore, scalars are also called \emph{invariant} quantities in the context of tensor algebra (verify!)...are there also other invariant quantities or are scalars the only ones? ..and what about mixed variance in higher rank tensors?
 
 % contravariant vectors: position, velocity, acceleration, force, electric and gravitational field
-% covariant vectors (verify): normals to planes, angular momentum moment of inertia,  magnetic field...i think, these correspond to covectors? ...or maybe bivectors? figure out!
+% covariant vectors (verify): normals to planes, angular momentum moment of inertia, magnetic field...i think, these correspond to covectors? ...or maybe bivectors? Looks like these are what physicists call pseudovectors? Figure out!
 
 ..tbc...
+
+% Start with a motivating example: 
+% -How do vectors and matrices transform under a change of the coordinate system - I think, for
+%  matrices, this is the similarity transformation?
+% -Write the transformation rules down in the familiar matrix notation, then from there, write them
+%  down in component notation. This may be the starting point for recognizing the general pattern
+%  for how general tensors transform
 
 \subsubsection{Rank, Order and Dimensionality}
 % What is order? same as rank? explain that the tensor rank has nothing to do with a matrix rank
@@ -156,6 +163,9 @@ https://www.youtube.com/watch?v=k2FP-T6S1x0
 Tensor algebra  by All Angles
 https://www.youtube.com/watch?v=KNQtfxbGnz4&list=PLffJUy1BnWj3uRN-lL7idX8mQeifZaqwn&index=4
 
+
+Spinors & Twistors Animated
+https://www.youtube.com/watch?v=220U3eIZFLM&list=PLWEiAJhCw-zQ28C9wGdA15-f6LrEG3pNi&index=3
 
 
 \end{comment}

@@ -92,3 +92,5 @@ Projects/CppExperiments/Build/VisualStudio2019/x64/Debug/CppExperiments.vcxproj.
 
 *.db
 /Prototypes/Cpp/Builds/VisualStudio2019/.vs
+/Prototypes/Cpp/Builds/VisualStudio2022/.vs
+/Prototypes/Cpp/Builds/VisualStudio2022/x64

@@ -21286,8 +21286,8 @@ void testPotentialPlotter()
   // cos(y) * cosh(x)
 
 
-  plotN([](C z) { return sqrt(z);     }, -1, +1, -1, +1, 31, 31, "PolyaPotential_SqrtN.ppm");
-  plotN([](C z) { return pow(z, 1.3); }, -1, +1, -1, +1, 31, 31, "PolyaPotential_CbrtN.ppm");
+  plotN([](C z) { return sqrt(z);        }, -1, +1, -1, +1, 31, 31, "PolyaPotential_SqrtN.ppm");
+  plotN([](C z) { return pow(z, R(1.3)); }, -1, +1, -1, +1, 31, 31, "PolyaPotential_CbrtN.ppm");
   // -Both have a discontinuity in the derivative along branch cut. It creates ripples in the 
   //  y-direction through the data in the produced P.
   // -Maybe the ripple could be reduced by using a higher order ansatz? But maybe that could make

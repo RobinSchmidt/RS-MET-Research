@@ -517,10 +517,10 @@ This equation says that it doesn't matter whether we firstly combine $a$ and $b$
 \begin{equation}
   f(a  b) = f(a) f(b)
 \end{equation}
-where it is implicitly understood that on the left hand side, we use $\circ$ to combine two elements from $G$ and on the right side use $\diamond$ to combine elements from $H$. Such a function $f$ is constrained to preserve the structure of group $G$ while mapping over to group $H$ and it may or may not exist. If such a homomorphism does exist then we can find the structure of group $G$ within group $H$ in the sense that the image of $G$ is a subgroup of $H$. Note that, as promised, I'm sloppy with using $G$ and $H$ as stand-in in some places where it would actually be more correct to write $\mathcal{G}$ and $\mathcal{H}$. Formally, it makes no sense to talk about a subgroup of $H$ because $H$ is just a set and the group is actually the pair $\mathcal{H}$. But to state that stuff formally correctly would be very awkward and confusing. Formally correctly, one would have to say that $f$ maps $G$ to a subset of $H$ and that subset happens to be the underlying set of a subgroup of $\mathcal{H}$. Nobody wants to speak like that so this slight sloppiness is quite common and acceptable in group theory [VERIFY!]. Anyway - the essence of a homomorphism is that the function $f$ maps from $G$ to $H$ and thereby preserves the structure of $\mathcal{G}$ within $\mathcal{H}$ - and such a thing may or may not be possible for two given groups at hand. If it is possible, then we may say that $\mathcal{H}$ is homomorphic to $\mathcal{G}$ which means that we find the structure of $\mathcal{G}$ within $\mathcal{H}$ [VERIFY!].
+where it is implicitly understood that on the left hand side, we use $\circ$ to combine two elements from $G$ and on the right side use $\diamond$ to combine elements from $H$. Such a function $f$ is constrained to preserve the structure of group $G$ while mapping over to group $H$ and it may or may not exist. If such a homomorphism does exist then we can find the structure of group $G$ within group $H$ in the sense that the image of $G$ is a subgroup of $H$. Note that, as promised, I'm sloppy with using $G$ and $H$ as stand-in in some places where it would actually be more correct to write $\mathcal{G}$ and $\mathcal{H}$. Formally, it makes no sense to talk about a subgroup of $H$ because $H$ is just a set and the group is actually the pair $\mathcal{H}$. But to state that stuff formally correctly would be very awkward and confusing. Formally correctly, one would have to say that $f$ maps $G$ to a subset of $H$ and that subset happens to be the underlying set of a subgroup of $\mathcal{H}$. Nobody wants to speak like that so this slight sloppiness is quite common and acceptable in group theory [VERIFY!]. Anyway - the essence of a  homomorphism is that the function $f$ maps from $G$ to $H$ and thereby preserves the structure of $\mathcal{G}$ within $\mathcal{H}$ - and such a thing may or may not be possible for two given groups at hand. If it is possible, then we may say that $\mathcal{H}$ is homomorphic to $\mathcal{G}$ which means that we find the structure of $\mathcal{G}$ within $\mathcal{H}$ [VERIFY!].
 
 \paragraph{Example}
-Let  $\mathcal{G} = (\mathbb{R}, +), \; \mathcal{H} = (\mathbb{R}^+, \cdot)$ and $f: \mathbb{R} \rightarrow \mathbb{R}^+$ with $f(x) = e^x$. That is, we consider the exponential function as a map from the real numbers with addition to the positive real numbers with multiplication. It is indeed a homomorphism between these two groups because $e^{a+b} = e^a \cdot e^b$ for all $a,b \in \mathbb{R}$. On the left hand side, we first add $a$ and $b$ (adding is the group operation of $\mathcal{G}$) and then map the sum over via $f$. On the right hand side, we first map $a$ and $b$ over seperately via $f$ and then multiply (multiplication is the group operation of $\mathcal{H}$). As we know from the laws of exponential functions, the result is the same, so $f$ is indeed a homomorphism.
+Let  $\mathcal{G} = (\mathbb{R}, +), \; \mathcal{H} = (\mathbb{R}^+, \cdot)$ and $f: \mathbb{R} \rightarrow \mathbb{R}^+$ with $f(x) = e^x$. That is, we consider the exponential function as a map from the real numbers with addition to the positive real  numbers with multiplication. It is indeed a homomorphism between these two groups because $e^{a+b} = e^a \cdot e^b$ for all $a,b \in \mathbb{R}$. On the left hand side, we first add $a$ and $b$ (adding is the group operation of $\mathcal{G}$) and then map the sum over via $f$. On the right hand side, we first map $a$ and $b$ over separately via $f$ and then multiply (multiplication is the group operation of $\mathcal{H}$). As we know from the laws of exponential functions, the result is the same, so $f$ is indeed a homomorphism.
 
 % maybe say something about the logarithm as inverse homomorphism...but maybe later
 % verify that neutral and inverse elements get mapped to their counterparts
@@ -535,9 +535,22 @@ Let  $\mathcal{G} = (\mathbb{R}, +), \; \mathcal{H} = (\mathbb{R}^+, \cdot)$ and
 % real numbers is the determinant. The operation of matrix multiplications gets mapped to scalar
 % multiplication
 
+% Other example: parity
 
 % Simplifying problems with isomorphisms, explained — Group Theory Ep. 2
 % https://www.youtube.com/watch?v=VZiLpYC0t5E
+
+
+
+% https://www.youtube.com/watch?v=KftKCG2lD60
+
+% 8:18 For any group G, we can create a homomomorphism from the integers Z into G by picking an   element g in G and mapping the integer n to g^n. We will have g^(m+n) = g^m * g^n
+
+% Monomorphism: injective homomorphism -> embeds one group into a larger group. Example: symmetries of triangle are also symmetries of a hexagon
+
+% Epimorphism: surjective homomorphism -> boils down a larger group into a smaller. the kernel of the homomorphsim measures, how much structural information we lose
+
+
 
 
 \paragraph{Kernel and Image} Homomorphisms have some noteworthy properties. To state them, we first need another definition: The \emph{kernel} of $f$ is the set of elements of $G$ that are mapped by $f$ to the neutral element $e_H$ of $H$: $\ker(f) = \{ g \in G: f(g) = e_H \}$. In other words, the kernel of $f$ is the pre-image of the neutral element in $H$. The \emph{image} of $f$ is the set of elements of $H$ that are actually reached by $f$: $\im(f) = \{ h \in H: (\exists g \in G: f(g) = h )\}$
@@ -1385,6 +1398,10 @@ https://www.youtube.com/watch?v=Sj_GSBaUE1o
 The Strong Nuclear Force as a Gauge Theory, Part 1: Quarks
 https://www.youtube.com/watch?v=GfeeIwmb_hw
 
+
+An Introduction to Group Theory | TTS
+https://www.youtube.com/watch?v=KftKCG2lD60
+-Goes pretty deep pretty fast - has some stuff that we do not yet have covered here
 
 
 \end{comment}

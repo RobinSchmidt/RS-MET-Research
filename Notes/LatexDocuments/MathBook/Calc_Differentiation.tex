@@ -203,7 +203,19 @@ Another generalization of the product rule applies to higher order derivatives o
 \begin{equation}
  (f g)^{(n)} = \sum_{k=0}^n \binom{n}{k}   f^{(n-k)} g^{(k)}
 \end{equation}
-Note the structural similarity with the binomial theorem given in equation (\ref{Eq:BinomialTheorem}). The $n$-th power would be replaced by the $n$-th derivative and instead of a sum of two variables, we have a product of two functions inside the parentheses. 
+Note the structural similarity with the binomial theorem given in equation (\ref{Eq:BinomialTheorem}). The $n$-th power would be replaced by the $n$-th derivative and instead of a sum of two variables, we have a product of two functions inside the parentheses. To get a feeling for how the formula works, lets write it out for $n = 1,2,3$:
+\begin{eqnarray}
+(f g)^{(1)}  = \sum_{k=0}^1 \binom{1}{k} f^{(n-k)} g^{(k)}
+             = 1 f^{(1)} g^{(0)} + 1 f^{(0)} g^{(1)} 
+             = f' g + f g' \nonumber \\
+(f g)^{(2)}  = \sum_{k=0}^2 \binom{2}{k} f^{(n-k)} g^{(k)}
+             = 1 f^{(2)} g^{(0)} + 2 f^{(1)} g^{(1)} + 1 f^{(0)} g^{(2)} 
+             = f'' g + 2 f' g' + f'' g \nonumber \\
+(f g)^{(3)}  = \sum_{k=0}^3 \binom{3}{k} f^{(n-k)} g^{(k)}
+             = 1 f^{(3)} g^{(0)} + 3 f^{(2)} g^{(1)} + 3 f^{(1)} g^{(2)} + 1 f^{(0)} g^{(3)} 
+             = f''' g + 3 f'' g' + 3 f' g'' +  f g''' \nonumber
+\end{eqnarray}
+
 
 % https://en.wikipedia.org/wiki/General_Leibniz_rule
 
@@ -226,7 +238,11 @@ The natural question to ask next is: How about higher order derivatives for prod
 %\frac{n!}{k_1! \cdots k_m!} \cdot 
 %f_1^{(k_1)}(x) \cdots f_m^{(k_m)}(x)
 %\end{equation}
-This formula is structurally similar to the multinomial theorem given in equation (\ref{Eq:MultinomialTheorem}). To see this formula in action, let's consider the example of computing the 2nd derivative of 3 factors ...TBC... ToDo: Maybe write the formula down in terms of the left hand side of the multinomimal theorem (Eq \ref{Eq:MultinomialTheorem}). Such a form could be much more practical (i.e. efficient) to evaluate.
+This formula is structurally similar to the multinomial theorem given in equation (\ref{Eq:MultinomialTheorem}). To see this formula in action, let's consider the example of computing the 2nd derivative of 3 factors ...TBC... 
+
+
+% ToDo: Maybe write the formula down in terms of the left hand side of the multinomimal theorem (Eq \ref{Eq:MultinomialTheorem}). Such a form could be much more practical (i.e. efficient) to evaluate. Hmm - I tried and it didn't seem to work out...because the back-translation between n-th derivative and n-th power is not quite clear
+
 %...TBC... ToDo: explain multinomial coeffs, give example with 2nd derivative of 3 factors.
 
 
@@ -259,7 +275,9 @@ There is also a generalization of the quotient rules to higher order derivatives
 \left( \frac{f}{g} \right) ^{(n)} = 
 \frac{1}{g} \sum_{k=0}^{n} (-1)^k \binom{n+1}{k+1} \frac{(f g^k)^{(n)}}{g^k}
 \end{equation}
-where we have again supressed the argument to make it bearable. VERIFY! TODO: maybe give different formulas - there are more. Maybe work through an example - maybe take the 3rd derivative. Q: Is there a genralization for quotients of multiple functions - but what would that even mean? Maybe a continued fraction expression?
+where we have again surpressed the argument to make it bearable. VERIFY! TODO: maybe give different formulas - there are more. Maybe work through an example - maybe take the 3rd derivative. Q: Is there a generalization for quotients of multiple functions - but what would that even mean? Maybe a continued fraction expression? 
+
+% There is this $(f g^k)^{(n)}$ in the numerator. I think, for this we need to combine the product rule for two factors and some sort of power rule for evaluating $(f^k)^{(n)}$. Such a rule can be obtained froma special case of the product rule for higher derivatives for multiple factors (the factors are all the same in this case - namely f)
 
 % Quotient rule for higher derivatives:
 % https://math.stackexchange.com/questions/5357/whats-the-generalisation-of-the-quotient-rule-for-higher-derivatives

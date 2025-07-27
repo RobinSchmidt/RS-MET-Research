@@ -277,26 +277,84 @@ There is also a generalization of the quotient rules to higher order derivatives
 \end{equation}
 where we have again surpressed the argument to make it bearable. VERIFY! TODO: maybe give different formulas - there are more. Maybe work through an example - maybe take the 3rd derivative. Q: Is there a generalization for quotients of multiple functions - but what would that even mean? Maybe a continued fraction expression? 
 
-% There is this $(f g^k)^{(n)}$ in the numerator. I think, for this we need to combine the product rule for two factors and some sort of power rule for evaluating $(f^k)^{(n)}$. Such a rule can be obtained froma special case of the product rule for higher derivatives for multiple factors (the factors are all the same in this case - namely f)
+\begin{comment}
 
-% Quotient rule for higher derivatives:
-% https://math.stackexchange.com/questions/5357/whats-the-generalisation-of-the-quotient-rule-for-higher-derivatives
-% https://www.physicsforums.com/threads/quotient-rule-for-higher-order-derivatives.289320/
-%
-% https://en.wikipedia.org/wiki/Quotient_rule#Higher_order_derivatives
-% -Has fomula for 2nd derivative of quotient which looks stiil okayish:
-%
-%  h'' = (f/g)'' = (f'' - g'' h - 2 g' h') / g
-%
-% 
+There is this $(f g^k)^{(n)}$ in the numerator. I think, for this we need to combine the product rule for two factors and some sort of power rule for evaluating $(f^k)^{(n)}$. Such a rule can be obtained from a special case of the product rule for higher derivatives for multiple factors (the factors are all the same in this case - namely f)
 
-% How Not to Repeatedly Differentiate a Reciprocal
-% https://www.jstor.org/stable/2324425
+Quotient rule for higher derivatives:
 
-% Is there a genralization for quotients of mupltiple functions - but what would that even mean? maybe a continued fraction expression?
+https://math.stackexchange.com/questions/5357/whats-the-generalisation-of-the-quotient-rule-for-higher-derivatives
 
-% ToDo:
-% -Give explicit formulas for 2nd and 3rd derivative
+https://www.physicsforums.com/threads/quotient-rule-for-higher-order-derivatives.289320/
+
+https://en.wikipedia.org/wiki/Quotient_rule#Higher_order_derivatives
+-Has formula for 2nd derivative of quotient which looks still okayish:
+
+  h'' = (f/g)'' = (f'' - g'' h - 2 g' h') / g
+
+ -ToDo: try to re-derive it. Maybe start with (f/g)' = (f'g-g'f)/g^2, define u = f'g-g'f, v = g^2,
+  such that (f/g)'' = (u'v-v'u)/v^2. With 
+    u' = (f'g - g'f)' = (f'g)' - (g'f)' = (f''g + f'g') - (g''f + g'f') = f''g - g''f
+    v' = (g^2)' = (g g)' = g'g + gg' = 2 g g'
+  this gives:
+    (f/g)'' = ( (f''g - g''f) g^2 -  (2 g g') (f'g-g'f) ) / g^4
+            = 
+  ... hmmm..does this really work out? Ah - wait - the formula above contains h and h'. Maybe when 
+  expanding this, it does indeed wrik out.
+
+
+ -Maybe try it with SageMath. See:
+  https://ask.sagemath.org/question/49362/symbolic-differentiation-of-unknown-function/
+  https://ask.sagemath.org/question/8822/is-there-any-way-to-define-an-as-yet-unknown-function/
+  https://ask.sagemath.org/question/10215/lazy-evaluation-of-derivatives-of-an-unknown-function/
+ -Some code how to do this may also go into a section about computer algebra
+
+
+This code works:
+
+x    = SR.var('x')
+f    = function('f')
+g    = function('g')
+h(x) = f(x)/g(x)
+h1   = diff(h,  x)
+h2   = diff(h1, x)
+h1, h2
+
+and produces:
+
+(x |--> diff(f(x), x)/g(x) - f(x)*diff(g(x), x)/g(x)^2,
+ x |--> diff(f(x), x, x)/g(x) - 2*diff(f(x), x)*diff(g(x), x)/g(x)^2 + 2*f(x)*diff(g(x), x)^2/g(x)^3 - f(x)*diff(g(x), x, x)/g(x)^2)
+
+which translates to:
+
+(f' / g - f* g')  / g^2
+f'' / g  -  2 * f' * g' / g^2  +  2*f * (g')^2 / g^3  -  f * g'' / g^2
+
+The 1st is the general quotient rule. simplifying the 2nd gives:
+
+f'' / g  -  2 * f' * g' / g^2  -  f * g'' / g^2  +   2*f * (g')^2 / g^3 
+f'' / g  -  (2 f' g' - f  g'') / g^2  +   2 f (g')^2 / g^3 
+(1/g) * (f'' - (2 f' g' - f  g'') / g  +  2 f (g')^2 / g^2)
+
+Verify this formula with examples symbolically and numerically!
+
+
+
+
+
+
+
+How Not to Repeatedly Differentiate a Reciprocal
+https://www.jstor.org/stable/2324425
+
+Is there a genralization for quotients of mupltiple functions - but what would that even mean? maybe a continued fraction expression?
+
+ToDo:
+ -Give explicit formulas for 2nd and 3rd derivative
+
+\end{comment}
+
+
 
 
 \subsubsection{The Chain Rule}
@@ -497,21 +555,33 @@ For this to work, $f(x)$ must be positive at the evaluation point $x$ because ot
 The power rule $(x^n)' = n x^{n-1}$ has the following generalization:
 \begin{equation}
  (f^g)' = \Bigl( \exp(g \, \ln(f) \Bigr) '
-        = f^g \Bigl(f^g \, \frac{g}{f} + g' \, \ln(f) \Bigr)
+        = f^g \Bigl(f ' \, \frac{g}{f} + g' \, \ln(f) \Bigr)
 \end{equation}
 Or, with unsurpressed argument $x$:
 \begin{equation}
  \Bigl(f(x)^{g(x)}\Bigr)' 
  = \Bigl( \exp(g(x) \, \ln(f(x)) \Bigr) '
- = f(x)^{g(x)} \Bigl(f(x)^{g(x)} \, \frac{g(x)}{f(x)} + g'(x) \, \ln(f(x)) \Bigr)
+ = f(x)^{g(x)} \Bigl(f'(x) \, \frac{g(x)}{f(x)} + g'(x) \, \ln(f(x)) \Bigr)
 \end{equation}
-...TBC...VERIFY. Give examples and special cases, give sources. Q: Do we need to require $f$ to be positive? It appears inside a logarithm on the RHS.
+...TBC...VERIFY. Give examples and special cases, give sources. Q: Do we need to require $f$ to be positive? It appears inside a logarithm on the RHS. TODO: give rule for special case when $g(x) = n$, i.e. an integer constant. I think, it comes out as $(f^n)' = n f' f^{n-1}$.
 
+% The ln term vanishes because g' = 0 when g is constant, so we have left f^n (f' n / f) 
+%
 % The reciprocal rule may be derived as the special case where g = -1
+% The normal power rule is a specialization for f(x) = x, g(x) = n
+%
+% Maybe put it before the quotient rule because in the generalized quotient rule, we actually need this
+% rule (together with the product rule) to evaluate the (f g^k)^{(n)} expression
 
 % https://en.wikipedia.org/wiki/Power_rule
 % https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
+
+% ToDo:
+% -explain how to use computer algebra systems to compute derivatives
+% -explain expression swell
+% -maybe explain automatic differentiation and numeric differentiation
+% -maybe all of this should go into a subsection "Derivatives on a Computer"
 
 \subsection{Generalizations, Alternatives and Analogies}
 The derivative, as presented here, is an idea that applies to real functions $f: \mathbb{R} \rightarrow \mathbb{R}$. There are certain related notions that apply to other contexts and generalizations of the idea and alternative but equivalent definitions of the same idea.
@@ -718,6 +788,10 @@ https://en.wikipedia.org/wiki/Quantum_calculus
 
 https://www.youtube.com/watch?v=-nkPCUoYwJo  Is it a fraction? What are dx and dy?
 
-	
+
+Every Type of DERIVATIVE Explained in 7 Minutes
+https://www.youtube.com/watch?v=y9ojuz1diD4
+-basic, higher order, partial, total, implicit, directional, logarithmic, parametric
+
 \end{comment}
 

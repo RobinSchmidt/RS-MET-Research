@@ -127,7 +127,14 @@ They get their name from the fact that they give the coefficients that arise fro
 \label{Eq:BinomialTheorem}
 (a+b)^n = \sum_{k=0}^{n} \binom{n}{k} a^k b^{n-k}
 \end{equation}
-They also arise in combinatorics. There, they give the number of different ways that one may pick $k$ objects from a set of $n$ objects. That's why they are pronounced as "n-choose-k". The formula above is important enough to have a name: It's the \emph{binomial theorem}.
+They also arise in combinatorics. There, they give the number of different ways that one may pick $k$ objects from a set of $n$ objects. That's why they are pronounced as "n-choose-k". The formula above is important enough to have a name: It's the \emph{binomial theorem}. One important formula for binomial coefficients is that when we take the sum over all $k$ for a given $n$, the result is always $2^n$:
+\begin{equation}
+\label{Eq:BinomialCoeffsSum}
+\sum_{k=0}^n \binom{n}{k} = 2^n
+\end{equation}
+
+% ToDo: give more formulas. See:
+% https://en.wikipedia.org/wiki/Binomial_coefficient#Identities_involving_binomial_coefficients
 
 \paragraph{$\star$ Multinomial Coefficients}
 A generalization of the binomial coefficients are the \emph{multinomial coefficients} defined as:
@@ -150,6 +157,27 @@ This sum is to be interpreted as follows. The indices $k_i$ run over all possibl
 = \sum_{\sum k_i = n} \Bigl( n! \frac{\prod_{i=1}^{m} a_i^{k_i}} {\prod_{i=1}^{m} k_i!} \Bigr)
 \end{equation}
 although that may look a bit obscure and it is rarely written down like this.
+
+
+\begin{comment}
+
+I think, the generalization of the formula (\ref{Eq:BinomialCoeffsSum}) can be found by rewriting the formula as:
+
+  \sum_{k_1 + k_2 = n} \binom{n}{k} 
+= \sum_{k_1 + k_2 = n} \frac{n!}{k_1! k_2!}
+= 2^n
+
+and then generalizing to
+
+\sum_{k_1 + \ldots  + k_m = n} \frac{n!}{k_1! \ldots k_m!}
+= m^n
+
+The result can be derived by considering the general formula for multinomial coeffs and the considering the special case of all a_i being equal to 1. ...or maybe by letting them all be equal to some given a, expanding (a_1 + ... + a_m)^n = (m a)^n = m^n a^n. Then noticing that the product in the formual \prod_{i=1}^m a_i^{k_i} simplifies to a^n (because sum_i k_i = n) and then noting that a^n does not depend on any of the summation indices k_i, so it can be dragged out of the sum. Then we have that a^n times the sum-of-multinomial-coeffs must be equal to a^n times m^n and therefore, this sum must be m^n.
+
+
+
+\end{comment}
+
 
 % toDo: give formula for sum of multinomial coeffs
 % https://en.wikipedia.org/wiki/Multinomial_theorem#Sum_of_all_multinomial_coefficients

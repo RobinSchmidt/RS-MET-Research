@@ -4664,7 +4664,37 @@ public:
   //  so should be the result of multiplying two d-values. Maybe that means, we need to use the 
   //  outer product of vectors to multiply d-values in order to get a matrix as result? Figure this 
   //  out! Maybe it all makes sense only when v,d,c are just scalars anyway. I'm not sure about 
-  //  that yet. In that case, it would all be trivial.
+  //  that yet. In that case, it would all be trivial. Maybe we should use TCrv(2) instead of 
+  //  TDer(2) in the explicit type conversion. That should probably result in a diagonal matrix of 
+  //  2s. Maybe the naive d*y.d computation needs to be soemthing else as well. Maybe y.d needs to
+  //  be converted into a row-vector first (i.e. transposed) such that the product with the column
+  //  vector d results in a matrix. But maybe the pre-factor 2 can remain a scalar. We'll see.
+
+  /** Implements quotient rule: (f/g)' = (f' * g - g' * f) / g^2 and 
+  (f/g)'' = f'' / g  -  (2 f' g' - f  g'') / g^2  +   2 f (g')^2 / g^3   Verify! */
+
+  TN operator/(const TN& y) const 
+  { 
+    //return TN(); // Preliminary
+
+    TVal f   = v;     // f
+    TDer fp  = d;     // f'
+    TCrv fpp = c;     // f''
+
+    TVal g   = y.v;   // g
+    TDer gp  = y.d;   // g'
+    TCrv gpp = y.c;   // g''
+
+    TVal g2  = g*g;   // g^2
+
+    return TN(f/g, (fp*g - f*gp)/g2, fpp/g - (2*fp*gp - f*gpp)/g2 + 2*f*(gp*gp)/(g2*g));
+
+    // ToDo:
+    // 
+    // - Verify the formula numerically with some examples.
+    //
+    // - Maybe get rid of the intermediates. They are only for clarity during writing.
+  }
 
 
 

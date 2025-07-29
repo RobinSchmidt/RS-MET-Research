@@ -5078,14 +5078,14 @@ bool unitTestThreealNumber()
   using TN   = rsThreealNumber<Real, Real, Real>;
 
   // Define two polynomials f(t) and g(t):
-  Poly f({ +1,-2,-3,+5 });   // f(t) = 1 - 2*t - 3*t^2 + 5*t^3
-  Poly g({ +2,+1,-4,-2 });   // g(t) = 2 + 1*t - 4*t^2 - 2*t^3
-  Real t = 0.5f;             // Evaluation point
+  Poly f({ +1,-2,-3,+5 });                  // f(t) = 1 - 2*t - 3*t^2 + 5*t^3
+  Poly g({ +2,+1,-4,-2 });                  // g(t) = 2 + 1*t - 4*t^2 - 2*t^3
+  Real t = 0.5f;                            // Evaluation point
 
   // Evaluate the polynomials at t and also compute their first and second derivatives at t:
   Real ft[3], gt[3];
-  f.evaluateWithDerivatives(t, ft, 2);  // ft[0] = f(t), ft[1] = f'(t), ft[2] = f''(t)
-  g.evaluateWithDerivatives(t, gt, 2);  // gt[0] = g(t), gt[1] = g'(t), gt[2] = g''(t)
+  f.evaluateWithDerivatives(t, ft, 2);      // ft[0] = f(t), ft[1] = f'(t), ft[2] = f''(t)
+  g.evaluateWithDerivatives(t, gt, 2);      // gt[0] = g(t), gt[1] = g'(t), gt[2] = g''(t)
 
   // Create some "threeal numbers" from the evaluated polynomials and their derivatives:
   TN x = TN(ft[0], ft[1], ft[2]);
@@ -5096,22 +5096,22 @@ bool unitTestThreealNumber()
 
   Poly p = f*g;
   Real pt[3];
-  p.evaluateWithDerivatives(t, pt, 2);  // pt[0] = p(t), pt[1] = p'(t), pt[2] = p''(t)
+  p.evaluateWithDerivatives(t, pt, 2);      // pt[0] = p(t), pt[1] = p'(t), pt[2] = p''(t)
 
+  ok &= rsIsCloseTo(r, pt, 0.f);            // We can use a tolerance of zero here.
+
+  // Now superfluous:
   ok &= r.v == pt[0];
   ok &= r.d == pt[1];
   ok &= r.c == pt[2];
   // ToDo: wrap this comparison into a function rsIsCloseTo() that takes a threeal number and an 
-  // array of 3 values - and maybe a tolerance.
+  // array of 3 values - and maybe a tolerance. Then call it here like:
+  // ok &= rsIsCloseTo(r, pt, 1.e-7f); for example
 
 
 
   
-  // ToDo: Maybe produce these examples in a more systematic way. Start with two functions x(t), 
-  // y(t) (maybe use polynomomials) and evaluate them at a given value of t along with their 1st 
-  // and 2nd derivative. Maybe use f,g for the variable names instead of x,y. Or maybe use f,g for
-  // the functions themselves and use rsPolynomial to implement them. This allows also for 
-  // convenient evaluation along with the derivatives because rsPolynomial support this.
+
 
   // Test unary functions:
   // ...
@@ -5122,6 +5122,18 @@ bool unitTestThreealNumber()
 
   rsAssert(ok);
   return ok;
+
+
+
+  // ToDo:
+  // 
+  // - Maybe use a different (less nice) evaluation point t. One where roundoff error actually 
+  //   occurs. Then we really need a nonzero tolerance in the rsIsCloseTo() checks.
+  //
+  // - To check the quotient rule, maybe create a std::function for evaluating f/g and use
+  //   rsNumericDifferentiator to produce the target values. Maybe we could also use 
+  //   rsRationalFunction to represent the quotient. But that does not yet support computation of 
+  //   derivatives, let alone 2nd derivatives. But maybe we could apply the quotient rule manually.
 }
 
 

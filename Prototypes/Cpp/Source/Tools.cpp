@@ -4713,6 +4713,23 @@ public:
 
 };
 
+
+template<class T>
+bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
+{
+  return rsIsCloseTo(x.getValue(),      a[0], tol) &&
+         rsIsCloseTo(x.getDerivative(), a[1], tol) &&
+         rsIsCloseTo(x.getCurvature(),  a[2], tol);
+}
+// Question:
+//
+// - What if we want to use different types for the value, derivative and curvature? Then we can't
+//   use a homogeneous array a for the target values anymore. That's a complication that we may 
+//   tackle later. We may create a function that takes the targets for value, slope and curvature 
+//   in separate variables.
+
+
+
 // ToDo:
 //
 // - If this works out well, maybe it makes sense to extend this even further to compute the 3rd 

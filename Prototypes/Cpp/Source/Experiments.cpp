@@ -5120,7 +5120,9 @@ bool unitTestThreealNumber()
   // to the numerical evaluation:
   r = x/y;
 
-  // Looks like the 2nd derivative is toally wrong! Check the formula!
+  // Looks like the 2nd derivative is totally wrong! Check the formula in rsThreealNumber! I think, 
+  // the numerical result should be trustworthy. The code is older and has already been used in 
+  // some places, I think (verify!).
 
 
   //ok &= rsIsCloseTo(r.v, q, 0.f);          // Check primal part

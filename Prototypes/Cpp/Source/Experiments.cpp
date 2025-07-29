@@ -5083,6 +5083,8 @@ bool unitTestThreealNumber()
   Poly f({ +1,-2,-3,+5 });                  // f(t) = 1 - 2*t - 3*t^2 + 5*t^3
   Poly g({ +2,+1,-4,-2 });                  // g(t) = 2 + 1*t - 4*t^2 - 2*t^3
   Real t = 0.5f;                            // Evaluation point
+  Real h = 0.01f;                           // Stepsize for numerical differentiation
+  Real tol = 1.e-6f;                        // Tolerance for numerical comparisons
 
   // Evaluate the polynomials at t and also compute their first and second derivatives at t:
   Real ft[3], gt[3];
@@ -5103,22 +5105,22 @@ bool unitTestThreealNumber()
 
   // Test quotient rule:
 
-  // Define a function for the quotient:
-  Func q = [&](Real t) { return f(t) / g(t); };
+  // Define function for evaluating the quotient and for numerically evaluating the 1st and 2nd 
+  // derivative of the quotient:
+  Func q   = [&](Real t) { return f(t) / g(t); };
+  Func qp  = [&](Real t) { return ND::derivative(q, t, h); };
+  Func qpp = [&](Real t) { return ND::secondDerivative(q, t, h); };
 
-  // Define a function for numerically evaulating the 1st derivative of the quotient:
-  Func qp = [&](Real t) 
-  {
-    float h = 0.01f;  // Maybe define this outside the lambda. It's the stepsize for the numeric differentiation
-    return ND::derivative(q, t, h);
-  };
+  // Do the numerical evaluation of the quotient and its derivatives:
+  Real qt   = q(t);
+  Real qpt  = qp(t);
+  Real qppt = qpp(t);
 
-
-  Real qt  = q(t);
-  Real qpt = qp(t);
-
+  // Compute the quotient with 1st and 2nd derivative using the threeal numbers and compare that
+  // to the numerical evaluation:
   r = x/y;
 
+  // Looks like the 2nd derivative is toally wrong! Check the formula!
 
 
   //ok &= rsIsCloseTo(r.v, q, 0.f);          // Check primal part

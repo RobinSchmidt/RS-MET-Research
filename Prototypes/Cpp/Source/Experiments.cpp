@@ -5120,19 +5120,9 @@ bool unitTestThreealNumber()
   // to the numerical evaluation:
   r = x/y;
 
-  // Looks like the 2nd derivative is totally wrong! Check the formula in rsThreealNumber! I think, 
-  // the numerical result should be trustworthy. The code is older and has already been used in 
-  // some places, I think (verify!).
-
-
-  //ok &= rsIsCloseTo(r.v, q, 0.f);          // Check primal part
-
-
-
-
-
-  
-
+  // OK - looks in the right ballpark. ToDo: tweak the h parameter to get a better match. Then 
+  // tweak the tolerance to adjust it to the match that we get.
+  // We want r.v == qt, r.d == qpt, r.c == qppt up to tolerance
 
   // Test unary functions:
   // ...

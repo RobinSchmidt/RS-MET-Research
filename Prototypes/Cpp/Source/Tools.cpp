@@ -4682,7 +4682,7 @@ public:
   //  vector d results in a matrix. But maybe the pre-factor 2 can remain a scalar. We'll see.
 
   /** Implements quotient rules: (f/g)' = (f' * g - g' * f) / g^2 and 
-  (f/g)'' = f'' / g  -  (2 f' g' - f  g'') / g^2  +   2 f (g')^2 / g^3   Verify! */
+  (f/g)'' = f'' / g  -  (2 f' g' + f  g'') / g^2  +   2 f (g')^2 / g^3   Verify! */
   TN operator/(const TN& y) const 
   { 
     //return TN(); // Preliminary
@@ -4697,7 +4697,8 @@ public:
 
     TVal g2  = g*g;   // g^2
 
-    return TN(f/g, (fp*g - f*gp)/g2, fpp/g - (2*fp*gp - f*gpp)/g2 + 2*f*(gp*gp)/(g2*g));
+    return TN(f/g, (fp*g - f*gp)/g2, fpp/g - (2*fp*gp + f*gpp)/g2 + 2*f*(gp*gp)/(g2*g));
+
 
     // ToDo:
     // 

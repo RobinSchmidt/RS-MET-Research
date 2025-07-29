@@ -5075,7 +5075,9 @@ bool unitTestThreealNumber()
 
   using Real = float;
   using Poly = rsPolynomial<Real>;
+  using Func = std::function<Real(Real)>;
   using TN   = rsThreealNumber<Real, Real, Real>;
+  using ND   = rsNumericDifferentiator<Real>;
 
   // Define two polynomials f(t) and g(t):
   Poly f({ +1,-2,-3,+5 });                  // f(t) = 1 - 2*t - 3*t^2 + 5*t^3
@@ -5092,21 +5094,36 @@ bool unitTestThreealNumber()
   TN y = TN(gt[0], gt[1], gt[2]);
 
   // Test product rule:
-  TN r = x*y;
-
   Poly p = f*g;
   Real pt[3];
   p.evaluateWithDerivatives(t, pt, 2);      // pt[0] = p(t), pt[1] = p'(t), pt[2] = p''(t)
-
+  TN r = x*y;
   ok &= rsIsCloseTo(r, pt, 0.f);            // We can use a tolerance of zero here.
 
-  // Now superfluous:
-  ok &= r.v == pt[0];
-  ok &= r.d == pt[1];
-  ok &= r.c == pt[2];
-  // ToDo: wrap this comparison into a function rsIsCloseTo() that takes a threeal number and an 
-  // array of 3 values - and maybe a tolerance. Then call it here like:
-  // ok &= rsIsCloseTo(r, pt, 1.e-7f); for example
+
+  // Test quotient rule:
+
+  // Define a function for the quotient:
+  Func q = [&](Real t) { return f(t) / g(t); };
+
+  // Define a function for numerically evaulating the 1st derivative of the quotient:
+  Func qp = [&](Real t) 
+  {
+    float h = 0.01f;  // Maybe define this outside the lambda. It's the stepsize for the numeric differentiation
+    return ND::derivative(q, t, h);
+  };
+
+
+  Real qt  = q(t);
+  Real qpt = qp(t);
+
+  r = x/y;
+
+
+
+  //ok &= rsIsCloseTo(r.v, q, 0.f);          // Check primal part
+
+
 
 
 

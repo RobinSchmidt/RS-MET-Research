@@ -4618,6 +4618,36 @@ public:
   TCrv c;  // 2nd derivative (curvature)
 
 
+  rsThreealNumber(TVal value = TVal(0), TDer derivative = TDer(0), TCrv curvature = TCrv(0)) 
+    : v(value), d(derivative), c(curvature)
+  {}
+  // maybe the derivative should default to 1? what is most convenient? to seed or not to seed?
+
+
+  using TN = rsThreealNumber<TVal, TDer, TCrv>;   // shorthand for convenience
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+  TVal getValue()      const { return v; }
+  TDer getDerivative() const { return d; }
+  TCrv getCurvature()  const { return c; }
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Arithmetic operators
+
+  /** Unary minus just applies minus sign to all three parts. */
+  TN operator-() const { return TN(-v, -d, -c); }
+
+  /** Implements sum rule: (f+g)' = f' + g' and (f + g)'' = f'' + g''. */
+  TN operator+(const TN& y) const { return TN(v + y.v, d + y.d, c + y.c); }
+
+  /** Implements difference rule: (f-g)' = f' - g' and (f-g)'' = f'' - g''. */
+  TN operator-(const TN& y) const { return TN(v - y.v, d - y.d, c - y.c); }
+
+
 
 
 };

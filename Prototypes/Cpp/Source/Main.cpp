@@ -47,10 +47,10 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Autodiff:
   testAutoDiff();
-  testAutoDiff2();
-  testAutoDiff3();
-  testAutoDiff4();
-  testAutoDiff5();     // stub
+  //testAutoDiff2();
+  //testAutoDiff3();
+  //testAutoDiff4();
+  //testAutoDiff5();     // stub
   //testAutoDiffReverse1();
   //testDualComplex();
 

@@ -5069,10 +5069,24 @@ bool unitTestDualNumber()
   return ok;
 }
 
+bool unitTestThreealNumber()
+{
+  bool ok = true;
+
+  using TN = rsThreealNumber<float, float, float>;
+
+  TN x, y, z, r;
+
+
+
+  return ok;
+}
+
 
 void testAutoDiff()
 {
   rsAssert(unitTestDualNumber());
+  rsAssert(unitTestThreealNumber());
 
   // see also:
   // https://www.youtube.com/watch?v=1QQj1mAV-eY

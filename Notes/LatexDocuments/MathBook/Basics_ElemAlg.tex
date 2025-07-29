@@ -157,42 +157,33 @@ This sum is to be interpreted as follows. The indices $k_i$ run over all possibl
 %= \sum_{k_1+\ldots+k_m = n} n! \frac{\prod_{i=1}^{m} a_i^{k_i}} {\prod_{i=1}^{m} k_i!}
 = \sum_{\sum k_i = n} \Bigl( n! \frac{\prod_{i=1}^{m} a_i^{k_i}} {\prod_{i=1}^{m} k_i!} \Bigr)
 \end{equation}
-although that may look a bit obscure and it is rarely written down like this.
-
-
-\begin{comment}
-
-I think, the generalization of the formula (\ref{Eq:BinomialCoeffsSum}) can be found by rewriting the formula as:
-
-  \sum_{k_1 + k_2 = n} \binom{n}{k} 
+although that may look a bit obscure and it is rarely written down like this. There is a generalization for formula (\ref{Eq:BinomialCoeffsSum}). First, let's rewrite it as:
+\begin{equation}
+\sum_{k=0}^n \binom{n}{k} 
 = \sum_{k_1 + k_2 = n} \frac{n!}{k_1! k_2!}
 = 2^n
-
-and then generalizing to
-
-\sum_{k_1 + \ldots  + k_m = n} \frac{n!}{k_1! \ldots k_m!}
+\end{equation}
+In this form, it can be generalized to the multinomial case as follows:
+\begin{equation}
+\label{Eq:MultinomialCoeffsSum}
+  \sum_{k_1+\ldots+k_m = n} \binom{n}{k_1,k_2,\ldots,k_m} 
+= \sum_{k_1+\ldots+k_m = n} \frac{n!}{k_1! k_2! \ldots k_m!}
 = m^n
+\end{equation}
+This can easily be derived by taking equation (\ref{Eq:MultinomialTheorem}) and considering the special case for $a_1 = a_2 = \ldots = a_m = 1$. The LHS then just becomes $m^n$ and the product over the $a_i^{k_i}$ in the RHS becomes $1$.
 
-The result can be derived by considering the general formula for multinomial coeffs and the considering the special case of all a_i being equal to 1. ...or maybe by letting them all be equal to some given a, expanding (a_1 + ... + a_m)^n = (m a)^n = m^n a^n. Then noticing that the product in the formual \prod_{i=1}^m a_i^{k_i} simplifies to a^n (because sum_i k_i = n) and then noting that a^n does not depend on any of the summation indices k_i, so it can be dragged out of the sum. Then we have that a^n times the sum-of-multinomial-coeffs must be equal to a^n times m^n and therefore, this sum must be m^n.
-
-
-
-\end{comment}
-
-
-% toDo: give formula for sum of multinomial coeffs
 % https://en.wikipedia.org/wiki/Multinomial_theorem#Sum_of_all_multinomial_coefficients
-% it specializes to 2^n for m = 2 which is also an important factor about binomial coeffs.
-% I think, there's also a formula that expresses the multinomial coeffs in terms of binomial coeffs.
+
+
+% There's also a formula that expresses the multinomial coeffs in terms of binomial coeffs.
 % I think, it may be implemented in the codebase...not sure, though.
 
 %...TBC...VERIFY...TODO: explain Pascal's triangle 
-% Maybe use substack for the k_i >= 0 conditio. Maybe use product notation in the rhs and sum notation in the lhs
+% Maybe use substack for the k_i >= 0 condition. Maybe use product notation in the rhs and sum notation in the lhs
 
 % Pascal's triangle is actually already prsented in the combinatorics chapter - maybe move that to here and then there, just out a reference. Or maybe include a forward reference here.
 
-%, maybe give a preview to multi-indices
-
+% How does Pascal's triangle generalize to the multinomial case? Will we get a (hyper)tetraeder?
 
 % What Lies Above Pascal's Triangle?
 % https://www.youtube.com/watch?v=q2daqMR3l24
@@ -200,7 +191,6 @@ The result can be derived by considering the general formula for multinomial coe
 % https://en.wikipedia.org/wiki/Multinomial_theorem
 % https://de.wikipedia.org/wiki/Multinomialtheorem
 % Arens, pg 891
-
 
 % Pascal's Triangle But The World Isn't Flat #SoME3
 % https://www.youtube.com/watch?v=ETA-4P9hA88

@@ -3923,8 +3923,10 @@ derivatives can be calculated by various means:
   (1) Analytically, by directly implementing a symbolically derived formula. This is tedious, 
       error-prone and needs human effort for each individual case (unless a symbolic math engine 
       is available, but the expressions tend to swell quickly rendering the approach inefficient).
+
   (2) Numerically, by using finite difference approximations. This can be computationally 
       expensive and inaccurate.
+
   (3) Automatically, by overloading operators and functions for a number type that is augmented by
       a derivative field. The resulting algebra of such augmented numbers makes use of the well 
       known differentiation rules and derivatives of elementary functions.
@@ -3938,7 +3940,7 @@ Likewise, in univariate function evaluations, we apply the chain-rule.
 
 Mathematically, we can think of the dual numbers as being constructed from the real numbers in a 
 way similar to the complex numbers. For these, we postulate the existence of a number i which has
-the property i^2 = -1. No real number has this property, so i can't be a real number. For the dual
+the property i^2 = -1. No real number has this property, so it can't be a real number. For the dual
 numbers, we postulate a nonzero number epsilon (denoted here as E) with the property E^2 = 0. No 
 real number (except zero, which was excluded) has this property, so E can't be a real number. The 
 dual numbers are then numbers of the form a + b*E, just like the complex numbers are of the form 
@@ -3957,7 +3959,14 @@ an NxM matrix. ...hmm...this is not how i did it in the examples...
 
 ...At some point, the derivative value must be seeded...i think, this is called 
 "forward mode"...We seed the derivative field with 1 by default-constructing a dual number from a 
-real number...explain also what reverse mode is..tbc...
+real number...explain why. Explain also what reverse mode is. It's a lot more complicated to 
+implement. It needs a forward and a backward pass where in the forward pass, a computational 
+graph must be created. It's basically a more general variant of the backpropagation algorithm used
+in neural network training. Explain why we use different template parameters for the value and 
+derivative. Maybe it's a provision for applying it to multivariable functions, where the derivative
+needs to be a vector when the output is a scalar and a matrix when the output is a vector?
+
+...TBC...
 
 ...under construction... */
 
@@ -4585,6 +4594,35 @@ RS_PFX rsSin(RS_DCN x)
 // automatic differentiation in the complex domain - we'll see
 // todo: define elementary functions exp, sin, cos, sqrt
 // implement operators that allow mixed operations with std::complex
+
+
+//=================================================================================================
+
+/** This is just a stub at the moment.
+
+This is an attempt on extending the idea of dual number (representing value and derivative) to
+including a second derivative. To implement the arithmetic operators, we use suitably extended 
+variants of the poduct rule, quotient rule, etc. 
+
+...TBC... */
+
+
+template<class TVal, class TDer, class TCrv>
+class rsThreealNumber
+{
+
+public:
+
+  TVal v;  // function value (height)
+  TDer d;  // 1st derivative (slope)
+  TCrv c;  // 2nd derivative (curvature)
+
+
+
+
+};
+
+
 
 
 //=================================================================================================

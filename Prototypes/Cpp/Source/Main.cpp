@@ -46,11 +46,11 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSortedSet();
 
   // Autodiff:
-  //testAutoDiff();
-  //testAutoDiff2();
-  //testAutoDiff3();
-  //testAutoDiff4();
-  //testAutoDiff5();     // stub
+  testAutoDiff();
+  testAutoDiff2();
+  testAutoDiff3();
+  testAutoDiff4();
+  testAutoDiff5();     // stub
   //testAutoDiffReverse1();
   //testDualComplex();
 
@@ -149,7 +149,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testNewtonOptimizer1D();
   //testFourierTrafo2D();
   //testKroneckerTrafo2D();
-  testDiscreteCalculus();             // stub
+  //testDiscreteCalculus();             // stub
 
 
 

@@ -4029,6 +4029,8 @@ public:
   template<class Ty> DN operator-(const Ty& y) const { return DN(v - TVal(y), d                ); }
   template<class Ty> DN operator*(const Ty& y) const { return DN(v * TVal(y), d * TDer(TVal(y))); }
   template<class Ty> DN operator/(const Ty& y) const { return DN(v / TVal(y), d / TDer(TVal(y))); }
+  // ToDo: Document the purpose of these operators. They apparently allow the right operand to be 
+  // of an arbitrary type. Document also why they are implemented in the way they are.
 
   // maybe rename operands from x,y to a,b - x,y should be used for function inputs and ouputs in
   // expressions like y = f(x)
@@ -4647,6 +4649,22 @@ public:
   /** Implements difference rule: (f-g)' = f' - g' and (f-g)'' = f'' - g''. */
   TN operator-(const TN& y) const { return TN(v - y.v, d - y.d, c - y.c); }
 
+
+  /** Implements product rule: (f*g)' = f' * g + g' * f and (f*g)'' = f''*g + 2*f'*g' + f*g''. */
+  TN operator*(const TN& y) const 
+  { 
+    return TN(v * y.v, d*y.v + v*y.d, c*y.v + TDer(2)*d*y.d + v*y.c; ); // Verify!
+  }
+  // ToDo: 
+  // -Document what these implementations imply for the requirements on the template parameters. 
+  //  Apparently, for the computation of the c field, we need to be able multiply values and 
+  //  curvatures (v and c values) and that should result in a type that is addition-compatible with
+  //  the result of a product of two derivatives (d values). Maybe that means that the type for the
+  //  c-values, when we see it as Hessian in a multivariable setting, should be a matrix - and 
+  //  so should be the result of multiplying two d-values. Maybe that means, we need to use the 
+  //  outer product of vectors to multiply d-values in order to get a matrix as result? Figure this 
+  //  out! Maybe it all makes sense only when v,d,c are just scalars anyway. I'm not sure about 
+  //  that yet. In that case, it would all be trivial.
 
 
 

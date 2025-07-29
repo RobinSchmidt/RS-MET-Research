@@ -4604,7 +4604,17 @@ RS_PFX rsSin(RS_DCN x)
 
 This is an attempt on extending the idea of dual number (representing value and derivative) to
 including a second derivative. To implement the arithmetic operators, we use suitably extended 
-variants of the poduct rule, quotient rule, etc. 
+variants of the product rule, quotient rule, etc. There are general formulas for the n-th 
+derivatives of products and quotients of functions. They can be looked up in (1). Here, we need
+only the 1st and 2nd order versions of them, i.e. for n=1 and n=2. The n=1 versions are already 
+implemented in rsDualNumber and can be found in just about any math textbook with a calculus 
+section. Here, we additionally use the n=2 rules.
+
+
+References:
+
+  (1) ...insert my own math book...
+
 
 ...TBC... */
 
@@ -4623,7 +4633,8 @@ public:
   rsThreealNumber(TVal value = TVal(0), TDer derivative = TDer(0), TCrv curvature = TCrv(0)) 
     : v(value), d(derivative), c(curvature)
   {}
-  // maybe the derivative should default to 1? what is most convenient? to seed or not to seed?
+  // Maybe the derivative should default to 1? What is most convenient? To seed or not to seed? It
+  // should be done consistently with the way doing it in rsDualNumber.
 
 
   using TN = rsThreealNumber<TVal, TDer, TCrv>;   // shorthand for convenience
@@ -4643,21 +4654,21 @@ public:
   /** Unary minus just applies minus sign to all three parts. */
   TN operator-() const { return TN(-v, -d, -c); }
 
-  /** Implements sum rule: (f+g)' = f' + g' and (f + g)'' = f'' + g''. */
+  /** Implements sum rules: (f+g)' = f' + g' and (f + g)'' = f'' + g''. */
   TN operator+(const TN& y) const { return TN(v + y.v, d + y.d, c + y.c); }
 
-  /** Implements difference rule: (f-g)' = f' - g' and (f-g)'' = f'' - g''. */
+  /** Implements difference rules: (f-g)' = f' - g' and (f-g)'' = f'' - g''. */
   TN operator-(const TN& y) const { return TN(v - y.v, d - y.d, c - y.c); }
 
 
-  /** Implements product rule: (f*g)' = f' * g + g' * f and (f*g)'' = f''*g + 2*f'*g' + f*g''. */
+  /** Implements product rules: (f*g)' = f' * g + g' * f and (f*g)'' = f''*g + 2*f'*g' + f*g''. */
   TN operator*(const TN& y) const 
   { 
-    return TN(v * y.v, d*y.v + v*y.d, c*y.v + TDer(2)*d*y.d + v*y.c; ); // Verify!
+    return TN(v * y.v, d*y.v + v*y.d, c*y.v + TDer(2)*d*y.d + v*y.c); // Verify!
   }
   // ToDo: 
   // -Document what these implementations imply for the requirements on the template parameters. 
-  //  Apparently, for the computation of the c field, we need to be able multiply values and 
+  //  Apparently, for the computation of the c field, we need to be able to multiply values and 
   //  curvatures (v and c values) and that should result in a type that is addition-compatible with
   //  the result of a product of two derivatives (d values). Maybe that means that the type for the
   //  c-values, when we see it as Hessian in a multivariable setting, should be a matrix - and 
@@ -4666,13 +4677,12 @@ public:
   //  out! Maybe it all makes sense only when v,d,c are just scalars anyway. I'm not sure about 
   //  that yet. In that case, it would all be trivial. Maybe we should use TCrv(2) instead of 
   //  TDer(2) in the explicit type conversion. That should probably result in a diagonal matrix of 
-  //  2s. Maybe the naive d*y.d computation needs to be soemthing else as well. Maybe y.d needs to
+  //  2s. Maybe the naive d*y.d computation needs to be something else as well. Maybe y.d needs to
   //  be converted into a row-vector first (i.e. transposed) such that the product with the column
   //  vector d results in a matrix. But maybe the pre-factor 2 can remain a scalar. We'll see.
 
-  /** Implements quotient rule: (f/g)' = (f' * g - g' * f) / g^2 and 
+  /** Implements quotient rules: (f/g)' = (f' * g - g' * f) / g^2 and 
   (f/g)'' = f'' / g  -  (2 f' g' - f  g'') / g^2  +   2 f (g')^2 / g^3   Verify! */
-
   TN operator/(const TN& y) const 
   { 
     //return TN(); // Preliminary
@@ -4694,12 +4704,23 @@ public:
     // - Verify the formula numerically with some examples.
     //
     // - Maybe get rid of the intermediates. They are only for clarity during writing.
+    //
+    // - Look for optimization opportunities. Maybe we can avoid some divisions. We could 
+    //   precompute 1/g and 1/g^2 and then replace all divisions by multiplications, for example. 
+    //   But maybe we can optimize it even better. But that's for later. In any case, we should 
+    //   keep the unoptimized code for reference in a comment.
   }
-
-
 
 };
 
+// ToDo:
+//
+// - If this works out well, maybe it makes sense to extend this even further to compute the 3rd 
+//   derivative (maybe call it jerk and use a j). Maybe for proof of concept, a general class that
+//   computes the derivatives up to the n-th could be useful. In my math book, I have formulas for
+//   these general higher order derivatives of products and quotients (for sums and differences, 
+//   the extension trivial anyway). Such an implementation based on these formulas will be horribly 
+//   inefficient, though. But it should just be a proof of concept anyway, so that's ok.
 
 
 

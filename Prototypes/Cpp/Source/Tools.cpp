@@ -4622,6 +4622,8 @@ References:
 template<class TVal, class TDer, class TCrv>
 class rsThreealNumber
 {
+  // The name is silly. Try to find a better one. "TrialNumber" would be confusing, though because 
+  // it makes the user think about tuings like "trial and error", etc. How about TrualNumber?
 
 public:
 

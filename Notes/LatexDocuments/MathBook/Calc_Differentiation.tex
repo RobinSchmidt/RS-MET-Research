@@ -1,6 +1,6 @@
 \section{Differentiation}
 
-%---------------------------------------------------------------------------------------------------
+%===================================================================================================
 \subsection{The Derivative}
 Consider an arbitrary function $f(x)$ and imagine that we want to compute the slope of the graph at a particular $x$ value that we denote by $x_0$. We could approximate it by considering the point $(x_0, f(x_0))$ and another point on the graph a small distance $h$ further to the right $(x_0+h, f(x_0+h))$ and compute the "rise over run" quotient $(f(x_0+h) - f(x_0)) / h$ which would give us the slope of a secant. For smaller and smaller $h$, the approximation would get better and better because the secant would approach the tangent. Now we consider the limit as $h$ approaches zero. If that limit exists, it actually \emph{is} our desired slope of the tangent. We denote that tangent slope at $x_0$ as $f'(x_0)$. This leads us to the following definition:
 \begin{equation}
@@ -31,10 +31,11 @@ This means: take the derivative of $f$ with respect to $x$, then evaluate the re
 % https://www.youtube.com/watch?v=RXtKQt09ZfA
 % -Says that the operator notation with the D is due to Euler
 
+%===================================================================================================
 \subsection{Higher Order Derivatives}
 With the derivative, we have an operation to produce a new "derived" function $f'$ from a given function $f$. There's nothing that stops us to apply the same operation to the derived function as well. And then iterate that process as often as we like. That's the way, higher order derivatives are created. 
 
-\paragraph{Notations} The second derivative of a function $f(x)$ is denoted as $f''(x)$ in Lagrange notation, the third as $f'''(x)$. From the fourth one onwards, the "dash" or "prime" notation becomes impractical so one often sees the notation $f^{(n)}(x)$ to denote the $n$-th order derivative of the function $f$. In this notation, the $0$-th order derivative means the function $f$ itself. This makes sense because taking the derivative zero times should be a "do-nothing" operation. To translate this into Leibniz notation, one would write $f^{(n)}(x) = \frac{d^n}{d x^n} f(x) = \frac{d^n f(x)}{d x^n}$. In operator notation with suppressed argument $x$, one would write $f^{(n)} = D^n f$ or $D^n[f]$. That is: in operator notation, putting a superscript like $n$ on an operator usually means: apply the operator $n$ times. It does not mean: apply the operator and then take the $n$th power of the result. This is different to putting a superscript on functions. Something like $f^2(x)$ does indeed usually\footnote{To make matters worse, there are exceptions to that, too. For example: in complex dynamics, $f^n(x)$ indeed means: apply $f$ $n$ times.} means: apply the function $f$, then square the result. This is the reason why in Lagrange notation for arbitrary derivatives, we need to uses these additional parentheses in the superscript to avoid confusion. Higher order derivatives in Newton notation use multiple dots above the function as in $\dot{x}(t), \ddot{x}(t), \dddot{x}(t), \ddddot{x}(t)$. I have seen up to 4 dots but there, the usefulness of this notation ends (and for more than 2, it's already questionable). Time derivatives of order higher than 4 typically do not occur in physics which is the place where Newton's notation is used. Mostly, we deal only with first and second derivatives anyway - and for these, Newton notation works fine. 
+\paragraph{Notations} The second derivative of a function $f(x)$ is denoted as $f''(x)$ in Lagrange notation, the third as $f'''(x)$. From the fourth one onwards, the "dash" or "prime" notation becomes impractical so one often sees the notation $f^{(n)}(x)$ to denote the $n$-th order derivative of the function $f$. In this notation, the $0$-th order derivative means the function $f$ itself. This makes sense because taking the derivative zero times should be a "do-nothing" operation. To translate this into Leibniz notation, one would write $f^{(n)}(x) = \frac{d^n}{d x^n} f(x) = \frac{d^n f(x)}{d x^n}$. In operator notation with suppressed argument $x$, one would write $f^{(n)} = D^n f$ or $D^n[f]$. That is: in operator notation, putting a superscript like $n$ on an operator usually means: apply the operator $n$ times. It does not mean: apply the operator and then take the $n$th power of the result. This is different to putting a superscript on functions. Something like $f^2(x)$ does indeed usually\footnote{To make matters worse, there are exceptions to that, too. For example: in complex dynamics, $f^n(x)$ indeed means: apply $f$ $n$ times. It's a mess!} means: apply the function $f$, then square the result. This is the reason why in Lagrange notation for arbitrary derivatives, we need to use these additional parentheses in the superscript to avoid confusion. Higher order derivatives in Newton notation use multiple dots above the function as in $\dot{x}(t), \ddot{x}(t), \dddot{x}(t), \ddddot{x}(t)$. I have seen up to 4 dots but there, the usefulness of this notation ends (and for more than 2, it's already questionable). Time derivatives of order higher than 4 typically do not occur in physics which is the place where Newton's notation is used. Mostly, we deal only with first and second derivatives anyway - and for these, Newton notation works fine. 
 
 %[ToDo: figure out if there's a general way to write an $n$-th time derivative in Newton notation - maybe something $\overset{n}{x}(t)$?]
 
@@ -42,8 +43,9 @@ With the derivative, we have an operation to produce a new "derived" function $f
 % -derive a formula for the definition of f'' based on using the definition of f'
 % -interpret the formula in terms of a numeric 2nd derivative when h is small.
 
+%===================================================================================================
 \subsection{Elementary Derivatives}
-We'll now give a short list of some of the most important derivatives of elementary functions. This list, together with the differentiation rules above, will allow us to mechanically evaluate derivatives of all functions that can be constructed from these elementary functions by algebraic operations or composition (i.e. nesting). 
+We'll now give a short list of some of the most important derivatives of elementary functions. This list, together with the differentiation rules given below, will allow us to mechanically evaluate derivatives of all functions that can be constructed from these elementary functions by algebraic operations or composition (i.e. nesting). 
 
 \medskip
 $(x^a)' = a x^{a-1}$, $(a^x)' = \ln(a) \, a^x$, $(\e^x)' = \e^x$, $(\sin x)' = \cos x$, $(\cos x)' = -\sin x$, $(\sinh x)' = \cosh x$, $(\cosh x)' = -\sinh x$, ......TBC...Maybe format the list nicely and gives the names of the rules or some comments in the right column
@@ -116,7 +118,7 @@ Much more comprehensive versions of such a list can be found in many mathematica
 
 
 
-
+%===================================================================================================
 \subsection{Differentiation Rules}
 Instead of evaluating derivatives from first principles every time we see one, we have a lookup list of derivatives of all important elementary functions that has been assembled once and for all from first principles (i.e. using the definition via the limit) and we have a couple of rules how to compute derivatives of more complicated functions that are created in various ways from the more basic functions (btw: Did I already say that a big theme in math is finding computational shortcuts? This is a nice example). The most elementary differentiation rules for any two functions $f$ and $g$ and any constant $a$ are the following:
 
@@ -157,7 +159,11 @@ whose usefulness lies mostly in its generalizations to the directional derivativ
 
 % Explain the motivation. I think, I have derived it from the Gateaux derivative or from the
 % directional derivative in the special case of 1D functions - or something. I'm not sure 
-% anymore.
+% anymore. Explain what we have achieved with this formula: We have replaced the derivative 
+% with respect to the variable x with a derivative wrt to some other variable h. This h-derivative
+% is applied to an expression involving the original function f, the original variable x and the
+% new variable h. The thing that makes this useful is that the "data type" of h may be different
+% from the data type of x. The type of h may be simpler. x could be a vector and h a scalar. 
 
 
 % ToDo:
@@ -166,6 +172,7 @@ whose usefulness lies mostly in its generalizations to the directional derivativ
 %  $(a f + b g)^{(n)} = a f^{(n)} + b g{(n)}$. The difference rule also follows automatically. Or 
 %  maybe state it even more generally ( \sum_k a_k f_k )^{(n)} = \sum_k  a_k f_k^{(n)}
 
+%---------------------------------------------------------------------------------------------------
 \subsubsection{The Product Rule}
 In the list above, we already mentioned the product rule which is also known as the Leibniz rule. In its basic form, it says:
 \begin{equation}
@@ -255,7 +262,7 @@ This formula is structurally similar to the multinomial theorem given in equatio
 % Maybe write it down in multi-index notation:
 % https://en.wikipedia.org/wiki/Multi-index_notation
 
-
+%---------------------------------------------------------------------------------------------------
 \subsubsection{The Quotient Rule} 
 As we have already seen in the list above, the rule for computing the derivative of a quotient of two functions $f = f(x)$ and $g = g(x)$ is given by:
 \begin{equation}
@@ -273,8 +280,9 @@ In the special case for $f(x) = 1$, we obtain the so called \emph{reciprocal rul
 \paragraph{Higher Order Derivatives of Quotients}
 There is also a generalization of the quotient rules to higher order derivatives of quotients of functions. It can be obtained from combining the (generalized) product rule with the reciprocal rule. This results in:
 \begin{equation}
-\left( \frac{f}{g} \right) ^{(n)} = 
-\frac{1}{g} \sum_{k=0}^{n} (-1)^k \binom{n+1}{k+1} \frac{(f g^k)^{(n)}}{g^k}
+\left( \frac{f}{g} \right) ^{(n)} 
+= \frac{1}{g} \sum_{k=0}^{n} (-1)^k \binom{n+1}{k+1} \frac{(f g^k)^{(n)}}{g^k}
+= \sum_{k=0}^{n} (-1)^k \binom{n+1}{k+1} \frac{(f g^k)^{(n)}}{g^{k+1}}
 \end{equation}
 where we have again surpressed the argument to make it bearable. VERIFY! TODO: maybe give different formulas - there are more. Maybe work through an example - maybe take the 3rd derivative. Q: Is there a generalization for quotients of multiple functions - but what would that even mean? Maybe a continued fraction expression? 
 
@@ -358,7 +366,7 @@ ToDo:
 
 
 
-
+%---------------------------------------------------------------------------------------------------
 \subsubsection{The Chain Rule}
 We have also already seen the (basic form of the) chain rule in our table above. There, it was given in terse form with suppressed argument. With unsuppressed argument, it would look like:
 \begin{equation}
@@ -515,6 +523,7 @@ For more explanations including a proof sketch, see \cite{YT_FaaDiBruno}.
 
 % https://en.wikipedia.org/wiki/Fa%C3%A0_di_Bruno%27s_formula
 
+%---------------------------------------------------------------------------------------------------
 \subsubsection{The Inverse Function Rule}
 Given an invertible function $f$ that assigns a value $y = f(x)$ to every $x$ and has an inverse function  $f^{-1}$ that brings us back from $y$ to $x$ such that $x = f^{-1}(y)$, the \emph{inverse function rule} tells us how to find the derivative of  $f^{-1}$ at $y$ from the derivative of $f$ at $x = f^{-1}(y)$. It's the reciprocal:
 \begin{equation}
@@ -538,7 +547,7 @@ Be careful to not confuse the inverse function $f^{-1}$ with the reciprocal of $
 
 % https://en.wikipedia.org/wiki/Chain_rule#Derivatives_of_inverse_functions
 
-
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Logarithmic Differentiation} 
 If a function $f$ is composed with the logarithm function such that $y = \ln(f(x))$, application of the chain rule gives the rule for logarithmic differentiation:
 \begin{equation}
@@ -552,14 +561,14 @@ For this to work, $f(x)$ must be positive at the evaluation point $x$ because ot
 
 % Give example to differentiate f(x) = x^x
 
-
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Generalized Power Rule} 
 The power rule $(x^n)' = n x^{n-1}$ has the following generalization:
 \begin{equation}
  (f^g)' = \Bigl( \exp(g \, \ln(f) \Bigr) '
         = f^g \Bigl(f ' \, \frac{g}{f} + g' \, \ln(f) \Bigr)
 \end{equation}
-Or, with unsurpressed argument $x$:
+Or, with unsupressed argument $x$:
 \begin{equation}
  \Bigl(f(x)^{g(x)}\Bigr)' 
  = \Bigl( \exp(g(x) \, \ln(f(x)) \Bigr) '
@@ -572,8 +581,17 @@ Or, with unsurpressed argument $x$:
 % The reciprocal rule may be derived as the special case where g = -1
 % The normal power rule is a specialization for f(x) = x, g(x) = n
 %
-% Maybe put it before the quotient rule because in the generalized quotient rule, we actually need this
-% rule (together with the product rule) to evaluate the (f g^k)^{(n)} expression
+% Maybe put it before the quotient rule because in the generalized quotient rule, we actually need
+% this rule (together with the product rule) to evaluate the (f g^k)^{(n)} expression. But for that,
+% we actually need a formual for (f^k)^{(n)}, i.e. the n-th derivative of the k-th power of f.
+
+% Also, on a related note, what's the n-th derivative of f composed k times with itself? Maybe we
+% should give a formula for that in the section about the chain rule. Maybe we could use the 
+% notation $f^{\circ k}$ to denote the k-fold composition of a function f with itself. Just writing
+% $f^k$ usually means the k-th power - but in some contexts (e.g. iterated function systems?),
+% $f^k(x)$ may actually mean the k-fold iteration of f applied to x rather than taking f(x) and
+% then raising the result to the k-th power. So, care needs to be taken and  we should give a
+% warning about the existence of these different notational conventions.
 
 % https://en.wikipedia.org/wiki/Power_rule
 % https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
@@ -585,9 +603,12 @@ Or, with unsurpressed argument $x$:
 % -maybe explain automatic differentiation and numeric differentiation
 % -maybe all of this should go into a subsection "Derivatives on a Computer"
 
+
+%===================================================================================================
 \subsection{Generalizations, Alternatives and Analogies}
 The derivative, as presented here, is an idea that applies to real functions $f: \mathbb{R} \rightarrow \mathbb{R}$. There are certain related notions that apply to other contexts and generalizations of the idea and alternative but equivalent definitions of the same idea.
 
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Alternative Definitions}
 
 \paragraph{Backward Difference}
@@ -641,7 +662,7 @@ f'(x) = x \lim_{q \rightarrow 1} \frac{(q-1)(q+1)}{(q - 1)}
       = x \lim_{q \rightarrow 1} q+1
       = 2 x
 \end{equation}
-which gives us the same result. This alternative definition is also related to the so called quantum derivative which is basically the same definition just without taking the limit. Sometimes, this alternative definition is much easier to evaluate than the standard definition. That's why I wanted to mention it. This is especially true when $f(x) = x^n$. With the standard definition, you'd have to expand a term of the form $(x+h)^n$ using the binomial theorem whereas with the alternative definition, things cancel nicely. However, usually, we do not evaluate derivatives using the definition via a limit (standard or alternative) anyway. Instead, we use our table of elementary derivatives together with our differentiation rules.
+which gives us the same result as the original definition in (\ref{Eq:Derivative}), as it should. This alternative definition is also related to the so called quantum derivative which is basically the same definition just without taking the limit. Sometimes, this alternative definition is much easier to evaluate than the standard definition. That's why I wanted to mention it. This is especially true when $f(x) = x^n$. With the standard definition, you'd have to expand a term of the form $(x+h)^n$ using the binomial theorem whereas with the alternative definition, things cancel nicely. However, usually, we do not evaluate derivatives using the definition via a limit (standard or alternative) anyway. Instead, we use our table of elementary derivatives together with our differentiation rules.
 %Fortunately, we don't have to go through this tedious procedure via the limit every time we need to compute a derivative.
 
 % https://en.wikipedia.org/wiki/Q-derivative
@@ -650,7 +671,7 @@ which gives us the same result. This alternative definition is also related to t
 % https://link.springer.com/chapter/10.1007/978-1-4613-0071-7_22
 % https://en.wikipedia.org/wiki/Quantum_calculus#History
 
-
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Generalizations}
 
 \paragraph{Implicit Differentiation}
@@ -716,6 +737,7 @@ Suppose we have a function $f$ of $x$, say $f(x) = x^6$, and we want to take the
 %  complex, partial, directional, covariant, Lie, exterior, material, weak, Frechet, Gateaux, 
 %  variational, fractional, Radon-Nikodym, stochastic. 
 
+%---------------------------------------------------------------------------------------------------
 %\subsubsection{$\star$ Analogies}
 \subsubsection{$\star$ Analogies}
 There are certain derivative-like operations that can be applied to other things than real functions. They are "derivative-like" in the sense that they obey certain rules that derivatives also obey. Mostly we are interested in operations that satisfy a product rule similar to the one of differentiation [VERIFY].

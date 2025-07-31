@@ -5082,9 +5082,9 @@ bool unitTestThreealNumber()
   // Define two polynomials f(t) and g(t):
   Poly f({ +1,-2,-3,+5 });                  // f(t) = 1 - 2*t - 3*t^2 + 5*t^3
   Poly g({ +2,+1,-4,-2 });                  // g(t) = 2 + 1*t - 4*t^2 - 2*t^3
-  Real t = 0.5f;                            // Evaluation point
-  Real h = 0.01f;                           // Stepsize for numerical differentiation
-  Real tol = 1.e-6f;                        // Tolerance for numerical comparisons
+  Real t   = 0.5f;                          // Evaluation point
+  Real h   = 1.e-2f;                        // Stepsize for numerical differentiation
+  Real tol = 1.e-1f;                        // Tolerance for numerical comparisons
 
   // Evaluate the polynomials at t and also compute their first and second derivatives at t:
   Real ft[3], gt[3];
@@ -5105,7 +5105,7 @@ bool unitTestThreealNumber()
 
   // Test quotient rule:
 
-  // Define function for evaluating the quotient and for numerically evaluating the 1st and 2nd 
+  // Define functions for evaluating the quotient and for numerically evaluating the 1st and 2nd 
   // derivative of the quotient:
   Func q   = [&](Real t) { return f(t) / g(t); };
   Func qp  = [&](Real t) { return ND::derivative(q, t, h); };
@@ -5123,6 +5123,10 @@ bool unitTestThreealNumber()
   // OK - looks in the right ballpark. ToDo: tweak the h parameter to get a better match. Then 
   // tweak the tolerance to adjust it to the match that we get.
   // We want r.v == qt, r.d == qpt, r.c == qppt up to tolerance
+  ok &= rsIsCloseTo(r.v, qt,   tol);  // value (primal part)
+  ok &= rsIsCloseTo(r.d, qpt,  tol);  // derivative or slope (dual part)
+  ok &= rsIsCloseTo(r.c, qppt, tol);  // curvature (third part)
+
 
   // Test unary functions:
   // ...
@@ -5136,7 +5140,39 @@ bool unitTestThreealNumber()
 
 
 
+  // Observations:
+  //
+  // - The error in the numerical evaluation of the quotient rule is quite large in the 2nd 
+  //   derivative, i.e. the qppt value. That's why we need such a large tolerance. I already tried
+  //   to tweak the stepsize h to get a better result but it did not help much. Using h = 1.e-2f 
+  //   seems to be somewhere around the best we can get. I tried only rough steps like h = 1.e-1f, 
+  //   h = 1.e-2f, h = 1.e-3f, so we may actually get better results by trying to optimize h on a 
+  //   finer granularity. Maybe using inverse powers of 2 would be better (than inverse powers of 
+  //   10) because it may avoid certain roundoff errors.
+  //
+  //
   // ToDo:
+  // 
+  // - Maybe use a higher order numerical evaluation scheme for the 2nd derivative. See class
+  //   rsNumericDifferentiator for the available methods. Maybe we can use a 3rd or 4th order 
+  //   approximation to get the error under control. If such methods are not yet available, add 
+  //   them!
+  // 
+  // - Maybe compute some target values like qpt, qppt analytically rather than numerically. Maybe
+  //   use SageMath to do that. Or maybe we can derive the formulas ourselves. The disadvantage is 
+  //   that we need to commit to a specific evaluation point t that we can't tweak later anymore - 
+  //   at least, not without also recomputing these target values.
+  // 
+  // - Implement and test the chain rule in unary functions like sin, exp, etc. To do this, we 
+  //   first need to derive the chain rule for the 2nd derivative, i.e. a general formula for 
+  //   (f(g(x)))''. A function f (like sin) for threeal numbers needs to compute the output triple
+  //   f, f', f'' from the given input triple g, g', g''. The 1st component f is just f(g) (e.g. 
+  //   sin(g)), the 2nd component f' is obtained by the chain rule f'(g) * g' (e.g. g' * cos(g)) 
+  //   and the 3rd component f'' is obtained by applying the derived formula for (f(g(x)))''. Maybe
+  //   it could make sense to factor out the implementation of the formulas in some general way - 
+  //   although I'm not yet sure how to do that in a general way. Maybe f, f' and f'' can be passed
+  //   as function pointers or as std::function objects or by using a template parameter F for the
+  //   functions f, f', f'' and using lambdas in the implementations of the specific functions.
   // 
   // - Maybe use a different (less nice) evaluation point t. One where roundoff error actually 
   //   occurs. Then we really need a nonzero tolerance in the rsIsCloseTo() checks.

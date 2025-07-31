@@ -6,7 +6,7 @@ Mathematics deals with various kinds of numbers, the most important of which are
 Natural numbers are the counting numbers $0,1,2,3,4,5,\ldots$. The set of natural numbers is denoted as $\mathbb{N}$. They are indeed "natural" in the sense that we have an intuitive understanding what a number like $3$ means. It is an act of abstraction though, to recognize that a set of 3 apples and a set of 3 orang-utans have something in common, namely that they both have the "size" of three\footnote{Later when we introduce set theory, we will learn that this "threeness" of both of these sets can be viewed in terms of being able to establish a one-to-one correspondence between the elements of both sets, i.e. give each orang-utan exactly one apple}. Whether or not zero is considered a natural number is a matter of convention. The historical fact that the invention (or discovery?)\footnote{There is a philosophical debate about whether mathematics is invented or discovered. Personally, I think, the question is stated improperly. There are different aspects of math some of which are invented (mainly definitions and axioms) and other aspects that are discovered (mainly theorems, proofs and conjectures).} of the number zero was a rather late development in western mathematics (it was recognized much earlier in Indian mathematics) may suggest that the idea of zero is not so natural after all. However, I adopt the convention here that zero is a natural number because especially in the context of computers and programming, it is more often than not more convenient to have zero available in the set. There is no right or wrong here. This is a typical case of a definition for which there is no universal consensus in the math community. If zero is in the set $\mathbb{N}$ per definition but we nevertheless need to make a statement about all natural numbers except zero, the notation $\mathbb{N}^+$ is often used. Conversely, if some author defines zero to not be in the set $\mathbb{N}$ but wants to make a statement about all natural numbers including zero, the notation $\mathbb{N}_0$ is often used.
 
 \subsubsection{Arithmetic Operations}
-There are some elementary operations that take two natural numbers as input and produce another natural number as output. Operations that take two operands are called binary operations. Those that take only one operand are called unary operations. The basic binary operations between numbers are usually introduced in elementary school as addition, subtraction, multiplication and division denoted by the symbols $+,-,\cdot,/$ respectively, where the operator symbol is surrrounded by the two operands (computer scientists call this "infix notation"). The dot for the multiplication is sometimes omitted. Let's recall the laws that additon and multiplication obey. For any natural numbers $a,b,c$, we have:
+There are some elementary operations that take two natural numbers as input and produce another natural number as output. Operations that take two operands are called binary operations. Those that take only one operand are called unary operations. The basic binary operations between numbers are usually introduced in elementary school as addition, subtraction, multiplication and division denoted by the symbols $+,-,\cdot,/$ respectively, where the operator symbol is surrounded by the two operands (computer scientists call this "infix notation"). The dot for the multiplication is sometimes omitted. Let's recall the laws that addition and multiplication obey. For any natural numbers $a,b,c$, we have:
 
 \medskip
 \begin{tabular}{c l}
@@ -26,7 +26,7 @@ A natural number $p$ is said to be divisible by some other natural number $d$, i
 
 
 \subsubsection{Prime Numbers}
-Some numbers have the special property that they are \emph{only} divisible by themselves and by one but have no other divisors. These numbers are called prime numbers and can in a certain sense be seen as the atomic building blocks from which all natural numbers except 0 and 1 are made up. This is meant in the following sense: for any natural number greater than 1, there always exists one and only one way to construct it as a product of prime numbers. We say that the factorization of a number into its prime factors is uniqely determined. However, that uniquness holds only up to ordering of the factors - the order cannot possibly matter because multiplication is commutative. Consider the number 60: We can write it as a product as follows $60 = 2 \cdot 2 \cdot 3 \cdot 5$. It has four prime factors where the factor 2 appears twice. 2,3 and 5 are indeed prime numbers - they cannot be further divided into smaller factors. Prime numbers such as 5 have only one single factor in their prime factorization and that factor is the number itself. The word "prime" can be used as noun or adjective: we can say that 5 is prime and also 5 is \emph{a} prime. In this context, the number 1 is not considered a prime by definition. This is again a matter of definition just as the question whether or not 0 should be considered to be a natural number. In this case, however, there is a consensus in the math community that 1 should be defined to not be a prime (that consensus, however, is actually not that old). Numbers that are not prime are called composite numbers because they are made up by more than one (prime) factor. The fact that any natural number greater than one can be constructed as a product of prime numbers and that this factorization is uniquely determined (up to order of the factors) is actually an important theorem: the fundamental theorem of arithmetic. It was known already to Euclid and appears in his "Elements".
+Some numbers have the special property that they are \emph{only} divisible by themselves and by one but have no other divisors. These numbers are called prime numbers and can in a certain sense be seen as the atomic building blocks from which all natural numbers except 0 and 1 are made up. This is meant in the following sense: for any natural number greater than 1, there always exists one and only one way to construct it as a product of prime numbers. We say that the factorization of a number into its prime factors is uniquely determined. However, that uniqueness holds only up to ordering of the factors - the order cannot possibly matter because multiplication is commutative. Consider the number 60: We can write it as a product as follows $60 = 2 \cdot 2 \cdot 3 \cdot 5$. It has four prime factors where the factor 2 appears twice. 2,3 and 5 are indeed prime numbers - they cannot be further divided into smaller factors. Prime numbers such as 5 have only one single factor in their prime factorization and that factor is the number itself. The word "prime" can be used as noun or adjective: we can say that 5 is prime and also 5 is \emph{a} prime. In this context, the number 1 is not considered a prime by definition. This is again a matter of definition just as the question whether or not 0 should be considered to be a natural number. In this case, however, there is a consensus in the math community that 1 should be defined to not be a prime (that consensus, however, is actually not that old). Numbers that are not prime are called composite numbers because they are made up by more than one (prime) factor. The fact that any natural number greater than one can be constructed as a product of prime numbers and that this factorization is uniquely determined (up to order of the factors) is actually an important theorem: the fundamental theorem of arithmetic. It was known already to Euclid and appears in his "Elements".
 % factorization, fundamental theorem of arithmetic
 
 \subsubsection{Powers}
@@ -469,6 +469,32 @@ https://www.youtube.com/watch?v=H5EUjnEKzjQ
 
 Every Number System Explained in 10 Minutes
 https://www.youtube.com/watch?v=OGpLCQlgD-4
+
+But what ARE the operations?
+https://www.youtube.com/watch?v=-nKWzn4gsRY
+-At the end, talks about hwo to extend tetration to non-integers - which is rarely discussed
+ elsewhere
+-It's based on considering the power tower a^a^a^a^a^a as a^a^a^a^a^a^1^1^1^1^1... and then
+ then asking what x should be for something like a^a^a^a^a^a^x^1^1^1... for a fractional tower
+ height with a fractional height of a*a*a*a*a*a*x where x is supposed to be a number between 1 and 
+ a. ...something along these lines. I don't know how it works in detail, though.
+
+
+This is What Happens When You Divide Zero by Zero
+https://www.youtube.com/watch?v=XoX_J0qCYfs
+-It's about indeterminate forms and how to algebraically transform one such indeterminate form into
+ another
+-This could actually have practical applications when one needs to transform an indeterminate
+ expression into a form that is amenable to the use of l'Hospital's rule.
+-Maybe we should devote a section in the calculus chapter to the manipulation of indeterminate
+ forms
+
+
+What Happens If We Add Fractions Incorrectly? #SoME3
+https://www.youtube.com/watch?v=4d6YrTKmjfE
+-It's about the mediant and Simpson's paradox
+ https://en.wikipedia.org/wiki/Simpson%27s_paradox
+-Farey sequences, Stern-Brocot trees, Ford circles, Hurwitz's theorem
 
 
 \end{comment}

@@ -5110,11 +5110,14 @@ bool unitTestThreealNumber()
   Func q   = [&](Real t) { return f(t) / g(t); };
   Func qp  = [&](Real t) { return ND::derivative(q, t, h); };
   Func qpp = [&](Real t) { return ND::secondDerivative(q, t, h); };
+  // Maybe rename q, qp, qpp to fVal, fDrv, fCrv for later reuse.
 
   // Do the numerical evaluation of the quotient and its derivatives:
   Real qt   = q(t);
   Real qpt  = qp(t);
   Real qppt = qpp(t);
+  // Maybe rename qt, qpt, qppt to tVal, tDrv, tCrv for later reuse.
+
 
   // Compute the quotient with 1st and 2nd derivative using the threeal numbers and compare that
   // to the numerical evaluation:

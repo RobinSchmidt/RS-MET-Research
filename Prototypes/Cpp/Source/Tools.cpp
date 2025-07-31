@@ -4726,12 +4726,10 @@ public:
 
 
 #define RS_CTD template<class TVal, class TDer, class TCrv>
-#define RS_TN  rsThrealNumber<TVal, TDer, TCrv>
+#define RS_TN  rsThreealNumber<TVal, TDer, TCrv>
 #define RS_PFX RS_CTD RS_TN
 
 
-
-/*
 RS_PFX rsSin(RS_TN x)
 {
   TVal g   = x.v;   // g
@@ -4749,7 +4747,7 @@ RS_PFX rsSin(RS_TN x)
   // - Compute sin(g), cos(g) only once. Maybe use rsSinCos.
 }
 // Needs tests!
-*/
+
 
 #undef RS_CTD
 #undef RS_DN

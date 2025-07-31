@@ -5133,10 +5133,28 @@ bool unitTestThreealNumber()
 
 
   // Test unary functions:
-  // ...
 
+  // Test sine function:
+  //fVal = [&](Real t) { return rsSin(x.v); };  // Nope! It should be rsSin(t), I think.
+  //fVal = [&](Real t) { return rsSin(t); };    // ...seems also wrong
+  fVal = [&](Real t) { return rsSin(f(t)); }; 
+  fDrv = [&](Real t) { return ND::derivative(fVal, t, h); };
+  fCrv = [&](Real t) { return ND::secondDerivative(fVal, t, h); };
+  tVal = fVal(t);
+  tDrv = fDrv(t);
+  tCrv = fCrv(t);
+  // This code is repetitive. Try to get rid of the duplication. Perhaps we could use a lamda that
+  // takes the function to evaluate as an argument (here rsSin) and assigns the fVal, fDrv, fCrv, 
+  // tVal, tDrv, tCrv values. Maybe the fVal, fDrv, fCrv functions could be stored locally inside
+  // this lambda. we don't need to see them from outside.
 
-  // Test binary operators:
+  r = rsSin(x);  // Evaluate the sine function at the threeal number x
+
+  ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
+  //ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
+  //ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
+  // FAILS!!! tDrv and tCrv are actually zero. Why is that?
+
 
 
   rsAssert(ok);

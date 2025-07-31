@@ -5135,25 +5135,25 @@ bool unitTestThreealNumber()
   // Test unary functions:
 
   // Test sine function:
-  //fVal = [&](Real t) { return rsSin(x.v); };  // Nope! It should be rsSin(t), I think.
-  //fVal = [&](Real t) { return rsSin(t); };    // ...seems also wrong
-  fVal = [&](Real t) { return rsSin(f(t)); }; 
+  fVal = [&](Real t) { return rsSin(f(t)); };
   fDrv = [&](Real t) { return ND::derivative(fVal, t, h); };
   fCrv = [&](Real t) { return ND::secondDerivative(fVal, t, h); };
   tVal = fVal(t);
   tDrv = fDrv(t);
   tCrv = fCrv(t);
-  // This code is repetitive. Try to get rid of the duplication. Perhaps we could use a lamda that
+  // This code is repetitive. Try to get rid of the duplication. Perhaps we could use a lambda that
   // takes the function to evaluate as an argument (here rsSin) and assigns the fVal, fDrv, fCrv, 
   // tVal, tDrv, tCrv values. Maybe the fVal, fDrv, fCrv functions could be stored locally inside
-  // this lambda. we don't need to see them from outside.
+  // this lambda. we don't need to see them from outside. Maybe the function should take the fVal
+  // function rather than the rsSin function, because in the quotient rule, it would not fit the 
+  // pattern to pass rsSin.
+
 
   r = rsSin(x);  // Evaluate the sine function at the threeal number x
 
   ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
-  //ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
-  //ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
-  // FAILS!!! tDrv and tCrv are actually zero. Why is that?
+  ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
+  ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
 
 
 
@@ -5180,6 +5180,12 @@ bool unitTestThreealNumber()
   //
   //
   // ToDo:
+  // 
+  // - Refactor the code to get rid of duplications.
+  // 
+  // - Implement more unary functions like exp, log, abs, etc. and test them. 
+  // 
+  // - Implement binary functions like pow and test them.
   // 
   // - Maybe use a higher order numerical evaluation scheme for the 2nd derivative. See class
   //   rsNumericDifferentiator for the available methods. Maybe we can use a 3rd or 4th order 

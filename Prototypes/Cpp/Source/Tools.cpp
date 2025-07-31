@@ -4656,17 +4656,19 @@ public:
   /** Unary minus just applies minus sign to all three parts. */
   TN operator-() const { return TN(-v, -d, -c); }
 
-  /** Implements sum rules: (f+g)' = f' + g' and (f + g)'' = f'' + g''. */
+  /** Implements 1st and 2nd order sum rules: (f+g)' = f' + g' and (f + g)'' = f'' + g''. */
   TN operator+(const TN& y) const { return TN(v + y.v, d + y.d, c + y.c); }
 
-  /** Implements difference rules: (f-g)' = f' - g' and (f-g)'' = f'' - g''. */
+  /** Implements 1st and 2nd order difference rules: (f-g)' = f' - g' and (f-g)'' = f'' - g''. */
   TN operator-(const TN& y) const { return TN(v - y.v, d - y.d, c - y.c); }
 
 
-  /** Implements product rules: (f*g)' = f' * g + g' * f and (f*g)'' = f''*g + 2*f'*g' + f*g''. */
+  /** Implements 1st and 2nd order product rules: 
+  (f*g)'  = f' * g + g' * f 
+  (f*g)'' = f''*g + 2*f'*g' + f*g''. */
   TN operator*(const TN& y) const 
   { 
-    return TN(v * y.v, d*y.v + v*y.d, c*y.v + TDer(2)*d*y.d + v*y.c); // Verify!
+    return TN(v * y.v, d*y.v + v*y.d, c*y.v + TDer(2)*d*y.d + v*y.c);
   }
   // ToDo: 
   // -Document what these implementations imply for the requirements on the template parameters. 
@@ -4683,8 +4685,9 @@ public:
   //  be converted into a row-vector first (i.e. transposed) such that the product with the column
   //  vector d results in a matrix. But maybe the pre-factor 2 can remain a scalar. We'll see.
 
-  /** Implements quotient rules: (f/g)' = (f' * g - g' * f) / g^2 and 
-  (f/g)'' = f'' / g  -  (2 f' g' + f  g'') / g^2  +   2 f (g')^2 / g^3   Verify! */
+  /** Implements 1st and 2nd order quotient rules: 
+  (f/g)'  = (f' * g - g' * f) / g^2 
+  (f/g)'' = f'' / g  -  (2 f' g' + f  g'') / g^2  +  2 f (g')^2 / g^3   Verify! */
   TN operator/(const TN& y) const 
   { 
     //return TN(); // Preliminary
@@ -4717,6 +4720,46 @@ public:
 };
 
 
+
+//=================================================================================================
+// Define unary functions for rsThreealNumber:
+
+
+#define RS_CTD template<class TVal, class TDer, class TCrv>
+#define RS_TN  rsThrealNumber<TVal, TDer, TCrv>
+#define RS_PFX RS_CTD RS_TN
+
+
+
+/*
+RS_PFX rsSin(RS_TN x)
+{
+  TVal g   = x.v;   // g
+  TDer gp  = x.d;   // g'
+  TCrv gpp = x.c;   // g''
+
+  return RS_TN(
+     rsSin(g),
+     rsCos(g) * gp,
+    -rsSin(g) * gp*gp + rsCos(g) * gpp);  // (f(g))'' =  f''(g) * (g')^2 + f'(g) * g''
+                                          // with f'(g) = cos(g), f''(g) = -sin(g)
+
+  // ToDo:
+  //
+  // - Compute sin(g), cos(g) only once. Maybe use rsSinCos.
+}
+// Needs tests!
+*/
+
+#undef RS_CTD
+#undef RS_DN
+#undef RS_PFX
+
+
+
+
+
+
 template<class T>
 bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
 {
@@ -4736,11 +4779,19 @@ bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
 // ToDo:
 //
 // - If this works out well, maybe it makes sense to extend this even further to compute the 3rd 
-//   derivative (maybe call it jerk and use a j). Maybe for proof of concept, a general class that
-//   computes the derivatives up to the n-th could be useful. In my math book, I have formulas for
-//   these general higher order derivatives of products and quotients (for sums and differences, 
-//   the extension trivial anyway). Such an implementation based on these formulas will be horribly 
-//   inefficient, though. But it should just be a proof of concept anyway, so that's ok.
+//   derivative (maybe call it jerk and use a j and call the class rsQuadralNumber or 
+//   rsTetralNumber). Maybe for proof of concept, a general class that computes the derivatives up
+//   to the n-th could be useful where n is a runtime parameter (or maybe a compile-time 
+//   parameter). In my math book, I have formulas for these general higher order derivatives of 
+//   products and quotients (for sums and differences, the extension trivial anyway). Such an 
+//   implementation based on these formulas may be horribly inefficient, though. But it should 
+//   just be a proof of concept anyway, so that's ok. But maybe, if n is a compile-time parameter,
+//   it would actually be not that bad. I think, we may have to declare some functions as constexpr
+//   to allow the compiler to figure out certain coeffs at compile time that would otherwise be
+//   inefficiently computed at runtime. For example, the binomial coefficients that occur in these
+//   formulas. I think it would be a good idea to declare these functions as constexpr anyway and 
+//   then inspect the generated assembly code to see if the compiler actually replaces the function
+//   calls with the computed values. 
 
 
 

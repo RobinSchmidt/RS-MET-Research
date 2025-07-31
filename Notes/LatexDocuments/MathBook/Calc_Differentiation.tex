@@ -523,6 +523,35 @@ For more explanations including a proof sketch, see \cite{YT_FaaDiBruno}.
 
 % https://en.wikipedia.org/wiki/Fa%C3%A0_di_Bruno%27s_formula
 
+\begin{comment}
+
+To the first few (i.e. n = 1,2,3) special cases of this rule with SageMath, use:
+
+x    = SR.var('x')
+f    = function('f')
+g    = function('g')
+h(x) = f(g(x))
+h1   = diff(h,  x)
+h2   = diff(h1, x)
+h3   = diff(h2, x)
+h1, h2, h3
+
+which gives:
+
+(x |--> D[0](f)(g(x))*diff(g(x), x),
+ x |--> D[0, 0](f)(g(x))*diff(g(x), x)^2 + D[0](f)(g(x))*diff(g(x), x, x),
+ x |--> D[0, 0, 0](f)(g(x))*diff(g(x), x)^3 + 3*D[0, 0](f)(g(x))*diff(g(x), x)*diff(g(x), x, x) + D[0](f)(g(x))*diff(g(x), x, x, x))
+
+Let's simplify that notationally:
+
+n=2: f''(g) * (g')^2 +  f'(g) * g''    verify!
+
+
+
+
+
+\end{comment}
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Inverse Function Rule}
 Given an invertible function $f$ that assigns a value $y = f(x)$ to every $x$ and has an inverse function  $f^{-1}$ that brings us back from $y$ to $x$ such that $x = f^{-1}(y)$, the \emph{inverse function rule} tells us how to find the derivative of  $f^{-1}$ at $y$ from the derivative of $f$ at $x = f^{-1}(y)$. It's the reciprocal:

@@ -5100,7 +5100,7 @@ bool unitTestThreealNumber()
   Real pt[3];
   p.evaluateWithDerivatives(t, pt, 2);      // pt[0] = p(t), pt[1] = p'(t), pt[2] = p''(t)
   TN r = x*y;
-  ok &= rsIsCloseTo(r, pt, 0.f);            // We can use a tolerance of zero here.
+  ok &= rsIsCloseTo(r, pt, 0.f);            // We can use zero tolerance here because t is nice.
 
 
   // Test quotient rule:
@@ -5126,6 +5126,7 @@ bool unitTestThreealNumber()
   ok &= rsIsCloseTo(r.v, qt,   tol);  // value (primal part)
   ok &= rsIsCloseTo(r.d, qpt,  tol);  // derivative or slope (dual part)
   ok &= rsIsCloseTo(r.c, qppt, tol);  // curvature (third part)
+  // Maybe factor these 3 tests out into a function like rsIsCloseTo(r, qt, qpt, qppt, tol).
 
 
   // Test unary functions:
@@ -5149,6 +5150,12 @@ bool unitTestThreealNumber()
   //   h = 1.e-2f, h = 1.e-3f, so we may actually get better results by trying to optimize h on a 
   //   finer granularity. Maybe using inverse powers of 2 would be better (than inverse powers of 
   //   10) because it may avoid certain roundoff errors.
+  // 
+  // - The fact that the numerical evaluation of the 2nd derivative is so bad, could actually be 
+  //   seen as a good thing because it shows that the threeal number implementation is really much 
+  //   better than the numerical evaluation. I'd really like to figure out, how good it actually is, 
+  //   though. That is: compare it to the true value of the 2nd derivative, which we may evaluate 
+  //   analytically by some math software.
   //
   //
   // ToDo:
@@ -5167,20 +5174,22 @@ bool unitTestThreealNumber()
   //   first need to derive the chain rule for the 2nd derivative, i.e. a general formula for 
   //   (f(g(x)))''. A function f (like sin) for threeal numbers needs to compute the output triple
   //   f, f', f'' from the given input triple g, g', g''. The 1st component f is just f(g) (e.g. 
-  //   sin(g)), the 2nd component f' is obtained by the chain rule f'(g) * g' (e.g. g' * cos(g)) 
+  //   sin(g)), the 2nd component f' is obtained by the chain rule g' * f'(g) (e.g. g' * cos(g)) 
   //   and the 3rd component f'' is obtained by applying the derived formula for (f(g(x)))''. Maybe
   //   it could make sense to factor out the implementation of the formulas in some general way - 
   //   although I'm not yet sure how to do that in a general way. Maybe f, f' and f'' can be passed
   //   as function pointers or as std::function objects or by using a template parameter F for the
   //   functions f, f', f'' and using lambdas in the implementations of the specific functions.
+  //   I think, the required formula is: (f(g))'' =  f''(g) * (g')^2 + f'(g) * g''
   // 
   // - Maybe use a different (less nice) evaluation point t. One where roundoff error actually 
   //   occurs. Then we really need a nonzero tolerance in the rsIsCloseTo() checks.
   //
   // - To check the quotient rule, maybe create a std::function for evaluating f/g and use
-  //   rsNumericDifferentiator to produce the target values. Maybe we could also use 
-  //   rsRationalFunction to represent the quotient. But that does not yet support computation of 
-  //   derivatives, let alone 2nd derivatives. But maybe we could apply the quotient rule manually.
+  //   rsNumericDifferentiator to produce the target values [done]. Maybe we could also use 
+  //   rsRationalFunction to represent the quotient. But that class does not yet support 
+  //   computation of derivatives, let alone 2nd derivatives. But maybe we could apply the quotient 
+  //   rule manually here.
 }
 
 

@@ -5107,15 +5107,15 @@ bool unitTestThreealNumber()
 
   // Define functions for evaluating the quotient and for numerically evaluating the 1st and 2nd 
   // derivative of the quotient:
-  Func q   = [&](Real t) { return f(t) / g(t); };
-  Func qp  = [&](Real t) { return ND::derivative(q, t, h); };
-  Func qpp = [&](Real t) { return ND::secondDerivative(q, t, h); };
+  Func fVal = [&](Real t) { return f(t) / g(t); };
+  Func fDrv = [&](Real t) { return ND::derivative(fVal, t, h); };
+  Func fCrv = [&](Real t) { return ND::secondDerivative(fVal, t, h); };
   // Maybe rename q, qp, qpp to fVal, fDrv, fCrv for later reuse.
 
   // Do the numerical evaluation of the quotient and its derivatives:
-  Real qt   = q(t);
-  Real qpt  = qp(t);
-  Real qppt = qpp(t);
+  Real tVal = fVal(t);
+  Real tDrv = fDrv(t);
+  Real tCrv = fCrv(t);
   // Maybe rename qt, qpt, qppt to tVal, tDrv, tCrv for later reuse.
 
 
@@ -5126,10 +5126,10 @@ bool unitTestThreealNumber()
   // OK - looks in the right ballpark. ToDo: tweak the h parameter to get a better match. Then 
   // tweak the tolerance to adjust it to the match that we get.
   // We want r.v == qt, r.d == qpt, r.c == qppt up to tolerance
-  ok &= rsIsCloseTo(r.v, qt,   tol);  // value (primal part)
-  ok &= rsIsCloseTo(r.d, qpt,  tol);  // derivative or slope (dual part)
-  ok &= rsIsCloseTo(r.c, qppt, tol);  // curvature (third part)
-  // Maybe factor these 3 tests out into a function like rsIsCloseTo(r, qt, qpt, qppt, tol).
+  ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
+  ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
+  ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
+  // Maybe factor these 3 tests out into a function like rsIsCloseTo(r, tVal, tDrv, tCrv, tol).
 
 
   // Test unary functions:

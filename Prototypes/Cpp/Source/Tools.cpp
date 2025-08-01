@@ -4767,9 +4767,34 @@ RS_PFX rsChainRule(RS_TN f, RS_TN g)
   //   order chain rule. The v part is just taken as is. 
 }
 
+RS_PFX rsSqrt(RS_TN x)
+{
+  TVal g   = x.v;                            // g = g(x) = x.v
+  TVal fv  = rsSqrt(g);                      // f(g)   =  sqrt(g)
+  TDer fd  = TDer(0.5)/rsSqrt(g);            // f'(g)  =  1/(2*sqrt(g))
+  TCrv fc  = -TDer(0.25)/(g*rsSqrt(g));      // f''(g) = -1/(4*g*sqrt(g))
+  return rsChainRule(RS_TN(fv, fd, fc), x);  // Apply the chain rule to compute the result
+}
+// Optimize: Compute the square root only once!
+// Needs tests! The code was generated. It looks quite good math-wise but I'm not sure about the 
+// type-conversions to TDer - are they in the right places and convert to the right type? Do we 
+// actually need them at all?
+
+/*
+
+f(x) = sqrt(x)
+f1 = diff(f, x)
+f2 = diff(f1, x)
+f1, f2
+
+->  (x |--> 1/2/sqrt(x), x |--> -1/4/x^(3/2))
+
+*/
+
+
 RS_PFX rsSin(RS_TN x)
 {
-  TVal g  =  x.v;
+  TVal g  =  x.v;                            // g = g(x) = x.v
   TVal fv =  rsSin(g);                       // f(g)   =  sin(g)
   TDer fd =  rsCos(g);                       // f'(g)  =  cos(g)
   TCrv fc = -rsSin(g);                       // f''(g) = -sin(g)
@@ -4815,6 +4840,12 @@ bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
 
 
 // ToDo:
+// 
+// - Implement arithmetic operators that allow to combine rsThreealNumbers with values of type 
+//   TVal, e.g. the underlying (real, scalar?) type. Maybe multiplication/division should 
+//   multiply/divide all 3 components by the given value whereas addition/subtraction should 
+//   add/subtract the given value only from the v component and leave d and c alone (i.e. just 
+//   copy it over from the threeal number operand)?
 //
 // - If this works out well, maybe it makes sense to extend this even further to compute the 3rd 
 //   derivative (maybe call it jerk and use a j and call the class rsQuadralNumber or 

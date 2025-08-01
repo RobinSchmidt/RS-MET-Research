@@ -5082,10 +5082,9 @@ bool unitTestThreealNumber()
   // Define two polynomials f(t) and g(t):
   Poly f({ +1,-2,-3,+5 });                  // f(t) = 1 - 2*t - 3*t^2 + 5*t^3
   Poly g({ +2,+1,-4,-2 });                  // g(t) = 2 + 1*t - 4*t^2 - 2*t^3
-  //Real t   = 0.5f;                          // Evaluation point
   Real t   = 0.25f;                         // Evaluation point
   Real h   = 1.e-2f;                        // Stepsize for numerical differentiation
-  Real tol = 1.e-1f;                        // Tolerance for numerical comparisons
+  Real tol = 1.e-2f;                        // Tolerance for numerical comparisons
 
   // Evaluate the polynomials at t and also compute their first and second derivatives at t:
   Real ft[3], gt[3];
@@ -5093,8 +5092,8 @@ bool unitTestThreealNumber()
   g.evaluateWithDerivatives(t, gt, 2);      // gt[0] = g(t), gt[1] = g'(t), gt[2] = g''(t)
 
   // Create some "threeal numbers" from the evaluated polynomials and their derivatives:
-  TN x = TN(ft[0], ft[1], ft[2]);
-  TN y = TN(gt[0], gt[1], gt[2]);
+  TN x = TN(ft[0], ft[1], ft[2]);           // x.v = f(t), x.d = f'(t), x.c = f''(t)
+  TN y = TN(gt[0], gt[1], gt[2]);           // y.v = g(t), y.d = g'(t), y.c = g''(t)
 
   // Test product rule:
   Poly p = f*g;
@@ -5146,11 +5145,6 @@ bool unitTestThreealNumber()
   ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
   ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
   ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
-  // This fails because we get NaNs because f(t) < 0 for the given t = 0.5. Maybe modify the 
-  // polynomial to give a positive value f(0.5) or choose a different t. 
-  // ..ok done. t = 0.25 works.
-  // Check if we can also reduce the tolerance now.
-
 
   // Test sine function:
   fVal = [&](Real t) { return rsSin(f(t)); };
@@ -5170,6 +5164,10 @@ bool unitTestThreealNumber()
   // this lambda. we don't need to see them from outside. Maybe the function should take the fVal
   // function rather than the rsSin function, because in the quotient rule, it would not fit the 
   // pattern to pass rsSin.
+
+  // Note: I tried using x.v instead of f(t) in the lambdas for fVal, but it did not work. I think 
+  // it is because the numerical differentiatior needs to evaluate f not only at t but also at t+h
+  // and t-h, so it needs to know the function f(t) rather than just the value f(t) at t.
 
 
 

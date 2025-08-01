@@ -536,21 +536,41 @@ h(x) = f(g(x))
 h1   = diff(h,  x)
 h2   = diff(h1, x)
 h3   = diff(h2, x)
-h1, h2, h3
+h4   = diff(h3, x)
+h1, h2, h3, h4
 
 which gives:
 
 (x |--> D[0](f)(g(x))*diff(g(x), x),
- x |--> D[0, 0](f)(g(x))*diff(g(x), x)^2 + D[0](f)(g(x))*diff(g(x), x, x),
- x |--> D[0, 0, 0](f)(g(x))*diff(g(x), x)^3 + 3*D[0, 0](f)(g(x))*diff(g(x), x)*diff(g(x), x, x) + D[0](f)(g(x))*diff(g(x), x, x, x))
+ x |--> D[0, 0](f)(g(x))*diff(g(x), x)^2 
+        + D[0](f)(g(x))*diff(g(x), x, x),
+ x |--> D[0, 0, 0](f)(g(x))*diff(g(x), x)^3 
+        + 3*D[0, 0](f)(g(x))*diff(g(x), x)*diff(g(x), x, x) 
+        + D[0](f)(g(x))*diff(g(x), x, x, x),
+ x |--> D[0, 0, 0, 0](f)(g(x))*diff(g(x), x)^4 
+        + 6*D[0, 0, 0](f)(g(x))*diff(g(x), x)^2*diff(g(x), x, x) 
+        + 3*D[0, 0](f)(g(x))*diff(g(x), x, x)^2 
+        + 4*D[0, 0](f)(g(x))*diff(g(x), x)*diff(g(x), x, x, x) 
+        + D[0](f)(g(x))*diff(g(x), x, x, x, x))
 
 Simplifying from the Sage syntax to math notation, this gives:
 
 n=1: f'(g)   *  g'
 n=2: f''(g)  * (g')^2                            +  f'(g) * g''
 n=3: f'''(g) * (g')^3  +  3 * f''(g) * g' * g''  +  f'(g) * g'''
+n=4: f''''(g) * (g')^4  +  6 * f'''(g) * (g')^2  * g''  +  3 * f''(g) * (g'')^2 
+     +  4 * f''(g) * g' * g'''  +  f'(g) * g''''
 
-ToDo: Maybe also include th n=4 case
+Maybe use a notation like f_3 to denote the 3rd derivative and adopt the convention that the 
+argument of f_k is always g. For example, g_1^2 means (g'(x))^2 and f_3 means f'''(g(x)).
+With this notation, we can write down these formulas in the shorter form:
+
+n=1: f_1*g_1
+n=2: f_2*g_1^2                                                   + f_1*g_2
+n=3: f_3*g_1^3                   + 3*f_2*g_1*g_2                 + f_1*g_3
+n=4: f_4*g_1^4 + 6*f_3*g_1^2*g_2 + 3*f_2*g_2^2   + 4*f_2*g_1*g_3 + f_1*g_4
+
+
 
 \end{comment}
 

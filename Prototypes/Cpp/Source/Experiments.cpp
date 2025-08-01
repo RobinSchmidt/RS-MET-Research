@@ -5073,11 +5073,12 @@ bool unitTestThreealNumber()
 {
   bool ok = true;
 
-  using Real = float;
-  using Poly = rsPolynomial<Real>;
-  using Func = std::function<Real(Real)>;
-  using TN   = rsThreealNumber<Real, Real, Real>;
-  using ND   = rsNumericDifferentiator<Real>;
+  using Real  = float;
+  using Poly  = rsPolynomial<Real>;
+  using TN    = rsThreealNumber<Real, Real, Real>;
+  using FuncR = std::function<Real(Real)>;           // Maybe rename back to Func
+  //using FuncT = std::function<TN(TN)>;
+  using ND    = rsNumericDifferentiator<Real>;
 
   // Define two polynomials f(t) and g(t):
   Poly f({ +1,-2,-3,+5 });                  // f(t) = 1 - 2*t - 3*t^2 + 5*t^3
@@ -5107,17 +5108,14 @@ bool unitTestThreealNumber()
 
   // Define functions for evaluating the quotient and for numerically evaluating the 1st and 2nd 
   // derivative of the quotient:
-  Func fVal = [&](Real t) { return f(t) / g(t); };
-  Func fDrv = [&](Real t) { return ND::derivative(fVal, t, h); };
-  Func fCrv = [&](Real t) { return ND::secondDerivative(fVal, t, h); };
-  // Maybe rename q, qp, qpp to fVal, fDrv, fCrv for later reuse.
+  FuncR fVal = [&](Real t) { return f(t) / g(t); };
+  FuncR fDrv = [&](Real t) { return ND::derivative(fVal, t, h); };
+  FuncR fCrv = [&](Real t) { return ND::secondDerivative(fVal, t, h); };
 
   // Do the numerical evaluation of the quotient and its derivatives:
   Real tVal = fVal(t);
   Real tDrv = fDrv(t);
   Real tCrv = fCrv(t);
-  // Maybe rename qt, qpt, qppt to tVal, tDrv, tCrv for later reuse.
-
 
   // Compute the quotient with 1st and 2nd derivative using the threeal numbers and compare that
   // to the numerical evaluation:
@@ -5133,6 +5131,55 @@ bool unitTestThreealNumber()
 
 
   // Test unary functions:
+
+  // Define helper function that takes a function pointer from real to real numbers and a function
+  // pointer from threeal numbers to threeal numbers. It verifies that the results in the d and c 
+  // fields of the evaluation of threeal numbers match the numerical evaluation of the 1st and 2nd 
+  // derivatives of the underlying real function. ...TBC..
+  // ToDo: maybe take a tolerance parameter
+
+  typedef Real (*pFuncR)(Real x);  // Pointer to function f: Real -> Real
+  typedef TN   (*pFuncT)(TN   x);  // Pointer to function f: TN   -> TN
+
+  auto testFunc = [&](const pFuncR funcR, const pFuncT funcT)
+  {
+    fVal = [&](Real t) { return funcR(f(t)); };
+    fDrv = [&](Real t) { return ND::derivative(fVal, t, h); };
+    fCrv = [&](Real t) { return ND::secondDerivative(fVal, t, h); };
+
+    tVal = fVal(t);
+    tDrv = fDrv(t);
+    tCrv = fCrv(t);
+
+    r = funcT(x);                        // Evaluate given FuncT at threeal number x
+
+    ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
+    ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
+    ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
+
+    return ok;
+  };
+
+  // Test the various unary functions. The first parameter is always a pointer to the underlying 
+  // function that operates on real numbers. The second parameter is a pointer to the function that
+  // operates on threeal numbers. The second parameter has typically the same function name as the 
+  // first, i.e. it is an overloaded version of the function for threeal numbers.
+  ok &= testFunc(&rsSqrt, &rsSqrt);
+  ok &= testFunc(&rsSin,  &rsSin);
+  // ...more to come... cos, exp, log, abs, etc.
+
+
+
+  // Obsolete comment:
+  // This doesn't compile because rsSqrt is not a std::function but just a plain old function. 
+  // Maybe testFunc should take function pointers rather than a std::function. Or maybe we can
+  // wrap our functions into std::function objects before passing them to testFunc. To do this,
+  // we could use a lambda that captures the function pointer and returns a std::function object.
+  // See https://stackoverflow.com/questions/21738775/c11-how-to-write-a-wrapper-function-to-make-stdfunction-objects
+
+
+  /*
+  // Old:
 
   // Test sqrt function:
   fVal = [&](Real t) { return rsSqrt(f(t)); };
@@ -5157,7 +5204,9 @@ bool unitTestThreealNumber()
   ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
   ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
   ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
+  */
 
+  // [DONE]
   // This code is repetitive. Try to get rid of the duplication. Perhaps we could use a lambda that
   // takes the function to evaluate as an argument (here rsSin) and assigns the fVal, fDrv, fCrv, 
   // tVal, tDrv, tCrv values. Maybe the fVal, fDrv, fCrv functions could be stored locally inside
@@ -5183,7 +5232,7 @@ bool unitTestThreealNumber()
   // Observations:
   //
   // - The error in the numerical evaluation of the quotient rule is quite large in the 2nd 
-  //   derivative, i.e. the qppt value. That's why we need such a large tolerance. I already tried
+  //   derivative, i.e. the tCrv value. That's why we need such a large tolerance. I already tried
   //   to tweak the stepsize h to get a better result but it did not help much. Using h = 1.e-2f 
   //   seems to be somewhere around the best we can get. I tried only rough steps like h = 1.e-1f, 
   //   h = 1.e-2f, h = 1.e-3f, so we may actually get better results by trying to optimize h on a 
@@ -5210,12 +5259,13 @@ bool unitTestThreealNumber()
   //   approximation to get the error under control. If such methods are not yet available, add 
   //   them!
   // 
-  // - Maybe compute some target values like qpt, qppt analytically rather than numerically. Maybe
+  // - Maybe compute some target values like tDer, tCrv analytically rather than numerically. Maybe
   //   use SageMath to do that. Or maybe we can derive the formulas ourselves. The disadvantage is 
   //   that we need to commit to a specific evaluation point t that we can't tweak later anymore - 
   //   at least, not without also recomputing these target values.
   // 
-  // - Implement and test the chain rule in unary functions like sin, exp, etc. To do this, we 
+  // - [DONE]
+  //   Implement and test the chain rule in unary functions like sin, exp, etc. To do this, we 
   //   first need to derive the chain rule for the 2nd derivative, i.e. a general formula for 
   //   (f(g(x)))''. A function f (like sin) for threeal numbers needs to compute the output triple
   //   f, f', f'' from the given input triple g, g', g''. The 1st component f is just f(g) (e.g. 
@@ -5233,11 +5283,13 @@ bool unitTestThreealNumber()
   // - Maybe use a different (less nice) evaluation point t. One where roundoff error actually 
   //   occurs. Then we really need a nonzero tolerance in the rsIsCloseTo() checks.
   //
-  // - To check the quotient rule, maybe create a std::function for evaluating f/g and use
-  //   rsNumericDifferentiator to produce the target values [done]. Maybe we could also use 
-  //   rsRationalFunction to represent the quotient. But that class does not yet support 
-  //   computation of derivatives, let alone 2nd derivatives. But maybe we could apply the quotient 
-  //   rule manually here.
+  // - [DONE]
+  //   To check the quotient rule, maybe create a std::function for evaluating f/g and use
+  //   rsNumericDifferentiator to produce the target values. 
+  // 
+  // - Maybe we could also use rsRationalFunction to represent the quotient. But that class does 
+  //   not yet support computation of derivatives, let alone 2nd derivatives. But maybe we could 
+  //   apply the quotient rule manually here. Nah - using numeric differentiation is fine for now.
 }
 
 

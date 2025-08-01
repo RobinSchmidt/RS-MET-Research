@@ -4730,7 +4730,7 @@ public:
 #define RS_PFX RS_CTD RS_TN
 
 
-RS_PFX rsSin(RS_TN x)
+RS_PFX rsSinOld(RS_TN x)
 {
   TVal g   = x.v;   // g
   TDer gp  = x.d;   // g'
@@ -4747,6 +4747,7 @@ RS_PFX rsSin(RS_TN x)
   // - Compute sin(g), cos(g) only once. Maybe use rsSinCos.
 }
 // Needs tests!
+// Obsolete - use rsSin instead.
 
 
 RS_PFX rsChainRule(RS_TN f, RS_TN g)
@@ -4757,15 +4758,31 @@ RS_PFX rsChainRule(RS_TN f, RS_TN g)
   TCrv c = f.c * g.d*g.d + f.d * g.c;  // f''(g) * (g')^2 + f'(g) * g''
 
   return RS_TN(v, d, c);               // Return the result as a new rsThreealNumber
+
+  // ToDo:
+  //
+  // - Streamline it by avoiding pulling out the v from f. Use f.v directly. And then we don't need
+  //   to use awkward wording like 0th order chain rule. We just compute d and c by 1st and 2nd 
+  //   order chain rule. The v part is just taken as is. 
 }
 
-RS_PFX rsSin2(RS_TN x)
+RS_PFX rsSin(RS_TN x)
 {
   TVal g  =  x.v;
   TVal fv =  rsSin(g);                       // f(g)   =  sin(g)
   TDer fd =  rsCos(g);                       // f'(g)  =  cos(g)
   TCrv fc = -rsSin(g);                       // f''(g) = -sin(g)
   return rsChainRule(RS_TN(fv, fd, fc), x);  // Apply the chain rule to compute the result
+
+  // ToDo:
+  //
+  // - Use rsSinCos to compute s,c. Then use return rsChainRule(RS_TN(s, c, -s), x); But maybe keep
+  //   the current version for reference. It may be more readable and shows more clearly what the
+  //   underlying math is. We evaluate the f (which is the sine function here) and its 1st and 2nd 
+  //   derivative at g (which is x.v). These 3 values, together with the 3 values (g, g', g'') in 
+  //   x, are then used to compute the result using the chain rule. This is the general pattern to
+  //   follow for all other unary functions as well, so we may want to keep this version as a 
+  //   template. But maybe we could also use a sqrt function for that purpose.
 }
 
 

@@ -4749,6 +4749,28 @@ RS_PFX rsSin(RS_TN x)
 // Needs tests!
 
 
+RS_PFX rsChainRule(RS_TN f, RS_TN g)
+{
+  // Compute the 3 parts of the result using the 0th, 1st and 2nd order chain rule:
+  TVal v = f.v;                        // f(g)
+  TDer d = f.d * g.d;                  // f'(g) * g'
+  TCrv c = f.c * g.d*g.d + f.d * g.c;  // f''(g) * (g')^2 + f'(g) * g''
+
+  return RS_TN(v, d, c);               // Return the result as a new rsThreealNumber
+}
+
+RS_PFX rsSin2(RS_TN x)
+{
+  TVal g  =  x.v;
+  TVal fv =  rsSin(g);                       // f(g)   =  sin(g)
+  TDer fd =  rsCos(g);                       // f'(g)  =  cos(g)
+  TCrv fc = -rsSin(g);                       // f''(g) = -sin(g)
+  return rsChainRule(RS_TN(fv, fd, fc), x);  // Apply the chain rule to compute the result
+}
+
+
+
+
 #undef RS_CTD
 #undef RS_DN
 #undef RS_PFX

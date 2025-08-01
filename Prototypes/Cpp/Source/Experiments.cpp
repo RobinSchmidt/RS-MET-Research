@@ -5082,7 +5082,8 @@ bool unitTestThreealNumber()
   // Define two polynomials f(t) and g(t):
   Poly f({ +1,-2,-3,+5 });                  // f(t) = 1 - 2*t - 3*t^2 + 5*t^3
   Poly g({ +2,+1,-4,-2 });                  // g(t) = 2 + 1*t - 4*t^2 - 2*t^3
-  Real t   = 0.5f;                          // Evaluation point
+  //Real t   = 0.5f;                          // Evaluation point
+  Real t   = 0.25f;                         // Evaluation point
   Real h   = 1.e-2f;                        // Stepsize for numerical differentiation
   Real tol = 1.e-1f;                        // Tolerance for numerical comparisons
 
@@ -5134,6 +5135,23 @@ bool unitTestThreealNumber()
 
   // Test unary functions:
 
+  // Test sqrt function:
+  fVal = [&](Real t) { return rsSqrt(f(t)); };
+  fDrv = [&](Real t) { return ND::derivative(fVal, t, h); };
+  fCrv = [&](Real t) { return ND::secondDerivative(fVal, t, h); };
+  tVal = fVal(t);
+  tDrv = fDrv(t);
+  tCrv = fCrv(t);
+  r = rsSqrt(x);                       // Evaluate square root at threeal number x
+  ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
+  ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
+  ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
+  // This fails because we get NaNs because f(t) < 0 for the given t = 0.5. Maybe modify the 
+  // polynomial to give a positive value f(0.5) or choose a different t. 
+  // ..ok done. t = 0.25 works.
+  // Check if we can also reduce the tolerance now.
+
+
   // Test sine function:
   fVal = [&](Real t) { return rsSin(f(t)); };
   fDrv = [&](Real t) { return ND::derivative(fVal, t, h); };
@@ -5141,6 +5159,11 @@ bool unitTestThreealNumber()
   tVal = fVal(t);
   tDrv = fDrv(t);
   tCrv = fCrv(t);
+  r = rsSin(x);                        // Evaluate sine at threeal number x
+  ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
+  ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
+  ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
+
   // This code is repetitive. Try to get rid of the duplication. Perhaps we could use a lambda that
   // takes the function to evaluate as an argument (here rsSin) and assigns the fVal, fDrv, fCrv, 
   // tVal, tDrv, tCrv values. Maybe the fVal, fDrv, fCrv functions could be stored locally inside
@@ -5148,12 +5171,6 @@ bool unitTestThreealNumber()
   // function rather than the rsSin function, because in the quotient rule, it would not fit the 
   // pattern to pass rsSin.
 
-
-  r = rsSin(x);  // Evaluate the sine function at the threeal number x
-
-  ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
-  ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
-  ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
 
 
   //r = rsSinOld(x);    // Old implementation of the sine function - just for comparison

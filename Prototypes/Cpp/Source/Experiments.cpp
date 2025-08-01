@@ -5156,7 +5156,7 @@ bool unitTestThreealNumber()
   ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
 
 
-  r = rsSinOld(x);    // Old implementation of the sine function - just for comparison
+  //r = rsSinOld(x);    // Old implementation of the sine function - just for comparison
 
 
 

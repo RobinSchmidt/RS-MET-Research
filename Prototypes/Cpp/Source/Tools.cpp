@@ -4690,8 +4690,6 @@ public:
   (f/g)'' = f'' / g  -  (2 f' g' + f  g'') / g^2  +  2 f (g')^2 / g^3   Verify! */
   TN operator/(const TN& y) const 
   { 
-    //return TN(); // Preliminary
-
     TVal f   = v;     // f
     TDer fp  = d;     // f'
     TCrv fpp = c;     // f''
@@ -4729,7 +4727,7 @@ public:
 #define RS_TN  rsThreealNumber<TVal, TDer, TCrv>
 #define RS_PFX RS_CTD RS_TN
 
-
+/*
 RS_PFX rsSinOld(RS_TN x)
 {
   TVal g   = x.v;   // g
@@ -4748,8 +4746,11 @@ RS_PFX rsSinOld(RS_TN x)
 }
 // Needs tests!
 // Obsolete - use rsSin instead.
+*/
 
 
+/** Implements the 1st and 2nd order chain rule. 
+...TBC... ToDo: explain usage inside the unary functions and document the formulas. */
 RS_PFX rsChainRule(RS_TN f, RS_TN g)
 {
   // Compute the 3 parts of the result using the 0th, 1st and 2nd order chain rule:

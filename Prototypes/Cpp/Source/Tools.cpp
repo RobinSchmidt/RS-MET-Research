@@ -4727,61 +4727,39 @@ public:
 #define RS_TN  rsThreealNumber<TVal, TDer, TCrv>
 #define RS_PFX RS_CTD RS_TN
 
+/** This function is used inside all of the following functions to compute unary functions of 
+rsThreealNumbers. It takes two rsThreealNumbers. The first of them is made up of the function 
+value, its first and second derivative of the outer function f in f(g(x)). This outer function f is
+the function to be implemented (i.e. our caller). The second parameter is the rsThreealNumber 
+g = g(x) which is the argument of the outer function f. It represents the value and 1st and 2nd 
+derivatives of the inner function g = g(x). It's the caller's argument which it must pass through
+along with the outer function's value and derivatives. To compute the final result, we apply the 
+1st and 2nd order chain rules which are:
 
-/** Implements the 1st and 2nd order chain rule. This function is used inside all of the 
-following functions to compute unary functions of rsThreealNumbers. It takes two rsThreealNumbers.
-The first of them is made up of the function value, its first and second derivative of the outer 
-function f in f(g(x)). This outer function f is the function to be implemented. The second 
-parameter is the rsThreealNumber g = g(x) which is the argument of the outer function f. It 
-represents the value and 1st and 2nd derivatives of the inner function g = g(x). To compute the 
-final result, we apply the 1st and 2nd order chain rules which are:
-
-  f(g(x))'  = f'(g(x)) * g'(x)                               1st order chain rule
-  f(g(x))'' = f''(g(x)) * (g'(x))^2 + f'(g(x)) * g''(x)      2nd order chain rule
+  (f(g(x)))'  = f'(g(x)) * g'(x)                               1st order chain rule
+  (f(g(x)))'' = f''(g(x)) * (g'(x))^2 + f'(g(x)) * g''(x)      2nd order chain rule
 
 The output of the function is the triple (v, d, c) = (f(g(x)), (f(g(x)))', (f(g(x)))''). The input 
 f is the triple (f(g(x)), f'(g(x)), f''(g(x))) and the input g is the triple 
 (g(x), g'(x), g''(x)). */
 RS_PFX rsChainRule(RS_TN f, RS_TN g)
 {
-  // Compute the 3 parts of the result using the 0th, 1st and 2nd order chain rule:
-  TVal v = f.v;                        // f(g)
-  TDer d = f.d * g.d;                  // f'(g) * g'
-  TCrv c = f.c * g.d*g.d + f.d * g.c;  // f''(g) * (g')^2 + f'(g) * g''
-
-  return RS_TN(v, d, c);               // Return the result as a new rsThreealNumber
-
-  // ToDo:
-  //
-  // - Streamline it by avoiding pulling out the v from f. Use f.v directly. And then we don't need
-  //   to use awkward wording like 0th order chain rule. We just compute d and c by 1st and 2nd 
-  //   order chain rule. The v part is just taken as is. 
+  TDer d = f.d * g.d;                        // 1st order chain rule
+  TCrv c = f.d * g.c  +  f.c * g.d*g.d;      // 2nd order chain rule
+  return RS_TN(f.v, d, c);                   // Return result as rsThreealNumber
 }
 
+/** Implements the sqrt function for rsThreealNumber. The implementation may serve as a template for
+the other unary functions. */
 RS_PFX rsSqrt(RS_TN x)
 {
-  TVal g   = x.v;                            // g = g(x) = x.v
-  TVal fv  = rsSqrt(g);                      // f(g)   =  sqrt(g)
-  TDer fd  = TDer(0.5)/rsSqrt(g);            // f'(g)  =  1/(2*sqrt(g))
-  TCrv fc  = -TDer(0.25)/(g*rsSqrt(g));      // f''(g) = -1/(4*g*sqrt(g))
-  return rsChainRule(RS_TN(fv, fd, fc), x);  // Apply the chain rule to compute the result
+  TVal g  = x.v;                             // g = g(x) = x.v
+  TVal s  = rsSqrt(g);                       // Square root of g(x).
+  TVal fv = s;                               // f(g)   =  sqrt(g). Value of the outer function f.
+  TDer fd = TDer( 0.5 ) / s;                 // f'(g)  =  1/(2*sqrt(g)). Outer 1st derivative.
+  TCrv fc = TCrv(-0.25) / (g*s);             // f''(g) = -1/(4*g*sqrt(g)). Outer 2nd derivative.
+  return rsChainRule(RS_TN(fv, fd, fc), x);  // Apply chain rule to compute result.
 }
-// Optimize: Compute the square root only once!
-// Needs tests! The code was generated. It looks quite good math-wise but I'm not sure about the 
-// type-conversions to TDer - are they in the right places and convert to the right type? Do we 
-// actually need them at all?
-
-/*
-
-f(x) = sqrt(x)
-f1 = diff(f, x)
-f2 = diff(f1, x)
-f1, f2
-
-->  (x |--> 1/2/sqrt(x), x |--> -1/4/x^(3/2))
-
-*/
-
 
 RS_PFX rsSin(RS_TN x)
 {
@@ -4789,7 +4767,7 @@ RS_PFX rsSin(RS_TN x)
   TVal fv =  rsSin(g);                       // f(g)   =  sin(g)
   TDer fd =  rsCos(g);                       // f'(g)  =  cos(g)
   TCrv fc = -rsSin(g);                       // f''(g) = -sin(g)
-  return rsChainRule(RS_TN(fv, fd, fc), x);  // Apply the chain rule to compute the result
+  return rsChainRule(RS_TN(fv, fd, fc), x);  // Apply chain rule to compute result.
 
   // ToDo:
   //
@@ -4802,16 +4780,9 @@ RS_PFX rsSin(RS_TN x)
   //   template. But maybe we could also use a sqrt function for that purpose.
 }
 
-
-
-
 #undef RS_CTD
 #undef RS_DN
 #undef RS_PFX
-
-
-
-
 
 
 template<class T>

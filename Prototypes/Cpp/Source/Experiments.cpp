@@ -5158,7 +5158,12 @@ bool unitTestThreealNumber()
     ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
 
     return ok;
+
+    // Note: I tried using x.v instead of f(t) in the lambda for fVal, but it did not work. I 
+    // think it is because the numerical differentiatior needs to evaluate f not only at t but also
+    // at t+h and t-h, so it needs to know the function f(t) rather than just the value f(t) at t.
   };
+
 
   // Test the various unary functions. The first parameter is always a pointer to the underlying 
   // function that operates on real numbers. The second parameter is a pointer to the function that
@@ -5167,61 +5172,6 @@ bool unitTestThreealNumber()
   ok &= testFunc(&rsSqrt, &rsSqrt);
   ok &= testFunc(&rsSin,  &rsSin);
   // ...more to come... cos, exp, log, abs, etc.
-
-
-
-  // Obsolete comment:
-  // This doesn't compile because rsSqrt is not a std::function but just a plain old function. 
-  // Maybe testFunc should take function pointers rather than a std::function. Or maybe we can
-  // wrap our functions into std::function objects before passing them to testFunc. To do this,
-  // we could use a lambda that captures the function pointer and returns a std::function object.
-  // See https://stackoverflow.com/questions/21738775/c11-how-to-write-a-wrapper-function-to-make-stdfunction-objects
-
-
-  /*
-  // Old:
-
-  // Test sqrt function:
-  fVal = [&](Real t) { return rsSqrt(f(t)); };
-  fDrv = [&](Real t) { return ND::derivative(fVal, t, h); };
-  fCrv = [&](Real t) { return ND::secondDerivative(fVal, t, h); };
-  tVal = fVal(t);
-  tDrv = fDrv(t);
-  tCrv = fCrv(t);
-  r = rsSqrt(x);                       // Evaluate square root at threeal number x
-  ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
-  ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
-  ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
-
-  // Test sine function:
-  fVal = [&](Real t) { return rsSin(f(t)); };
-  fDrv = [&](Real t) { return ND::derivative(fVal, t, h); };
-  fCrv = [&](Real t) { return ND::secondDerivative(fVal, t, h); };
-  tVal = fVal(t);
-  tDrv = fDrv(t);
-  tCrv = fCrv(t);
-  r = rsSin(x);                        // Evaluate sine at threeal number x
-  ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
-  ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
-  ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
-  */
-
-  // [DONE]
-  // This code is repetitive. Try to get rid of the duplication. Perhaps we could use a lambda that
-  // takes the function to evaluate as an argument (here rsSin) and assigns the fVal, fDrv, fCrv, 
-  // tVal, tDrv, tCrv values. Maybe the fVal, fDrv, fCrv functions could be stored locally inside
-  // this lambda. we don't need to see them from outside. Maybe the function should take the fVal
-  // function rather than the rsSin function, because in the quotient rule, it would not fit the 
-  // pattern to pass rsSin.
-
-  // Note: I tried using x.v instead of f(t) in the lambdas for fVal, but it did not work. I think 
-  // it is because the numerical differentiatior needs to evaluate f not only at t but also at t+h
-  // and t-h, so it needs to know the function f(t) rather than just the value f(t) at t.
-
-
-
-  //r = rsSinOld(x);    // Old implementation of the sine function - just for comparison
-
 
 
   rsAssert(ok);

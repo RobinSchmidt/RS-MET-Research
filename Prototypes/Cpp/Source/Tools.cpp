@@ -4687,7 +4687,7 @@ public:
 
   /** Implements 1st and 2nd order quotient rules: 
   (f/g)'  = (f' * g - g' * f) / g^2 
-  (f/g)'' = f'' / g  -  (2 f' g' + f  g'') / g^2  +  2 f (g')^2 / g^3   Verify! */
+  (f/g)'' = f'' / g  -  (2 f' g' + f g'') / g^2  +  2 f (g')^2 / g^3   Verify! */
   TN operator/(const TN& y) const 
   { 
     TVal f   = v;     // f
@@ -4727,30 +4727,21 @@ public:
 #define RS_TN  rsThreealNumber<TVal, TDer, TCrv>
 #define RS_PFX RS_CTD RS_TN
 
-/*
-RS_PFX rsSinOld(RS_TN x)
-{
-  TVal g   = x.v;   // g
-  TDer gp  = x.d;   // g'
-  TCrv gpp = x.c;   // g''
 
-  return RS_TN(
-     rsSin(g),
-     rsCos(g) * gp,
-    -rsSin(g) * gp*gp + rsCos(g) * gpp);  // (f(g))'' =  f''(g) * (g')^2 + f'(g) * g''
-                                          // with f'(g) = cos(g), f''(g) = -sin(g)
+/** Implements the 1st and 2nd order chain rule. This function is used inside all of the 
+following functions to compute unary functions of rsThreealNumbers. It takes two rsThreealNumbers.
+The first of them is made up of the function value, its first and second derivative of the outer 
+function f in f(g(x)). This outer function f is the function to be implemented. The second 
+parameter is the rsThreealNumber g = g(x) which is the argument of the outer function f. It 
+represents the value and 1st and 2nd derivatives of the inner function g = g(x). To compute the 
+final result, we apply the 1st and 2nd order chain rules which are:
 
-  // ToDo:
-  //
-  // - Compute sin(g), cos(g) only once. Maybe use rsSinCos.
-}
-// Needs tests!
-// Obsolete - use rsSin instead.
-*/
+  f(g(x))'  = f'(g(x)) * g'(x)                               1st order chain rule
+  f(g(x))'' = f''(g(x)) * (g'(x))^2 + f'(g(x)) * g''(x)      2nd order chain rule
 
-
-/** Implements the 1st and 2nd order chain rule. 
-...TBC... ToDo: explain usage inside the unary functions and document the formulas. */
+The output of the function is the triple (v, d, c) = (f(g(x)), (f(g(x)))', (f(g(x)))''). The input 
+f is the triple (f(g(x)), f'(g(x)), f''(g(x))) and the input g is the triple 
+(g(x), g'(x), g''(x)). */
 RS_PFX rsChainRule(RS_TN f, RS_TN g)
 {
   // Compute the 3 parts of the result using the 0th, 1st and 2nd order chain rule:
@@ -4861,7 +4852,12 @@ bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
 //   formulas. I think it would be a good idea to declare these functions as constexpr anyway and 
 //   then inspect the generated assembly code to see if the compiler actually replaces the function
 //   calls with the computed values. 
-
+//
+//
+// See also:
+// 
+//  https://stackoverflow.com/questions/3173359/implementing-automatic-differentiation-for-2nd-derivative-algorithm-for-travers
+//  https://www.alglib.net/optimization/lbfgsandcg.php
 
 
 //=================================================================================================

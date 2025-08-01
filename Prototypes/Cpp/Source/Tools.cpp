@@ -4759,6 +4759,12 @@ RS_PFX rsSqrt(RS_TN x)
   TDer fd = TDer( 0.5 ) / s;                 // f'(g)  =  1/(2*sqrt(g)). Outer 1st derivative.
   TCrv fc = TCrv(-0.25) / (g*s);             // f''(g) = -1/(4*g*sqrt(g)). Outer 2nd derivative.
   return rsChainRule(RS_TN(fv, fd, fc), x);  // Apply chain rule to compute result.
+
+  // ToDo:
+  // 
+  // - This could perhaps be optimized to use only one division by computing r = 1/(g*s) and then
+  //   computing fd = 0.5*g*r and fc = -0.25*r. But maybe we should then also test the numerical
+  //   accuracy of both implementations. Maybe the current version is more accurate.
 }
 
 RS_PFX rsSin(RS_TN x)

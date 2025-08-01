@@ -5208,6 +5208,9 @@ bool unitTestThreealNumber()
   //   as function pointers or as std::function objects or by using a template parameter F for the
   //   functions f, f', f'' and using lambdas in the implementations of the specific functions.
   //   I think, the required formula is: (f(g))'' =  f''(g) * (g')^2 + f'(g) * g''
+  //   Maybe the function should take g, g', g'' (as rsThreealNumber in one unit) and  
+  //   f(g), f'(g), f''(g) (maybe as separate quantities? Or maybe also as rsThrrealNumber?) as 
+  //   arguments.
   // 
   // - Maybe use a different (less nice) evaluation point t. One where roundoff error actually 
   //   occurs. Then we really need a nonzero tolerance in the rsIsCloseTo() checks.

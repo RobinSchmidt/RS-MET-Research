@@ -519,6 +519,8 @@ f(g(x))''' =
 \end{equation}
 For more explanations including a proof sketch, see \cite{YT_FaaDiBruno}.
 
+% Maybe give the formulas for n= 1,2,3,4 in notation with supressed argument and with f^{(n)} notation
+
 %Perhaps it would make sense to express it in the form of an algorithm in pseudocode or in python? Maybe figure out an even more general formula for higher order derivatives of composites of multiple functions - but that would then probably be unmanagably messy? Maybe implement it in C++ and link the implementation
 
 % https://en.wikipedia.org/wiki/Fa%C3%A0_di_Bruno%27s_formula
@@ -542,13 +544,13 @@ which gives:
  x |--> D[0, 0](f)(g(x))*diff(g(x), x)^2 + D[0](f)(g(x))*diff(g(x), x, x),
  x |--> D[0, 0, 0](f)(g(x))*diff(g(x), x)^3 + 3*D[0, 0](f)(g(x))*diff(g(x), x)*diff(g(x), x, x) + D[0](f)(g(x))*diff(g(x), x, x, x))
 
-Let's simplify that notationally:
+Simplifying from the Sage syntax to math notation, this gives:
 
-n=2: f''(g) * (g')^2 +  f'(g) * g''    verify!
+n=1: f'(g)   *  g'
+n=2: f''(g)  * (g')^2                            +  f'(g) * g''
+n=3: f'''(g) * (g')^3  +  3 * f''(g) * g' * g''  +  f'(g) * g'''
 
-
-
-
+ToDo: Maybe also include th n=4 case
 
 \end{comment}
 

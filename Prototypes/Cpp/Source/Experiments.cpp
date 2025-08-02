@@ -5146,26 +5146,29 @@ bool unitTestThreealNumber()
 
   auto testFunc = [&](const pFuncR funcR, const pFuncT funcT)
   {
+    // Produce target values by numerical differentiation:
     fVal = [&](Real t) { return funcR(f(t)); };
     fDrv = [&](Real t) { return ND::derivative(fVal, t, h); };
     fCrv = [&](Real t) { return ND::secondDerivative(fVal, t, h); };
-
     tVal = fVal(t);
     tDrv = fDrv(t);
     tCrv = fCrv(t);
 
-    r = funcT(x);                        // Evaluate given FuncT at threeal number x
+    // Evaluate given FuncT at threeal number x:
+    r = funcT(x);
 
-    bool ok = true;  // Result of the test
+    //bool ok = true;  // Result of the test
 
     //ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
     //ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
     //ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
 
+    //ok &= rsIsCloseTo(r, tVal, tDrv, tCrv, tol);
+    //return ok;
 
-    ok &= rsIsCloseTo(r, tVal, tDrv, tCrv, tol);
-
-    return ok;
+    // Compare target values with computed values, i.e. compare results of autodiff with results of
+    // numerical differentiation:
+    return rsIsCloseTo(r, tVal, tDrv, tCrv, tol);
 
     // Note: I tried using x.v instead of f(t) in the lambda for fVal, but it did not work. I 
     // think it is because the numerical differentiatior needs to evaluate f not only at t but also

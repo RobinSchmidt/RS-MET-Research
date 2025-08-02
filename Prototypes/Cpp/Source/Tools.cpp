@@ -4786,6 +4786,8 @@ RS_PFX rsSin(RS_TN x)
   //   template. But maybe we could also use a sqrt function for that purpose.
 }
 
+/** Function to check if a threeal number has the expected components v,d,c up to some numerical 
+tolerance. */
 RS_CTD
 bool rsIsCloseTo(RS_TN x, TVal v, TDer d, TCrv c, TVal tol)
 {
@@ -4806,6 +4808,10 @@ bool rsIsCloseTo(RS_TN x, TVal v, TDer d, TCrv c, TVal tol)
 #undef RS_PFX
 
 
+/** Convenience function to compare a threeal number with a length 3 array of values supposed to 
+represent f, f', f'' of some function evaluated at some x. This is convenient to use in conjunction
+with functions thatb produce values and derivatives in this way. I have some such functions in the 
+codebase - for example, the evaluation of polynomials with derivatives has such an API. */
 template<class T>
 bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
 {

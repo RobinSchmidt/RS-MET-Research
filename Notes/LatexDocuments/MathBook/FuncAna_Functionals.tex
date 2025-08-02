@@ -72,6 +72,8 @@ The so constructed functionals are what we will call \emph{regular distributions
 
 \subsubsection{Evaluating Distributions} ...TBC...ToDo: Explain that for distributions, it doesn't make sense (in general) to ask what value they have at a given point. 
 
+% They lose the main feature that we expect from functions: mapping values to values. But they retain some important other features. Explain which (see Weitz's video aboput the delta function).
+
 % Instead, we are only allowed to ask questions about what the integral above evaluates to for a given test function $f$. We can "test" the distribution $g$ with $f$, where $f$ may be localized (I guess) but we cannot ask for the value of $g$ at a specific $x$. So, "evaluating" a distribution amounts to testing / probing it with a test function? Maybe that is the reason for the term distribution? We are not allowed to evaluate the function *at* a point but we are only allowed to evaluate a (weighted) average *around* a point - that is: we can figure out how the function values are "distributed" around that point? Could that even hint to a connection to probability distributions? ...or more like: probability density function? 
 
 % ToDo:
@@ -128,8 +130,9 @@ Because we assumed that the interval $(-\epsilon, \epsilon)$ is completely conta
 % -Riesz-Markov-Kakutani theorem
 
 % When functions have no value(s): Delta functions and distributions
+%  (Lecture notes by Steven G. Johnson)
 % https://math.mit.edu/~stevenj/18.303/delta-notes.pdf  
-% -Very well writtrn lecture notes. It's like a tutorial.
+% -Very well written lecture notes. It's like a tutorial.
 % -Has an example for when one cannot exchange limits and differentiation. Maybe that example could
 %  be brought up int the Differentiation section
 % -I have a copy with highlighting here:
@@ -144,11 +147,11 @@ Now let's assume, $g$ is actually some nasty, non-differentiable function such t
 \begin{equation}
  \int_a^b g'(x) f(x) \; dx = \Big[g(x) f(x)\Big]_a^b - \int_a^b g(x) f'(x) \; dx
 \end{equation}
-Now there's no $g'$ anymore in the right hand side. Instead, we have to differentiate $f$ and that will never pose a problem to us because $f$ was assumed to be a test function, so it's differentiable infinitely often. For test functions, we also we have $f(a) = f(b) = 0$ which makes the boundary terms vanish. So, what remains is:
+Now there's no $g'$ anymore in the right hand side. Instead, we have to differentiate $f$ and that will never pose a problem to us because $f$ was assumed to be a test function, so it's smooth (i.e. differentiable infinitely often everywhere). For test functions, we also we have $f(a) = f(b) = 0$ which makes the boundary terms vanish. So, what remains is:
 \begin{equation}
  G'(f) = - \int_a^b g(x) f'(x) \; dx
 \end{equation}
-So, we may compute the functional $G'(f)$ for any test function $f$ even for a non-differentiable inducing function $g$ by simply moving the prime from $g$ to $f$ and prepending a minus sign. This motivates the following definition of the \emph{distributional derivative}:
+So, we may compute the functional $G'(f)$ for any test function $f$, even for a non-differentiable inducing function $g$, by simply moving the prime from $g$ to $f$ and prepending a minus sign. This motivates the following definition of the \emph{distributional derivative}:
 \begin{equation}
   G'(f) = -G(f')
 \end{equation}

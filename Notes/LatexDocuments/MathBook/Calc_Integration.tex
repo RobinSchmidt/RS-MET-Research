@@ -305,7 +305,7 @@ Most functions that we will typically encounter in applications are indeed Riema
 %https://en.wikipedia.org/wiki/Lebesgue_integration
 
 \subsubsection{Measures}
-Let's assume, we have a given set $A$ such as $\mathbb{R}^n$ for some positive natural number $n$. Informally, a measure on $A$ is a function, typically denoted as $\mu(X)$, into which we can plug in a subset $X$ of $A$ as input and it spits out a nonnegative real number or infinity as output. A first attempt to formalize it could look like: $\mu: \mathcal{P}(A) \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ where $\mathcal{P}(A)$ denotes the power set of $A$, i.e. the set of all subsets of A. However, the actual definition is slightly more complicated and more general. The domain of $\mu$ is not necessarily the set of \emph{all} subsets of $A$, although it could be. Instead, it is some set of subsets that satisfies some constraints. These constraints are encapsulated in the definition of a so called $\sigma$-algebra. With this definition in place, we will be able to state the actual formal definition of what a measure is.
+Let's assume, we have a given set $A$. For the time being, you may think of $A = \mathbb{R}^n$ for some positive natural number $n$ as an example. Informally, a measure on $A$ is a function, typically denoted as $\mu(X)$, into which we can plug in a subset $X$ of $A$ as input and it spits out a nonnegative real number or infinity as output. A first attempt to formalize it could look like: $\mu: \mathcal{P}(A) \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ where $\mathcal{P}(A)$ denotes the power set of $A$, i.e. the set of all subsets of A. However, the actual definition is slightly more complicated and more general. The domain of $\mu$ is not necessarily the set of \emph{all} subsets of $A$, although it could be. Instead, it is some set of subsets that satisfies some constraints. These constraints are encapsulated in the definition of a so called $\sigma$-algebra. With this definition in place, we will be able to state the actual formal definition of what a measure is.
 
 \paragraph{Definition: $\sigma$-Algebra} \label{Def:SigmaAlgebra} Given a set $A$, a $\sigma$-algebra $\Sigma$ on $A$ is a set of subsets of $A$ such that: (1) $\Sigma$ contains $A$ itself, (2) $\Sigma$ is closed under taking the complement, (3) $\Sigma$ is closed under taking countable unions.
 
@@ -313,7 +313,7 @@ Let's assume, we have a given set $A$ such as $\mathbb{R}^n$ for some positive n
 From this definition, it follows that the empty set $\emptyset$ is also in $\Sigma$ and that $\Sigma$ is closed under taking countable intersections, too. The extreme examples of such $\sigma$-algebras on a set $A$ are $\{\emptyset, A\}$ and $\mathcal{P}(A)$. The former is the smallest possible and the latter is the largest possible $\sigma$-algebra on $A$. Now, if $\mathcal{P}(A)$ qualifies as a $\sigma$-algebra, you might wonder why we go through the hassle of making such a definition instead of just always using $\mathcal{P}(A)$ as the domain of our measure function $\mu$. Why not just always take the largest possible domain? Why throw in such a complication just to restrict $\mu$ to possibly smaller domains? The answer is that for some choices of the set $A$, $\mathbb{R}$ being among these choices, it is impossible to construct a measure function $\mu$ on $\mathcal{P}(A)$ with certain desired properties. More on that later.
 
 \medskip
-By the way, there is also a notion of a so called $\Sigma$-algebra in computer science which is an entirely different concept that has nothing to do with the $\sigma$-algebras of this section, so don't get confused. I also have no idea why it's called an "algebra" anyway. In abstract algebra, an algebra is typically a vector space with some product defined on it - but I don't see the connection to this concept of $\sigma$-algebra here. [ToDo: Figure out if there is one! If not, rant about bad naming.]
+By the way, there is also a notion of a so called $\Sigma$-algebra in computer science which is an entirely different concept that has nothing to do with the $\sigma$-algebras of this section, so don't get confused. I also have no idea why it's called an "algebra" anyway. In abstract algebra, an algebra is typically a vector space with some product defined on it - but I don't see the connection to this concept of $\sigma$-algebra here. [ToDo: Figure out if there is one! If not, rant about bad naming (again).]
 
 % TODO: explain how the values of f on sets of measure zero do not affect the value of a (definite)
 % integral. That implies that it makes no difference if we integrate over open, half-open or closed
@@ -380,6 +380,8 @@ Here "countable" means either countably infinite or finite. That means that the 
 \subsubsection{The Lesbesgue Measure}
 After these general considerations, we now want to construct a measure $\mu$ on the set of real numbers $\mathbb{R}$. That means, we want to define a function into which we plug in a subset of $\mathbb{R}$ and it spits out a nonegative real number or infinity. Intuitively, that measure should suitably generalize the idea of a length of an interval $[a,b]$, so we would certainly expect that $\mu([a,b]) = b-a$. Furthermore, we would expect $\mu$ to be translation invariant, i.e. $\mu(X + t) = \mu(X)$ for any measurable set $X \subseteq \mathbb{R}$ and any real number $t \in \mathbb{R}$ that acts as a translation or offset that shifts the set $X$ by an amount of $t$ along the real number line. The construction of such a function $\mu$ on the whole power set $\mathcal{P}(\mathbb{R})$ turns out to be impossible, though. That's the reason why we need this complication with the $\sigma$-algebras. So, if we can't use $\mathcal{P}(\mathbb{R})$ as our $\sigma$-algebra, i.e. as the domain of $\mu$, what other set of subsets of $\mathbb{R}$ could be suitable to serve as our $\sigma$-algebra? The answer turns out to be the so called \emph{Borel algebra} ...TBC...
 
+% Tn multiple dimensions, it should generalize the idea of areas (2D), volumes (3D) and hypervolumesn (nD)
+
 
 % https://de.wikipedia.org/wiki/Borelsche_%CF%83-Algebra
 % https://en.wikipedia.org/wiki/Borel_set
@@ -432,6 +434,14 @@ After these general considerations, we now want to construct a measure $\mu$ on 
 % https://www.youtube.com/watch?v=hs3eDa3_DzU
 % -A set with no measure - Vitali set
 
+% Other measures:
+% https://en.wikipedia.org/wiki/Borel_measure
+% https://en.wikipedia.org/wiki/Probability_measure
+% https://en.wikipedia.org/wiki/Fuzzy_measure_theory
+% https://en.wikipedia.org/wiki/Haar_measure
+% https://en.wikipedia.org/wiki/Lebesgue_measure
+% https://en.wikipedia.org/wiki/Risk-neutral_measure
+
 %===================================================================================================
 \subsection{Other Integral Definitions} 
 
@@ -476,11 +486,13 @@ https://mathematica.stackexchange.com/questions/140088/does-mathematica-implemen
 
 -as example for computing a Riemman integral from the definiton, use f(x) = x^2 and integrate it from zero to some variable upper limit b
 -define a sum S_N = \sum_{k=1}^N (k dx)^2 dx with dx defined as (b-a)/N with a=0, so it's just dx=b/N
+ ...I think, the dx should actzally be a \Delta x
 -this leads to S_N = dx^3 \sum_k k^3
--using \sum_k k^3 = (2N^3+3N^2+N)/6 via Faulhaber's formula we can get rid of the sum
+-using \sum_k k^3 = (2N^3+3N^2+N)/6 via Faulhaber's formula we can get rid of the sum. Reference
+ the formula for sums of powers of x somewhere in an earlier section
 -this leads to an expression containing powers of N in the numerator and N^3 in the denominator
 -when N -> inf only the leading term remains and we get \lim_{N -> inf} S_N = b^3/3
--this should just serve as a demonstartion that in princpile, it's possible to evaluate integrals from the definitions, using rules of limits and closed form sum formulas as an analogy how it is in princpile possible to evaluate derivatives using limits
+-this should just serve as a demonstration that in principle, it's possible to evaluate integrals from the definitions, using rules of limits and closed form sum formulas as an analogy how it is in principle possible to evaluate derivatives using limits
 -state that nobody actually evaluates integrals like that, just like with derivatives
 
 Explain what happens when we use closed or open intervals to integrate over and/or when we change the function values at isolated points - the value of the integral doesn't change. Introduce the notation where the set that we integrate over is written as subscript to the integral sign (typically using R for region - or maybe I for interval. In general, it's a subset of the domain of f)

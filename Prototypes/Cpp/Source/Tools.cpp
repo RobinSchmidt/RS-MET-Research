@@ -4786,6 +4786,21 @@ RS_PFX rsSin(RS_TN x)
   //   template. But maybe we could also use a sqrt function for that purpose.
 }
 
+RS_CTD
+bool rsIsCloseTo(RS_TN x, TVal v, TDer d, TCrv c, TVal tol)
+{
+  return rsIsCloseTo(x.getValue(),      v, tol) &&
+         rsIsCloseTo(x.getDerivative(), d, tol) &&
+         rsIsCloseTo(x.getCurvature(),  c, tol);
+
+  // ToDo:
+  //
+  // - Maybe the tolerance parameter should be of yet another templated type. We may have to change
+  //   that when we want to use it for more complicated types for TVal such as vector or complex 
+  //   types.
+}
+
+
 #undef RS_CTD
 #undef RS_DN
 #undef RS_PFX

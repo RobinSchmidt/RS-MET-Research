@@ -5124,9 +5124,12 @@ bool unitTestThreealNumber()
   // OK - looks in the right ballpark. ToDo: tweak the h parameter to get a better match. Then 
   // tweak the tolerance to adjust it to the match that we get.
   // We want r.v == qt, r.d == qpt, r.c == qppt up to tolerance
-  ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
-  ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
-  ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
+
+  ok &= rsIsCloseTo(r, tVal, tDrv, tCrv, tol);
+
+  //ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
+  //ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
+  //ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
   // Maybe factor these 3 tests out into a function like rsIsCloseTo(r, tVal, tDrv, tCrv, tol).
 
 
@@ -5153,9 +5156,14 @@ bool unitTestThreealNumber()
 
     r = funcT(x);                        // Evaluate given FuncT at threeal number x
 
-    ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
-    ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
-    ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
+    bool ok = true;  // Result of the test
+
+    //ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
+    //ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
+    //ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
+
+
+    ok &= rsIsCloseTo(r, tVal, tDrv, tCrv, tol);
 
     return ok;
 

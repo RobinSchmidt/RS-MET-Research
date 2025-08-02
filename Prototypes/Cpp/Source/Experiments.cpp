@@ -5096,7 +5096,9 @@ bool unitTestThreealNumber()
   TN x = TN(ft[0], ft[1], ft[2]);           // x.v = f(t), x.d = f'(t), x.c = f''(t)
   TN y = TN(gt[0], gt[1], gt[2]);           // y.v = g(t), y.d = g'(t), y.c = g''(t)
 
+
   // Test product rule:
+
   Poly p = f*g;
   Real pt[3];
   p.evaluateWithDerivatives(t, pt, 2);      // pt[0] = p(t), pt[1] = p'(t), pt[2] = p''(t)
@@ -5120,20 +5122,10 @@ bool unitTestThreealNumber()
   // Compute the quotient with 1st and 2nd derivative using the threeal numbers and compare that
   // to the numerical evaluation:
   r = x/y;
-
-  // OK - looks in the right ballpark. ToDo: tweak the h parameter to get a better match. Then 
-  // tweak the tolerance to adjust it to the match that we get.
-  // We want r.v == qt, r.d == qpt, r.c == qppt up to tolerance
-
   ok &= rsIsCloseTo(r, tVal, tDrv, tCrv, tol);
 
-  //ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
-  //ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
-  //ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
-  // Maybe factor these 3 tests out into a function like rsIsCloseTo(r, tVal, tDrv, tCrv, tol).
 
-
-  // Test unary functions:
+  // Test chain rule (used in unary functions like sqrt, sin, exp, etc.):
 
   // Define helper function that takes a function pointer from real to real numbers and a function
   // pointer from threeal numbers to threeal numbers. It verifies that the results in the d and c 
@@ -5156,15 +5148,6 @@ bool unitTestThreealNumber()
 
     // Evaluate given FuncT at threeal number x:
     r = funcT(x);
-
-    //bool ok = true;  // Result of the test
-
-    //ok &= rsIsCloseTo(r.v, tVal, tol);   // value (primal part)
-    //ok &= rsIsCloseTo(r.d, tDrv, tol);   // derivative or slope (dual part)
-    //ok &= rsIsCloseTo(r.c, tCrv, tol);   // curvature (third part)
-
-    //ok &= rsIsCloseTo(r, tVal, tDrv, tCrv, tol);
-    //return ok;
 
     // Compare target values with computed values, i.e. compare results of autodiff with results of
     // numerical differentiation:

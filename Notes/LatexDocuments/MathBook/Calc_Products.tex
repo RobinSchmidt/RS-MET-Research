@@ -240,8 +240,8 @@ then $p(x)$ and $q(x)$ will have the same roots as $f(x)$. Of course, if the pro
 % 05b - Euler's Solution of the Basel Problem
 % https://www.youtube.com/watch?v=wbirLVLNYNk
 
-
-\paragraph{Sine}
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Factoring the Sine Function}
 A nice infinite product representation of the sine function was found be Euler and is given by:
 \begin{equation}
 \sin(x) = x \cdot \prod_{k=1}^{\infty} \left( 1 - \frac{x^2}{k^2 \pi^2}  \right)
@@ -274,6 +274,26 @@ which is known as the \emph{Wallis product} representation of $\pi$. Due to its 
 % https://www.youtube.com/watch?v=FCpRl0NzVu4&list=PLbaA3qJlbE93DiTYMzl0XKnLn5df_QWqY&index=3
 
 % https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Infinite_product_formulae
+
+% Can Sine be Factored?
+% https://www.youtube.com/watch?v=s2oO4g-13sc
+% -Explains why the $\prod_{k} (x - r_k)$ form for sine doesn't coverge but the
+%  $\prod_{k} (1 - \frac{x}{r_k})$ does. It's because in the 2nd form, the factors approach 1 
+%  whereas in the 1st case, they oscillate and grow bigger.
+% -At around 15 min, it has a power series expansion for 
+%  sin(x)/x = 1 - x^2/3! + x^4/5! - x^6/7! + ... = \sum_{k=0}^{\infty} x^{2k} / (2*k+1)!
+% -This could be useful for approximating the sinc function in practical applications.
+% -At around 19 min, mentions the Weierstrass factorization theorem which states that entire
+%  functions can be factored in this way (like Euler factored the sine function). See:
+%  https://en.wikipedia.org/wiki/Weierstrass_factorization_theorem
+%  This theorem is relevant here and should be mentioned.
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{The Weierstrass Factorization Theorem}
+...TBC...ToDo: Explain hat this theorem ensures that every \emph{entire function} can be factored in the way, Euler factored the sine function. Explain what "entire functions" are.
+
+% https://en.wikipedia.org/wiki/Weierstrass_factorization_theorem
+
 
 %---------------------------------------------------------------------------------------------------
 

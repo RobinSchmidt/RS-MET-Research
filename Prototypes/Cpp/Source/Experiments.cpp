@@ -11162,29 +11162,44 @@ bool testCommutativeHyperOperations()
   return ok;
 
   // Notes:
-  // -The numbers get big really quick
-  // -We have x *_2 y = e^(log(x)*log(y)) = (e^(log(x)))^log(y) = (e^(log(y)))^log(x). It follows 
-  //  that x^log(y) = y^log(x) because (e^(log(y))) = x and (e^(log(y))) = y? Is that true? It 
-  //  would be a logarithm law that I wasn't aware of before. Yes - this video:
-  //  https://www.youtube.com/watch?v=ofy2Kw2sIZg  mentions the formula at 0:45, too.
-  // -Could it be the case that the rule log(a*b) = log(a) + log(b) could be generalized to
-  //  log(a *_j b) = log(a) *_i log(b)  where i = j-1
+  // 
+  // - The numbers get big really quick
+  // 
+  // - We have x *_2 y = e^(log(x)*log(y)) = (e^(log(x)))^log(y) = (e^(log(y)))^log(x). It follows
+  //   that x^log(y) = y^log(x) because (e^(log(y))) = x and (e^(log(y))) = y? Is that true? It 
+  //   would be a logarithm law that I wasn't aware of before. Yes - this video:
+  //   https://www.youtube.com/watch?v=ofy2Kw2sIZg  mentions the formula at 0:45, too.
+  // 
+  // - Could it be the case that the rule log(a*b) = log(a) + log(b) could be generalized to
+  //   log(a *_j b) = log(a) *_i log(b)  where i = j-1
   //
+  // 
   // ToDo:
-  // -Test also associativity. Maybe commutativity doesn't really need to be tested. It immediately
-  //  follows from commutativity of multiplication...we'll see
-  // -Try other bases to prevent the numbers from exploding so quickly. Read the comments under the 
-  //  video. Base 2 seems to have interesting additional properties. It would still lead to rather
-  //  quick growth, though. Maybe try 1.1. What if the base B is < 1? What happens in the limit 
-  //  when B = 1? 
-  // -What about allowing complex numbers to get a greater domain for the logarithm?
-  // -What about using the imaginary unit as basis or some general complex number, maybe with unit 
-  //  modulus? Could this solve the problem of exploding numbers?
-  // -Plot the surface z = f(x,y) = op(x, y, n) for various n. But it may grow quickly for larger n 
-  //  so maybe use a logarithmic z-axis. Maybe even iterated logarithms could be needed.
+  // 
+  // - Test also associativity. Maybe commutativity doesn't really need to be tested. It 
+  //   immediately follows from commutativity of multiplication...we'll see
+  // 
+  // - Try other bases to prevent the numbers from exploding so quickly. Read the comments under 
+  //   the video. Base 2 seems to have interesting additional properties. It would still lead to 
+  //   rather quick growth, though. Maybe try 1.1. What if the base B is < 1? What happens in the 
+  //   limit when B = 1? 
+  // 
+  // - What about allowing complex numbers to get a greater domain for the logarithm?
+  // 
+  // - What about using the imaginary unit as basis or some general complex number, maybe with unit
+  //   modulus? Could this solve the problem of exploding numbers?
+  // 
+  // - Plot the surface z = f(x,y) = op(x, y, n) for various n. But it may grow quickly for larger n 
+  //   so maybe use a logarithmic z-axis. Maybe even iterated logarithms could be needed.
   //
+  // 
   // See also:
-  // -https://www.youtube.com/watch?v=ofy2Kw2sIZg  The Missing Operation | Epic Math Time
+  // 
+  // - https://www.youtube.com/watch?v=ofy2Kw2sIZg  The Missing Operation | Epic Math Time
+  //
+  // - https://www.youtube.com/watch?v=O-bMxw21EJc  Every Hyperoperation Explained
+  //   Overview over hwo hyperoperations can be defined. It includes the way implemented here (I 
+  //   think) but also other ways.
 }
 
 

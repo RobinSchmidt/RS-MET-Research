@@ -4695,26 +4695,24 @@ public:
   (f/g)'' = f'' / g  -  (2 f' g' + f g'') / g^2  +  2 f (g')^2 / g^3   Verify! */
   TN operator/(const TN& y) const 
   { 
-    TVal f   = v;     // f
-    TDer fp  = d;     // f'
-    TCrv fpp = c;     // f''
+    //TVal f   = v;     // f
+    //TDer fp  = d;     // f'
+    //TCrv fpp = c;     // f''
 
-    TVal g   = y.v;   // g
-    TDer gp  = y.d;   // g'
-    TCrv gpp = y.c;   // g''
-
+    //TVal g   = y.v;   // g
+    //TDer gp  = y.d;   // g'
+    //TCrv gpp = y.c;   // g''
 
     //TVal g2  = g*g;   // g^2
     //return TN(f/g, (fp*g - f*gp)/g2, fpp/g - (2*fp*gp + f*gpp)/g2 + 2*f*(gp*gp)/(g2*g));
 
 
-    TVal r  = TVal(1) / g;  // 1/g
+    TVal r  = TVal(1) / y.v;  // 1/g
     TVal r2 = r*r;
-
     return TN(
-      r*f,                                            // f/g
-      r2*(fp*g - f*gp),                               // (f'*g - g'*f) / g^2 
-      r*fpp - r2*(2*fp*gp+f*gpp) + 2*r2*r*f*(gp*gp)); // f''/g - (2f'g'+fg'')/g^2 + 2f(g')^2/g^3
+      v*r,                                      // f/g
+      (d*y.v - v*y.d)*r2,                       // (f'*g - g'*f) / g^2 
+      r*(c-r*((2*d*y.d+v*y.c)-r*2*v*y.d*y.d))); // f''/g - (2f'g'+fg'')/g^2 + 2f(g')^2/g^3
 
     // ToDo:
     // 

@@ -5105,6 +5105,13 @@ bool unitTestThreealNumber()
   TN r = x*y;
   ok &= rsIsCloseTo(r, pt, 0.f);            // We can use zero tolerance here because t is nice.
 
+  // Try to reconstruct x and y from the product r and the respective other factor:
+  TN x1 = r / y; ok &= rsIsCloseTo(x1, x, tol);
+  TN y1 = r / x; ok &= rsIsCloseTo(y1, y, tol);
+  // Here, we could actually use a lower tolerance. The tol variable is for tolerances involving
+  // numerical approximations (e.g. numerical derivatives) which is not the case here. Here, we 
+  // should see at most an error in the roundoff-noise range.
+
 
   // Test quotient rule:
 
@@ -5131,7 +5138,7 @@ bool unitTestThreealNumber()
   // pointer from threeal numbers to threeal numbers. It verifies that the results in the d and c 
   // fields of the evaluation of threeal numbers match the numerical evaluation of the 1st and 2nd 
   // derivatives of the underlying real function. ...TBC..
-  // ToDo: maybe take a tolerance parameter
+  // ToDo: maybe take a tolerance parameter instead of using the captured tol from outside
 
   typedef Real (*pFuncR)(Real x);  // Pointer to function f: Real -> Real
   typedef TN   (*pFuncT)(TN   x);  // Pointer to function f: TN   -> TN
@@ -5234,6 +5241,20 @@ bool unitTestThreealNumber()
   // - Maybe we could also use rsRationalFunction to represent the quotient. But that class does 
   //   not yet support computation of derivatives, let alone 2nd derivatives. But maybe we could 
   //   apply the quotient rule manually here. Nah - using numeric differentiation is fine for now.
+  //
+  // - Figure out the exact conditions under which a threeal number has a multiplicative inverse.
+  //   Or maybe more generally: when can we restore x,y from a product p = x*y and know only p and
+  //   x (or p and y). Maybe it's a condition that involves both factors? I think, a necessary 
+  //   condition to be able to compute p/y is that y.v != 0 because in the formula for the quotient
+  //   rule, we need to divide by y.v. But is that already sufficient? Looking at the product 
+  //   rules:  (f*g)'  = f' * g + g' * f, (f*g)'' = f''*g + 2*f'*g' + f*g''  it seems like there 
+  //   are some ways in which p.d and/or p.c could become zero even though none of f',f'',g'.g'' is
+  //   zero. Does that matter? Characterize the geometric shape of the set of such zero divisors in
+  //   the 3D space spanned by the threeal numbers. Find an interpretation for what these 
+  //   conditions mean. If all 3 parts are zero, then it means that the underlying function has a 
+  //   root or order 3 the evaluation point t. Maybe the order doesn't matter but maybe at the 
+  //   roots of some function g(x), we cannot compute the reciprocal 1/g or the quotient f/g for 
+  //   any f because g(x) = 0 there. This seems to make sense.
 }
 
 

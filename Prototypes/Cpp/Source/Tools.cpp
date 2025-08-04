@@ -4608,7 +4608,8 @@ variants of the product rule, quotient rule, etc. There are general formulas for
 derivatives of products and quotients of functions. They can be looked up in (1). Here, we need
 only the 1st and 2nd order versions of them, i.e. for n=1 and n=2. The n=1 versions are already 
 implemented in rsDualNumber and can be found in just about any math textbook with a calculus 
-section. Here, we additionally use the n=2 rules.
+section. Here, we additionally use the n=2 rules. There are also higher order chain rules wich are 
+needed for the implementations of functions like sqrt and sin.
 
 
 References:
@@ -4624,6 +4625,10 @@ class rsThreealNumber
 {
   // The name is silly. Try to find a better one. "TrialNumber" would be confusing, though because 
   // it makes the user think about tuings like "trial and error", etc. How about TrualNumber?
+  // TripleNumber? TripletNumber? Dual is latin. Latin for 3 would be tres or tria. 
+  // https://en.wikipedia.org/wiki/Latin_numerals
+  // ...so maybe let's go with TrialNumber anyway. It sounds good and fits well with DualNumber.
+  // The next would then be named QuadralNumber, then quintal or pental?
 
 public:
 
@@ -4698,10 +4703,18 @@ public:
     TDer gp  = y.d;   // g'
     TCrv gpp = y.c;   // g''
 
-    TVal g2  = g*g;   // g^2
 
-    return TN(f/g, (fp*g - f*gp)/g2, fpp/g - (2*fp*gp + f*gpp)/g2 + 2*f*(gp*gp)/(g2*g));
+    //TVal g2  = g*g;   // g^2
+    //return TN(f/g, (fp*g - f*gp)/g2, fpp/g - (2*fp*gp + f*gpp)/g2 + 2*f*(gp*gp)/(g2*g));
 
+
+    TVal r  = TVal(1) / g;  // 1/g
+    TVal r2 = r*r;
+
+    return TN(
+      r*f,                                            // f/g
+      r2*(fp*g - f*gp),                               // (f'*g - g'*f) / g^2 
+      r*fpp - r2*(2*fp*gp+f*gpp) + 2*r2*r*f*(gp*gp)); // f''/g - (2f'g'+fg'')/g^2 + 2f(g')^2/g^3
 
     // ToDo:
     // 
@@ -4748,6 +4761,8 @@ RS_PFX rsChainRule(RS_TN f, RS_TN g)
   TCrv c = f.d * g.c  +  f.c * g.d*g.d;      // 2nd order chain rule
   return RS_TN(f.v, d, c);                   // Return result as rsThreealNumber
 }
+// Maybe turn this into a static member function. Maybe implement similar functions for the product
+// and quotient rules and then use these inside the *,/ operators.
 
 /** Implements the sqrt function for rsThreealNumber. The implementation may serve as a template for
 the other unary functions. */
@@ -4791,9 +4806,9 @@ tolerance. */
 RS_CTD
 bool rsIsCloseTo(RS_TN x, TVal v, TDer d, TCrv c, TVal tol)
 {
-  return rsIsCloseTo(x.getValue(),      v, tol) &&
-         rsIsCloseTo(x.getDerivative(), d, tol) &&
-         rsIsCloseTo(x.getCurvature(),  c, tol);
+  return rsIsCloseTo(x.v, v, tol) &&
+         rsIsCloseTo(x.d, d, tol) &&
+         rsIsCloseTo(x.c, c, tol);
 
   // ToDo:
   //
@@ -4801,6 +4816,15 @@ bool rsIsCloseTo(RS_TN x, TVal v, TDer d, TCrv c, TVal tol)
   //   that when we want to use it for more complicated types for TVal such as vector or complex 
   //   types.
 }
+
+RS_CTD
+bool rsIsCloseTo(RS_TN x, RS_TN y, TVal tol)
+{
+  return rsIsCloseTo(x.v, y.v, tol) &&
+         rsIsCloseTo(x.d, y.d, tol) &&
+         rsIsCloseTo(x.c, y.c, tol);
+}
+
 
 
 #undef RS_CTD
@@ -4835,6 +4859,11 @@ bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
 //   multiply/divide all 3 components by the given value whereas addition/subtraction should 
 //   add/subtract the given value only from the v component and leave d and c alone (i.e. just 
 //   copy it over from the threeal number operand)?
+// 
+// - Implement a reciprocal function that computes the reciprocal of a threeal number. Maybe it 
+//   could also be an operator that takes a left operant of integer type such that we can write 1/x
+//   where x is a threeal number. It should just compute the reciprocal and scale it by the given 
+//   integer in the left operand.
 //
 // - If this works out well, maybe it makes sense to extend this even further to compute the 3rd 
 //   derivative (maybe call it jerk and use a j and call the class rsQuadralNumber or 

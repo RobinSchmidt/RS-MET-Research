@@ -4647,7 +4647,6 @@ public:
   using TN = rsThreealNumber<TVal, TDer, TCrv>;   // shorthand for convenience
 
 
-
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
@@ -4668,9 +4667,12 @@ public:
   TN operator-(const TN& y) const { return TN(v - y.v, d - y.d, c - y.c); }
 
 
-  /** Implements 1st and 2nd order product rules: 
-  (f*g)'  = f' * g + g' * f 
-  (f*g)'' = f''*g + 2*f'*g' + f*g''. */
+  /** Implements 1st and 2nd order product rules which are given by:
+  
+        (f*g)'  = f' * g + g' * f 
+        (f*g)'' = f''*g + 2*f'*g' + f*g''. 
+
+  The first one is the regular product rule that you can find in any calculus text. */
   TN operator*(const TN& y) const 
   { 
     return TN(v * y.v, d*y.v + v*y.d, c*y.v + TDer(2)*d*y.d + v*y.c);
@@ -4690,40 +4692,20 @@ public:
   //  be converted into a row-vector first (i.e. transposed) such that the product with the column
   //  vector d results in a matrix. But maybe the pre-factor 2 can remain a scalar. We'll see.
 
-  /** Implements 1st and 2nd order quotient rules: 
-  (f/g)'  = (f' * g - g' * f) / g^2 
-  (f/g)'' = f'' / g  -  (2 f' g' + f g'') / g^2  +  2 f (g')^2 / g^3   Verify! */
+  /** Implements 1st and 2nd order quotient rules which are given by:
+
+        (f/g)'  = (f' * g - g' * f) / g^2 
+        (f/g)'' = f'' / g  -  (2 f' g' + f g'') / g^2  +  2 f (g')^2 / g^3. 
+
+  The implementation of these formulas has been a bit optimized algebraically, though.  */
   TN operator/(const TN& y) const 
   { 
-    //TVal f   = v;     // f
-    //TDer fp  = d;     // f'
-    //TCrv fpp = c;     // f''
-
-    //TVal g   = y.v;   // g
-    //TDer gp  = y.d;   // g'
-    //TCrv gpp = y.c;   // g''
-
-    //TVal g2  = g*g;   // g^2
-    //return TN(f/g, (fp*g - f*gp)/g2, fpp/g - (2*fp*gp + f*gpp)/g2 + 2*f*(gp*gp)/(g2*g));
-
-
-    TVal r  = TVal(1) / y.v;  // 1/g
-    TVal r2 = r*r;
-    return TN(
-      v*r,                                      // f/g
+    TVal r  = TVal(1) / y.v;                    // 1/g
+    TVal r2 = r*r;                              // 1/g^2
+    return TN(v*r,                              // f/g
       (d*y.v - v*y.d)*r2,                       // (f'*g - g'*f) / g^2 
       r*(c-r*((2*d*y.d+v*y.c)-r*2*v*y.d*y.d))); // f''/g - (2f'g'+fg'')/g^2 + 2f(g')^2/g^3
-
-    // ToDo:
-    // 
-    // - Verify the formula numerically with some examples.
-    //
-    // - Maybe get rid of the intermediates. They are only for clarity during writing.
-    //
-    // - Look for optimization opportunities. Maybe we can avoid some divisions. We could 
-    //   precompute 1/g and 1/g^2 and then replace all divisions by multiplications, for example. 
-    //   But maybe we can optimize it even better. But that's for later. In any case, we should 
-    //   keep the unoptimized code for reference in a comment.
+                                                // with v=f, d=f', c=f'', y.v=g, y.d=g', y.c=g''
   }
 
 };
@@ -4799,6 +4781,16 @@ RS_PFX rsSin(RS_TN x)
   //   template. But maybe we could also use a sqrt function for that purpose.
 }
 
+
+/** Function to check if two threeal number are equal up to some numerical tolerance. */
+RS_CTD
+bool rsIsCloseTo(RS_TN x, RS_TN y, TVal tol)
+{
+  return rsIsCloseTo(x.v, y.v, tol) &&
+         rsIsCloseTo(x.d, y.d, tol) &&
+         rsIsCloseTo(x.c, y.c, tol);
+}
+
 /** Function to check if a threeal number has the expected components v,d,c up to some numerical 
 tolerance. */
 RS_CTD
@@ -4814,21 +4806,6 @@ bool rsIsCloseTo(RS_TN x, TVal v, TDer d, TCrv c, TVal tol)
   //   that when we want to use it for more complicated types for TVal such as vector or complex 
   //   types.
 }
-
-RS_CTD
-bool rsIsCloseTo(RS_TN x, RS_TN y, TVal tol)
-{
-  return rsIsCloseTo(x.v, y.v, tol) &&
-         rsIsCloseTo(x.d, y.d, tol) &&
-         rsIsCloseTo(x.c, y.c, tol);
-}
-
-
-
-#undef RS_CTD
-#undef RS_DN
-#undef RS_PFX
-
 
 /** Convenience function to compare a threeal number with a length 3 array of values supposed to 
 represent f, f', f'' of some function evaluated at some x. This is convenient to use in conjunction
@@ -4849,7 +4826,6 @@ bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
 //   in separate variables.
 
 
-
 // ToDo:
 // 
 // - Implement arithmetic operators that allow to combine rsThreealNumbers with values of type 
@@ -4859,7 +4835,7 @@ bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
 //   copy it over from the threeal number operand)?
 // 
 // - Implement a reciprocal function that computes the reciprocal of a threeal number. Maybe it 
-//   could also be an operator that takes a left operant of integer type such that we can write 1/x
+//   could also be an operator that takes a left operand of integer type such that we can write 1/x
 //   where x is a threeal number. It should just compute the reciprocal and scale it by the given 
 //   integer in the left operand.
 //
@@ -4883,6 +4859,11 @@ bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
 // 
 //  https://stackoverflow.com/questions/3173359/implementing-automatic-differentiation-for-2nd-derivative-algorithm-for-travers
 //  https://www.alglib.net/optimization/lbfgsandcg.php
+
+
+#undef RS_CTD
+#undef RS_DN
+#undef RS_PFX
 
 
 //=================================================================================================

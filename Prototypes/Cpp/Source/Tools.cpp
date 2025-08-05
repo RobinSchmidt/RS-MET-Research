@@ -4628,7 +4628,8 @@ class rsThreealNumber
   // TripleNumber? TripletNumber? Dual is latin. Latin for 3 would be tres or tria. 
   // https://en.wikipedia.org/wiki/Latin_numerals
   // ...so maybe let's go with TrialNumber anyway. It sounds good and fits well with DualNumber.
-  // The next would then be named QuadralNumber, then quintal or pental?
+  // Or maybe let's take TriolNumber? The next would then be named QuadralNumber, then quintal or 
+  // pental?
 
 public:
 
@@ -4677,44 +4678,26 @@ public:
   { 
     return TN(v * y.v, d*y.v + v*y.d, c*y.v + TDer(2)*d*y.d + v*y.c);
   }
-  // ToDo: 
-  // -Document what these implementations imply for the requirements on the template parameters. 
-  //  Apparently, for the computation of the c field, we need to be able to multiply values and 
-  //  curvatures (v and c values) and that should result in a type that is addition-compatible with
-  //  the result of a product of two derivatives (d values). Maybe that means that the type for the
-  //  c-values, when we see it as Hessian in a multivariable setting, should be a matrix - and 
-  //  so should be the result of multiplying two d-values. Maybe that means, we need to use the 
-  //  outer product of vectors to multiply d-values in order to get a matrix as result? Figure this 
-  //  out! Maybe it all makes sense only when v,d,c are just scalars anyway. I'm not sure about 
-  //  that yet. In that case, it would all be trivial. Maybe we should use TCrv(2) instead of 
-  //  TDer(2) in the explicit type conversion. That should probably result in a diagonal matrix of 
-  //  2s. Maybe the naive d*y.d computation needs to be something else as well. Maybe y.d needs to
-  //  be converted into a row-vector first (i.e. transposed) such that the product with the column
-  //  vector d results in a matrix. But maybe the pre-factor 2 can remain a scalar. We'll see.
+
 
   /** Implements 1st and 2nd order quotient rules which are given by:
 
         (f/g)'  = (f' * g - g' * f) / g^2 
         (f/g)'' = f'' / g  -  (2 f' g' + f g'') / g^2  +  2 f (g')^2 / g^3. 
 
-  The implementation of these formulas has been a bit optimized algebraically, though.  */
+  The implementation of the 2nd formula has been a bit optimized algebraically, though.  */
   TN operator/(const TN& y) const 
   { 
-    TVal r  = TVal(1) / y.v;                    // 1/g
-    TVal r2 = r*r;                              // 1/g^2
-    return TN(v*r,                              // f/g
-      (d*y.v - v*y.d)*r2,                       // (f'*g - g'*f) / g^2 
+    // We have: v = f, d = f', c = f'', y.v = g, y.d = g', y.c = g''. Then:
+    TVal r = TVal(1) / y.v;                     // 1/g
+    return TN(v*r, (d*y.v - v*y.d)*r*r,         // f/g, (f'*g - g'*f) / g^2 
       r*(c-r*((2*d*y.d+v*y.c)-r*2*v*y.d*y.d))); // f''/g - (2f'g'+fg'')/g^2 + 2f(g')^2/g^3
-                                                // with v=f, d=f', c=f'', y.v=g, y.d=g', y.c=g''
   }
 
 };
 
-
-
 //=================================================================================================
 // Define unary functions for rsThreealNumber:
-
 
 #define RS_CTD template<class TVal, class TDer, class TCrv>
 #define RS_TN  rsThreealNumber<TVal, TDer, TCrv>
@@ -4729,8 +4712,8 @@ derivatives of the inner function g = g(x). It's the caller's argument which it 
 along with the outer function's value and derivatives. To compute the final result, we apply the 
 1st and 2nd order chain rules which are:
 
-  (f(g(x)))'  = f'(g(x)) * g'(x)                               1st order chain rule
-  (f(g(x)))'' = f''(g(x)) * (g'(x))^2 + f'(g(x)) * g''(x)      2nd order chain rule
+  (f(g(x)))'  = f'(g(x)) * g'(x)
+  (f(g(x)))'' = f''(g(x)) * (g'(x))^2 + f'(g(x)) * g''(x)
 
 The output of the function is the triple (v, d, c) = (f(g(x)), (f(g(x)))', (f(g(x)))''). The input 
 f is the triple (f(g(x)), f'(g(x)), f''(g(x))) and the input g is the triple 
@@ -4759,7 +4742,9 @@ RS_PFX rsSqrt(RS_TN x)
   // 
   // - This could perhaps be optimized to use only one division by computing r = 1/(g*s) and then
   //   computing fd = 0.5*g*r and fc = -0.25*r. But maybe we should then also test the numerical
-  //   accuracy of both implementations. Maybe the current version is more accurate.
+  //   accuracy of both implementations. Maybe the current version is more accurate. Maybe instead
+  //   of computing 1/sqrt(g), we could use an inverse square root function. These are sometimes
+  //   more efficient than using a square root function and then reciprocating.
 }
 
 RS_PFX rsSin(RS_TN x)
@@ -4814,9 +4799,9 @@ codebase - for example, the evaluation of polynomials with derivatives has such 
 template<class T>
 bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
 {
-  return rsIsCloseTo(x.getValue(),      a[0], tol) &&
-         rsIsCloseTo(x.getDerivative(), a[1], tol) &&
-         rsIsCloseTo(x.getCurvature(),  a[2], tol);
+  return rsIsCloseTo(x.v, a[0], tol) &&
+         rsIsCloseTo(x.d, a[1], tol) &&
+         rsIsCloseTo(x.c, a[2], tol);
 }
 // Question:
 //
@@ -4854,6 +4839,21 @@ bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
 //   then inspect the generated assembly code to see if the compiler actually replaces the function
 //   calls with the computed values. 
 //
+// - Document what the implementations of the different rules imply for the requirements on the 
+//   template parameters. For example, for the computation of the c field in the 2nd order product 
+//   rule, we need to be able to multiply values and curvatures (v and c values) and that should 
+//   result in a type that is addition-compatible with the result of a product of two derivatives 
+//   (d values). Maybe that means that the type for the c-values, when we see it as Hessian in a 
+//   multivariable setting, should be a matrix - and so should be the result of multiplying two 
+//   d-values. Maybe that means, we need to use the outer product of vectors to multiply d-values 
+//   in order to get a matrix as result? Figure this out! Maybe it all makes sense only when v,d,c
+//   are just scalars anyway. I'm not sure about that yet. In that case, it would all be trivial. 
+//   Maybe we should use TCrv(2) instead of TDer(2) in the explicit type conversion. That should 
+//   probably result in a diagonal matrix of 2s. Maybe the naive d*y.d computation needs to be 
+//   something else as well. Maybe y.d needs to be converted into a row-vector first (i.e. 
+//   transposed) such that the product with the column vector d results in a matrix. But maybe the 
+//   pre-factor 2 can remain a scalar. We'll see.
+// 
 //
 // See also:
 // 

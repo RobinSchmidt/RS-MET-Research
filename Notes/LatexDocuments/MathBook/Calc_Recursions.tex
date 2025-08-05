@@ -1,0 +1,66 @@
+\section{Infinite Anythings}
+After having seen infinite sums and infinite products, we'll now do a thing that mathematicians love to do: Generalize. We have defined an infinite sum via a limit over the partial sums $s_n$. The computation of such an $s_n$ was a finite sum which we already knew how to do. There is, however, another way to look at it. The computation of $s_n$ can also be seen as a formula involving the previous sum $s_{n-1}$ plus some new "update" or "correction" term $a_n$, i.e. $s_n = s_{n-1} + a_n$. For this $a_n$ term, we typically had an explicit formula involving $n$, i.e. $a_n = f(n)$ for a given function $f(n)$. With infinite products, the situation was similar with the only difference that we had a sequence of (finite) products $p_n$ and the update rule was $p_{n+1} = p_n \cdot a_n$. The general pattern here is that we compute the next term in our sequence (of partial sums or products) via some rule that takes in one (or, more generally, more) previous values of the sequence and possibly the index $n$ and computes the next value in this sequence. That is: we are dealing with sequences that can be produced via some recursive rule. ...TBC...
+
+%===================================================================================================
+\subsection{Recursively Defined Sequences}
+
+% Maybe start with the Babylonian algorithm applied to 2 as motivating example - without yet mentioning the name.
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Convergence}
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Fibonacci Numbers}
+
+% the sequence itself diverges but the sequence of ratios of successive terms converges to the golden ratio
+
+\paragraph{The Golden Ratio}
+Although the sequence of Fibonacci numbers itself diverges to infinity, we can construct a new sequence from it that does converge - and it does so to a rather interesting number. ...TBC...
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Newton-Raphson Iteration}
+
+\paragraph{The Babylonian Algorithm}
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{The Arithmetic-Geometric Mean}
+
+
+
+
+
+%===================================================================================================
+\subsection{Continued Fractions}
+
+% ...hmm...I'm not so sure if continued fractions and radicals fit in here because the upate rule actually is not so  imple. We have to evaluate the whole expression from the inside out implying that we must do a complete re-evalutation of everything for each new $n$. However, in the beginning we said that the update rule may involve more than one previous values, so maybe we can us that as justification? ..But hey! We are actually "outside" the recursion subsection here - so we do not need the content to fit in!
+
+
+%===================================================================================================
+\subsection{Infinite Radicals}
+
+
+
+
+
+
+\begin{comment}
+
+Maybe make a section about continued fractions. See:
+
+Die geheime Macht der Kettenbrüche für unmögliche Gleichungen
+https://www.youtube.com/watch?v=2qTgi4nq9TA
+
+
+...what about infinte radicals? Or generally infinitely nested functions? Maybe take the 
+arithmetic/geometric mean as example. The general theme is to have some (possibly recursive) rule to
+create an infinite sequence of numbers that converges to some specific number. In series and
+products, the rule is defined via a summation or product respectively. Maybe make a section "Other Infinite Sequences" or "...Computations". Maybe explain also the Newton iteration there. Maybe first
+frame sums and product in terms of recursion, i.e. S_{n+1} = S_n + f(n) or something like that and products similarly. Another example is the Fibonacci sequence - and the quotient of successive terms (which converges to the golden ratio) - it also domenostrates something lese: take an existing sequence (here the Fibonacci numbers) and create a new sequence from it (here the ratios of successive terms)
+
+-we will come full circle back to sequences - an earlier section of calculus
+
+But maybe that's a topic for discrete calc - in the theory of recurrence relations
+
+
+\end{comment}

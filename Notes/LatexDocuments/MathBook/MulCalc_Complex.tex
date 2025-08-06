@@ -159,6 +159,21 @@ It's time to define some more jargon. A complex function is said to be \emph{hol
 
 \subsection{The Residue Theorem}
 
+
+
+\subsection{The Factorization Theorem}
+
+
+% https://en.wikipedia.org/wiki/Weierstrass_factorization_theorem
+% https://de.wikipedia.org/wiki/Weierstra%C3%9Fscher_Produktsatz
+
+
+
+\subsection{The Mapping Theorem}
+
+% https://en.wikipedia.org/wiki/Riemann_mapping_theorem
+
+
 \subsection{Analytic Continuation}
 As a motivating example, consider the function $f(s)$ defined by the infinite sum:
 \begin{equation}
@@ -167,6 +182,7 @@ f(s) = \sum_{n=1}^{\infty} = \frac{1}{n^s}
 The usage of $s$ as argument is just a common convention for this particular function which is known as the \emph{Riemann zeta function} and also often denoted as $\zeta (s)$. It is indeed a well defined and even analytic function whenever that infinite sum converges. As we know from our discussion in the series section, this sum does indeed converge for $s > 1$ when we assume $s$ to be real. More generally, if we allow $s$ to be complex, the condition for convergence is that the real part of $s$ must be greater than one. For inputs with real part less than or equal to one, the function is as of yet undefined. However, complex analysis provides us with a technique by which we can uniquely extend the domain of the function to almost the whole complex plane. That technique is called \emph{analytic continuation}. As said, for $\Re(s) > 1$, $f$ is indeed an analytic function. ...
 
 % https://en.wikipedia.org/wiki/Identity_theorem
+% https://en.wikipedia.org/wiki/Monodromy_theorem
 
 % We have been able to extend the domains of exp and sin/cos by means of power series. that worked out because the power series of exp and sin/cos were nice enough to have an infinite radius of convergence around the expansion point zero (and, in fact, around any other expansion point as well?). 
 
@@ -177,6 +193,69 @@ The usage of $s$ as argument is just a common convention for this particular fun
 % Analytic Continuation and the Zeta Function
 % https://www.youtube.com/watch?v=CjSKmcWRFzE
 
+
+
+
+
+
+
+
+\subsection{Special Functions in the Complex Plane}
+
+\subsubsection{Constructing Functions from Poles and Zeros}
+
+% Recall the factorization of the sine function in the section about infinite products and generalize this idea to start with arbitrary poles and zeros in the complex plane and use them to construct a function.
+
+% I think, it should be possible to uniquely (up to a scale factor) construct entire functions (i.e. functions that are holomorphic/analytic in the entire complex plane) from their roots by making a product ansatz. let $R$ be the set of roots. Then use the ansatz $f(z) = \prod_{r \in R} (1 - z/r)$ or  $f(z) = \prod_{r \in R} (z - r)$.
+
+% More generally, it may be possible to construct meromorphic functions by making an ansatz that takes a quotient of two such products. 
+
+% Figure this out and maybe use the technique to construct a function that is zero at all the Gaussian integers. But wait? Will the function be really unqiue? What happens if we square each factor in the product? Or, more generally, raise each factor to some power (not necessarily the same power for each factor).
+
+
+\subsubsection{Elliptic Functions}
+
+% https://en.wikipedia.org/wiki/Elliptic_function
+
+%\paragraph{Constructing Functions from Poles and Zeros}
+
+
+
+\paragraph{The Weierstrass Elliptic Function}
+
+
+% Maybe let's define a function over the complex numbers by having roots at all the Gaussian integers. Or, more generally, let's specify a real and an imaginary period and construct a function that has roots at all values that can be constructed by appropriately shifting that unit cell. Is that how the Weierstrass P-function is constructed? Hmm - not quite. It seems to have poles at the lattice points:
+
+% https://en.wikipedia.org/wiki/Weierstrass_elliptic_function
+
+
+\paragraph{The Jacobi Elliptic Functions}
+
+
+% https://en.wikipedia.org/wiki/Jacobi_elliptic_functions
+
+% https://en.wikipedia.org/wiki/Hyperelliptic_curve
+
+
+
+\subsubsection{Modular Forms}
+
+
+% https://en.wikipedia.org/wiki/Modular_form
+
+
+
+
+\subsubsection{$L$-Functions}
+
+% https://en.wikipedia.org/wiki/L-function
+% https://de.wikipedia.org/wiki/L-Funktion
+
+
+
+
+
+\subsection{Riemann Surfaces}
 
 
 
@@ -249,6 +328,8 @@ Make a section about some specific complex functions of interest:
 % Essence of complex analysis  by Mathemaniac, uses a vector-field approach	
 
 
+
+https://en.wikipedia.org/wiki/Riemann%E2%80%93Roch_theorem
 	
 	
 https://en.wikipedia.org/wiki/Elliptic_function
@@ -313,6 +394,6 @@ https://www.youtube.com/playlist?list=PLb0zKSynM2PA4hFxdbJYBuk8v3I-Fv6fA
 
 The Hidden World of Coordinates
 https://www.youtube.com/watch?v=fy3NxL8KHAU
-
+-Introduces Riemann Surfaces
 
 \end{comment}

@@ -206,11 +206,17 @@ The usage of $s$ as argument is just a common convention for this particular fun
 
 % Recall the factorization of the sine function in the section about infinite products and generalize this idea to start with arbitrary poles and zeros in the complex plane and use them to construct a function.
 
-% I think, it should be possible to uniquely (up to a scale factor) construct entire functions (i.e. functions that are holomorphic/analytic in the entire complex plane) from their roots by making a product ansatz. let $R$ be the set of roots. Then use the ansatz $f(z) = \prod_{r \in R} (1 - z/r)$ or  $f(z) = \prod_{r \in R} (z - r)$.
+% I think, it should be possible to uniquely (up to a scale factor) construct entire functions (i.e. functions that are holomorphic/analytic in the entire complex plane) from their roots by making a product ansatz. let $R$ be the set of roots. Then use the ansatz $f(z) = \prod_{r \in R} (1 - z/r)$ or  $f(z) = \prod_{r \in R} (z - r)$. But maybe these product do not necessarily converge. In the case of the sin function, we could combine factors (1 +- z/r) due to symmetry to the form (1 + c/r^2) and that led to a convergent product - but we may not always have such a symmetry.
 
 % More generally, it may be possible to construct meromorphic functions by making an ansatz that takes a quotient of two such products. 
 
 % Figure this out and maybe use the technique to construct a function that is zero at all the Gaussian integers. But wait? Will the function be really unqiue? What happens if we square each factor in the product? Or, more generally, raise each factor to some power (not necessarily the same power for each factor).
+
+% Try to construct a function with zeros precisely at all the Gaussian integers. Maybe
+% f(z) = \prod_{m=-\infty}^{\infty} \prod_{n=-\infty}^{\infty} \left(1 - \frac{z}{n + \i m} \right)
+% Try to simplify by combining terms for negative and positive m,n such that the products can run from 1 to inf. The n=m=0 case can be treated separately by just dragging out a factor of z. 
+
+
 
 
 \subsubsection{Elliptic Functions}

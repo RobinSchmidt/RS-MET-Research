@@ -4766,6 +4766,39 @@ RS_PFX rsSin(RS_TN x)
   //   template. But maybe we could also use a sqrt function for that purpose.
 }
 
+/*
+// AI-generated - they look correct but can optimized:
+
+RS_PFX rsCos(RS_TN x)
+{
+  TVal g  =  x.v;                            // g = g(x) = x.v
+  TVal fv =  rsCos(g);                       // f(g)   =  cos(g)
+  TDer fd = -rsSin(g);                       // f'(g)  = -sin(g)
+  TCrv fc = -rsCos(g);                       // f''(g) = -cos(g)
+  return rsChainRule(RS_TN(fv, fd, fc), x);  // Apply chain rule to compute result.
+}
+
+RS_PFX rsExp(RS_TN x)
+{
+  TVal g  =  x.v;                            // g = g(x) = x.v
+  TVal fv =  rsExp(g);                       // f(g)   =  exp(g)
+  TDer fd =  rsExp(g);                       // f'(g)  =  exp(g)
+  TCrv fc =  rsExp(g);                       // f''(g) =  exp(g)
+  return rsChainRule(RS_TN(fv, fd, fc), x);  // Apply chain rule to compute result.
+}
+
+RS_PFX rsLog(RS_TN x)
+{
+  TVal g  =  x.v;                            // g = g(x) = x.v
+  TVal fv =  rsLog(g);                       // f(g)   =  log(g)
+  TDer fd =  TDer(1) / g;                    // f'(g)  =  1/g
+  TCrv fc = -TCrv(1) / (g*g);                // f''(g) = -1/(g^2)
+  return rsChainRule(RS_TN(fv, fd, fc), x);  // Apply chain rule to compute result.
+}
+*/
+
+
+
 
 /** Function to check if two threeal number are equal up to some numerical tolerance. */
 RS_CTD

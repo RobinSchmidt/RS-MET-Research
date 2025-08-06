@@ -27,57 +27,33 @@ As a motivating example, consider the following rule to compute a new term in a 
 \begin{equation}
 a_{n+1} = \frac{1}{2} \left( a_n + \frac{c}{a_n}  \right)
 \end{equation}
-For some given constant number $c$ and some given initial value $a_0$. Here, $a_{n+1}$ only depends on the sequence value immediately before it, i.e. $a_n$, and there is no explicit dependency on $n$ in the formula. Let's see what this rule produces for $c = 2, a_0 = 5$. The following snippet of SageMath code:
-\begin{verbatim}
+For some given constant number $c$ and some given initial value $a_0$. Here, $a_{n+1}$ only depends on the sequence value immediately before it, i.e. $a_n$, and there is no explicit dependency on $n$ in the formula. Let's see what this rule produces for $c = 2, a_0 = 3$ with SageMath:
+\begin{center}
+\begin{tabular}{ ccccc } 
+\begin{lstlisting}
 c = 2.0
-a = 5.0
-for i in range(1,9):
+a = 3.0
+for i in range(1,8):
     a = (a + c/a) / 2
     print(a)
-\end{verbatim}
-produces this result:
-\begin{verbatim}
-2.70000000000000
-1.72037037037037
-1.44145536817765
-1.41447098136777
-1.41421358579688
-1.41421356237310
+\end{lstlisting}
+& & & &
+\begin{lstlisting}
+1.83333333333333
+1.46212121212121
+1.41499842989480
+1.41421378004720
+1.41421356237311
 1.41421356237309
 1.41421356237309
-\end{verbatim}
-After the 8th iteration, the sequence has converged to a value that will thereafter remain the same in the first 15 decimal digits. The value that this sequence converges to is none other than the square root of two. More generally, for any given $c$, the sequence of numbers defined by this algorithm will converge to $\sqrt{c}$ regardless of the initial value $a_0$ as long as it is positive. Let's try to figure out why ...TBC...
-
-
-% This does not compile:
-
-%\begin{center}
-%\begin{tabular}{ |c|c| } 
-%\hline
-%\begin{verbatim}
-%c = 2.0
-%a = 5.0
-%for i in range(1,9):
-%    a = (a + c/a) / 2
-%    print(a)
-%\end{verbatim}
-%&
-%\begin{verbatim}
-%2.70000000000000
-%1.72037037037037
-%1.44145536817765
-%1.41447098136777
-%1.41421358579688
-%1.41421356237310
-%1.41421356237309
-%1.41421356237309
-%\end{verbatim}
-%\hline
-%\end{tabular}
-%\end{center}
-
+\end{lstlisting}
+\end{tabular}
+\end{center}
 % See:
 % https://stackoverflow.com/questions/3220121/verbatim-environment-inside-latex-cell
+After the 6th iteration, the sequence has converged to a value that will thereafter remain the same in the first 15 decimal digits. The value that this sequence converges to is none other than the square root of two. More generally, for any given $c$, the sequence of numbers defined by this algorithm will converge to $\sqrt{c}$ regardless of the initial value $a_0$ as long as it is positive. Let's try to figure out why ...TBC...
+
+
 
 
 % ToDo:

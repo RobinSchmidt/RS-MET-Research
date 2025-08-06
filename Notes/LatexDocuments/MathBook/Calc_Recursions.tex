@@ -1,5 +1,21 @@
 \section{Infinite Anythings}
-After having seen infinite sums and infinite products, we'll now do a thing that mathematicians love to do: Generalize. We have defined an infinite sum via a limit over the partial sums $s_n$. The computation of such an $s_n$ was a finite sum which we already knew how to do. There is, however, another way to look at it. The computation of $s_n$ can also be seen as a formula involving the previous sum $s_{n-1}$ plus some new "update" or "correction" term $a_n$, i.e. $s_n = s_{n-1} + a_n$. For this $a_n$ term, we typically had an explicit formula involving $n$, i.e. $a_n = f(n)$ for a given function $f(n)$. With infinite products, the situation was similar with the only difference that we had a sequence of (finite) products $p_n$ and the update rule was $p_{n+1} = p_n \cdot a_n$. The general pattern here is that we compute the next term in our sequence (of partial sums or products) via some rule that takes in one (or, more generally, more) previous values of the sequence and possibly the index $n$ and computes the next value in this sequence. That is: we are dealing with sequences that can be produced via some recursive rule. ...TBC...
+After having seen infinite sums and infinite products, we'll now do a thing that mathematicians love to do: Generalize. We have defined an infinite sum via a limit over the partial sums $s_n$. The computation of such an $s_n$ was a finite sum which we already knew how to do. There is, however, another way to look at it. The computation of $s_n$ can also be seen as a formula involving the previous sum $s_{n-1}$ plus some new "update" or "correction" term $a_n$, i.e. $s_n = s_{n-1} + a_n$. For this $a_n$ term, we typically had an explicit formula involving $n$, i.e. $a_n = f(n)$ for a given function $f(n)$. With infinite products, the situation was similar with the only difference that we had a sequence of (finite) products $p_n$ and the update rule was $p_{n+1} = p_n \cdot a_n$. The general pattern here is that we compute the next term in our sequence (of partial sums or products) via some rule that takes in one (or, more generally, more) previous values of the sequence and possibly the index $n$ and computes the next value in this sequence. That is: we are dealing with sequences that can be produced via some recursive rule of the general form:
+\begin{equation}
+a_{n+1} = f(n, a_n, a_{n-1}, a_{n-2}, \ldots, a_0)
+\end{equation}
+This form is very general and the actual rule will often be simpler that that in practical cases. Often, the dependency will only have a finite window of memory. For example, $a_{n+1}$ may depend only on $a_n, a_{n-1}$ but not on even "older" values of the $a$ sequence. But for greatest generality, we allow it to depend on all previous values of the sequence and we also allow an explicit dependency on the index $n$ to be able to include the infinite sums and products into this more general framework. In infinite sums and products, we usually do have such an explicit dependency on $n$. ...TBC...
+
+% ToDo: 
+%
+% - Maybe in the explanation of the sums, don't introduce this intermediate sequence a_n as in
+%   the formula $s_n = s_{n-1} + a_n$. Instead frame it as $s_n = s_{n-1} + f(n)$ directly. Give
+%   an example for how an original sum can be transformed into such a recursive representation. We
+%   just need to extract the formula f(n) and the initial value. Maybe take the example of the
+%   sum $s = \sum_{n=1}^{\infty} \frac{1}{n^2}$. Here, we have $f(n) = \frac{1}{n^2}$ and the
+%   initial value $s_1$ for $n=1$ is $a_1 = 1$
+%
+% - Or, maybe make a subsubsection in the "Recursively Defined Sequences" subsection for how to
+%   transform infinite sums and products into this recursive form
 
 %===================================================================================================
 \subsection{Recursively Defined Sequences}
@@ -11,7 +27,7 @@ As a motivating example, consider the following rule to compute a new term in a 
 \begin{equation}
 a_{n+1} = \frac{1}{2} \left( a_n + \frac{c}{a_n}  \right)
 \end{equation}
-For some given constant number $c$ and some given initial value $a_0$. Let's see what this rule produces for $c = 2, a_0 = 5$. The following snippet of SageMath code:
+For some given constant number $c$ and some given initial value $a_0$. Here, $a_{n+1}$ only depends on the sequence value immediately before it, i.e. $a_n$, and there is no explicit dependency on $n$ in the formula. Let's see what this rule produces for $c = 2, a_0 = 5$. The following snippet of SageMath code:
 \begin{verbatim}
 c = 2.0
 a = 5.0
@@ -32,6 +48,42 @@ produces this result:
 \end{verbatim}
 After the 8th iteration, the sequence has converged to a value that will thereafter remain the same in the first 15 decimal digits. The value that this sequence converges to is none other than the square root of two. More generally, for any given $c$, the sequence of numbers defined by this algorithm will converge to $\sqrt{c}$ regardless of the initial value $a_0$ as long as it is positive. Let's try to figure out why ...TBC...
 
+
+% This does not compile:
+
+%\begin{center}
+%\begin{tabular}{ |c|c| } 
+%\hline
+%\begin{verbatim}
+%c = 2.0
+%a = 5.0
+%for i in range(1,9):
+%    a = (a + c/a) / 2
+%    print(a)
+%\end{verbatim}
+%&
+%\begin{verbatim}
+%2.70000000000000
+%1.72037037037037
+%1.44145536817765
+%1.41447098136777
+%1.41421358579688
+%1.41421356237310
+%1.41421356237309
+%1.41421356237309
+%\end{verbatim}
+%\hline
+%\end{tabular}
+%\end{center}
+
+% See:
+% https://stackoverflow.com/questions/3220121/verbatim-environment-inside-latex-cell
+
+
+% ToDo:
+% - Make a table from the SageMath input and output such that it takes less space. We should do
+%   this generally with all SageMath code in the book. maybe we should create a specific LaTeX
+%   environment for that
 
 
 %The explanation why should be deferred to the discussion of Newton-Raphson iteration - or maybe provide a geometric explanation here. Start with a rectangle of sidelengths 1 and c...see Weitz' video
@@ -56,7 +108,7 @@ Although the sequence of Fibonacci numbers itself diverges to infinity, we can c
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Newton-Raphson Iteration}
 
-\paragraph{The Babylonian Algorithm}
+%\paragraph{The Babylonian Algorithm}
 
 % https://en.wikipedia.org/wiki/Square_root_algorithms#Heron's_method
 
@@ -68,6 +120,7 @@ Although the sequence of Fibonacci numbers itself diverges to infinity, we can c
 % (a_{n+1}, b_{n+1}) = ((a_n + b_n)/2, sqrt{a_n b_n})
 % but this can be reformulated within a framework of scalar-valued sequences by just "zipping" the a_n, b_n sequences into a single sequence. The update rule may then be of the form a_{n+1} = ...for n even, ....for n odd - or something like that. It may be inconvenient but it can be done.
 
+% What happens if we apply the same idea to other pairs of means? Try the arithmetic-harmonic mean.
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Iterated Function Systems}

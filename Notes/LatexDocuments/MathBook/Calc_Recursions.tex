@@ -82,15 +82,68 @@ Although the sequence of Fibonacci numbers itself diverges to infinity, we can c
 
 % https://en.wikipedia.org/wiki/Square_root_algorithms#Heron's_method
 
+% Use it to compute the Lambert-W function. Apply it to y = x e^x  ->  x e^x - y = 0 where y is
+% just a constant in this context
+
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Arithmetic-Geometric Mean}
+Consider the following recursive rule for a pair of numbers:
+\begin{equation}
+\begin{pmatrix} 
+a_{n+1} \\ 
+b_{n+1}
+\end{pmatrix} 
+= 
+\begin{pmatrix} 
+(a_n + b_n)/2 \\ 
+\sqrt{a_n \cdot b_n}
+\end{pmatrix} 
+\end{equation}
+That is, we have a recursive rule that produces a vector from a previous vector. The first component of the next vector is the arithmetic mean of the components of the current vector. The second component is the geometric mean. Let's see what this rule produces for the initial values $a_0 = 2, b_0 = 8$:
+\begin{center}
+\begin{tabular}{ ccccc } 
+\begin{lstlisting}
+a = 2.0
+b = 8.0
+for i in range(1,7):
+    t = (a+b)/2
+    b = sqrt(a*b)
+    a = t
+    print(a, b)
+\end{lstlisting}
+& & & &
+\begin{lstlisting}
+5.00000000000000 4.00000000000000
+4.50000000000000 4.47213595499958
+4.48606797749979 4.48604634366366
+4.48605716058173 4.48605716056869
+4.48605716057521 4.48605716057521
+4.48605716057521 4.48605716057521
+\end{lstlisting}
+\end{tabular}
+\end{center}
+Apparently both vector components converge to the same value. A value that is somewhere in between the arithmetic and geometric mean of the initial values. ...TBC...
 
+% Maybe move the print call into the 1st line of the loop such that we also print out the initial
+% values. Do this also for the sqrt-algorithm
 
 % Frame this in the following way: we start with a vector-valued recursion formula:
 % (a_{n+1}, b_{n+1}) = ((a_n + b_n)/2, sqrt{a_n b_n})
 % but this can be reformulated within a framework of scalar-valued sequences by just "zipping" the a_n, b_n sequences into a single sequence. The update rule may then be of the form a_{n+1} = ...for n even, ....for n odd - or something like that. It may be inconvenient but it can be done.
 
 % What happens if we apply the same idea to other pairs of means? Try the arithmetic-harmonic mean.
+
+% https://en.wikipedia.org/wiki/Geometric%E2%80%93harmonic_mean
+% 
+
+
+% https://en.wikipedia.org/wiki/Arithmetic%E2%80%93geometric_mean
+% "The arithmetic–harmonic mean is equivalent to the geometric mean." (section of "Realted Concepts")
+% ...is it generally true that for the generalized means G_m(x,y) and G_n(x,y), the mutual limit of
+% the recursion is G_{(m+n)/2}(x,y). By generalized mean, I mean ((x^n + y^n)/2)^{1/n}. Try it numerically! The fact that the arithmetic-harmonic mean is equal to the geometric mean seems to suggest that. The arithmetic mean would be G_1(x,y), the harmonic mean G_{-1}(x,y) and the geometric mean G_0(x,y). If so, that would mean that the arithmetic-geometric mean would be G_{1.5}(x,y) = ((x^{3/2} + y^{3/2})/2)^{2/3}. That would be a closed form solution for the AGM which may be useful sometimes.
+
+% https://mathworld.wolfram.com/Arithmetic-GeometricMean.html
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Iterated Function Systems}

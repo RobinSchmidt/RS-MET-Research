@@ -4749,11 +4749,18 @@ RS_PFX rsSqrt(RS_TN x)
 
 RS_PFX rsSin(RS_TN x)
 {
+  TVal s, c;
+  rsSinCos(x.v, &s, &c);                     // s = sin(g), c = cos(g) where g = x.v
+  return rsChainRule(RS_TN(s, c, -s), x);    // Apply chain rule to compute result.
+
+  /*
+  // Old:
   TVal g  =  x.v;                            // g = g(x) = x.v
   TVal fv =  rsSin(g);                       // f(g)   =  sin(g)
   TDer fd =  rsCos(g);                       // f'(g)  =  cos(g)
   TCrv fc = -rsSin(g);                       // f''(g) = -sin(g)
   return rsChainRule(RS_TN(fv, fd, fc), x);  // Apply chain rule to compute result.
+  */
 
   // ToDo:
   //

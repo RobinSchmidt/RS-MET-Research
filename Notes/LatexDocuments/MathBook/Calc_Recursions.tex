@@ -3,7 +3,7 @@ After having seen infinite sums and infinite products, we'll now do a thing that
 \begin{equation}
 a_{n+1} = f(n, a_n, a_{n-1}, a_{n-2}, \ldots, a_0)
 \end{equation}
-This form is very general and the actual rule will often be simpler that that in practical cases. Often, the dependency will only have a finite window of memory. For example, $a_{n+1}$ may depend only on $a_n, a_{n-1}$ but not on even "older" values of the $a$ sequence. But for greatest generality, we allow it to depend on all previous values of the sequence and we also allow an explicit dependency on the index $n$ to be able to include the infinite sums and products into this more general framework. In infinite sums and products, we usually do have such an explicit dependency on $n$. ...TBC...
+This form is very general and the actual rule will often be simpler than that in practical cases. Often, the dependency will only have a finite window of memory. For example, $a_{n+1}$ may depend only on $a_n, a_{n-1}$ but not on even "older" values of the $a$ sequence. But for greatest generality, we allow it to depend on all previous values of the sequence and we also allow an explicit dependency on the index $n$ to be able to include the infinite sums and products into this more general framework. In infinite sums and products, we usually do have such an explicit dependency on $n$. ...TBC...
 
 % ToDo: 
 %
@@ -51,19 +51,13 @@ for i in range(1,8):
 \end{center}
 % See:
 % https://stackoverflow.com/questions/3220121/verbatim-environment-inside-latex-cell
-After the 6th iteration, the sequence has converged to a value that will thereafter remain the same in the first 15 decimal digits. The value that this sequence converges to is none other than the square root of two. More generally, for any given $c$, the sequence of numbers defined by this algorithm will converge to $\sqrt{c}$ regardless of the initial value $a_0$ as long as it is positive. Let's try to figure out why ...TBC...
-
-
-
+After the 6th iteration, the sequence has converged to a value that will thereafter remain the same in the first 15 decimal digits. The value that this sequence converges to is none other than the square root of two. More generally, for any given positive real number $c$, the sequence of numbers defined by this algorithm will converge to $\sqrt{c}$ regardless of the initial value $a_0$ as long as it is positive [VERIFY!]. Let's try to figure out why ...TBC...
 
 % ToDo:
-% - Make a table from the SageMath input and output such that it takes less space. We should do
-%   this generally with all SageMath code in the book. maybe we should create a specific LaTeX
-%   environment for that
 
+% The explanation why should be deferred to the discussion of Newton-Raphson iteration - or maybe provide a geometric explanation here. Start with a rectangle of sidelengths 1 and c...see Weitz' video
 
-%The explanation why should be deferred to the discussion of Newton-Raphson iteration - or maybe provide a geometric explanation here. Start with a rectangle of sidelengths 1 and c...see Weitz' video
-
+% Maybe mention that this can indeed be a practically useful algorithm for evaluating square roots - or for refining an existing estimate of the square root. Maybe mention the famous fast inverse square root algorithm from the Quake codebase.
 
 
 

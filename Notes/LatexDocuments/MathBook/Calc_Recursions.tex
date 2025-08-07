@@ -177,6 +177,31 @@ Apparently both vector components converge to the same value of around $4.486$. 
 
 %===================================================================================================
 \subsection{Infinitely Nested Radicals}
+Let's assume that we have some given constants $a,b$ and consider the following expression to compute a value $x$:
+\begin{equation}
+ x = a + b \cdot \sqrt{a + b \cdot \sqrt{a + b \cdot \sqrt{\ldots}}}
+\end{equation}
+Can we make sense of such an expression involving infinitely nested radicals (aka roots) and maybe even find a value of $x$ that satisfies this equation? By inspection, we may realize that the expression inside of the outermost square root is actually the same as the whole right hand side expression which, by virtue of the equation, is supposed to be equal to the left hand side $x$. So we may write:
+\begin{equation}
+ x = a + b \cdot \sqrt{x}
+\end{equation}
+That looks a lot simpler! In fact, with a little bit of simple algebra, we can solve that equation for $x$ to obtain ...TBC...
+
+
+% Maybe start with the expression as example:
+%
+%   x = a + b \sqrt{a + b \sqrt{a + b \sqrt{\ldots}}}
+%
+% By inspection we see that this means:
+%
+%   x = a + b \sqrt{x}
+%
+% which we can solve for x. This results in a quadratic equation for x with solutions:
+%
+%   x_{1,2} = \frac{2a + b^2}{2} \pm \sqrt{ \frac{(2a + b)^2}{4} - 1}
+%
+% Verify these solutions and maybe filter out the wrong one that may have been created due to 
+% squaring both sides of the equation.
 
 
 % https://en.wikipedia.org/wiki/Nested_radical#Infinitely_nested_radicals

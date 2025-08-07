@@ -16,6 +16,9 @@ This form is very general and the actual rule will often be simpler than that in
 %
 % - Or, maybe make a subsubsection in the "Recursively Defined Sequences" subsection for how to
 %   transform infinite sums and products into this recursive form
+%
+% - Maybe, for consistency with previous secstions, use k instead of n for the index
+
 
 %===================================================================================================
 \subsection{Recursively Defined Sequences}
@@ -57,7 +60,7 @@ After the 6th iteration, the sequence has converged to a value that will thereaf
 
 % The explanation why should be deferred to the discussion of Newton-Raphson iteration - or maybe provide a geometric explanation here. Start with a rectangle of sidelengths 1 and c...see Weitz' video
 
-% Maybe mention that this can indeed be a practically useful algorithm for evaluating square roots - or for refining an existing estimate of the square root. Maybe mention the famous fast inverse square root algorithm from the Quake codebase.
+% Maybe mention that this can indeed be a practically useful algorithm for evaluating square roots - or for refining an existing estimate of the square root. Maybe mention the famous fast inverse square root algorithm from the Quake codebase. Maybe mention startegies to come up with a good starting value. Maybe this may involve bit-twiddling trickery with IEEE-754 floating point numbers. For arbitrary pecision arithemtic, we may use initial values computed from converting results in machine precision and then improve the precision on them.
 
 
 
@@ -169,10 +172,18 @@ Apparently both vector components converge to the same value of around $4.486$. 
 
 
 %===================================================================================================
-\subsection{Infinite Radicals}
+\subsection{Infinite Power Towers}
 
 
+%===================================================================================================
+\subsection{Infinitely Nested Radicals}
 
+
+% https://en.wikipedia.org/wiki/Nested_radical#Infinitely_nested_radicals
+
+% https://mathworld.wolfram.com/NestedRadical.html
+
+% https://math.stackexchange.com/questions/4049946/the-infinitely-nested-radicals-problem-and-ramanujans-wondrous-formula
 
 
 
@@ -180,12 +191,23 @@ Apparently both vector components converge to the same value of around $4.486$. 
 
 ToDo:
 -Infinite tetration
--Infinite convolutions (central limit theorem), 
+-Function sequences that are defined by infinite processes
+ Examples: Bolzano function, Weierstrass function, ...
+-Infinite convolutions (central limit theorem) - can also be framed as recursively defined sequence
+ but this time, the sequence arguments are functions rather than numbers and the operations that we
+ do on them may involve operators such as integration.
 -Infinitely repeated integration
 -Integrals over infinite sequences of functions:
  See https://www.youtube.com/watch?v=851U557j6HE  
      Researchers thought this was a bug (Borwein integrals)
-
+-Mention Picard iteration: 
+ https://de.wikipedia.org/wiki/Picard-Iteration
+ https://en.wikipedia.org/wiki/Picard%E2%80%93Lindel%C3%B6f_theorem
+ https://adamdjellouli.com/articles/numerical_methods/7_ordinary_differential_equations/picards_method
+ ...but it actually can only be properly understood after the section about ODEs. Maybe change the 
+ order of the sections of make the Picard iteration note one with a star (i.e. can be skipped
+ on first read)
+-Space filling curves
 
 Maybe make a section about continued fractions. See:
 

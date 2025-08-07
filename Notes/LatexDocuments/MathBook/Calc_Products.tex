@@ -291,11 +291,21 @@ which is known as the \emph{Wallis product} representation of $\pi$. Due to its 
 % At the outset, it is not obvious that the roots alone are enough to determine the sine function uniquely. Not only is it conceivable that the actual sine function needs a constant factor in front of it - we could even multiply the product by an arbitrary function (perhaps one that doesn't itself have real zeros such as exp(x)) and the resulting would still have exactly the same zeros as the sine function. At least along the real axis. It may be a different story once we widen our perspective to the complex plane (exp does have complex roots - or does it?)
 
 % ToDo: 
+%
 % - Construct a function in a way similar to sin but with roots at  \i k \pi  rather than  k \pi.
 %   Maybe we'll get sinh?
+%
 % - Maybe explain that the factorization of sin worked only because the roots at k \pi are the only
 %   roots of sin. Would there have been additional, "invisible" roots somewhere else in the 
 %   complex plane, it would not have worked out, I think.
+%
+% - Construct a function that has roots (of order 1) at all the Gaussian integers in the complex 
+%   plane. Star with f(z) = \prod_{n=-inf}^{inf} \prod_{m=-inf}^{inf} (1 - z/(n + i*m)) and 
+%   transform it into  f(z) = z \prod_{n=1}^{inf} \prod_{m=1}^{inf} a_{nm}  with
+%   a_{nm} = (1-z/(n+im)) (1-z/(n-im)) (1-z/(-n+im)) (1-z/(-n-im)) = ...simplify
+%   I think, it should be bi-periodic with periods 1 and i such that the values on unit square
+%   already define it fully. What is the shape there? Maybe compare it to the Weierstrass 
+%   P-function
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Weierstrass Factorization Theorem}

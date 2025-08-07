@@ -123,7 +123,7 @@ for i in range(1,7):
 \end{lstlisting}
 \end{tabular}
 \end{center}
-Apparently both vector components converge to the same value. A value that is somewhere in between the arithmetic and geometric mean of the initial values. ...TBC...
+Apparently both vector components converge to the same value of around $4.486$. A value that is somewhere in between the arithmetic mean $5$ and geometric mean $4$ of the initial values $2$ and $8$. This common limit of both vector components is called the arithmetic-geometric mean. ...TBC...ToDo: explain applications, explain how the vector iteration can be embedded into the current framework of sequences by "zipping"
 
 % Maybe move the print call into the 1st line of the loop such that we also print out the initial
 % values. Do this also for the sqrt-algorithm
@@ -156,6 +156,12 @@ Apparently both vector components converge to the same value. A value that is so
 % IMPLEMENTING ITERATED FUNCTION SYSTEMS IN PYTHON
 % https://www.math.uni-rostock.de/~wj/projects/Fractals/160355141_Habib_Wahab_MTH6138_IFS.pdf
 
+% Consider the equation  x = f(f(f(...f(x)))). Peeling off the outermost application of f in the 
+% RHS, we note that, by the equation, we must have x = f(x). That means that the equation requires
+% that x must be a fixed point of the function f. The is equivalent to requiring x - f(x) = 0 which
+% is in the form suitable to hand over to a root finder ...tbc...
+
+
 %===================================================================================================
 \subsection{Continued Fractions}
 
@@ -171,6 +177,15 @@ Apparently both vector components converge to the same value. A value that is so
 
 
 \begin{comment}
+
+ToDo:
+-Infinite tetration
+-Infinite convolutions (central limit theorem), 
+-Infinitely repeated integration
+-Integrals over infinite sequences of functions:
+ See https://www.youtube.com/watch?v=851U557j6HE  
+     Researchers thought this was a bug (Borwein integrals)
+
 
 Maybe make a section about continued fractions. See:
 

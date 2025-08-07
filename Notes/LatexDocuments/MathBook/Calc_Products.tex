@@ -220,7 +220,7 @@ Some of our favorite functions have expressions based on infinite products. One 
  p(x) = \prod_{k} (x - r_k)  \qquad \text{or} \qquad
  q(x) = \prod_{k} (1 - \frac{x}{r_k})
 \end{equation}
-then $p(x)$ and $q(x)$ will have the same roots as $f(x)$. Of course, if the product is infinite, we may have to worry about convergence and even if it is finite, it is not clear whether or not the product will match the function anywhere else. If the function $f(x)$ happens to be a polynomial, though, we can actually confidently say that when we include all of the roots of $f(x)$ into our product function $p(x)$, then $p(x)$ must actually indeed be equal to $f(x)$ up to a constant scale factor. The same is true for $q(x)$ but with a different scale factor [VERIFY!]. If we now remember that a power series expansion of a function can be regarded as a sort of "infinite polynomial", we may plausibly hope that we can express our function $f(x)$ with such an infinite product. In practice, the form of $q(x)$ tends to be easier to deal with. First, it has the desirable form of products where the factors are of the form $(1 + \ldots)$. I think, it also tends to be less prone to divergence away from the roots (VERIFY!). To turn one form into the other, one just needs to multiply a linear factor of the form $(x - r_k)$ with an appropriate constant, namely $-1 / r_k$. That could be problematic if one of the $r_k$ is zero, though ...TBC...
+then $p(x)$ and $q(x)$ will have the same roots as $f(x)$. Of course, if the product is infinite, we may have to worry about convergence and even if it is finite, it is not clear whether or not the product will match the function anywhere else. If the function $f(x)$ happens to be a polynomial, though, we can actually confidently say that when we include all of the roots of $f(x)$ into our product function $p(x)$, then $p(x)$ must actually indeed be equal to $f(x)$ up to a constant scale factor. The same is true for $q(x)$ but with a different scale factor [VERIFY!]. If we now remember that a power series expansion of a function can be regarded as a sort of "infinite polynomial", we may plausibly hope that we can express our function $f(x)$ with such an infinite product. In practice, the form of $q(x)$ tends to be easier to deal with. First, it has the desirable form of products where the factors are of the form $(1 + \ldots)$. I think, it also tends to be less prone to divergence away from the roots (VERIFY!). To turn one form into the other, one just needs to multiply a linear factor of the form $(x - r_k)$ with an appropriate constant, namely $-1 / r_k$. That could be problematic if one of the $r_k$ is zero, though. But that is a problem that can easily be solved by pulling these factors out of the product. ...TBC...
 
 % To tame the polynomial, we may want to multiply each factor of the form (x - r_k) by some number c
 %  that turns the factor into the form (1 - x/r_k)
@@ -290,7 +290,12 @@ which is known as the \emph{Wallis product} representation of $\pi$. Due to its 
 
 % At the outset, it is not obvious that the roots alone are enough to determine the sine function uniquely. Not only is it conceivable that the actual sine function needs a constant factor in front of it - we could even multiply the product by an arbitrary function (perhaps one that doesn't itself have real zeros such as exp(x)) and the resulting would still have exactly the same zeros as the sine function. At least along the real axis. It may be a different story once we widen our perspective to the complex plane (exp does have complex roots - or does it?)
 
-
+% ToDo: 
+% - Construct a function in a way similar to sin but with roots at  \i k \pi  rather than  k \pi.
+%   Maybe we'll get sinh?
+% - Maybe explain that the factorization of sin worked only because the roots at k \pi are the only
+%   roots of sin. Would there have been additional, "invisible" roots somewhere else in the 
+%   complex plane, it would not have worked out, I think.
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Weierstrass Factorization Theorem}

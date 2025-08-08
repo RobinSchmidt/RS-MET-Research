@@ -202,17 +202,6 @@ Apparently both vector components converge to the same value of around $4.486$. 
 
 %===================================================================================================
 \subsection{Infinitely Nested Radicals}
-
-% https://en.wikipedia.org/wiki/Nested_radical#Infinitely_nested_radicals
-
-% https://mathworld.wolfram.com/NestedRadical.html
-
-% https://math.stackexchange.com/questions/4049946/the-infinitely-nested-radicals-problem-and-ramanujans-wondrous-formula
-
-
-
-\begin{comment}
-
 Let's assume that we have some given constants $a,b$ and consider the following expression to compute a value $x$:
 \begin{equation}
  x = a + b \cdot \sqrt{a + b \cdot \sqrt{a + b \cdot \sqrt{\ldots}}}
@@ -231,6 +220,16 @@ That looks a lot simpler! In fact, with a little bit of simple algebra, we can s
 %VERIFY! Maybe one of the solutions is wrong 
 ...TBC...
 
+
+
+% https://en.wikipedia.org/wiki/Nested_radical#Infinitely_nested_radicals
+
+% https://mathworld.wolfram.com/NestedRadical.html
+
+% https://math.stackexchange.com/questions/4049946/the-infinitely-nested-radicals-problem-and-ramanujans-wondrous-formula
+
+
+\begin{comment}
 
 % Maybe start with the expression as example:
 %
@@ -255,29 +254,19 @@ That looks a lot simpler! In fact, with a little bit of simple algebra, we can s
 To solve it, use the Sage code:
 
 a = 3
-b = 5
-k = a + b/2
-#s = sqrt(k^2 - 1)    # wrong?
+b = 2
+k = a + b^2/2
 s = sqrt(k^2 - a^2)
 x1 = k + s
 x2 = k - s
 y1 = a + b * sqrt(x1)
 y2 = a + b * sqrt(x2)
-#x1,y1, x2,y2
 N(x1),N(y1), N(x2),N(y2)
 
 which gives:
 
-(3/2*sqrt(13) + 11/2,
- 5*sqrt(3/2*sqrt(13) + 11/2) + 3,
- -3/2*sqrt(13) + 11/2,
- 5*sqrt(-3/2*sqrt(13) + 11/2) + 3)
+(9.00000000000000, 9.00000000000000, 1.00000000000000, 5.00000000000000)
 
-But this is wrong! Neither is x1 == y1 nor x2 == y2. Check the formula! If it is right, then maybe
-there is some error in the reasoning. Maybe we cannot just square both sides of the equation. Maybe
-we then get also things like  (-2)^2 = 2^2  from which we would falsely conclude that -2 = 2? We
-expect to create an extra solution like -2 when we transform  2 = 2  to  2^2 = 2^2  because now also
-(-2)^2 = (-2)^2 is a solution. But maybe we also get false "cross-solutions" like (-2)^2 = 2^2?
 
 Check the formula against Mathematica's result:
 
@@ -288,6 +277,22 @@ Here is a plot of  f(x) = x  and  f(x) = a + b sqrt(x)  with adjustable a,b:
 The intersection of the graphs should be our solution
 
 ...I think, my formula is wrong. I may have made a mistake somewhere in the algebra
+
+
+This looks good:
+
+a = 3
+b = 2
+p = -(2*a + b^2)
+q = a^2
+x1 = -p/2 + sqrt((p/2)^2 - q)
+x2 = -p/2 - sqrt((p/2)^2 - q)
+y1 = a + b * sqrt(x1)
+y2 = a + b * sqrt(x2)
+N(x1),N(y1), N(x2),N(y2)   # The 1st solution seems to be the right one
+
+This is using p,q in the pq-formula x_{1,2} = -p/2 +- sqrt((p/2)^2 - q). It works but can be
+simplified.
 
 \end{comment}
 

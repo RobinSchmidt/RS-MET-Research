@@ -210,15 +210,20 @@ Can we make sense of such an expression involving infinitely nested radicals (ak
 \begin{equation}
  x = a + b \cdot \sqrt{x}
 \end{equation}
-That looks a lot simpler! In fact, with a little bit of simple algebra, we can solve that equation for $x$ to obtain:
-%\begin{equation}
-%x_{1,2} = k \pm \sqrt{k^2 - 1} 
-%\qquad \text{where} \qquad
-%%k = \frac{2a + b}{2}
-%k = a + \frac{b}{2}
-%\end{equation}
-%VERIFY! Maybe one of the solutions is wrong 
-...TBC...
+That looks a lot simpler! With a little bit of algebra we can bring it into the standard form of a reduced quadratic equation:
+\begin{equation}
+x^2 - (2a + b^2) x + a^2 = 0
+\end{equation}
+which we can solve for $x$ via the $pq$-formula to obtain:
+\begin{equation}
+x_{1,2} = k \pm s 
+\quad \text{where} \quad
+k = a + \frac{b^2}{2}, \;
+s = \sqrt{k^2 - a^2}, 
+\end{equation}
+But we need to be a bit careful with this result. The "little bit of algebra" involved a step where both sides of an equation had to be squared. Such steps may produce extraneous solutions. We need to try both signs for $s$ and pick the one that produces a value $x$ that does indeed solve the equation. ...TBC...
+% which one that is may depend on the signs of a and b? Or maybe on the sign of k? Figure out! Give an example for a triple a,b,x that works. a = 3, b = 2, x = 9 works.
+
 
 
 
@@ -228,28 +233,9 @@ That looks a lot simpler! In fact, with a little bit of simple algebra, we can s
 
 % https://math.stackexchange.com/questions/4049946/the-infinitely-nested-radicals-problem-and-ramanujans-wondrous-formula
 
+% https://en.wikipedia.org/wiki/Quadratic_equation#Reduced_quadratic_equation
 
 \begin{comment}
-
-% Maybe start with the expression as example:
-%
-%   x = a + b \sqrt{a + b \sqrt{a + b \sqrt{\ldots}}}
-%
-% By inspection we see that this means:
-%
-%   x = a + b \sqrt{x}
-%
-% which we can solve for x. This results in a quadratic equation for x with solutions:
-%
-%   x_{1,2} = \frac{2a + b^2}{2} \pm \sqrt{ \frac{(2a + b)^2}{4} - 1}
-%
-% Verify these solutions and maybe filter out the wrong one that may have been created due to 
-% squaring both sides of the equation. We could simplify the solution as follows:
-%
-%   k = (2 a + b^2) / 2,  x_{1,2} = k +- sqrt(k^2 - 1)
-
-% I think, it may have to be  k +- sqrt(k^2 - a^2)
-
 
 To solve it, use the Sage code:
 
@@ -276,9 +262,6 @@ Here is a plot of  f(x) = x  and  f(x) = a + b sqrt(x)  with adjustable a,b:
   https://www.desmos.com/calculator/epu6yonem9
 The intersection of the graphs should be our solution
 
-...I think, my formula is wrong. I may have made a mistake somewhere in the algebra
-
-
 This looks good:
 
 a = 3
@@ -294,7 +277,12 @@ N(x1),N(y1), N(x2),N(y2)   # The 1st solution seems to be the right one
 This is using p,q in the pq-formula x_{1,2} = -p/2 +- sqrt((p/2)^2 - q). It works but can be
 simplified.
 
+It's intersting to note here that no calculus is needed. We don't evaluate any limit here. What we did instead was to observe that in an infinite nesting of functions, we are allowed to peel off the outermost layer of function evaluation. In fact, we can peel off any finite number of layers but doing it only for the outermost one was the simplest choice. This act of peeling off was legal only due to the infinite nesting. For a finite nesting, we would not have been able to do that.
+
 \end{comment}
+
+
+
 
 
 

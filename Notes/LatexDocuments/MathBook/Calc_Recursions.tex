@@ -164,6 +164,28 @@ Apparently both vector components converge to the same value of around $4.486$. 
 % that x must be a fixed point of the function f. The is equivalent to requiring x - f(x) = 0 which
 % is in the form suitable to hand over to a root finder ...tbc...
 
+% That is a general pattern: when the function is iterated infinitely many times, we are allowed to
+% "peel off" the outer layer of the evaluation - the next inner layer will still have infinitely 
+% many nested layers of evaluation. This would not be possible with only finitely many layers so the
+% qualitytive step to go to infinity actually gives us an opportunity for simplification. That's
+% pretty interesting because normally, going to infinity makes things more complicated. Well - not
+% always but often.
+
+
+% https://www.youtube.com/watch?v=bEZ6JLLjM3Y  The beauty of Fixed Points
+
+% https://en.wikipedia.org/wiki/Contraction_mapping
+% Contraction: d(f(x), f(y)) < k d(x,y)  where k is a constant with 0 <= k < 1. Why is it not enough
+% to require d(f(x), f(y)) < d(x,y)? Maybe consider a function from R to R with some point x_0 and 
+% an f that lets the points approach x_0 - eps_L  when x comes in from the left and to x_0 - eps_R 
+% when y comes in from the right. Then, the distance between x and y in repeated iteration will
+% indeed shrink in every iteration, i.e. d(f(x), f(y)) < d(x,y)  will be satisfied. But I think,
+% we cannot find a constant k such that  d(f(x), f(y)) < k d(x,y) will always be satisfied. Not sure
+% if that makes sense though. What if our inital values x,y are inside x-eps_L ... x+eps_R? Then
+% d(f(x), f(y)) < d(x,y) will have to be violated as well ...or maybe not? Try to create a 
+% counter example for f such that only the stricter definition achieves what we want but the looser
+% definition doesn't. Maybe f need to be piecewise defined for inside and outside the interval
+% [x-eps_L, x+eps_R]
 
 %===================================================================================================
 \subsection{Continued Fractions}
@@ -175,17 +197,39 @@ Apparently both vector components converge to the same value of around $4.486$. 
 \subsection{Infinite Power Towers}
 
 
+
+
+
 %===================================================================================================
 \subsection{Infinitely Nested Radicals}
+
+% https://en.wikipedia.org/wiki/Nested_radical#Infinitely_nested_radicals
+
+% https://mathworld.wolfram.com/NestedRadical.html
+
+% https://math.stackexchange.com/questions/4049946/the-infinitely-nested-radicals-problem-and-ramanujans-wondrous-formula
+
+
+
+\begin{comment}
+
 Let's assume that we have some given constants $a,b$ and consider the following expression to compute a value $x$:
 \begin{equation}
  x = a + b \cdot \sqrt{a + b \cdot \sqrt{a + b \cdot \sqrt{\ldots}}}
 \end{equation}
-Can we make sense of such an expression involving infinitely nested radicals (aka roots) and maybe even find a value of $x$ that satisfies this equation? By inspection, we may realize that the expression inside of the outermost square root is actually the same as the whole right hand side expression which, by virtue of the equation, is supposed to be equal to the left hand side $x$. So we may write:
+Can we make sense of such an expression involving infinitely nested radicals (aka roots) and maybe even find a value of $x$ that satisfies this equation? By inspection, we may realize that the expression inside of the outermost square root is actually the same as the whole right hand side expression which, by virtue of the equation, is supposed to be equal to the left hand side $x$. So we may rewrite the equation as:
 \begin{equation}
  x = a + b \cdot \sqrt{x}
 \end{equation}
-That looks a lot simpler! In fact, with a little bit of simple algebra, we can solve that equation for $x$ to obtain ...TBC...
+That looks a lot simpler! In fact, with a little bit of simple algebra, we can solve that equation for $x$ to obtain:
+%\begin{equation}
+%x_{1,2} = k \pm \sqrt{k^2 - 1} 
+%\qquad \text{where} \qquad
+%%k = \frac{2a + b}{2}
+%k = a + \frac{b}{2}
+%\end{equation}
+%VERIFY! Maybe one of the solutions is wrong 
+...TBC...
 
 
 % Maybe start with the expression as example:
@@ -201,14 +245,52 @@ That looks a lot simpler! In fact, with a little bit of simple algebra, we can s
 %   x_{1,2} = \frac{2a + b^2}{2} \pm \sqrt{ \frac{(2a + b)^2}{4} - 1}
 %
 % Verify these solutions and maybe filter out the wrong one that may have been created due to 
-% squaring both sides of the equation.
+% squaring both sides of the equation. We could simplify the solution as follows:
+%
+%   k = (2 a + b^2) / 2,  x_{1,2} = k +- sqrt(k^2 - 1)
+
+% I think, it may have to be  k +- sqrt(k^2 - a^2)
 
 
-% https://en.wikipedia.org/wiki/Nested_radical#Infinitely_nested_radicals
+To solve it, use the Sage code:
 
-% https://mathworld.wolfram.com/NestedRadical.html
+a = 3
+b = 5
+k = a + b/2
+#s = sqrt(k^2 - 1)    # wrong?
+s = sqrt(k^2 - a^2)
+x1 = k + s
+x2 = k - s
+y1 = a + b * sqrt(x1)
+y2 = a + b * sqrt(x2)
+#x1,y1, x2,y2
+N(x1),N(y1), N(x2),N(y2)
 
-% https://math.stackexchange.com/questions/4049946/the-infinitely-nested-radicals-problem-and-ramanujans-wondrous-formula
+which gives:
+
+(3/2*sqrt(13) + 11/2,
+ 5*sqrt(3/2*sqrt(13) + 11/2) + 3,
+ -3/2*sqrt(13) + 11/2,
+ 5*sqrt(-3/2*sqrt(13) + 11/2) + 3)
+
+But this is wrong! Neither is x1 == y1 nor x2 == y2. Check the formula! If it is right, then maybe
+there is some error in the reasoning. Maybe we cannot just square both sides of the equation. Maybe
+we then get also things like  (-2)^2 = 2^2  from which we would falsely conclude that -2 = 2? We
+expect to create an extra solution like -2 when we transform  2 = 2  to  2^2 = 2^2  because now also
+(-2)^2 = (-2)^2 is a solution. But maybe we also get false "cross-solutions" like (-2)^2 = 2^2?
+
+Check the formula against Mathematica's result:
+
+https://www.wolframalpha.com/input?i=solve+x+%3D+a+%2B+b+sqrt%28x%29+for+x
+
+Here is a plot of  f(x) = x  and  f(x) = a + b sqrt(x)  with adjustable a,b:
+  https://www.desmos.com/calculator/epu6yonem9
+The intersection of the graphs should be our solution
+
+...I think, my formula is wrong. I may have made a mistake somewhere in the algebra
+
+\end{comment}
+
 
 
 

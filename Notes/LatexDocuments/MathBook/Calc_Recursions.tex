@@ -151,6 +151,12 @@ Apparently both vector components converge to the same value of around $4.486$. 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Iterated Function Systems}
 
+% Maybe make this a subsection after the inifinte radicals. It generalizes the stuff there. If we
+% take  f(x) = a + b sqrt(x)  and iterate that function (starting at a suitable initial value x),
+% the iteration will converge to the fxied point. Maybe the subsec should be called 
+% Fixed Point Iteration
+
+
 % https://en.wikipedia.org/wiki/Iterated_function_system
 
 % Iterated Function Systems: A Comprehensive Survey
@@ -224,9 +230,6 @@ s = \sqrt{k^2 - a^2},
 But we need to be a bit careful with this result. The "little bit of algebra" involved a step where both sides of an equation had to be squared. Such steps may produce extraneous solutions. We need to try both signs for $s$ and pick the one that produces a value $x$ that does indeed solve the equation. ...TBC...
 % which one that is may depend on the signs of a and b? Or maybe on the sign of k? Figure out! Give an example for a triple a,b,x that works. a = 3, b = 2, x = 9 works.
 
-
-
-
 % https://en.wikipedia.org/wiki/Nested_radical#Infinitely_nested_radicals
 
 % https://mathworld.wolfram.com/NestedRadical.html
@@ -277,9 +280,12 @@ N(x1),N(y1), N(x2),N(y2)   # The 1st solution seems to be the right one
 This is using p,q in the pq-formula x_{1,2} = -p/2 +- sqrt((p/2)^2 - q). It works but can be
 simplified.
 
-It's intersting to note here that no calculus is needed. We don't evaluate any limit here. What we did instead was to observe that in an infinite nesting of functions, we are allowed to peel off the outermost layer of function evaluation. In fact, we can peel off any finite number of layers but doing it only for the outermost one was the simplest choice. This act of peeling off was legal only due to the infinite nesting. For a finite nesting, we would not have been able to do that.
+It's interesting to note here that no calculus was needed. We don't evaluate any limit here. What we did instead was to observe that in an infinite nesting of functions, we are allowed to peel off the outermost layer of function evaluation. In fact, we can peel off any finite number of layers but doing it only for the outermost one was the simplest choice here. This act of peeling off was legal only due to the \emph{infinite} nesting. For a finite nesting, we would not have been able to do that. We recognized that one part of an infinite expression was equal to the expression as a whole and took advantage of this self-similarity to simplify the expression. This is a general technique that we should add to our problem solving toolkit. It feels like lying somewhere in between an algebraic and a calculusly technique. It has to do with taking a process to infinity (which is what we do in calculus) but also with replacing a subexpression with some equivalent subexpression (which is what we do in algebra).
 
 \end{comment}
+
+
+
 
 
 

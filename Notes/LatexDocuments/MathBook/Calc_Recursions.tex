@@ -148,60 +148,6 @@ Apparently both vector components converge to the same value of around $4.486$. 
 
 % https://mathworld.wolfram.com/Arithmetic-GeometricMean.html
 
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Iterated Function Systems}
-
-% Maybe make this a subsection after the inifinte radicals. It generalizes the stuff there. If we
-% take  f(x) = a + b sqrt(x)  and iterate that function (starting at a suitable initial value x),
-% the iteration will converge to the fxied point. Maybe the subsec should be called 
-% Fixed Point Iteration
-
-
-% https://en.wikipedia.org/wiki/Iterated_function_system
-
-% Iterated Function Systems: A Comprehensive Survey
-% https://arxiv.org/abs/2211.14661
-
-% IMPLEMENTING ITERATED FUNCTION SYSTEMS IN PYTHON
-% https://www.math.uni-rostock.de/~wj/projects/Fractals/160355141_Habib_Wahab_MTH6138_IFS.pdf
-
-% Consider the equation  x = f(f(f(...f(x)))). Peeling off the outermost application of f in the 
-% RHS, we note that, by the equation, we must have x = f(x). That means that the equation requires
-% that x must be a fixed point of the function f. The is equivalent to requiring x - f(x) = 0 which
-% is in the form suitable to hand over to a root finder ...tbc...
-
-% That is a general pattern: when the function is iterated infinitely many times, we are allowed to
-% "peel off" the outer layer of the evaluation - the next inner layer will still have infinitely 
-% many nested layers of evaluation. This would not be possible with only finitely many layers so the
-% qualitytive step to go to infinity actually gives us an opportunity for simplification. That's
-% pretty interesting because normally, going to infinity makes things more complicated. Well - not
-% always but often.
-
-
-% https://www.youtube.com/watch?v=bEZ6JLLjM3Y  The beauty of Fixed Points
-
-% https://en.wikipedia.org/wiki/Contraction_mapping
-% Contraction: d(f(x), f(y)) < k d(x,y)  where k is a constant with 0 <= k < 1. Why is it not enough
-% to require d(f(x), f(y)) < d(x,y)? Maybe consider a function from R to R with some point x_0 and 
-% an f that lets the points approach x_0 - eps_L  when x comes in from the left and to x_0 - eps_R 
-% when y comes in from the right. Then, the distance between x and y in repeated iteration will
-% indeed shrink in every iteration, i.e. d(f(x), f(y)) < d(x,y)  will be satisfied. But I think,
-% we cannot find a constant k such that  d(f(x), f(y)) < k d(x,y) will always be satisfied. Not sure
-% if that makes sense though. What if our inital values x,y are inside x-eps_L ... x+eps_R? Then
-% d(f(x), f(y)) < d(x,y) will have to be violated as well ...or maybe not? Try to create a 
-% counter example for f such that only the stricter definition achieves what we want but the looser
-% definition doesn't. Maybe f need to be piecewise defined for inside and outside the interval
-% [x-eps_L, x+eps_R]
-
-%===================================================================================================
-\subsection{Continued Fractions}
-
-% ...hmm...I'm not so sure if continued fractions and radicals fit in here because the upate rule actually is not so  imple. We have to evaluate the whole expression from the inside out implying that we must do a complete re-evalutation of everything for each new $n$. However, in the beginning we said that the update rule may involve more than one previous values, so maybe we can us that as justification? ..But hey! We are actually "outside" the recursion subsection here - so we do not need the content to fit in!
-
-
-%===================================================================================================
-\subsection{Infinite Power Towers}
-
 
 
 
@@ -280,15 +226,81 @@ N(x1),N(y1), N(x2),N(y2)   # The 1st solution seems to be the right one
 This is using p,q in the pq-formula x_{1,2} = -p/2 +- sqrt((p/2)^2 - q). It works but can be
 simplified.
 
-It's interesting to note here that no calculus was needed. We don't evaluate any limit here. What we did instead was to observe that in an infinite nesting of functions, we are allowed to peel off the outermost layer of function evaluation. In fact, we can peel off any finite number of layers but doing it only for the outermost one was the simplest choice here. This act of peeling off was legal only due to the \emph{infinite} nesting. For a finite nesting, we would not have been able to do that. We recognized that one part of an infinite expression was equal to the expression as a whole and took advantage of this self-similarity to simplify the expression. This is a general technique that we should add to our problem solving toolkit. It feels like lying somewhere in between an algebraic and a calculusly technique. It has to do with taking a process to infinity (which is what we do in calculus) but also with replacing a subexpression with some equivalent subexpression (which is what we do in algebra).
+It's interesting to note here that no actual calculus tools were needed to get to the solution. We don't evaluate any limit here. What we did instead was to observe that in an infinite nesting of functions, we are allowed to peel off the outermost layer of function evaluation. In fact, we can peel off any finite number of layers but doing it only for the outermost one was the simplest choice here. This act of peeling off was legal only due to the \emph{infinite} nesting. For a finite nesting, we would not have been able to do that. We recognized that one part of an infinite expression was equal to the expression as a whole and took advantage of this self-similarity to simplify the expression. This is a general technique that we should add to our problem solving toolkit. It feels like lying somewhere in between an algebraic and a calculusly technique. It has to do with taking a process to infinity (which is what we do in calculus) but also with replacing a subexpression with some equivalent subexpression (which is what we do in algebra).
 
 \end{comment}
 
 
 
 
+%===================================================================================================
+\subsection{Infinite Power Towers}
 
 
+
+
+
+%===================================================================================================
+\subsection{Continued Fractions}
+
+% ...hmm...I'm not so sure if continued fractions and radicals fit in here because the upate rule actually is not so simple. We have to evaluate the whole expression from the inside out implying that we must do a complete re-evalutation of everything for each new $n$. However, in the beginning we said that the update rule may involve more than one previous values, so maybe we can us that as justification? ..But hey! We are actually "outside" the recursion subsection here - so we do not need the content to fit in!
+
+
+
+
+
+%===================================================================================================
+%\subsection{Iterated Function Systems}
+\subsection{Fixed Point Iteration}
+Consider the following situation: We are given a function $f(x)$ and an initial value $x_0$ and now we apply the function again and again to produce the next value. That means $x_1 = f(x_0)$, $x_2 = f(x_1) = f(f(x_0))$ and so on. As you may have guessed, we intend to repeat the application of $f$ to our previous result ad infinitum. With some functions $f$ and initial values $x_0$, this process may actually converge to a definite number. Let's call that number $x_{\infty}$, so we have:
+\begin{equation}
+ x_{\infty} = f(f(f( \ldots f(x_0))))
+\end{equation}
+Now remember what we did with the infinitely nested radical. We have a similar situation here. When we peel off the outermost function application, what remains is \emph{still} an infinite number of function applications to $x_0$ and it is therefore still equal to $x_{\infty}$. That means $x_{\infty}$ must satisfy $x_{\infty} = f(x_{\infty})$.
+
+%If it does, it means that this number $x$ must satisfy the condition $f(x) = x$. This can be seen by looking at the infinitely nested expression $x = f(f(f(\ldots f(x_0))))$. We may again peel off the outermost function application and recognize that what remains is equal to the whole right hand side. This is, of course, equal to the left hand side $x$, so we may conclude that the infinite expression is equivalent to the simple finite expression $x = f(x)$ ...TBC...
+
+% Maybe make this a subsection after the inifinte radicals. It generalizes the stuff there. If we
+% take  f(x) = a + b sqrt(x)  and iterate that function (starting at a suitable initial value x),
+% the iteration will converge to the fxied point. Maybe the subsec should be called 
+% Fixed Point Iteration
+
+
+% https://en.wikipedia.org/wiki/Iterated_function_system
+
+% Iterated Function Systems: A Comprehensive Survey
+% https://arxiv.org/abs/2211.14661
+
+% IMPLEMENTING ITERATED FUNCTION SYSTEMS IN PYTHON
+% https://www.math.uni-rostock.de/~wj/projects/Fractals/160355141_Habib_Wahab_MTH6138_IFS.pdf
+
+% Consider the equation  x = f(f(f(...f(x_0)))). Peeling off the outermost application of f in the 
+% RHS, we note that, by the equation, we must have x = f(x). That means that the equation requires
+% that x must be a fixed point of the function f. The is equivalent to requiring x - f(x) = 0 which
+% is in the form suitable to hand over to a root finder ...tbc...
+
+% That is a general pattern: when the function is iterated infinitely many times, we are allowed to
+% "peel off" the outer layer of the evaluation - the next inner layer will still have infinitely 
+% many nested layers of evaluation. This would not be possible with only finitely many layers so the
+% qualitytive step to go to infinity actually gives us an opportunity for simplification. That's
+% pretty interesting because normally, going to infinity makes things more complicated. Well - not
+% always but often.
+
+
+% https://www.youtube.com/watch?v=bEZ6JLLjM3Y  The beauty of Fixed Points
+
+% https://en.wikipedia.org/wiki/Contraction_mapping
+% Contraction: d(f(x), f(y)) < k d(x,y)  where k is a constant with 0 <= k < 1. Why is it not enough
+% to require d(f(x), f(y)) < d(x,y)? Maybe consider a function from R to R with some point x_0 and 
+% an f that lets the points approach x_0 - eps_L  when x comes in from the left and to x_0 - eps_R 
+% when y comes in from the right. Then, the distance between x and y in repeated iteration will
+% indeed shrink in every iteration, i.e. d(f(x), f(y)) < d(x,y)  will be satisfied. But I think,
+% we cannot find a constant k such that  d(f(x), f(y)) < k d(x,y) will always be satisfied. Not sure
+% if that makes sense though. What if our inital values x,y are inside x-eps_L ... x+eps_R? Then
+% d(f(x), f(y)) < d(x,y) will have to be violated as well ...or maybe not? Try to create a 
+% counter example for f such that only the stricter definition achieves what we want but the looser
+% definition doesn't. Maybe f need to be piecewise defined for inside and outside the interval
+% [x-eps_L, x+eps_R]
 
 
 

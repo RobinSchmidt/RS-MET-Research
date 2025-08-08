@@ -46,7 +46,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSortedSet();
 
   // Autodiff:
-  testAutoDiff();
+  //testAutoDiff();
   //testAutoDiff2();
   //testAutoDiff3();
   //testAutoDiff4();
@@ -155,6 +155,9 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Misc:
   //testMerge();  // Trying to find an in-place merge algorithm - not sure, if that's possible, though
+
+
+  testGaussIntRoots();                  // stub
 
   // Riemann zeta function:
   //testPolyaPotenialFormulas();

@@ -19964,6 +19964,80 @@ void testMerge()
 }
 
 
+
+
+/** A function that is supposed to have roots at the Gaussian integers. It is defined via an 
+infinite double product but we evaluate only finitely many factors. How many is adjusted by the 
+numRoots parameter. ...TBC...  */
+template<class T>
+std::complex<T> rootsAtGaussInts(std::complex<T> z, int numRoots)
+{
+  std::complex<T> w = z;                   // Initialization creates root at 0
+  std::complex<T> i(0,1);                  // Imaginary unit
+  for(int m = 1; m <= numRoots; m++)
+  {
+    for(int n = 1; n <= numRoots; n++)
+    {
+      w *= (1 - z/(+T(m) + i*T(n)));
+      w *= (1 - z/(+T(m) - i*T(n)));
+      w *= (1 - z/(-T(m) + i*T(n)));
+      w *= (1 - z/(-T(m) - i*T(n)));
+      // Can be optimized, I guess. The 4 factors may be condensed into 1
+    }
+  }
+  return w;
+}
+
+void testGaussIntRoots()
+{
+  // Under construction.
+
+  using Real    = double;
+  using Complex = std::complex<Real>;
+  using MatC    = RAPT::rsMatrix<Complex>;
+
+  int numRoots  = 10;                    // Evaluation accuracy
+  int numPixels = 51;                    // Grid density
+
+
+  MatC A(numPixels, numPixels);          // Matrix for values of the function
+  Real dx = Real(1) / Real(numPixels-1); // Step size in the unit square
+
+  Complex i(0,1);                        // Imaginary unit
+
+  for(int m = 0; m < numPixels; m++)
+  {
+    for(int n = 0; n < numPixels; n++)
+    {
+      Real x = Real(m) * dx;                     // x-coordinate in unit square
+      Real y = Real(n) * dx;                     // y-coordinate in unit square
+      Complex z = x + i*y;                       // Complex evaluation point
+      Complex w = rootsAtGaussInts(z, numRoots); // Evaluate function at z
+      A(m, n) = w;                               // Store result in matrix A
+    }
+  }
+
+
+
+  int dummy = 0;
+
+  // ToDo:
+  // 
+  // - Make a plot of the real and imaginary part of the rootsAtGaussInts function in the unit
+  //   square of complex plane.
+  // 
+  // - Store u = real(w), v = imag(w) in real valued matrices U,V for plotting
+}
+
+
+
+
+
+
+
+
+
+
 template<class Tx, class Ty, class F>
 void partialDerivatives(const F& f, const Tx& x, const Tx& y, 
   const Tx& hx, const Tx& hy, Ty* f_x, Ty* f_y)

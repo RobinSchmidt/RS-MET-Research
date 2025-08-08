@@ -66,9 +66,11 @@ After the 6th iteration, the sequence has converged to a value that will thereaf
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Convergence}
+...TBC...
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Fibonacci Numbers}
+...TBC...
 
 % the sequence itself diverges but the sequence of ratios of successive terms converges to the golden ratio
 
@@ -80,6 +82,7 @@ Although the sequence of Fibonacci numbers itself diverges to infinity, we can c
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Newton-Raphson Iteration}
+...TBC...
 
 %\paragraph{The Babylonian Algorithm}
 
@@ -173,8 +176,13 @@ x_{1,2} = k \pm s
 k = a + \frac{b^2}{2}, \;
 s = \sqrt{k^2 - a^2}, 
 \end{equation}
-But we need to be a bit careful with this result. The "little bit of algebra" involved a step where both sides of an equation had to be squared. Such steps may produce extraneous solutions. We need to try both signs for $s$ and pick the one that produces a value $x$ that does indeed solve the equation. ...TBC...
-% which one that is may depend on the signs of a and b? Or maybe on the sign of k? Figure out! Give an example for a triple a,b,x that works. a = 3, b = 2, x = 9 works.
+But we need to be a bit careful with this result. The "little bit of algebra" involved a step where both sides of an equation had to be squared. Such steps may produce extraneous solutions. We need to try both signs for $s$ and pick the one that produces a value $x$ that does indeed solve the equation. For some combinations of $a,b$ we may not get any real solution at all. For $a = 3, b = 2$, the formula produces the solutions $x = 1, x = 9$ and of these, only the $x=9$ solution actually works. With $a = -2, b = 3$, we get $x = 1, x = 4$ as solutions and they are both true solutions. But be that as it may. It's interesting to note here that no actual calculus tools were needed to get to the formula solution(s). We don't evaluate any limit here. What we did instead was to observe that in an infinite nesting of functions, we are allowed to peel off the outermost layer of function evaluation. In fact, we can peel off any finite number of layers but doing it only for the outermost one was the simplest choice here. This act of peeling off was legal only due to the \emph{infinite} nesting. For a finite nesting, we would not have been able to do that. We recognized that one part of an infinite expression was equal to the expression as a whole and took advantage of this self-similarity to simplify the expression. This is a general technique that we should add to our problem solving toolkit. It feels like lying somewhere in between an algebraic and a calculusly technique. It has to do with taking a process to infinity (which is what we do in calculus) but also with replacing a subexpression with some equivalent subexpression (which is what we do in algebra).
+
+%...TBC...Mention other kinds of infinite expressions involving roots
+
+
+% which one that is may depend on the signs of a and b? Or maybe on the sign of k? Figure out! Give an example for a triple a,b,x that works. a = 3, b = 2, x = 9 works. Ah - with a = -2, b = 3, we actually get two real solutions at x = 1 and x = 4. So maybe different cases are possible? Sometimes the + solution, sometimes the - solution sometimes both and sometimes none? Figure out! With a = -1, b = 1, we get no (real) solution. With a = -1.6, b = 2.5, we get close to a tangency solution. I think, when the - solution works, the + solution will also work but not the other way around. The - solution produces the smaller value - but if the sqrt-like graph crosses the diagonal once, it must cross it again due to the slope for sqrt going down when we move rightward. So, I think, the case that the - solution works but the + solution doesn't cannot occurr.
+
 
 % https://en.wikipedia.org/wiki/Nested_radical#Infinitely_nested_radicals
 
@@ -211,23 +219,6 @@ Here is a plot of  f(x) = x  and  f(x) = a + b sqrt(x)  with adjustable a,b:
   https://www.desmos.com/calculator/epu6yonem9
 The intersection of the graphs should be our solution
 
-This looks good:
-
-a = 3
-b = 2
-p = -(2*a + b^2)
-q = a^2
-x1 = -p/2 + sqrt((p/2)^2 - q)
-x2 = -p/2 - sqrt((p/2)^2 - q)
-y1 = a + b * sqrt(x1)
-y2 = a + b * sqrt(x2)
-N(x1),N(y1), N(x2),N(y2)   # The 1st solution seems to be the right one
-
-This is using p,q in the pq-formula x_{1,2} = -p/2 +- sqrt((p/2)^2 - q). It works but can be
-simplified.
-
-It's interesting to note here that no actual calculus tools were needed to get to the solution. We don't evaluate any limit here. What we did instead was to observe that in an infinite nesting of functions, we are allowed to peel off the outermost layer of function evaluation. In fact, we can peel off any finite number of layers but doing it only for the outermost one was the simplest choice here. This act of peeling off was legal only due to the \emph{infinite} nesting. For a finite nesting, we would not have been able to do that. We recognized that one part of an infinite expression was equal to the expression as a whole and took advantage of this self-similarity to simplify the expression. This is a general technique that we should add to our problem solving toolkit. It feels like lying somewhere in between an algebraic and a calculusly technique. It has to do with taking a process to infinity (which is what we do in calculus) but also with replacing a subexpression with some equivalent subexpression (which is what we do in algebra).
-
 \end{comment}
 
 
@@ -235,9 +226,15 @@ It's interesting to note here that no actual calculus tools were needed to get t
 
 %===================================================================================================
 \subsection{Infinite Power Towers}
+Let's next consider a power tower of infinite height, aka infinite tetration. We want to make sense of an expression of the form:
 
-
-
+\begin{equation}
+f(x) = x^{x^{\cdot^{\cdot^{\cdot^x}}}}
+%x^{x^{\cdot^{\cdot^{\cdot^{x^{x^x}}}}}}
+% x^{x^{x^{x^{x^{x^{x^{x^{x^x}}}}}}}}
+\end{equation}
+% https://tex.stackexchange.com/questions/144490/how-do-i-typeset-a-tenfold-powering-a-tower-of-powers-with-latex
+...TBC...
 
 
 %===================================================================================================
@@ -252,18 +249,26 @@ It's interesting to note here that no actual calculus tools were needed to get t
 %===================================================================================================
 %\subsection{Iterated Function Systems}
 \subsection{Fixed Point Iteration}
-Consider the following situation: We are given a function $f(x)$ and an initial value $x_0$ and now we apply the function again and again to produce the next value. That means $x_1 = f(x_0)$, $x_2 = f(x_1) = f(f(x_0))$ and so on. As you may have guessed, we intend to repeat the application of $f$ to our previous result ad infinitum. With some functions $f$ and initial values $x_0$, this process may actually converge to a definite number. Let's call that number $x_{\infty}$, so we have:
+Consider the following situation: We are given a function $f(x)$ and an initial value $x_0$ and now we apply the function again and again to produce the next value. That means $x_1 = f(x_0)$, $x_2 = f(x_1) = f(f(x_0))$ and so on. As you may have guessed, we intend to repeat the application of $f$ to our previous result ad infinitum. With some functions $f$ and initial values $x_0$, this process may actually converge to a definite number. Let's call that number $x$, so we have by definition:
 \begin{equation}
- x_{\infty} = f(f(f( \ldots f(x_0))))
+ x = f(f(f( \ldots f(x_0))))
 \end{equation}
-Now remember what we did with the infinitely nested radical. We have a similar situation here. When we peel off the outermost function application, what remains is \emph{still} an infinite number of function applications to $x_0$ and it is therefore still equal to $x_{\infty}$. That means $x_{\infty}$ must satisfy $x_{\infty} = f(x_{\infty})$.
+where the dots intend to mean that we apply $f$ infinitely often to $x_0$. Now remember what we did with the infinitely nested radical. We have a similar situation here, just more general. In our previous infinite radical situation, we had this same situation for the special case $f(x) = a + b \sqrt{x}$. When we peel off the outermost function application on the right hand side, what remains is \emph{still} an infinite number of function applications to $x_0$ and it is therefore still equal to $x$. That means $x$ must satisfy $x = f(x)$. A point $x$ with that property is called a \emph{fixed point} of the given function $f$. Geometrically, it is a point of intersection between the graph of $f(x)$ and the graph of the identity function. Not all functions have such intersection points but some do. For example, the graph of the function $f(x) = x^3$ intersects with the graph of the identity function in the points $(-1,-1)$ and $(1,1)$ and it is indeed true that $(-1)^3 = -1$ and $1^3 = 1$.
+
+% Maybe take 8 cos(x) as another example. It has 5 fixed points
+%
+%   https://www.desmos.com/calculator/di4hxswknp
+%
+% Maybe create an example where one of the fixed points is not an intersection point but a point
+% of tangency. Maybe use k cos(x) and adjust k accordingly. k = 6.202 seems to work:
+%
+%   https://www.desmos.com/calculator/wzjyzxnp1r
+%
+% How would we find a formula for k? Tangency means that the derivative of f must be 1 at the
+% fixed point.
+
 
 %If it does, it means that this number $x$ must satisfy the condition $f(x) = x$. This can be seen by looking at the infinitely nested expression $x = f(f(f(\ldots f(x_0))))$. We may again peel off the outermost function application and recognize that what remains is equal to the whole right hand side. This is, of course, equal to the left hand side $x$, so we may conclude that the infinite expression is equivalent to the simple finite expression $x = f(x)$ ...TBC...
-
-% Maybe make this a subsection after the inifinte radicals. It generalizes the stuff there. If we
-% take  f(x) = a + b sqrt(x)  and iterate that function (starting at a suitable initial value x),
-% the iteration will converge to the fxied point. Maybe the subsec should be called 
-% Fixed Point Iteration
 
 
 % https://en.wikipedia.org/wiki/Iterated_function_system

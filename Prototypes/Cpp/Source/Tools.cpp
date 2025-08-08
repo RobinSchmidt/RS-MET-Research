@@ -4754,7 +4754,7 @@ RS_PFX rsSin(RS_TN x)
   return rsChainRule(RS_TN(s, c, -s), x);    // Apply chain rule to compute result.
 
   /*
-  // Old:
+  // Old, unoptimized:
   TVal g  =  x.v;                            // g = g(x) = x.v
   TVal fv =  rsSin(g);                       // f(g)   =  sin(g)
   TDer fd =  rsCos(g);                       // f'(g)  =  cos(g)

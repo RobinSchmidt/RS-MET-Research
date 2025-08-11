@@ -19998,13 +19998,13 @@ void testGaussIntRoots()
   using MatC    = RAPT::rsMatrix<Complex>;
 
 
-  int numRoots  = 10;                        // Evaluation accuracy
+  int numRoots  = 50;                        // Evaluation accuracy
   int numPixels = 51;                        // Grid density
 
-  Real xMin = 0.0;                           // Minimum x-value (i.e. real part)
-  Real xMax = 1.0;                           // Maximum x-value (i.e. real part)
-  Real yMin = 0.0;                           // Minimum y-value (i.e. imaginary part)
-  Real yMax = 1.0;                           // Maximum y-value (i.e. imaginary part)
+  Real xMin = -1.0;                          // Minimum x-value (i.e. real part)
+  Real xMax = +1.0;                          // Maximum x-value (i.e. real part)
+  Real yMin = -1.0;                          // Minimum y-value (i.e. imaginary part)
+  Real yMax = +1.0;                          // Maximum y-value (i.e. imaginary part)
 
   Real dx = (xMax-xMin) / Real(numPixels-1); // Step size in the x direction
   Real dy = (yMax-yMin) / Real(numPixels-1); // Step size in the y direction

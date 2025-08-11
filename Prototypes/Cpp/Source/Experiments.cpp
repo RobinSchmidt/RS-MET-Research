@@ -19994,37 +19994,56 @@ void testGaussIntRoots()
 
   using Real    = double;
   using Complex = std::complex<Real>;
+  using MatR    = RAPT::rsMatrix<Real>;
   using MatC    = RAPT::rsMatrix<Complex>;
 
-  int numRoots  = 10;                    // Evaluation accuracy
-  int numPixels = 51;                    // Grid density
+
+  int numRoots  = 10;                        // Evaluation accuracy
+  int numPixels = 51;                        // Grid density
+
+  Real xMin = 0.0;                           // Minimum x-value (i.e. real part)
+  Real xMax = 1.0;                           // Maximum x-value (i.e. real part)
+  Real yMin = 0.0;                           // Minimum y-value (i.e. imaginary part)
+  Real yMax = 1.0;                           // Maximum y-value (i.e. imaginary part)
+
+  Real dx = (xMax-xMin) / Real(numPixels-1); // Step size in the x direction
+  Real dy = (yMax-yMin) / Real(numPixels-1); // Step size in the y direction
 
 
-  MatC A(numPixels, numPixels);          // Matrix for values of the function
-  Real dx = Real(1) / Real(numPixels-1); // Step size in the unit square
+  //MatC A( numPixels, numPixels);             // Matrix for values of the function
+  MatR re(numPixels, numPixels);
+  MatR im(numPixels, numPixels);
 
-  Complex i(0,1);                        // Imaginary unit
+  Complex i(0,1);                            // Imaginary unit
 
   for(int m = 0; m < numPixels; m++)
   {
     for(int n = 0; n < numPixels; n++)
     {
-      Real x = Real(m) * dx;                     // x-coordinate in unit square
-      Real y = Real(n) * dx;                     // y-coordinate in unit square
+      Real x = xMin + Real(m) * dx;              // x-coordinate
+      Real y = yMin + Real(n) * dy;              // y-coordinate
       Complex z = x + i*y;                       // Complex evaluation point
       Complex w = rootsAtGaussInts(z, numRoots); // Evaluate function at z
-      A(m, n) = w;                               // Store result in matrix A
+      //A(m, n) = w;                               // Store result in matrix A
+      re(m, n) = w.real();                       // Store real part
+      im(m, n) = w.imag();                       // Store imaginary part
     }
   }
 
 
-
+  // Plot real and imaginary parts of the function values w = f(z):
+  plotMatrix(re);
+  plotMatrix(im);
   int dummy = 0;
 
   // ToDo:
   // 
   // - Make a plot of the real and imaginary part of the rootsAtGaussInts function in the unit
   //   square of complex plane.
+  // 
+  // - Maybe choose a bigger domain to see if the function does indeed have the expected 
+  //   periodicity (of course, we need to do that before introducing any range reduction in the
+  //   evaluation algorithm - which we should eventually do - but not yet)
   // 
   // - Store u = real(w), v = imag(w) in real valued matrices U,V for plotting
 }

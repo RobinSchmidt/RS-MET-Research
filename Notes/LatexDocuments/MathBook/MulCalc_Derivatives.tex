@@ -23,9 +23,12 @@ Now let's assume we are given an arbitrary vector $\mathbf{v}$ of unit length. W
  = \lim_{h \rightarrow 0} \frac{f(\mathbf{x} + h \mathbf{v} ) - f(\mathbf{x})}{h}
  = \frac{d}{d h} f(\mathbf{x} + h \mathbf{v}) \bigg\rvert_{h=0}
 \end{equation}
-where the RHS is a generalization of \ref{Eq:DerivativeViaH} which tells us how we could evaluate the limit (but we'll soon learn a simpler way to evaluate it). Note that the directional derivative into any of the coordinate directions $\mathbf{e}_i$ just reduces to the partial derivative with respect to coordinate $i$, so partial derivatives can also be seen as directional derivatives into very specific directions: namely, into the directions of our coordinate axes. [TODO: verify that the RHS is actually correct] 
+where the RHS is a generalization of \ref{Eq:DerivativeViaH} which tells us how we could evaluate the limit (but we'll soon learn a simpler way to evaluate it). Note that the directional derivative into any of the coordinate directions $\mathbf{e}_i$ just reduces to the partial derivative with respect to coordinate $i$, so partial derivatives can also be seen as directional derivatives into very specific directions: namely, into the directions of our coordinate axes. [TODO: verify that the RHS is actually correct, give notations for the directional derivative] 
 
 % The formula is not from a book - i found it myself by analogy to the evaluation formula for the Gateaux derivative in Baerwolff, pg. 792]
+
+% Notations:
+% $D_{\mathbf{v}} f(\mathbf{x})$, $\nabla_{\mathbf{v}} f(\mathbf{x})$
 
 %===================================================================================================
 \subsection{Higher Order Partial Derivatives}

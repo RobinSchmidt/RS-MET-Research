@@ -20009,12 +20009,31 @@ void testGaussIntRoots()
   Real dx = (xMax-xMin) / Real(numPixels-1); // Step size in the x direction
   Real dy = (yMax-yMin) / Real(numPixels-1); // Step size in the y direction
 
+  Complex zero(0, 0);
+  Complex i(0, 1);                           // Imaginary unit
 
-  //MatC A( numPixels, numPixels);             // Matrix for values of the function
+  // Shorthand function f for convenience:
+  auto f = [&](Complex z) { return rootsAtGaussInts(z, numRoots); };
+
+  bool ok = true;
+
+
+  // Check for some Gaussian integers z that f(z) returns zero as expected:
+  Complex z;
+  Complex w;
+  z =  0; w = f(z); ok &= w == zero;
+  z =  1; w = f(z); ok &= w == zero;  // FAILS!!!
+  //z = -1; w = f(z); ok &= w == zero;
+  // OK - this check fails! Figure out why! If this simple test already fails, it's no surprise 
+  // that we don't see the expected periodicity.
+
+
+
+  //MatC A( numPixels, numPixels);           // Matrix for values of the function
   MatR re(numPixels, numPixels);
   MatR im(numPixels, numPixels);
 
-  Complex i(0,1);                            // Imaginary unit
+
 
   for(int m = 0; m < numPixels; m++)
   {

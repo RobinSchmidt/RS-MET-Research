@@ -19982,7 +19982,7 @@ distribution of the roots looks the same. It should not matter if we stand at 0.
 of roots and therefore, the function should have the same value. ...VERIFY (theoretically and 
 numerically)! ...TBC...  */
 template<class T>
-std::complex<T> rootsAtGaussInts(std::complex<T> z, int numRoots)
+std::complex<T> rootsAtGaussInts1(std::complex<T> z, int numRoots)
 {
   std::complex<T> w(1, 0);                       // Initialization with empty product
   std::complex<T> i(0, 1);                       // Imaginary unit
@@ -20003,7 +20003,21 @@ std::complex<T> rootsAtGaussInts(std::complex<T> z, int numRoots)
 // - Try an implementation based on  f(z) = \prod_{r \in R} (z - r). In this case, we do not need
 //   to treat the special case of the root at 0 separately. I think, the resulting function should 
 //   be the same up to a scaling factor. But maybe the form makes a difference for the numerical
-//   evaluation? Try it!  
+//   evaluation? Try it!  ...ok - done - see below:
+
+template<class T>
+std::complex<T> rootsAtGaussInts2(std::complex<T> z, int numRoots)
+{
+  std::complex<T> w(1, 0);                       // Initialization with empty product
+  std::complex<T> i(0, 1);                       // Imaginary unit
+  for(int m = -numRoots; m <= numRoots; m++)
+    for(int n = -numRoots; n <= numRoots; n++)
+      w *= (z - (T(m) + i*T(n)));
+  return w;
+}
+// This implementation seems to be even more prone to numerical overflow than the one above.
+
+
 
 
 /*
@@ -20043,10 +20057,10 @@ void testGaussIntRoots()
   int numRoots  = 20;                        // Evaluation accuracy
   int numPixels = 51;                        // Grid density
 
-  Real xMin = -1.0;                          // Minimum x-value (i.e. real part)
-  Real xMax = +1.0;                          // Maximum x-value (i.e. real part)
-  Real yMin = -1.0;                          // Minimum y-value (i.e. imaginary part)
-  Real yMax = +1.0;                          // Maximum y-value (i.e. imaginary part)
+  Real xMin = -1.1;                          // Minimum x-value (i.e. real part)
+  Real xMax = +1.1;                          // Maximum x-value (i.e. real part)
+  Real yMin = -1.1;                          // Minimum y-value (i.e. imaginary part)
+  Real yMax = +1.1;                          // Maximum y-value (i.e. imaginary part)
 
   Real dx = (xMax-xMin) / Real(numPixels-1); // Step size in the x direction
   Real dy = (yMax-yMin) / Real(numPixels-1); // Step size in the y direction
@@ -20055,7 +20069,8 @@ void testGaussIntRoots()
   Complex i(0, 1);                           // Imaginary unit
 
   // Shorthand function f for convenience:
-  auto f = [&](Complex z) { return rootsAtGaussInts(z, numRoots); };
+  auto f = [&](Complex z) { return rootsAtGaussInts1(z, numRoots); };
+  //auto f = [&](Complex z) { return rootsAtGaussInts2(z, numRoots); };
 
   bool ok = true;
 
@@ -20104,13 +20119,13 @@ void testGaussIntRoots()
   {
     for(int n = 0; n < numPixels; n++)
     {
-      Real x = xMin + Real(m) * dx;              // x-coordinate
-      Real y = yMin + Real(n) * dy;              // y-coordinate
-      Complex z = x + i*y;                       // Complex evaluation point
-      Complex w = rootsAtGaussInts(z, numRoots); // Evaluate function at z
-      //A(m, n) = w;                               // Store result in matrix A
-      re(m, n) = w.real();                       // Store real part
-      im(m, n) = w.imag();                       // Store imaginary part
+      Real x = xMin + Real(m) * dx;          // x-coordinate
+      Real y = yMin + Real(n) * dy;          // y-coordinate
+      Complex z = x + i*y;                   // Complex evaluation point
+      Complex w = f(z);                      // Evaluate function at z
+      //A(m, n) = w;                           // Store result in matrix A
+      re(m, n) = w.real();                   // Store real part
+      im(m, n) = w.imag();                   // Store imaginary part
     }
   }
 
@@ -20127,6 +20142,13 @@ void testGaussIntRoots()
   //   we may run into numerical problems. ToDo: Maybe instead of evaluating the product directly, 
   //   take its logarithm which we can evaluate using a sum and exponentiate the result at the end.
   //   But the problem with that idea is that the logarithm of a complex number is not unique. 
+  // 
+  // - The numRoots setting seems to have not much visual impact on the plot. Even with an 
+  //   extremely low value of 1, the plot looks (almost?) the same as with higher settings like 20
+  //   or 50. That is strange! Oh - but with with a greater xy-range (like -1.5..1.5) the scale
+  //   of the function values is very different. The numbers at the edges are higher with a higher 
+  //   value of numRoots. The plots *look* the same due to normalization of the z-range but reading
+  //   the color bar on the right, it is clear that numbers are different. 
   //
   // - Done.
   //   The function does not look periodic at all. Verify the implementation! Verify the math! 

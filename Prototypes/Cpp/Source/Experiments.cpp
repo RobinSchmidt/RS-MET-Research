@@ -19966,10 +19966,21 @@ void testMerge()
 
 
 
-/** A function that is supposed to have roots at the Gaussian integers. It is defined via an 
-infinite double product but we evaluate only finitely many factors. How many is adjusted by the 
-numRoots parameter. ...TBC...  */
+/** A complex function that is constructed to have roots (of order 1) at the Gaussian integers. It
+is defined via an infinite product:
 
+  f(z) = \prod_{r \in R} (1 - z/r)
+
+where R is the set of roots which in this case should be the Gaussian integers. We can 
+re-express this product as a double product over indices m,n and let these indices independently 
+run from -inf to +inf. We would the produce all the numbers of the form m + i*n which are the 
+Gaussian integers as desired. In practice, we only use finitely many factors in the evaluation. How
+many roots we use is adjusted by the numRoots parameter. If I'm not mistaken, this function should 
+be doubly periodic because at any position inside in any square in the complex plane, the 
+distribution of the roots looks the same. It should not matter if we stand at 0.3 + 0.7i or at 
+2.3 + 5.7i or at m.3 + n.7i for any pair m,n. When we look around, we "see" the same distribution 
+of roots and therefore, the function should have the same value. ...VERIFY (theoretically and 
+numerically)! ...TBC...  */
 template<class T>
 std::complex<T> rootsAtGaussInts(std::complex<T> z, int numRoots)
 {
@@ -19987,6 +19998,13 @@ std::complex<T> rootsAtGaussInts(std::complex<T> z, int numRoots)
   }
   return w;
 }
+// ToDo:
+//
+// - Try an implementation based on  f(z) = \prod_{r \in R} (z - r). In this case, we do not need
+//   to treat the special case of the root at 0 separately. I think, the resulting function should 
+//   be the same up to a scaling factor. But maybe the form makes a difference for the numerical
+//   evaluation? Try it!  
+
 
 /*
 template<class T>

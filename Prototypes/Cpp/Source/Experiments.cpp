@@ -19986,6 +19986,9 @@ std::complex<T> rootsAtGaussInts(std::complex<T> z, int numRoots)
     }
   }
   return w;
+
+  // This code is wrong! We are missing the m == 0, and n == 0 cases. For every nonzero m we would
+  // need to include the case where n = 0 and vice versa.
 }
 
 void testGaussIntRoots()
@@ -19998,7 +20001,7 @@ void testGaussIntRoots()
   using MatC    = RAPT::rsMatrix<Complex>;
 
 
-  int numRoots  = 50;                        // Evaluation accuracy
+  int numRoots  = 5;                        // Evaluation accuracy
   int numPixels = 51;                        // Grid density
 
   Real xMin = -1.0;                          // Minimum x-value (i.e. real part)
@@ -20022,10 +20025,14 @@ void testGaussIntRoots()
   Complex z;
   Complex w;
   z =  0; w = f(z); ok &= w == zero;
-  z =  1; w = f(z); ok &= w == zero;  // FAILS!!!
+  z =  1; w = f(z); ok &= w == zero;  // FAILS!!!  w = 1.3086289904425668 - i*1.4745149545802860e-16
   //z = -1; w = f(z); ok &= w == zero;
   // OK - this check fails! Figure out why! If this simple test already fails, it's no surprise 
   // that we don't see the expected periodicity.
+  // Aha! I see! The Code is still wrong! See comments in the implementation of rootsAtGaussInts().
+  // ToDo: First do a completely naive implementation with no optimizations whatsoever. Then try to
+  // create an optimized version - always making sure that it returns the same result by means of
+  // suitable unit tests.
 
 
 

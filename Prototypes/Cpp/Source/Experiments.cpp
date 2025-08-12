@@ -20025,10 +20025,10 @@ void testGaussIntRoots()
   int numRoots  = 20;                        // Evaluation accuracy
   int numPixels = 51;                        // Grid density
 
-  Real xMin = -1.2;                          // Minimum x-value (i.e. real part)
-  Real xMax = +1.2;                          // Maximum x-value (i.e. real part)
-  Real yMin = -1.2;                          // Minimum y-value (i.e. imaginary part)
-  Real yMax = +1.2;                          // Maximum y-value (i.e. imaginary part)
+  Real xMin = -1.0;                          // Minimum x-value (i.e. real part)
+  Real xMax = +1.0;                          // Maximum x-value (i.e. real part)
+  Real yMin = -1.0;                          // Minimum y-value (i.e. imaginary part)
+  Real yMax = +1.0;                          // Maximum y-value (i.e. imaginary part)
 
   Real dx = (xMax-xMin) / Real(numPixels-1); // Step size in the x direction
   Real dy = (yMax-yMin) / Real(numPixels-1); // Step size in the y direction
@@ -20040,7 +20040,6 @@ void testGaussIntRoots()
   auto f = [&](Complex z) { return rootsAtGaussInts(z, numRoots); };
 
   bool ok = true;
-
 
   // Check for some Gaussian integers z that f(z) returns zero as expected:
   Complex z;
@@ -20055,21 +20054,33 @@ void testGaussIntRoots()
   z =  2*i; w = f(z); ok &= w == zero;
   z = -2*i; w = f(z); ok &= w == zero;
 
-  // ToDo:
-  // Maybe loop through all complex numbers of the form m + i*n form m,n in 
-  // -numRoots...+numRoots. This should always give zero as result
+  //z = 8-20*i; w = f(z); ok &= w == zero;
+  // This gives a nan result. It looks like the evaluation algorithm has numerical problems. During
+  // evaluation, the partial products grow very large. I think, we are dealing with floating point 
+  // overflow here.
 
-  // ToDo: First do a completely naive implementation with no optimizations whatsoever (done). Then
-  // try to create an optimized version - always making sure that it returns the same result by 
-  // means of suitable unit tests.
+  // Loop through all complex numbers of the form m + i*n form m,n in -numRoots...+numRoots. This 
+  // should always give zero as result:
+  //for(int m = -numRoots; m <= numRoots; m++)
+  //{
+  //  for(int n = -numRoots; n <= numRoots; n++)
+  //  {
+  //    z = Complex(m, n);
+  //    w = f(z);
+  //    ok &= w == zero;
+  //    //rsAssert(ok);  // Triggers at m = 8, n = -20 with w == -nan - i*nan
+  //    // ...of course, this triggers only, if numRoots is large enough.
+  //  }
+  //}
+  // Code is commented out because it doesn't really work. We seem to get numerical problems in the
+  // multiplicative accumulation of the product.
+
 
 
 
   //MatC A( numPixels, numPixels);           // Matrix for values of the function
   MatR re(numPixels, numPixels);
   MatR im(numPixels, numPixels);
-
-
 
   for(int m = 0; m < numPixels; m++)
   {
@@ -20091,9 +20102,16 @@ void testGaussIntRoots()
   plotMatrix(im);
   int dummy = 0;
 
+
   // Observations:
+  // 
+  // - During evaluation of the product, it may grow very large when the input z is large. I think,
+  //   we may run into numerical problems. ToDo: Maybe instead of evaluating the product directly, 
+  //   take its logarithm which we can evaluate using a sum and exponentiate the result at the end.
+  //   But the problem with that idea is that the logarithm of a complex number is not unique. 
   //
-  // - The function does not look periodic at all. Verify the implementation! Verify the math! 
+  // - Done.
+  //   The function does not look periodic at all. Verify the implementation! Verify the math! 
   //   Something is fundamentally wrong - either with the theory or the implementation.
   //
   // 
@@ -20112,15 +20130,11 @@ void testGaussIntRoots()
   //   periodicity (of course, we need to do that before introducing any range reduction in the
   //   evaluation algorithm - which we should eventually do - but not yet)
   // 
+  // - Try to create an optimized version of the evaluation function always making sure that it 
+  //   returns the same result as the naive implementation by means of suitable unit tests.
+  // 
   // - Store u = real(w), v = imag(w) in real valued matrices U,V for plotting
 }
-
-
-
-
-
-
-
 
 
 

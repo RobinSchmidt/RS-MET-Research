@@ -242,8 +242,9 @@ then $p(x)$ and $q(x)$ will have the same roots as $f(x)$. Of course, if the pro
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Factoring the Sine Function}
-A nice infinite product representation of the sine function was found be Euler and is given by:
+A nice infinite product representation of the sine function was found by Euler and is given by:
 \begin{equation}
+\label{Eq:SineInfProduct}
 \sin(x) = x \cdot \prod_{k=1}^{\infty} \left( 1 - \frac{x^2}{k^2 \pi^2}  \right)
         = \ldots \left(1 + \frac{x}{3 \pi}  \right)
                  \left(1 + \frac{x}{2 \pi}  \right) 
@@ -254,7 +255,13 @@ A nice infinite product representation of the sine function was found be Euler a
                  \left(1 - \frac{x}{3 \pi}  \right)
           \ldots
 \end{equation}
-He "factored out" all the infinitely many roots of the sine function that occur at all the integer multiples of $\pi$. Each positive integer $k$ gives one factor of $(1 + \frac{x}{k \pi})$ and one of $(1 - \frac{x}{k \pi})$. These pairs of factors can be combined into a single $(1 - \frac{x^2}{k^2 \pi^2})$ factor. The $k=0$ case is treated separately to avoid division by zero. That's the single $x$ in the middle. He discovered this formula in the course of solving the so called Basel problem. This is the problem of finding the value of the infinite sum $\sum_{k=1}^{\infty} \frac{1}{k^2}$. Euler found the value of this sum to be $\frac{\pi^2}{6}$ and his investigations led also to the definition of the famous Riemann zeta function. By evaluating the product formula at $x = \frac{\pi}{2}$, one obtains:
+He "factored out" all the infinitely many roots of the sine function that occur at all the integer multiples of $\pi$. Each positive integer $k$ gives one factor of $(1 + \frac{x}{k \pi})$ and one of $(1 - \frac{x}{k \pi})$. These pairs of factors can be combined into a single $(1 - \frac{x^2}{k^2 \pi^2})$ factor. The $k=0$ case is treated separately to avoid division by zero. That's the single $x$ in the middle. Having found this product representation for the sine function had a couple of interesting spin off results.
+
+\paragraph{The Basel Problem}
+Euler discovered this product formula in the course of solving the so called Basel problem. This is the problem of finding the value of the infinite sum $\sum_{k=1}^{\infty} \frac{1}{k^2}$. Euler found the value of this sum to be $\frac{\pi^2}{6}$ and his investigations led also to the definition of the famous Riemann zeta function. ...TBC.. ToDo: explain the connections
+
+\paragraph{The Wallis Product}
+By evaluating the product formula (\ref{Eq:SineInfProduct}) at $x = \frac{\pi}{2}$, one obtains:
 \begin{equation}
  1 = \frac{\pi}{2} \cdot \prod_{k=1}^{\infty} \left( 1 - \frac{1}{4 k^2}  \right)
    = \frac{\pi}{2} \cdot \prod_{k=1}^{\infty} \left( \frac{4 k^2 - 1}{4 k^2}  \right)
@@ -265,6 +272,7 @@ and solving that for $\pi$ gives:
 \pi = 2 \cdot \prod_{k=1}^{\infty} \left( \frac{(2k)^2 }{(2k-1)(2k+1)} \right)   
 \end{equation}
 which is known as the \emph{Wallis product} representation of $\pi$. Due to its slow convergence, the formula is useless for practical computation of $\pi$, though. But it's an interesting factoid nonetheless. 
+
 
 % ToDo: explain how the product form of the sine can be used to find formulas for infinite sums of
 % the form sum_k 1/k^2, sum_k 1/k^4, sum_k 1/k^6, ... It somehow works by comparing coefficients of
@@ -287,6 +295,8 @@ which is known as the \emph{Wallis product} representation of $\pi$. Due to its 
 %  functions can be factored in this way (like Euler factored the sine function). See:
 %  https://en.wikipedia.org/wiki/Weierstrass_factorization_theorem
 %  This theorem is relevant here and should be mentioned.
+% -Explain hwo the solution to the Basel problem falls out of the sine factorization by 
+%  compasring coefficients with the known taylor expansion of sine.
 
 % At the outset, it is not obvious that the roots alone are enough to determine the sine function uniquely. Not only is it conceivable that the actual sine function needs a constant factor in front of it - we could even multiply the product by an arbitrary function (perhaps one that doesn't itself have real zeros such as exp(x)) and the resulting would still have exactly the same zeros as the sine function. At least along the real axis. It may be a different story once we widen our perspective to the complex plane (exp does have complex roots - or does it?)
 
@@ -330,6 +340,10 @@ which is known as the \emph{Wallis product} representation of $\pi$. Due to its 
 %
 % Here is also another product formula:
 % https://math.stackexchange.com/questions/502160/exponential-function-as-an-infinite-product
+
+
+% Explain connections to the Euler product, Basel problem, Riemann Zeta function
+% https://www.youtube.com/watch?v=u7BadbVwnl4
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Weierstrass Factorization Theorem}

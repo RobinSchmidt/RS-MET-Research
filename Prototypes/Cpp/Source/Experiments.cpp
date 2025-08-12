@@ -19969,6 +19969,26 @@ void testMerge()
 /** A function that is supposed to have roots at the Gaussian integers. It is defined via an 
 infinite double product but we evaluate only finitely many factors. How many is adjusted by the 
 numRoots parameter. ...TBC...  */
+
+template<class T>
+std::complex<T> rootsAtGaussInts(std::complex<T> z, int numRoots)
+{
+  std::complex<T> w(1, 0);                       // Initialization with empty product
+  std::complex<T> i(0, 1);                       // Imaginary unit
+  for(int m = -numRoots; m <= numRoots; m++)
+  {
+    for(int n = -numRoots; n <= numRoots; n++)
+    {
+      if(m == 0 && n == 0)
+        w *= z;                                  // Special case to avoid div-by-zero
+      else
+        w *= (1 - z/(T(m) + i*T(n)));
+    }
+  }
+  return w;
+}
+
+/*
 template<class T>
 std::complex<T> rootsAtGaussInts(std::complex<T> z, int numRoots)
 {
@@ -19990,6 +20010,7 @@ std::complex<T> rootsAtGaussInts(std::complex<T> z, int numRoots)
   // This code is wrong! We are missing the m == 0, and n == 0 cases. For every nonzero m we would
   // need to include the case where n = 0 and vice versa.
 }
+*/
 
 void testGaussIntRoots()
 {
@@ -20001,13 +20022,13 @@ void testGaussIntRoots()
   using MatC    = RAPT::rsMatrix<Complex>;
 
 
-  int numRoots  = 5;                        // Evaluation accuracy
+  int numRoots  = 20;                        // Evaluation accuracy
   int numPixels = 51;                        // Grid density
 
-  Real xMin = -1.0;                          // Minimum x-value (i.e. real part)
-  Real xMax = +1.0;                          // Maximum x-value (i.e. real part)
-  Real yMin = -1.0;                          // Minimum y-value (i.e. imaginary part)
-  Real yMax = +1.0;                          // Maximum y-value (i.e. imaginary part)
+  Real xMin = -1.2;                          // Minimum x-value (i.e. real part)
+  Real xMax = +1.2;                          // Maximum x-value (i.e. real part)
+  Real yMin = -1.2;                          // Minimum y-value (i.e. imaginary part)
+  Real yMax = +1.2;                          // Maximum y-value (i.e. imaginary part)
 
   Real dx = (xMax-xMin) / Real(numPixels-1); // Step size in the x direction
   Real dy = (yMax-yMin) / Real(numPixels-1); // Step size in the y direction
@@ -20024,15 +20045,23 @@ void testGaussIntRoots()
   // Check for some Gaussian integers z that f(z) returns zero as expected:
   Complex z;
   Complex w;
-  z =  0; w = f(z); ok &= w == zero;
-  z =  1; w = f(z); ok &= w == zero;  // FAILS!!!  w = 1.3086289904425668 - i*1.4745149545802860e-16
-  //z = -1; w = f(z); ok &= w == zero;
-  // OK - this check fails! Figure out why! If this simple test already fails, it's no surprise 
-  // that we don't see the expected periodicity.
-  // Aha! I see! The Code is still wrong! See comments in the implementation of rootsAtGaussInts().
-  // ToDo: First do a completely naive implementation with no optimizations whatsoever. Then try to
-  // create an optimized version - always making sure that it returns the same result by means of
-  // suitable unit tests.
+  z =  0;   w = f(z); ok &= w == zero;
+  z =  1;   w = f(z); ok &= w == zero;
+  z = -1;   w = f(z); ok &= w == zero;
+  z =  2;   w = f(z); ok &= w == zero;
+  z = -2;   w = f(z); ok &= w == zero;
+  z =  1*i; w = f(z); ok &= w == zero;
+  z = -1*i; w = f(z); ok &= w == zero;
+  z =  2*i; w = f(z); ok &= w == zero;
+  z = -2*i; w = f(z); ok &= w == zero;
+
+  // ToDo:
+  // Maybe loop through all complex numbers of the form m + i*n form m,n in 
+  // -numRoots...+numRoots. This should always give zero as result
+
+  // ToDo: First do a completely naive implementation with no optimizations whatsoever (done). Then
+  // try to create an optimized version - always making sure that it returns the same result by 
+  // means of suitable unit tests.
 
 
 

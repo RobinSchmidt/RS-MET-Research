@@ -20036,7 +20036,19 @@ void testGaussIntRoots()
   plotMatrix(im);
   int dummy = 0;
 
+  // Observations:
+  //
+  // - The function does not look periodic at all. Verify the implementation! Verify the math! 
+  //   Something is fundamentally wrong - either with the theory or the implementation.
+  //
+  // 
   // ToDo:
+  // 
+  // - Evaluate the function specifically at the Gaussian integers to verify that it actually has
+  //   a value of zero there. That's what it should have by construction but the plot seems to say
+  //   otherwise. If it doesn't have the expected roots at the Gaussian integers, figure out, why
+  //   not. It should have a root by virtual of one of the factors in the product formula 
+  //   evaluating to zero.
   // 
   // - Make a plot of the real and imaginary part of the rootsAtGaussInts function in the unit
   //   square of complex plane.

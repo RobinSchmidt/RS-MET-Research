@@ -307,6 +307,30 @@ which is known as the \emph{Wallis product} representation of $\pi$. Due to its 
 %   already define it fully. What is the shape there? Maybe compare it to the Weierstrass 
 %   P-function
 
+
+% ToDo:
+% - Give similar infinite product formulas for cos, sinh, cosh. See:
+%   https://mathworld.wolfram.com/Cosine.html
+%   https://math.stackexchange.com/questions/2833321/infinite-product-expansion-of-hyperbolic-functions
+% https://mathworld.wolfram.com/InfiniteProduct.html
+
+% (Unverified) Google AI overviews for "infinite product formula for hyperbolic sine function" etc.:
+% sinh(x) = x * ∏ (1 + x² / (k²π²)) from k=1 to infinity 
+% cosh(z) = ∏_(k=1)^∞ (1 + z² / ((k - 1/2)²π²))
+% cos(x) = ∏ (from n=1 to ∞) [1 - (4x² / ((2n-1)²π²))]
+
+% For a product formula for exp, we could use:
+%   e^x = \lim_{n \Rightarrow \infty} (1 + x/n)^n
+% It's kind of like an infinite product. It's just that for each new value of n, every factor in the
+% product changes - so it's not quite like the infinite product formulas for sin, etc. But maybe 
+% that is as close as we can get for exp? We could also use exp = (sinh + cosh)/2 so we would get
+% a sum of two products for exp with the infinite product formulas for sinh and cosh. Maybe we could
+% interpret the infinite product that we get in the limit in terms of zeros at -inf? And/or maybe
+% it has poles at +inf (but I don't thinlk so)?
+%
+% Here is also another product formula:
+% https://math.stackexchange.com/questions/502160/exponential-function-as-an-infinite-product
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Weierstrass Factorization Theorem}
 ...TBC...ToDo: Explain hat this theorem ensures that every \emph{entire function} can be factored in a way that generalizes the procedure that Euler used to factor the sine function. Explain what "entire functions" are. Maybe that should be a topic for complex analysis

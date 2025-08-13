@@ -20024,7 +20024,6 @@ template<class T>
 std::complex<T> rootsAtGaussInts3(std::complex<T> z, int numRoots)
 {
   std::complex<T> lw(0, 0);                        // Accumulator for ln(w(z))
-  std::complex<T> i(0, 1); 
   for(int m = -numRoots; m <= numRoots; m++)
   {
     for(int n = -numRoots; n <= numRoots; n++)
@@ -20035,9 +20034,9 @@ std::complex<T> rootsAtGaussInts3(std::complex<T> z, int numRoots)
       }
       else
       {
-        //std::complex<T> r(T(m), T(n));          // Does not compile. Why?
-        std::complex<T> r = T(m) + i*T(n);        // ..this compiles
-        //std::complex<T> q = z/r;
+        //std::complex<T> r(T(m), T(n));           // Does not compile. Why?
+        std::complex<T> r((T)m, (T)n);             // ...this compiles
+        //std::complex<T> r(m, n);                 // ...this also compiles
         std::complex<T> lz = log(T(1) - z/r);
         lw += lz;                                  // Accumulate logarithm of the product
       }
@@ -20053,9 +20052,17 @@ std::complex<T> rootsAtGaussInts3(std::complex<T> z, int numRoots)
   // - Try an evaluation algorithm based on summing log(z-r) rather than log(1 - z/r).
   //
   // - Check why the line  std::complex<T> r(T(m), T(n));  doesn't compile. It seems like r has the
-  //   wrong datatype in this case? The compiler complains when we try to evaluate the quotient z/r
-  //   and says that there is no overloaded / operator that takes a left operand of some function 
-  //   type or something. It's weird.
+  //   wrong datatype in this case? The compiler (of MSVC 2022) complains when we try to evaluate 
+  //   the quotient z/r and says that there is no overloaded / operator that takes a left operand 
+  //   of some function type or something. It's weird. Check what constructors std::complex has. It
+  //   works when we call a constructor with two integers but not when we call a constructor with 
+  //   two variables of type T (where T = double). It looks cleaner (albeit more verbose) to me 
+  //   when we do an explicit type conversion from int to T but the compile doesn't accept it.
+  //   Hmm...OK...writing  std::complex<T> r((T)m, (T)n);  actually does work. So, apparently,
+  //   using T(m) is not the same as (T)m. The former is (supposed to be) a constructor call for
+  //   type t with an integer argument whereas the latter is an epxlicit type conversion. I 
+  //   thought that these would be equivalent - but apparently this is not the case - at least not
+  //   always? Maybe it has to do with double being a primitive type rather than a class type?
 }
 
 /*
@@ -20092,13 +20099,13 @@ void testGaussIntRoots()
   using MatC    = RAPT::rsMatrix<Complex>;
 
 
-  int numRoots  = 20;                        // Evaluation accuracy
-  int numPixels = 51;                        // Grid density
+  int numRoots  = 10;                        // Evaluation accuracy
+  int numPixels = 201;                       // Grid density
 
-  Real xMin = -1.1;                          // Minimum x-value (i.e. real part)
-  Real xMax = +1.1;                          // Maximum x-value (i.e. real part)
-  Real yMin = -1.1;                          // Minimum y-value (i.e. imaginary part)
-  Real yMax = +1.1;                          // Maximum y-value (i.e. imaginary part)
+  Real xMin = -4.0;                          // Minimum x-value (i.e. real part)
+  Real xMax = +4.0;                          // Maximum x-value (i.e. real part)
+  Real yMin = -4.0;                          // Minimum y-value (i.e. imaginary part)
+  Real yMax = +4.0;                          // Maximum y-value (i.e. imaginary part)
 
   Real dx = (xMax-xMin) / Real(numPixels-1); // Step size in the x direction
   Real dy = (yMax-yMin) / Real(numPixels-1); // Step size in the y direction
@@ -20171,6 +20178,19 @@ void testGaussIntRoots()
   }
 
 
+  // Clip height values:
+  Real zMax = 3.0;                               // Maximum height value for clipping
+  for(int m = 0; m < numPixels; m++)
+  {
+    for(int n = 0; n < numPixels; n++)
+    {
+      re(m, n) = rsClip(re(m, n), -zMax, zMax);  // Clip real part
+      im(m, n) = rsClip(im(m, n), -zMax, zMax);  // Clip imaginary part
+    }
+  }
+
+
+
   // Plot real and imaginary parts of the function values w = f(z):
   plotMatrix(re);
   plotMatrix(im);
@@ -20183,6 +20203,9 @@ void testGaussIntRoots()
   //   we may run into numerical problems. ToDo: Maybe instead of evaluating the product directly, 
   //   take its logarithm which we can evaluate using a sum and exponentiate the result at the end.
   //   But the problem with that idea is that the logarithm of a complex number is not unique. 
+  //   OK - done. The plot looks visually the same as with the two direct product evaluation 
+  //   implementations. That also means that it shows the same unexpected non-periodic behavior.
+  //   There must be something wrong with my theoretical assumptions.
   // 
   // - The numRoots setting seems to have not much visual impact on the plot. Even with an 
   //   extremely low value of 1, the plot looks (almost?) the same as with higher settings like 20
@@ -20194,6 +20217,10 @@ void testGaussIntRoots()
   // - Done.
   //   The function does not look periodic at all. Verify the implementation! Verify the math! 
   //   Something is fundamentally wrong - either with the theory or the implementation.
+  // 
+  // - It doesn't seem to change much when we increase the numRoots beyond the plotting range.
+  //   When we plot for x,y in -4..+4, we will see changes in the plots for numRoots = 1,2,3,4
+  //   but going to 5 or even higher, nothing really new happens.
   //
   // 
   // ToDo:
@@ -20220,6 +20247,14 @@ void testGaussIntRoots()
   //   - Do all the different implementations return the same results (up to roundoff error and
   //     possibly a constant scale factor)?
   //   - Do they indeed produce 0 as output at the Gaussian integers?
+  //
+  // - Maybe plot 1D cross-sections of the function. Maybe the problem is just that it diverges
+  //   very quickly at the edges of the square on which we evaluate it? And/or maybe clip the 
+  //   height values to something like -3...+3. In the unit square, the function values seem to
+  //   be bounded to something like -2.5..+2.5. OK...Done. It looks like the non-eriodicity is 
+  //   real. The function develops more and more "arms" the further we move away from the center.
+  //   Maybe try a different expansion point, i.e. expand the product around some other center z0
+  //   than the origin. I think, this amounts to replacing z by (z-z0) in the formulas.
 }
 
 

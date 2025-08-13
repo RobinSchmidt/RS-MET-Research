@@ -19964,7 +19964,7 @@ void testMerge()
 }
 
 
-
+//-------------------------------------------------------------------------------------------------
 
 /** A complex function that is constructed to have roots (of order 1) at the Gaussian integers. It
 is defined via an infinite product:
@@ -19989,6 +19989,7 @@ std::complex<T> rootsAtGaussInts1(std::complex<T> z, int numRoots)
   for(int m = -numRoots; m <= numRoots; m++)
   {
     for(int n = -numRoots; n <= numRoots; n++)
+    //for(int n = -numRoots; n <= numRoots-2; n++)  // test
     {
       if(m == 0 && n == 0)
         w *= z;                                  // Special case to avoid div-by-zero
@@ -20065,6 +20066,30 @@ std::complex<T> rootsAtGaussInts3(std::complex<T> z, int numRoots)
   //   always? Maybe it has to do with double being a primitive type rather than a class type?
 }
 
+template<class T>
+std::complex<T> rootsAtGaussInts4(std::complex<T> z, int numRoots, int rootOrder = 1)
+{
+  std::complex<T> w(1, 0);                       // Initialization with empty product
+  std::complex<T> i(0, 1);                       // Imaginary unit
+  for(int m = -numRoots; m <= numRoots; m++)
+  {
+    for(int n = -numRoots; n <= numRoots; n++)
+    {
+      std::complex<T> factor;
+
+      if(m == 0 && n == 0)
+        factor = z;                                  // Special case to avoid div-by-zero
+      else
+        factor = (1 - z/(T(m) + i*T(n)));
+
+      //w *= factor;  // ToDo: use w *= rsPowInt(factor, rootOrder)
+      //w *= rsPowInt(factor, rootOrder);
+      w *= std::pow(factor, rootOrder);
+    }
+  }
+  return w;
+}
+
 /*
 template<class T>
 std::complex<T> rootsAtGaussInts(std::complex<T> z, int numRoots)
@@ -20106,10 +20131,9 @@ bool unitTestGaussIntRoots()
   auto f2 = [&](Complex z) { return rootsAtGaussInts2(z, numRoots); };
   auto f3 = [&](Complex z) { return rootsAtGaussInts3(z, numRoots); };
 
-
+  // Helper function that checks if the given z is a root of the function f1, f2 and f3:
   auto isRoot = [&](Complex z) -> bool
   {
-    // Check if the given z is a root of the function f1, f2 or f3:
     bool ok = true;
     ok &= f1(z) == zero;
     ok &= f2(z) == zero;
@@ -20178,7 +20202,7 @@ void testGaussIntRoots()
   using MatC    = RAPT::rsMatrix<Complex>;
 
 
-  int numRoots  = 8;                         // Evaluation accuracy
+  int numRoots  = 20;                        // Evaluation accuracy
   int numPixels = 201;                       // Grid density
 
   Real xMin = -4.0;                          // Minimum x-value (i.e. real part)
@@ -20193,11 +20217,15 @@ void testGaussIntRoots()
   Complex i(0, 1);                           // Imaginary unit
 
   // Shorthand function f for convenience:
-  auto f = [&](Complex z) { return rootsAtGaussInts1(z, numRoots); };
+  //auto f = [&](Complex z) { return rootsAtGaussInts1(z, numRoots); };
   //auto f = [&](Complex z) { return rootsAtGaussInts2(z, numRoots); };
   //auto f = [&](Complex z) { return rootsAtGaussInts3(z, numRoots); };
   // We have different implementations for the evaluation of f. Mathematically, they should all be
   // equivalent (maybe up to a scalar factor) but numerically, they might not be.
+
+
+  // This one is different. It has an additional parameter to control the order of the roots:
+  auto f = [&](Complex z) { return rootsAtGaussInts4(z, numRoots, 2); };
 
 
 
@@ -20270,6 +20298,12 @@ void testGaussIntRoots()
   // - It doesn't seem to change much when we increase the numRoots beyond the plotting range.
   //   When we plot for x,y in -4..+4, we will see changes in the plots for numRoots = 1,2,3,4
   //   but going to 5 or even higher, nothing really new happens.
+  // 
+  // - When we mess in the implementation of the function with loop limits, then the center of the
+  //   figure moves accordingly. For example, when we reduce the upper limit of the innner loop by
+  //   2 then the figure moves 1 unit downward. That could be a hint that the unexpected look of
+  //   the graph could be an artifact of the finite numbe4r of factors that we use in the 
+  //   evaluation. But it's still strange.
   //
   // 
   // ToDo:
@@ -20304,9 +20338,12 @@ void testGaussIntRoots()
   //   real. The function develops more and more "arms" the further we move away from the center.
   //   Maybe try a different expansion point, i.e. expand the product around some other center z0
   //   than the origin. I think, this amounts to replacing z by (z-z0) in the formulas.
+  //
+  // - Try using 2nd order roots rather than 1st order ones. Maybe the product doesn't converge
+  //   with 1st order roots.
 }
 
-
+//-------------------------------------------------------------------------------------------------
 
 template<class Tx, class Ty, class F>
 void partialDerivatives(const F& f, const Tx& x, const Tx& y, 

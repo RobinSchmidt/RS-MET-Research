@@ -20018,7 +20018,45 @@ std::complex<T> rootsAtGaussInts2(std::complex<T> z, int numRoots)
 // This implementation seems to be even more prone to numerical overflow than the one above.
 
 
+/** Yet another implementation based on summing the logarithms rather than computing the product 
+directly. I hope that this may be better behaved numerically ...TBC... */
+template<class T>
+std::complex<T> rootsAtGaussInts3(std::complex<T> z, int numRoots)
+{
+  std::complex<T> lw(0, 0);                        // Accumulator for ln(w(z))
+  std::complex<T> i(0, 1); 
+  for(int m = -numRoots; m <= numRoots; m++)
+  {
+    for(int n = -numRoots; n <= numRoots; n++)
+    {
+      if(m == 0 && n == 0)
+      {
+        lw += log(z);                              // Verify!
+      }
+      else
+      {
+        //std::complex<T> r(T(m), T(n));          // Does not compile. Why?
+        std::complex<T> r = T(m) + i*T(n);        // ..this compiles
+        //std::complex<T> q = z/r;
+        std::complex<T> lz = log(T(1) - z/r);
+        lw += lz;                                  // Accumulate logarithm of the product
+      }
+    }
+  }
+  std::complex<T> w = exp(lw);
+  return w;
 
+  // ToDo:
+  //
+  // - Check if we have problems due to the multivalued nature of the complex logarithm function.
+  //
+  // - Try an evaluation algorithm based on summing log(z-r) rather than log(1 - z/r).
+  //
+  // - Check why the line  std::complex<T> r(T(m), T(n));  doesn't compile. It seems like r has the
+  //   wrong datatype in this case? The compiler complains when we try to evaluate the quotient z/r
+  //   and says that there is no overloaded / operator that takes a left operand of some function 
+  //   type or something. It's weird.
+}
 
 /*
 template<class T>
@@ -20069,8 +20107,11 @@ void testGaussIntRoots()
   Complex i(0, 1);                           // Imaginary unit
 
   // Shorthand function f for convenience:
-  auto f = [&](Complex z) { return rootsAtGaussInts1(z, numRoots); };
+  //auto f = [&](Complex z) { return rootsAtGaussInts1(z, numRoots); };
   //auto f = [&](Complex z) { return rootsAtGaussInts2(z, numRoots); };
+  auto f = [&](Complex z) { return rootsAtGaussInts3(z, numRoots); };
+
+
 
   bool ok = true;
 
@@ -20111,7 +20152,7 @@ void testGaussIntRoots()
 
 
 
-  //MatC A( numPixels, numPixels);           // Matrix for values of the function
+  MatC A( numPixels, numPixels);             // Matrix for values of the function
   MatR re(numPixels, numPixels);
   MatR im(numPixels, numPixels);
 
@@ -20123,7 +20164,7 @@ void testGaussIntRoots()
       Real y = yMin + Real(n) * dy;          // y-coordinate
       Complex z = x + i*y;                   // Complex evaluation point
       Complex w = f(z);                      // Evaluate function at z
-      //A(m, n) = w;                           // Store result in matrix A
+      A( m, n) = w;                          // Store result in matrix A
       re(m, n) = w.real();                   // Store real part
       im(m, n) = w.imag();                   // Store imaginary part
     }
@@ -20174,6 +20215,11 @@ void testGaussIntRoots()
   //   returns the same result as the naive implementation by means of suitable unit tests.
   // 
   // - Store u = real(w), v = imag(w) in real valued matrices U,V for plotting
+  //
+  // - Write a function function unitTestGaussIntRoots which checks the following things:
+  //   - Do all the different implementations return the same results (up to roundoff error and
+  //     possibly a constant scale factor)?
+  //   - Do they indeed produce 0 as output at the Gaussian integers?
 }
 
 
@@ -20182,7 +20228,7 @@ template<class Tx, class Ty, class F>
 void partialDerivatives(const F& f, const Tx& x, const Tx& y, 
   const Tx& hx, const Tx& hy, Ty* f_x, Ty* f_y)
 {
-  Ty L, R, A, B; // left, right, above, below
+  Ty L, R, A, B;             // left, right, above, below
   L = f(x-hx, y);
   R = f(x+hx, y);
   B = f(x, y-hy);
@@ -20190,8 +20236,11 @@ void partialDerivatives(const F& f, const Tx& x, const Tx& y,
   *f_x = (R-L) / (2*hx);
   *f_y = (A-B) / (2*hy);
 }
-// May eventually go into rsNumericDifferentiator. A 3D version could also use I,O for in,out.
-// Or mayb use xp,xm instead of L,R for x-plus, x-minus. Then do the same for y
+// May eventually go into rsNumericDifferentiator. Maybe it should be called partialDerivatives2D 
+// there. A 3D version could also use I,O for in,out (in addition to L,R,A,B). Or maybe use xp,xm 
+// instead of L,R for x-plus, x-minus. Then do the same for y. This doesn't make any assumptions 
+// about how we would "draw" the function and generalizes readily to any number of dimensions, so 
+// it may be preferable.
 
 
 void testPolyaPotenialFormulas()
@@ -20250,8 +20299,8 @@ void testPolyaPotenialFormulas()
 
 
   // A helper function taking a complex number z, the corresponding value w = f(z) and a pointer
-  // to a vector field and potential filed function. Check, if the evctor field and numerical 
-  // derivatives of the potnetial field match conj(w):
+  // to a vector field and potential field function. It checks, if the vector field and numerical 
+  // derivatives of the potential field match conj(w):
   typedef void (*VecField)(Real, Real, Real*, Real*);
   typedef Real (*PotField)(Real, Real);
   auto test = [](Complex z, Complex w, VecField V, PotField P)
@@ -20268,9 +20317,9 @@ void testPolyaPotenialFormulas()
     ok &= rsIsCloseTo(u,  w.real(), tol);
     ok &= rsIsCloseTo(v, -w.imag(), tol);
 
-    // Test potential filed function P:
-    tol = 1.e-5;       // for the numerical derivatives, we need a much higher tolerance
-    Real h = 0.0001;   // stepsize for numerical derivative
+    // Test potential field function P:
+    tol = 1.e-5;       // For the numerical derivatives, we need a much higher tolerance
+    Real h = 0.0001;   // Stepsize for numerical derivative
     partialDerivatives(P, x, y, h, h, &u, &v);
     ok &= rsIsCloseTo(u,  w.real(), tol);
     ok &= rsIsCloseTo(v, -w.imag(), tol);
@@ -20285,6 +20334,11 @@ void testPolyaPotenialFormulas()
   ok &= test(z, z*z,    PPE::square,     PPE::square);
   ok &= test(z, exp(z), PPE::exp,        PPE::exp);
   ok &= test(z, sin(z), PPE::sin,        PPE::sin);
+  // ToDo: Document why we need to pass the PPE::... functions twice. I think, these are two
+  // overloaded functions with the same names but different signatures. Check the signature of 
+  // "test()". The VecField param takes two reals as inputs and assigns two real output parameters.
+  // The PotField param takes two reals as inputs and returns one real number as output.
+
 
   // Test the formulas for powers z^n for exponents in -5...+5:
   for(int n = -5; n <= +5; n++)

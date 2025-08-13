@@ -19992,7 +19992,8 @@ std::complex<T> rootsAtGaussInts1(std::complex<T> z, int numRoots)
     //for(int n = -numRoots; n <= numRoots-2; n++)  // test
     {
       if(m == 0 && n == 0)
-        w *= z;                                  // Special case to avoid div-by-zero
+        //w *= z;                                  // Special case to avoid div-by-zero
+        w *= -z;                                   // test
       else
         w *= (1 - z/(T(m) + i*T(n)));
     }
@@ -20031,7 +20032,8 @@ std::complex<T> rootsAtGaussInts3(std::complex<T> z, int numRoots)
     {
       if(m == 0 && n == 0)
       {
-        lw += log(z);                              // Verify!
+        //lw += log(z);                              // Verify!
+        lw += log(-z);                       // Test
       }
       else
       {
@@ -20143,7 +20145,7 @@ bool unitTestGaussIntRoots()
 
 
   // Check for some Gaussian integers z that f(z) returns zero as expected:
-  Complex z;
+  Complex z, w1, w2, w3;
   z =  0;   ok &= isRoot(z);
   z =  1;   ok &= isRoot(z);
   z = -1;   ok &= isRoot(z);
@@ -20154,6 +20156,26 @@ bool unitTestGaussIntRoots()
   z =  2*i; ok &= isRoot(z);
   z = -2*i; ok &= isRoot(z);
   // ToDo: Check more numbers
+
+  // Check if the different implementations produce the same results:
+  z  = 0.6 + 0.4*i;
+  w1 = f1(z);
+  w2 = f2(z);
+  w3 = f3(z);
+  // w1 and w3 are similar but w2 is totally off. It's huge!
+
+  // Figure out scale factor between w1 and w2:
+  Real s = abs(w2) / abs(w1);
+
+  // Now try f1, f2, f3 at a different evaluation point and compensate for the scaling in w2:
+  z  = 0.7 + 0.3*i;
+  w1 = f1(z);
+  w2 = f2(z) / s;
+  w3 = f3(z);
+  // OK - now all 3 are similar up to a sign change in w2. ..OK - I fixed ths sign error by 
+  // multiplying the factor for r=0 in the product by -1.
+
+
 
 
   //z = 8-20*i; w = f(z); ok &= w == zero;
@@ -20217,15 +20239,18 @@ void testGaussIntRoots()
   Complex i(0, 1);                           // Imaginary unit
 
   // Shorthand function f for convenience:
-  //auto f = [&](Complex z) { return rootsAtGaussInts1(z, numRoots); };
+  auto f = [&](Complex z) { return rootsAtGaussInts1(z, numRoots); };
   //auto f = [&](Complex z) { return rootsAtGaussInts2(z, numRoots); };
   //auto f = [&](Complex z) { return rootsAtGaussInts3(z, numRoots); };
   // We have different implementations for the evaluation of f. Mathematically, they should all be
-  // equivalent (maybe up to a scalar factor) but numerically, they might not be.
+  // equivalent (maybe up to a scalar factor) but numerically, they might not be. I think,
+  // rootsAtGaussInts1 should probably be the canonical standard implementation that should 
+  // normally be used. The others are more for proof of concept - just to show that they also work 
+  // in principle.
 
 
   // This one is different. It has an additional parameter to control the order of the roots:
-  auto f = [&](Complex z) { return rootsAtGaussInts4(z, numRoots, 2); };
+  //auto f = [&](Complex z) { return rootsAtGaussInts4(z, numRoots, 2); };
 
 
 

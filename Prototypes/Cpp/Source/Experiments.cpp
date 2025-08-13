@@ -20089,51 +20089,48 @@ std::complex<T> rootsAtGaussInts(std::complex<T> z, int numRoots)
 }
 */
 
-void testGaussIntRoots()
+
+bool unitTestGaussIntRoots()
 {
-  // Under construction.
+  bool ok = true;
 
   using Real    = double;
   using Complex = std::complex<Real>;
-  using MatR    = RAPT::rsMatrix<Real>;
-  using MatC    = RAPT::rsMatrix<Complex>;
 
-
-  int numRoots  = 10;                        // Evaluation accuracy
-  int numPixels = 201;                       // Grid density
-
-  Real xMin = -4.0;                          // Minimum x-value (i.e. real part)
-  Real xMax = +4.0;                          // Maximum x-value (i.e. real part)
-  Real yMin = -4.0;                          // Minimum y-value (i.e. imaginary part)
-  Real yMax = +4.0;                          // Maximum y-value (i.e. imaginary part)
-
-  Real dx = (xMax-xMin) / Real(numPixels-1); // Step size in the x direction
-  Real dy = (yMax-yMin) / Real(numPixels-1); // Step size in the y direction
+  int numRoots  = 5;                         // Maybe get rid
 
   Complex zero(0, 0);
   Complex i(0, 1);                           // Imaginary unit
 
-  // Shorthand function f for convenience:
-  //auto f = [&](Complex z) { return rootsAtGaussInts1(z, numRoots); };
-  //auto f = [&](Complex z) { return rootsAtGaussInts2(z, numRoots); };
-  auto f = [&](Complex z) { return rootsAtGaussInts3(z, numRoots); };
+  auto f1 = [&](Complex z) { return rootsAtGaussInts1(z, numRoots); };
+  auto f2 = [&](Complex z) { return rootsAtGaussInts2(z, numRoots); };
+  auto f3 = [&](Complex z) { return rootsAtGaussInts3(z, numRoots); };
 
 
+  auto isRoot = [&](Complex z) -> bool
+  {
+    // Check if the given z is a root of the function f1, f2 or f3:
+    bool ok = true;
+    ok &= f1(z) == zero;
+    ok &= f2(z) == zero;
+    ok &= f3(z) == zero;
+    return ok;
+  };
 
-  bool ok = true;
 
   // Check for some Gaussian integers z that f(z) returns zero as expected:
   Complex z;
-  Complex w;
-  z =  0;   w = f(z); ok &= w == zero;
-  z =  1;   w = f(z); ok &= w == zero;
-  z = -1;   w = f(z); ok &= w == zero;
-  z =  2;   w = f(z); ok &= w == zero;
-  z = -2;   w = f(z); ok &= w == zero;
-  z =  1*i; w = f(z); ok &= w == zero;
-  z = -1*i; w = f(z); ok &= w == zero;
-  z =  2*i; w = f(z); ok &= w == zero;
-  z = -2*i; w = f(z); ok &= w == zero;
+  z =  0;   ok &= isRoot(z);
+  z =  1;   ok &= isRoot(z);
+  z = -1;   ok &= isRoot(z);
+  z =  2;   ok &= isRoot(z);
+  z = -2;   ok &= isRoot(z);
+  z =  1*i; ok &= isRoot(z);
+  z = -1*i; ok &= isRoot(z);
+  z =  2*i; ok &= isRoot(z);
+  z = -2*i; ok &= isRoot(z);
+  // ToDo: Check more numbers
+
 
   //z = 8-20*i; w = f(z); ok &= w == zero;
   // This gives a nan result. It looks like the evaluation algorithm has numerical problems. During
@@ -20157,11 +20154,59 @@ void testGaussIntRoots()
   // multiplicative accumulation of the product.
 
 
+  return ok;
+
+  // ToDo:
+  //
+  // - Create a bunch of random complex numbers and verify that all 3 implementations return the
+  //   same result up to roundoff error and possibly a constant scale factor. To figure out what
+  //   that scale factor is, maybe evaluate each function at some reference point (maybe 
+  //   0.5 + 0.5i) and then divide all 3 results by that number before making the comparison.
+}
 
 
+void testGaussIntRoots()
+{
+  // Under construction.
+
+  bool ok = unitTestGaussIntRoots();
+
+
+  using Real    = double;
+  using Complex = std::complex<Real>;
+  using MatR    = RAPT::rsMatrix<Real>;
+  using MatC    = RAPT::rsMatrix<Complex>;
+
+
+  int numRoots  = 8;                         // Evaluation accuracy
+  int numPixels = 201;                       // Grid density
+
+  Real xMin = -4.0;                          // Minimum x-value (i.e. real part)
+  Real xMax = +4.0;                          // Maximum x-value (i.e. real part)
+  Real yMin = -4.0;                          // Minimum y-value (i.e. imaginary part)
+  Real yMax = +4.0;                          // Maximum y-value (i.e. imaginary part)
+
+  Real dx = (xMax-xMin) / Real(numPixels-1); // Step size in the x direction
+  Real dy = (yMax-yMin) / Real(numPixels-1); // Step size in the y direction
+
+  Complex zero(0, 0);
+  Complex i(0, 1);                           // Imaginary unit
+
+  // Shorthand function f for convenience:
+  auto f = [&](Complex z) { return rootsAtGaussInts1(z, numRoots); };
+  //auto f = [&](Complex z) { return rootsAtGaussInts2(z, numRoots); };
+  //auto f = [&](Complex z) { return rootsAtGaussInts3(z, numRoots); };
+  // We have different implementations for the evaluation of f. Mathematically, they should all be
+  // equivalent (maybe up to a scalar factor) but numerically, they might not be.
+
+
+
+  // Evaluate the function w = f(z) in a rectangular region in the complex plane:
   MatC A( numPixels, numPixels);             // Matrix for values of the function
-  MatR re(numPixels, numPixels);
-  MatR im(numPixels, numPixels);
+  MatR re(numPixels, numPixels);             // Real part
+  MatR im(numPixels, numPixels);             // Imaginary part
+  MatR r( numPixels, numPixels);             // Radius
+  MatR p( numPixels, numPixels);             // Phase angle
 
   for(int m = 0; m < numPixels; m++)
   {
@@ -20172,11 +20217,12 @@ void testGaussIntRoots()
       Complex z = x + i*y;                   // Complex evaluation point
       Complex w = f(z);                      // Evaluate function at z
       A( m, n) = w;                          // Store result in matrix A
-      re(m, n) = w.real();                   // Store real part
-      im(m, n) = w.imag();                   // Store imaginary part
+      re(m, n) = real(w);                    // Store real part
+      im(m, n) = imag(w);                    // Store imaginary part
+      r( m, n) = abs(w);                     // Store radius (absolute value)
+      p( m, n) = arg(w);                     // Store phase angle (argument)
     }
   }
-
 
   // Clip height values:
   Real zMax = 3.0;                               // Maximum height value for clipping
@@ -20186,14 +20232,17 @@ void testGaussIntRoots()
     {
       re(m, n) = rsClip(re(m, n), -zMax, zMax);  // Clip real part
       im(m, n) = rsClip(im(m, n), -zMax, zMax);  // Clip imaginary part
+      r (m, n) = rsClip(r( m, n),  0.0,  10.0);  // Clip absolute value
     }
   }
-
 
 
   // Plot real and imaginary parts of the function values w = f(z):
   plotMatrix(re);
   plotMatrix(im);
+  plotMatrix(r);
+  plotMatrix(p);         // Needs circular color map
+  plotMatrix(re + im);   // Just for fun
   int dummy = 0;
 
 
@@ -20241,7 +20290,7 @@ void testGaussIntRoots()
   // - Try to create an optimized version of the evaluation function always making sure that it 
   //   returns the same result as the naive implementation by means of suitable unit tests.
   // 
-  // - Store u = real(w), v = imag(w) in real valued matrices U,V for plotting
+  // - Store absolute value and argument (phase) in 2 further real matrices and plot them, too.
   //
   // - Write a function function unitTestGaussIntRoots which checks the following things:
   //   - Do all the different implementations return the same results (up to roundoff error and

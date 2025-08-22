@@ -101,8 +101,13 @@ Again, the "nabla-cross" notation  $\nabla \times$ can be explained by taking a 
 
 ToDo: explain vorticity, give definition in terms of limit of circulation with geometric intuition
 
-%
+% Vector Calculus: Understanding Curl
 % https://www.youtube.com/watch?v=A2Sn_xAKMwQ
+
+
+% Divergence and curl: The language of Maxwell's equations, fluid flow, and more
+% https://www.youtube.com/watch?v=rB83DpBJQsE
+
 
 \medskip
 For 2D vector fields $\mathbf{f}(x,y) = (f_1(x,y), f_2(x,y))^T$, we can use a sort of hack: First, we embed the 2D input space in 3D space by just setting $f_3 = 0$. Our functions $f_1, f_2$ are just functions of $x$ and $y$.  Because they do not depend on $z$, all partial derivatives with respect to $z$ will be zero as well. Now we notice that only the last component of our curl vector will be nonzero. That means, if the vector field is (locally) swirling at all, it will do so around an axis parallel to the $z$-axis. This makes a lot of sense - we'd probably think about a 2D curl more as swirling around a point on the plane rather than an axis sticking out of the plane - but if we really force ourselves to think about an axis, then it would have to be perpendicular to the plane. We could now define a sort of pseudo curl as the simple scalar field $\partial f_2 / \partial x - \partial f_1 / \partial y$. Sometimes, such a 2D pseudo curl is useful but it's not really a satisfying solution. A meaningful and satisfying generalization to $n$D including 2D can only be given later in the context of exterior calculus where the cross product is thrown away in favor of the similar but different wedge product. 

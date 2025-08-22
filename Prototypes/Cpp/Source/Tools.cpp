@@ -4906,6 +4906,120 @@ bool rsIsCloseTo(rsThreealNumber<T, T, T> x, T a[3], T tol)
 #undef RS_PFX
 
 
+
+
+//=================================================================================================
+
+/** Just a stub at the moment. 
+
+A class to represent an interval in the real (or rational or integer etc.) numbers. The interval is
+defined by a lower and an upper bound and it can be open or closed of half open. For example, [0,1) 
+would be the half open unit interval that does include 0 but not 1, (0,1] would be the half open 
+unit interval that does not include 0 but does include 1, etc. Empty intervals can be represented 
+by setting up an upper bound that is below the lower bound, e.g. [1,0) or (1,0]. But that would be 
+a weird way to represent it. A more canconical way to represent the empty interval could perhaps be 
+something like (0,0). 
+
+
+Questions:
+
+- What about [0,0)? Does that include zero or not - i.e. is it empty or is it the singleton set 
+  containing only zero? Figure out what mathematical convention is used for this. I think coding 
+  wise, it would naturally come out as the empty interval because when we check if a number is 
+  inside the interval, would check if it's strictly less than the upper bound (of zero) an that
+  test would return false in this case.
+
+*/
+
+template<class T>
+class rsInterval
+{
+
+public:
+
+  /** Checks if the given number x is inside this interval. */
+  bool contains(T x) const
+  {
+    return (hasMin ? (x >= min) : (x > min)) && (hasMax ? (x <= max) : (x < max));
+  }
+
+
+protected:
+
+  // We initialize with the closed unit interval [0,1] by default.
+  T    min    = T(0);  // Lower bound
+  T    max    = T(1);  // Upper bound
+  bool hasMin = true;  // True if lower bound is contained in the interval
+  bool hasMax = true;  // True if upper bound is contained in the interval
+
+  // Or maybe default to the empty interval and canocially represent it as (0,0)?
+};
+
+// ToDo:
+//
+// - Implement arithmetic operators. They should properly implement interval arithmetic. Special
+//   care needs to be taken to handle the open/closed properties properly - especially when we
+//   are dealing with intervals that contain negative numbers because there may be some inversion
+//   going on. We should have unit tests for all the cases that can occur.
+//
+// - Implement functions that compute the intersection and union of two intervals. But the union of
+//   two non-verlapping intervals can not be represented by a single interval, so we may have to 
+//   write an additional class for that. Maybe it should be called rsIntervalSet and we can 
+//   internally use a std::vector of intervals to represent it. Or maybe we could use class 
+//   rsSortedSet - but to sort intervals, we need to define a less-than operator for them. Maybe it
+//   should first compare the min and in case of equality, compare the max. But it also should take 
+//   the open/closed properties into account. 
+// 
+// - Implement function that compute elementary functions such as sqrt, sin, cos, exp, log, of 
+//   intervals. For non-monotonic functions f, this will be more complicated than just computing 
+//   the function values of the bounds. Instead, we need to figure out the minimum and maximum 
+//   values that the function f takes on the interval [min, max]. 
+//
+// - Maybe rename to rsMathInterval or rsRealInterval or rsRealNumberInterval etc. to avoid 
+//   potential confusion with other sorts of intervals such as time intervals, musical intervals, 
+//   etc..
+// 
+// - Allow the lower bound to be negative infinity and the upper bound to be positive infinity. For
+//   T = float or double, we can use std::numeric_limits<T>::infinity() for that. For 
+//   T = rsFraction, we may nee to define a special constant for infinity. Maybe using a 
+//   denominator of zero with a numerator of +1 would be appropriate for +infinity and a numerator
+//   of -1 for -infinity. For integers, we may have to use the min/max integer values. 
+// 
+// - When the implementation of -inf, +inf works, write a class rsDedekindCut that uses two such
+//   intervals to represent a real number as a Dedekind cut. The left interval would go from
+//   -inf to the number represented by the cut and the right interval would go from that number to 
+//   +inf. Maybe representing real numbers this way could be implemented in terms of a boolean 
+//   function that takes an rsFraction as input and returns true if the number is inside the left
+//   (or right) part of the cut. This might be a std::function object that is kept as class member 
+//   and for any particluar number, it may actually need to implement a complicated algorithm to 
+//   figure this out. Writing this function would be the responsibility of the client code and it
+//   might be nontrivial for certain numbers. For example, for a number like pi, it may need to 
+//   include an algorithm that is capable of computing pi to arbitrary precision and then check if
+//   the given (rational) number is less than the computed result. Depending on how close the given
+//   rational number is to pi, this function would have to compute pi to a certain precision. The
+//   class rsDedekindCut would have a member function like isInLeftPart(rsFraction x). This would 
+//   then invoke the user-assigned std::function object to check if x is in the left part of the
+//   Dedekind cut. Alternatively, it could have a function isInRightPart(). Or it could have both.
+//   As a hack, we could perhaps also just represent the Dedekind cut as a double or float or maybe
+//   and arbitrary precision float. But that may involve the risk of returning wrong results when
+//   the rational number that we want to check (for in which part it is) is so close to the cut 
+//   that we run into numerical roundoff error territory. 
+// 
+// - The main purpose of the Dedekind cut class is to demonstrate that the arithmetic operators
+//   defined on such Dedekind cuts really work in the way that we want real number arithmetic to
+//   work. It's a class to demonstrate the mathematical concept of representing real numbers in 
+//   this way. It has no other purpose than being purely educational for this set theoretical 
+//   idea. We should implement thorough unit tests for these arithmetic operators. The code should
+//   eventually go into the same file as the von Neumann numbers. In principle, it should be 
+//   possible to use a rsNeumannRational in place of rsFraction. But that would be impractical
+//   due to massive computational overhead, so we cheat and use rsFraction instead.
+// 
+//
+// See also:
+// 
+// - Measurement and Calculus: Continuity and Derivatives through the Lens of Interval Arithmetic #SoME4
+//   https://www.youtube.com/watch?v=_7BNdxjobL4
+
 //=================================================================================================
 
 /** Defines a line in the 2D plane using 3 numbers a,b,c representing the line equation:

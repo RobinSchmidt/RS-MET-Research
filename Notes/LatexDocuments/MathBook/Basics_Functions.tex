@@ -245,6 +245,10 @@ This is a fun one and rather exotic and requires some higher level math concepts
 
 % x^2 has the other fixed point x=0. x=0 is stable and x=1 is unstable, I think.
 
+% Give examples, e^x is fixed foint of d/dx, I think, sinh and cosh are fixed points of d^2/dx^2 and
+% sin, cos (and arbitrary phase shifted sines) of  d^4/dx^4. A Gaussian is fixed point of the 
+% Fourier trafo. So is a delta-comb
+
 \paragraph{A Non Function}
 Consider the following nonsensical looking attempt of defining a function:
 \begin{equation}
@@ -486,6 +490,9 @@ That formula to compute the new list of $c$-coefficients from the $a$- and $b$-c
 
 ...TBC... TODo: give Python code for convolution - or give a reference to my C++ implementation
 % \bigl(\sum_{n=0}^N  a_n x^n\bigr) \bigl( \sum_{k=0}^M b_k x^k \bigr) = $\sum_{n=0}^{N+M} c_n x^n, wher c_n = ...
+
+% Maybe give an example with two finite polynomials - mostly to show where this summation ends. Explain that end also in terms of imagining the higher order coeffs being zero.
+
 % give a similar formula also for nesting and deconvolution
 
 \paragraph{Division}
@@ -527,6 +534,21 @@ TODO: give algorithm for computing the coeffs of the nested polynomial in terms 
 
 
 
+\paragraph{Factorization} ...TBC...
+
+% Monic polynomial in product form:
+%
+%   p(x) =    (x  - r_1) *    (x -  r_2) *    (x - r_3 ) *  ...
+%        = r1*(x/r1 - 1) * r2*(x/r2 - 1) * r3*(x/r3 - 1) *  ...
+%        =    (x/r1 - 1) *    (x/r2 - 1) *    (x/r3 - 1) *  ... * r1*r2*r3*...
+%
+% So: It seems to be more natural to factor out the roots r1,r2,r3,... from the linear factors 
+% rather than their negatives. Doingt the latter would result in the form:
+%  
+%   p(x) = (1 - x/r1) * (1 - x/r2) * (1 - x/r3) *  ... * (-r1)*(-r2)*(-r3)*...
+
+
+% https://en.wikipedia.org/wiki/Factorization_of_polynomials
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Rational Functions}

@@ -191,7 +191,7 @@ holds. That means that beyond some index $N_{\varepsilon}$ that depends on the c
 
 \paragraph{Theorem} If there exists an index $m$ such that all $h_k$ for $k \geq m$ have the same sign, then the infinite product $\prod_{k=k_0}^{\infty} (1 + h_k)$ has the same convergence as the infinite sum $\sum_{k=k_0}^{\infty} h_k$. That means: either both converge or both diverge. Or stated yet another way: the product converges if and only if the sum converges. 
 
-\paragraph{Theorem} The infinite product $\prod_{k=k_0}^{\infty} (1 + h_k)$ converges absolutely if and only if  the infinite sum $\sum_{k=k_0}^{\infty} h_k$ converges absolutely.
+\paragraph{Theorem} The infinite product $\prod_{k=k_0}^{\infty} (1 + h_k)$ converges absolutely if and only if  the infinite sum $\sum_{k=k_0}^{\infty} h_k$ converges absolutely. That is:  $\prod_{k=k_0}^{\infty} (1 + |h_k|)$ converges iff  $\sum_{k=k_0}^{\infty} |h_k|$ converges.
 
 \paragraph{Theorem} If for a given product $\prod_{k=k_0}^{\infty} (1 + h_k)$ the associated series  $\sum_{k=k_0}^{\infty} h_k$ converges then: (1) If the squared series $\sum_{k=k_0}^{\infty} h_k^2$ converges then the product also converges.  (2) If the squared series $\sum_{k=k_0}^{\infty} h_k^2$ diverges then the product also diverges. If the (non-squared) series $\sum_{k=k_0}^{\infty} h_k$ diverges, this criterion says nothing about the convergence of the product. It may or may not converge and other criteria need to be used to figure that out.
 
@@ -276,7 +276,7 @@ and solving that for $\pi$ gives:
 \begin{equation}
 \pi = 2 \cdot \prod_{k=1}^{\infty} \left( \frac{(2k)^2 }{(2k-1)(2k+1)} \right)   
 \end{equation}
-which is known as the \emph{Wallis product} representation of $\pi$. Due to its slow convergence, the formula is useless for practical computation of $\pi$, though. But it's an interesting factoid nonetheless. 
+which is known as the \emph{Wallis product} representation of $\pi$. Due to its slow convergence, the formula is useless for practical computation of $\pi$, though. But it's an interesting fact nonetheless. The Wallis product formula was already known before Euler found the factorization of the sine function.
 
 
 % ToDo: explain how the product form of the sine can be used to find formulas for infinite sums of
@@ -302,6 +302,8 @@ which is known as the \emph{Wallis product} representation of $\pi$. Due to its 
 %  This theorem is relevant here and should be mentioned.
 % -Explain hwo the solution to the Basel problem falls out of the sine factorization by 
 %  compasring coefficients with the known taylor expansion of sine.
+% -At around 14:15, he explains how the product formula for sin(x)/x was used by Euler to solve the
+%  Basel problem
 
 % At the outset, it is not obvious that the roots alone are enough to determine the sine function uniquely. Not only is it conceivable that the actual sine function needs a constant factor in front of it - we could even multiply the product by an arbitrary function (perhaps one that doesn't itself have real zeros such as exp(x)) and the resulting would still have exactly the same zeros as the sine function. At least along the real axis. It may be a different story once we widen our perspective to the complex plane (exp does have complex roots - or does it?)
 

@@ -302,6 +302,10 @@ bool testKalmanFilter()
   // https://github.com/yyccR/papers/blob/master/kalman%20filter/A%20New%20Approach%20to%20Linear%20Filtering%20and%20Prediction%20Problems.pdf
   //
   // Simon Haykin - Adaptive Filter Theory, 4th Ed. pg 484
+  //
+  // Visually Explained: Kalman Filters
+  // https://www.youtube.com/watch?v=IFeCIbljreY    
+  // (I didn't watch it yet. 1st impression looks good, though)
 
   // ToDo:
   //
@@ -19992,10 +19996,11 @@ std::complex<T> rootsAtGaussInts1(std::complex<T> z, int numRoots)
     //for(int n = -numRoots; n <= numRoots-2; n++)  // test
     {
       if(m == 0 && n == 0)
-        //w *= z;                                  // Special case to avoid div-by-zero
-        w *= -z;                                   // test
+        w *= z;                                  // Special case to avoid div-by-zero
+        //w *= -z;                                   // test
       else
         w *= (1 - z/(T(m) + i*T(n)));
+        //w *= -(1 - z/(T(m) + i*T(n)));             // test
     }
   }
   return w;
@@ -20032,8 +20037,8 @@ std::complex<T> rootsAtGaussInts3(std::complex<T> z, int numRoots)
     {
       if(m == 0 && n == 0)
       {
-        //lw += log(z);                              // Verify!
-        lw += log(-z);                       // Test
+        lw += log(z);                              // Verify!
+        //lw += log(-z);                       // Test
       }
       else
       {
@@ -20124,7 +20129,7 @@ bool unitTestGaussIntRoots()
   using Real    = double;
   using Complex = std::complex<Real>;
 
-  int numRoots  = 5;                         // Maybe get rid
+  int numRoots  = 7;                         // Maybe get rid
 
   Complex zero(0, 0);
   Complex i(0, 1);                           // Imaginary unit
@@ -20145,7 +20150,7 @@ bool unitTestGaussIntRoots()
 
 
   // Check for some Gaussian integers z that f(z) returns zero as expected:
-  Complex z, w1, w2, w3;
+  Complex z, w, w1, w2, w3;
   z =  0;   ok &= isRoot(z);
   z =  1;   ok &= isRoot(z);
   z = -1;   ok &= isRoot(z);
@@ -20169,13 +20174,13 @@ bool unitTestGaussIntRoots()
 
   // Now try f1, f2, f3 at a different evaluation point and compensate for the scaling in w2:
   z  = 0.7 + 0.3*i;
-  w1 = f1(z);
+  w1 = f1(z);               // -0.80518460762406241 - i*0.12829279980894007  with  numRoots = 5
   w2 = f2(z) / s;
   w3 = f3(z);
   // OK - now all 3 are similar up to a sign change in w2. ..OK - I fixed ths sign error by 
-  // multiplying the factor for r=0 in the product by -1.
-
-
+  // multiplying the factor for r=0 in the product by -1. Oh! But that fix works only with 
+  // numRoots = 5 but not with 4. It seems like switching between an even and odd number flips the
+  // sign of the result? Maybe this is a hint that the product is divergent?
 
 
   //z = 8-20*i; w = f(z); ok &= w == zero;
@@ -20183,23 +20188,25 @@ bool unitTestGaussIntRoots()
   // evaluation, the partial products grow very large. I think, we are dealing with floating point 
   // overflow here.
 
+
   // Loop through all complex numbers of the form m + i*n form m,n in -numRoots...+numRoots. This 
   // should always give zero as result:
-  //for(int m = -numRoots; m <= numRoots; m++)
-  //{
-  //  for(int n = -numRoots; n <= numRoots; n++)
-  //  {
-  //    z = Complex(m, n);
-  //    w = f(z);
-  //    ok &= w == zero;
-  //    //rsAssert(ok);  // Triggers at m = 8, n = -20 with w == -nan - i*nan
-  //    // ...of course, this triggers only, if numRoots is large enough.
-  //  }
-  //}
+  for(int m = -numRoots; m <= numRoots; m++)
+  {
+    for(int n = -numRoots; n <= numRoots; n++)
+    {
+      z = Complex(m, n);
+      w = f1(z);
+      ok &= w == zero;
+      //rsAssert(ok);  // Triggers at m = 8, n = -20 with w == -nan - i*nan
+      // ...of course, this triggers only, if numRoots is large enough.
+    }
+  }
   // Code is commented out because it doesn't really work. We seem to get numerical problems in the
   // multiplicative accumulation of the product.
 
 
+  rsAssert(ok);
   return ok;
 
   // ToDo:
@@ -20224,7 +20231,7 @@ void testGaussIntRoots()
   using MatC    = RAPT::rsMatrix<Complex>;
 
 
-  int numRoots  = 20;                        // Evaluation accuracy
+  int numRoots  =  20;                       // Evaluation accuracy
   int numPixels = 201;                       // Grid density
 
   Real xMin = -4.0;                          // Minimum x-value (i.e. real part)
@@ -20366,6 +20373,18 @@ void testGaussIntRoots()
   //
   // - Try using 2nd order roots rather than 1st order ones. Maybe the product doesn't converge
   //   with 1st order roots.
+  //
+  // - Try using many more roots. Maybe something like 20 or 50 just isn't enough for the product
+  //   to converge further out. Just look at this around 11:35:
+  //   https://www.youtube.com/watch?v=s2oO4g-13sc
+  //   When increasing the number of factors, the approximations first start to oscillate wildly
+  //   further away from zero before they eventually begin to converge. Maybe something similar is
+  //   happening here, too. OK - I tried with numRoots = 200. With that, we really run into 
+  //   numerical problems for z-values with larger imaginary parts. With 100, we also already see 
+  //   problems but they start further away from zero (to be more precise, further away from the 
+  //   imaginary axis). Between 20 and 50, there is no visual difference between the plots, though.
+  //   So, i tend to think that for plotting it in x,y in -4..+4, numRoots = 20 is more than 
+  //   enough.
 }
 
 //-------------------------------------------------------------------------------------------------

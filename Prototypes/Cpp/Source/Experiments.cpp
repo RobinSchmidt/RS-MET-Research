@@ -19888,7 +19888,7 @@ void testContinuedFractions()
   //      https://oeis.org/A001203
 
   // The number of CFE-coeffs to compute:
-  Int numCoeffs = 20;
+  Int numCoeffs = 13;
 
   // Create the continued fraction representation:
   std::vector<Int> c(numCoeffs);       // The CFE-coefficients
@@ -19900,6 +19900,23 @@ void testContinuedFractions()
     c[k] = ik;
     xk   = Real(1) / fk;
   }
+
+  // Plot the error between x and its CFE approximants:
+  std::vector<Real> err(numCoeffs);
+  for(int n = 0; n < numCoeffs; n++)
+  {
+    rsFraction<Int> f = rsContinuedFractionConvergent(c.data(), n+1);
+
+    err[n] = x - f.toDouble();
+    // Using toDouble() assumes that Real = double. For a more general implementation, we should
+    // perhaps let rsFraction have a conversion constructor to an arbitrary real number type and
+    // invoke it here via Real(f). 
+  }
+  rsPlotVector(err);
+  // The errors gets very high for n > 12 because we run into numerical inaccuracies there.
+  // ToDo: plot it only up to n = 12. Maybe plot the log of the absolute error. It seems to 
+  // decrease too fast to see it on a linear scale.
+
 
    
   int dummy = 0;

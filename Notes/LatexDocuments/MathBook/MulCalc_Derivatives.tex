@@ -517,4 +517,40 @@ https://www.youtube.com/watch?v=Hv5oUizQ4FM
  this can be simplified to 2 A x.
 
 
+-Explain multivariable functions that can be expressed in various different coordinate systems and
+ how to convert between the different representations. In some contexts (especially theormdynamics),
+ it is quite common to express one physical quantity as a function of some others - but there are different possible choices for what these others are. In such cases, when expressing a partial derivative, one puts the expression in parentheses and puts the variables that are held constant into a subscript.
+-See Arens, Ergänzungen, pg 128. It has the example: f: R^2 -> R^2, f(x,y) = x^2 - y^2. With
+ x = r*cos(p), y = r*sin(p), r = sqrt(x^2 + y^2), p = atan2(y,x), we can express f also in terms
+ of r,p as: f(r,p) = r^2(cos^2 p) - sin^2 p = r^2 cos(2 p). We have:
+ (df/dx)_y = 2 x, (df/dy)_x = -2y,   (df/dr)_p = 2 r cos(2 p), (df/dp)_r = -2 r^2 sin(2 p).
+ But we can also compute partial derivatives in "mixed" coordinates like (df/dx)_r = 4 x. This works
+ as follows: We use r^2 = x^2 + y^2 and substitue y^2 = r^2 - x^2 into the cartesian form to get
+ f(x,r) = 2 x^2 - r^2. The general procedure is to express the function f only in terms of those
+ variables, whose state we know. For each variable, there are two possibilities: either: held 
+ constant or: f is being differentiated with respect to it. When we have a function of more than 2
+ variables, those that are held constant are seperated by a comma in te subscript.
+-Using the symbol f regardless of which coordinates we use, e.g. f(x,y) or f(r,p) or f(x,r) is
+ mathematically sloppy but can be justified by noting that f always denotes the same physical 
+ quantity and it is widespread practice (at least in certain fields).
+-Bring an actual real world example from thermodynamics
+-An example that I have thought of myself is: f(x,y) = x / (x+y). The other coordinate system is:
+ s = x+y, d = x-y, i.e. the sum and difference of the original coordinates. One could interpret x,y
+ as kinetic and potential energy. Then s would be the total energy and d the Lagrangian and f could be
+ interpreted as some sort of kinetic energy ratio (i.e. the fraction of the total energy that is 
+ kinetic). Give expressions for (df/dx)_s, (df/dx)_y, (df/dx)_d, etc. I think, we should be able to
+ compute 12 different partial derivatives: pick one of the 4 variables to differentiate with respect 
+ to and for each, we have 3 possible variables that we can hold constant. I think, in general we will
+ always have (2n)*(2n-1) possible partial derivatives when we have 2 different disjoint sets of
+ coordinates to express a function of n variables. In this case, the 2 disjoint sets are 
+ {x,y}, {s,d}. Maybe even more generally, we will have C*(C-1) possible partial derivatives where
+ C is the cardinality of the union of the different sets of coordinates. Some coordinate systems 
+ have non-disjoint coordinates - for example cartesian and cylindrical in 3D have the z-coordinate 
+ in common.
+
+
+
+
+
+
 \end{comment} 

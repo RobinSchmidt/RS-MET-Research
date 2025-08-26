@@ -19881,21 +19881,27 @@ void testContinuedFractions()
   using Real = double;
   using Int  = int;
 
-  // The number we want to represent as a continued fraction:
-  Real x = PI;                 
+  Real x;   // The number we want to represent as a continued fraction
+  Int  N;   // The number of CFE-coeffs to compute
+
+  // Set up x and N. We always use an N that is appropriate for x such that we can compute all 
+  // coeffs without running numerical problems that blow up the error at the end.:
+
+  //x = PI; N = 13;
   // Should be: 3,7,15,1,292,1,1,1,2,1,3,1,14,2,1,1,2, ...
   // See: https://mathworld.wolfram.com/PiContinuedFraction.html
   //      https://oeis.org/A001203
 
-  //x = GOLDEN_RATIO; // Worst case for CFEs. All coeffs are 1.
+  x = GOLDEN_RATIO;   N = 40; // Worst case for CFEs. All coeffs are 1.
+  //x = SQRT2;          N = 30;
+  //x = EULER;          N = 30;
+  //x = EULER_CONSTANT; N = 20;
 
-  // The number of CFE-coeffs to compute:
-  Int numCoeffs = 13;
 
-  // Create the continued fraction representation:
-  std::vector<Int> c(numCoeffs);       // The CFE-coefficients
+  // Create the continued fraction representation of x:
+  std::vector<Int> c(N);       // The CFE-coefficients
   Real xk = x;
-  for(int k = 0; k < numCoeffs; k++)
+  for(int k = 0; k < N; k++)
   {
     Int  ik = (Int)floor(xk);          // Integer part
     Real fk = xk - ik;                 // Fractional part
@@ -19904,8 +19910,8 @@ void testContinuedFractions()
   }
 
   // Plot the error between x and its CFE approximants:
-  std::vector<Real> err(numCoeffs), logErr(numCoeffs);
-  for(int n = 0; n < numCoeffs; n++)
+  std::vector<Real> err(N), logErr(N);
+  for(int n = 0; n < N; n++)
   {
     rsFraction<Int> f = rsContinuedFractionConvergent(c.data(), n+1);
 
@@ -19915,9 +19921,19 @@ void testContinuedFractions()
     // invoke it here via Real(f). 
 
     logErr[n] = rsLogB(rsAbs(err[n]), 10);
+    //logErr[n] = rsLogB(rsAbs(err[n]), 2);
   }
-  rsPlotVector(err);
+
+  // Compute error ratios between successive approximation steps:
+  std::vector<Real> errRat(N-1);
+  for(int n = 0; n < N-1; n++)
+    errRat[n] = err[n] / err[n+1];
+
+
   rsPlotVector(logErr);
+  rsPlotVector(err);
+  rsPlotVector(errRat);
+
   // The errors gets very high for n > 12 because we run into numerical inaccuracies there.
   // ToDo: plot it only up to n = 12. Maybe plot the log of the absolute error. It seems to 
   // decrease too fast to see it on a linear scale.
@@ -19936,9 +19952,15 @@ void testContinuedFractions()
   //   minor wiggles in the first few values). We can also use a lot more coeffs (38) before 
   //   running into numerical problems. Interestingly, the two first wrong coeffs at 38 and 39
   //   are both 2 and the error still decreases when using them. They are wrong nonetheless, 
-  //   though.
-  // 
+  //   though. It looks like increasing the order by 5 decreases the error by 100. Figure this 
+  //   out exactly and theoretically. It will give us a worst case bound for the error as 
+  //   function of the approximation order. The actual error for any given number x will be 
+  //   less. The ratio between successive errors seems to converge to a constant value around
+  //   -(1 + golden ratio) = -2.618... (yes - the error oscillates). That would mean that in the 
+  //   worst case, the error as function of the number of coeffs n decareases exponentially by 
+  //   1 / (1+phi)^n where phi is the golden ratio. Verify this!
   //
+  // 
   // ToDo:
   //
   // - Explain the algorithm.
@@ -19948,8 +19970,10 @@ void testContinuedFractions()
   //   (c[k] + something). Figure out if such an alternative representation may be advantageous
   //   for certain numbers in the sense that it approximates the number better for a given 
   //   number of coeffs. The answer to that question may depend on the number x and on numCoeffs.
+  //   I think, we would have to replace floor with ceil and fk = xk - ik with fk = ik - xk.
   // 
-  // - Plot the difference between the correct value x and the CFE as function of the order of
+  // - [Done]
+  //   Plot the difference between the correct value x and the CFE as function of the order of
   //   the approximation. Maybe do it for the golden ratio because this is the worst case. We
   //   are interested in the shape of the convergence curve. How quickly does it converge? For 
   //   numbers like pi where we have some large coeffs, we should see jumps in the error. For

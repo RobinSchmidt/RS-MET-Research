@@ -547,7 +547,12 @@ https://www.youtube.com/watch?v=Hv5oUizQ4FM
  C is the cardinality of the union of the different sets of coordinates. Some coordinate systems 
  have non-disjoint coordinates - for example cartesian and cylindrical in 3D have the z-coordinate 
  in common.
-
+-Two different sets of coordinates are equally valid if there is a bijection between both sets. This
+ means that the Jacobian of the coordinate transformation must be regular. In practice, it may be the
+ case that one set of coordinates is better suited than another. regularity of the Jacobian may depend
+ on the current operating point - that means that two sets of coordinates may be equally valid in a
+ certain partof the domain but not in another. Example: thermodynamical state variables at a phase
+ transition (e.g. from gas to liquid etc.).
 
 
 

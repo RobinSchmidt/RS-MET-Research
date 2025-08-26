@@ -150,7 +150,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testFourierTrafo2D();
   //testKroneckerTrafo2D();
   //testDiscreteCalculus();             // stub
-  testIntervalArithmetic();             // stub
+  //testIntervalArithmetic();             // stub
+  testContinuedFractions();
 
 
 

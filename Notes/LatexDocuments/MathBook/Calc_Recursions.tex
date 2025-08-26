@@ -240,6 +240,18 @@ f(x) = x^{x^{\cdot^{\cdot^{\cdot^x}}}}
 %===================================================================================================
 \subsection{Continued Fractions}
 
+% Motivate CFEs as a bridge between the rational and the real numbers. It uses potentially infinite sequences of integer numbers to approximate real numbers with increasing accuracy. Actually, decimal or binary or hexadecimal expansions do the same thing but in a different way. There, we represent real numbers as  sum_k d_k b^k  where the d_k are the digits and b is the base. Wit a CFE, the representation is given by a somewhat more complicated conversion algorithm. It may be more natural (because it doesn't require us to introduce an arbitrary base) and maybe more efficient (in the sense of having a better accuracy for a given number of coeffs? I'm not sure about that, though - it may depend on the number - maybe try it for the golden ratio which is the worst case for a CFE). Also, a CFE does not have the problem of becoming potentially infinite when the number x is rational. In any given base, some rational numbers will have infinite expansions (they will be periodic, though). Maybe give 1/7 as example ...TBC...
+
+% See: 
+% Warum ist 1/7 interessanter als 1/13? (Woher kommen die Nachkommastellen?)
+% https://www.youtube.com/watch?v=ThIlhNKzBks
+%
+
+% Give the algorithm to produce a CFE as Sage code. See the C++ implementation if the research repo. Maybe start with a numerical approximation of pi using x = N(pi, 50) or something. Do it also for the golden ratio and maybe some other interesting irrational numbers
+
+% See: https://oeis.org/A001203
+
+
 % ...hmm...I'm not so sure if continued fractions and radicals fit in here because the upate rule actually is not so simple. We have to evaluate the whole expression from the inside out implying that we must do a complete re-evalutation of everything for each new $n$. However, in the beginning we said that the update rule may involve more than one previous values, so maybe we can us that as justification? ..But hey! We are actually "outside" the recursion subsection here - so we do not need the content to fit in!
 
 

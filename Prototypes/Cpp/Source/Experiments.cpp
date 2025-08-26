@@ -19874,7 +19874,63 @@ void testIntervalArithmetic()
   rsAssert(ok);
 }
 
+void testContinuedFractions()
+{
+  // Experiments with continued fraction expansions (CFEs) of real numbers.
 
+  // The number we want to represent as a continued fraction:
+  double x = PI;                 
+  // Should be: 3,7,15,1,292,1,1,1,2,1,3,1,14,2,1,1,2, ...
+  // See: https://mathworld.wolfram.com/PiContinuedFraction.html
+  //      https://oeis.org/A001203
+
+  // The number of CFE-coeffs to compute:
+  int numCoeffs = 20;
+
+  // Create the continued fraction representation:
+  std::vector<int> c(numCoeffs); // The CFE-coefficients
+  double xk = x;
+  for(int k = 0; k < numCoeffs; k++)
+  {
+    int ak = (int) floor(xk);
+    c[k] = ak;
+    xk = 1.0 / (xk - ak);
+  }
+
+   
+  int dummy = 0;
+
+  // Observations:
+  //
+  // - For x = pi, the result is correct up to c[12] = 14. After that, we apparently run into 
+  //   numerical inaccuracy errors.
+  //
+  //
+  // ToDo:
+  //
+  // - Explain the algorithm.
+  //
+  // - Implement an alternative algorithm that uses ceil instead of floor. I think, it should 
+  //   produce a representation where the denominators look like (c[k] - something) rather than 
+  //   (c[k] + something). Figure out if such an alternative representation may be advantageous
+  //   for certain numbers in the sense that it approximates the number better for a given 
+  //   number of coeffs. The answer to that question may depend on the number x and on numCoeffs.
+  // 
+  // - Plot the difference between the correct value x and the CFE as function of the order of
+  //   the approximation. Maybe do it for the golden ratio because this is the worst case. We
+  //   are interested in the shape of the convergence curve. How quickly does it converge? For 
+  //   numbers like pi where we have some large coeffs, we should see jumps in the error. For
+  //   the golden ratio, we should see a smooth curve because all coeffs are equal (namely
+  //   equal to 1). Maybe the function rsContinuedFractionConvergent() can be used for obtaining
+  //   the successive approximants (given our CFE coeffs). I'm not totally sure if that is its 
+  //   purpose but I think so. Take care about potential integer overflow. Maybe use 64 bit 
+  //   integers if it turns out to be a problem. Maybe use type aliases like Real = double, 
+  //   Int = int64_t, etc.
+  // 
+  // - Record for each number how many coeffs are computed correctly when we use double for x.
+  //
+  // - Maybe try using arbitrary precision floating point numbers for x. 
+}
 
 
 /** UNDER CONSTRUCTION. Does not work yet. I try to come up with an in-place merge algorithm that 

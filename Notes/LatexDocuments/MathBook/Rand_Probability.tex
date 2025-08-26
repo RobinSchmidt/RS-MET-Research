@@ -174,8 +174,6 @@ A conditional probability is a probability of some event $A$ to occur when we al
 % Conditional probability, joint probability, marginal probability,  Bayes theorem
 
 
-
-
 \paragraph{Bayes Theorem}
 %From $P(A \cap B) = P(A) P(B|A)$,  $P(B \cap A) = P(B) P(A|B)$ and $P(A \cap B) = P(B \cap A)$, it immediately follows that:
 From $P(A, B) = P(A) P(B|A)$,  $P(B, A) = P(B) P(A|B)$ and $P(A, B) = P(B, A)$, it immediately follows that:
@@ -201,8 +199,70 @@ You just need to plug in the right hand sides of equalities 1 and 2 into equalit
 
 \paragraph{The Inclusion-Exclusion Principle}
 
+
+
+
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Random Variables}
+
+
+
+\paragraph{Information}
+Let's assume we have a random variable $X$ and make an observation and observe that $X$ has the value $x$. We want to find a way to quantify what we have learned from that observation. We want to define a quantity that tells us, how much \emph{information} we have gathered from our observation. This measure of information is a property that we want to assign to individual events, i.e. a property of individual realizations of a random variable.
+
+%As a motivating example, let's assume that I roll a fair die but don't tell you the result. As far as you know, the result could be any number between 1 and 6 and each outcome has equal probability. If I now tell you that the result was even, I have given you a bit\footnote{I intend to mean the word \emph{bit} here in an informal, colloquial sense but coincidentally, is indeed one bit in the information-theoretical sense of the word which we will define later.} of information such that you can narrow down the possible outcomes to $\{2,4,6\}$. If I now also tell you that the result was greater than $3$, I have given you another bit of information that let's you narrow down the result further to $\{4,6\}$. If I finally tell you that the result is less than $6$, I have given you enough information to infer that the result must have been $4$. We want to construct a measure of information that has the property that the sum of the 3 individual pieces of information given (even, $> 3$, $< 6$) comes out the same as the information content of directly telling you that the result was $4$. [VERIFY! Calculate the example through!] ...TBC...
+
+
+% maybe use "chunk" or "piece" instead of "bit"
+
+
+% 
+
+
+
+% Example: 
+% - Example: Roll a die and assume the result the result is 4. If I tell you that the result is even,
+%   I have gievn you some bit of information. If I also tell you, the result is greater than 2, I've
+%   given you another bit of information. If I also tell you that the result is less than 6, I have
+%   given you enough information such that you can uniquely identify the result 4.
+% 
+
+% - We want to construct a measure that tells us, how informative a given event A is. Let's call 
+%   that measure "information" I(A). We want it to satisfy the following requirements:
+% - I(A) = 0  if  P(A) = 1  -> a certain event has no information
+% - if P(A) < P(B) then I(A) > I(B)  -> an unlikely event has more information than a likely one
+% - if A and B are independent and C = "A and B" then I(C) = I(A) + I(B)
+% 
+% Note also:
+% - An event that has zero probability has infinite information. Note that zero-probability does not
+%   necesarrily mean "impossible" when we deal with continuous random variables. If we throw a dart
+%   at a board to hit any particular point is actually zero (for all point) - nevertheless, the dart
+%   must end up somewhere.
+
+% Why Entropy isn't Mysterious
+% https://www.youtube.com/watch?v=_ZfPDjNTcLc
+
+
+
+\paragraph{Entropy}
+
+% -Entropy is the expectation value (or mean) of the information
+% -It's a property of the random variable itself (not of individual realizations of it). More 
+%  precisely, it's a property of the probability distribution that governs the random variable.
+% -Maybe use a fair and an unfair die as example to eplain the concept. Maybe the unfair die could have
+%  P(x = 1) = 0.5, P(x=2) = ... = P(x=6) = 1/10. Maybe use also the exreme case where P(1) = 1.
+
+% Why Entropy isn't Mysterious
+% https://www.youtube.com/watch?v=_ZfPDjNTcLc
+
+% You can mix 10 marbles until they sort themselves. Why not 100?
+% https://www.youtube.com/watch?v=VCXqELB3UPg
+
+
+
+
+
 
 
 %===================================================================================================
@@ -332,7 +392,8 @@ TODO: explain how discrete distributions can be framed inside the continuous fra
 
 
 
-\paragraph{Entropy}
+
+
 
 \paragraph{Cross Entropy}
 
@@ -420,6 +481,8 @@ A Problem with Infinite Hotel Keys - Numberphile
 https://www.youtube.com/watch?v=uezOrcmHzrQ
 - The probability that at least one key is the correct one if you have a bucket of infinitely many
   keys for infinitely many doors and try a random key for each door is 1-1/e ~= 63%
+
+
 
 \end{comment}
 

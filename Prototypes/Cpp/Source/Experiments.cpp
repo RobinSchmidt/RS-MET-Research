@@ -19751,10 +19751,8 @@ std::vector<T> rsSummation(const std::vector<T>& f, T C = T(0))
   return sf;
 }
 
-
-
 // Does not yet work. I think, it works only for x > n or x >= n. Otherwise, the result is always
-// zero because a zero occurs as factor in the product. Im' not sure, if that's correct. Figure 
+// zero because a zero occurs as factor in the product. I'm not sure, if that's correct. Figure 
 // that out!
 template<class T>
 T rsFallingPower(T x, int n)
@@ -19775,7 +19773,6 @@ T rsFallingPower(T x, int n)
   //
   // https://en.wikipedia.org/wiki/Falling_and_rising_factorials
 }
-
 
 void testDiscreteCalculus()
 {
@@ -19849,6 +19846,35 @@ void testDiscreteCalculus()
   // - We use the falling power notation (x)_n = x(x-1)(x-2)...(x-n+1) from here:
 //     https://mathworld.wolfram.com/FallingFactorial.html
 }
+
+void testIntervalArithmetic()
+{
+  // Under construction. We try to implement and test some basic interval arithmetic.
+
+  bool ok = true;
+
+  using Num      = int;
+  using Interval = rsInterval<Num>;
+
+  //Interval i1(2, 5);
+  //Interval i2(3, 7);
+
+  // We need to implement operators, + and == for rsInterval to make this work:
+  //Interval i3;
+  //i3 = i1 + i2;
+  //ok &= i3 == Interval(5, 12);
+  //ok &= i3.contains(5);
+  //ok &= i3.contains(8);
+  //ok &= i3.contains(12);
+  //ok &= !i3.contains(4);
+  //ok &= !i3.contains(13);
+  //ok &= i3.isLeftClosed();
+  //ok &= i3.isRightClosed();
+    
+  rsAssert(ok);
+}
+
+
 
 
 /** UNDER CONSTRUCTION. Does not work yet. I try to come up with an in-place merge algorithm that 

@@ -150,6 +150,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testFourierTrafo2D();
   //testKroneckerTrafo2D();
   //testDiscreteCalculus();             // stub
+  testIntervalArithmetic();             // stub
 
 
 
@@ -157,7 +158,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testMerge();  // Trying to find an in-place merge algorithm - not sure, if that's possible, though
 
 
-  testGaussIntRoots();                  // stub
+  //testGaussIntRoots();                  // stub
 
   // Riemann zeta function:
   //testPolyaPotenialFormulas();

@@ -4920,6 +4920,13 @@ by setting up an upper bound that is below the lower bound, e.g. [1,0) or (1,0].
 a weird way to represent it. A more canconical way to represent the empty interval could perhaps be 
 something like (0,0). 
 
+The main intended use of this class is to represent uncertain values, for example representing
+physical measurements with a tolerance. We want to model how such uncertain values behave when they
+interact with one another through mathematical operations. For example, if a value for a variable x
+is known to lie between xMin and xMax and another variable y is known to lie between yMin and yMax,
+then a variable z = x + y is known to lie between zMin = xMin + yMin and zMax = xMax + yMax. To 
+model such relationships, this class implements the arithmetic operators +, -, *, /, etc. and also
+unary functions such as sqrt, sin, cos, exp, log, etc. for intervals. ...TBC...
 
 Questions:
 
@@ -4936,6 +4943,16 @@ class rsInterval
 {
 
 public:
+
+  //rsInterval() = default;
+
+  /*
+  rsInterval(T newMin, T newMax, bool newHasMin = true, bool newHasMax = true)
+    : min(newMin), max(newMax), hasMin(newHasMin), hasMax(newHasMax)
+  {
+    // Maybe we should assert that newMin <= newMax when the interval is not empty?
+  }
+  */
 
   /** Checks if the given number x is inside this interval. */
   bool contains(T x) const
@@ -5003,7 +5020,8 @@ protected:
 //   As a hack, we could perhaps also just represent the Dedekind cut as a double or float or maybe
 //   and arbitrary precision float. But that may involve the risk of returning wrong results when
 //   the rational number that we want to check (for in which part it is) is so close to the cut 
-//   that we run into numerical roundoff error territory. 
+//   that we run into numerical roundoff error territory. I'm not toally sure if it really makes
+//   sense to implement the Dedekind cuts based on this interval class, though.
 // 
 // - The main purpose of the Dedekind cut class is to demonstrate that the arithmetic operators
 //   defined on such Dedekind cuts really work in the way that we want real number arithmetic to
@@ -5013,6 +5031,11 @@ protected:
 //   eventually go into the same file as the von Neumann numbers. In principle, it should be 
 //   possible to use a rsNeumannRational in place of rsFraction. But that would be impractical
 //   due to massive computational overhead, so we cheat and use rsFraction instead.
+// 
+// - Maybe factor out a class that doesn't have the hasMin and hasMax fields. This greatly 
+//   simplifies the implementation of the arithmetic operators and unary functions. Maybe this 
+//   class should assume closed intervals because that makes the most sense in the case of integer
+//   and rational intervals. Maybe the class could be named rsClosedInterval. 
 // 
 //
 // See also:

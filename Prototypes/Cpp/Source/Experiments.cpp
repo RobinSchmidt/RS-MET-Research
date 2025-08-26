@@ -19887,6 +19887,8 @@ void testContinuedFractions()
   // See: https://mathworld.wolfram.com/PiContinuedFraction.html
   //      https://oeis.org/A001203
 
+  //x = GOLDEN_RATIO; // Worst case for CFEs. All coeffs are 1.
+
   // The number of CFE-coeffs to compute:
   Int numCoeffs = 13;
 
@@ -19902,17 +19904,20 @@ void testContinuedFractions()
   }
 
   // Plot the error between x and its CFE approximants:
-  std::vector<Real> err(numCoeffs);
+  std::vector<Real> err(numCoeffs), logErr(numCoeffs);
   for(int n = 0; n < numCoeffs; n++)
   {
     rsFraction<Int> f = rsContinuedFractionConvergent(c.data(), n+1);
 
     err[n] = x - f.toDouble();
-    // Using toDouble() assumes that Real = double. For a more general implementation, we should
+    // Using f.toDouble() assumes that Real = double. For a more general implementation, we should
     // perhaps let rsFraction have a conversion constructor to an arbitrary real number type and
     // invoke it here via Real(f). 
+
+    logErr[n] = rsLogB(rsAbs(err[n]), 10);
   }
   rsPlotVector(err);
+  rsPlotVector(logErr);
   // The errors gets very high for n > 12 because we run into numerical inaccuracies there.
   // ToDo: plot it only up to n = 12. Maybe plot the log of the absolute error. It seems to 
   // decrease too fast to see it on a linear scale.
@@ -19924,8 +19929,15 @@ void testContinuedFractions()
   // Observations:
   //
   // - For x = pi, the result is correct up to c[12] = 14. After that, we apparently run into 
-  //   numerical inaccuracy errors.
+  //   numerical inaccuracy errors. That is very plausible when looking at the log-error plot. At 
+  //   12, it is down to roughly 10^-16 which is about the limit of double precision.
   //
+  // - For x = golden ratio, the log error decreases almost in a straight line (there are some
+  //   minor wiggles in the first few values). We can also use a lot more coeffs (38) before 
+  //   running into numerical problems. Interestingly, the two first wrong coeffs at 38 and 39
+  //   are both 2 and the error still decreases when using them. They are wrong nonetheless, 
+  //   though.
+  // 
   //
   // ToDo:
   //
@@ -19947,6 +19959,8 @@ void testContinuedFractions()
   //   purpose but I think so. Take care about potential integer overflow. Maybe use 64 bit 
   //   integers if it turns out to be a problem. Maybe use type aliases like Real = double, 
   //   Int = int64_t, etc.
+  // 
+  // - Compare the error with increasingly accurate decimal representations of x.
   // 
   // - Record for each number how many coeffs are computed correctly when we use double for x.
   //

@@ -19878,23 +19878,27 @@ void testContinuedFractions()
 {
   // Experiments with continued fraction expansions (CFEs) of real numbers.
 
+  using Real = double;
+  using Int  = int;
+
   // The number we want to represent as a continued fraction:
-  double x = PI;                 
+  Real x = PI;                 
   // Should be: 3,7,15,1,292,1,1,1,2,1,3,1,14,2,1,1,2, ...
   // See: https://mathworld.wolfram.com/PiContinuedFraction.html
   //      https://oeis.org/A001203
 
   // The number of CFE-coeffs to compute:
-  int numCoeffs = 20;
+  Int numCoeffs = 20;
 
   // Create the continued fraction representation:
-  std::vector<int> c(numCoeffs); // The CFE-coefficients
-  double xk = x;
+  std::vector<Int> c(numCoeffs);       // The CFE-coefficients
+  Real xk = x;
   for(int k = 0; k < numCoeffs; k++)
   {
-    int ak = (int) floor(xk);
-    c[k] = ak;
-    xk = 1.0 / (xk - ak);
+    Int  ik = (Int)floor(xk);          // Integer part
+    Real fk = xk - ik;                 // Fractional part
+    c[k] = ik;
+    xk   = Real(1) / fk;
   }
 
    

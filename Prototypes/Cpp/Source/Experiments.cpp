@@ -19874,9 +19874,40 @@ void testIntervalArithmetic()
   rsAssert(ok);
 }
 
+
+
+
+/*
+template<class T>
+rsFraction<T> rsFloor(const rsFraction<T>& x)
+{
+
+
+}
+*/
+
 void testContinuedFractions()
 {
-  // Experiments with continued fraction expansions (CFEs) of real numbers.
+  // Experiments with continued fraction expansions (CFEs) of real numbers. To convert a positive 
+  // real number x into its CFE, the following algorithm is used: We set x_0 = x and split x_0 into
+  // its integer part i_0 = floor(x_0) and its fractional part f_0 = x_0 - i_0 such that 
+  // x_0 = i_0 + f_0. Now we write f_0 as 1/(1/f_0) such that x_0 = i_0 + 1/(1/f_0). We note that
+  // 1/f_0 is always greater than 1 because f_0 is always less than 1 because it is the fractional 
+  // part of some number. Now we set x_1 = 1/f_0 and repeat the procedure. And so on. The values 
+  // i_k that we produce by this procedure is the simple continued fraction expansion of x. It is
+  // called "simple" because all the numerators that occur are equal to 1. I think, it should be 
+  // possible to produce different CFEs by prescribing the desired numerators n_k and in each step
+  // writing f_k = n_k/(n_k/f_k) rather than f_k = 1/(1/f_k). ToDo: Try this!
+  // 
+  // See:
+  // https://en.wikipedia.org/wiki/Continued_fraction
+  // https://en.wikipedia.org/wiki/Simple_continued_fraction
+  // https://mathworld.wolfram.com/ContinuedFraction.html
+  // https://mathworld.wolfram.com/GeneralizedContinuedFraction.html
+  // https://de.wikipedia.org/wiki/Kettenbruch
+  // https://mathepedia.de/kettenbrueche.html
+  // Notes/ContinuedFractions.txt
+
 
   using Real = double;
   using Int  = int;
@@ -19892,19 +19923,19 @@ void testContinuedFractions()
   // See: https://mathworld.wolfram.com/PiContinuedFraction.html
   //      https://oeis.org/A001203
 
-  x = GOLDEN_RATIO;   N = 40; // Worst case for CFEs. All coeffs are 1.
+  //x = GOLDEN_RATIO;   N = 40; // Worst case for CFEs. All coeffs are 1.
   //x = SQRT2;          N = 30;
   //x = EULER;          N = 30;
-  //x = EULER_CONSTANT; N = 20;
+  x = EULER_CONSTANT; N = 20;
 
 
   // Create the continued fraction representation of x:
-  std::vector<Int> c(N);       // The CFE-coefficients
+  std::vector<Int> c(N);               // The CFE-coefficients
   Real xk = x;
   for(int k = 0; k < N; k++)
   {
     Int  ik = (Int)floor(xk);          // Integer part
-    Real fk = xk - ik;                 // Fractional part
+    Real fk = xk - (Real)ik;           // Fractional part
     c[k] = ik;
     xk   = Real(1) / fk;
   }
@@ -19929,14 +19960,23 @@ void testContinuedFractions()
   for(int n = 0; n < N-1; n++)
     errRat[n] = err[n] / err[n+1];
 
-
   rsPlotVector(logErr);
-  rsPlotVector(err);
+  //rsPlotVector(err);
   rsPlotVector(errRat);
 
-  // The errors gets very high for n > 12 because we run into numerical inaccuracies there.
-  // ToDo: plot it only up to n = 12. Maybe plot the log of the absolute error. It seems to 
-  // decrease too fast to see it on a linear scale.
+
+  // The code below is experimental. I'm not yet sure if it makes any sense at all.
+
+  // Compute the alternative CFE representation using ceil instead of floor:
+  std::vector<Int> d(N);               // The alternative CFE-coefficients
+  xk = x;
+  for(int k = 0; k < N; k++)
+  {
+    Int  ik = (Int)ceil(xk);           // Integer part
+    Real fk = ik - xk;                 // Fractional part
+    d[k] = ik;
+    xk   = Real(1) / fk;
+  }
 
 
    
@@ -19959,18 +19999,51 @@ void testContinuedFractions()
   //   -(1 + golden ratio) = -2.618... (yes - the error oscillates). That would mean that in the 
   //   worst case, the error as function of the number of coeffs n decareases exponentially by 
   //   1 / (1+phi)^n where phi is the golden ratio. Verify this!
+  // 
+  // - For x = sqrt(2), the coeffs are 1,2,2,2,2,... ToDo: figure out the slope of the error 
+  //   decrease. The ratio of successive errors seems to approach -5.8284...
+  // 
+  // - It looks like the ratio is always negative, i.e. the error oscillates around the correct 
+  //   value. Verify this with more examples and theoretically. The file Kettenbrueche.pdf (Link 
+  //   below) says on page 29: "Da x zwischen den beiden Konvergente liegt ...". So its seems, the
+  //   actualy value of x is always in between two successive convergents which is equlvalent to
+  //   saying that the error oscillates.
+  // 
+  // - For Euler's number, the coeffs are 2,1,2,1,1,4,1,1,6,1,1,8,1,1,10,1,1,12,1,1,14,1,1,16,...
+  //   see: https://oeis.org/A003417. The pattern is: 2 ones followed by a value that increases by
+  //   2 compared to the previous non-1 value (which is at k-3). The error ratio plot has a 
+  //   comb-like shape. For the 1s, it decreases only slightly, for the other values, we see
+  //   bigger steps. I think, the formula for the coeffs is: c[0] = 2, c[1] = 1, 
+  //   c[k] = 2*(k+1)/3 if (k+1) is divisible by 3, otherwise c[k] = 1. Verify this!
   //
   // 
   // ToDo:
   //
   // - Explain the algorithm.
   //
-  // - Implement an alternative algorithm that uses ceil instead of floor. I think, it should 
+  // - [Done]
+  //   Implement an alternative algorithm that uses ceil instead of floor. I think, it should 
   //   produce a representation where the denominators look like (c[k] - something) rather than 
   //   (c[k] + something). Figure out if such an alternative representation may be advantageous
   //   for certain numbers in the sense that it approximates the number better for a given 
   //   number of coeffs. The answer to that question may depend on the number x and on numCoeffs.
   //   I think, we would have to replace floor with ceil and fk = xk - ik with fk = ik - xk.
+  // 
+  // - Aha! It seems that this idea is not so new. This alternative representation is known as
+  //   Hirzebruch-Jung continued fraction expansion. See:
+  //   https://math.stackexchange.com/questions/4615934/program-computing-the-hirzebruch-jung-continued-fraction
+  //   https://mathoverflow.net/questions/221047/motivation-for-hirzebruch-jung-modified-euclidean-algorithm
+  //   
+  // - Test the alternative FCE implementation. We need a function analoguous to 
+  //   rsContinuedFractionConvergent but for the alternative representation. For this, we need
+  //   to figure out, how the normal implementation works first. Try to re-derive the algorithm
+  //   from the normal CFE-formula x = c0 + 1/(c1 + 1/(c2 + 1/(c3 + ... ))). Then derive a similar 
+  //   algorithm from the alternative CFE-formula x = d0 - 1/(d1 - 1/(d2 - 1/(d3 - ... ))). 
+  // 
+  // - More generally, one could consider CFE of the form c0 + k/(c1 + k/(c2 + k/(c3 + ... ))). The
+  //   two forms we use here would be the special cases k = +1 and k = -1. Generalizing even 
+  //   further, we could use k1,k2,k3, etc. instead of just a single k. I think this is the most 
+  //   general form of a CFE.
   // 
   // - [Done]
   //   Plot the difference between the correct value x and the CFE as function of the order of
@@ -19984,11 +20057,29 @@ void testContinuedFractions()
   //   integers if it turns out to be a problem. Maybe use type aliases like Real = double, 
   //   Int = int64_t, etc.
   // 
+  // - Try to figure out a formula for the ratio of successive errors assuming a constant value
+  //   for the c[k]. For example, for the golden ratio, all c[k] are 1 and for sqrt(2), all c[k]
+  //   are 2.
+  // 
   // - Compare the error with increasingly accurate decimal representations of x.
   // 
   // - Record for each number how many coeffs are computed correctly when we use double for x.
   //
   // - Maybe try using arbitrary precision floating point numbers for x. 
+  //
+  // - Maybe try to implement this "conservative matrix field" stuff. I think, to make this work
+  //   we may need to instantiate rsMatrix with rsPolynomial<int> or maybe with
+  //   rsRationalFunction<rsFraction<int>>. I'm not sure, if that's possible. If not, try to make
+  //   it possible. See Notes/ContinuedFractions.txt for 
+  //
+  //
+  // See also:
+  //
+  // - https://www.amazon.de/Die-Lehre-von-den-Kettenbr%C3%BCchen/dp/3519020211/
+  //   The German wikipedia page says that this is the standard work about continued fractions
+  //
+  // - https://www.fim.uni-passau.de/fileadmin/dokumente/fakultaeten/fim/lehrstuhl/sauer/geyer/Kettenbrueche.pdf
+  //   A 100 page pdf file about continued fractions (in German)
 }
 
 

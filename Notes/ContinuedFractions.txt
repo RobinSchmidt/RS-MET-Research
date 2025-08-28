@@ -42,7 +42,7 @@ https://oeis.org/A002486
 26  8958937768937/2851718461558
 
 
-figure out what the most accurate convegent is that we can represent with int
+figure out what the most accurate convergent is that we can represent with int
 and int64 - maybe define them as constants, so we can also do approximate
 calcualtions invloving pi, e, etc
 

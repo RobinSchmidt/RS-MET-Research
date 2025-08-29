@@ -20118,13 +20118,39 @@ std::vector<int> rsContinuedFractionDenominators(
   //
   // - [Done] Maybe templatize on the real and int type.
   // 
-  // - Maybe let it work on a pre-allocated plain array of numerators and denominators
+  // - Maybe let it work on a pre-allocated plain array of numerators and denominators.
+  // 
+  // - Test it with TReal = rsFraction<int>
   //
   //
   // See:
   // https://en.wikipedia.org/wiki/Continued_fraction
   // https://mathworld.wolfram.com/GeneralizedContinuedFraction.html
   // https://arxiv.org/abs/1912.03214
+}
+
+template<class TReal, class TInt>
+TReal rsEvaluateContinuedFraction(
+  const std::vector<TInt>& numerators, const std::vector<TInt>& denominators)
+{
+  const std::vector<TInt>& b = numerators;
+  const std::vector<TInt>& a = denominators;
+
+  rsAssert(rsAreSameSize(a, b));
+
+  int N = (int)b.size();
+
+  TReal x = TReal(a[N-1]) / TReal(b[N-1]);
+  for (int i = N-2; i >= 0; --i)
+  {
+    x = TReal(a[i]) / (TReal(b[i]) + x);
+  }
+
+  return x;
+ 
+  // ToDo:
+  //
+  // - Init x with 0 and let the loop start at N-1.
 }
 
 void testContinuedFractions2()
@@ -20143,6 +20169,8 @@ void testContinuedFractions2()
   ok &= a == VecI({ 7, 15, 1, 292, 1, 1 });
   // The CFE of pi is 3,7,15,1,292,1,1,... but the function isn't supposed to produce the integer 
   // part 3, i.e. the first element, so we expect 7,15,1,292,1,1,...
+
+  double y = rsEvaluateContinuedFraction<double>(a, b);
 
   rsAssert(ok);
 

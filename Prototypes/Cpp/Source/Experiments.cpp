@@ -19876,17 +19876,7 @@ void testIntervalArithmetic()
 
 
 
-
-/*
-template<class T>
-rsFraction<T> rsFloor(const rsFraction<T>& x)
-{
-
-
-}
-*/
-
-void testContinuedFractions()
+void testContinuedFractions1()
 {
   // Experiments with continued fraction expansions (CFEs) of real numbers. To convert a positive 
   // real number x into its CFE, the following algorithm is used: We set x_0 = x and split x_0 into
@@ -19918,7 +19908,7 @@ void testContinuedFractions()
   // Set up x and N. We always use an N that is appropriate for x such that we can compute all 
   // coeffs without running numerical problems that blow up the error at the end.:
 
-  //x = PI; N = 13;
+  x = PI; N = 13;
   // Should be: 3,7,15,1,292,1,1,1,2,1,3,1,14,2,1,1,2, ...
   // See: https://mathworld.wolfram.com/PiContinuedFraction.html
   //      https://oeis.org/A001203
@@ -19926,7 +19916,7 @@ void testContinuedFractions()
   //x = GOLDEN_RATIO;   N = 40; // Worst case for CFEs. All coeffs are 1.
   //x = SQRT2;          N = 30;
   //x = EULER;          N = 30;
-  x = EULER_CONSTANT; N = 20;
+  //x = EULER_CONSTANT; N = 20;
 
 
   // Create the continued fraction representation of x:
@@ -19934,7 +19924,7 @@ void testContinuedFractions()
   Real xk = x;
   for(int k = 0; k < N; k++)
   {
-    Int  ik = (Int)floor(xk);          // Integer part
+    Int  ik = (Int)rsFloor(xk);        // Integer part
     Real fk = xk - (Real)ik;           // Fractional part
     c[k] = ik;
     xk   = Real(1) / fk;
@@ -19972,7 +19962,7 @@ void testContinuedFractions()
   xk = x;
   for(int k = 0; k < N; k++)
   {
-    Int  ik = (Int)ceil(xk);           // Integer part
+    Int  ik = (Int)rsCeil(xk);         // Integer part
     Real fk = ik - xk;                 // Fractional part
     d[k] = ik;
     xk   = Real(1) / fk;
@@ -20043,7 +20033,16 @@ void testContinuedFractions()
   // - More generally, one could consider CFE of the form c0 + k/(c1 + k/(c2 + k/(c3 + ... ))). The
   //   two forms we use here would be the special cases k = +1 and k = -1. Generalizing even 
   //   further, we could use k1,k2,k3, etc. instead of just a single k. I think this is the most 
-  //   general form of a CFE.
+  //   general form of a CFE. Maybe it would make sense to treat the integer part seperately and 
+  //   write the number x as: x = i + (n1 / d1 + (n2 / d2 + (n3 / d3 + ...))). Then, cutting off
+  //   at any index k like, would leave us with a k-th order continued fraction (I made this word 
+  //   up). For k = 0, we would just have i. For k = 1, we would have i + n1/d1. For k = 2 we would 
+  //   have i + n1 / (d1 + n2/d2), etc. To fit the pattern, i would be d0 - but that doesn't make 
+  //   sense because i is not a denominator. It is its own kind of thing. I think, we could  write 
+  //   an algorithm that takes as input the number x and some prescribed array of n values and 
+  //   produces as output the integer part i and an array of d values. But maybe it should just 
+  //   accept values in the range 0..1. Splitting off the integer part can be done by a separate 
+  //   function on top.
   // 
   // - [Done]
   //   Plot the difference between the correct value x and the CFE as function of the order of
@@ -20070,7 +20069,12 @@ void testContinuedFractions()
   // - Maybe try to implement this "conservative matrix field" stuff. I think, to make this work
   //   we may need to instantiate rsMatrix with rsPolynomial<int> or maybe with
   //   rsRationalFunction<rsFraction<int>>. I'm not sure, if that's possible. If not, try to make
-  //   it possible. See Notes/ContinuedFractions.txt for 
+  //   it possible. See Notes/ContinuedFractions.txt 
+  //   https://www.youtube.com/watch?v=Uk04gfIt8yM
+  // 
+  // - Compare the speed of convergence of continued fraction expansions of some numbers to other
+  //   algorithms that generate the same number. For example, try series expansions, infinite 
+  //   products, fixed point iterations, Newton-Raphson (for e.g. sqrt(2), sqrt(5)), etc.
   //
   //
   // See also:
@@ -20080,6 +20084,86 @@ void testContinuedFractions()
   //
   // - https://www.fim.uni-passau.de/fileadmin/dokumente/fakultaeten/fim/lehrstuhl/sauer/geyer/Kettenbrueche.pdf
   //   A 100 page pdf file about continued fractions (in German)
+}
+
+
+// Needs more tests. Result for pi-3 with numerators being all 1s is correct, though.
+template<class TReal, class TInt>
+std::vector<int> rsContinuedFractionDenominators(
+  const TReal& x, const std::vector<TInt>& numerators)
+{
+  // Under construction
+
+  rsAssert(x > TReal(0) && x < TReal(1));
+  // This function currently only works for numbers x in the open interval (0,1). That is: if x is
+  // a fraction, it is supposed to be a proper fraction, i.e. one with a denominator that is 
+  // strictly greater than the numerator.
+
+  int N = (int)numerators.size();
+  const std::vector<TInt>& n = numerators;
+  std::vector<TInt> d(N);
+
+  TReal xk = x, fk;
+  TInt  ik;
+  for(int k = 0; k < N; k++)
+  {
+    xk   = n[k] / xk;
+    ik   = (TInt)rsFloor(xk);       // Integer part
+    fk   = xk - (TReal)ik;          // Fractional part
+    d[k] = ik;
+    xk   = fk;
+  }
+
+  return d;
+
+  // ToDo:
+  // 
+  // - Document what this function produces.
+  //
+  // - [Done] Maybe templatize on the real and int type.
+  // 
+  // - Maybe let it work on a pre-allocated plain array of numerators and denominators
+  // 
+  // - Maybe streamline the algo. We may actually get rid of the ik variable by directly writing
+  //   it into d[k]. We can perhaps also get rid of fk.
+  //
+  //
+  // See:
+  // https://en.wikipedia.org/wiki/Continued_fraction
+  // https://mathworld.wolfram.com/GeneralizedContinuedFraction.html
+  // https://arxiv.org/abs/1912.03214
+}
+
+void testContinuedFractions2()
+{
+  // Under construction
+
+  bool ok = true;
+
+  using VecI = std::vector<int>;
+
+  double x;
+
+  x = PI - 3.0;
+  VecI b = { 1,1,1,1,1,1 };
+  VecI a = rsContinuedFractionDenominators(x, b);
+  ok &= a == VecI({ 7, 15, 1, 292, 1, 1 });
+  // The CFE of pi is 3,7,15,1,292,1,1,... but the function isn't supposed to produce the integer 
+  // part 3, i.e. the first element, so we expect 7,15,1,292,1,1,...
+
+  rsAssert(ok);
+
+  // ToDo:
+  //
+  // - Implement a function that evaluates a general continued fraction expansion.
+  //
+  // - Test the functions with numerators other than all 1s.
+}
+
+void testContinuedFractions()
+{
+  //testContinuedFractions1();
+  testContinuedFractions2();
 }
 
 

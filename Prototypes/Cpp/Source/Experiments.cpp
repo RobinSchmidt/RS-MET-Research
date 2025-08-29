@@ -20103,17 +20103,13 @@ std::vector<int> rsContinuedFractionDenominators(
   const std::vector<TInt>& n = numerators;
   std::vector<TInt> d(N);
 
-  TReal xk = x, fk;
-  TInt  ik;
+  TReal xk = x;
   for(int k = 0; k < N; k++)
   {
-    xk   = n[k] / xk;
-    ik   = (TInt)rsFloor(xk);       // Integer part
-    fk   = xk - (TReal)ik;          // Fractional part
-    d[k] = ik;
-    xk   = fk;
+    xk   = n[k] / xk;               // Scaled reciprocal
+    d[k] = (TInt)rsFloor(xk);       // Integer part
+    xk   = xk - (TReal)d[k];        // Fractional part
   }
-
   return d;
 
   // ToDo:
@@ -20123,9 +20119,6 @@ std::vector<int> rsContinuedFractionDenominators(
   // - [Done] Maybe templatize on the real and int type.
   // 
   // - Maybe let it work on a pre-allocated plain array of numerators and denominators
-  // 
-  // - Maybe streamline the algo. We may actually get rid of the ik variable by directly writing
-  //   it into d[k]. We can perhaps also get rid of fk.
   //
   //
   // See:

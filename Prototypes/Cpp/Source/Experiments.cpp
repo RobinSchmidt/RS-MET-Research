@@ -20135,22 +20135,26 @@ TReal rsEvaluateContinuedFraction(
 {
   const std::vector<TInt>& b = numerators;
   const std::vector<TInt>& a = denominators;
-
   rsAssert(rsAreSameSize(a, b));
 
   int N = (int)b.size();
-
-  TReal x = TReal(a[N-1]) / TReal(b[N-1]);
-  for (int i = N-2; i >= 0; --i)
-  {
+  TReal x(0);
+  for (int i = N-1; i >= 0; --i)
     x = TReal(a[i]) / (TReal(b[i]) + x);
-  }
-
   return x;
- 
+
   // ToDo:
   //
-  // - Init x with 0 and let the loop start at N-1.
+  // - Maybe rename TReal to TVal and TInt to TCoef. I think, in a more general context, it makes 
+  //   sense to allow for non-integer CFE coefficients. Also, the result or value may be a rational
+  //   number. Sure, rational number also count as real numbers (they are a subset), but it may be
+  //   misleading anyway to call it TReal. See:
+  //   https://en.wikipedia.org/wiki/Continued_fraction#Transcendental_functions_and_numbers
+  //   In these examples, the coeffs are clearly not limited to be integers because they depend on
+  //   a real variable x.
+  //
+  // - Implement an alternative evaluation algorithm based continuants and convergents:
+  //   https://en.wikipedia.org/wiki/Continued_fraction#Formulation
 }
 
 void testContinuedFractions2()
@@ -20161,8 +20165,9 @@ void testContinuedFractions2()
 
   using VecI = std::vector<int>;
 
-  double x;
+  double x, y, d;
 
+  // Obtain the CFE of pi-3 where we use all 1s for the partial numerators
   x = PI - 3.0;
   VecI b = { 1,1,1,1,1,1 };
   VecI a = rsContinuedFractionDenominators(x, b);
@@ -20170,7 +20175,9 @@ void testContinuedFractions2()
   // The CFE of pi is 3,7,15,1,292,1,1,... but the function isn't supposed to produce the integer 
   // part 3, i.e. the first element, so we expect 7,15,1,292,1,1,...
 
-  double y = rsEvaluateContinuedFraction<double>(a, b);
+  y = rsEvaluateContinuedFraction<double>(a, b);
+  d = x-y;  // Difference between true x and CFE approximant y
+  ok &= rsIsCloseTo(x, y, 1.e-9);
 
   rsAssert(ok);
 

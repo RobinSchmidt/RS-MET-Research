@@ -91,6 +91,9 @@ Although the sequence of Fibonacci numbers itself diverges to infinity, we can c
 % Use it to compute the Lambert-W function. Apply it to y = x e^x  ->  x e^x - y = 0 where y is
 % just a constant in this context
 
+% Rigging Newton's Method | #SoME4
+% https://www.youtube.com/watch?v=I2sjchgXsmk
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Arithmetic-Geometric Mean}
@@ -176,7 +179,7 @@ x_{1,2} = k \pm s
 k = a + \frac{b^2}{2}, \;
 s = \sqrt{k^2 - a^2}, 
 \end{equation}
-But we need to be a bit careful with this result. The "little bit of algebra" involved a step where both sides of an equation had to be squared. Such steps may produce extraneous solutions. We need to try both signs for $s$ and pick the one that produces a value $x$ that does indeed solve the equation. For some combinations of $a,b$ we may not get any real solution at all. For $a = 3, b = 2$, the formula produces the solutions $x = 1, x = 9$ and of these, only the $x=9$ solution actually works. With $a = -2, b = 3$, we get $x = 1, x = 4$ as solutions and they are both true solutions. But be that as it may. It's interesting to note here that no actual calculus tools were needed to get to the formula solution(s). We don't evaluate any limit here. What we did instead was to observe that in an infinite nesting of functions, we are allowed to peel off the outermost layer of function evaluation, if we see by inspection that the argument of the function is the same as the function's output. In fact, we can peel off any finite number of layers but doing it only for the outermost one was the simplest choice here. This act of peeling off was legal only due to the \emph{infinite} nesting. For a finite nesting, we would not have been able to do that. We recognized that one part of an infinite expression was equal to the expression as a whole and took advantage of this self-similarity to simplify the expression. This is a general technique that we should add to our problem solving toolkit. It feels like lying somewhere in between an algebraic and a calculusly technique. It has to do with taking a process to infinity (which is what we do in calculus) but also with replacing a subexpression with some other subexpression which we know to be equivalent (which is what we do in algebra).
+But we need to be a bit careful with this result. The "little bit of algebra" involved a step where both sides of an equation had to be squared. Such steps may produce extraneous solutions. We need to try both signs for $s$ and pick the one that produces a value $x$ that does indeed solve the equation. For some combinations of $a,b$ we may not get any real solution at all. For $a = 3, b = 2$, the formula produces the solutions $x = 1, x = 9$ and of these, only the $x=9$ solution actually works. With $a = -2, b = 3$, we get $x = 1, x = 4$ as solutions and they are both true solutions. But be that as it may. It's interesting to note here that no actual calculus tools were needed to find the solution(s). We don't evaluate any limit here. What we did instead was to observe that in an infinite nesting of functions, we are allowed to peel off the outermost layer of function evaluation, if we see by inspection that the argument of the function is the same as the function's output. In fact, we can peel off any finite number of layers but doing it only for the outermost one was the simplest choice here. This act of peeling off was legal only due to the \emph{infinite} nesting. For a finite nesting, we would not have been able to do that. We recognized that one part of an infinite expression was equal to the expression as a whole and took advantage of this self-similarity to simplify the expression. This is a general technique that we should add to our problem solving toolkit. It feels like lying somewhere in between an algebraic and a calculusly technique. It has to do with taking a process to infinity (which is what we do in calculus) but also with replacing a subexpression with some other subexpression which we know to be equivalent (which is what we do in algebra).
 
 %...TBC...Mention other kinds of infinite expressions involving roots
 
@@ -239,6 +242,31 @@ f(x) = x^{x^{\cdot^{\cdot^{\cdot^x}}}}
 
 %===================================================================================================
 \subsection{Continued Fractions}
+Consider defining a number $x$ by an expression of the form:
+\begin{equation}
+x = b_0 + \cfrac{a_1}{b_1 + \cfrac{a_2}{b_2 + \cfrac{a_3}{b_3 + \ddots }}}
+\end{equation}
+where the dots mean, as usual, that we imagine the pattern to go on forever. Such an expression is called a \emph{continued fraction} expansion (henceforth abbreviated as CFE) of the number $x$. The numbers $b_i, i = 0,1,2,3,\ldots$ and $a_j, j = 1,2,3,\ldots$ are given sequences of coefficients. These numbers are typically assumed to be integers. The $a_j$ are called \emph{partial numerators} and the $b_i$ are called \emph{partial denominators}. Because the notation above is rather clunky, there are alternative notations for writing down a continued fraction. Among them are:
+\begin{equation}
+x = b_0 + \frac{a_1}{b_1 +} \frac{a_2}{b_2 +} \frac{a_3}{b_3 +} \cdots, \qquad
+x = b_0 + \frac{|a_1}{b_1|} + \frac{|a_2}{b_2|} + \frac{|a_3}{b_3|} + \cdots
+\end{equation}
+In an environment where no mathematical typesetting is available, I like to write them as:
+\begin{equation}
+x = b_0 + a_1 / (b_1 + a_2 / (b_2 + (a_3 /  (b_3 + (\cdots))))) 
+\end{equation}
+To understand how we would go about evaluating such an infinite continued fraction, let's first consider a finite version of this situation. Let's assume that in the expression above, the partial numerator $a_4$ (i.e. the first one that would occur in the "dotdotdot" subexpression) would be zero. That would mean that the whole dots subexpression would also evaluate zero. Then we could evaluate the expression from the "bottom up" or from the "inside out" or "backwards"   ...TBC...ToDo: give naive (backward) evaluation algorithm as SageMath/Python code, explain terminology: generalized vs simple (used differently in calculus and number theory)
+
+
+\subsubsection{Forward Evaluation}
+While it is totally possible to evaluate a finite continued fraction with the naive backward evaluation algorithm given above, there is actually also a way that avoids starting at the innermost subexpression and working our way back to the outermost. I will refer to this alternative evaluation algorithm as forward evaluation. Such an algorithm will turn out to particularly convenient when we want to evaluate infinite CFEs. ...TBC...
+
+\paragraph{Convergents and Continuants}
+
+\paragraph{Fundamental Recurrence Formulas}
+
+
+% ToDo: Give all the different notations, explain different terminologies in number theory and analysis for the qualifiers "simple" and "generalized", Should be impose the constraint that $a_i < b_i$ to ensure each partial fraction is a proper fraction?
 
 % Motivate CFEs as a bridge between the rational and the real numbers. It uses potentially infinite sequences of integer numbers to approximate real numbers with increasing accuracy. Actually, decimal or binary or hexadecimal expansions do the same thing but in a different way. There, we represent real numbers as  sum_k d_k b^k  where the d_k are the digits and b is the base. Wit a CFE, the representation is given by a somewhat more complicated conversion algorithm. It may be more natural (because it doesn't require us to introduce an arbitrary base) and maybe more efficient (in the sense of having a better accuracy for a given number of coeffs? I'm not sure about that, though - it may depend on the number - maybe try it for the golden ratio which is the worst case for a CFE). Also, a CFE does not have the problem of becoming potentially infinite when the number x is rational. In any given base, some rational numbers will have infinite expansions (they will be periodic, though). Maybe give 1/7 as example ...TBC...
 
@@ -255,6 +283,13 @@ f(x) = x^{x^{\cdot^{\cdot^{\cdot^x}}}}
 % ...hmm...I'm not so sure if continued fractions and radicals fit in here because the upate rule actually is not so simple. We have to evaluate the whole expression from the inside out implying that we must do a complete re-evalutation of everything for each new $n$. However, in the beginning we said that the update rule may involve more than one previous values, so maybe we can us that as justification? ..But hey! We are actually "outside" the recursion subsection here - so we do not need the content to fit in!
 
 
+% https://en.wikipedia.org/wiki/Continued_fraction#Formulation
+% fundamental recurrence formulas
+
+%\begin{equation}
+%x = b_0 + \frac{a_1}{b_1 + \frac{a_2}{b_2 + \frac{a_3}{b_3 + \ddots }}}
+%\end{equation}
+%% That looks ugly!
 
 
 
@@ -265,7 +300,7 @@ Consider the following situation: We are given a function $f(x)$ and an initial 
 \begin{equation}
  x = f(f(f( \ldots f(x_0))))
 \end{equation}
-where the dots intend to mean that we apply $f$ infinitely often to $x_0$. Now remember what we did with the infinitely nested radical. We have a similar situation here, just more general. In our previous infinite radical situation, we had this same situation for the special case $f(x) = a + b \sqrt{x}$. When we peel off the outermost function application on the right hand side, what remains is \emph{still} an infinite number of function applications to $x_0$ and it is therefore still equal to $x$. That means $x$ must satisfy $x = f(x)$. A point $x$ with that property is called a \emph{fixed point} of the given function $f$. Geometrically, it is a point of intersection between the graph of $f(x)$ and the graph of the identity function. Not all functions have such intersection points but some do. Some functions $f$ even have multiple such intersection points. For example, the graph of the function $f(x) = x^3$ intersects with the graph of the identity function $g(x) = x$ in the points $(-1,-1)$ and $(1,1)$ and it is indeed true that $(-1)^3 = -1$ and $1^3 = 1$.
+where the dots intend to mean that we apply $f$ infinitely often to $x_0$. Now remember what we did with the infinitely nested radical. We have a similar situation here, just more general. In our previous infinite radical situation, we had this same situation for the special case $f(x) = a + b \sqrt{x}$. When we peel off the outermost function application on the right hand side, what remains is \emph{still} an infinite number of function applications to $x_0$ and it is therefore still equal to $x$. That means $x$ must satisfy $x = f(x)$. A point $x$ with that property is called a \emph{fixed point} of the given function $f$. The name reflects the fact that applying $f$ to $x$ changes nothing. At the value $x$, the output of $f$ is equal to the input. Geometrically, it is a point of intersection between the graph of $f(x)$ and the graph of the identity function. Not all functions have such intersection points but some do. Some functions $f$ even have multiple such intersection points. For example, the graph of the function $f(x) = x^3$ intersects with the graph of the identity function $g(x) = x$ in the points $(-1,-1)$ and $(1,1)$ and it is indeed true that $(-1)^3 = -1$ and $1^3 = 1$.
 
 % Maybe take 8 cos(x) as another example. It has 5 fixed points
 %
@@ -319,7 +354,8 @@ where the dots intend to mean that we apply $f$ infinitely often to $x_0$. Now r
 % definition doesn't. Maybe f need to be piecewise defined for inside and outside the interval
 % [x-eps_L, x+eps_R]
 
-
+% What is cos( cos( cos( cos( cos( cos( cos( cos( cos( cos( cos( cos(…?? // Banach Fixed Point Theorem
+% https://www.youtube.com/watch?v=qHnXE_h5c2M
 
 
 %===================================================================================================

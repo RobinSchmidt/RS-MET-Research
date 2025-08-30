@@ -242,20 +242,51 @@ f(x) = x^{x^{\cdot^{\cdot^{\cdot^x}}}}
 
 %===================================================================================================
 \subsection{Continued Fractions}
-Consider defining a number $x$ by an expression of the form:
+
+% This LaTeX operator definition code has bee adapted from the last answer (Dec 2, 2014 at 15:45 by dremondaris) here (A replaced by K):
+
+% https://tex.stackexchange.com/questions/23432/how-to-create-my-own-math-operator-with-limits/23436#23436
+
+% ToDo: move the to Setup.tex
+
+% This allows us to turn arbitrary letters into math-symbols with lower and upper limits similra to the Sigma and Pi notaion for sums and products:
+\newcommand{\operator}[1]{\mathop{\vphantom{\sum}\mathchoice
+{\vcenter{\hbox{\huge $#1$}}}
+{\vcenter{\hbox{\Large $#1$}}}{#1}{#1}}\displaylimits}
+
+% This uses the above code to define a big K operator form continued fractions:
+\newcommand{\opK}{\operator{\mathrm{K}}}
+
+
+
+Consider defining a nonegative real number $x \in \mathbb{R}_0^+$ by an expression of the form:
 \begin{equation}
 x = b_0 + \cfrac{a_1}{b_1 + \cfrac{a_2}{b_2 + \cfrac{a_3}{b_3 + \ddots }}}
 \end{equation}
 where the dots mean, as usual, that we imagine the pattern to go on forever. Such an expression is called a \emph{continued fraction} expansion (henceforth abbreviated as CFE) of the number $x$. The numbers $b_i, i = 0,1,2,3,\ldots$ and $a_j, j = 1,2,3,\ldots$ are given sequences of coefficients. These numbers are typically assumed to be integers. The $a_j$ are called \emph{partial numerators} and the $b_i$ are called \emph{partial denominators}. Because the notation above is rather clunky, there are alternative notations for writing down a continued fraction. Among them are:
 \begin{equation}
-x = b_0 + \frac{a_1}{b_1 +} \frac{a_2}{b_2 +} \frac{a_3}{b_3 +} \cdots, \qquad
-x = b_0 + \frac{|a_1}{b_1|} + \frac{|a_2}{b_2|} + \frac{|a_3}{b_3|} + \cdots
+x = b_0 + \frac{a_1}{b_1 +} \frac{a_2}{b_2 +} \frac{a_3}{b_3 +} \cdots, \quad
+x = b_0 + \frac{|a_1}{b_1|} + \frac{|a_2}{b_2|} + \frac{|a_3}{b_3|} + \cdots, \quad
+x = b_0 + \opK_{i=1}^{\infty} \frac{b_i}{a_i}
 \end{equation}
-In an environment where no mathematical typesetting is available, I like to write them as:
+The last one is analogous to the $\sum$ notation for sums and the $\prod$ notation for products. The big $\opK$ stands for "Kettenbruch" which is the German translation for continued fraction (literally: chain fraction). The first coefficient $b_0$ has been dragged out because it doesn't really fit nicely into the general pattern. It has no $a_0$ to pair with. It is typically taken to be the integer part of the number $x$, i.e. $b_0 =\floor{x}$ and we usually also assume that the whole $\opK$ expression is less than $1$ such that it represents the fractional part of $x$, i.e. $\opK_{i=1}^{\infty} \frac{b_i}{a_i} = x - \floor{x} < 1$. In an environment where no mathematical typesetting is available, I like to write continued fractions as:
 \begin{equation}
 x = b_0 + a_1 / (b_1 + a_2 / (b_2 + (a_3 /  (b_3 + (\cdots))))) 
 \end{equation}
-To understand how we would go about evaluating such an infinite continued fraction, let's first consider a finite version of this situation. Let's assume that in the expression above, the partial numerator $a_4$ (i.e. the first one that would occur in the "dotdotdot" subexpression) would be zero. That would mean that the whole dots subexpression would also evaluate zero. Then we could evaluate the expression from the "bottom up" or from the "inside out" or "backwards"   ...TBC...ToDo: give naive (backward) evaluation algorithm as SageMath/Python code, explain terminology: generalized vs simple (used differently in calculus and number theory)
+which has some similarity with the nested form of writing down a polynomial using Horner's rule. ...TBC... ToDo: explain terminology: generalized vs simple (used differently in calculus and number theory), explain conventions to ensure that only proper fractions occur, explain how to deal with negative $x$
+
+\subsubsection{Naive Evaluation}
+To understand how we would go about evaluating such an infinite continued fraction, let's first consider a finite version of this situation. Let's assume that in the expression above, the partial numerator $a_4$ (i.e. the first one that would occur in the "dotdotdot" subexpression) would be zero. That would mean that the whole dots subexpression would also evaluate zero. Then we could evaluate the expression from the "bottom up" or from the "inside out" or "backwards"   ...TBC...ToDo: give naive (backward) evaluation algorithm as SageMath/Python code, expand the first few finite cases (up to $n=3$) into regular fractions
+
+
+% Give also the notation:
+% x = (a_0; a_1, a_2, \ldots, a_n)
+% and Gauss's big-K notation similar to Sigma amd Pi for sums and products, see:
+% https://tex.stackexchange.com/questions/540735/how-to-format-k-notation-for-continued-fractions
+% https://math.stackexchange.com/questions/2179834/weird-large-k-symbol
+% https://tex.stackexchange.com/questions/73195/how-to-typeset-a-continued-fraction-in-the-following-format
+% https://tex.stackexchange.com/questions/23432/how-to-create-my-own-math-operator-with-limits/23436#23436
+% The K here stands for Kettenbruch (the German translation of continued fraction, literally chain fraction)
 
 
 \subsubsection{Forward Evaluation}

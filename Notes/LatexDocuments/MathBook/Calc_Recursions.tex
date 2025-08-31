@@ -304,8 +304,22 @@ x_2 = \frac{A_2}{B_2} = \frac{b_2(b_1 b_0 + a_1) + a_2 b_0}{b_2 b_1 + a_2}, \qua
 \ldots \quad
 x_n = \frac{A_n}{B_n}
 \end{equation}
-The numbers $A_n, B_n$ that we can create in this way are called the $n$-th order \emph{continuants} and the numbers $x_n$ are called the $n$-th order \emph{convergents} of the CFE. The latter name rightfully suggests that the sequence of $x_n$ converges - namely to $x$ - which is the whole point of all of this business. [Q: Are there any conditions that need to be satisfied for convergence?] ...TBC... ToDo: Explain the sense in which the convergents are the best rational approximations to $x$, mention the $22/7 = 3 + 1/7$ approximation for $\pi$
+The numbers $A_n, B_n$ that we can create in this way are called the $n$-th order \emph{continuants} and the numbers $x_n$ are called the $n$-th order \emph{convergents} of the CFE. The latter name rightfully suggests that the sequence of $x_n$ converges - namely to $x$ - which is the whole point of all of this business. [Q: Are there any conditions that need to be satisfied for convergence?] ...TBC... ToDo: Explain the sense in which the convergents are the best rational approximations to $x$, mention the $22/7 = 3 + 
+1/7$ approximation for $\pi$
 
+% Google AI says:
+% "Continuants also have combinatorial interpretations, such as being the sum of monomials corresponding to configurations on a frieze,"
+% when being prompted with "continued fraction continuants"
+
+% It also says:
+
+%Recursive Relation:
+%For a simple continued fraction [a₀; a₁, a₂, ...] (where aᵢ are coefficients), the numerators Aᵢ and denominators Bᵢ of the convergents are defined by the following recurrence relations:
+%Aₙ = aₙ Aₙ₋₁ + Aₙ₋₂
+%Bₙ = aₙ Bₙ₋₁ + Bₙ₋₂
+%With initial values A₋₂ = 0, A₋₁ = 1 and B₋₂ = 1, B₋₁ = 0.
+
+% This formula is different from what Wikipedia says. I think Wikipedia may be wrong? Check that! Compare it to other sources and try to re-derive the recursion
 
 \subsubsection{Forward Evaluation}
 While it is totally possible to evaluate a finite continued fraction with the naive backward evaluation algorithm given above, there is actually also a way that avoids starting at the innermost subexpression and working our way back to the outermost. I will refer to this alternative evaluation algorithm as forward evaluation. Such an algorithm will turn out to particularly convenient when we want to evaluate infinite CFEs because in this case, there isn't any innermost subexpression. ...TBC...

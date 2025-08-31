@@ -20175,7 +20175,7 @@ need to be swapped. Figure out why and fix it!
 
 Implements the evaluation of continued fractions as a "generator" class. You can initialize it with
 the zeroth partial denominator (which isn't really a denominator, though - it's just the integer 
-part of the number x). Then you can succesively call getNextConvergent() which accepts a pair of 
+part of the number x). Then you can successively call getNextConvergent() which accepts a pair of 
 new partial numerator and denominator and produces the convergent that includes all partial 
 numerators and denominators up to the given one. ...TBC...
 

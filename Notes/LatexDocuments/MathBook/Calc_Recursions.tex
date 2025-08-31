@@ -179,7 +179,7 @@ x_{1,2} = k \pm s
 k = a + \frac{b^2}{2}, \;
 s = \sqrt{k^2 - a^2}, 
 \end{equation}
-But we need to be a bit careful with this result. The "little bit of algebra" involved a step where both sides of an equation had to be squared. Such steps may produce extraneous solutions. We need to try both signs for $s$ and pick the one that produces a value $x$ that does indeed solve the equation. For some combinations of $a,b$ we may not get any real solution at all. For $a = 3, b = 2$, the formula produces the solutions $x = 1, x = 9$ and of these, only the $x=9$ solution actually works. With $a = -2, b = 3$, we get $x = 1, x = 4$ as solutions and they are both true solutions. But be that as it may. It's interesting to note here that no actual calculus tools were needed to find the solution(s). We don't evaluate any limit here. What we did instead was to observe that in an infinite nesting of functions, we are allowed to peel off the outermost layer of function evaluation, if we see by inspection that the argument of the function is the same as the function's output. In fact, we can peel off any finite number of layers but doing it only for the outermost one was the simplest choice here. This act of peeling off was legal only due to the \emph{infinite} nesting. For a finite nesting, we would not have been able to do that. We recognized that one part of an infinite expression was equal to the expression as a whole and took advantage of this self-similarity to simplify the expression. This is a general technique that we should add to our problem solving toolkit. It feels like lying somewhere in between an algebraic and a calculusly technique. It has to do with taking a process to infinity (which is what we do in calculus) but also with replacing a subexpression with some other subexpression which we know to be equivalent (which is what we do in algebra).
+But we need to be a bit careful with this result. The "little bit of algebra" involved a step where both sides of an equation had to be squared. Such steps may produce extraneous solutions. We need to try both signs for $s$ and pick the one that produces a value $x$ that does indeed solve the equation. For some combinations of $a,b$ we may not get any real solution at all. For $a = 3, b = 2$, the formula produces the solutions $x = 1, x = 9$ and of these, only the $x=9$ solution actually works. With $a = -2, b = 3$, we get $x = 1, x = 4$ as solutions and they are both true solutions. But be that as it may. It's interesting to note here that no actual calculus tools were needed to find the solution(s). We don't evaluate any limit here. What we did instead was to observe that in an infinite nesting of functions, we are allowed to "peel off" the outermost layer of function evaluation, if we see by inspection that the argument of the function is the same as the function's output. In fact, we can peel off any finite number of layers but doing it only for the outermost one was the simplest choice here. This act of peeling off was legal only due to the \emph{infinite} nesting. For a finite nesting, we would not have been able to do that. We recognized that one part of an infinite expression was equal to the expression as a whole and took advantage of this self-similarity to simplify the expression. This is a general technique that we should add to our problem solving toolkit. It feels like lying somewhere in between an algebraic and a calculusly technique. It has to do with taking a process to infinity (which is what we do in calculus) but also with replacing a subexpression with some other subexpression which we know to be equivalent (which is what we do in algebra).
 
 %...TBC...Mention other kinds of infinite expressions involving roots
 
@@ -261,22 +261,27 @@ f(x) = x^{x^{\cdot^{\cdot^{\cdot^x}}}}
 
 Consider defining a nonegative real number $x \in \mathbb{R}_0^+$ by an expression of the form:
 \begin{equation}
+\label{Eq:ContinuedFraction}
 x = b_0 + \cfrac{a_1}{b_1 + \cfrac{a_2}{b_2 + \cfrac{a_3}{b_3 + \ddots }}}
 \end{equation}
-where the dots mean, as usual, that we imagine the pattern to go on forever. Such an expression is called a \emph{continued fraction} expansion (henceforth abbreviated as CFE) of the number $x$. The numbers $b_i, i = 0,1,2,3,\ldots$ and $a_j, j = 1,2,3,\ldots$ are given sequences of coefficients. These numbers are typically assumed to be integers. The $a_j$ are called \emph{partial numerators} and the $b_i$ are called \emph{partial denominators}. Because the notation above is rather clunky, there are alternative notations for writing down a continued fraction. Among them are:
+where the dots mean, as usual, that we imagine the pattern to go on forever. Such an expression is called a \emph{continued fraction} expansion (henceforth abbreviated as CFE) of the number $x$. The numbers $b_i, i = 0,1,2,3,\ldots$ and $a_j, j = 1,2,3,\ldots$ are given sequences of coefficients. These numbers are typically assumed to be integers. The $a_j$ are called \emph{partial numerators} and the $b_i$ are called \emph{partial denominators}. Because the notation above is rather wasteful with precious space, there are alternative notations for writing down a continued fraction. Among them are:
 \begin{equation}
-x = b_0 + \frac{a_1}{b_1 +} \frac{a_2}{b_2 +} \frac{a_3}{b_3 +} \cdots, \quad
+x = b_0 + \frac{a_1}{b_1 +} \, \frac{a_2}{b_2 +} \, \frac{a_3}{b_3 +} \cdots, \quad
 x = b_0 + \frac{|a_1}{b_1|} + \frac{|a_2}{b_2|} + \frac{|a_3}{b_3|} + \cdots, \quad
-x = b_0 + \opK_{i=1}^{\infty} \frac{b_i}{a_i}
+x = b_0 + \opK_{i=1}^{\infty} \frac{a_i}{b_i}
 \end{equation}
-The last one is analogous to the $\sum$ notation for sums and the $\prod$ notation for products. The big $\opK$ stands for "Kettenbruch" which is the German translation for continued fraction (literally: chain fraction). The first coefficient $b_0$ has been dragged out because it doesn't really fit nicely into the general pattern. It has no $a_0$ to pair with. It is typically taken to be the integer part of the number $x$, i.e. $b_0 =\floor{x}$ and we usually also assume that the whole $\opK$ expression is less than $1$ such that it represents the fractional part of $x$, i.e. $\opK_{i=1}^{\infty} \frac{b_i}{a_i} = x - \floor{x} < 1$. In an environment where no mathematical typesetting is available, I like to write continued fractions as:
+The last one was introduced by Gauss and is analogous to the $\sum$ notation for sums and the $\prod$ notation for products. The big $\opK$ stands for "Kettenbruch" which is the German translation for continued fraction (literally: chain fraction). The first coefficient $b_0$ has to be outside the $\opK$ because it doesn't really fit nicely into the general pattern. It has no $a_0$ to pair with. It is typically taken to be the integer part of the number $x$, i.e. $b_0 =\floor{x}$ and we usually also assume that the whole $\opK$ expression is less than $1$ such that it represents the fractional part of $x$, i.e. $\opK_{i=1}^{\infty} \frac{b_i}{a_i} = x - \floor{x} < 1$. In an environment where no mathematical typesetting is available, I like to write continued fractions as:
 \begin{equation}
 x = b_0 + a_1 / (b_1 + a_2 / (b_2 + (a_3 /  (b_3 + (\cdots))))) 
 \end{equation}
-which has some similarity with the nested form of writing down a polynomial using Horner's rule. ...TBC... ToDo: explain terminology: generalized vs simple (used differently in calculus and number theory), explain conventions to ensure that only proper fractions occur, explain how to deal with negative $x$
+which bears some similarity with the nested form of writing down a polynomial using Horner's rule. 
+
+...TBC... ToDo: explain terminology: generalized vs simple (used differently in calculus and number theory), explain conventions to ensure that only proper fractions occur, explain how to deal with negative $x$, give $(b_0;b_1,b_2,b_3,\ldots)$ notation for simple CFEs (i.e. with all $a_j = 1$)
+
+% Hirzebruch fractions
 
 \subsubsection{Naive Evaluation}
-To understand how we would go about evaluating such an infinite continued fraction, let's first consider a finite version of this situation. Let's assume that in the expression above, the partial numerator $a_4$ (i.e. the first one that would occur in the "dotdotdot" subexpression) would be zero. That would mean that the whole dots subexpression would also evaluate zero. Then we could evaluate the expression from the "bottom up" or from the "inside out" or "backwards"   ...TBC...ToDo: give naive (backward) evaluation algorithm as SageMath/Python code, expand the first few finite cases (up to $n=3$) into regular fractions
+To understand how we would go about evaluating such an infinite continued fraction, let's first consider a finite version of this situation. Let's assume that in the expression in equation (\ref{Eq:ContinuedFraction}), the partial numerator $a_4$ (i.e. the first one that would occur in the "dotdotdot" subexpression) would be zero. That would mean that the whole dots subexpression would also evaluate zero. Then we could evaluate the expression from the "bottom up" or from the "inside out" or "backwards". When simplifying the mess, we will end up with a regular old fraction aka a rational number in standard form. ...TBC...ToDo: give naive (backward) evaluation algorithm as SageMath/Python code, expand the first few finite cases (up to $n=3$) into regular fractions
 
 
 % Give also the notation:
@@ -289,12 +294,36 @@ To understand how we would go about evaluating such an infinite continued fracti
 % The K here stands for Kettenbruch (the German translation of continued fraction, literally chain fraction)
 
 
-\subsubsection{Forward Evaluation}
-While it is totally possible to evaluate a finite continued fraction with the naive backward evaluation algorithm given above, there is actually also a way that avoids starting at the innermost subexpression and working our way back to the outermost. I will refer to this alternative evaluation algorithm as forward evaluation. Such an algorithm will turn out to particularly convenient when we want to evaluate infinite CFEs. ...TBC...
-
 \paragraph{Convergents and Continuants}
+Let's write down the first couple of truncated CFEs in simplified form, i.e. in the form of a simple fraction with a single numerator and single denominator and assign the names $A_n, B_n$ to the resulting numerators and denominators and the name $x_n$ to the finite fractions that we get:
+\begin{equation}
+\label{Eq:ContinuantsAndConvergents}
+x_0 = \frac{A_0}{B_0} = b_0, \quad
+x_1 = \frac{A_1}{B_1} = \frac{b_1 b_0 + a_1}{b_1}, \quad
+x_2 = \frac{A_2}{B_2} = \frac{b_2(b_1 b_0 + a_1) + a_2 b_0}{b_2 b_1 + a_2}, \quad
+\ldots \quad
+x_n = \frac{A_n}{B_n}
+\end{equation}
+The numbers $A_n, B_n$ that we can create in this way are called the $n$-th order \emph{continuants} and the numbers $x_n$ are called the $n$-th order \emph{convergents} of the CFE. The latter name rightfully suggests that the sequence of $x_n$ converges - namely to $x$ - which is the whole point of all of this business. [Q: Are there any conditions that need to be satisfied for convergence?]
+
+
+\subsubsection{Forward Evaluation}
+While it is totally possible to evaluate a finite continued fraction with the naive backward evaluation algorithm given above, there is actually also a way that avoids starting at the innermost subexpression and working our way back to the outermost. I will refer to this alternative evaluation algorithm as forward evaluation. Such an algorithm will turn out to particularly convenient when we want to evaluate infinite CFEs because in this case, there isn't any innermost subexpression. ...TBC...
+
+
 
 \paragraph{Fundamental Recurrence Formulas}
+Let's take a closer look at equation (\ref{Eq:ContinuantsAndConvergents}). It may not be totally obvious, but it turns out that the continuants satisfy the following 3-term recurrence relations:
+\begin{equation}
+A_n = b_n A_{n-1} + a_n A_{n-2}, \quad
+B_n = b_n B_{n-1} + a_n B_{n-2}, \quad
+\text{for }  n \geq 1
+\end{equation}
+with the initial values:
+\begin{equation}
+A_{-1} = 1, A_0 = b_0, B_{-1} = 0, B_0 = 1
+\end{equation}
+These formulas are rather important and are therefore called the \emph{fundamental recurrence formulas}. These formulas are the key for an alternative evaluation algorithm that allows us to evaluate the CFE in a forward manner, i.e. in a way that allows use to produce finer and finer approximations of $x$ without knowing all coeffs up to $n$ upfront. We just need to keep track of the continuants $A_{n-2}, A_{n-1}, B_{n-2}, B_{n-1}$ and when a new pair of partial numerators and denominators $a_n, b_n$ "arrives", we can use these coefficients together with the stored continuants to "update" or refine our approximation of $x$ from the previous convergent $x_{n-1}$ to the new convergent $x_n$ by using these recurrence formulas. ...TBC...ToDo: Give SageMath/Python code for forward evaluation
 
 
 % ToDo: Give all the different notations, explain different terminologies in number theory and analysis for the qualifiers "simple" and "generalized", Should be impose the constraint that $a_i < b_i$ to ensure each partial fraction is a proper fraction?
@@ -321,6 +350,30 @@ While it is totally possible to evaluate a finite continued fraction with the na
 %x = b_0 + \frac{a_1}{b_1 + \frac{a_2}{b_2 + \frac{a_3}{b_3 + \ddots }}}
 %\end{equation}
 %% That looks ugly!
+
+% https://en.wikipedia.org/wiki/Continued_fraction#The_determinant_formula
+
+\subsubsection{Obtaining the CFE}
+Let's now look at the problem to obtain a continued fraction expansion for a given number $x$. The first $b$-coeff is easy: it's just $b_0 = \floor{x}$. ...TBC...ToDo: Give Python code to produce a CFE for a given $x$
+
+
+
+%\subsubsection{Composition of Linear Fractional Transformations}
+
+% https://de.wikipedia.org/wiki/Kettenbruch#Darstellung_als_Komposition_von_Abbildungen
+
+
+%\subsubsection{Orthogonal Polynomials}
+
+
+%\subsubsection{Function Approximation}
+% Explain hwo CFEs can be used to approximate functions
+
+
+%\subsubsection{The Conservative Matrix Field}
+% In a recent discovery, mathematicians have found a systematic way to produce CFEs for many interesting numbers. ...TBC...
+
+
 
 
 

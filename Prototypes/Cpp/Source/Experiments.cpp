@@ -20172,8 +20172,8 @@ void testContinuedFractions2()
   VecI b = { 1,1,1,1,1,1 };
   VecI a = rsContinuedFractionDenominators(x, b);
   ok &= a == VecI({ 7, 15, 1, 292, 1, 1 });
-  // The CFE of pi is 3,7,15,1,292,1,1,... but the function isn't supposed to produce the integer 
-  // part 3, i.e. the first element, so we expect 7,15,1,292,1,1,...
+  // The simple CFE of pi is 3,7,15,1,292,1,1,... but the function isn't supposed to produce the 
+  // integer part 3, i.e. the first element, so we expect 7,15,1,292,1,1,...
 
   y = rsEvaluateContinuedFraction<double>(a, b);
   d = x-y;  // Difference between true x and CFE approximant y
@@ -20186,6 +20186,9 @@ void testContinuedFractions2()
   // - Implement a function that evaluates a general continued fraction expansion.
   //
   // - Test the functions with numerators other than all 1s.
+  //
+  // - Try to figure out if it's also possible to prescribe the denominators and compute the 
+  //   numerators
 }
 
 void testContinuedFractions()

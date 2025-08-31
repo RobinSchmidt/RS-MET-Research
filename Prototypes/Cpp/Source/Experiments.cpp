@@ -19908,18 +19908,18 @@ void testContinuedFractions1()
   // Set up x and N. We always use an N that is appropriate for x such that we can compute all 
   // coeffs without running numerical problems that blow up the error at the end.:
 
-  x = PI; N = 13;
+  //x = PI; N = 13;
   // Should be: 3,7,15,1,292,1,1,1,2,1,3,1,14,2,1,1,2, ...
   // See: https://mathworld.wolfram.com/PiContinuedFraction.html
   //      https://oeis.org/A001203
 
-  //x = GOLDEN_RATIO;   N = 40; // Worst case for CFEs. All coeffs are 1.
+  x = GOLDEN_RATIO;   N = 40; // Worst case for CFEs. All coeffs are 1.
   //x = SQRT2;          N = 30;
   //x = EULER;          N = 30;
   //x = EULER_CONSTANT; N = 20;
 
 
-  // Create the continued fraction representation of x:
+  // Create the simple continued fraction representation of x:
   std::vector<Int> c(N);               // The CFE-coefficients
   Real xk = x;
   for(int k = 0; k < N; k++)
@@ -19950,14 +19950,16 @@ void testContinuedFractions1()
   for(int n = 0; n < N-1; n++)
     errRat[n] = err[n] / err[n+1];
 
+  // Plot errors:
+  rsPlotVector(err);
   rsPlotVector(logErr);
-  //rsPlotVector(err);
   rsPlotVector(errRat);
 
 
   // The code below is experimental. I'm not yet sure if it makes any sense at all.
 
-  // Compute the alternative CFE representation using ceil instead of floor:
+  // Compute the alternative CFE representation using ceil instead of floor. I think, this is 
+  // called the "Hirzebruch-Jung" CFE (verify!)
   std::vector<Int> d(N);               // The alternative CFE-coefficients
   xk = x;
   for(int k = 0; k < N; k++)
@@ -19986,17 +19988,17 @@ void testContinuedFractions1()
   //   out exactly and theoretically. It will give us a worst case bound for the error as 
   //   function of the approximation order. The actual error for any given number x will be 
   //   less. The ratio between successive errors seems to converge to a constant value around
-  //   -(1 + golden ratio) = -2.618... (yes - the error oscillates). That would mean that in the 
-  //   worst case, the error as function of the number of coeffs n decareases exponentially by 
-  //   1 / (1+phi)^n where phi is the golden ratio. Verify this!
+  //   -(1 + golden ratio) = -2.618... Because of the negative sign, the error oscillates. That 
+  //   would mean that in the worst case, the error as function of the number of coeffs n 
+  //   decareases exponentially by 1 / (1+phi)^n where phi is the golden ratio. Verify this!
   // 
   // - For x = sqrt(2), the coeffs are 1,2,2,2,2,... ToDo: figure out the slope of the error 
   //   decrease. The ratio of successive errors seems to approach -5.8284...
   // 
   // - It looks like the ratio is always negative, i.e. the error oscillates around the correct 
   //   value. Verify this with more examples and theoretically. The file Kettenbrueche.pdf (Link 
-  //   below) says on page 29: "Da x zwischen den beiden Konvergente liegt ...". So its seems, the
-  //   actualy value of x is always in between two successive convergents which is equlvalent to
+  //   below) says on page 29: "Da x zwischen den beiden Konvergenten liegt ...". So its seems, the
+  //   actually value of x is always in between two successive convergents which is equlvalent to
   //   saying that the error oscillates.
   // 
   // - For Euler's number, the coeffs are 2,1,2,1,1,4,1,1,6,1,1,8,1,1,10,1,1,12,1,1,14,1,1,16,...
@@ -20004,7 +20006,8 @@ void testContinuedFractions1()
   //   2 compared to the previous non-1 value (which is at k-3). The error ratio plot has a 
   //   comb-like shape. For the 1s, it decreases only slightly, for the other values, we see
   //   bigger steps. I think, the formula for the coeffs is: c[0] = 2, c[1] = 1, 
-  //   c[k] = 2*(k+1)/3 if (k+1) is divisible by 3, otherwise c[k] = 1. Verify this!
+  //   c[k] = 2*(k+1)/3 if (k+1) is divisible by 3, otherwise c[k] = 1. Verify this! Try to figure
+  //   out why this pattern arises.
   //
   // 
   // ToDo:
@@ -20017,14 +20020,15 @@ void testContinuedFractions1()
   //   (c[k] + something). Figure out if such an alternative representation may be advantageous
   //   for certain numbers in the sense that it approximates the number better for a given 
   //   number of coeffs. The answer to that question may depend on the number x and on numCoeffs.
-  //   I think, we would have to replace floor with ceil and fk = xk - ik with fk = ik - xk.
-  // 
+  //   I think, we would have to replace floor with ceil and fk = xk - ik with fk = ik - xk. Try
+  //   it with the golden ratio.
+  //   
   // - Aha! It seems that this idea is not so new. This alternative representation is known as
   //   Hirzebruch-Jung continued fraction expansion. See:
   //   https://math.stackexchange.com/questions/4615934/program-computing-the-hirzebruch-jung-continued-fraction
   //   https://mathoverflow.net/questions/221047/motivation-for-hirzebruch-jung-modified-euclidean-algorithm
   //   
-  // - Test the alternative FCE implementation. We need a function analoguous to 
+  // - Test the alternative CFE implementation. We need a function analoguous to 
   //   rsContinuedFractionConvergent but for the alternative representation. For this, we need
   //   to figure out, how the normal implementation works first. Try to re-derive the algorithm
   //   from the normal CFE-formula x = c0 + 1/(c1 + 1/(c2 + 1/(c3 + ... ))). Then derive a similar 
@@ -20042,7 +20046,7 @@ void testContinuedFractions1()
   //   an algorithm that takes as input the number x and some prescribed array of n values and 
   //   produces as output the integer part i and an array of d values. But maybe it should just 
   //   accept values in the range 0..1. Splitting off the integer part can be done by a separate 
-  //   function on top.
+  //   function on top of it.
   // 
   // - [Done]
   //   Plot the difference between the correct value x and the CFE as function of the order of
@@ -20097,7 +20101,8 @@ std::vector<int> rsContinuedFractionDenominators(
   rsAssert(x > TReal(0) && x < TReal(1));
   // This function currently only works for numbers x in the open interval (0,1). That is: if x is
   // a fraction, it is supposed to be a proper fraction, i.e. one with a denominator that is 
-  // strictly greater than the numerator.
+  // strictly greater than the numerator. I guess, we could allow x = 0, though. But we may have to
+  // treat it as special case to avoid division by zero.
 
   int N = (int)numerators.size();
   const std::vector<TInt>& n = numerators;
@@ -20155,7 +20160,80 @@ TReal rsEvaluateContinuedFraction(
   //
   // - Implement an alternative evaluation algorithm based continuants and convergents:
   //   https://en.wikipedia.org/wiki/Continued_fraction#Formulation
+  //   Maybe rename this function to rsContFracEvalNaive or rsContFracEvalBackward and the 
+  //   algorithm based on continuants can be named rsContFracEvalForward. Maybe implement it as a
+  //   generator class. It would be constructed as rsContinuedFraction(Real x) and have functions
+  //   like getNextContinuants(), getNextConvergent(). The former may produce a rsVector2D<int> and
+  //   the latter just calls it like rsVector2D<TInt> c = getNextContinuants(); and returns 
+  //   c.x / c.y. Maybe it could also have functions like getCurrentContinuants() and 
+  //   getCurrentConvergent() which does no state update.
 }
+
+
+/** Under construction. Seems to be still buggy.
+
+Implements the evaluation of continued fractions as a "generator" class. You can initialize it with
+the zeroth partial denominator (which isn't really a denominator, though - it's just the integer 
+part of the number x). Then you can succesively call getNextConvergent() which accepts a pair of 
+new partial numerator and denominator and produces the convergent that includes all partial 
+numerators and denominators up to the given one. ...TBC...
+
+*/
+
+template<class TReal, class TInt>
+class rsContinuedFractionEvaluator
+{
+
+public:
+
+  rsContinuedFractionEvaluator()
+  {
+    init(TInt(0));
+  }
+
+  void init(TInt b0 = TInt(0))
+  {
+    A2 = 1; A1 = b0;
+    B2 = 0; B1 = 1;
+  }
+
+  /** Accepts a new pair of partial numerator a and partial denominator b and updates our stored 
+  continuants. */
+  void updateContinuants(TInt a, TInt b)
+  {
+    // Compute the new, updated continuants by the fundamental recurrence formulas:
+    TInt A = b * A1 + a * A2;
+    TInt B = b * B1 + a * B2;
+
+    // Store them for the next call:
+    B2 = B1; B1 = B;
+    A2 = A1; A1 = A;
+  }
+
+  TReal getCurrentConvergent()
+  {
+    return TReal(A1) / TReal(B1);
+  }
+
+
+  TReal getNextConvergent(TInt a, TInt b)
+  {
+    updateContinuants(a, b);
+    return getCurrentConvergent();
+  }
+
+
+protected:
+
+  TInt A1, A2, B1, B2;
+
+};
+// ToDo:
+// 
+// - Maybe rename TReal to TVal and TInt to TCoef. Or maybe we can get rid of TReal altogether
+//
+// - Add functions getCurrentNumerator(), getCurrentDenominator()
+
 
 void testContinuedFractions2()
 {
@@ -20163,9 +20241,14 @@ void testContinuedFractions2()
 
   bool ok = true;
 
+
+
   using VecI = std::vector<int>;
+  using CFE = rsContinuedFractionEvaluator<double, int>;
+
 
   double x, y, d;
+  double x0, x1, x2, x3, x4, x5, x6;
 
   // Obtain the CFE of pi-3 where we use all 1s for the partial numerators
   x = PI - 3.0;
@@ -20178,6 +20261,19 @@ void testContinuedFractions2()
   y = rsEvaluateContinuedFraction<double>(a, b);
   d = x-y;  // Difference between true x and CFE approximant y
   ok &= rsIsCloseTo(x, y, 1.e-9);
+
+  CFE cfe;
+  cfe.init(3);
+  x0 = cfe.getCurrentConvergent();
+  x1 = cfe.getNextConvergent(a[0], b[0]);
+  x2 = cfe.getNextConvergent(a[1], b[1]);
+  x3 = cfe.getNextConvergent(a[2], b[2]);
+  x4 = cfe.getNextConvergent(a[3], b[3]);
+  x5 = cfe.getNextConvergent(a[4], b[4]);
+  x6 = cfe.getNextConvergent(a[5], b[5]);
+  // These look wrong!
+
+
 
   rsAssert(ok);
 
@@ -20331,7 +20427,8 @@ be doubly periodic because at any position inside in any square in the complex p
 distribution of the roots looks the same. It should not matter if we stand at 0.3 + 0.7i or at 
 2.3 + 5.7i or at m.3 + n.7i for any pair m,n. When we look around, we "see" the same distribution 
 of roots and therefore, the function should have the same value. ...VERIFY (theoretically and 
-numerically)! ...TBC...  */
+numerically)! But experments show that this is actually NOT the case! Maybe I have some fallacious 
+thinking here? Or maybe the implementation is just buggy? Figure out! ...TBC...  */
 template<class T>
 std::complex<T> rootsAtGaussInts1(std::complex<T> z, int numRoots)
 {
@@ -20403,6 +20500,7 @@ std::complex<T> rootsAtGaussInts3(std::complex<T> z, int numRoots)
   // ToDo:
   //
   // - Check if we have problems due to the multivalued nature of the complex logarithm function.
+  //   ...OK - so far, it looks fine.
   //
   // - Try an evaluation algorithm based on summing log(z-r) rather than log(1 - z/r).
   //
@@ -20412,12 +20510,15 @@ std::complex<T> rootsAtGaussInts3(std::complex<T> z, int numRoots)
   //   of some function type or something. It's weird. Check what constructors std::complex has. It
   //   works when we call a constructor with two integers but not when we call a constructor with 
   //   two variables of type T (where T = double). It looks cleaner (albeit more verbose) to me 
-  //   when we do an explicit type conversion from int to T but the compile doesn't accept it.
+  //   when we do an explicit type conversion from int to T but the compiler doesn't accept it.
   //   Hmm...OK...writing  std::complex<T> r((T)m, (T)n);  actually does work. So, apparently,
   //   using T(m) is not the same as (T)m. The former is (supposed to be) a constructor call for
-  //   type t with an integer argument whereas the latter is an epxlicit type conversion. I 
+  //   type T with an integer argument whereas the latter is an explicit type conversion. I 
   //   thought that these would be equivalent - but apparently this is not the case - at least not
-  //   always? Maybe it has to do with double being a primitive type rather than a class type?
+  //   always? Maybe it has to do with double being a primitive type rather than a class type? 
+  //   Hmm...I think (T)m will invoke a type conversion operator rather than calling a constructor,
+  //   so - yeah - it's plausible that these may behave differently (depending on the 
+  //   implementations of both)
 }
 
 template<class T>
@@ -20464,7 +20565,8 @@ std::complex<T> rootsAtGaussInts(std::complex<T> z, int numRoots)
   return w;
 
   // This code is wrong! We are missing the m == 0, and n == 0 cases. For every nonzero m we would
-  // need to include the case where n = 0 and vice versa.
+  // need to include the case where n = 0 and vice versa. Maybe the inclusion of these factors into
+  // the product can be implemented as two simple loops (as opposed to the nested loop above).
 }
 */
 
@@ -20527,11 +20629,12 @@ bool unitTestGaussIntRoots()
   // OK - now all 3 are similar up to a sign change in w2. ..OK - I fixed ths sign error by 
   // multiplying the factor for r=0 in the product by -1. Oh! But that fix works only with 
   // numRoots = 5 but not with 4. It seems like switching between an even and odd number flips the
-  // sign of the result? Maybe this is a hint that the product is divergent?
+  // sign of the result? Maybe this is a hint that the product is divergent? It seems to oscillate.
+  // But maybe the amplitude of the oscillation goes down? Figure out!
 
 
   //z = 8-20*i; w = f(z); ok &= w == zero;
-  // This gives a nan result. It looks like the evaluation algorithm has numerical problems. During
+  // This gives a NaN result. It looks like the evaluation algorithm has numerical problems. During
   // evaluation, the partial products grow very large. I think, we are dealing with floating point 
   // overflow here.
 

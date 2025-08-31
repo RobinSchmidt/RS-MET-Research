@@ -247,15 +247,16 @@ f(x) = x^{x^{\cdot^{\cdot^{\cdot^x}}}}
 
 % https://tex.stackexchange.com/questions/23432/how-to-create-my-own-math-operator-with-limits/23436#23436
 
-% ToDo: move the to Setup.tex
+% ToDo: move this to Setup.tex
 
-% This allows us to turn arbitrary letters into math-symbols with lower and upper limits similra to the Sigma and Pi notaion for sums and products:
+% This allows us to turn arbitrary letters into math-symbols with lower and upper limits similar to the Sigma and Pi notaion for sums and products:
 \newcommand{\operator}[1]{\mathop{\vphantom{\sum}\mathchoice
 {\vcenter{\hbox{\huge $#1$}}}
 {\vcenter{\hbox{\Large $#1$}}}{#1}{#1}}\displaylimits}
 
 % This uses the above code to define a big K operator form continued fractions:
 \newcommand{\opK}{\operator{\mathrm{K}}}
+% It can be used like \opK_{i=1}^{\infty} \frac{a_i}{b_i}
 
 
 
@@ -270,18 +271,17 @@ x = b_0 + \frac{a_1}{b_1 +} \, \frac{a_2}{b_2 +} \, \frac{a_3}{b_3 +} \cdots, \q
 x = b_0 + \frac{|a_1}{b_1|} + \frac{|a_2}{b_2|} + \frac{|a_3}{b_3|} + \cdots, \quad
 x = b_0 + \opK_{i=1}^{\infty} \frac{a_i}{b_i}
 \end{equation}
-The last one was introduced by Gauss and is analogous to the $\sum$ notation for sums and the $\prod$ notation for products. The big $\opK$ stands for "Kettenbruch" which is the German translation for continued fraction (literally: chain fraction). The first coefficient $b_0$ has to be outside the $\opK$ because it doesn't really fit nicely into the general pattern. It has no $a_0$ to pair with. It is typically taken to be the integer part of the number $x$, i.e. $b_0 =\floor{x}$ and we usually also assume that the whole $\opK$ expression is less than $1$ such that it represents the fractional part of $x$, i.e. $\opK_{i=1}^{\infty} \frac{b_i}{a_i} = x - \floor{x} < 1$. In an environment where no mathematical typesetting is available, I like to write continued fractions as:
+The last one was introduced by Gauss and is analogous to the $\sum$ notation for sums and the $\prod$ notation for products\footnote{which both were introduced by Euler. Somehow it's always Euler or Gauss.}. The big $\opK$ stands for "Kettenbruch" which is the German translation for continued fraction (literally: chain fraction). The first coefficient $b_0$ has to be outside the $\opK$ because it doesn't really fit nicely into the general pattern. It has no $a_0$ to pair with. It is typically taken to be the integer part of the number $x$, i.e. $b_0 =\floor{x}$ and we usually also assume that the whole $\opK$ expression is less than $1$ such that it represents the fractional part of $x$, i.e. $\opK_{i=1}^{\infty} \frac{b_i}{a_i} = x - \floor{x} < 1$ [VERIFY!]. In an environment where no mathematical typesetting is available, I like to write continued fractions as:
 \begin{equation}
 x = b_0 + a_1 / (b_1 + a_2 / (b_2 + (a_3 /  (b_3 + (\cdots))))) 
 \end{equation}
-which bears some similarity with the nested form of writing down a polynomial using Horner's rule. 
+which bears some similarity to the nested form of writing down a polynomial using Horner's rule. 
 
-...TBC... ToDo: explain terminology: generalized vs simple (used differently in calculus and number theory), explain conventions to ensure that only proper fractions occur, explain how to deal with negative $x$, give $(b_0;b_1,b_2,b_3,\ldots)$ notation for simple CFEs (i.e. with all $a_j = 1$)
+...TBC... ToDo: explain terminology: generalized vs simple (used differently in calculus and number theory), explain conventions to ensure that only proper fractions occur, explain how to deal with negative $x$, give $(b_0;b_1,b_2,b_3,\ldots)$ notation for simple CFEs (i.e. with all $a_j = 1$), mention Hirzebruch-Jung CFEs (where all $a_j = -1$).
 
-% Hirzebruch fractions
 
 \subsubsection{Naive Evaluation}
-To understand how we would go about evaluating such an infinite continued fraction, let's first consider a finite version of this situation. Let's assume that in the expression in equation (\ref{Eq:ContinuedFraction}), the partial numerator $a_4$ (i.e. the first one that would occur in the "dotdotdot" subexpression) would be zero. That would mean that the whole dots subexpression would also evaluate zero. Then we could evaluate the expression from the "bottom up" or from the "inside out" or "backwards". When simplifying the mess, we will end up with a regular old fraction aka a rational number in standard form. ...TBC...ToDo: give naive (backward) evaluation algorithm as SageMath/Python code, expand the first few finite cases (up to $n=3$) into regular fractions
+To understand how we would go about evaluating such an infinite continued fraction, let's first consider a finite version of this situation. Let's assume that in the expression in equation (\ref{Eq:ContinuedFraction}), the partial numerator $a_4$ (i.e. the first one that would occur in the "dotdotdot" subexpression) would be zero. That would mean that the whole dots subexpression would also evaluate zero. Then we could evaluate the expression from the "bottom up" or from the "inside out" or "backwards". When simplifying the resulting mess, we will end up with a regular old fraction aka a rational number in standard form. ...TBC...ToDo: give naive (backward) evaluation algorithm as SageMath/Python code, expand the first few finite cases (up to $n=3$) into regular fractions
 
 
 % Give also the notation:
@@ -304,7 +304,7 @@ x_2 = \frac{A_2}{B_2} = \frac{b_2(b_1 b_0 + a_1) + a_2 b_0}{b_2 b_1 + a_2}, \qua
 \ldots \quad
 x_n = \frac{A_n}{B_n}
 \end{equation}
-The numbers $A_n, B_n$ that we can create in this way are called the $n$-th order \emph{continuants} and the numbers $x_n$ are called the $n$-th order \emph{convergents} of the CFE. The latter name rightfully suggests that the sequence of $x_n$ converges - namely to $x$ - which is the whole point of all of this business. [Q: Are there any conditions that need to be satisfied for convergence?]
+The numbers $A_n, B_n$ that we can create in this way are called the $n$-th order \emph{continuants} and the numbers $x_n$ are called the $n$-th order \emph{convergents} of the CFE. The latter name rightfully suggests that the sequence of $x_n$ converges - namely to $x$ - which is the whole point of all of this business. [Q: Are there any conditions that need to be satisfied for convergence?] ...TBC... ToDo: Explain the sense in which the convergents are the best rational approximations to $x$, mention the $22/7 = 3 + 1/7$ approximation for $\pi$
 
 
 \subsubsection{Forward Evaluation}
@@ -316,14 +316,15 @@ While it is totally possible to evaluate a finite continued fraction with the na
 Let's take a closer look at equation (\ref{Eq:ContinuantsAndConvergents}). It may not be totally obvious, but it turns out that the continuants satisfy the following 3-term recurrence relations:
 \begin{equation}
 A_n = b_n A_{n-1} + a_n A_{n-2}, \quad
-B_n = b_n B_{n-1} + a_n B_{n-2}, \quad
+B_n = b_n B_{n-1} + a_n B_{n-2}  \quad
 \text{for }  n \geq 1
 \end{equation}
-with the initial values:
+These formulas are rather important and are therefore called the \emph{fundamental recurrence formulas}.
+To get the recursion started, we will also need the initial values. These are given by:
 \begin{equation}
 A_{-1} = 1, A_0 = b_0, B_{-1} = 0, B_0 = 1
 \end{equation}
-These formulas are rather important and are therefore called the \emph{fundamental recurrence formulas}. These formulas are the key for an alternative evaluation algorithm that allows us to evaluate the CFE in a forward manner, i.e. in a way that allows use to produce finer and finer approximations of $x$ without knowing all coeffs up to $n$ upfront. We just need to keep track of the continuants $A_{n-2}, A_{n-1}, B_{n-2}, B_{n-1}$ and when a new pair of partial numerators and denominators $a_n, b_n$ "arrives", we can use these coefficients together with the stored continuants to "update" or refine our approximation of $x$ from the previous convergent $x_{n-1}$ to the new convergent $x_n$ by using these recurrence formulas. ...TBC...ToDo: Give SageMath/Python code for forward evaluation
+The recurrence formulas are the key for an alternative evaluation algorithm that allows us to evaluate the CFE in a forward manner, i.e. in a way that allows use to produce finer and finer approximations of $x$ without knowing all coeffs up to $n$ upfront. We just need to keep track of the continuants $A_{n-2}, A_{n-1}, B_{n-2}, B_{n-1}$ and when a new pair of partial numerators and denominators $a_n, b_n$ "arrives", we can use these coefficients together with the stored continuants to "update" or refine our approximation of $x$ from the previous convergent $x_{n-1}$ to the new convergent $x_n$ by using these recurrence formulas for the continuants and then just compute $x_n = A_n/B_n$. ...TBC...ToDo: Give SageMath/Python code for forward evaluation
 
 
 % ToDo: Give all the different notations, explain different terminologies in number theory and analysis for the qualifiers "simple" and "generalized", Should be impose the constraint that $a_i < b_i$ to ensure each partial fraction is a proper fraction?
@@ -354,7 +355,13 @@ These formulas are rather important and are therefore called the \emph{fundament
 % https://en.wikipedia.org/wiki/Continued_fraction#The_determinant_formula
 
 \subsubsection{Obtaining the CFE}
-Let's now look at the problem to obtain a continued fraction expansion for a given number $x$. The first $b$-coeff is easy: it's just $b_0 = \floor{x}$. ...TBC...ToDo: Give Python code to produce a CFE for a given $x$
+Let's now look at the problem to obtain a continued fraction expansion for a given number $x$. The first $b$-coeff is easy: it's just $b_0 = \floor{x}$. ...TBC...ToDo: Give Python code to produce a CFE for a given $x$, give a couple of interesting/useful CFEs for important mathematical constants such as $\e, \pi, \varphi, \ldots$, explain how the size of the coeffs determines the error of the approximation, explain why the golden ratio $\varphi$ is the worst case for a CFE
+
+% When we include a big coeff, the error decreases a lot. That is also the reason why the golden ratio is the hardest number to approximate by a CFE because it has all coeffs equal to 1, i.e. it doesn't have any larger coeffs.
+
+% Explain the rate of convergence in the worst case, i.e. in the case of the golden ratio $\varphi$. Maybe give a plot of the approximation error
+
+% Maybe put this section before the section about evaluation.
 
 
 

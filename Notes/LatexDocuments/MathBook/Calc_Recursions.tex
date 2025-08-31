@@ -319,7 +319,10 @@ The numbers $A_n, B_n$ that we can create in this way are called the $n$-th orde
 %Bₙ = aₙ Bₙ₋₁ + Bₙ₋₂
 %With initial values A₋₂ = 0, A₋₁ = 1 and B₋₂ = 1, B₋₁ = 0.
 
-% This formula is different from what Wikipedia says. I think Wikipedia may be wrong? Check that! Compare it to other sources and try to re-derive the recursion
+% This formula is different from what Wikipedia says. I think Wikipedia may be wrong? Check that! Compare it to other sources and try to re-derive the recursion. On page 11 in Jones/Thron "Continued Fractions..." is the same formula as in Wikipedia. They are probably taken from there
+
+% See also:
+% https://en.wikipedia.org/wiki/Continuant_(mathematics)
 
 \subsubsection{Forward Evaluation}
 While it is totally possible to evaluate a finite continued fraction with the naive backward evaluation algorithm given above, there is actually also a way that avoids starting at the innermost subexpression and working our way back to the outermost. I will refer to this alternative evaluation algorithm as forward evaluation. Such an algorithm will turn out to particularly convenient when we want to evaluate infinite CFEs because in this case, there isn't any innermost subexpression. ...TBC...
@@ -395,8 +398,48 @@ Let's now look at the problem to obtain a continued fraction expansion for a giv
 % In a recent discovery, mathematicians have found a systematic way to produce CFEs for many interesting numbers. ...TBC...
 
 
+% Arithmetic With... Continued Fractions?? #SoME2
+% https://www.youtube.com/watch?v=O6Atodhpr1M
+
+% Continued Fraction Arithmetic
+% https://www.youtube.com/watch?v=tBc_xcRzMxk
 
 
+% https://hsinhaoyu.github.io/cont_frac/
+% https://arxiv.org/html/2412.19929v1#S3
+
+% C-Library for continued fraction arithmetic:
+% https://github.com/mjdominus/cf
+
+% Another one:
+% https://github.com/blynn/frac
+% https://crypto.stanford.edu/pbc/notes/contfrac/   Infors about the code(?)
+
+% Another one in Python:
+% https://github.com/hsinhaoyu/cont_frac
+% https://github.com/hsinhaoyu/cont_frac/blob/main/org/cont_frac.org  Article that explains it
+
+% https://perl.plover.com/classes/cftalk/INFO/gosper.html  Gosper's original paper(?)
+% I think, when transforming a rational number into a CFE, we can use the Euclidean algorithm for the gcd just that here, we are not only interested in the last result but in the whole sequence of intermediate results that is produced. Verify this!
+
+% The same as .txt file:
+% https://perl.plover.com/yak/cftalk/INFO/gosper.txt
+
+% Another text by Gosper:
+% https://www.microsoft.com/en-us/research/wp-content/uploads/2016/10/cont-frac-gosper-1.pdf
+
+% https://arxiv.org/pdf/2412.19929
+% https://rosettacode.org/wiki/Continued_fraction/Arithmetic
+% https://medium.com/@omer.kasdarma/the-curious-world-of-simple-continued-fractions-part-v-the-arithmetics-b749a215383d
+
+% Websites with infos:
+% https://srossd.com/blog/2020/gosper-1/
+% https://compasstech.com.au/gxwgosper/#top
+% https://crypto.stanford.edu/pbc/notes/contfrac/
+
+% Transcendental Functions on Continued Fractions
+% https://arxiv.org/abs/2412.19929
+% -Paper about improvements to Gosper's algorithm
 
 %===================================================================================================
 %\subsection{Iterated Function Systems}

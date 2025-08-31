@@ -20171,7 +20171,7 @@ TReal rsEvaluateContinuedFraction(
 
 
 /** Under construction. Seems to be still buggy. Seems like the arguments for the update function
-need to be swapped. Figure out why and fix it!
+need to be swapped. Figure out why and fix it! ...OK - the fix is done!
 
 Implements the evaluation of continued fractions as a "generator" class. You can initialize it with
 the zeroth partial denominator (which isn't really a denominator, though - it's just the integer 
@@ -20207,8 +20207,15 @@ public:
   void updateContinuants(TInt a, TInt b)
   {
     // Compute the new, updated continuants by the fundamental recurrence formulas:
-    TInt A = b * A1 + a * A2;
-    TInt B = b * B1 + a * B2;
+    //TInt A = b * A1 + a * A2;
+    //TInt B = b * B1 + a * B2;
+    // This gives wrong results!
+
+    // This seems to work:
+    TInt A = a * A1 + b * A2;
+    TInt B = a * B1 + b * B2;
+    // But this is not what Wikipedia says. Could it be that the formula there is wrong?
+
 
     // Store them for the next call:
     B2 = B1; B1 = B;
@@ -20272,14 +20279,15 @@ void testContinuedFractions2()
   CFE cfe;
   cfe.init(3);
   x0 = cfe.getCurrentConvergent();
-  x1 = cfe.getNextConvergent(a[0], b[0]);
+  x1 = cfe.getNextConvergent(a[0], b[0]);  // 22/7
   x2 = cfe.getNextConvergent(a[1], b[1]);
-  x3 = cfe.getNextConvergent(a[2], b[2]);
+  x3 = cfe.getNextConvergent(a[2], b[2]);  // 355/113
   x4 = cfe.getNextConvergent(a[3], b[3]);
   x5 = cfe.getNextConvergent(a[4], b[4]);
   x6 = cfe.getNextConvergent(a[5], b[5]);
-  // These approximations are wrong! 
-  
+
+
+  /*
   // Looks like we need to swap the arguments to fix it:
   cfe.init(3);
   x0 = cfe.getCurrentConvergent();
@@ -20289,6 +20297,7 @@ void testContinuedFractions2()
   x4 = cfe.getNextConvergent(b[3], a[3]);
   x5 = cfe.getNextConvergent(b[4], a[4]);
   x6 = cfe.getNextConvergent(b[5], a[5]);
+  */
   // Figure out why we need to swap the arguments. Fix the code such that we don't have to do it.
   // Let b be an optional parameter (defaulting to 1)
 

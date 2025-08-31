@@ -20170,13 +20170,18 @@ TReal rsEvaluateContinuedFraction(
 }
 
 
-/** Under construction. Seems to be still buggy.
+/** Under construction. Seems to be still buggy. Seems like the arguments for the update function
+need to be swapped. Figure out why and fix it!
 
 Implements the evaluation of continued fractions as a "generator" class. You can initialize it with
 the zeroth partial denominator (which isn't really a denominator, though - it's just the integer 
 part of the number x). Then you can succesively call getNextConvergent() which accepts a pair of 
 new partial numerator and denominator and produces the convergent that includes all partial 
 numerators and denominators up to the given one. ...TBC...
+
+See:
+
+https://en.wikipedia.org/wiki/Continued_fraction#Formulation
 
 */
 
@@ -20230,7 +20235,9 @@ protected:
 };
 // ToDo:
 // 
-// - Maybe rename TReal to TVal and TInt to TCoef. Or maybe we can get rid of TReal altogether
+// - Maybe rename TReal to TVal and TInt to TCoef. Or maybe we can get rid of TReal altogether. 
+//   Maybe return rsFraction<TInt>...not sure, though. It may be inconvenient to force the user
+//   to use rsFraction
 //
 // - Add functions getCurrentNumerator(), getCurrentDenominator()
 
@@ -20271,9 +20278,22 @@ void testContinuedFractions2()
   x4 = cfe.getNextConvergent(a[3], b[3]);
   x5 = cfe.getNextConvergent(a[4], b[4]);
   x6 = cfe.getNextConvergent(a[5], b[5]);
-  // These look wrong!
+  // These approximations are wrong! 
+  
+  // Looks like we need to swap the arguments to fix it:
+  cfe.init(3);
+  x0 = cfe.getCurrentConvergent();
+  x1 = cfe.getNextConvergent(b[0], a[0]);  // 22/7
+  x2 = cfe.getNextConvergent(b[1], a[1]);
+  x3 = cfe.getNextConvergent(b[2], a[2]);  // 355/113
+  x4 = cfe.getNextConvergent(b[3], a[3]);
+  x5 = cfe.getNextConvergent(b[4], a[4]);
+  x6 = cfe.getNextConvergent(b[5], a[5]);
+  // Figure out why we need to swap the arguments. Fix the code such that we don't have to do it.
+  // Let b be an optional parameter (defaulting to 1)
 
-
+  // See:
+  // https://en.wikipedia.org/wiki/Approximations_of_%CF%80#Continued_fractions
 
   rsAssert(ok);
 

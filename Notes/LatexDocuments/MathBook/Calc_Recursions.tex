@@ -265,7 +265,7 @@ Consider defining a nonegative real number $x \in \mathbb{R}_0^+$ by an expressi
 \label{Eq:ContinuedFraction}
 x = b_0 + \cfrac{a_1}{b_1 + \cfrac{a_2}{b_2 + \cfrac{a_3}{b_3 + \ddots }}}
 \end{equation}
-where the dots mean, as usual, that we imagine the pattern to go on forever. Such an expression is called a \emph{continued fraction} expansion (henceforth abbreviated as CFE) of the number $x$. The numbers $b_i, i = 0,1,2,3,\ldots$ and $a_j, j = 1,2,3,\ldots$ are given sequences of coefficients. These numbers are typically assumed to be integers. The $a_j$ are called \emph{partial numerators} and the $b_i$ are called \emph{partial denominators}. Because the notation above is rather wasteful with precious space, there are alternative notations for writing down a continued fraction. Among them are:
+where the dots mean, as usual, that we imagine the pattern to potentially go on forever. Such an expression is called a \emph{continued fraction} expansion (henceforth abbreviated as CFE) of the number $x$. The numbers $b_i, i = 0,1,2,3,\ldots$ and $a_j, j = 1,2,3,\ldots$ are given sequences of coefficients. These numbers are typically assumed to be integers. The $a_j$ are called \emph{partial numerators} and the $b_i$ are called \emph{partial denominators}. Because the notation above is rather wasteful with precious space, there are alternative notations for writing down a continued fraction. Among them are:
 \begin{equation}
 x = b_0 + \frac{a_1}{b_1 +} \, \frac{a_2}{b_2 +} \, \frac{a_3}{b_3 +} \cdots, \quad
 x = b_0 + \frac{|a_1}{b_1|} + \frac{|a_2}{b_2|} + \frac{|a_3}{b_3|} + \cdots, \quad
@@ -275,7 +275,8 @@ The last one was introduced by Gauss and is analogous to the $\sum$ notation for
 \begin{equation}
 x = b_0 + a_1 / (b_1 + a_2 / (b_2 + (a_3 /  (b_3 + (\cdots))))) 
 \end{equation}
-which bears some similarity to the nested form of writing down a polynomial using Horner's rule. Note that the CFE of a given number $x$ is not uniquely determined. However, when we fix the partial numerators $a_i$, then the corresponding partial denominators are indeed uniquely determined and we can compute them. If we fix them all to be one: $a_j = 1, \forall j$, then we get what is called a \emph{simple continued fraction}. Well, at least that's the terminology used in numerical analysis and complex analysis. In number theory, CFEs with all ones for the $a_j$ are just called continued fraction without any qualifier. If one wants to use different values for the $a_j$ there, one calls the result a \emph{generalized continued fraction}. I will adopt the convention from analysis here, i.e. unqualified means general. For simple continued fractions, there is a special notation. Because all the $a_j$ are fixed to $1$ anyway, there is no need to write them down. One needs only the $b$-coefficients and one may write it down as:
+which bears some similarity to the nested form of writing down a polynomial using Horner's rule. Note that the CFE of a given number $x$ is not uniquely determined. However, when we fix the partial numerators $a_i$, then the corresponding partial denominators are indeed uniquely determined and we can compute them.
+If we fix them all to be one: $a_j = 1, \forall j$, then we get what is called a \emph{simple continued fraction}. Well, at least that's the terminology used in numerical analysis and complex analysis. In number theory, CFEs with all ones for the $a_j$ are just called continued fraction without any qualifier. If one wants to use different values for the $a_j$ there, one calls the result a \emph{generalized continued fraction}. I will adopt the convention from analysis here, i.e. unqualified means general. For simple continued fractions, there is a special notation. Because all the $a_j$ are fixed to $1$ anyway, there is no need to write them down. One needs only the $b$-coefficients and one may write it down as:
 \begin{equation}
 x = [b_0; b_1, b_2, b_3, \ldots]
 \end{equation}
@@ -283,7 +284,15 @@ The semicolon after $b_0$ is not a typo. I guess, it's a nod to the somewhat spe
 \begin{equation}
 x = [b_0; b_1, b_2, b_3, \ldots] = b_0 + \frac{1}{[b_1; b_2, b_3, b_4, \ldots]}
 \end{equation}
-Another special case with its own name is the one where we set  $a_j = -1, \forall j$. Such a CFE is a so called \emph{Hirzebruch-Jung continued fraction} expansion. 
+Another special case with its own name is the one where we set  $a_j = -1, \forall j$. Such a CFE is a so called \emph{Hirzebruch-Jung continued fraction} expansion. A CFE in which all the $a$-coeffs are zero after a certain cutoff point $n_0$ such $a_j = 0, \forall j \geq n_0$ is called \emph{finite continued fraction} expansion. Finite CFEs represent rational numbers and infinite ones represent irrational numbers.
+
+% CFEs are a way to represent irrationla numbers as infinite sequences of real numbers. In this respect, they serve a similar purpose as decimal (or binary or hexadecimal etc.) expansions. But they are more natural in the sense that they do not require us to introduce an (arbitrary) basis.
+
+
+
+% https://en.wikipedia.org/wiki/Simple_continued_fraction#Finite_continued_fractions
+% "Every finite continued fraction represents a rational number, and every rational number can be represented in precisely two different ways as a finite continued fraction, with the conditions that the first coefficient is an integer and the other coefficients are positive integers. These two representations agree except in their final terms. In the longer representation the final term in the continued fraction is 1; the shorter representation drops the final 1, but increases the new final term by 1. "
+
 
 %...TBC... ToDo: explain terminology: generalized vs simple (used differently in calculus and number theory), explain conventions to ensure that only proper fractions occur, explain how to deal with negative $x$, give $(b_0;b_1,b_2,b_3,\ldots)$ notation for simple CFEs (i.e. with all $a_j = 1$), mention Hirzebruch-Jung CFEs (where all $a_j = -1$).
 
@@ -295,6 +304,21 @@ Another special case with its own name is the one where we set  $a_j = -1, \fora
 % not only does the transformed sequence converge to the same limit but it is also true that all convergents are the same.
 
 % Q: Can we also prescribe the numerators and compute the denominators?
+
+
+\subsubsection{Obtaining the CFE}
+Let's now look at the problem to obtain a continued fraction expansion for a given nonegative number $x$ and let's first focus on the simple case, i.e. assume all partial numerators are 1. The first $b$-coeff is easy to compute: it's just the integer part of $x$ such that $b_0 = \floor{x}$. 
+
+
+...TBC...ToDo: Give Python code to produce a CFE for a given $x$, give a couple of interesting/useful CFEs for important mathematical constants such as $\e, \pi, \varphi, \ldots$, explain how the size of the coeffs determines the error of the approximation, explain why the golden ratio $\varphi$ is the worst case for a CFE
+
+% When we include a big coeff, the error decreases a lot. That is also the reason why the golden ratio is the hardest number to approximate by a CFE because it has all coeffs equal to 1, i.e. it doesn't have any larger coeffs.
+
+% Explain the rate of convergence in the worst case, i.e. in the case of the golden ratio $\varphi$. Maybe give a plot of the approximation error
+
+% Maybe put this section before the section about evaluation.
+
+% https://en.wikipedia.org/wiki/Simple_continued_fraction#Calculating_continued_fraction_representations
 
 
 
@@ -391,16 +415,6 @@ The recurrence formulas are the key for an alternative evaluation algorithm that
 
 % https://en.wikipedia.org/wiki/Continued_fraction#The_determinant_formula
 
-\subsubsection{Obtaining the CFE}
-Let's now look at the problem to obtain a continued fraction expansion for a given number $x$. The first $b$-coeff is easy: it's just $b_0 = \floor{x}$. ...TBC...ToDo: Give Python code to produce a CFE for a given $x$, give a couple of interesting/useful CFEs for important mathematical constants such as $\e, \pi, \varphi, \ldots$, explain how the size of the coeffs determines the error of the approximation, explain why the golden ratio $\varphi$ is the worst case for a CFE
-
-% When we include a big coeff, the error decreases a lot. That is also the reason why the golden ratio is the hardest number to approximate by a CFE because it has all coeffs equal to 1, i.e. it doesn't have any larger coeffs.
-
-% Explain the rate of convergence in the worst case, i.e. in the case of the golden ratio $\varphi$. Maybe give a plot of the approximation error
-
-% Maybe put this section before the section about evaluation.
-
-% https://en.wikipedia.org/wiki/Simple_continued_fraction#Calculating_continued_fraction_representations
 
 
 %\subsubsection{Composition of Linear Fractional Transformations}
@@ -408,8 +422,21 @@ Let's now look at the problem to obtain a continued fraction expansion for a giv
 % https://de.wikipedia.org/wiki/Kettenbruch#Darstellung_als_Komposition_von_Abbildungen
 
 
+
+
+
+
 \subsubsection{Arithmetic}
-If we have the CFEs of two numbers $x$ and $y$, we can compute the CFEs of $x + y, x - y, x \cdot y, x / y$ with Gosper's algorithm. ...TBC...
+Let's assume tha we have the CFEs of two numbers $x$ and $y$ and we want to compute the CFEs of $x + y, x - y, x \cdot y, x / y$. If the input CFEs are finite, we could just naively convert them into regular fractions, perform the arithmetic operation there and then convert back. But there is another way to do it that avoids the back and forth conversion and is even applicable to the infinite case. This is embodied in an algorithm published (informally) by Bill Gosper in 1972. ...TBC...
+
+% Gospers algorithm solves the general problem of computing  (a x + b y) / (c x + d w) where a,b,c,d and x,y,z,w are all continued frarctions. It thereby includes the 4 basic arithmetic operators as special cases [VERIFY].
+
+% For two finite CFEs, we could just convert to regular fractions, do the arithmetic there and then convert back.
+
+% https://en.wikipedia.org/wiki/Simple_continued_fraction#Reciprocals
+% [a_{0};a_{1},a_{2},\ldots ,a_{n}]} and [0;a_{0},a_{1},\ldots ,a_{n}] are reciprocals
+% Maybe put this into the "Arithmetic" section
+
 
 %\subsubsection{Orthogonal Polynomials}
 

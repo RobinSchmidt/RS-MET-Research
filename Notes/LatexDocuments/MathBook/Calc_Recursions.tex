@@ -243,6 +243,8 @@ f(x) = x^{x^{\cdot^{\cdot^{\cdot^x}}}}
 %===================================================================================================
 \subsection{Continued Fractions}
 
+% Maybe this should be a section rather than a subsection and go into its own file. 
+
 % This LaTeX operator definition code has bee adapted from the last answer (Dec 2, 2014 at 15:45 by dremondaris) here (A replaced by K):
 
 % https://tex.stackexchange.com/questions/23432/how-to-create-my-own-math-operator-with-limits/23436#23436
@@ -275,8 +277,11 @@ The last one was introduced by Gauss and is analogous to the $\sum$ notation for
 \begin{equation}
 x = b_0 + a_1 / (b_1 + a_2 / (b_2 + (a_3 /  (b_3 + (\cdots))))) 
 \end{equation}
-which bears some similarity to the nested form of writing down a polynomial using Horner's rule. Note that the CFE of a given number $x$ is not uniquely determined. However, when we fix the partial numerators $a_i$, then the corresponding partial denominators are indeed uniquely determined and we can compute them.
-If we fix them all to be one: $a_j = 1, \forall j$, then we get what is called a \emph{simple continued fraction}. Well, at least that's the terminology used in numerical analysis and complex analysis. In number theory, CFEs with all ones for the $a_j$ are just called continued fraction without any qualifier. If one wants to use different values for the $a_j$ there, one calls the result a \emph{generalized continued fraction}. I will adopt the convention from analysis here, i.e. unqualified means general. For simple continued fractions, there is a special notation. Because all the $a_j$ are fixed to $1$ anyway, there is no need to write them down. One needs only the $b$-coefficients and one may write it down as:
+which bears some similarity to the nested form of writing down a polynomial using Horner's rule. Another option could be:
+\begin{equation}
+x = b_0 + (a_1/b_1+) (a_2/b_2+) (a_3/b_3+) \cdots
+\end{equation}
+which looks nicer but the downside is that it doesn't translate to code as easily. Note that the CFE of a given number $x$ is not uniquely determined. However, when we fix the partial numerators $a_j$, then the corresponding partial denominators are indeed uniquely determined and we can compute them with an algorithm that will be detailed soon. If we fix them all to be one: $a_j = 1, \forall j$, then we get what is called a \emph{simple continued fraction}. Well, at least that's the terminology used in numerical analysis and complex analysis. In number theory, CFEs with all ones for the $a_j$ are just called continued fraction without any qualifier. If one wants to use different values for the $a_j$ there, one calls the result a \emph{generalized continued fraction}. I will adopt the convention from analysis here, i.e. unqualified means general. For simple continued fractions, there is a special notation. Because all the $a_j$ are fixed to $1$ anyway, there is no need to write them down. One needs only the $b$-coefficients and one may write it down as:
 \begin{equation}
 x = [b_0; b_1, b_2, b_3, \ldots]
 \end{equation}
@@ -286,7 +291,14 @@ x = [b_0; b_1, b_2, b_3, \ldots] = b_0 + \frac{1}{[b_1; b_2, b_3, b_4, \ldots]}
 \end{equation}
 Another special case with its own name is the one where we set  $a_j = -1, \forall j$. Such a CFE is a so called \emph{Hirzebruch-Jung continued fraction} expansion. A CFE in which all the $a$-coeffs are zero after a certain cutoff point $n_0$ such $a_j = 0, \forall j \geq n_0$ is called \emph{finite continued fraction} expansion. Finite CFEs represent rational numbers and infinite ones represent irrational numbers.
 
-% CFEs are a way to represent irrationla numbers as infinite sequences of real numbers. In this respect, they serve a similar purpose as decimal (or binary or hexadecimal etc.) expansions. But they are more natural in the sense that they do not require us to introduce an (arbitrary) basis.
+% By the way - if you would have guessed that an infinite fraction should look somehting like
+% b0/(a1/(b1/(a2/(b2/(a3/(b3 ...)))))) notice that such an expression would immediately simplify to a simple fraction (b0 b1 b2 b3 ...) / (a0 a1 a2 ...) so that would not be particularly interesting. We really need to sprinkle in some plusses to get something nontrivial
+
+% CFEs are a way to represent irrational numbers as infinite sequences of real numbers. In this respect, they serve a similar purpose as decimal (or binary or hexadecimal etc.) expansions. But they are more natural in the sense that they do not require us to introduce an (arbitrary) basis.
+
+% Maybe also give the notation (also made up by me):
+% x = b_0 + (a_1/b_1+) (a_2/b_2+) (a_3/b_3+)...
+% It looks nicer than x = b_0 + a_1 / (b_1 + a_2 / (b_2 + (a_3 /  (b_3 + (\cdots))))) but the downside is that it doesn't translate to code as easily.
 
 
 
@@ -427,7 +439,7 @@ The recurrence formulas are the key for an alternative evaluation algorithm that
 
 
 \subsubsection{Arithmetic}
-Let's assume tha we have the CFEs of two numbers $x$ and $y$ and we want to compute the CFEs of $x + y, x - y, x \cdot y, x / y$. If the input CFEs are finite, we could just naively convert them into regular fractions, perform the arithmetic operation there and then convert back. But there is another way to do it that avoids the back and forth conversion and is even applicable to the infinite case. This is embodied in an algorithm published (informally) by Bill Gosper in 1972. ...TBC...
+Let's assume that we have the CFEs of two numbers $x$ and $y$ and we want to compute the CFEs of $x + y, x - y, x \cdot y, x / y$. If the input CFEs are finite, we could just naively convert them into regular fractions, perform the arithmetic operation there and then convert back. But there is another way to do it that avoids the back and forth conversion. It operates directly on the sequences of CFE coefficients and is even applicable to the infinite case. This is embodied in an algorithm published (informally) by Bill Gosper in 1972. ...TBC...
 
 % Gospers algorithm solves the general problem of computing  (a x + b y) / (c x + d w) where a,b,c,d and x,y,z,w are all continued frarctions. It thereby includes the 4 basic arithmetic operators as special cases [VERIFY].
 

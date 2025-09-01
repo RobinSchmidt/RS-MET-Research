@@ -1,5 +1,214 @@
 \section{Continued Fractions}
+Consider defining a nonegative real number $x \in \mathbb{R}_0^+$ by an expression of the form:
+\begin{equation}
+\label{Eq:ContinuedFraction}
+x = b_0 + \cfrac{a_1}{b_1 + \cfrac{a_2}{b_2 + \cfrac{a_3}{b_3 + \ddots }}}
+\end{equation}
+where the dots mean, as usual, that we imagine the pattern to potentially go on forever. Such an expression is called a \emph{continued fraction} expansion (henceforth abbreviated as CFE) of the number $x$. The numbers $b_i, i = 0,1,2,3,\ldots$ and $a_j, j = 1,2,3,\ldots$ are given sequences of coefficients. These numbers are typically assumed to be integers. The $a_j$ are called \emph{partial numerators} and the $b_i$ are called \emph{partial denominators}. Because the notation above is rather wasteful with precious space, there are alternative notations for writing down a continued fraction. Among them are:
+\begin{equation}
+x = b_0 + \frac{a_1}{b_1 +} \, \frac{a_2}{b_2 +} \, \frac{a_3}{b_3 +} \cdots, \quad
+x = b_0 + \frac{|a_1}{b_1|} + \frac{|a_2}{b_2|} + \frac{|a_3}{b_3|} + \cdots, \quad
+x = b_0 + \opK_{i=1}^{\infty} \frac{a_i}{b_i}
+\end{equation}
+The last one was introduced by Gauss and is analogous to the $\sum$ notation for sums and the $\prod$ notation for products\footnote{which both were introduced by Euler. Somehow it's always Euler or Gauss.}. The big $\opK$ stands for "Kettenbruch" which is the German translation for continued fraction (literally: chain fraction). The first coefficient $b_0$ has to be outside the $\opK$ because it doesn't really fit nicely into the general pattern. It has no $a_0$ to pair with. It is typically taken to be the integer part of the number $x$, i.e. $b_0 =\floor{x}$ and we usually also assume that the whole $\opK$ expression is less than $1$ such that it represents the fractional part of $x$, i.e. $\opK_{i=1}^{\infty} \frac{b_i}{a_i} = x - \floor{x} < 1$ [VERIFY!]. In an environment where no mathematical typesetting is available, I like to write continued fractions as:
+\begin{equation}
+x = b_0 + a_1 / (b_1 + a_2 / (b_2 + (a_3 /  (b_3 + (\cdots))))) 
+\end{equation}
+which bears some similarity to the nested form of writing down a polynomial using Horner's rule. Another option could be:
+\begin{equation}
+x = b_0 + (a_1/b_1+) (a_2/b_2+) (a_3/b_3+) \cdots
+\end{equation}
+which looks nicer but the downside is that it doesn't translate to code as easily. Note that the CFE of a given number $x$ is not uniquely determined. However, when we fix the partial numerators $a_j$, then the corresponding partial denominators are indeed uniquely determined and we can compute them with an algorithm that will be detailed soon. If we fix them all to be one: $a_j = 1, \forall j$, then we get what is called a \emph{simple continued fraction}. Well, at least that's the terminology used in numerical analysis and complex analysis. In number theory, CFEs with all ones for the $a_j$ are just called continued fraction without any qualifier. If one wants to use different values for the $a_j$ there, one calls the result a \emph{generalized continued fraction}. I will adopt the convention from analysis here, i.e. unqualified means general. For simple continued fractions, there is a special notation. Because all the $a_j$ are fixed to $1$ anyway, there is no need to write them down. One needs only the $b$-coefficients and one may write it down as:
+\begin{equation}
+x = [b_0; b_1, b_2, b_3, \ldots]
+\end{equation}
+The semicolon after $b_0$ is not a typo. I guess, it's a nod to the somewhat special role of that coefficient. Note that we have the following relation:
+\begin{equation}
+x = [b_0; b_1, b_2, b_3, \ldots] = b_0 + \frac{1}{[b_1; b_2, b_3, b_4, \ldots]}
+\end{equation}
+Another special case with its own name is the one where we set  $a_j = -1, \forall j$. Such a CFE is a so called \emph{Hirzebruch-Jung continued fraction} expansion. A CFE in which all the $a$-coeffs are zero after a certain cutoff point $n_0$ such $a_j = 0, \forall j \geq n_0$ is called \emph{finite continued fraction} expansion. Finite CFEs represent rational numbers and infinite ones represent irrational numbers.
 
+% By the way - if you would have guessed that an infinite fraction should look somehting like
+% b0/(a1/(b1/(a2/(b2/(a3/(b3 ...)))))) notice that such an expression would immediately simplify to a simple fraction (b0 b1 b2 b3 ...) / (a0 a1 a2 ...) so that would not be particularly interesting. We really need to sprinkle in some plusses to get something nontrivial
+
+% CFEs are a way to represent irrational numbers as infinite sequences of real numbers. In this respect, they serve a similar purpose as decimal (or binary or hexadecimal etc.) expansions. But they are more natural in the sense that they do not require us to introduce an (arbitrary) basis.
+
+% Maybe also give the notation (also made up by me):
+% x = b_0 + (a_1/b_1+) (a_2/b_2+) (a_3/b_3+)...
+% It looks nicer than x = b_0 + a_1 / (b_1 + a_2 / (b_2 + (a_3 /  (b_3 + (\cdots))))) but the downside is that it doesn't translate to code as easily.
+
+% https://en.wikipedia.org/wiki/Simple_continued_fraction#Finite_continued_fractions
+% "Every finite continued fraction represents a rational number, and every rational number can be represented in precisely two different ways as a finite continued fraction, with the conditions that the first coefficient is an integer and the other coefficients are positive integers. These two representations agree except in their final terms. In the longer representation the final term in the continued fraction is 1; the shorter representation drops the final 1, but increases the new final term by 1. "
+
+%...TBC... ToDo: explain terminology: generalized vs simple (used differently in calculus and number theory), explain conventions to ensure that only proper fractions occur, explain how to deal with negative $x$, give $(b_0;b_1,b_2,b_3,\ldots)$ notation for simple CFEs (i.e. with all $a_j = 1$), mention Hirzebruch-Jung CFEs (where all $a_j = -1$).
+
+% Q: Is there also a special notation for Hirzebruch-Jung CFEs?
+
+% Q: Are there always an infinite number of CFEs for every number? Try to produce a CFE for the golden ratio with all 2s in the denominators. ...and one with the sequence 1,2,3,4,... as denominators
+% Ah - yes:
+% https://en.wikipedia.org/wiki/Continued_fraction#The_equivalence_transformation
+% not only does the transformed sequence converge to the same limit but it is also true that all convergents are the same.
+
+% Q: Can we also prescribe the numerators and compute the denominators?
+
+
+
+
+
+\subsection{Conversion to CFE}
+Let's now look at the problem to obtain a continued fraction expansion for a given nonegative number $x$ and let's first focus on the simple case, i.e. assume all partial numerators are 1. The first $b$-coeff is easy to compute: it's just the integer part of $x$ such that $b_0 = \floor{x}$. 
+
+
+...TBC...ToDo: Give Python code to produce a CFE for a given $x$, give a couple of interesting/useful CFEs for important mathematical constants such as $\e, \pi, \varphi, \ldots$, explain how the size of the coeffs determines the error of the approximation, explain why the golden ratio $\varphi$ is the worst case for a CFE
+
+% When we include a big coeff, the error decreases a lot. That is also the reason why the golden ratio is the hardest number to approximate by a CFE because it has all coeffs equal to 1, i.e. it doesn't have any larger coeffs.
+
+% Explain the rate of convergence in the worst case, i.e. in the case of the golden ratio $\varphi$. Maybe give a plot of the approximation error
+
+% Maybe put this section before the section about evaluation.
+
+% https://en.wikipedia.org/wiki/Simple_continued_fraction#Calculating_continued_fraction_representations
+
+
+\subsection{Evaluation}
+
+\subsubsection{Naive Evaluation}
+To understand how we would go about evaluating such an infinite continued fraction, let's first consider a finite version of this situation. Let's assume that in the expression in equation (\ref{Eq:ContinuedFraction}), the partial numerator $a_4$ (i.e. the first one that would occur in the "dotdotdot" subexpression) would be zero. That would mean that the whole dots subexpression would also evaluate zero. Then we could evaluate the expression from the "bottom up" or from the "inside out" or "backwards". When simplifying the resulting mess, we will end up with a regular old fraction aka a rational number in standard form. ...TBC...ToDo: give naive (backward) evaluation algorithm as SageMath/Python code, expand the first few finite cases (up to $n=3$) into regular fractions
+
+
+% Give also the notation:
+% x = (a_0; a_1, a_2, \ldots, a_n)
+% and Gauss's big-K notation similar to Sigma amd Pi for sums and products, see:
+% https://tex.stackexchange.com/questions/540735/how-to-format-k-notation-for-continued-fractions
+% https://math.stackexchange.com/questions/2179834/weird-large-k-symbol
+% https://tex.stackexchange.com/questions/73195/how-to-typeset-a-continued-fraction-in-the-following-format
+% https://tex.stackexchange.com/questions/23432/how-to-create-my-own-math-operator-with-limits/23436#23436
+% The K here stands for Kettenbruch (the German translation of continued fraction, literally chain fraction)
+
+\subsubsection{Convergents and Continuants}
+Let's write down the first couple of truncated CFEs in simplified form, i.e. in the form of a simple fraction with a single numerator and single denominator and assign the names $A_n, B_n$ to the resulting numerators and denominators and the name $x_n$ to the finite fractions that we get:
+\begin{equation}
+\label{Eq:ContinuantsAndConvergents}
+x_0 = \frac{A_0}{B_0} = b_0, \quad
+x_1 = \frac{A_1}{B_1} = \frac{b_1 b_0 + a_1}{b_1}, \quad
+x_2 = \frac{A_2}{B_2} = \frac{b_2(b_1 b_0 + a_1) + a_2 b_0}{b_2 b_1 + a_2}, \quad
+\ldots \quad
+x_n = \frac{A_n}{B_n}
+\end{equation}
+The numbers $A_n, B_n$ that we can create in this way are called the $n$-th order \emph{continuants} and the numbers $x_n$ are called the $n$-th order \emph{convergents} of the CFE. The latter name rightfully suggests that the sequence of $x_n$ converges - namely to $x$ - which is the whole point of all of this business. [Q: Are there any conditions that need to be satisfied for convergence?] ...TBC... ToDo: Explain the sense in which the convergents are the best rational approximations to $x$, mention the $22/7 = 3 + 
+1/7$ approximation for $\pi$
+
+% Google AI says:
+% "Continuants also have combinatorial interpretations, such as being the sum of monomials corresponding to configurations on a frieze,"
+% when being prompted with "continued fraction continuants"
+
+% It also says:
+
+%Recursive Relation:
+%For a simple continued fraction [a₀; a₁, a₂, ...] (where aᵢ are coefficients), the numerators Aᵢ and denominators Bᵢ of the convergents are defined by the following recurrence relations:
+%Aₙ = aₙ Aₙ₋₁ + Aₙ₋₂
+%Bₙ = aₙ Bₙ₋₁ + Bₙ₋₂
+%With initial values A₋₂ = 0, A₋₁ = 1 and B₋₂ = 1, B₋₁ = 0.
+
+% This formula is different from what Wikipedia says. I think Wikipedia may be wrong? Check that! Compare it to other sources and try to re-derive the recursion. On page 11 in Jones/Thron "Continued Fractions..." is the same formula as in Wikipedia. They are probably taken from there
+
+% See also:
+% https://en.wikipedia.org/wiki/Continuant_(mathematics)
+
+\paragraph{Fundamental Recurrence Formulas}
+Let's take a closer look at equation (\ref{Eq:ContinuantsAndConvergents}). It may not be totally obvious, but it turns out that the continuants satisfy the following 3-term recurrence relations:
+\begin{equation}
+A_n = b_n A_{n-1} + a_n A_{n-2}, \quad
+B_n = b_n B_{n-1} + a_n B_{n-2}  \quad
+\text{for }  n \geq 1
+\end{equation}
+These formulas are rather important and are therefore called the \emph{fundamental recurrence formulas}.
+To get the recursion started, we will also need the initial values. These are given by:
+\begin{equation}
+A_{-1} = 1, A_0 = b_0, B_{-1} = 0, B_0 = 1
+% Maybe use A_0 = 1, A_1 = b_0, B_0 = 0, B_1 = 1 and use the recursion for n >= 2
+\end{equation}
+
+
+
+
+\subsubsection{Forward Evaluation}
+While it is totally possible to evaluate a finite continued fraction with the naive backward evaluation algorithm given above, there is actually also a way that avoids starting at the innermost subexpression and working our way back to the outermost. I will refer to this alternative evaluation algorithm as forward evaluation. Such an algorithm will turn out to particularly convenient when we want to evaluate infinite CFEs because in this case, there isn't any innermost subexpression. ...TBC...
+
+
+
+
+
+The recurrence formulas are the key for an alternative evaluation algorithm that allows us to evaluate the CFE in a forward manner, i.e. in a way that allows use to produce finer and finer approximations of $x$ without knowing all coeffs up to $n$ upfront. We just need to keep track of the continuants $A_{n-2}, A_{n-1}, B_{n-2}, B_{n-1}$ and when a new pair of partial numerators and denominators $a_n, b_n$ "arrives", we can use these coefficients together with the stored continuants to "update" or refine our approximation of $x$ from the previous convergent $x_{n-1}$ to the new convergent $x_n$ by using these recurrence formulas for the continuants and then just compute $x_n = A_n/B_n$. ...TBC...ToDo: Give SageMath/Python code for forward evaluation
+
+
+% ToDo: Give all the different notations, explain different terminologies in number theory and analysis for the qualifiers "simple" and "generalized", Should be impose the constraint that $a_i < b_i$ to ensure each partial fraction is a proper fraction?
+
+% Motivate CFEs as a bridge between the rational and the real numbers. It uses potentially infinite sequences of integer numbers to approximate real numbers with increasing accuracy. Actually, decimal or binary or hexadecimal expansions do the same thing but in a different way. There, we represent real numbers as  sum_k d_k b^k  where the d_k are the digits and b is the base. Wit a CFE, the representation is given by a somewhat more complicated conversion algorithm. It may be more natural (because it doesn't require us to introduce an arbitrary base) and maybe more efficient (in the sense of having a better accuracy for a given number of coeffs? I'm not sure about that, though - it may depend on the number - maybe try it for the golden ratio which is the worst case for a CFE). Also, a CFE does not have the problem of becoming potentially infinite when the number x is rational. In any given base, some rational numbers will have infinite expansions (they will be periodic, though). Maybe give 1/7 as example ...TBC...
+
+% See: 
+% Warum ist 1/7 interessanter als 1/13? (Woher kommen die Nachkommastellen?)
+% https://www.youtube.com/watch?v=ThIlhNKzBks
+%
+
+% Give the algorithm to produce a CFE as Sage code. See the C++ implementation if the research repo. Maybe start with a numerical approximation of pi using x = N(pi, 50) or something. Do it also for the golden ratio and maybe some other interesting irrational numbers
+
+% See: https://oeis.org/A001203
+
+
+% ...hmm...I'm not so sure if continued fractions and radicals fit in here because the upate rule actually is not so simple. We have to evaluate the whole expression from the inside out implying that we must do a complete re-evalutation of everything for each new $n$. However, in the beginning we said that the update rule may involve more than one previous values, so maybe we can us that as justification? ..But hey! We are actually "outside" the recursion subsection here - so we do not need the content to fit in!
+
+
+% https://en.wikipedia.org/wiki/Continued_fraction#Formulation
+% fundamental recurrence formulas
+
+%\begin{equation}
+%x = b_0 + \frac{a_1}{b_1 + \frac{a_2}{b_2 + \frac{a_3}{b_3 + \ddots }}}
+%\end{equation}
+%% That looks ugly!
+
+% https://en.wikipedia.org/wiki/Continued_fraction#The_determinant_formula
+
+
+\subsection{Applications}
+
+
+\subsubsection{Mathematical Constants}
+
+\subsubsection{Composition of Linear Fractional Transformations}
+
+% https://de.wikipedia.org/wiki/Kettenbruch#Darstellung_als_Komposition_von_Abbildungen
+
+
+\subsubsection{Orthogonal Polynomials}
+
+
+\subsubsection{Function Approximation}
+% Explain hwo CFEs can be used to approximate functions
+
+
+
+\subsection{Arithmetic}
+Let's assume that we have the CFEs of two numbers $x$ and $y$ and we want to compute the CFEs of $x + y, x - y, x \cdot y, x / y$. If the input CFEs are finite, we could just naively convert them into regular fractions, perform the arithmetic operation there and then convert back. But there is another way to do it that avoids the back and forth conversion. It operates directly on the sequences of CFE coefficients and is even applicable to the infinite case. This is embodied in an algorithm published (informally) by Bill Gosper in 1972. ...TBC...
+
+% Gospers algorithm solves the general problem of computing  (a x + b y) / (c x + d w) where a,b,c,d and x,y,z,w are all continued frarctions. It thereby includes the 4 basic arithmetic operators as special cases [VERIFY].
+
+% For two finite CFEs, we could just convert to regular fractions, do the arithmetic there and then convert back.
+
+% https://en.wikipedia.org/wiki/Simple_continued_fraction#Reciprocals
+% [a_{0};a_{1},a_{2},\ldots ,a_{n}]} and [0;a_{0},a_{1},\ldots ,a_{n}] are reciprocals
+% Maybe put this into the "Arithmetic" section
+
+
+\subsection{Arithmetic}
+
+
+
+%\subsubsection{Systematic Exploration}
+% We have seen
+
+%\subsubsection{The Conservative Matrix Field}
+% In a recent discovery, mathematicians have found a systematic way to produce CFEs for many interesting numbers. ...TBC...
 
 
 
@@ -7,5 +216,90 @@
 
 
 \begin{comment}
+
+
+% Arithmetic With... Continued Fractions?? #SoME2
+% https://www.youtube.com/watch?v=O6Atodhpr1M
+
+% Continued Fraction Arithmetic
+% https://www.youtube.com/watch?v=tBc_xcRzMxk
+% https://github.com/thegraycuber/continued_fraction_arithmetic
+
+% https://hsinhaoyu.github.io/cont_frac/
+% https://arxiv.org/html/2412.19929v1#S3
+
+% C-Library for continued fraction arithmetic:
+% https://github.com/mjdominus/cf
+
+% Another one:
+% https://github.com/blynn/frac
+% https://crypto.stanford.edu/pbc/notes/contfrac/   Infors about the code(?)
+
+% Another one in Python:
+% https://github.com/hsinhaoyu/cont_frac
+% https://github.com/hsinhaoyu/cont_frac/blob/main/org/cont_frac.org  Article that explains it
+
+% https://perl.plover.com/classes/cftalk/INFO/gosper.html  Gosper's original paper(?)
+% I think, when transforming a rational number into a CFE, we can use the Euclidean algorithm for the gcd just that here, we are not only interested in the last result but in the whole sequence of intermediate results that is produced. Verify this!
+
+% The same as .txt file:
+% https://perl.plover.com/yak/cftalk/INFO/gosper.txt
+
+% Another text by Gosper:
+% https://www.microsoft.com/en-us/research/wp-content/uploads/2016/10/cont-frac-gosper-1.pdf
+
+% https://arxiv.org/pdf/2412.19929
+% https://rosettacode.org/wiki/Continued_fraction/Arithmetic
+% https://medium.com/@omer.kasdarma/the-curious-world-of-simple-continued-fractions-part-v-the-arithmetics-b749a215383d
+
+% Websites with infos:
+% https://srossd.com/blog/2020/gosper-1/
+% https://compasstech.com.au/gxwgosper/#top
+% https://crypto.stanford.edu/pbc/notes/contfrac/
+
+% Transcendental Functions on Continued Fractions
+% https://arxiv.org/abs/2412.19929
+% -Paper about improvements to Gosper's algorithm
+
+% Continued fractions
+% https://www.youtube.com/watch?v=ycqpBz8eQJg
+
+% Euler's universal formula for continued fractions.
+% https://www.youtube.com/watch?v=3E5ElSxfwX0
+
+% DIFFERENTIATING a CONTINUED FRACTION?!
+% https://www.youtube.com/watch?v=V4f-m23rGZ4
+
+% https://doc.sagemath.org/html/en/reference/diophantine_approximation/sage/rings/continued_fraction.html
+
+
+
+
+
+Let's try to find the fundamental recursion formulas for CFEs with SageMath:
+
+var("b0,b1,b2,b3,b4,a1,a2,a3,a4")
+x0 = b0
+x1 = b0 + (a1/b1)
+x2 = b0 + (a1/(b1+a2/b2))
+x3 = b0 + (a1/(b1+a2/(b2+a3/b3)))
+x4 = b0 + (a1/(b1+a2/(b2+a3/(b3+a4/b4))))
+x0, x1.simplify_rational(), x2.simplify_rational(), x3.simplify_rational(), x4.simplify_rational()
+
+
+(b0,
+
+(b0*b1 + a1)/b1,
+
+(a2*b0 + (b0*b1 + a1)*b2)/(b1*b2 + a2),
+
+(a3*b0*b1 + a1*a3 + (a2*b0 + (b0*b1 + a1)*b2)*b3)/(a3*b1 + (b1*b2 + a2)*b3),
+
+(a2*a4*b0 + (a4*b0*b1 + a1*a4)*b2 + (a3*b0*b1 + a1*a3 + (a2*b0 + (b0*b1 + a1)*b2)*b3)*b4) / 
+(a4*b1*b2 + a2*a4 + (a3*b1 + (b1*b2 + a2)*b3)*b4)
+
+
+
+
 
 \end{comment}

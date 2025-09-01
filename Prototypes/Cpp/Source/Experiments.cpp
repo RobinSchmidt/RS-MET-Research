@@ -20304,7 +20304,9 @@ void testContinuedFractions2()
   // Ahh! I see! I have swapped the names of the a and b arrays here! So: the code in 
   // getNextConvergent() can be reverted and we need to swap the names and a and b here. But we may
   // also have ot adapt the calls to rsContinuedFractionDenominators() and 
-  // rsEvaluateContinuedFraction() and/or the implementations of these functions accordingly.
+  // rsEvaluateContinuedFraction() and/or the implementations of these functions accordingly. Maybe
+  // the b-coeffs should always be passed as 1st argument because we can then make the a-coeffs
+  // optional. They should default to all ones
 
 
   // See:

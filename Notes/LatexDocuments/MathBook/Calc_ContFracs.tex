@@ -1,5 +1,5 @@
 \section{Continued Fractions}
-Consider defining a nonegative real number $x \in \mathbb{R}_0^+$ by an expression of the form:
+After looking at infinite sums which are very common in any calculus book and infinite products which are already much less commonly taught, we will now look at an even more exotic infinite kind of expression. Consider defining a nonnegative real number $x \in \mathbb{R}_0^+$ by an expression of the form:
 \begin{equation}
 \label{Eq:ContinuedFraction}
 x = b_0 + \cfrac{a_1}{b_1 + \cfrac{a_2}{b_2 + \cfrac{a_3}{b_3 + \ddots }}}
@@ -56,10 +56,7 @@ Another special case with its own name is the one where we set  $a_j = -1, \fora
 
 
 \subsection{Conversion to CFE}
-Let's now look at the problem to obtain a continued fraction expansion for a given nonegative number $x$ and let's first focus on the simple case, i.e. assume all partial numerators are 1. The first $b$-coeff is easy to compute: it's just the integer part of $x$ such that $b_0 = \floor{x}$. 
-
-
-...TBC...ToDo: Give Python code to produce a CFE for a given $x$, give a couple of interesting/useful CFEs for important mathematical constants such as $\e, \pi, \varphi, \ldots$, explain how the size of the coeffs determines the error of the approximation, explain why the golden ratio $\varphi$ is the worst case for a CFE
+Let's now look at the problem to obtain a continued fraction expansion for a given nonegative number $x$ and let's first focus on the simple case, i.e. assume all partial numerators are 1. The first $b$-coeff is easy to compute: it's just the integer part of $x$ such that $b_0 = \floor{x}$. Let's define the fractional part as $f_0 = x - b_0$ such that $x = b_0 + f_0$. The key observation is that we can write $f_0$ as $1/(1/(f_0))$ because reciprocating a number twice gives back the original number\footnote{If you want to show off with fancy math terminology, you could say that reciprocation is an involution.}. So now we have $x$ expressed in the form $x = b_0 + 1/(1/(f_0))$ which is getting closer to the representation of $x$ that we want to find. Because $f_0$ was the fractional part of some number, it is guaranteed to be less than $1$ and therefore its reciprocal $1/f_0$ is greater than $1$. That means that we can express $1/f_0$ again in terms of an integer part (i.e. its floor) and a fractional part. With these considerations in mind, we can come up with the following algorithm to produce the $b$-coeffs for a simple CFE of $x$:  ...TBC...ToDo: Give Python code to produce a CFE for a given $x$, give a couple of interesting/useful CFEs for important mathematical constants such as $\e, \pi, \varphi, \ldots$, explain how the size of the coeffs determines the error of the approximation, explain why the golden ratio $\varphi$ is the worst case for a CFE
 
 % When we include a big coeff, the error decreases a lot. That is also the reason why the golden ratio is the hardest number to approximate by a CFE because it has all coeffs equal to 1, i.e. it doesn't have any larger coeffs.
 
@@ -71,9 +68,10 @@ Let's now look at the problem to obtain a continued fraction expansion for a giv
 
 
 \subsection{Evaluation}
+After having seen how to produce a CFE for a given number, we now want to look at the inverse problem: Given the coefficients of a CFE, we want to compute the number $x$ that it represents. That means we want to evaluate the expression given by the CFE.
 
 \subsubsection{Naive Evaluation}
-To understand how we would go about evaluating such an infinite continued fraction, let's first consider a finite version of this situation. Let's assume that in the expression in equation (\ref{Eq:ContinuedFraction}), the partial numerator $a_4$ (i.e. the first one that would occur in the "dotdotdot" subexpression) would be zero. That would mean that the whole dots subexpression would also evaluate zero. Then we could evaluate the expression from the "bottom up" or from the "inside out" or "backwards". When simplifying the resulting mess, we will end up with a regular old fraction aka a rational number in standard form. ...TBC...ToDo: give naive (backward) evaluation algorithm as SageMath/Python code, expand the first few finite cases (up to $n=3$) into regular fractions
+Before we attempt to understand how we could evaluate an infinite continued fraction, let's first consider a finite version of this situation. Let's assume that in the expression in equation (\ref{Eq:ContinuedFraction}), the partial numerator $a_4$ (i.e. the first one that would occur in the "dotdotdot" subexpression) would be zero. That would mean that the whole dots subexpression would also evaluate zero. Then we could evaluate the expression from the "bottom up" or from the "inside out" or "backwards". When simplifying the resulting mess, we will end up with a regular old fraction aka a rational number in standard form. ...TBC...ToDo: give naive (backward) evaluation algorithm as SageMath/Python code, expand the first few finite cases (up to $n=3$) into regular fractions
 
 
 % Give also the notation:
@@ -174,17 +172,21 @@ The recurrence formulas are the key for an alternative evaluation algorithm that
 
 
 \subsubsection{Mathematical Constants}
+% Explain how continued fractions produce the best rational approximations for a given maximum denominator. For example, if we allow a maximum denominator of 10, we could use 22/7 and this is a better approximation to pi than 31/10. Is it even better than 314/100? Well, 314/100 is 3.14 and 22/7 is 3.142857... whereas the true value of pi is 3.14159.... -> compute the error in both cases. Explain how big b-coeffs lead to a large error decrease when being incorporated
 
-\subsubsection{Composition of Linear Fractional Transformations}
+
+%\subsubsection{Composition of Linear Fractional Transformations}
 
 % https://de.wikipedia.org/wiki/Kettenbruch#Darstellung_als_Komposition_von_Abbildungen
 
 
-\subsubsection{Orthogonal Polynomials}
+%\subsubsection{Orthogonal Polynomials}
 
 
 \subsubsection{Function Approximation}
 % Explain hwo CFEs can be used to approximate functions
+
+
 
 
 
@@ -200,15 +202,12 @@ Let's assume that we have the CFEs of two numbers $x$ and $y$ and we want to com
 % Maybe put this into the "Arithmetic" section
 
 
-\subsection{Arithmetic}
 
+\subsection{Systematic Exploration}
+We have seen how to algorithmically produce a continued fraction expansion of a given real number and we have also seen some continuous fractions expansions of mathematical constants that have been constructed explicitly by the ingenuity of genius mathematicians of the caliber of Gauss, Euler and Ramanujan. Over the centuries, a whole zoo of CFEs for various important mathematical constants has been discovered and the natural question arose, if it is possible some somehow systematize the exploration of the "space" of continuous fractions expansions. ...TBC...
 
-
-%\subsubsection{Systematic Exploration}
-% We have seen
-
-%\subsubsection{The Conservative Matrix Field}
-% In a recent discovery, mathematicians have found a systematic way to produce CFEs for many interesting numbers. ...TBC...
+\subsubsection{The Conservative Matrix Field}
+In a recent discovery, mathematicians have found a systematic way to produce CFEs for many interesting numbers. ...TBC...
 
 
 
@@ -273,6 +272,14 @@ Let's assume that we have the CFEs of two numbers $x$ and $y$ and we want to com
 % https://doc.sagemath.org/html/en/reference/diophantine_approximation/sage/rings/continued_fraction.html
 
 
+https://mathworld.wolfram.com/RamanujanContinuedFractions.html
+
+https://en.wikipedia.org/wiki/Rogers%E2%80%93Ramanujan_continued_fraction
+
+
+
+Continued fraction expansions for complex numbers - a general approach
+https://arxiv.org/abs/1509.04500
 
 
 
@@ -291,13 +298,35 @@ x0, x1.simplify_rational(), x2.simplify_rational(), x3.simplify_rational(), x4.s
 
 (b0*b1 + a1)/b1,
 
-(a2*b0 + (b0*b1 + a1)*b2)/(b1*b2 + a2),
+(a2*b0 + (b0*b1 + a1)*b2) / (b1*b2 + a2),
 
-(a3*b0*b1 + a1*a3 + (a2*b0 + (b0*b1 + a1)*b2)*b3)/(a3*b1 + (b1*b2 + a2)*b3),
+(a3*b0*b1 + a1*a3 + (a2*b0 + (b0*b1 + a1)*b2)*b3) / (a3*b1 + (b1*b2 + a2)*b3),
 
 (a2*a4*b0 + (a4*b0*b1 + a1*a4)*b2 + (a3*b0*b1 + a1*a3 + (a2*b0 + (b0*b1 + a1)*b2)*b3)*b4) / 
 (a4*b1*b2 + a2*a4 + (a3*b1 + (b1*b2 + a2)*b3)*b4)
 
+
+Let's focus on x3 and write it as p3/q3:
+
+p3 = a3 * (b0*b1 + a1)  +  b3 * (a2*b0 + (b0*b1 + a1)*b2)
+q3 = a3 * b1  +  b3 * (b1*b2 + a2)
+
+we recognize that the subexpressions are 
+
+(b0*b1 + a1) = p1, (a2*b0 + (b0*b1 + a1)*b2) = p2, b1 = q1, (b1*b2 + a2) = q2
+
+which we generalize to:
+
+p_n = a_n * p_{n-2}  +  b_n * p_{n-1}
+q_n = a_n * q_{n-2}  +  b_n * q_{n-1}
+
+hmm...that formula looks like the one in wikipedia (with p_n = A_n, q_n = B_n)
+
+
+
+I think, the golden ratio can be found from considering a CFE with all a- and b-coeffs equal to one. Due to the self-similarity of the expression, we can find the equation:
+x = 1 + ( 1 / (1 + 1/x) )
+which can be solved for x to produce the golden ratio and its cousin: (1 +- sqrt(5)) / 2 
 
 
 

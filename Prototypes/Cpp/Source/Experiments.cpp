@@ -20300,6 +20300,12 @@ void testContinuedFractions2()
   */
   // Figure out why we need to swap the arguments. Fix the code such that we don't have to do it.
   // Let b be an optional parameter (defaulting to 1)
+  //
+  // Ahh! I see! I have swapped the names of the a and b arrays here! So: the code in 
+  // getNextConvergent() can be reverted and we need to swap the names and a and b here. But we may
+  // also have ot adapt the calls to rsContinuedFractionDenominators() and 
+  // rsEvaluateContinuedFraction() and/or the implementations of these functions accordingly.
+
 
   // See:
   // https://en.wikipedia.org/wiki/Approximations_of_%CF%80#Continued_fractions

@@ -118,6 +118,23 @@
 % https://mathworld.wolfram.com/XOR.html
 % https://mathworld.wolfram.com/NAND.html
 
+
+
+% This LaTeX operator definition code has bee adapted from the last answer (Dec 2, 2014 at 15:45 by dremondaris) here (A replaced by K):
+
+% https://tex.stackexchange.com/questions/23432/how-to-create-my-own-math-operator-with-limits/23436#23436
+
+% This allows us to turn arbitrary letters into math-symbols with lower and upper limits similar to the Sigma and Pi notaion for sums and products:
+\newcommand{\operator}[1]{\mathop{\vphantom{\sum}\mathchoice
+{\vcenter{\hbox{\huge $#1$}}}
+{\vcenter{\hbox{\Large $#1$}}}{#1}{#1}}\displaylimits}
+
+% This uses the above code to define a big K operator for continued fractions:
+\newcommand{\opK}{\operator{\mathrm{K}}}
+% It can be used like \opK_{i=1}^{\infty} \frac{a_i}{b_i}
+
+
+
 % For using two ldots instead of 3 such that we can do 1..n rather than 1...n
 %\newcommand{\ldotsTwo}{\mathinner{{\ldotp}{\ldotp}}}
 % https://tex.stackexchange.com/questions/668325/how-do-i-get-only-two-dots-using-ldots

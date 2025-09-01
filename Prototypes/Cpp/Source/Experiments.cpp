@@ -20215,7 +20215,7 @@ public:
     TInt A = a * A1 + b * A2;
     TInt B = a * B1 + b * B2;
     // But this is not what Wikipedia says. Could it be that the formula there is wrong?
-
+    // https://en.wikipedia.org/wiki/Continued_fraction#Formulation
 
     // Store them for the next call:
     B2 = B1; B1 = B;
@@ -20290,7 +20290,7 @@ void testContinuedFractions2()
   /*
   // Looks like we need to swap the arguments to fix it:
   cfe.init(3);
-  x0 = cfe.getCurrentConvergent();
+  x0 = cfe.getCurrentConvergent();         // 3
   x1 = cfe.getNextConvergent(b[0], a[0]);  // 22/7
   x2 = cfe.getNextConvergent(b[1], a[1]);
   x3 = cfe.getNextConvergent(b[2], a[2]);  // 355/113

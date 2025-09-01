@@ -275,9 +275,28 @@ The last one was introduced by Gauss and is analogous to the $\sum$ notation for
 \begin{equation}
 x = b_0 + a_1 / (b_1 + a_2 / (b_2 + (a_3 /  (b_3 + (\cdots))))) 
 \end{equation}
-which bears some similarity to the nested form of writing down a polynomial using Horner's rule. 
+which bears some similarity to the nested form of writing down a polynomial using Horner's rule. Note that the CFE of a given number $x$ is not uniquely determined. However, when we fix the partial numerators $a_i$, then the corresponding partial denominators are indeed uniquely determined and we can compute them. If we fix them all to be one: $a_j = 1, \forall j$, then we get what is called a \emph{simple continued fraction}. Well, at least that's the terminology used in numerical analysis and complex analysis. In number theory, CFEs with all ones for the $a_j$ are just called continued fraction without any qualifier. If one wants to use different values for the $a_j$ there, one calls the result a \emph{generalized continued fraction}. I will adopt the convention from analysis here, i.e. unqualified means general. For simple continued fractions, there is a special notation. Because all the $a_j$ are fixed to $1$ anyway, there is no need to write them down. One needs only the $b$-coefficients and one may write it down as:
+\begin{equation}
+x = [b_0; b_1, b_2, b_3, \ldots]
+\end{equation}
+The semicolon after $b_0$ is not a typo. I guess, it's a nod to the somewhat special role of that coefficient. Note that we have the following relation:
+\begin{equation}
+x = [b_0; b_1, b_2, b_3, \ldots] = b_0 + \frac{1}{[b_1; b_2, b_3, b_4, \ldots]}
+\end{equation}
+Another special case with its own name is the one where we set  $a_j = -1, \forall j$. Such a CFE is a so called \emph{Hirzebruch-Jung continued fraction} expansion. 
 
-...TBC... ToDo: explain terminology: generalized vs simple (used differently in calculus and number theory), explain conventions to ensure that only proper fractions occur, explain how to deal with negative $x$, give $(b_0;b_1,b_2,b_3,\ldots)$ notation for simple CFEs (i.e. with all $a_j = 1$), mention Hirzebruch-Jung CFEs (where all $a_j = -1$).
+%...TBC... ToDo: explain terminology: generalized vs simple (used differently in calculus and number theory), explain conventions to ensure that only proper fractions occur, explain how to deal with negative $x$, give $(b_0;b_1,b_2,b_3,\ldots)$ notation for simple CFEs (i.e. with all $a_j = 1$), mention Hirzebruch-Jung CFEs (where all $a_j = -1$).
+
+% Q: Is there also a special notation for Hirzebruch-Jung CFEs?
+
+% Q: Are there always an infinite number of CFEs for every number? Try to produce a CFE for the golden ratio with all 2s in the denominators. ...and one with the sequence 1,2,3,4,... as denominators
+% Ah - yes:
+% https://en.wikipedia.org/wiki/Continued_fraction#The_equivalence_transformation
+% not only does the transformed sequence converge to the same limit but it is also true that all convergents are the same.
+
+% Q: Can we also prescribe the numerators and compute the denominators?
+
+
 
 
 \subsubsection{Naive Evaluation}
@@ -340,6 +359,7 @@ These formulas are rather important and are therefore called the \emph{fundament
 To get the recursion started, we will also need the initial values. These are given by:
 \begin{equation}
 A_{-1} = 1, A_0 = b_0, B_{-1} = 0, B_0 = 1
+% Maybe use A_0 = 1, A_1 = b_0, B_0 = 0, B_1 = 1 and use the recursion for n >= 2
 \end{equation}
 The recurrence formulas are the key for an alternative evaluation algorithm that allows us to evaluate the CFE in a forward manner, i.e. in a way that allows use to produce finer and finer approximations of $x$ without knowing all coeffs up to $n$ upfront. We just need to keep track of the continuants $A_{n-2}, A_{n-1}, B_{n-2}, B_{n-1}$ and when a new pair of partial numerators and denominators $a_n, b_n$ "arrives", we can use these coefficients together with the stored continuants to "update" or refine our approximation of $x$ from the previous convergent $x_{n-1}$ to the new convergent $x_n$ by using these recurrence formulas for the continuants and then just compute $x_n = A_n/B_n$. ...TBC...ToDo: Give SageMath/Python code for forward evaluation
 
@@ -380,12 +400,16 @@ Let's now look at the problem to obtain a continued fraction expansion for a giv
 
 % Maybe put this section before the section about evaluation.
 
+% https://en.wikipedia.org/wiki/Simple_continued_fraction#Calculating_continued_fraction_representations
 
 
 %\subsubsection{Composition of Linear Fractional Transformations}
 
 % https://de.wikipedia.org/wiki/Kettenbruch#Darstellung_als_Komposition_von_Abbildungen
 
+
+\subsubsection{Arithmetic}
+If we have the CFEs of two numbers $x$ and $y$, we can compute the CFEs of $x + y, x - y, x \cdot y, x / y$ with Gosper's algorithm. ...TBC...
 
 %\subsubsection{Orthogonal Polynomials}
 
@@ -403,7 +427,7 @@ Let's now look at the problem to obtain a continued fraction expansion for a giv
 
 % Continued Fraction Arithmetic
 % https://www.youtube.com/watch?v=tBc_xcRzMxk
-
+% https://github.com/thegraycuber/continued_fraction_arithmetic
 
 % https://hsinhaoyu.github.io/cont_frac/
 % https://arxiv.org/html/2412.19929v1#S3
@@ -440,6 +464,17 @@ Let's now look at the problem to obtain a continued fraction expansion for a giv
 % Transcendental Functions on Continued Fractions
 % https://arxiv.org/abs/2412.19929
 % -Paper about improvements to Gosper's algorithm
+
+% Continued fractions
+% https://www.youtube.com/watch?v=ycqpBz8eQJg
+
+% Euler's universal formula for continued fractions.
+% https://www.youtube.com/watch?v=3E5ElSxfwX0
+
+% DIFFERENTIATING a CONTINUED FRACTION?!
+% https://www.youtube.com/watch?v=V4f-m23rGZ4
+
+% https://doc.sagemath.org/html/en/reference/diophantine_approximation/sage/rings/continued_fraction.html
 
 %===================================================================================================
 %\subsection{Iterated Function Systems}

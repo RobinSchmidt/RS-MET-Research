@@ -18,7 +18,7 @@ which bears some similarity to the nested form of writing down a polynomial usin
 \begin{equation}
 x = b_0 + (a_1/b_1+) (a_2/b_2+) (a_3/b_3+) \cdots
 \end{equation}
-which looks nicer but the downside is that it doesn't translate to code as easily. Note that the CFE of a given number $x$ is not uniquely determined. However, when we fix the partial numerators $a_j$, then the corresponding partial denominators are indeed almost\footnote{For rational numbers which have finite CFEs, there are actually two ways to write it down} uniquely determined [VERIFY!] and we can compute them with an algorithm that will be detailed soon. If we fix them all to be one: $a_j = 1, \forall j$, then we get what is called a \emph{simple continued fraction}. Well, at least that's the terminology used in numerical analysis and complex analysis. In number theory, CFEs with all ones for the $a_j$ are just called continued fraction without any qualifier. If one wants to use different values for the $a_j$ there, one calls the result a \emph{generalized continued fraction}. I will adopt the convention from analysis here, i.e. unqualified means general. For simple continued fractions, there is a special notation. Because all the $a_j$ are fixed to $1$ anyway, there is no need to write them down. One needs only the $b$-coefficients and one may write it down as:
+which looks nicer but the downside is that it doesn't translate to code as easily. Note that the CFE of a given number $x$ is not uniquely determined. However, when we fix the partial numerators $a_j$, then the corresponding partial denominators are indeed almost\footnote{For rational numbers which have finite CFEs, there are actually two ways to write it down} uniquely determined [VERIFY!] and we can compute them with an algorithm that will be detailed soon. If we fix them all to be one: $a_j = 1, \forall j$, then we get what is called a \emph{simple continued fraction}. Well, at least that's the terminology used in numerical analysis and complex analysis. In number theory, CFEs with all ones for the $a_j$ are just called continued fraction without any qualifier. If one wants to use different values for the $a_j$ there, one calls the result a \emph{generalized continued fraction}. I will adopt the convention from analysis here, i.e. unqualified means general. For simple continued fractions, there is a special notation. Because all the $a_j$ are fixed to $1$ anyway, there is no need to write them down. One needs only the $b$-coefficients and one may write the CFE of a number $x$ down as:
 \begin{equation}
 x = [b_0; b_1, b_2, b_3, \ldots]
 \end{equation}
@@ -26,7 +26,15 @@ The semicolon after $b_0$ is not a typo. I guess, it's a nod to the somewhat spe
 \begin{equation}
 x = [b_0; b_1, b_2, b_3, \ldots] = b_0 + \frac{1}{[b_1; b_2, b_3, b_4, \ldots]}
 \end{equation}
-Another special case with its own name is the one where we set  $a_j = -1, \forall j$. Such a CFE is a so called \emph{Hirzebruch-Jung continued fraction} expansion. A CFE in which all the $a$-coeffs are zero after a certain cutoff point $n_0$ such $a_j = 0, \forall j \geq n_0$ is called \emph{finite continued fraction} expansion. Finite CFEs represent rational numbers and infinite ones represent irrational numbers.
+and we also have the following fact:
+\begin{equation}
+x = [b_0; b_1, b_2, b_3, \ldots]  
+\qquad \Leftrightarrow \qquad
+\frac{1}{x} = [0; b_0, b_1, b_2, b_3, \ldots]  
+\end{equation}
+That is: the reciprocal of a simple CFE of a number $x$ can be simply found by prepending a value of zero to the list of $b$-coeffs. Another special case with its own name is the one where we set  $a_j = -1, \forall j$. Such a CFE is a so called \emph{Hirzebruch-Jung continued fraction} expansion. A CFE in which all the $a$-coeffs are zero after a certain cutoff point $n_0$ such $a_j = 0, \forall j \geq n_0$ is called \emph{finite continued fraction} expansion. Another important fact is that a number $x$ has a finite CFE if and only if $x$ is rational.
+
+%Finite CFEs represent rational numbers and infinite ones represent irrational numbers.
 
 % By the way - if you would have guessed that an infinite fraction should look somehting like
 % b0/(a1/(b1/(a2/(b2/(a3/(b3 ...)))))) notice that such an expression would immediately simplify to a simple fraction (b0 b1 b2 b3 ...) / (a0 a1 a2 ...) so that would not be particularly interesting. We really need to sprinkle in some plusses to get something nontrivial
@@ -56,7 +64,10 @@ Another special case with its own name is the one where we set  $a_j = -1, \fora
 
 
 \subsection{Conversion to CFE}
-Let's now look at the problem to obtain a continued fraction expansion for a given nonegative number $x$ and let's first focus on the simple case, i.e. assume all partial numerators are 1. The first $b$-coeff is easy to compute: it's just the integer part of $x$ such that $b_0 = \floor{x}$. Let's define the fractional part as $f_0 = x - b_0$ such that $x = b_0 + f_0$. The key observation is that we can write $f_0$ as $1/(1/(f_0))$ because reciprocating a number twice gives back the original number\footnote{If you want to show off with fancy math terminology, you could say that reciprocation is an involution.}. So now we have $x$ expressed in the form $x = b_0 + 1/(1/(f_0))$ which is getting closer to the representation of $x$ that we want to find. Because $f_0$ was the fractional part of some number, it is guaranteed to be less than $1$ and therefore its reciprocal $1/f_0$ is greater than $1$. That means that we can express $1/f_0$ again in terms of an integer part (i.e. its floor) and a fractional part. With these considerations in mind, we can come up with the following algorithm to produce the $b$-coeffs for a simple CFE of $x$. We use the example of $x = \pi$ and to the right of the code is the (reformatted) produced output:
+Let's now look at the problem to obtain a continued fraction expansion for a given nonegative number $x$.
+
+\subsubsection{Simple CFE for a Real Number}
+Let's first focus the case where we have a given real number $x$ and we want to find its simple continued fraction expansion, i.e. an expansion in which all partial numerators are 1. The first $b$-coeff is easy to compute: it's just the integer part of $x$ such that $b_0 = \floor{x}$. Let's define the fractional part as $f_0 = x - b_0$ such that $x = b_0 + f_0$. The key observation is that we can write $f_0$ as $1/(1/(f_0))$ because reciprocating a number twice gives back the original number\footnote{If you want to show off with fancy math terminology, you could say that reciprocation is an involution.}. So now we have $x$ expressed in the form $x = b_0 + 1/(1/(f_0))$ which is getting closer to the representation of $x$ that we want to find. Because $f_0$ was the fractional part of some number, it is guaranteed to be less than $1$ and therefore its reciprocal $1/f_0$ is greater than $1$. That means that we can express $1/f_0$ again in terms of an integer part (i.e. its floor) and a fractional part. With these considerations in mind, we can come up with the following algorithm to produce the $b$-coeffs for a simple CFE of $x$. We use the example of $x = \pi$ and to the right of the code is the (reformatted) produced output:
 \begin{center}
 \begin{tabular}{ ccccc } 
 \begin{lstlisting}
@@ -83,7 +94,28 @@ We first create a numerical (i.e. floating point) variable with 200 significant 
 % What are Continued Fractions? How to write continued fraction of a number? @Prof.SamKu_
 % https://www.youtube.com/watch?v=AiY9pPsl4bc
 
-% Explain connection to the Euclidean algorithm for the GCD. I think, the correspondence is as follows: We pass a pair of (num,den) to the variant of CFE algo that deals with rational numbers. The floor(x) operation corresponds to an integer division - that is, b = num/den. The modulo operation in the GCD algo maps to the x-b operation. The swapping operation maps to the reciprocation in x = 1 / (x-b). In the Euclidean algo, we are only interested in the final result of the mod operation. Here, we are interested in the whole sequence of numbers that is produced along the way.
+\subsubsection{Simple CFE for a Rational Number}
+Let's now look at the case where $x$ is a rational number. Of cause, rational numbers are a subset of the real numbers, so in principle, the algorithm above should work for rational numbers, too. But there is the potential problem of numerical precision issues due to using a finite precision floating point format to represent real numbers. For rational numbers, we can avoid this problem and use an algorithm that sidesteps the use of floating point numbers. Consider this SageMath code snippet:
+\begin{center}
+\begin{tabular}{ ccccc } 
+\begin{lstlisting}
+n = 415            # Numerator
+d =  93            # Denominator
+while d > 0:
+    b = n // d     # Integer part of n/d
+    r = n - b*d    # Remainder
+    n, d = d, r    # New n/d is d/r
+    print(b)       # 415/93 = [4;2,6,7]
+\end{lstlisting}
+& & \vline & &
+\begin{lstlisting}
+4 2 6 7
+\end{lstlisting}
+\end{tabular}
+\end{center}
+It computes the simple CFE of the rational number $\frac{415}{93}$ which is given by $[4;2,6,7]$. It is, of course, finite because $x$ is a rational number. So it really ends in the final $7$. I didn't cut off a tail here. ...TBC...
+
+% Explain connection to the Euclidean algorithm for the GCD. I think, the correspondence is as follows: We pass a pair of (num,den) to the variant of CFE algo that deals with rational numbers. The floor(x) operation corresponds to an integer division - that is, b = num/den. The modulo operation in the GCD algo maps to the x-b operation. The swapping operation maps to the reciprocation in x = 1 / (x-b). In the Euclidean algo, we are only interested in the final result of the mod operation. Here, we are interested in the whole sequence of numbers that is produced along the way. ...Moreover - here we are interested mainly in the results of the integer division whereas the Euclidean algo is mainly interested in the remainders. 
 
 % Some authors even claim that the CFE algorithm above basically *is* the Euclidean algorithm. I personally find that statement not very helpful. The Euclidean GCD algo takes a pair of integers and spits out another integer whereas the CFE algo takes a real number and produces a sequence of integers - so even the I/O types don't match - let alone the algo itself. These authors apparently expect the reader to do the supposedly "trivial" mapping effortlessly themselves in their head. But for me, it took some effort to see the correspondence. ...Mabye mention that in a starred paragraph (the Euclidean algo will be introduced later in teh book in the Number Theory section)
 
@@ -380,7 +412,8 @@ Results:
 93/415 = [0;4,2,6,7]     # It's the same as for 415/93 but with a 0 prepended - as expected!
 ...more to come...
 
+Q: Where does the GCD appear in this algo? Is it the final value of d before it becomes zero? Ah - I think, it may be the last or 2nd to last value of r - it's not one of the b-values (which are the output of the algorithm)
 
-
+...Nope - with 60/36 (with gcd = 12), it doesn't work. The produced CFE is [1;1,2] ...is that even right? Yeah: 1+(1/(1+(1/(2)))) = 5/3  = 60/36
 
 \end{comment}

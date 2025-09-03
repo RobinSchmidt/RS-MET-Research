@@ -90,6 +90,8 @@ We first create a numerical (i.e. floating point) variable with 200 significant 
 \end{equation}
 ...TBC...ToDo: explain how the size of the coeffs determines the error of the approximation, note that truncating after $1/7$ gives $3 + (1/7) = 22/7$ which is a rather well known rational approximation of $\pi$
 
+% Mention that to obtain a Hirzebruch-Jung CFE, the only thing that needs to be changed in the algo is to replace the floor(x) with ceil(x) [VERIFY]
+
 % ToDo: give also an algorithm for rational numbers, see:
 % What are Continued Fractions? How to write continued fraction of a number? @Prof.SamKu_
 % https://www.youtube.com/watch?v=AiY9pPsl4bc
@@ -130,6 +132,11 @@ It computes the simple CFE of the rational number $\frac{415}{93}$ which is give
 
 % https://en.wikipedia.org/wiki/Simple_continued_fraction#Calculating_continued_fraction_representations
 
+
+
+%\subsubsection{General CFE for a Real Number}
+% I think, the only thing that needs to be changed is to replace x = 1 / (x-b)  by 
+% x = a[i] / (x-b) so maybe we should not make an extra subsubsection for that little tweak and instead just mention it
 
 
 

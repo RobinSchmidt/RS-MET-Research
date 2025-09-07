@@ -61,10 +61,50 @@ That is: the reciprocal of a simple CFE of a number $x$ can be simply found by p
 
 
 
+\subsection{Convergence} ...TBC...ToDo: explain the conditions under which a CFE converges to a definite number.
 
+% Maybe put this subsection after the subsecs about "Conversion to CFE" and "Evaluation"
+% Maybe rename it "Convergents and Convergence" and explain the concept of convergents first. The definition of convergence for a CFE is that the sequence of convergents must converge (I think). But that is just a definition that is not very informative. What we really want is a condition that we put on the sequences of a- and b-coeffs from which we can establish the convergence of the sequence of convergents.
+
+% Maybe it makes sense to define k_j = \opK_{i=j+1}^\infty \frac{a_i}{b_i} such that we can write
+% x = b_0 + k_0 = b_0 + frac{a_1}{b_1 + k_1} = ....
+% i.e. the k_j contains the infinite tail of the continued fraction starting from index j+1. Maybe
+% with this definition, the convergence criterion can be expressed in terms of looking at ratios
+% beween b_i and k_i. Maybe it converges if k_i/b_i -> 0. The rationale is that the b_i dominate
+% the partial denominators more and more. Maybe we can express convergence more simply in terms of
+% just the a_i and b_i. We do already know that for a_i = b_i = 1, the CFE converges (to the golden
+% ratio) and this is supposed to be the slowest rate of convergence. Maybe a necessary condition
+% could be lim_{i -> inf} a_i/b_i <= 1? Try it experimentally with b = 1,1,1,1,.. and a = 2,2,2,...
+% and if this converges, try a = 1,2,3,4,.... and if this still converges try a = 1,2,4,9,16,25,...
+% (quadratic growth). Try also exponential growth: a = 1,2,4,8,16,32,... (all with b = 1,1,1,...)
+
+
+% https://en.wikipedia.org/wiki/Continued_fraction#Notions_of_convergence
+% https://en.wikipedia.org/wiki/Continued_fraction#Even_and_odd_convergents
+% https://crypto.stanford.edu/pbc/notes/contfrac/converge.html
+
+% https://en.wikipedia.org/wiki/Convergence_problem
+% https://en.wikipedia.org/wiki/Convergence_problem#Worpitzky's_theorem
+% https://en.wikipedia.org/wiki/Convergence_problem#%C5%9Aleszy%C5%84ski%E2%80%93Pringsheim_criterion
+
+% https://en.wikipedia.org/wiki/%C5%9Aleszy%C5%84ski%E2%80%93Pringsheim_theorem
+
+% https://de.wikipedia.org/wiki/Konvergenzkriterium_von_Pringsheim
+
+% The Seidel, Stern, Stolz and Van Vleck Theorems on continued fractions
+% https://oro.open.ac.uk/22465/1/SSVV29.pdf
+
+
+% Google AI result (2025-09-07, prompt: continued fraction convergence criteria)
+%
+% "Continued fraction convergence depends on the type of fraction; classical criteria include Worpitzky's theorem for positive terms and the Seidel-Stern criterion for general real and complex elements, while divergence criteria like the Sleszynski-Pringsheim test exist for specific cases. For complex or general continued fractions, criteria often rely on the convergence of the even and odd parts of the sequence of convergents, or the application of Banach algebra theory for wider applications. ... For generalized continued fractions with positive partial numerators, convergence can be established under certain conditions involving the convergence of series derived from the terms. "
+
+% So: the following criteria exist: Worpitzky's theorem, Seidel-Stern criterion, Sleszynski-Pringsheim test, Stern-Stolz conditions,
 
 \subsection{Conversion to CFE}
 Let's now look at the problem to obtain a continued fraction expansion for a given nonegative number $x$.
+
+% Maybe rename this subsection to "Producing the CFE" or "Finding a CFE" and give also other means to obtain the a,b-sequences. I guess, in the various CFE expansions that exist for various mathematical constants, the people who found the CFEs used special methods?
 
 \subsubsection{Simple CFE for a Real Number}
 Let's first focus the case where we have a given real number $x$ and we want to find its simple continued fraction expansion, i.e. an expansion in which all partial numerators are 1. The first $b$-coeff is easy to compute: it's just the integer part of $x$ such that $b_0 = \floor{x}$. Let's define the fractional part as $f_0 = x - b_0$ such that $x = b_0 + f_0$. The key observation is that we can write $f_0$ as $1/(1/(f_0))$ because reciprocating a number twice gives back the original number\footnote{If you want to show off with fancy math terminology, you could say that reciprocation is an involution.}. So now we have $x$ expressed in the form $x = b_0 + 1/(1/(f_0))$ which is getting closer to the representation of $x$ that we want to find. Because $f_0$ was the fractional part of some number, it is guaranteed to be less than $1$ and therefore its reciprocal $1/f_0$ is greater than $1$. That means that we can express $1/f_0$ again in terms of an integer part (i.e. its floor) and a fractional part. With these considerations in mind, we can come up with the following algorithm to produce the $b$-coeffs for a simple CFE of $x$. We use the example of $x = \pi$ and to the right of the code is the (reformatted) produced output:
@@ -90,7 +130,7 @@ We first create a numerical (i.e. floating point) variable with 200 significant 
 \end{equation}
 ...TBC...ToDo: explain how the size of the coeffs determines the error of the approximation, note that truncating after $1/7$ gives $3 + (1/7) = 22/7$ which is a rather well known rational approximation of $\pi$
 
-% Mention that to obtain a Hirzebruch-Jung CFE, the only thing that needs to be changed in the algo is to replace the floor(x) with ceil(x) [VERIFY]
+% Mention that to obtain a Hirzebruch-Jung CFE, the only thing that needs to be changed in the algo is to replace the floor(x) with ceil(x) [VERIFY]  ...or replace  x = 1 / (x-b)  by  x = -1 / (x-b).
 
 % ToDo: give also an algorithm for rational numbers, see:
 % What are Continued Fractions? How to write continued fraction of a number? @Prof.SamKu_
@@ -168,7 +208,7 @@ x_2 = \frac{A_2}{B_2} = \frac{b_2(b_1 b_0 + a_1) + a_2 b_0}{b_2 b_1 + a_2}, \qua
 \ldots \quad
 x_n = \frac{A_n}{B_n}
 \end{equation}
-The numbers $A_n, B_n$ that we can create in this way are called the $n$-th order \emph{continuants} and the numbers $x_n$ are called the $n$-th order \emph{convergents} of the CFE. The latter name rightfully suggests that the sequence of $x_n$ converges - namely to $x$ - which is the whole point of all of this business. [Q: Are there any conditions that need to be satisfied for convergence?] ...TBC... ToDo: Explain the sense in which the convergents are the best rational approximations to $x$, mention the $22/7 = 3 + 
+The numbers $A_n, B_n$ that we can create in this way are called the $n$-th order \emph{continuants} and the numbers $x_n$ are called the $n$-th order \emph{convergents} of the CFE. The latter name rightfully suggests that we expect the sequence of $x_n$ to converge - namely to the number $x$ - which is the whole point of all of this business. The conditions under which we can actually expect such a convergence will be discussed below. ...TBC... ToDo: Explain the sense in which the convergents are the best rational approximations to $x$, mention the $22/7 = 3 + 
 1/7$ approximation for $\pi$
 
 % Google AI says:
@@ -422,5 +462,9 @@ Results:
 Q: Where does the GCD appear in this algo? Is it the final value of d before it becomes zero? Ah - I think, it may be the last or 2nd to last value of r - it's not one of the b-values (which are the output of the algorithm)
 
 ...Nope - with 60/36 (with gcd = 12), it doesn't work. The produced CFE is [1;1,2] ...is that even right? Yeah: 1+(1/(1+(1/(2)))) = 5/3  = 60/36
+
+
+
+https://en.wikipedia.org/wiki/Dirichlet%27s_approximation_theorem
 
 \end{comment}

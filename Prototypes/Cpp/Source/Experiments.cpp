@@ -20097,6 +20097,11 @@ std::vector<int> rsContinuedFractionDenominators(
   const TReal& x, const std::vector<TInt>& numerators)
 {
   // Under construction
+  //
+  // I actually think, this may still be wrong and may not work unless all numerators are 1. The 
+  // idea was that in the derivation of the algo, we replace the f = 1/(1/f) step by f = n/(1/f) but
+  // this is wrong. It should be f = n/(n/f). We may need to include a division by n at some place.
+  // Figure this out!
 
   rsAssert(x > TReal(0) && x < TReal(1));
   // This function currently only works for numbers x in the open interval (0,1). That is: if x is

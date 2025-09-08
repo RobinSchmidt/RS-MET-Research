@@ -61,45 +61,7 @@ That is: the reciprocal of a simple CFE of a number $x$ can be simply found by p
 
 
 
-\subsection{Convergence} ...TBC...ToDo: explain the conditions under which a CFE converges to a definite number.
 
-% Maybe put this subsection after the subsecs about "Conversion to CFE" and "Evaluation"
-% Maybe rename it "Convergents and Convergence" and explain the concept of convergents first. The definition of convergence for a CFE is that the sequence of convergents must converge (I think). But that is just a definition that is not very informative. What we really want is a condition that we put on the sequences of a- and b-coeffs from which we can establish the convergence of the sequence of convergents.
-
-% Maybe it makes sense to define k_j = \opK_{i=j+1}^\infty \frac{a_i}{b_i} such that we can write
-% x = b_0 + k_0 = b_0 + frac{a_1}{b_1 + k_1} = ....
-% i.e. the k_j contains the infinite tail of the continued fraction starting from index j+1. Maybe
-% with this definition, the convergence criterion can be expressed in terms of looking at ratios
-% beween b_i and k_i. Maybe it converges if k_i/b_i -> 0. The rationale is that the b_i dominate
-% the partial denominators more and more. Maybe we can express convergence more simply in terms of
-% just the a_i and b_i. We do already know that for a_i = b_i = 1, the CFE converges (to the golden
-% ratio) and this is supposed to be the slowest rate of convergence. Maybe a necessary condition
-% could be lim_{i -> inf} a_i/b_i <= 1? Try it experimentally with b = 1,1,1,1,.. and a = 2,2,2,...
-% and if this converges, try a = 1,2,3,4,.... and if this still converges try a = 1,2,4,9,16,25,...
-% (quadratic growth). Try also exponential growth: a = 1,2,4,8,16,32,... (all with b = 1,1,1,...)
-
-
-% https://en.wikipedia.org/wiki/Continued_fraction#Notions_of_convergence
-% https://en.wikipedia.org/wiki/Continued_fraction#Even_and_odd_convergents
-% https://crypto.stanford.edu/pbc/notes/contfrac/converge.html
-
-% https://en.wikipedia.org/wiki/Convergence_problem
-% https://en.wikipedia.org/wiki/Convergence_problem#Worpitzky's_theorem
-% https://en.wikipedia.org/wiki/Convergence_problem#%C5%9Aleszy%C5%84ski%E2%80%93Pringsheim_criterion
-
-% https://en.wikipedia.org/wiki/%C5%9Aleszy%C5%84ski%E2%80%93Pringsheim_theorem
-
-% https://de.wikipedia.org/wiki/Konvergenzkriterium_von_Pringsheim
-
-% The Seidel, Stern, Stolz and Van Vleck Theorems on continued fractions
-% https://oro.open.ac.uk/22465/1/SSVV29.pdf
-
-
-% Google AI result (2025-09-07, prompt: continued fraction convergence criteria)
-%
-% "Continued fraction convergence depends on the type of fraction; classical criteria include Worpitzky's theorem for positive terms and the Seidel-Stern criterion for general real and complex elements, while divergence criteria like the Sleszynski-Pringsheim test exist for specific cases. For complex or general continued fractions, criteria often rely on the convergence of the even and odd parts of the sequence of convergents, or the application of Banach algebra theory for wider applications. ... For generalized continued fractions with positive partial numerators, convergence can be established under certain conditions involving the convergence of series derived from the terms. "
-
-% So: the following criteria exist: Worpitzky's theorem, Seidel-Stern criterion, Sleszynski-Pringsheim test, Stern-Stolz conditions,
 
 \subsection{Conversion to CFE}
 Let's now look at the problem to obtain a continued fraction expansion for a given nonegative number $x$.
@@ -199,7 +161,7 @@ Before we attempt to understand how we could evaluate an infinite continued frac
 % The K here stands for Kettenbruch (the German translation of continued fraction, literally chain fraction)
 
 \subsubsection{Convergents and Continuants}
-Let's write down the first couple of truncated CFEs in simplified form, i.e. in the form of a simple fraction with a single numerator and single denominator and assign the names $A_n, B_n$ to the resulting numerators and denominators and the name $x_n$ to the finite fractions that we get:
+Let's write down the first couple of truncated CFEs in simplified (or expanded) form, i.e. in the form of a simple fraction with a single numerator and single denominator and assign the names $A_n, B_n$ to the resulting numerators and denominators and the name $x_n$ to the finite fractions that we get:
 \begin{equation}
 \label{Eq:ContinuantsAndConvergents}
 x_0 = \frac{A_0}{B_0} = b_0, \quad
@@ -208,7 +170,7 @@ x_2 = \frac{A_2}{B_2} = \frac{b_2(b_1 b_0 + a_1) + a_2 b_0}{b_2 b_1 + a_2}, \qua
 \ldots \quad
 x_n = \frac{A_n}{B_n}
 \end{equation}
-The numbers $A_n, B_n$ that we can create in this way are called the $n$-th order \emph{continuants} and the numbers $x_n$ are called the $n$-th order \emph{convergents} of the CFE. The latter name rightfully suggests that we expect the sequence of $x_n$ to converge - namely to the number $x$ - which is the whole point of all of this business. The conditions under which we can actually expect such a convergence will be discussed below. ...TBC... ToDo: Explain the sense in which the convergents are the best rational approximations to $x$, mention the $22/7 = 3 + 
+The numbers $A_n, B_n$ that we can create in this way are called the $n$-th order \emph{continuants} and the numbers $x_n$ are called the $n$-th order \emph{convergents} of the CFE. The latter name rightfully suggests that we expect the sequence of $x_n$ to converge - namely to the number $x$ - which is the whole point of all of this business. The conditions under which we can actually expect such a convergence will be discussed below. For now, let's just assume that convergence does indeed occur. ...TBC... ToDo: Explain the sense in which the convergents are the best rational approximations to $x$, mention the $22/7 = 3 + 
 1/7$ approximation for $\pi$
 
 % Google AI says:
@@ -246,7 +208,7 @@ A_{-1} = 1, A_0 = b_0, B_{-1} = 0, B_0 = 1
 
 
 \subsubsection{Forward Evaluation}
-While it is totally possible to evaluate a finite continued fraction with the naive backward evaluation algorithm given above, there is actually also a way that avoids starting at the innermost subexpression and working our way back to the outermost. I will refer to this alternative evaluation algorithm as forward evaluation. Such an algorithm will turn out to particularly convenient when we want to evaluate infinite CFEs because in this case, there isn't any innermost subexpression. ...TBC...
+While it is totally possible to evaluate a finite continued fraction with the naive backward evaluation algorithm given above, there is actually also a way that avoids starting at the innermost subexpression and working our way back to the outermost. I will refer to this alternative evaluation algorithm as \emph{forward evaluation} and may occasionally refer to the naive algorithm as \emph{backward evaluation}. Such a forward evaluation algorithm will turn out to particularly convenient when we want to evaluate infinite CFEs because in this case, there isn't any innermost subexpression. ...TBC...
 
 
 
@@ -281,6 +243,48 @@ The recurrence formulas are the key for an alternative evaluation algorithm that
 %% That looks ugly!
 
 % https://en.wikipedia.org/wiki/Continued_fraction#The_determinant_formula
+
+
+\subsection{Convergence} ...TBC...ToDo: explain the conditions under which a CFE converges to a definite number.
+
+% Maybe put this subsection after the subsecs about "Conversion to CFE" and "Evaluation"
+% Maybe rename it "Convergents and Convergence" and explain the concept of convergents first. The definition of convergence for a CFE is that the sequence of convergents must converge (I think). But that is just a definition that is not very informative. What we really want is a condition that we put on the sequences of a- and b-coeffs from which we can establish the convergence of the sequence of convergents.
+
+% Maybe it makes sense to define k_j = \opK_{i=j+1}^\infty \frac{a_i}{b_i} such that we can write
+% x = b_0 + k_0 = b_0 + frac{a_1}{b_1 + k_1} = ....
+% i.e. the k_j contains the infinite tail of the continued fraction starting from index j+1. Maybe
+% with this definition, the convergence criterion can be expressed in terms of looking at ratios
+% beween b_i and k_i. Maybe it converges if k_i/b_i -> 0. The rationale is that the b_i dominate
+% the partial denominators more and more. Maybe we can express convergence more simply in terms of
+% just the a_i and b_i. We do already know that for a_i = b_i = 1, the CFE converges (to the golden
+% ratio) and this is supposed to be the slowest rate of convergence. Maybe a necessary condition
+% could be lim_{i -> inf} a_i/b_i <= 1? Try it experimentally with b = 1,1,1,1,.. and a = 2,2,2,...
+% and if this converges, try a = 1,2,3,4,.... and if this still converges try a = 1,2,4,9,16,25,...
+% (quadratic growth). Try also exponential growth: a = 1,2,4,8,16,32,... (all with b = 1,1,1,...)
+
+
+% https://en.wikipedia.org/wiki/Continued_fraction#Notions_of_convergence
+% https://en.wikipedia.org/wiki/Continued_fraction#Even_and_odd_convergents
+% https://crypto.stanford.edu/pbc/notes/contfrac/converge.html
+
+% https://en.wikipedia.org/wiki/Convergence_problem
+% https://en.wikipedia.org/wiki/Convergence_problem#Worpitzky's_theorem
+% https://en.wikipedia.org/wiki/Convergence_problem#%C5%9Aleszy%C5%84ski%E2%80%93Pringsheim_criterion
+
+% https://en.wikipedia.org/wiki/%C5%9Aleszy%C5%84ski%E2%80%93Pringsheim_theorem
+
+% https://de.wikipedia.org/wiki/Konvergenzkriterium_von_Pringsheim
+
+% The Seidel, Stern, Stolz and Van Vleck Theorems on continued fractions
+% https://oro.open.ac.uk/22465/1/SSVV29.pdf
+
+
+% Google AI result (2025-09-07, prompt: continued fraction convergence criteria)
+%
+% "Continued fraction convergence depends on the type of fraction; classical criteria include Worpitzky's theorem for positive terms and the Seidel-Stern criterion for general real and complex elements, while divergence criteria like the Sleszynski-Pringsheim test exist for specific cases. For complex or general continued fractions, criteria often rely on the convergence of the even and odd parts of the sequence of convergents, or the application of Banach algebra theory for wider applications. ... For generalized continued fractions with positive partial numerators, convergence can be established under certain conditions involving the convergence of series derived from the terms. "
+
+% So: the following criteria exist: Worpitzky's theorem, Seidel-Stern criterion, Sleszynski-Pringsheim test, Stern-Stolz conditions,
+
 
 
 \subsection{Applications}
@@ -319,7 +323,7 @@ Let's assume that we have the CFEs of two numbers $x$ and $y$ and we want to com
 
 
 \subsection{Systematic Exploration}
-We have seen how to algorithmically produce a continued fraction expansion of a given real number and we have also seen some continuous fractions expansions of mathematical constants that have been constructed explicitly by the ingenuity of genius mathematicians of the caliber of Gauss, Euler and Ramanujan. Over the centuries, a whole zoo of CFEs for various important mathematical constants has been discovered and the natural question arose, if it is possible some somehow systematize the exploration of the "space" of continuous fractions expansions. ...TBC...
+We have seen how to algorithmically produce a continued fraction expansion of a given real number and we have also [NOT YET] seen some continuous fractions expansions of mathematical constants that have been constructed explicitly by the ingenuity of genius mathematicians of the caliber of Gauss, Euler and Ramanujan. Over the centuries, a whole zoo of CFEs for various important mathematical constants has been discovered and the natural question arose, if it is possible some somehow systematize the exploration of the "space" of continuous fractions expansions. ...TBC...
 
 \subsubsection{The Conservative Matrix Field}
 In a recent discovery, mathematicians have found a systematic way to produce CFEs for many interesting numbers. ...TBC...
@@ -466,5 +470,48 @@ Q: Where does the GCD appear in this algo? Is it the final value of d before it 
 
 
 https://en.wikipedia.org/wiki/Dirichlet%27s_approximation_theorem
+
+Continued fractions, Fermat, Euler, Lagrange
+https://www.math.uni-bonn.de/people/thiele/lecturenotes/cf.pdf
+
+
+https://r-knott.surrey.ac.uk/fibonacci/CFintro.html
+
+
+https://en.wikipedia.org/wiki/Approximations_of_%CF%80#Continued_fractions
+
+SOME CONTINUED FRACTIONS FOR π AND G
+https://arxiv.org/pdf/1806.03346
+- page 2: "Euler explains the method of converting an infinite series into a continued
+fraction"
+  -> that could be intersting! Ah! Here:
+
+  https://en.wikipedia.org/wiki/Euler%27s_continued_fraction_formula
+
+
+https://en.wikipedia.org/wiki/Gauss%27s_continued_fraction
+
+https://en.wikipedia.org/wiki/Engel_expansion
+
+Real Numbers With Polynomial Continued Fraction Expansions
+https://arxiv.org/abs/math/0402462
+
+Observations on continued fractions (Leonhard Euler)
+https://download.uni-mainz.de/mathematik/Algebraische%20Geometrie/Euler-Kreis%20Mainz/E123_Englisch.pdf
+
+Über die Bildung von Kettenbrüchen (Leonhard Euler)
+https://download.uni-mainz.de/mathematik/Algebraische%20Geometrie/Euler-Kreis%20Mainz/522.pdf
+
+Euler und die analytische Theorie der Kettenbrüche
+https://www.researchgate.net/profile/Alexander-Aycock/publication/281608510_Euler_und_die_analytische_Theorie_der_Kettenbruche/links/568ef76808aeaa1481b04ad9/Euler-und-die-analytische-Theorie-der-Kettenbrueche.pdf
+
+Über die Transformation von Reihen in Kettenbrüche, wo zugleich die Theorie nicht unwesentlich
+erweitert wird (Leonhard Euler)
+https://download.uni-mainz.de/mathematik/Algebraische%20Geometrie/Euler-Kreis%20Mainz/593.pdf
+
+
+Zur Arithmetik von Kettenbrüchen
+https://www.math.uni-sb.de/ag/gekeler/PERSONEN/Bachelorarbeiten/Stopp.pdf
+
 
 \end{comment}

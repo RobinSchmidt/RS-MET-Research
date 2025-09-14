@@ -17945,39 +17945,56 @@ void testWaveGuide1()
 
   using Real = double;
   using DL   = RAPT::rsDelay<Real>;
+  using Vec  = std::vector<Real>;
 
   int M   = 100;       // Length of the delaylines
-  int mIn = 30;
+  int mIn = 30;        // Input position (for strike, pluck, bow, etc.)
+  int N   = 1000;      // Number of samples to render
 
   // Smaller values for initial tests:
-  M = 10, mIn = 3;
+  M = 10, mIn = 3, N = 50;
  
-
-
   // Create the delaylines and set up the delay time in samples:
-  DL dl1, dl2;
+  DL dl1, dl2;                 // Maybe rename to dlP, dlM where P,M stands for "plus","minus"
   dl1.setMaxDelayInSamples(M);
   dl2.setMaxDelayInSamples(M);
   dl1.setDelayInSamples(M);
   dl2.setDelayInSamples(M);
 
   // Set up initial condition of the string:
-
-  //dl1.addToInput(1.0);
-  //dl2.addToInput(1.0);
-  
-  // We need a function addToInputAt() which allows us to add signals into the delayline at 
-  // arbitrary positions that we can call like this:
   dl1.addToInputAt(1.0,   mIn);
   dl2.addToInputAt(1.0, M-mIn);
 
-  rsPlotDelayLineContent(dl1, dl2);
+  // Allocate buffers to hold the output signals of the forward and backward propagating waves
+  // (typically denoted by y+ and y- in the literature which we denote by P,M for plus/minus here)
+  // and for the complete output wave which is just the sum of y+ and y-:
+  Vec yP(N), yM(N), y(N);  // y+[n], y-[n], y[n]
 
+
+  // Run the model for N samples from the initial conditions without providing further input:
+  for(int n = 0; n < N; n++)
+  {
+    // During development, we may plot the contents of the delaylines to see what is going on:
+    //rsPlotDelayLineContent(dl1, dl2);
+
+    // Preliminary:
+    Real out1 = dl1.getSample(0.0);
+    Real out2 = dl2.getSample(0.0);
+    // ToDo: Pull the output samples out of the delaylines without updating the tap pointers, apply
+    // the crossfeedback and then manually update (i.e. increment with wraparound) the tap 
+    // pointers. Also compute the overall output as sum of out1 and out2
+
+    // Store partial and complete output signals:
+    yP[n] = out1;
+    yM[n] = out2;
+    y[n]  = yP[n] + yM[n];
+  }
+
+  rsPlotVectors(y, yP, yM);
 
   int dummy = 0;
 
   // ToDo:
-
   //
   // - Set up the delaylines in a mutual feedback loop. dl1 feeds into dl2 and vice versa. I think,
   //   when we model a string with fixed ends, the feedback should be inverting which means that in

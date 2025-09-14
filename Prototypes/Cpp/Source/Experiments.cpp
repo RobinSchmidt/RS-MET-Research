@@ -17938,7 +17938,7 @@ void testStateSpaceFilters()
 
 void testWaveGuide1()
 {
-  // Under construction.
+  // Under construction. Not very far yet.
 
   // First experiment with waveguide modeling. We implement a very simple waveguide model for a
   // string (or air column) by means of a pair of delaylines. ...TBC...
@@ -17978,20 +17978,34 @@ void testWaveGuide1()
     //rsPlotDelayLineContent(dl1, dl2);
 
     // Preliminary:
-    Real out1 = dl1.getSample(0.0);
-    Real out2 = dl2.getSample(0.0);
+    //Real out1 = dl1.getSample(0.0);
+    //Real out2 = dl2.getSample(0.0);
     // ToDo: Pull the output samples out of the delaylines without updating the tap pointers, apply
     // the crossfeedback and then manually update (i.e. increment with wraparound) the tap 
     // pointers. Also compute the overall output as sum of out1 and out2
+
+    // Get the outputs of the delay lines:
+    Real out1 = dl1.readOutput();
+    Real out2 = dl2.readOutput();
+
+    // Implement the mutual crossfeedback with inversion:
+    dl1.addToInput(-out2);
+    dl2.addToInput(-out1);
+
+    // Update the tap pointers in the delaylines:
+    dl1.incrementTapPointers();
+    dl2.incrementTapPointers();
 
     // Store partial and complete output signals:
     yP[n] = out1;
     yM[n] = out2;
     y[n]  = yP[n] + yM[n];
   }
+  // The delayline content looks still wrong!
 
+
+  // Plot the produced signals:
   rsPlotVectors(y, yP, yM);
-
   int dummy = 0;
 
   // ToDo:

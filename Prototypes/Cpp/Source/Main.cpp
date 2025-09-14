@@ -130,7 +130,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   // MIMO Filters:
   //testMimoTransferMatrix();
   //testMimoFilters();           // just a stub - not much in there yet, mostly comments
-  //testStateSpaceFilters(); 
+  testStateSpaceFilters(); 
 
 
   // Math:

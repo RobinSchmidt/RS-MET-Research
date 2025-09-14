@@ -4987,7 +4987,7 @@ protected:
 //   should first compare the min and in case of equality, compare the max. But it also should take 
 //   the open/closed properties into account. 
 // 
-// - Implement function that compute elementary functions such as sqrt, sin, cos, exp, log, of 
+// - Implement function that computes elementary functions such as sqrt, sin, cos, exp, log, of 
 //   intervals. For non-monotonic functions f, this will be more complicated than just computing 
 //   the function values of the bounds. Instead, we need to figure out the minimum and maximum 
 //   values that the function f takes on the interval [min, max]. 

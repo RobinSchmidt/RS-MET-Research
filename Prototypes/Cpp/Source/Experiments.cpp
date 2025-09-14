@@ -20131,6 +20131,21 @@ std::vector<int> rsContinuedFractionDenominators(
   // - Maybe let it work on a pre-allocated plain array of numerators and denominators.
   // 
   // - Test it with TReal = rsFraction<int>
+  // 
+  // - Implement a similar function rsContinuedFractionNumerators(const TReal& x, 
+  //   const std::vector<TInt>& denominators). It should treat the partial denominators 
+  //   b1,b2,b3,... as given in the array "denominators" (which should probably *not* include 
+  //   b0 because we assume that to be just b0 = floor(x)) and from those, compute suitable partial
+  //   numerators a1,a2,a3,.... I think to compute them, we could start by writing 
+  //   x = b0 + f0  ->  f0 = x - b0  and require f0 = a1 / (b1 + f1)  such that  
+  //   a1 = f0 * (b1 + f1). We do not actually have a value for f1 yet, though. But: we do know 
+  //   that we want to have 0 <= f1 < 1 so we could compute a1 for the boundary cases f1 = 0 and 
+  //   f1 = 1 which should give us a possible range of values for a1. Hopefully, this range will
+  //   include at least one integer that we may then use. If it doesn't then maybe we have to relax 
+  //   our 0 <= f1 < 1 requirement. But I don't really expect that this will ever happen (-> Figure 
+  //   out - experimentally and theoretically!). When we have a1 fixed, we can compute the actual 
+  //   value of  f1 = a1/f0 - b1  and with that, we may proceed to compute a2 by using 
+  //   f1 = a2 / (b2 + f2). Again, f2 is yet unknown but we now just use 0 <= f2 < 1 and so on. 
   //
   //
   // See:

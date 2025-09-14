@@ -17940,19 +17940,38 @@ void testWaveGuide1()
 {
   // Under construction.
 
-  // First experiment with waveguide modeling. We implement a very simple waveguide model by means 
-  // of a pair of delaylines. ...TBC...
+  // First experiment with waveguide modeling. We implement a very simple waveguide model for a
+  // string (or air column) by means of a pair of delaylines. ...TBC...
 
   using Real = double;
   using DL   = RAPT::rsDelay<Real>;
 
-  int M = 100;     // Length of the delaylines
+  int M   = 100;       // Length of the delaylines
+  int mIn = 30;
 
+  // Smaller values for initial tests:
+  M = 10, mIn = 3;
+ 
+
+
+  // Create the delaylines and set up the delay time in samples:
   DL dl1, dl2;
   dl1.setMaxDelayInSamples(M);
   dl2.setMaxDelayInSamples(M);
   dl1.setDelayInSamples(M);
   dl2.setDelayInSamples(M);
+
+  // Set up initial condition of the string:
+
+  //dl1.addToInput(1.0);
+  //dl2.addToInput(1.0);
+  
+  // We need a function addToInputAt() which allows us to add signals into the delayline at 
+  // arbitrary positions that we can call like this:
+  dl1.addToInputAt(1.0,   mIn);
+  dl2.addToInputAt(1.0, M-mIn);
+
+  rsPlotDelayLineContent(dl1, dl2);
 
 
   int dummy = 0;
@@ -17987,6 +18006,9 @@ void testWaveGuide1()
   //   general filters in direct form for this. Or maybe better in biquad-chain form. Maybe 
   //   implement both (in 2 different classes). For the firect form version, we can model it after
   //   the way we do it with the allpass delays.
+  //
+  // - Allow for non-integer delays by providing various interpolation methods (linear, cubic, 
+  //   Thiran-allpass, etc.)
 }
 
 void testWaveGuides()

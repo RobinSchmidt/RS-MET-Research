@@ -17934,6 +17934,68 @@ void testStateSpaceFilters()
   testStateSpaceFromDF();
 }
 
+
+
+void testWaveGuide1()
+{
+  // Under construction.
+
+  // First experiment with waveguide modeling. We implement a very simple waveguide model by means 
+  // of a pair of delaylines. ...TBC...
+
+  using Real = double;
+  using DL   = RAPT::rsDelay<Real>;
+
+  int M = 100;     // Length of the delaylines
+
+  DL dl1, dl2;
+  dl1.setMaxDelayInSamples(M);
+  dl2.setMaxDelayInSamples(M);
+  dl1.setDelayInSamples(M);
+  dl2.setDelayInSamples(M);
+
+
+  int dummy = 0;
+
+  // ToDo:
+
+  //
+  // - Set up the delaylines in a mutual feedback loop. dl1 feeds into dl2 and vice versa. I think,
+  //   when we model a string with fixed ends, the feedback should be inverting which means that in
+  //   the lossless case, dl1 feed into dl2 with gain -1 and dl2 feeds into dl1 also with gain -1.
+  // 
+  // - Set up initial conditions for the delaylines - maybe a Gaussian impulse at some location. Or 
+  //   maybe just a unit impulse to start with. Or maybe a triangular shape like we would get when
+  //   pulling the string at some position.
+  // 
+  // - Plot outputs.
+  //
+  // - Implement means to read out a signal from the waveguide at some given position mOut and a 
+  //   means to feed an exitation signal into the delayline at some position mIn. I think, we 
+  //   should read from dl1 at position mOut and from dl2 at position M-mOut but I'm not sure. 
+  //   Maybe we need to read from both at mOut or from both at M-mOut. Figure this out! The same
+  //   reasoning applies to the excitation.
+  //
+  //  - Implement lossy case by using a gain factor less of -g instead of -1 where g is some number
+  //    with 0 < g <= 1. It should be computed from a desired decay time. Figure out a formula for 
+  //    g when the decay time is given as user parameter (in samples).
+  //
+  // - Try what happens when we make one or both reflections non-inverting.
+  //
+  // - Wrap the whole functionality into a class. The extend this class by incorporating damping 
+  //   and dispersion filters at the reflecting ends (or maybe just at one end). Maybe allow for 
+  //   general filters in direct form for this. Or maybe better in biquad-chain form. Maybe 
+  //   implement both (in 2 different classes). For the firect form version, we can model it after
+  //   the way we do it with the allpass delays.
+}
+
+void testWaveGuides()
+{
+  testWaveGuide1();
+}
+
+
+
 void test2x2Matrices1()
 {
   // We implement definitions and verify formulas/theorems from chapter 1 in the book "Mathematik 

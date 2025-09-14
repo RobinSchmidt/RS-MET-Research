@@ -130,7 +130,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   // MIMO Filters:
   //testMimoTransferMatrix();
   //testMimoFilters();           // just a stub - not much in there yet, mostly comments
-  testStateSpaceFilters(); 
+  //testStateSpaceFilters();
+  testWaveGuides();
 
 
   // Math:
@@ -151,7 +152,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testKroneckerTrafo2D();
   //testDiscreteCalculus();             // stub
   //testIntervalArithmetic();             // stub
-  testContinuedFractions();
+  //testContinuedFractions();
 
 
 

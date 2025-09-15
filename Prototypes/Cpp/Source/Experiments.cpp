@@ -17934,7 +17934,8 @@ void testStateSpaceFilters()
   testStateSpaceFromDF();
 }
 
-
+//=================================================================================================
+// Waveguide stuff:
 
 // Maybe move these two functions below into the library. But maybe then we should not assert that
 // v is nonempty and instead check if it is empty and if so, return immediately such that with 
@@ -17959,20 +17960,21 @@ void rsShiftRight(std::vector<T>& v)
 }
 
 /** Performs a single update step in a naive waveguide implementation. The vectors wL,wR are the 
-buffers for the leftward and rightward traveling wave components and rL and rR are the reflection
-coefficients at the left and right boudary respectively. For a lossless waveguide, they should both 
-have an absolute value of 1. If both are -1, this corresponds to boundary conditions where the 
+buffers for the leftward and rightward traveling wave components and rL,rR are the reflection
+coefficients at the left and right boundary respectively. For a lossless waveguide, they should 
+both have an absolute value of 1. If both are -1, this corresponds to boundary conditions where the
 displacement is fixed at zero at both ends. A physical wave variable such as the actual 
 displacement of a string is given by the sum of both buffers. The physical interpretation of the 
 buffers is that they store the spatial samples of the traveling wave components. The contents of 
 the buffers themselves do not correspond to any measurable physical quantity. They are a 
 theoretical modeling device and only their sum gives a meaningful physical quantity.
 
-...TBC: explain how other boundary conditions can be implemented. What about using complex 
+...TBC: explain how other boundary conditions can be implemented. I think, rL = rR = +1 corresponds
+to boundary conditions where the velocity is zero at both ends (verify!). What about using complex 
 reflection coeffs (and therfore complex waveguide contents)? Does that make any physical sense?
 Even if not, it may be interesting to experiment with nonetheless. Maybe it's useful? */
 template<class T>
-void rsWaveguideStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
+void rsWaveGuideStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
 {
   rsAssert(rsAreSameSize(wL, wR), "Sizes of buffers for leftward and rightward wave must match");
 
@@ -17990,7 +17992,6 @@ void rsWaveguideStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
   wR[0]   = rL * xL;
 }
 
-
 void testWaveGuide1()
 {
   // We naively implement a propagating wave using two std::vectors for the two traveling wave 
@@ -18004,52 +18005,23 @@ void testWaveGuide1()
   using Vec  = std::vector<Real>;
 
   // User parameters:
-  int  M  =  10;               // Length of the string, number of spatial samples
-  int  m  =   3;               // Input position (for strike, pluck, bow, etc.)
-  int  N  =  50;               // Number of steps to take
-  Real rL =  -1.0;             // Reflection coeff at left boundary
-  Real rR =  -1.0;             // Reflection coeff at right boundary
+  int  M  =  10;                       // Length of the string, number of spatial samples
+  int  m  =   3;                       // Input position (for strike, pluck, bow, etc.)
+  int  N  =  50;                       // Number of steps to take
+  Real rL =  -1.0;                     // Reflection coeff at left boundary
+  Real rR =  -1.0;                     // Reflection coeff at right boundary
 
   // Create vectors that hold the leftward and rightward traveling wave components:
   Vec wL(M), wR(M);
 
   // Set up initial condition of the string:
-  wL[m] = wR[m] = 1.0;         // Single impulse at mIn
+  wL[m] = wR[m] = 1.0;                 // Single impulse at m
 
-  /*
-  // Define helper function to do one time step of the wave traveling action:
-  auto doStep = [&]() 
-  {
-    // Extract wave components at the left and right boundary:
-    Real xL = wL[0];
-    Real xR = wR[M-1];
-
-    // Let the wave components travel by one spacial unit:
-    rsShiftLeft( wL);  // Shift content of wL one step leftward, rightmost position becomes empty
-    rsShiftRight(wR);  // Shift content of wR one step rightward, leftmost position becomes empty
-
-    // Insert the reflected components into the now empty positions:
-    wL[M-1] = rR * xR;
-    wR[0]   = rL * xL;
-    // ToDo: Maybe instead of a minus, use user adjustable factors. -1 corresponds to an inverting
-    // reflection which corresponds to a "zero displacement" boundary condition. I think +1 would
-    // correspond to a "zero velocity" boundary condition. In general, we may use different 
-    // boundary conditions for the left and right end, so maybe give the user two adjustable coeffs
-    // rL, rR (for reflection coeff left/right).
-  };
-  */
-
+  // Do the time stepping and plot the contents of the wave buffers at each time step:
   for(int n = 0; n < N; n++)
   {
-    // Plot the contents of the traveling wave vectors and their sum which represents the physical
-    // wave:
-    rsPlotVectors(wL, wR);             // Only the traveling wave components
-    //rsPlotVectors(wL+wR);              // Only the physical wave
-    //rsPlotVectors(wL, wR, wL+wR);      // Everything
-
-    // Advance the traveling waves by one time step:
-    rsWaveguideStep(wL, wR, rL, rR);
-    //doStep();
+    rsPlotVectors(  wL, wR);           // Plot the traveling wave components
+    rsWaveGuideStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
   }
 
   // Observations:
@@ -18079,17 +18051,11 @@ void testWaveGuide1()
   // 
   // ToDo:
   // 
-  // - Try all 4 possible assignments for rL and rR. Each of them can be either -1 or +1. Will we 
-  //   still see repetition of the initial state after 2M steps with all possible configurations?
-  // 
-  // - Figure out if it is still the case that wL *and* wR are back to their initial conditions 
-  //   when we init wL and wR differently. Maybe in this case, only the sum wL+wR is the same at 
-  //   step 2M as it was as step 0 but the contents of wL and wr have been swapped? And/or maybe
-  //   compare contents of wL and wR at time steps 1 and 2M+1. This way, swe should also be able 
-  //   to see the swap, if any because at step 1, the contents of wL and wR are actually different.
-  // 
-  // - Refactor the code such that we can re-use the relevant parts of it in the context of unit 
-  //   tests for an actual waveguide implementation.
+  // - Implement various functions to set up different initial conditions. Here, we just simply set
+  //   one sample to 1. That's good for checking the implementation but not very realistic. Maybe
+  //   write a function rsSetupWaveGuidePluck(...) that takes a plucking position and sets up a 
+  //   triangular initial condition. Maybe also make a function that sets up various sinusoidal 
+  //   modes. Maybe a Gaussian bell, etc.
   //
   // - Create an animation. To facilitate this, write some infrastructure for producing such 
   //   animations. This will be very helpful in the development of waveguide models.
@@ -18240,7 +18206,7 @@ void testWaveGuides()
   testWaveGuide2();
 }
 
-
+//=================================================================================================
 
 void test2x2Matrices1()
 {

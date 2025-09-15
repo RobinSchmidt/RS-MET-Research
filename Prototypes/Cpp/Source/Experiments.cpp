@@ -18077,6 +18077,34 @@ void testWaveGuideNaiveImpulse()
   //   animations. This will be very helpful in the development of waveguide models.
 }
 
+// Simliar to testWaveGuideNaiveImpulse() but it takes the values N,M,etc. as parameter and also
+// produces an output signal. This is meant to be used to produce reference outputs via the naive
+// waveguide algo that can be compared against outputs produced by more efficient algos:
+template<class T>
+std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL, T rR)
+{
+  using Vec  = std::vector<T>;
+
+  // Allocate waveguide and set up initial conditions:
+  Vec wL(M), wR(M);           
+  wL[mIn] = wR[mIn] = 1.0;
+
+  // Produce output signal:
+  Vec y(N);
+  for(int n = 0; n < N; n++)
+  {
+    //rsPlotVectors(wL, wR);             // Plot the traveling wave components
+    y[n] = wL[mOut] + wR[mOut];        // Read out output signal at mOut
+    rsWaveGuideStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
+  }
+  return y;
+
+  // Maybe rename to something like rsGetWaveGuideNaiveImpulseOutput(...) and use it in 
+  // testWaveGuideNaiveImpulse(). Maybe give it a boolean switch for plotting or not plotting.
+}
+
+
+
 /** Convenience function to set up the delay in the given delayLine. If the requested delay is 
 greater than the currently available maximum delay, the maximum delay will automatically be 
 increased. This is the "convenience" part. It's meant for use in offline experiments but not in 
@@ -18154,6 +18182,9 @@ void testWaveGuide1()
     dL2.reset();
   };
 
+  // Produce reference output via naive algorithm:
+  Vec yR = rsCreateWaveGuideReference(N, M1+M2, M1, M1, rL, rR);
+  // The total length M is M1+M2. The input is injected at M1. The output is picked up also at M1. 
 
   // The first version of the algorithm. Here, we do the increments of the tap pointers as the 
   // first thing in the per sample computation:
@@ -18252,6 +18283,7 @@ void testWaveGuide1()
   }
 
   // Plot the produced output signals:
+  rsPlotVector(yR);  // Reference signal produced by naive algo.
   rsPlotVector(y1);  // Has correct period of 2*(M1+M2). Seems 1 sample too early, though.
   rsPlotVector(y2);  // Has wrong period.
   rsPlotVector(y3);  // Is all zeros.

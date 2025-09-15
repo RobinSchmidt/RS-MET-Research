@@ -17960,14 +17960,21 @@ void rsShiftRight(std::vector<T>& v)
 
 void testWaveGuide1()
 {
+  // We naively implement a propagating wave using two std::vectors for the two traveling wave 
+  // components. We really implement the traveling and reflections directly and literally. It is
+  // inefficient to do it like this but the purpose of this experiment is merely to produce the 
+  // target behavior that we then want to realize via the waveguide (i.e. bidirecitonal delay line)
+  // approach. It's a preliminary experiment to produce some target data that we then want to match
+  // with the waveguides.
+
   using Real = double;
   using Vec  = std::vector<Real>;
 
-  int M   = 100;             // Length of the delaylines
-  int mIn = 30;              // Input position (for strike, pluck, bow, etc.)
-  int N   = 1000;            // Number of samples to render
+  int M   = 10;              // Length of the delaylines
+  int mIn = 3;               // Input position (for strike, pluck, bow, etc.)
+  int N   = 50;              // Number of steps to take
 
-  M = 10, mIn = 3, N = 50;
+  //M = 10, mIn = 3, N = 50;
 
   // Create vectors that hold the leftward and rightward traveling wave components:
   Vec wL(M), wR(M);
@@ -18000,8 +18007,8 @@ void testWaveGuide1()
   {
     // Plot the contents of the traveling wave vectors and their sum which represents the physical
     // wave:
-    //rsPlotVectors(wL, wR);             // Only the traveling wvae components
-    rsPlotVectors(wL+wR);              // Only the physical wave
+    rsPlotVectors(wL, wR);             // Only the traveling wave components
+    //rsPlotVectors(wL+wR);              // Only the physical wave
     //rsPlotVectors(wL, wR, wL+wR);      // Everything
 
     // Advance the traveling waves by one time step:
@@ -18011,7 +18018,31 @@ void testWaveGuide1()
   // Plot the contents of the traveling wave vectors and their sum which represents the physical
   // wave:
   //rsPlotVectors(wL, wR, wL+wR);
-  int dummy = 0;
+  //int dummy = 0;
+
+
+  // Observations:
+  //
+  // - After 2M steps, we come back to the original constellation, i.e. wL and wR are the same
+  //   at time step 2M as it was at time 0. When comparing the contents of wL,wR at n = 0 with the
+  //   contents at n = 2M+1, then they are also equal. In these cases, the contents of wL and wR
+  //   are actually different from one another (as opposed to n = 0 and n = 2M where wL,wR have 
+  //   the same content). So we can conlcude that after 2M steps, we indeed reach a situation that
+  //   is the same as the initial situation. There isn't any content swapping between wL and wR 
+  //   going on. By just looking at n = 0 and n = 2M, we couldn't rule out content swapping. But by
+  //   looking at n = 1 and n = 2M+1, we can.
+  //
+  // 
+  // ToDo:
+  // 
+  // - Figure out if it is still the case that wL *and* wR are back to their initial conditions 
+  //   when we init wL and wR differently. Maybe in this case, only the sum wL+wR is the same at 
+  //   step 2M as it was as step 0 but the contents of wL and wr have been swapped? And/or maybe
+  //   compare contents of wL and wR at time steps 1 and 2M+1. This way, swe should also be able 
+  //   to see the swap, if any because at step 1, the contents of wL and wR are actually different.
+  //
+  // - Create an animation. To facilitate this, write some infrastructure for producing such 
+  //   animations. This will be very helpful in the development of waveguide models.
 }
 
 void testWaveGuide2()

@@ -18175,9 +18175,6 @@ void testWaveGuide1()
     Real xL1 = dL1.readOutput();
     Real xL2 = dL2.readOutput();
 
-    // Produce and store output signal:
-    y1[n] = xR1 + xL1;
-
     // Do the reflections at both ends:
     dL1.writeInput(rR * xR2);
     dR1.writeInput(rL * xL2);
@@ -18185,9 +18182,12 @@ void testWaveGuide1()
     // Do the transfer from the 1st to the 2nd parts:
     dR2.writeInput(xR1);
     dL2.writeInput(xL1);
+
+    // Produce and store output signal:
+    y1[n] = xR1 + xL1;
   }
 
-  // The first version of the algorithm. Here, we do the increments of the tap pointers as the 
+  // The second version of the algorithm. Here, we do the increments of the tap pointers as the 
   // second thing in the per sample computation. They occurr after reading the outputs.
   resetDelays();
   dR2.writeInput(1.0);                     // Initialization is the same as in algo 1
@@ -18200,9 +18200,6 @@ void testWaveGuide1()
     Real xR2 = dR2.readOutput();
     Real xL1 = dL1.readOutput();
     Real xL2 = dL2.readOutput();
-
-    // Produce and store output signal:
-    y2[n] = xR1 + xL1;
 
     // Update the tap-pointers:
     dR1.incrementTapPointers();
@@ -18217,16 +18214,13 @@ void testWaveGuide1()
     // Do the transfer from the 1st to the 2nd parts:
     dR2.writeInput(xR1);
     dL2.writeInput(xL1);
+
+    // Produce and store output signal:
+    y2[n] = xR1 + xL1;
   }
 
 
-  // Maybe move the "Produce and store output signal" part to the very bottom in each algo to make
-  // them look more similar. It doesn't matter where we put that instruction.
-
-
-
-
-  // Plot the produced output signal:
+  // Plot the produced output signals:
   rsPlotVector(y1);
   rsPlotVector(y2);
 
@@ -18253,7 +18247,8 @@ void testWaveGuide1()
   //   
   // - When doing the tap increments last (after writing inputs), the output signal is all zeros so
   //   that seems to be totally wrong. But maybe it could be made to work by doing something else
-  //   differently, too.
+  //   differently, too. I initially have thought that doing the updates last would be the right 
+  //   way to do it.
   //
   //
   // ToDo:

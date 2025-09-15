@@ -18187,13 +18187,49 @@ void testWaveGuide1()
     dL2.writeInput(xL1);
   }
 
+  // The first version of the algorithm. Here, we do the increments of the tap pointers as the 
+  // second thing in the per sample computation. They occurr after reading the outputs.
+  resetDelays();
+  dR2.writeInput(1.0);                     // Initialization is the same as in algo 1
+  dL2.writeInput(1.0);
+  Vec y2(N);
+  for(int n = 0; n < N; n++)               // Loop through the time steps
+  {
+    // Read outputs of the delay lines:
+    Real xR1 = dR1.readOutput();
+    Real xR2 = dR2.readOutput();
+    Real xL1 = dL1.readOutput();
+    Real xL2 = dL2.readOutput();
 
+    // Produce and store output signal:
+    y2[n] = xR1 + xL1;
+
+    // Update the tap-pointers:
+    dR1.incrementTapPointers();
+    dR2.incrementTapPointers();
+    dL1.incrementTapPointers();
+    dL2.incrementTapPointers();
+
+    // Do the reflections at both ends:
+    dL1.writeInput(rR * xR2);
+    dR1.writeInput(rL * xL2);
+
+    // Do the transfer from the 1st to the 2nd parts:
+    dR2.writeInput(xR1);
+    dL2.writeInput(xL1);
+  }
+
+
+  // Maybe move the "Produce and store output signal" part to the very bottom in each algo to make
+  // them look more similar. It doesn't matter where we put that instruction.
 
 
 
 
   // Plot the produced output signal:
   rsPlotVector(y1);
+  rsPlotVector(y2);
+
 
 
   // Observations:

@@ -17953,9 +17953,9 @@ void testWaveGuide1()
 
   // Smaller values for initial tests:
   //M = 10, mIn = 3, N = 50;
-  //M = 15, mIn = 3, N = 50;     // M = 15 is deliberately 2^k - 1
+  M = 15, mIn = 3, N = 50;     // M = 15 is deliberately 2^k - 1
   //M = 16, mIn = 3, N = 50;
-  M = 17, mIn = 3, N = 50;
+  //M = 17, mIn = 3, N = 50;
  
   // Create the delaylines and set up the delay time in samples:
   DL dl1, dl2;                 // Maybe rename to dlP, dlM where P,M stands for "plus","minus"
@@ -17969,6 +17969,9 @@ void testWaveGuide1()
   //dl2.addToInputAt(1.0, M-mIn);
   dl2.addToInputAt(1.0, M-mIn-1);  // Why -1?
   //dl2.addToInputAt(1.0, mIn);
+  // ToDo: maybe use clear() initially and/or use a function like writeInputAt() which overwrites
+  // instead of accumulating
+
 
   // Allocate buffers to hold the output signals of the forward and backward propagating waves
   // (typically denoted by y+ and y- in the literature which we denote by P,M for plus/minus here)
@@ -17994,10 +17997,14 @@ void testWaveGuide1()
     Real out2 = dl2.readOutput();
 
     // Implement the mutual crossfeedback with inversion:
-    dl1.addToInput(-out2);
-    dl2.addToInput(-out1);
+    //dl1.addToInput(-out2);
+    //dl2.addToInput(-out1);
+    dl1.writeInput(-out2);
+    dl2.writeInput(-out1);
     // Maybe instead of addToInput(), we should do something like setInput() or writeInput(). I 
     // think, we want to overwrite the content instead of adding to what is already there.
+
+
 
     // Update the tap pointers in the delaylines:
     dl1.incrementTapPointers();
@@ -18062,6 +18069,9 @@ void testWaveGuide1()
   // - Maybe try it first with a naive implementation of a delayline whose length is exactly M such
   //   that M is also the wrap-around modulus. Maybe the optimization with using a 2^k-1 length 
   //   with bitmasking for wraparound should be done as an optimization later.
+  //
+  // - Try to create an animation. It's annoying to have to click through the individual plots to
+  //   see the time development.
 }
 
 void testWaveGuides()

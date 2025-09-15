@@ -18219,47 +18219,80 @@ void testWaveGuide1()
     y2[n] = xR1 + xL1;
   }
 
+  // The second version of the algorithm. Here, we do the increments of the tap pointers as the 
+  // last thing in the per sample computation.
+  resetDelays();
+  dR2.writeInput(1.0);                     // Initialization is the same as in algo 1
+  dL2.writeInput(1.0);
+  Vec y3(N);
+  for(int n = 0; n < N; n++)               // Loop through the time steps
+  {
+    // Read outputs of the delay lines:
+    Real xR1 = dR1.readOutput();
+    Real xR2 = dR2.readOutput();
+    Real xL1 = dL1.readOutput();
+    Real xL2 = dL2.readOutput();
+
+    // Do the reflections at both ends:
+    dL1.writeInput(rR * xR2);
+    dR1.writeInput(rL * xL2);
+
+    // Do the transfer from the 1st to the 2nd parts:
+    dR2.writeInput(xR1);
+    dL2.writeInput(xL1);
+
+    // Update the tap-pointers:
+    dR1.incrementTapPointers();
+    dR2.incrementTapPointers();
+    dL1.incrementTapPointers();
+    dL2.incrementTapPointers();
+
+    // Produce and store output signal:
+    y3[n] = xR1 + xL1;
+  }
 
   // Plot the produced output signals:
-  rsPlotVector(y1);
-  rsPlotVector(y2);
-
+  rsPlotVector(y1);  // Has correct period of 2*(M1+M2). Seems 1 sample too early, though.
+  rsPlotVector(y2);  // Has wrong period.
+  rsPlotVector(y3);  // Is all zeros.
 
 
   // Observations:
   //
   // - When doing the tap-increments first (before reading the outputs), we see the upward spikes 
-  //   at n = 19,39,59,79,99,... so the period is 20 = 2 * (N1 + N2) as expected. However, I would
+  //   at n = 19,39,59,79,99,... so the period is 20 = 2 * (M1 + M2) as expected. However, I would
   //   have expected to see the spikes at 0,20,40,60,80,... So it seems they are one sample too 
   //   early. Maybe we can fix this by adjusting (decrementing?) the tap pointers before entering 
   //   the loop. But that seems a bit hacky. Maybe there is a more principled solution.
   // 
   // - When doing the tap increments in the middle (in between reading outputs and writing inputs),
   //   the upward spikes are at 23,47,71,95 so the period is 24. That is strange! Why does this 
-  //   happen? How is 24 related to the N1, N2 settings? Maybe it's because 
-  //   24 = 2 * ((N1+1) + (N2+1)). Maybe somehow we acquire and additional one sample of delay in 
+  //   happen? How is 24 related to the M1, M2 settings? Maybe it's because 
+  //   24 = 2 * ((M1+1) + (M2+1)). Maybe somehow we acquire and additional one sample of delay in 
   //   each of the 4 delaylines? This smells a bit like the implicit unit delay inherent in setting
-  //   up feedback paths in DSP filters. If this is correct, then we could fix it by shortening N1 
-  //   and N2 by one sample. That would even slightly reduce the required delay memory for the 
+  //   up feedback paths in DSP filters. If this is correct, then we could fix it by shortening M1 
+  //   and M2 by one sample. That would even slightly reduce the required delay memory for the 
   //   implementation. But somehow that seems implausible because it is not clear where this 
-  //   additional delay could come from. After all, we are not remembering any state variables from
-  //   one time step to the next except for the contents of the delay lines themselves.
+  //   additional delay could come from. After all, we are not storing any additional state 
+  //   variables from one loop iteration to the next. All data we have available in each iteration 
+  //   are the contents of the delay lines themselves. There is no such thing as a "previous 
+  //   output" in the algo. We don't even have any variables for such a thing.
   //   
   // - When doing the tap increments last (after writing inputs), the output signal is all zeros so
   //   that seems to be totally wrong. But maybe it could be made to work by doing something else
-  //   differently, too. I initially have thought that doing the updates last would be the right 
+  //   differently, too? I initially have thought that doing the updates last would be the right 
   //   way to do it.
   //
   //
   // ToDo:
   // 
-  // - Maybe make multiple versions of algorithm with different strategies when to do the tap
-  //   increments and write the results into vectors y1,y2,y3,...
-  // 
-  // - Try to do a mixed strategy: Update certain taps before the readout and others after it. 
-  //   Maybe the increments of the delaylines whose outputs are used for feedback should be 
+  // - Try to do a hybrid mixed strategy: Update certain taps before the readout and others after 
+  //   it. Maybe the increments of the delaylines whose outputs are used for feedback should be 
   //   post-incremented and the others (whose ouputs are used for transfering data within the two
-  //   partial delaylines that make up one half (upper or lower) of the waveguide) pre-incremented? // 
+  //   partial delaylines that make up one half (upper or lower) of the waveguide) pre-incremented? 
+  //   Maybe within such a hybrid update strategy, we could even have some of the updates as the 
+  //   very last thing? Here, I was assuming a hybrid between "first" and "middle" but maybe some 
+  //   hybrid with some updates "last" is possible?
   // 
   // - Create a reference signal using the naive WG algorithm, i.e. the one that uses 2 
   //   std::vectors. We want to try to match the behavior of the naive algo with a more efficient

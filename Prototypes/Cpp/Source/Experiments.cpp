@@ -18150,13 +18150,8 @@ void testWaveGuide1()
     Real xL1 = dL1.readOutput();
     Real xL2 = dL2.readOutput();
 
-    // Do the reflections at both ends:
-    dL1.writeInput(-xR2);    // ToDo: Use rR * xR2 with reflection coeff rR
-    dR1.writeInput(-xL2);    // ...dito with rL
-
-    // Do the transfer from the 1st to the 2nd parts:
-    dR2.writeInput(xR1);
-    dL2.writeInput(xL1);
+    // Produce and store output signal:
+    y[n] = xR1 + xL1;
 
     // Update the tap-pointers:
     dR1.incrementTapPointers();
@@ -18164,15 +18159,24 @@ void testWaveGuide1()
     dL1.incrementTapPointers();
     dL2.incrementTapPointers();
 
-    // Produce and store output signal:
-    y[n] = xR1 + xL1;
+    // Do the reflections at both ends:
+    dL1.writeInput(-xR2);    // ToDo: Use rR * xR2 with reflection coeff rR
+    dR1.writeInput(-xL2);    // ...dito with rL
+
+    // Do the transfer from the 1st to the 2nd parts:
+    dR2.writeInput(xR1);
+    dL2.writeInput(xL1);
   }
 
   // Plot the produced output signal:
   rsPlotVector(y);
 
 
+
   // ToDo: 
+  // 
+  // - Figure out and document what happens when we reorder the statements in the loop. What 
+  //   happens when we do the increments first/last/middle, etc.?
   // 
   // - Fill a std::vector with the desired inital shape and then transfer that shape 
   //   appropriately into both delaylines. This transfer can then be factored out and reused.

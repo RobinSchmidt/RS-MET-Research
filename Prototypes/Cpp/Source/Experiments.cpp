@@ -17952,7 +17952,10 @@ void testWaveGuide1()
   int N   = 1000;      // Number of samples to render
 
   // Smaller values for initial tests:
-  M = 10, mIn = 3, N = 50;
+  //M = 10, mIn = 3, N = 50;
+  //M = 15, mIn = 3, N = 50;     // M = 15 is deliberately 2^k - 1
+  //M = 16, mIn = 3, N = 50;
+  M = 17, mIn = 3, N = 50;
  
   // Create the delaylines and set up the delay time in samples:
   DL dl1, dl2;                 // Maybe rename to dlP, dlM where P,M stands for "plus","minus"
@@ -17963,7 +17966,9 @@ void testWaveGuide1()
 
   // Set up initial condition of the string:
   dl1.addToInputAt(1.0,   mIn);
-  dl2.addToInputAt(1.0, M-mIn);
+  //dl2.addToInputAt(1.0, M-mIn);
+  dl2.addToInputAt(1.0, M-mIn-1);  // Why -1?
+  //dl2.addToInputAt(1.0, mIn);
 
   // Allocate buffers to hold the output signals of the forward and backward propagating waves
   // (typically denoted by y+ and y- in the literature which we denote by P,M for plus/minus here)
@@ -17975,7 +17980,7 @@ void testWaveGuide1()
   for(int n = 0; n < N; n++)
   {
     // During development, we may plot the contents of the delaylines to see what is going on:
-    //rsPlotDelayLineContent(dl1, dl2);
+    rsPlotDelayLineContent(dl1, dl2, true);  // true: Reverse content of dl2
 
     // Preliminary:
     //Real out1 = dl1.getSample(0.0);
@@ -17991,10 +17996,15 @@ void testWaveGuide1()
     // Implement the mutual crossfeedback with inversion:
     dl1.addToInput(-out2);
     dl2.addToInput(-out1);
+    // Maybe instead of addToInput(), we should do something like setInput() or writeInput(). I 
+    // think, we want to overwrite the content instead of adding to what is already there.
 
     // Update the tap pointers in the delaylines:
     dl1.incrementTapPointers();
     dl2.incrementTapPointers();
+    // Maybe let it take an (optional) argument and pass +1 to dl1 and -1 to dl2.
+
+    //dl2.addToInput(-out1);
 
     // Store partial and complete output signals:
     yP[n] = out1;
@@ -18040,6 +18050,18 @@ void testWaveGuide1()
   //
   // - Allow for non-integer delays by providing various interpolation methods (linear, cubic, 
   //   Thiran-allpass, etc.)
+  // 
+  // - Check if it works when M is a power of 2. If so, it may mean that at some point where we
+  //   wrap around at maxDelay, we should actually wrap around the the delay instead.
+  //
+  // - Maybe the way it's currently implemented is flawed. Maybe to really implement a 
+  //   bidirectional delayline, we need to increment the tap pointers in dl1 and decrement them in 
+  //   dl2? But I think, it should be possible to do it with both delaylines incrementing. We may 
+  //   just need to configure the read- and write positions differently.
+  //
+  // - Maybe try it first with a naive implementation of a delayline whose length is exactly M such
+  //   that M is also the wrap-around modulus. Maybe the optimization with using a 2^k-1 length 
+  //   with bitmasking for wraparound should be done as an optimization later.
 }
 
 void testWaveGuides()

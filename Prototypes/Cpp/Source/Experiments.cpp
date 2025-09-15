@@ -17941,6 +17941,8 @@ void testStateSpaceFilters()
 // v is nonempty and instead check if it is empty and if so, return immediately such that with 
 // empty vectors, the functions do nothing.
 
+/** Shifts the content of the given vector by one position to the left and fills the right end up 
+with zero. */
 template<class T>
 void rsShiftLeft(std::vector<T>& v)
 {
@@ -17950,6 +17952,8 @@ void rsShiftLeft(std::vector<T>& v)
   v[v.size()-1] = T(0);
 }
 
+/** Shifts the content of the given vector by one position to the right and fills the left end up
+with zero. */
 template<class T>
 void rsShiftRight(std::vector<T>& v)
 {
@@ -17969,6 +17973,10 @@ buffers is that they store the spatial samples of the traveling wave components.
 the buffers themselves do not correspond to any measurable physical quantity. They are a 
 theoretical modeling device and only their sum gives a meaningful physical quantity.
 
+The time step moves the content of wL one spatial sample to the left and the content of wR one 
+spatial sample to the right. The now "freed" or "emptied" positions at the right end of wL and at 
+the left end of wR will be filled with the reflected wave from the respective other buffer. 
+
 ...TBC: explain how other boundary conditions can be implemented. I think, rL = rR = +1 corresponds
 to boundary conditions where the velocity is zero at both ends (verify!). What about using complex 
 reflection coeffs (and therfore complex waveguide contents)? Does that make any physical sense?
@@ -17978,7 +17986,7 @@ void rsWaveGuideStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
 {
   rsAssert(rsAreSameSize(wL, wR), "Sizes of buffers for leftward and rightward wave must match");
 
-  // Extract traveling wave components at the left and right boundary:
+  // Extract traveling wave components at the left and right boundary for reflection:
   int M = (int)wL.size();
   T xL = wL[0];
   T xR = wR[M-1];
@@ -17987,13 +17995,15 @@ void rsWaveGuideStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
   rsShiftLeft( wL);  // Shift content of wL one step leftward, rightmost position becomes empty
   rsShiftRight(wR);  // Shift content of wR one step rightward, leftmost position becomes empty
 
-  // Insert the reflected components into the now empty positions:
+  // Insert the reflected components into the now "empty" positions:
   wL[M-1] = rR * xR;
   wR[0]   = rL * xL;
 }
 
-void testWaveGuide1()
+void testWaveGuideNaiveImpulse()
 {
+  // Naive implementation of the wave propagation of an impulse-shaped waveform along a waveguide.
+  //
   // We naively implement a propagating wave using two std::vectors for the two traveling wave 
   // components in a 1D medium such as a string or air column in a tube. We really implement the 
   // traveling and reflections directly and literally. It is inefficient to do it like this but the
@@ -18001,13 +18011,13 @@ void testWaveGuide1()
   // realize via the waveguide (i.e. bidirecitonal delay line) approach. It's a preliminary 
   // experiment to produce some target data that we then want to match with the waveguides.
 
-  using Real = double;
+  using Real = double;                 // Maybe use "Amp" for general amplitude - might be complex later
   using Vec  = std::vector<Real>;
 
   // User parameters:
-  int  M  =  10;                       // Length of the string, number of spatial samples
-  int  m  =   3;                       // Input position (for strike, pluck, bow, etc.)
-  int  N  =  50;                       // Number of steps to take
+  int  M  =  10;                       // Length of the waveguide, number of spatial samples
+  int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
+  int  N  =  50;                       // Number of time steps to take in simulation
   Real rL =  -1.0;                     // Reflection coeff at left boundary
   Real rR =  -1.0;                     // Reflection coeff at right boundary
 
@@ -18015,7 +18025,7 @@ void testWaveGuide1()
   Vec wL(M), wR(M);
 
   // Set up initial condition of the string:
-  wL[m] = wR[m] = 1.0;                 // Single impulse at m
+  wL[m] = wR[m] = 1.0;                 // Set a single impulse at location m in both WGs
 
   // Do the time stepping and plot the contents of the wave buffers at each time step:
   for(int n = 0; n < N; n++)
@@ -18202,7 +18212,7 @@ void testWaveGuide2()
 
 void testWaveGuides()
 {
-  testWaveGuide1();
+  testWaveGuideNaiveImpulse();
   testWaveGuide2();
 }
 

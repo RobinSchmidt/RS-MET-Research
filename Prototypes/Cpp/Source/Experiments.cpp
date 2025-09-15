@@ -17936,7 +17936,85 @@ void testStateSpaceFilters()
 
 
 
+// Maybe move these two functions below into the library. But maybe then we should not assert that
+// v is nonempty and instead check if it is empty and if so, return immediately such that with 
+// empty vectors, the functions do nothing.
+
+template<class T>
+void rsShiftLeft(std::vector<T>& v)
+{
+  rsAssert(v.size() > 0, "Size of v must be at least 1"); // or else: access violation
+  for(size_t i = 0; i < v.size()-1; i++)
+    v[i] = v[i+1];
+  v[v.size()-1] = T(0);
+}
+
+template<class T>
+void rsShiftRight(std::vector<T>& v)
+{
+  rsAssert(v.size() > 0, "Size of v must be at least 1"); // or else: access violation
+  for(size_t i = v.size()-1; i > 0; i--)
+    v[i] = v[i-1];
+  v[0] = T(0);
+}
+
 void testWaveGuide1()
+{
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+  int M   = 100;             // Length of the delaylines
+  int mIn = 30;              // Input position (for strike, pluck, bow, etc.)
+  int N   = 1000;            // Number of samples to render
+
+  M = 10, mIn = 3, N = 50;
+
+  // Create vectors that hold the leftward and rightward traveling wave components:
+  Vec wL(M), wR(M);
+
+  // Set up initial condition of the string:
+  wL[mIn] = wR[mIn] = 1.0;   // Single impulse at mIn
+
+  // Define helper function to do one time step of the wave traveling action:
+  auto doStep = [&]() 
+  {
+    // Extract wave components at the left and right boundary:
+    Real xL = wL[0];
+    Real xR = wR[M-1];
+
+    // Let the wave components travel by one spacial unit:
+    rsShiftLeft( wL);  // Shift content of wL one step leftward, rightmost position becomes empty
+    rsShiftRight(wR);  // Shift content of wR one step rightward, leftmost position becomes empty
+
+    // Insert the reflected components into the now empty positions:
+    wL[M-1] = -xR;
+    wR[0]   = -xL;
+    // ToDo: Maybe instead of a minus, use user adjustable factors. -1 corresponds to an inverting
+    // reflection which corresponds to a "zero displacement" boundary condition. I think +1 would
+    // correspond to a "zero velocity" boundary condition. In general, we may use different 
+    // boundary conditions for the left and right end, so maybe give the user two adjustable coeffs
+    // rL, rR (for reflection coeff left/right).
+  };
+
+  for(int n = 0; n < N; n++)
+  {
+    // Plot the contents of the traveling wave vectors and their sum which represents the physical
+    // wave:
+    //rsPlotVectors(wL, wR);             // Only the traveling wvae components
+    rsPlotVectors(wL+wR);              // Only the physical wave
+    //rsPlotVectors(wL, wR, wL+wR);      // Everything
+
+    // Advance the traveling waves by one time step:
+    doStep();
+  }
+
+  // Plot the contents of the traveling wave vectors and their sum which represents the physical
+  // wave:
+  //rsPlotVectors(wL, wR, wL+wR);
+  int dummy = 0;
+}
+
+void testWaveGuide2()
 {
   // Under construction. Not very far yet.
 
@@ -17947,9 +18025,9 @@ void testWaveGuide1()
   using DL   = RAPT::rsDelay<Real>;
   using Vec  = std::vector<Real>;
 
-  int M   = 100;       // Length of the delaylines
-  int mIn = 30;        // Input position (for strike, pluck, bow, etc.)
-  int N   = 1000;      // Number of samples to render
+  int M   = 100;             // Length of the delaylines
+  int mIn = 30;              // Input position (for strike, pluck, bow, etc.)
+  int N   = 1000;            // Number of samples to render
 
   // Smaller values for initial tests:
   //M = 10, mIn = 3, N = 50;
@@ -17958,7 +18036,8 @@ void testWaveGuide1()
   //M = 17, mIn = 3, N = 50;
  
   // Create the delaylines and set up the delay time in samples:
-  DL dl1, dl2;                 // Maybe rename to dlP, dlM where P,M stands for "plus","minus"
+  DL dl1, dl2;  // Maybe rename to dlP, dlM where P,M stands for "plus","minus" or to 
+                // dlL, dlR where L,R means "left","right". Or maybe just use dL,dR
   dl1.setMaxDelayInSamples(M);
   dl2.setMaxDelayInSamples(M);
   dl1.setDelayInSamples(M);
@@ -18077,6 +18156,7 @@ void testWaveGuide1()
 void testWaveGuides()
 {
   testWaveGuide1();
+  testWaveGuide2();
 }
 
 

@@ -17980,7 +17980,13 @@ the left end of wR will be filled with the reflected wave from the respective ot
 ...TBC: explain how other boundary conditions can be implemented. I think, rL = rR = +1 corresponds
 to boundary conditions where the velocity is zero at both ends (verify!). What about using complex 
 reflection coeffs (and therfore complex waveguide contents)? Does that make any physical sense?
-Even if not, it may be interesting to experiment with nonetheless. Maybe it's useful? */
+Even if not, it may be interesting to experiment with nonetheless. Maybe it's useful? I think, it 
+does make physical sense when the real part represents velocity and the imaginary part represents
+displacement or in general, the real part represents the derivative of the imaginary part. For a 
+sine wave in the imaginary part, we would have a cosine wave in the real part - the derivative of
+a sine is a cosine. I think, we could also use the real part for displacement and the negated(!) 
+imaginary part for the velocity (derivative). We need to negate because the derivative of cosine is
+minus sine. Verify this!  */
 template<class T>
 void rsWaveGuideStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
 {
@@ -18070,6 +18076,66 @@ void testWaveGuideNaiveImpulse()
   // - Create an animation. To facilitate this, write some infrastructure for producing such 
   //   animations. This will be very helpful in the development of waveguide models.
 }
+
+/** Convenience function to set up the delay in the given delayLine. If the requested delay is 
+greater thatn teh currently available maximum delay, the maximum delay will automatically be 
+increased. This is the "convenience" part. */
+template<class T>
+void rsSetDelay(RAPT::rsDelay<T>* delayLine, int delayInSamples)
+{
+  if(delayLine->getMaxDelayInSamples() < delayInSamples)
+    delayLine->setMaxDelayInSamples(delayInSamples);
+  delayLine->setDelayInSamples(delayInSamples);
+}
+// Maybe move into library. In some experiments in the main repo, I often have the 2-line pattern:
+//  
+//   delayLine.setMaxDelayInSamples(M);
+//   delayLine.setDelayInSamples(M);
+//
+// which can then be replaced by the 1-liner:
+//
+//   rsSetDelay(&delayLine, M)
+
+
+void testWaveGuide1()
+{
+  // We implement a waveguide using 4 delaylines as shown in PASP, Fig 2.13 (page 50) or here:
+  // 
+  //   https://ccrma.stanford.edu/~jos/pasp/Physical_Outputs.html
+  // 
+  // with boundary conditions implemented like shown in Fig 1.14 (page 31) or here:
+  // 
+  //   https://ccrma.stanford.edu/~jos/pasp/Digital_Waveguide_Modeling_Elements.html
+
+  using Real = double;
+  using DL   = RAPT::rsDelay<Real>;
+  using Vec  = std::vector<Real>;
+  
+  int N1 = 3;
+  int N2 = 7;
+  int N  = N1+N2;            // Total delay
+
+  // Create and set up the delaylines:
+  DL dR1, dR2;               // 1st and 2nd part of delay for rightward wave
+  DL dL1, dL2;               // 1st and 2nd part of delay for leftward wave
+  rsSetDelay(&dR1, N1);
+  rsSetDelay(&dR2, N2);
+  rsSetDelay(&dL1, N2);
+  rsSetDelay(&dL2, N1);
+  // We use the convention that dL1 is the bottom-right delay line in the block diagram. The idea
+  // is that the numbering goes around the delaylines in the same way as the signal flows. But it 
+  // may be confusing that the dL1 uses N2 and dL2 uses N1. Maybe use different names for the delay
+  // lines that don't involve numbers.
+
+  // Set up initial conditions:
+
+  // ToDo: fill a std::vector with the desired inital shape and then transfer that shape 
+  // appropriately into both delaylines. This transfer can then be factored out and reused.
+
+
+  int dummy = 0;
+}
+
 
 void testWaveGuide2()
 {
@@ -18212,8 +18278,9 @@ void testWaveGuide2()
 
 void testWaveGuides()
 {
-  testWaveGuideNaiveImpulse();
-  testWaveGuide2();
+  //testWaveGuideNaiveImpulse();
+  testWaveGuide1();
+  //testWaveGuide2();
 }
 
 //=================================================================================================

@@ -17958,30 +17958,65 @@ void rsShiftRight(std::vector<T>& v)
   v[0] = T(0);
 }
 
+/** Performs a single update step in a naive waveguide implementation. The vectors wL,wR are the 
+buffers for the leftward and rightward traveling wave components and rL and rR are the reflection
+coefficients at the left and right boudary respectively. For a lossless waveguide, they should both 
+have an absolute value of 1. If both are -1, this corresponds to boundary conditions where the 
+displacement is fixed at zero at both ends. A physical wave variable such as the actual 
+displacement of a string is given by the sum of both buffers. The physical interpretation of the 
+buffers is that they store the spatial samples of the traveling wave components. The contents of 
+the buffers themselves do not correspond to any measurable physical quantity. They are a 
+theoretical modeling device and only their sum gives a meaningful physical quantity.
+
+...TBC: explain how other boundary conditions can be implemented. What about using complex 
+reflection coeffs (and therfore complex waveguide contents)? Does that make any physical sense?
+Even if not, it may be interesting to experiment with nonetheless. Maybe it's useful? */
+template<class T>
+void rsWaveguideStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
+{
+  rsAssert(rsAreSameSize(wL, wR), "Sizes of buffers for leftward and rightward wave must match");
+
+  // Extract traveling wave components at the left and right boundary:
+  int M = (int)wL.size();
+  T xL = wL[0];
+  T xR = wR[M-1];
+
+  // Let the wave components travel by one spacial unit:
+  rsShiftLeft( wL);  // Shift content of wL one step leftward, rightmost position becomes empty
+  rsShiftRight(wR);  // Shift content of wR one step rightward, leftmost position becomes empty
+
+  // Insert the reflected components into the now empty positions:
+  wL[M-1] = rR * xR;
+  wR[0]   = rL * xL;
+}
+
+
 void testWaveGuide1()
 {
   // We naively implement a propagating wave using two std::vectors for the two traveling wave 
-  // components. We really implement the traveling and reflections directly and literally. It is
-  // inefficient to do it like this but the purpose of this experiment is merely to produce the 
-  // target behavior that we then want to realize via the waveguide (i.e. bidirecitonal delay line)
-  // approach. It's a preliminary experiment to produce some target data that we then want to match
-  // with the waveguides.
+  // components in a 1D medium such as a string or air column in a tube. We really implement the 
+  // traveling and reflections directly and literally. It is inefficient to do it like this but the
+  // purpose of this experiment is merely to produce the target behavior that we then want to 
+  // realize via the waveguide (i.e. bidirecitonal delay line) approach. It's a preliminary 
+  // experiment to produce some target data that we then want to match with the waveguides.
 
   using Real = double;
   using Vec  = std::vector<Real>;
 
-  int M   = 10;              // Length of the delaylines
-  int mIn = 3;               // Input position (for strike, pluck, bow, etc.)
-  int N   = 50;              // Number of steps to take
-
-  //M = 10, mIn = 3, N = 50;
+  // User parameters:
+  int  M  =  10;               // Length of the string, number of spatial samples
+  int  m  =   3;               // Input position (for strike, pluck, bow, etc.)
+  int  N  =  50;               // Number of steps to take
+  Real rL =  -1.0;             // Reflection coeff at left boundary
+  Real rR =  -1.0;             // Reflection coeff at right boundary
 
   // Create vectors that hold the leftward and rightward traveling wave components:
   Vec wL(M), wR(M);
 
   // Set up initial condition of the string:
-  wL[mIn] = wR[mIn] = 1.0;   // Single impulse at mIn
+  wL[m] = wR[m] = 1.0;         // Single impulse at mIn
 
+  /*
   // Define helper function to do one time step of the wave traveling action:
   auto doStep = [&]() 
   {
@@ -17994,14 +18029,15 @@ void testWaveGuide1()
     rsShiftRight(wR);  // Shift content of wR one step rightward, leftmost position becomes empty
 
     // Insert the reflected components into the now empty positions:
-    wL[M-1] = -xR;
-    wR[0]   = -xL;
+    wL[M-1] = rR * xR;
+    wR[0]   = rL * xL;
     // ToDo: Maybe instead of a minus, use user adjustable factors. -1 corresponds to an inverting
     // reflection which corresponds to a "zero displacement" boundary condition. I think +1 would
     // correspond to a "zero velocity" boundary condition. In general, we may use different 
     // boundary conditions for the left and right end, so maybe give the user two adjustable coeffs
     // rL, rR (for reflection coeff left/right).
   };
+  */
 
   for(int n = 0; n < N; n++)
   {
@@ -18012,14 +18048,9 @@ void testWaveGuide1()
     //rsPlotVectors(wL, wR, wL+wR);      // Everything
 
     // Advance the traveling waves by one time step:
-    doStep();
+    rsWaveguideStep(wL, wR, rL, rR);
+    //doStep();
   }
-
-  // Plot the contents of the traveling wave vectors and their sum which represents the physical
-  // wave:
-  //rsPlotVectors(wL, wR, wL+wR);
-  //int dummy = 0;
-
 
   // Observations:
   //
@@ -18031,15 +18062,34 @@ void testWaveGuide1()
   //   is the same as the initial situation. There isn't any content swapping between wL and wR 
   //   going on. By just looking at n = 0 and n = 2M, we couldn't rule out content swapping. But by
   //   looking at n = 1 and n = 2M+1, we can.
+  // 
+  // - After M steps we see a situation that looks like the initial condition but reflected 
+  //   horizontally. That means, the impulses in wL and wR are now also both equal to each other 
+  //   but are now located at M-1-m rather than at m. When rL = rR = -1, it is also vertically 
+  //   reflected. When rL = rR = +1, it's not vertically reflected. When rL and rR have opposite 
+  //   signs, then one of the waves is reflected and the other one isn't (so their sum would cancel
+  //   to zero). In this case, we do not come back to the initial condition after 2M steps. 
+  //   Instead, we come to a condition that equals the inverted (i.e. negated) initial condition.
+  //   To come back to the original non-inverted initial condition, we need to wait another 2M time
+  //   steps. I think that means that when we use opposite signs for the left and right reflection 
+  //   coeffs, we double the temporal period length of the vibration. Maybe this also implies that 
+  //   we will see only odd harmonics because wherever we pick up a signal, its second half wave 
+  //   will be the mirror image of its first half wave?
   //
   // 
   // ToDo:
+  // 
+  // - Try all 4 possible assignments for rL and rR. Each of them can be either -1 or +1. Will we 
+  //   still see repetition of the initial state after 2M steps with all possible configurations?
   // 
   // - Figure out if it is still the case that wL *and* wR are back to their initial conditions 
   //   when we init wL and wR differently. Maybe in this case, only the sum wL+wR is the same at 
   //   step 2M as it was as step 0 but the contents of wL and wr have been swapped? And/or maybe
   //   compare contents of wL and wR at time steps 1 and 2M+1. This way, swe should also be able 
   //   to see the swap, if any because at step 1, the contents of wL and wR are actually different.
+  // 
+  // - Refactor the code such that we can re-use the relevant parts of it in the context of unit 
+  //   tests for an actual waveguide implementation.
   //
   // - Create an animation. To facilitate this, write some infrastructure for producing such 
   //   animations. This will be very helpful in the development of waveguide models.

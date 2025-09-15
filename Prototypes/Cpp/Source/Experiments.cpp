@@ -18116,13 +18116,11 @@ void testWaveGuide1()
   using DL   = RAPT::rsDelay<Real>;
   using Vec  = std::vector<Real>;
   
-  int N1 = 3;
-  int N2 = 7;
-  //int N  = N1+N2;            // Total delay
+  int numSamples = 100;      // Number of samples to generate
+  int N1 = 3;                // Length of the delay left hand (not leftward!) delaylines
+  int N2 = 7;                // Dito for right hand delaylines (right in the block diagram)
   // Maybe use M1,M2 instead of N1,N2. This is inconsistent with the notation in the book but more
   // consistent with the naming conventions in the rest of the code.
-
-  int numSamples = 50;       // Or maybe call it numSteps
 
   // Create and set up the delaylines:
   DL dR1, dR2;               // 1st and 2nd part of delay for rightward wave
@@ -18144,6 +18142,12 @@ void testWaveGuide1()
   Vec y(numSamples);
   for(int n = 0; n < numSamples; n++)  
   {
+    // Update the tap-pointers:
+    dR1.incrementTapPointers();
+    dR2.incrementTapPointers();
+    dL1.incrementTapPointers();
+    dL2.incrementTapPointers();
+
     // Read outputs of the delay lines:
     Real xR1 = dR1.readOutput();
     Real xR2 = dR2.readOutput();
@@ -18152,12 +18156,6 @@ void testWaveGuide1()
 
     // Produce and store output signal:
     y[n] = xR1 + xL1;
-
-    // Update the tap-pointers:
-    dR1.incrementTapPointers();
-    dR2.incrementTapPointers();
-    dL1.incrementTapPointers();
-    dL2.incrementTapPointers();
 
     // Do the reflections at both ends:
     dL1.writeInput(-xR2);    // ToDo: Use rR * xR2 with reflection coeff rR
@@ -18172,11 +18170,36 @@ void testWaveGuide1()
   rsPlotVector(y);
 
 
-
+  // Observations:
+  //
+  // - When doing the tap-increments first (before reading the outputs), we see the upward spikes 
+  //   at n = 19,39,59,79,99,... so the period is 20 = 2 * (N1 + N2) as expected. However, I would
+  //   have expected to see the spikes at 0,20,40,60,80,... So it seems they are one sample too 
+  //   early. Maybe we can fix this by adjusting (decrementing?) the tap pointers before entering 
+  //   the loop. But that seems a bit hacky. Maybe there is a more principled solution.
+  // 
+  // - When doing the tap increments in the middle (in between reading outputs and writing inputs),
+  //   the upard spikes are at 23,47,71,95 so the period is 24. That is strange! Why does this 
+  //   happen? How is 24 related to the N1, N2 settings? Maybe it's because 
+  //   24 = 2 * ((N1+1) + (N2+1)). Maybe somehow we acquire and additional one sample of delay in 
+  //   each of the 4 delaylines? This smells a bit like the implicit unit delay inherent in setting
+  //   up feedback paths in DSP filters. If this is correct, then we could fix it by shortening N1 
+  //   and N2 by one sample. That would even slightly reduce the required delay memory for the 
+  //   implementation. But somehow that seems implausible because it is not clear where this 
+  //   additional delay could come from. After all, we are not remembering any state variables from
+  //   one time step to the next except for the contents of the delay lines themselves.
+  //   
+  // - When doing the tap increments last (after writing inputs), the output signal is all zeros so
+  //   that seems to be totally wrong. But maybe it could be made to work by doing something else
+  //   differently, too.
+  //
+  //
   // ToDo: 
   // 
-  // - Figure out and document what happens when we reorder the statements in the loop. What 
-  //   happens when we do the increments first/last/middle, etc.?
+  // - Try to do a mixed strategy: Update ceratin taps before the readout and others after it. 
+  //   Maybe the increments of the delaylines whose outputs are used for feedback should be 
+  //   post-incremented an the others (whose ouputs are used for transfering data within the two
+  //   partial delaylines that make up one half (uppr or lower) of the waveguide) pre-incremented?
   // 
   // - Fill a std::vector with the desired inital shape and then transfer that shape 
   //   appropriately into both delaylines. This transfer can then be factored out and reused.

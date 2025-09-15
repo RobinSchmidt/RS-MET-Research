@@ -18099,13 +18099,18 @@ void rsSetDelay(RAPT::rsDelay<T>* delayLine, int delayInSamples)
 
 void testWaveGuide1()
 {
-  // We implement a waveguide using 4 delaylines as shown in PASP, Fig 2.13 (page 50) or here:
+  // We implement a waveguide using 4 delaylines as shown in PASP, Fig 2.13 page 50 or here:
   // 
   //   https://ccrma.stanford.edu/~jos/pasp/Physical_Outputs.html
   // 
-  // with boundary conditions implemented like shown in Fig 1.14 (page 31) or here:
+  // with boundary conditions implemented like shown in Fig 1.14 page 31 or here:
   // 
   //   https://ccrma.stanford.edu/~jos/pasp/Digital_Waveguide_Modeling_Elements.html
+  //
+  // The input impulse is injected according to Fig 2.14 page 51 or here:
+  //
+  //   https://ccrma.stanford.edu/~jos/pasp/Physical_Inputs.html
+
 
   using Real = double;
   using DL   = RAPT::rsDelay<Real>;
@@ -18113,7 +18118,11 @@ void testWaveGuide1()
   
   int N1 = 3;
   int N2 = 7;
-  int N  = N1+N2;            // Total delay
+  //int N  = N1+N2;            // Total delay
+  // Maybe use M1,M2 instead of N1,N2. This is inconsistent with the notation in the book but more
+  // consistent with the naming conventions in the rest of the code.
+
+  int numSamples = 50;       // Or maybe call it numSteps
 
   // Create and set up the delaylines:
   DL dR1, dR2;               // 1st and 2nd part of delay for rightward wave
@@ -18127,13 +18136,46 @@ void testWaveGuide1()
   // may be confusing that the dL1 uses N2 and dL2 uses N1. Maybe use different names for the delay
   // lines that don't involve numbers.
 
-  // Set up initial conditions:
+  // Set up initial conditions as in Fig 2.14:
+  dR2.writeInput(1.0);
+  dL2.writeInput(1.0);
 
-  // ToDo: fill a std::vector with the desired inital shape and then transfer that shape 
-  // appropriately into both delaylines. This transfer can then be factored out and reused.
+  // The loop through the time steps:
+  Vec y(numSamples);
+  for(int n = 0; n < numSamples; n++)  
+  {
+    // Read outputs of the delay lines:
+    Real xR1 = dR1.readOutput();
+    Real xR2 = dR2.readOutput();
+    Real xL1 = dL1.readOutput();
+    Real xL2 = dL2.readOutput();
+
+    // Do the reflections at both ends:
+    dL1.writeInput(-xR2);    // ToDo: Use rR * xR2 with reflection coeff rR
+    dR1.writeInput(-xL2);    // ...dito with rL
+
+    // Do the transfer from the 1st to the 2nd parts:
+    dR2.writeInput(xR1);
+    dL2.writeInput(xL1);
+
+    // Update the tap-pointers:
+    dR1.incrementTapPointers();
+    dR2.incrementTapPointers();
+    dL1.incrementTapPointers();
+    dL2.incrementTapPointers();
+
+    // Produce and store output signal:
+    y[n] = xR1 + xL1;
+  }
+
+  // Plot the produced output signal:
+  rsPlotVector(y);
 
 
-  int dummy = 0;
+  // ToDo: 
+  // 
+  // - Fill a std::vector with the desired inital shape and then transfer that shape 
+  //   appropriately into both delaylines. This transfer can then be factored out and reused.
 }
 
 

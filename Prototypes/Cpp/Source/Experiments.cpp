@@ -18283,10 +18283,13 @@ void testWaveGuide1()
   }
 
   // Plot the produced output signals:
-  rsPlotVector(yR);  // Reference signal produced by naive algo.
-  rsPlotVector(y1);  // Has correct period of 2*(M1+M2). Seems 1 sample too early, though.
-  rsPlotVector(y2);  // Has wrong period.
-  rsPlotVector(y3);  // Is all zeros.
+  //rsPlotVector(yR);  // Reference signal produced by naive algo.
+  //rsPlotVector(y1);  // Has correct period of 2*(M1+M2). Seems 1 sample too early, though.
+  //rsPlotVector(y2);  // Has wrong period.
+  //rsPlotVector(y3);  // Is all zeros.
+
+  // Plot reference signal together with one of our outputs signals:
+  rsPlotVectors(yR, y1);
 
 
   // Observations:

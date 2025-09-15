@@ -18078,13 +18078,14 @@ void testWaveGuideNaiveImpulse()
 }
 
 /** Convenience function to set up the delay in the given delayLine. If the requested delay is 
-greater thatn teh currently available maximum delay, the maximum delay will automatically be 
-increased. This is the "convenience" part. */
+greater than the currently available maximum delay, the maximum delay will automatically be 
+increased. This is the "convenience" part. It's meant for use in offline experiments but not in 
+realtime rendering (because increasing the maximum delay may reallocate memory). */
 template<class T>
 void rsSetDelay(RAPT::rsDelay<T>* delayLine, int delayInSamples)
 {
   if(delayLine->getMaxDelayInSamples() < delayInSamples)
-    delayLine->setMaxDelayInSamples(delayInSamples);
+    delayLine->setMaxDelayInSamples(delayInSamples);       // May allocate
   delayLine->setDelayInSamples(delayInSamples);
 }
 // Maybe move into library. In some experiments in the main repo, I often have the 2-line pattern:
@@ -18094,7 +18095,10 @@ void rsSetDelay(RAPT::rsDelay<T>* delayLine, int delayInSamples)
 //
 // which can then be replaced by the 1-liner:
 //
-//   rsSetDelay(&delayLine, M)
+//   rsSetDelay(&delayLine, M);
+//
+// But maybe it should be somewhere in the rs_testing module and not in the RAPT library itself. It
+// may confuse users there.
 
 
 void testWaveGuide1()
@@ -18107,34 +18111,41 @@ void testWaveGuide1()
   // 
   //   https://ccrma.stanford.edu/~jos/pasp/Digital_Waveguide_Modeling_Elements.html
   //
-  // The input impulse is injected according to Fig 2.14 page 51 or here:
+  // although we are a bit more general here and allow the -1 factors to be any numbers. These 
+  // reflection coefficients can be set up via the variables rR,rL below. The input impulse is 
+  // injected according to Fig 2.14 page 51 or here:
   //
   //   https://ccrma.stanford.edu/~jos/pasp/Physical_Inputs.html
+  //
+  // The N1,N2 values for the delay lines in these diagrams correspond to our M1,M2 variables here.
+  // I wanted to use M for the delay variables consistency with other parts of the codebase. The 
+  // book itself also often uses M for delay line lengths in many other places.
 
 
   using Real = double;
   using DL   = RAPT::rsDelay<Real>;
   using Vec  = std::vector<Real>;
   
-  int numSamples = 100;      // Number of samples to generate
-  int N1 = 3;                // Length of the delay left hand (not leftward!) delaylines
-  int N2 = 7;                // Dito for right hand delaylines (right in the block diagram)
-  // Maybe use M1,M2 instead of N1,N2. This is inconsistent with the notation in the book but more
-  // consistent with the naming conventions in the rest of the code.
+  // User parameters:
+  int  N  = 100;             // Number of samples to generate
+  int  M1 =   3;             // Length of the delay left hand (not leftward!) delaylines
+  int  M2 =   7;             // Dito for right hand delaylines (right in the block diagram)
+  Real rR =  -1.0;           // Reflection coeff at right boundary
+  Real rL =  -1.0;           // Reflection coeff at left boundary
 
   // Create and set up the delaylines:
   DL dR1, dR2;               // 1st and 2nd part of delay for rightward wave
   DL dL1, dL2;               // 1st and 2nd part of delay for leftward wave
-  rsSetDelay(&dR1, N1);
-  rsSetDelay(&dR2, N2);
-  rsSetDelay(&dL1, N2);
-  rsSetDelay(&dL2, N1);
+  rsSetDelay(&dR1, M1);
+  rsSetDelay(&dR2, M2);
+  rsSetDelay(&dL1, M2);
+  rsSetDelay(&dL2, M1);
   // We use the convention that dL1 is the bottom-right delay line in the block diagram. The idea
   // is that the numbering goes around the delaylines in the same way as the signal flows. But it 
   // may be confusing that the dL1 uses N2 and dL2 uses N1. Maybe use different names for the delay
   // lines that don't involve numbers.
 
-  // Helper function to clear all delay lines:
+  // Helper function to reset all delay lines:
   auto resetDelays = [&]() 
   {
     dR1.reset();
@@ -18149,8 +18160,8 @@ void testWaveGuide1()
   resetDelays();
   dR2.writeInput(1.0);                     // Set up initial conditions as in Fig 2.14:
   dL2.writeInput(1.0);
-  Vec y1(numSamples);
-  for(int n = 0; n < numSamples; n++)      // Loop through the time steps
+  Vec y1(N);
+  for(int n = 0; n < N; n++)               // Loop through the time steps
   {
     // Update the tap-pointers:
     dR1.incrementTapPointers();
@@ -18168,13 +18179,17 @@ void testWaveGuide1()
     y1[n] = xR1 + xL1;
 
     // Do the reflections at both ends:
-    dL1.writeInput(-xR2);    // ToDo: Use rR * xR2 with reflection coeff rR
-    dR1.writeInput(-xL2);    // ...dito with rL
+    dL1.writeInput(rR * xR2);
+    dR1.writeInput(rL * xL2);
 
     // Do the transfer from the 1st to the 2nd parts:
     dR2.writeInput(xR1);
     dL2.writeInput(xL1);
   }
+
+
+
+
 
 
   // Plot the produced output signal:
@@ -18213,7 +18228,13 @@ void testWaveGuide1()
   // - Try to do a mixed strategy: Update certain taps before the readout and others after it. 
   //   Maybe the increments of the delaylines whose outputs are used for feedback should be 
   //   post-incremented and the others (whose ouputs are used for transfering data within the two
-  //   partial delaylines that make up one half (upper or lower) of the waveguide) pre-incremented?
+  //   partial delaylines that make up one half (upper or lower) of the waveguide) pre-incremented? // 
+  // 
+  // - Create a reference signal using the naive WG algorithm, i.e. the one that uses 2 
+  //   std::vectors. We want to try to match the behavior of the naive algo with a more efficient
+  //   delay line based algorithm. The naive algo updates the state of the whole vectors per sample
+  //   by shifting the contents which has a per sample complexity of O(M) when M is the length of 
+  //   the WG (e.g. the virtual string or bore). A delay based algo does it in O(1) per sample.
   // 
   // - Fill a std::vector with the desired inital shape and then transfer that shape 
   //   appropriately into both delaylines. This transfer can then be factored out and reused.

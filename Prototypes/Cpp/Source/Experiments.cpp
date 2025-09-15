@@ -18134,13 +18134,23 @@ void testWaveGuide1()
   // may be confusing that the dL1 uses N2 and dL2 uses N1. Maybe use different names for the delay
   // lines that don't involve numbers.
 
-  // Set up initial conditions as in Fig 2.14:
-  dR2.writeInput(1.0);
-  dL2.writeInput(1.0);
+  // Helper function to clear all delay lines:
+  auto resetDelays = [&]() 
+  {
+    dR1.reset();
+    dR2.reset();
+    dL1.reset();
+    dL2.reset();
+  };
 
-  // The loop through the time steps:
-  Vec y(numSamples);
-  for(int n = 0; n < numSamples; n++)  
+
+  // The first version of the algorithm. Here, we do the increments of the tap pointers as the 
+  // first thing in the per sample computation:
+  resetDelays();
+  dR2.writeInput(1.0);                     // Set up initial conditions as in Fig 2.14:
+  dL2.writeInput(1.0);
+  Vec y1(numSamples);
+  for(int n = 0; n < numSamples; n++)      // Loop through the time steps
   {
     // Update the tap-pointers:
     dR1.incrementTapPointers();
@@ -18155,7 +18165,7 @@ void testWaveGuide1()
     Real xL2 = dL2.readOutput();
 
     // Produce and store output signal:
-    y[n] = xR1 + xL1;
+    y1[n] = xR1 + xL1;
 
     // Do the reflections at both ends:
     dL1.writeInput(-xR2);    // ToDo: Use rR * xR2 with reflection coeff rR
@@ -18166,8 +18176,9 @@ void testWaveGuide1()
     dL2.writeInput(xL1);
   }
 
+
   // Plot the produced output signal:
-  rsPlotVector(y);
+  rsPlotVector(y1);
 
 
   // Observations:
@@ -18179,7 +18190,7 @@ void testWaveGuide1()
   //   the loop. But that seems a bit hacky. Maybe there is a more principled solution.
   // 
   // - When doing the tap increments in the middle (in between reading outputs and writing inputs),
-  //   the upard spikes are at 23,47,71,95 so the period is 24. That is strange! Why does this 
+  //   the upward spikes are at 23,47,71,95 so the period is 24. That is strange! Why does this 
   //   happen? How is 24 related to the N1, N2 settings? Maybe it's because 
   //   24 = 2 * ((N1+1) + (N2+1)). Maybe somehow we acquire and additional one sample of delay in 
   //   each of the 4 delaylines? This smells a bit like the implicit unit delay inherent in setting
@@ -18194,12 +18205,15 @@ void testWaveGuide1()
   //   differently, too.
   //
   //
-  // ToDo: 
+  // ToDo:
   // 
-  // - Try to do a mixed strategy: Update ceratin taps before the readout and others after it. 
+  // - Maybe make multiple versions of algorithm with different strategies when to do the tap
+  //   increments and write the results into vectors y1,y2,y3,...
+  // 
+  // - Try to do a mixed strategy: Update certain taps before the readout and others after it. 
   //   Maybe the increments of the delaylines whose outputs are used for feedback should be 
-  //   post-incremented an the others (whose ouputs are used for transfering data within the two
-  //   partial delaylines that make up one half (uppr or lower) of the waveguide) pre-incremented?
+  //   post-incremented and the others (whose ouputs are used for transfering data within the two
+  //   partial delaylines that make up one half (upper or lower) of the waveguide) pre-incremented?
   // 
   // - Fill a std::vector with the desired inital shape and then transfer that shape 
   //   appropriately into both delaylines. This transfer can then be factored out and reused.

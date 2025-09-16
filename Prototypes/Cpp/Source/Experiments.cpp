@@ -18296,14 +18296,42 @@ void testWaveGuide1()
     y4[n] = xR1 + xL1;
   }
 
+  // In this 5th version, we do another hybrid updating strategy ...TBC...
+  resetDelays();
+  dR2.writeInput(1.0);
+  dL2.writeInput(1.0);
+  Vec y5(N);
+  for(int n = 0; n < N; n++)
+  {
+    dR2.incrementTapPointers();            // Increment "inner" delay lines
+    dL1.incrementTapPointers();
+
+    Real xR1 = dR1.readOutput();           // Read
+    Real xR2 = dR2.readOutput();
+    Real xL1 = dL1.readOutput();
+    Real xL2 = dL2.readOutput();
+
+    dR1.incrementTapPointers();            // Increment "outer" delay lines
+    dL2.incrementTapPointers();
+
+    dL1.writeInput(rR * xR2);              // Write
+    dR1.writeInput(rL * xL2);
+    dR2.writeInput(xR1);
+    dL2.writeInput(xL1);
+
+    y5[n] = xR1 + xL1;
+  }
+
 
 
   // Plot the produced output signals:
-  //rsPlotVector(yR);  // Reference signal produced by naive algo.
-  //rsPlotVector(y1);  // Has correct period of 2*(M1+M2). Seems 1 sample too early, though.
-  //rsPlotVector(y2);  // Has wrong period.
-  //rsPlotVector(y3);  // Is all zeros.
-  rsPlotVector(y4);
+  //rsPlotVector(yR);     // Reference signal produced by naive algo.
+  //rsPlotVector(y1);     // Has correct period of 2*(M1+M2). Seems 1 sample too early, though.
+  //rsPlotVector(y2);     // Has wrong period.
+  //rsPlotVector(y3);     // Is all zeros.
+  //rsPlotVector(y4);
+  //rsPlotVector(y5);
+  rsPlotVectors(y4, y5);  // They look different in the lower half-wave
 
   // Plot reference signal together with one of our output signals:
   rsPlotVectors(yR, y1);

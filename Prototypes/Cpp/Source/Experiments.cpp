@@ -7442,11 +7442,11 @@ void testPDE_1stOrder()
   using Vec = std::vector<float>;
 
   // Set up mesh and video parameters:
-  int Mx        = 40; // number of spatial samples in x direction
-  int My        = 20; // number of spatial samples in y direction
+  int Mx        = 40;    // number of spatial samples in x direction
+  int My        = 20;    // number of spatial samples in y direction
   int numFrames = 250;
   int width     = Mx*10;
-  int height    = (int)round(My*10 * sqrt(3));
+  int height    = (int)round(My*10 * sqrt(3)); // Document this formula!
   int frameRate = 25;
 
   // Create the mesh:
@@ -7557,8 +7557,7 @@ void weightEdgesByDirection(rsGraph<rsVector2D<T>, T>& mesh, rsVector2D<T> d, T 
 //  it's -1, the edge weight should be 0 but if it's like -0.5, maybe the edge weight should be 
 //  just scaled down by 0.5 ...or 0.5^2...or whatever other formula? -> experimentation needed
 
-
-void testTransportEquation()
+void testTransportEquationMesh2D()
 {
   // Under construction
 
@@ -7969,7 +7968,7 @@ void testTransportEquation()
   int dummy = 0;
 }
 
-void testWaveEquation()
+void testWaveEquationMesh2D()
 {
 
 
@@ -7985,7 +7984,7 @@ void testWaveEquation()
 // https://github.com/nilsberglund-orleans/YouTube-simulations
 
 
-// check, if this can be removed:
+// Check, if this can be removed, i.e. if it has been moved to the main codebase:
 /*
 template<class T> 
 rsPolynomial<std::complex<T>> getComplexFromHarmonicU(const rsBivariatePolynomial<T>& u)
@@ -18125,7 +18124,19 @@ void testWaveGuideNaiveImpulse()
   //   to "flip" instead of just resting.
   // 
   // - For m = 3 and m = 6, the y signal looks the same. Same for m = 4 and m = 5. 
+  // 
+  // 
+  // Conclusions:
   //
+  // - The observation that the reflection itself takes one sample can perhaps be interpreted as 
+  //   follows: In the algorithm as it is implemented, we do not really have any spatial samples
+  //   directly *at* the boundaries. If we would have any, i.e. if wL[0], wR[0], and wL[M-1], 
+  //   wR[M-1] would correspond to actual physical positions, the content of these positions should
+  //   satisfy the boundary conditions at all time instants. that is, we should have 
+  //   wL[0] + wR[0] = 0  and  wL[M-1] + wR[M-1] = 0 at all times for fixed/clamped boundary 
+  //   conditions (i.e. no displacement possible at boundary). I think, more generally, the 
+  //   boundaries should satisfy wL[0] + rL*wR[0] = 0  and  wL[M-1] + rR*wR[M-1] = 0 (verify!).
+  // 
   // 
   // ToDo:
   // 
@@ -18134,6 +18145,9 @@ void testWaveGuideNaiveImpulse()
   //   write a function rsSetupWaveGuidePluck(...) that takes a plucking position and sets up a 
   //   triangular initial condition. Maybe also make a function that sets up various sinusoidal 
   //   modes. Maybe a Gaussian bell, etc.
+  // 
+  // - Create different versions of the time stepping algo that implements different ways of 
+  //   handling the reflections, i.e. with and without delay.
   //
   // - Create an animation. To facilitate this, write some infrastructure for producing such 
   //   animations. This will be very helpful in the development of waveguide models.
@@ -18582,7 +18596,7 @@ void testWaveGuide2()
 
 void testWaveGuides()
 {
-  //testWaveGuideNaiveImpulse();
+  testWaveGuideNaiveImpulse();
   testWaveGuide1();
   //testWaveGuide2();
 }

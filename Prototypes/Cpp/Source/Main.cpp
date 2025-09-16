@@ -59,11 +59,14 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // PDE solvers on nonuniform meshes:
   //testMeshGeneration();
-  //testTransportEquation();
-  //testWaveEquation();
+  //testTransportEquationMesh2D();
+  //testWaveEquationMesh2D();        // stub
   //testBiModalFeedback();
-  //testPDE_1stOrder();  // stub
-  //testVertexMesh();  // moved to main codbase
+  //testPDE_1stOrder();      // stub - rename to testPDE_1stOrder_Mesh2D
+  //testVertexMesh();  // moved to main codbase - does not exist here anymnore
+
+
+
 
   // Geometric algebra:
   //testExteriorAlgebra3D();
@@ -131,7 +134,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testMimoTransferMatrix();
   //testMimoFilters();           // just a stub - not much in there yet, mostly comments
   //testStateSpaceFilters();
-  testWaveGuides();              // Under construction
+  testWaveGuides();              // Under construction - maybe move this near the PDE stuff
 
 
   // Math:

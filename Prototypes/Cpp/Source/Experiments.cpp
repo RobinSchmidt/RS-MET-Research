@@ -17937,6 +17937,33 @@ void testStateSpaceFilters()
 // Waveguide stuff:
 
 
+template<class T>
+void rsStepWaveEquation1D(std::vector<T>& w)
+{
+  int M = (int)w.size();
+
+  // Sanity check: Verify the "no displacement" boundary conditions at both ends:
+  rsAssert(w[0]   == T(0));
+  rsAssert(w[M-1] == T(0));
+
+
+  using Vec = std::vector<T>;
+
+  // Compute accelerations:
+  Vec a(M);
+  for(int m = 1; m < M-1; m++)
+    a[m] = (w[m-1] - 2*w[m] + w[m+1]);
+  // Compare this to rsNumericDifferentiator::secondDerivative() which computes:
+  // 
+  //   (f(x-h) - Tx(2)*f(x) + f(x+h)) / (h*h);
+  //
+  // Here, we assume that h = 1, i.e. we assume a unit spatial spacing
+
+  // I think, we need to take two arrays as input. One for the displacement (maybe call it u) and
+  // one for the velocity (maybe call it v or maybe u_t like often seen in the PDE literature)
+}
+
+
 void testWaveEquation1D()
 {
   // We implement a numerical PDE solver scheme for the 1D wvae equation. ...TBC...
@@ -17948,9 +17975,23 @@ void testWaveEquation1D()
   int  M  =  10;                       // Length of the waveguide, number of spatial samples
   int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
   int  N  = 100;                       // Number of time steps to take in simulation
-  Real rL =  -1.0;                     // Reflection coeff at left boundary
-  Real rR =  -1.0;                     // Reflection coeff at right boundary
 
+  //Real rL =  -1.0;                     // Reflection coeff at left boundary
+  //Real rR =  -1.0;                     // Reflection coeff at right boundary
+  // Nah! For the PDE approach, we don't use reflection coeffs. Instead, we just keep the first and 
+  // last spatial sample fixed at zero. To implement a "no velocity" boundary condition, we may 
+  // have to do soemthing else. Maybe don't directly approximate the 2nd spatial derivative but 
+  // first approximate the 1st spatial derivative (maybe using a 1st order forward and backward 
+  // difference at the boundary points), then set that to zero at m = 0 and m = M-1 and then take a
+  // numerical 1st derivative of *that* to approximate the 2nd derivative
+
+
+  Vec w(M);
+  w[m] = 1.0;
+  for(int n = 0; n < N; n++)
+  {
+    rsStepWaveEquation1D(w);
+  }
 
 }
 
@@ -18035,6 +18076,7 @@ void rsWaveGuideStep1(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
   // would invariantly always yield zero (assuming rL = rR = -1). This it exactly how it should be 
   // because the displacement is supposed to be indeed zero at the endpoints at all times.
 }
+// rename to rsStepWaveGuide1
 
 // Simliar to testWaveGuideNaiveImpulse() but it takes the values N,M,etc. as parameter and also
 // produces an output signal. This is meant to be used to produce reference outputs via the naive

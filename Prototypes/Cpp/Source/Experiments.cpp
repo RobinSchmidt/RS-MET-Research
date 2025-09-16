@@ -17938,13 +17938,15 @@ void testStateSpaceFilters()
 
 
 template<class T>
-void rsStepWaveEquation1D(std::vector<T>& w)
+void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
 {
-  int M = (int)w.size();
+  int M = (int)u.size();
 
-  // Sanity check: Verify the "no displacement" boundary conditions at both ends:
-  rsAssert(w[0]   == T(0));
-  rsAssert(w[M-1] == T(0));
+  // Verify the boundary conditions as sanity check:
+  rsAssert(u[0]   == T(0));  // No displacement at left end
+  rsAssert(u[M-1] == T(0));  // No displacement at right end
+  rsAssert(v[0]   == T(0));  // No velocity at left end
+  rsAssert(v[M-1] == T(0));  // No velocity at right end
 
 
   using Vec = std::vector<T>;
@@ -17952,15 +17954,32 @@ void rsStepWaveEquation1D(std::vector<T>& w)
   // Compute accelerations:
   Vec a(M);
   for(int m = 1; m < M-1; m++)
-    a[m] = (w[m-1] - 2*w[m] + w[m+1]);
+    a[m] = (u[m-1] - 2*u[m] + u[m+1]);
   // Compare this to rsNumericDifferentiator::secondDerivative() which computes:
   // 
   //   (f(x-h) - Tx(2)*f(x) + f(x+h)) / (h*h);
   //
   // Here, we assume that h = 1, i.e. we assume a unit spatial spacing
 
-  // I think, we need to take two arrays as input. One for the displacement (maybe call it u) and
-  // one for the velocity (maybe call it v or maybe u_t like often seen in the PDE literature)
+  // Update velocities:
+  for(int m = 1; m < M-1; m++)
+    v[m] += a[m];              // Should we use a scaling coefficient here?
+
+  // Update displacements:
+  for(int m = 1; m < M-1; m++)
+    u[m] += v[m];              // Should we use a scaling coefficient here? 
+                               // Maybe the same as for the v-update or a different one?
+
+  // Rename to rsStepEulerWaveEquation1D. We use a forward Euler time-stepping method. Maybe also
+  // implement the trapezoidal method and perhaps others was well. Maybe later we can add multistep
+  // methods like Adams-Bashforth and Adams-Moulton as well as Runge-Kutta methods - although for
+  // Runge-Kutta, I'm not sure how to go about evaluating the required intermediate steps.
+
+  // Maybe for updating the displacement u, we can use 0.5 * (vOld + vNew) where vOld is the v 
+  // value before the update (before adding the acceleration a) and vNew is the value after the 
+  // update. I think, this would amount to using an Euler step for updating v and a trapezoidal 
+  // step for updating u. To implement trapezoidal steps also for v, I think, we would need to have
+  // access to the acceleration a from the previous time step
 }
 
 
@@ -17986,11 +18005,12 @@ void testWaveEquation1D()
   // numerical 1st derivative of *that* to approximate the 2nd derivative
 
 
-  Vec w(M);
-  w[m] = 1.0;
+  Vec u(M), v(M);                      // Spatial samples of displacement u and velocity v
+  u[m] = 1.0;
   for(int n = 0; n < N; n++)
   {
-    rsStepWaveEquation1D(w);
+    rsPlotVectors(u, v);               // Plot the displacement and velocity wave variables
+    rsStepWaveEquation1D_1(u, v);
   }
 
 }

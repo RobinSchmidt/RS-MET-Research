@@ -18113,6 +18113,9 @@ void testWaveEquation1D()
   // - Try to derive time stepping formulas from the expected state at time n = 1. What we expect 
   //   is that an initial displacement spike at m splits into two spikes of half the amplitude at
   //   m-1 and m+1.
+  //
+  // - Compare to class rsWaveEquation1D in PartialDifferentialEquations.h in the prototypes.
+
 }
 
 

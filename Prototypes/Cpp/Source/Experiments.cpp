@@ -18010,6 +18010,38 @@ void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
   // access to the acceleration a from the previous time step
 }
 
+template<class T>
+void rsStepWaveEquation1D_2(std::vector<T>& u, std::vector<T>& v, std::vector<T>& a)
+{
+  rsAssert(rsAreEndsZero(&u, &v, &a));
+
+  int M = (int)u.size();
+  using Vec = std::vector<T>;
+
+  // We need a temporary copy t of u because we overwrite u in the loop below but we also need to
+  // read from its old version:
+  Vec t = u;  
+
+  // Loop over the spatial samples:
+  for(int m = 1; m < M-1; m++)
+  {
+    // Compute new acceleration by spatial central difference of displacement:
+    T aNew = (t[m-1] - 2*t[m] + t[m+1]);
+
+    // Compute new velocity by temporal trapezoidal integration of acceleration:
+    T vNew = v[m] + 0.5 * (a[m] + aNew);
+
+    // Compute new displacement by temporal trapezoidal integration of velocity:
+    T uNew = u[m] + 0.5 * (v[m] + vNew);
+
+    // Update m-th spatial samples in u,v,a:
+    u[m] = uNew;
+    v[m] = vNew;
+    a[m] = aNew;
+  }
+}
+
+
 
 void testWaveEquation1D()
 {
@@ -18033,12 +18065,13 @@ void testWaveEquation1D()
   // numerical 1st derivative of *that* to approximate the 2nd derivative
 
 
-  Vec u(M), v(M);                      // Spatial samples of displacement u and velocity v
+  Vec u(M), v(M), a(M);                // Spatial samples of displacement u, velocity v, acceleration a
   u[m] = 1.0;
   for(int n = 0; n < N; n++)
   {
     rsPlotVectors(u, v);               // Plot the displacement and velocity wave variables
-    rsStepWaveEquation1D_1(u, v);
+    //rsStepWaveEquation1D_1(u, v);    // Has parasitic oscillations
+    rsStepWaveEquation1D_2(u, v, a);   // Is unstable!
   }
 
 }

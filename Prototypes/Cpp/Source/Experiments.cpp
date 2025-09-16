@@ -18010,6 +18010,36 @@ void rsWaveGuideStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
   //wR[1]   = rL * xL;
 }
 
+// Simliar to testWaveGuideNaiveImpulse() but it takes the values N,M,etc. as parameter and also
+// produces an output signal. This is meant to be used to produce reference outputs via the naive
+// waveguide algo that can be compared against outputs produced by more efficient algos:
+template<class T>
+std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL, T rR)
+{
+  using Vec  = std::vector<T>;
+
+  // Allocate waveguide and set up initial conditions:
+  Vec wL(M), wR(M);
+  wL[mIn] = wR[mIn] = 1.0;
+
+  // Produce output signal:
+  Vec y(N);
+  for(int n = 0; n < N; n++)
+  {
+    //rsPlotVectors(wL, wR);             // Plot the traveling wave components
+    y[n] = wL[mOut] + wR[mOut];        // Read out output signal at mOut
+    rsWaveGuideStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
+  }
+  return y;
+
+  // Maybe rename to something like rsGetWaveGuideNaiveImpulseOutput(...) and use it in 
+  // testWaveGuideNaiveImpulse(). Maybe give it a boolean switch for plotting or not plotting.
+  // Being able to switch plotting on and off by the caller may be useful for debugging.
+}
+
+
+
+
 void testWaveGuideNaiveImpulse()
 {
   // Naive implementation of the wave propagation of an impulse-shaped waveform along a waveguide.
@@ -18042,11 +18072,20 @@ void testWaveGuideNaiveImpulse()
   for(int n = 0; n < N; n++)
   {
     y[n] = wL[m] + wR[m];
-    rsPlotVectors(  wL, wR);           // Plot the traveling wave components
+    //rsPlotVectors(  wL, wR);           // Plot the traveling wave components
     rsWaveGuideStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
   }
 
-  rsPlotVector(y);
+  // Plot the output signal:
+  //rsPlotVector(y);
+
+  // Let's try to use the function that is supposed to create the same output signal and compare
+  // the results:
+  Vec yR = rsCreateWaveGuideReference(N, M, m, m, rL, rR);
+  rsPlotVectors(y, yR);
+  bool ok = y == yR;
+  rsAssert(ok);
+   
 
   // Observations:
   //
@@ -18113,34 +18152,6 @@ void testWaveGuideNaiveImpulse()
   //   kind of reflection behavior we should expect - should it be with or without delay?
 }
 
-// Simliar to testWaveGuideNaiveImpulse() but it takes the values N,M,etc. as parameter and also
-// produces an output signal. This is meant to be used to produce reference outputs via the naive
-// waveguide algo that can be compared against outputs produced by more efficient algos:
-template<class T>
-std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL, T rR)
-{
-  using Vec  = std::vector<T>;
-
-  // Allocate waveguide and set up initial conditions:
-  Vec wL(M), wR(M);           
-  wL[mIn] = wR[mIn] = 1.0;
-
-  // Produce output signal:
-  Vec y(N);
-  for(int n = 0; n < N; n++)
-  {
-    //rsPlotVectors(wL, wR);             // Plot the traveling wave components
-    y[n] = wL[mOut] + wR[mOut];        // Read out output signal at mOut
-    rsWaveGuideStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
-  }
-  return y;
-
-  // Maybe rename to something like rsGetWaveGuideNaiveImpulseOutput(...) and use it in 
-  // testWaveGuideNaiveImpulse(). Maybe give it a boolean switch for plotting or not plotting.
-}
-
-
-
 /** Convenience function to set up the delay in the given delayLine. If the requested delay is 
 greater than the currently available maximum delay, the maximum delay will automatically be 
 increased. This is the "convenience" part. It's meant for use in offline experiments but not in 
@@ -18204,10 +18215,13 @@ void testWaveGuide1()
   rsSetDelay(&dR2, M2);
   rsSetDelay(&dL1, M2);
   rsSetDelay(&dL2, M1);
-  // We use the convention that dL1 is the bottom-right delay line in the block diagram. The idea
-  // is that the numbering goes around the delaylines in the same way as the signal flows. But it 
-  // may be confusing that the dL1 uses N2 and dL2 uses N1. Maybe use different names for the delay
-  // lines that don't involve numbers.
+  // We use the convention that dL1 is the bottom-right delay line in the block diagram of Fig 
+  // 2.13. The idea is that the numbering goes around the delaylines in the same way as the signal
+  // flows. But it may be confusing that the dL1 uses N2 and dL2 uses N1. Maybe use different 
+  // names for the delay lines that don't involve numbers. So, with respect to the block diagram, 
+  // we have: dR1: top-left, dR2: top-right, dL1: bottom-right, dL2: bottom-left. As for the 
+  // direction of the waves: in dR1, dR2 the wave travles rightward, in dL1, dL2 the wave travels
+  // leftward. The L,R in the names refer to the traveling direction of the wave.
 
   // Helper function to reset all delay lines:
   auto resetDelays = [&]() 
@@ -18358,6 +18372,8 @@ void testWaveGuide1()
     y5[n] = xR1 + xL1;
   }
 
+
+
   // ToDo: pre-update R1,R2 and post-update L1,L2 and vice versa
   // Maybe factor out helper function like readOutputs(), writeInputs(). To do this, we need some
   // local variables xR1,xR2,xL1,xL2 which these helper functions can access. I gues, we should
@@ -18371,7 +18387,7 @@ void testWaveGuide1()
   //rsPlotVector(y3);     // Is all zeros.
   //rsPlotVector(y4);
   //rsPlotVector(y5);
-  rsPlotVectors(y4, y5);  // They look different in the lower half-wave
+  //rsPlotVectors(y4, y5);  // They look different in the lower half-wave
 
   // Plot reference signal together with one of our output signals:
   rsPlotVectors(yR, y1);
@@ -18566,7 +18582,7 @@ void testWaveGuide2()
 
 void testWaveGuides()
 {
-  testWaveGuideNaiveImpulse();
+  //testWaveGuideNaiveImpulse();
   testWaveGuide1();
   //testWaveGuide2();
 }

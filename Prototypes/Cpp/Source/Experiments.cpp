@@ -17987,7 +17987,8 @@ void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
   // 
   //   (f(x-h) - Tx(2)*f(x) + f(x+h)) / (h*h);
   //
-  // Here, we assume that h = 1, i.e. we assume a unit spatial spacing
+  // Here, we assume that h = 1, i.e. we assume a unit spatial spacing. But: Shouldn't the 
+  // acceleration be the negative of the 2nd spatial derivative? We may need a minus here!
 
   // Update velocities:
   for(int m = 1; m < M-1; m++)
@@ -18027,6 +18028,7 @@ void rsStepWaveEquation1D_2(std::vector<T>& u, std::vector<T>& v, std::vector<T>
   {
     // Compute new acceleration by spatial central difference of displacement:
     T aNew = (t[m-1] - 2*t[m] + t[m+1]);
+    // Wait! Shouldn't the acceleration be the negative of the 2nd spatial derivative?
 
     // Compute new velocity by temporal trapezoidal integration of acceleration:
     T vNew = v[m] + 0.5 * (a[m] + aNew);
@@ -18051,29 +18053,32 @@ void testWaveEquation1D()
   using Vec  = std::vector<Real>;
 
   // User parameters:
-  int  M  =  10;                       // Length of the waveguide, number of spatial samples
-  int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
+  int  M  =  30;                       // Length of the waveguide, number of spatial samples
+  int  m  =   7;                       // Position of initial impulse along the waveguide (WG)
   int  N  = 100;                       // Number of time steps to take in simulation
-
-  //Real rL =  -1.0;                     // Reflection coeff at left boundary
-  //Real rR =  -1.0;                     // Reflection coeff at right boundary
-  // Nah! For the PDE approach, we don't use reflection coeffs. Instead, we just keep the first and 
-  // last spatial sample fixed at zero. To implement a "no velocity" boundary condition, we may 
-  // have to do soemthing else. Maybe don't directly approximate the 2nd spatial derivative but 
-  // first approximate the 1st spatial derivative (maybe using a 1st order forward and backward 
-  // difference at the boundary points), then set that to zero at m = 0 and m = M-1 and then take a
-  // numerical 1st derivative of *that* to approximate the 2nd derivative
 
 
   Vec u(M), v(M), a(M);                // Spatial samples of displacement u, velocity v, acceleration a
+
   u[m] = 1.0;
+  //v[m] = 1.0;
+  //a[m] = 1.0;
+
   for(int n = 0; n < N; n++)
   {
-    rsPlotVectors(u, v);               // Plot the displacement and velocity wave variables
-    //rsStepWaveEquation1D_1(u, v);    // Has parasitic oscillations
-    rsStepWaveEquation1D_2(u, v, a);   // Is unstable!
+    rsPlotVectors(u, v, a);            // Plot the displacement, velocity, acceleration waves
+    rsStepWaveEquation1D_1(u, v);    // Has parasitic oscillations
+    //rsStepWaveEquation1D_2(u, v, a);   // Is unstable!
   }
 
+  // ToDo:
+  //
+  // - Try using a more realistic initial condition such as a triangular shape for the displacement
+  //   which simulates the pluck of a string.
+  //
+  // - Try to derive time stepping formulas from the expected state at time n = 1. What we expect 
+  //   is that an initial displacement spike at m splits into two spikes of half the amplitude at
+  //   m-1 and m+1.
 }
 
 

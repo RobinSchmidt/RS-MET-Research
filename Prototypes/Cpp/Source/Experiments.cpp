@@ -17936,6 +17936,25 @@ void testStateSpaceFilters()
 //=================================================================================================
 // Waveguide stuff:
 
+
+void testWaveEquation1D()
+{
+  // We implement a numerical PDE solver scheme for the 1D wvae equation. ...TBC...
+
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+  // User parameters:
+  int  M  =  10;                       // Length of the waveguide, number of spatial samples
+  int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
+  int  N  = 100;                       // Number of time steps to take in simulation
+  Real rL =  -1.0;                     // Reflection coeff at left boundary
+  Real rR =  -1.0;                     // Reflection coeff at right boundary
+
+
+}
+
+
 // Maybe move these two functions below into the library. But maybe then we should not assert that
 // v is nonempty and instead check if it is empty and if so, return immediately such that with 
 // empty vectors, the functions do nothing.
@@ -18610,6 +18629,7 @@ void testWaveGuide2()
 
 void testWaveGuides()
 {
+  testWaveEquation1D();
   testWaveGuideNaiveImpulse();
   testWaveGuide1();
   //testWaveGuide2();

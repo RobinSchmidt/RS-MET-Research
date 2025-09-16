@@ -18027,7 +18027,7 @@ void testWaveGuideNaiveImpulse()
   // User parameters:
   int  M  =  10;                       // Length of the waveguide, number of spatial samples
   int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
-  int  N  =  50;                       // Number of time steps to take in simulation
+  int  N  = 100;                       // Number of time steps to take in simulation
   Real rL =  -1.0;                     // Reflection coeff at left boundary
   Real rR =  -1.0;                     // Reflection coeff at right boundary
 
@@ -18038,11 +18038,15 @@ void testWaveGuideNaiveImpulse()
   wL[m] = wR[m] = 1.0;                 // Set a single impulse at location m in both WGs
 
   // Do the time stepping and plot the contents of the wave buffers at each time step:
+  Vec y(N);
   for(int n = 0; n < N; n++)
   {
+    y[n] = wL[m] + wR[m];
     rsPlotVectors(  wL, wR);           // Plot the traveling wave components
     rsWaveGuideStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
   }
+
+  rsPlotVector(y);
 
   // Observations:
   //
@@ -18080,6 +18084,8 @@ void testWaveGuideNaiveImpulse()
   //   obvious when using rL = rR = 1. In this case, it really looks like the wave "rests" for one
   //   sample instant at the wall. When using negative reflection coeffs, it uses this resting time 
   //   to "flip" instead of just resting.
+  // 
+  // - For m = 3 and m = 6, the y signal looks the same. Same for m = 4 and m = 5. 
   //
   // 
   // ToDo:
@@ -18100,6 +18106,11 @@ void testWaveGuideNaiveImpulse()
   //   result with the original). I think, doing it this way would really simulate distributed 
   //   damping as opposed to lumped damping (which could be conveniently integrated into the 
   //   reflections). It's costly but this is just for experimentation.
+  //
+  // - Maybe implement a simple PDE solver and compare the results to that. I expect the numerical 
+  //   PDE solver to show artifacts though. The solution produced by the algorithm above is 
+  //   supposed to be exact. However, the comparison with the PDE solver can give us hints which 
+  //   kind of reflection behavior we should expect - should it be with or without delay?
 }
 
 // Simliar to testWaveGuideNaiveImpulse() but it takes the values N,M,etc. as parameter and also

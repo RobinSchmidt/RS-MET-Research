@@ -18004,6 +18004,10 @@ void rsWaveGuideStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
   // Insert the reflected components into the now "empty" positions:
   wL[M-1] = rR * xR;
   wR[0]   = rL * xL;
+
+  // Test (can be used instead the code above):
+  //wL[M-2] = rR * xR;
+  //wR[1]   = rL * xL;
 }
 
 void testWaveGuideNaiveImpulse()
@@ -18063,6 +18067,19 @@ void testWaveGuideNaiveImpulse()
   //   coeffs, we double the temporal period length of the vibration. Maybe this also implies that 
   //   we will see only odd harmonics because wherever we pick up a signal, its second half wave 
   //   will be the mirror image of its first half wave?
+  // 
+  // - Apparently, the reflection itself takes also one time step. When the left-going wave hits
+  //   the left wall at time n, at the next sample instant n+1, we see the reflected wave in the 
+  //   right going wave and it's also located exactly *at* the wall. Shouldn't it have advanced one
+  //   position further to the right at this moment already? It seems like the wave spends two 
+  //   sample instants at the wall. It can be fixed by using  wL[M-2] = rR * xR; wR[1] = rL * xL;
+  //   instead of  wL[M-1] = rR * xR; wR[0] = rL * xL;  but that shortens the period by 2 samples.
+  //   I also think, that when we use this algo with arbitrarily filled initial arrays, we may lose
+  //   one of the values. Maybe it's more convenient to accept that we deal with a "delayed 
+  //   reflection", i.e. a reflection that takes itself one sample period to take place. It is more 
+  //   obvious when using rL = rR = 1. In this case, it really looks like the wave "rests" for one
+  //   sample instant at the wall. When using negative reflection coeffs, it uses this resting time 
+  //   to "flip" instead of just resting.
   //
   // 
   // ToDo:
@@ -18075,6 +18092,14 @@ void testWaveGuideNaiveImpulse()
   //
   // - Create an animation. To facilitate this, write some infrastructure for producing such 
   //   animations. This will be very helpful in the development of waveguide models.
+  //
+  // - Experiment with a bit of smoothing before or after each shifting. Maybe handle the 
+  //   boundaries of the buffers periodically. Try a simple 3-point FIR. If the coeffs are [0,1,0],
+  //   there would be no smoothing at all. Maximum smoothing would be obtained by [1,1,1]/3. But 
+  //   maybe we could also use a bidirectional IIR smoothing filter (and then blend the smoothed
+  //   result with the original). I think, doing it this way would really simulate distributed 
+  //   damping as opposed to lumped damping (which could be conveniently integrated into the 
+  //   reflections). It's costly but this is just for experimentation.
 }
 
 // Simliar to testWaveGuideNaiveImpulse() but it takes the values N,M,etc. as parameter and also
@@ -18530,7 +18555,7 @@ void testWaveGuide2()
 
 void testWaveGuides()
 {
-  //testWaveGuideNaiveImpulse();
+  testWaveGuideNaiveImpulse();
   testWaveGuide1();
   //testWaveGuide2();
 }

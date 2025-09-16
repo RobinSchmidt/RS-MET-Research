@@ -18322,6 +18322,10 @@ void testWaveGuide1()
     y5[n] = xR1 + xL1;
   }
 
+  // ToDo: pre-update R1,R2 and post-update L1,L2 and vice versa
+  // Maybe factor out helper function like readOutputs(), writeInputs(). To do this, we need some
+  // local variables xR1,xR2,xL1,xL2 which these helper functions can access. I gues, we should
+  // set the to zero in resetDelays() which should probably be renamed to reset()
 
 
   // Plot the produced output signals:

@@ -18194,7 +18194,7 @@ void testWaveGuide1()
   Vec y1(N);
   for(int n = 0; n < N; n++)               // Loop through the time steps
   {
-    // Update the tap-pointers:
+    // Increment the tap-pointers:
     dR1.incrementTapPointers();
     dR2.incrementTapPointers();
     dL1.incrementTapPointers();
@@ -18224,71 +18224,88 @@ void testWaveGuide1()
   dR2.writeInput(1.0);                     // Initialization is the same as in algo 1
   dL2.writeInput(1.0);
   Vec y2(N);
-  for(int n = 0; n < N; n++)               // Loop through the time steps
+  for(int n = 0; n < N; n++) 
   {
-    // Read outputs of the delay lines:
-    Real xR1 = dR1.readOutput();
+    Real xR1 = dR1.readOutput();           // Read
     Real xR2 = dR2.readOutput();
     Real xL1 = dL1.readOutput();
     Real xL2 = dL2.readOutput();
 
-    // Update the tap-pointers:
-    dR1.incrementTapPointers();
+    dR1.incrementTapPointers();            // Increment
     dR2.incrementTapPointers();
     dL1.incrementTapPointers();
     dL2.incrementTapPointers();
 
-    // Do the reflections at both ends:
-    dL1.writeInput(rR * xR2);
+    dL1.writeInput(rR * xR2);              // Write
     dR1.writeInput(rL * xL2);
-
-    // Do the transfer from the 1st to the 2nd parts:
     dR2.writeInput(xR1);
     dL2.writeInput(xL1);
 
-    // Produce and store output signal:
     y2[n] = xR1 + xL1;
   }
 
-  // The second version of the algorithm. Here, we do the increments of the tap pointers as the 
+  // The third version of the algorithm. Here, we do the increments of the tap pointers as the 
   // last thing in the per sample computation.
   resetDelays();
-  dR2.writeInput(1.0);                     // Initialization is the same as in algo 1
+  dR2.writeInput(1.0); 
   dL2.writeInput(1.0);
   Vec y3(N);
-  for(int n = 0; n < N; n++)               // Loop through the time steps
+  for(int n = 0; n < N; n++) 
   {
-    // Read outputs of the delay lines:
-    Real xR1 = dR1.readOutput();
+    Real xR1 = dR1.readOutput();           // Read
     Real xR2 = dR2.readOutput();
     Real xL1 = dL1.readOutput();
     Real xL2 = dL2.readOutput();
 
-    // Do the reflections at both ends:
-    dL1.writeInput(rR * xR2);
+    dL1.writeInput(rR * xR2);              // Write
     dR1.writeInput(rL * xL2);
-
-    // Do the transfer from the 1st to the 2nd parts:
     dR2.writeInput(xR1);
     dL2.writeInput(xL1);
 
-    // Update the tap-pointers:
-    dR1.incrementTapPointers();
+    dR1.incrementTapPointers();            // Increment
     dR2.incrementTapPointers();
     dL1.incrementTapPointers();
     dL2.incrementTapPointers();
 
-    // Produce and store output signal:
     y3[n] = xR1 + xL1;
   }
+
+  // In this 4th version, we do a hybrid updating strategy ...TBC...
+  resetDelays();
+  dR2.writeInput(1.0);
+  dL2.writeInput(1.0);
+  Vec y4(N);
+  for(int n = 0; n < N; n++)
+  {
+    dR1.incrementTapPointers();            // Increment "outer" delay lines
+    dL2.incrementTapPointers();
+
+    Real xR1 = dR1.readOutput();           // Read
+    Real xR2 = dR2.readOutput();
+    Real xL1 = dL1.readOutput();
+    Real xL2 = dL2.readOutput();
+
+    dR2.incrementTapPointers();            // Increment "inner" delay lines
+    dL1.incrementTapPointers();
+
+    dL1.writeInput(rR * xR2);              // Write
+    dR1.writeInput(rL * xL2);
+    dR2.writeInput(xR1);
+    dL2.writeInput(xL1);
+
+    y4[n] = xR1 + xL1;
+  }
+
+
 
   // Plot the produced output signals:
   //rsPlotVector(yR);  // Reference signal produced by naive algo.
   //rsPlotVector(y1);  // Has correct period of 2*(M1+M2). Seems 1 sample too early, though.
   //rsPlotVector(y2);  // Has wrong period.
   //rsPlotVector(y3);  // Is all zeros.
+  rsPlotVector(y4);
 
-  // Plot reference signal together with one of our outputs signals:
+  // Plot reference signal together with one of our output signals:
   rsPlotVectors(yR, y1);
 
 

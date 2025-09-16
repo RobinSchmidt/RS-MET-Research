@@ -17987,7 +17987,7 @@ a sine is a cosine. I think, we could also use the real part for displacement an
 imaginary part for the velocity (derivative). We need to negate because the derivative of cosine is
 minus sine. Verify this!  */
 template<class T>
-void rsWaveGuideStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
+void rsWaveGuideStep1(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
 {
   rsAssert(rsAreSameSize(wL, wR), "Sizes of buffers for leftward and rightward wave must match");
 
@@ -18007,6 +18007,14 @@ void rsWaveGuideStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
   // Test (can be used instead the code above):
   //wL[M-2] = rR * xR;
   //wR[1]   = rL * xL;
+
+  // Implement different algorithms. Maybe one where we do not first extract xL,xR but just do the 
+  // shifts straight away and *then* implement the reflection as 
+  // wL[M-1] = rR * wR[M-1]; wR[0] = rL * wL[0]. This should automatically ensure the invariant 
+  // that wL[M-1] - rR * wR[M-1] = 0  and  wR[0] - rL * wL[0] = 0  such that when trying to pick
+  // up a physical displacement at m = 0 or m = M-1 by forming wL[0] + wR[0]  or  wL[M-1] + wR[M-1]
+  // would invariantly always yield zero (assuming rL = rR = -1). This it exactly how it should be 
+  // because the displacement is supposed to be indeed zero at the endpoints at all times.
 }
 
 // Simliar to testWaveGuideNaiveImpulse() but it takes the values N,M,etc. as parameter and also
@@ -18027,13 +18035,15 @@ std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL,
   {
     //rsPlotVectors(wL, wR);             // Plot the traveling wave components
     y[n] = wL[mOut] + wR[mOut];        // Read out output signal at mOut
-    rsWaveGuideStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
+    rsWaveGuideStep1(wL, wR, rL, rR);   // Advance the traveling waves by one time step
   }
   return y;
 
   // Maybe rename to something like rsGetWaveGuideNaiveImpulseOutput(...) and use it in 
   // testWaveGuideNaiveImpulse(). Maybe give it a boolean switch for plotting or not plotting.
   // Being able to switch plotting on and off by the caller may be useful for debugging.
+
+  // Maybe use rsWaveGuideStep2, rsWaveGuideStep3, etc. ...or maybe make it switchable
 }
 
 
@@ -18072,7 +18082,11 @@ void testWaveGuideNaiveImpulse()
   {
     y[n] = wL[m] + wR[m];
     //rsPlotVectors(  wL, wR);           // Plot the traveling wave components
-    rsWaveGuideStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
+
+
+    rsWaveGuideStep1(wL, wR, rL, rR);  // Advance the traveling waves by one time step
+    // Maybe have a function  rsWaveGuideStep(wL, wR, rL, rR, algo);  which lets us switch between
+    // different methods for doing the time step
   }
 
   // Plot the output signal:

@@ -17936,6 +17936,33 @@ void testStateSpaceFilters()
 //=================================================================================================
 // Waveguide stuff:
 
+// Some helper functions for sanity checks - mainly to verify the boundary conditions:
+
+template<class T>
+bool rsAreEndsZero(const std::vector<T>& v)
+{
+  if(v.empty())
+    return true;  
+  return v[0] == T(0) && v[v.size()-1] == T(0);
+}
+
+template<class T>
+bool rsAreEndsZero(
+  const std::vector<T>* v1,
+  const std::vector<T>* v2 = nullptr,
+  const std::vector<T>* v3 = nullptr)
+{
+  bool ok = true;
+
+  if(v1 != nullptr) ok &= rsAreEndsZero(*v1);
+  if(v2 != nullptr) ok &= rsAreEndsZero(*v2);
+  if(v3 != nullptr) ok &= rsAreEndsZero(*v3);
+
+  return ok;
+
+  // Can be extended to support even more input vectors if needed
+}
+
 
 template<class T>
 void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
@@ -17943,10 +17970,11 @@ void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
   int M = (int)u.size();
 
   // Verify the boundary conditions as sanity check:
-  rsAssert(u[0]   == T(0));  // No displacement at left end
-  rsAssert(u[M-1] == T(0));  // No displacement at right end
-  rsAssert(v[0]   == T(0));  // No velocity at left end
-  rsAssert(v[M-1] == T(0));  // No velocity at right end
+  //rsAssert(u[0]   == T(0));       // No displacement at left end
+  //rsAssert(u[M-1] == T(0));       // No displacement at right end
+  //rsAssert(v[0]   == T(0));       // No velocity at left end
+  //rsAssert(v[M-1] == T(0));       // No velocity at right end
+  rsAssert(rsAreEndsZero(&u, &v));  // Checks checks all boundary conditions at once
 
 
   using Vec = std::vector<T>;

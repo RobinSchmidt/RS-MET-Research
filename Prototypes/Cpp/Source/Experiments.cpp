@@ -17963,7 +17963,6 @@ bool rsAreEndsZero(
   // Can be extended to support even more input vectors if needed
 }
 
-
 template<class T>
 void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
 {
@@ -17979,20 +17978,25 @@ void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
 
   using Vec = std::vector<T>;
 
+  //T c2 = 1.0 / 32.0;  // I think, this coeff is the square of the propagation speed (verify!)
+  T c2 = 1.0;
+
   // Compute accelerations:
   Vec a(M);
   for(int m = 1; m < M-1; m++)
     a[m] = (u[m-1] - 2*u[m] + u[m+1]);
+    //a[m] = -(u[m-1] - 2*u[m] + u[m+1]);
   // Compare this to rsNumericDifferentiator::secondDerivative() which computes:
   // 
   //   (f(x-h) - Tx(2)*f(x) + f(x+h)) / (h*h);
   //
   // Here, we assume that h = 1, i.e. we assume a unit spatial spacing. But: Shouldn't the 
-  // acceleration be the negative of the 2nd spatial derivative? We may need a minus here!
+  // acceleration be the negative of the 2nd spatial derivative? We may need a minus here! But 
+  // doing it makes the algo totally unstable.
 
   // Update velocities:
   for(int m = 1; m < M-1; m++)
-    v[m] += a[m];              // Should we use a scaling coefficient here?
+    v[m] += c2 * a[m];         // Should we use a scaling coefficient here?
 
   // Update displacements:
   for(int m = 1; m < M-1; m++)
@@ -18043,38 +18047,68 @@ void rsStepWaveEquation1D_2(std::vector<T>& u, std::vector<T>& v, std::vector<T>
   }
 }
 
-
-
 void testWaveEquation1D()
 {
-  // We implement a numerical PDE solver scheme for the 1D wvae equation. ...TBC...
+  // We implement a numerical PDE solver scheme for the 1D wave equation. 
+  // 
+  // This doesn't work yet!
+  // Figure out why. So far, I wrote all the code just from the top of my head. ToDo: Compare to
+  // the older implementations and look up the literature (epsecially in Numerical Sound Synthesis
+  // by Stefan Bilbao). I already did some experiments with the wave equation in 1D, 2D and 3D 
+  // following the book. I think, they are somewhere in the main repo. ...TBC...
 
   using Real = double;
   using Vec  = std::vector<Real>;
 
   // User parameters:
-  int  M  =  30;                       // Length of the waveguide, number of spatial samples
-  int  m  =   7;                       // Position of initial impulse along the waveguide (WG)
+  int  M  =  11;                       // Length of the waveguide, number of spatial samples
+  int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
   int  N  = 100;                       // Number of time steps to take in simulation
 
 
-  Vec u(M), v(M), a(M);                // Spatial samples of displacement u, velocity v, acceleration a
+  // Allocate vectors for spatial samples of displacement u, velocity v, acceleration a:
+  Vec u(M), v(M), a(M);
 
+  // Set up inital conditions:
   u[m] = 1.0;
   //v[m] = 1.0;
   //a[m] = 1.0;
 
+ 
+
+  // Do the time stepping and at each step, produce a plot for inspection:
   for(int n = 0; n < N; n++)
   {
-    rsPlotVectors(u, v, a);            // Plot the displacement, velocity, acceleration waves
+    rsPlotVectors(u, v, a);        // Plot the displacement, velocity, acceleration waves
+
+    // Plot a smoothed version of the displacement u:
+    //Vec us = u;
+    //rsArrayTools::movingAverage3pt(&us[0], M, &us[0]);
+    //rsPlotVectors(u, us);            // Plot displacement an smoothed displacement
+
     rsStepWaveEquation1D_1(u, v);    // Has parasitic oscillations
     //rsStepWaveEquation1D_2(u, v, a);   // Is unstable!
   }
 
+
+  // Observations:
+  //
+  // - With the simple Euler stepper and with M = 10, m = 3, we see a lot of messy parasitic 
+  //   oscillations during the travel of the wave. However, at n = 9 iterations, we arrive at a 
+  //   "nice" state again. It has a single downward spike at m = 6. At n = 18, we are back at the 
+  //   original configuration. However, all states in between are a total mess. It looks like we 
+  //   have in general a period length of 2*(M-1). Verify this! Is this what we should expect?
+  //   With M = 11, we reach the downward spike at n = 10 and the initial configuration at n = 20.
+  //
+  // - Could we perhaps form a sensible output signal picked up at some location m by using
+  //   a sum like out = u[m-1] + u[m] + u[m+1]? ...Nope - that looks messy, too!
+  //
   // ToDo:
   //
   // - Try using a more realistic initial condition such as a triangular shape for the displacement
-  //   which simulates the pluck of a string.
+  //   which simulates the pluck of a string. I think, the single displacement spike is a rather 
+  //   extreme and actually rather unphysical initial condition. It may nevertheless make sense to
+  //   use this to analyze the behavior of the algorithm.
   //
   // - Try to derive time stepping formulas from the expected state at time n = 1. What we expect 
   //   is that an initial displacement spike at m splits into two spikes of half the amplitude at

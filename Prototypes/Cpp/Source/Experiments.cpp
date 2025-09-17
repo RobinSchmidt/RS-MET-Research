@@ -18083,10 +18083,20 @@ void rsStepWaveEquation1D_3(std::vector<T>& u, std::vector<T>& u1)
   //   sense to specify initial conditions for u and v. Maybe we can implement a function that
   //   converts between u1 and v. It will probably also have to know about u. That is: u1 = f(u,v)
   //   and v = g(u,u1) for f,g being the appropriate conversion functions.
+  // 
+  // - Figure out how we can inject signals into the string. Is it enough to just add some signal
+  //   to u[m] to simulate driving the string at position m or do we also need to take care of u1?
+  //   I actually don't think so but this should be verified. Maybe we need to add half of it to
+  //   u1[m-1] and u1[m+1], too? That's actually also plausible.
   //
   // - Try to derive a scheme that also involves a 1st spatial derivative. I think, this can be 
   //   used to model damping. The book gives 1st order finite difference formulas for these. But 
   //   maybe we should try using 2nd order formulas for these, too.
+  //
+  // - Figure out how we could incoporate an arbitrary wave velocity c into the scheme. As it 
+  //   stands, we have implemented the special case of c = 1 in which the wave travels one spatial
+  //   sample in every time step, I think. It results from setting X = c*T where X is the spatial 
+  //   sampling interval (grid density) and T is the temporal sampling interval (sample rate).
 }
 // Needs tests!
 //

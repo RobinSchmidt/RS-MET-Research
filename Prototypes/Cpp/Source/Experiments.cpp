@@ -18131,9 +18131,14 @@ void testWaveEquation1D()
 
   // Allocate vectors for spatial samples of displacement u, velocity v, acceleration a:
   Vec u(M), v(M), a(M);
+  Vec u1(M);             // u with one sample time delay
 
   // Set up inital conditions:
-  u[m] = 1.0;
+  u[m]    = 1.0;
+  u1[m-1] = 0.5;
+  u1[m+1] = 0.5;
+
+
   //v[m] = 1.0;
   //a[m] = 1.0;
 
@@ -18142,7 +18147,8 @@ void testWaveEquation1D()
   // Do the time stepping and at each step, produce a plot for inspection:
   for(int n = 0; n < N; n++)
   {
-    rsPlotVectors(u, v, a);        // Plot the displacement, velocity, acceleration waves
+    rsPlotVectors(u, u1);
+    //rsPlotVectors(u, v, a);        // Plot the displacement, velocity, acceleration waves
 
     // Plot a smoothed version of the displacement u:
     //Vec us = u;
@@ -18151,6 +18157,8 @@ void testWaveEquation1D()
 
     rsStepWaveEquation1D_1(u, v);    // Has parasitic oscillations
     //rsStepWaveEquation1D_2(u, v, a);   // Is unstable!
+
+    rsStepWaveEquation1D_3(u, u1);  // Is unstable!
   }
 
 

@@ -18141,8 +18141,8 @@ void testWaveEquation1D()
 
   // Set up inital conditions:
   u[m]    = 1.0;
-  u1[m-1] = 0.5;
-  u1[m+1] = 0.5;
+  //u1[m-1] = 0.5;
+  //u1[m+1] = 0.5;
 
 
   //v[m] = 1.0;
@@ -18186,7 +18186,14 @@ void testWaveEquation1D()
   //   "inside the boundary" for the duration of one sampling period or something. Generally, the 
   //   result of this scheme looks good and produces results that are in line with the 
   //   expectations. So, at last, we have one working prototype reference implementation to compare
-  //   all upcoming schemes against. Yay!
+  //   all upcoming schemes against. Yay! 
+  // 
+  // - For th PASP scheme, it seems to be indeed appropriate to set the initial condition for u1 to
+  //   u1[m-1] = u1[m+1] = 0.5. If we leave it at zero, I think, this would physically correspond 
+  //   to having a nonzero initial velocity somewhere in the range m-1,m,m+1 (I'm not sure exactly 
+  //   where -> figure out!). The effect on the simulation result is that we see a train of 3 
+  //   spikes traveling along the string. At least, that how it looks for m = 3. ToDo: Try it with
+  //   a longer string (like M=30) and placing the farther away from the boundary.
   //
   // ToDo:
   //
@@ -18194,6 +18201,22 @@ void testWaveEquation1D()
   //   which simulates the pluck of a string. I think, the single displacement spike is a rather 
   //   extreme and actually rather unphysical initial condition. It may nevertheless make sense to
   //   use this to analyze the behavior of the algorithm.
+  // 
+  // - Write a function to set up appropriate initial conditions for u1 given u. If we assume zero 
+  //   initial velocity at all points, I think we should scatter then contents of u[m] into
+  //   u1[m-1] and u1[m+1] with weights 0.5. Maybe use this: 
+  //     
+  //     rsZero(u1);
+  //     for(int m = 1; m < M-1; m++)
+  //     {
+  //       u1[m-1] += 0.5 * u[m];
+  //       u1[m+1] += 0.5 * u[m]
+  //     }
+  //     u1[0] = u1[M-1] = 0:
+  //   
+  //    With this code, we should be able to set up an appropriate u1 given any desired u assuming
+  //    that the initial velocity is zero along the whole string.
+  // 
   //
   // - Try to derive time stepping formulas from the expected state at time n = 1. What we expect 
   //   is that an initial displacement spike at m splits into two spikes of half the amplitude at

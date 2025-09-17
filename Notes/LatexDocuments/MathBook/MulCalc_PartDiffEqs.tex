@@ -188,9 +188,56 @@ I used waves on a pond of water as an example for the sort of phenomena that the
 
 
 
-\subsection{The General Form}
+
+
+\subsection{Classification}
+
+
+\subsubsection{The General Form}
 
 % see Arens, pg 1090
+
+
+\subsubsection{Homogeneity and Autonomy}
+% -a homogeneous PDE has a zero right hand side
+% -an autonomous PDE does not depend on time (or space), i.e. it's time invariant (or more generally)
+%  shift-invariant. It has constant coefficients, i.e. no coefficient-functions (or the functions are
+%  all just constant functions)
+
+
+\subsubsection{Order and Degree}
+% -order is highest derivative
+% -degree is highest total exponent in case of polynomial PDEs, i.e. those that contain products of
+%  derivatives - I think, polynomial terms involving only the variables themselves do not count - I %  think, that can be seen as a right-hand side
+% -If the degree is 1, the PDE is linear
+
+
+
+
+\subsubsection{Subtypes of 2nd Order Linear PDEs}
+Linear PDEs of second order are so common in physics and also in other fields of science that it may make sense to classify them more finely into even more specific subtypes. ...TBC...
+
+% Subtypes of 2nd order PDEs (which are very common in physcis)
+
+
+\paragraph{Elliptic PDEs}
+
+% https://en.wikipedia.org/wiki/Elliptic_partial_differential_equation
+
+
+
+\paragraph{Hyperbolic PDEs}
+
+% https://en.wikipedia.org/wiki/Hyperbolic_partial_differential_equation
+
+
+
+\paragraph{Parabolic PDEs}
+
+% https://en.wikipedia.org/wiki/Parabolic_partial_differential_equation
+
+% Explains the difference in terms of the sign of B^2 - A C for the 2D case. Maybe in nD, it's a determinant of some matrix? Or maybe about the sign distribution of its eigenvalues?
+
 
 
 \subsection{Analytical Solution Methods}
@@ -272,7 +319,11 @@ https://www.youtube.com/watch?v=3bH-3dINo7E
 Laplace equation in 3D:  u_xx + u_yy + u_zz = 0
 Wave equation in 2D:     u_xx + u_yy - u_tt = 0
 
-Both are PDEs in 3 independent variables and both are 2nd order in all variables. The only difference (besides the different name for the 3rd coordinate) is that in the 1st, we have all plusses and in the 2nd, we have both plusses and minusses (well just one minus, but one is enough). I think, that's the difference between "elliptic" and "hyperbolic" PDEs? Compare that to euqations of conic sections from analytical geometry. If that is right, what would parabolic in between case look like? Maybe the derivative wrt to the 3rd coordinate must be zero? But then the solution would just be constant wrt to that variable. Figure out!
+Both are PDEs in 3 independent variables and both are 2nd order in all variables. The only difference (besides the different name for the 3rd coordinate) is that in the 1st, we have all plusses and in the 2nd, we have both plusses and minusses (well just one minus, but one is enough). I think, that's the difference between "elliptic" and "hyperbolic" PDEs? Compare that to euqations of conic sections from analytical geometry. If that is right, what would parabolic in between case look like? Maybe the derivative wrt to the 3rd coordinate must be zero? But then the solution would just be constant wrt to that variable. Figure out! Wait. i think it makes sense to interpret it in terms of coefficients:
+
+ c_x u_xx + c_y u_yy + c_z u_zz = 0
+
+Then, when all coeffs have the smae sign, we have an elliptic PDE, if both signs occur, we have a hyperbolic PDE. And maybe we have a parabolic PDE if at least one coeff is zero? But then the repective variable would be totally unconstrained which seems also wrong.
 
 
 \end{comment}

@@ -18025,7 +18025,7 @@ void rsStepWaveEquation1D_2(std::vector<T>& u, std::vector<T>& v, std::vector<T>
 
   // We need a temporary copy t of u because we overwrite u in the loop below but we also need to
   // read from its old version:
-  Vec t = u;  
+  Vec t = u;
 
   // Loop over the spatial samples:
   for(int m = 1; m < M-1; m++)
@@ -18046,6 +18046,59 @@ void rsStepWaveEquation1D_2(std::vector<T>& u, std::vector<T>& v, std::vector<T>
     a[m] = aNew;
   }
 }
+
+/** Implements the finite difference scheme (FDS) from PASP, page 660 which is defined by the 
+update equation:
+
+   u[n+1,m] = u[n,m+1] + u[n,m-1] - u[n-1,m]
+
+The vector u contains the wave variable of displacement and u1 contains the displacement one step
+before, i.e. the unit delayed displacement. ...TBC... */
+template<class T>
+void rsStepWaveEquation1D_3(std::vector<T>& u, std::vector<T>& u1)
+{
+  rsAssert(rsAreSameSize(u, u1));
+  rsAssert(rsAreEndsZero(&u, &u1));
+
+  int M = (int)u.size();
+  using Vec = std::vector<T>;
+
+  // Compute new shape of the string using the finite difference scheme:
+  Vec uNew(M);
+  for(int m = 1; m < M-1; m++)
+    uNew[m] = u[m+1] + u[m-1] - u1[m];
+
+  // Update state of the string:
+  u1 = u;
+  u  = uNew;
+
+  // ToDo:
+  //
+  // - Try to reformulate it in terms of u and v := u - u1, i.e. in terms of the displacement and
+  //   the "velocity" v where the velocity is taken to be the difference of the displacement now 
+  //   and one time step before. This is more physical.
+  //
+  // - Figure out and document how to convert desired initial condition for u and v to 
+  //   corresponding initial conditions for u and u1. From a user's perspective, it makes more 
+  //   sense to specify initial conditions for u and v. Maybe we can implement a function that
+  //   converts between u1 and v. It will probably also have to know about u. That is: u1 = f(u,v)
+  //   and v = g(u,u1) for f,g being the appropriate conversion functions.
+  //
+  // - Try to derive a scheme that also involves a 1st spatial derivative. I think, this can be 
+  //   used to model damping. The book gives 1st order finite difference formulas for these. But 
+  //   maybe we should try using 2nd order formulas for these, too.
+}
+// Needs tests!
+//
+// I think an appropriate initial condition for an impulse like initial state at m is:
+//
+//   u[m]    = 1;
+//   u1[m-1] = 0.5;
+//   u1[m+1] = 0.5;
+//
+// where everything else is zero. Try that!
+
+
 
 void testWaveEquation1D()
 {

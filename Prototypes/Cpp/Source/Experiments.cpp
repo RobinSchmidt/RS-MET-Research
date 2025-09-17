@@ -18047,7 +18047,9 @@ void rsStepWaveEquation1D_2(std::vector<T>& u, std::vector<T>& v, std::vector<T>
   }
 }
 
-/** Implements the finite difference scheme (FDS) from PASP, page 660 which is defined by the 
+/** Does not work yet!
+
+Implements the finite difference scheme (FDS) from PASP, page 660 which is defined by the 
 update equation:
 
    u[n+1,m] = u[n,m+1] + u[n,m-1] - u[n-1,m]
@@ -18066,7 +18068,10 @@ void rsStepWaveEquation1D_3(std::vector<T>& u, std::vector<T>& u1)
   // Compute new shape of the string using the finite difference scheme:
   Vec uNew(M);
   for(int m = 1; m < M-1; m++)
-    uNew[m] = u[m+1] + u[m-1] - u1[m];
+  {
+    uNew[m] = u[m]  +  (u[m+1] + u[m-1] - u1[m]);
+    //uNew[m] = u[m]  -  (u[m+1] + u[m-1] - u1[m]);
+  }
 
   // Update state of the string:
   u1 = u;

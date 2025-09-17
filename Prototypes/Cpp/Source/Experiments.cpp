@@ -18069,7 +18069,8 @@ void rsStepWaveEquation1D_3(std::vector<T>& u, std::vector<T>& u1)
   Vec uNew(M);
   for(int m = 1; m < M-1; m++)
   {
-    uNew[m] = u[m]  +  (u[m+1] + u[m-1] - u1[m]);
+    uNew[m] = u[m+1] + u[m-1] - u1[m];
+    //uNew[m] = u[m]  +  (u[m+1] + u[m-1] - u1[m]);
     //uNew[m] = u[m]  -  (u[m+1] + u[m-1] - u1[m]);
   }
 
@@ -18129,7 +18130,7 @@ void testWaveEquation1D()
   using Vec  = std::vector<Real>;
 
   // User parameters:
-  int  M  =  11;                       // Length of the waveguide, number of spatial samples
+  int  M  =  10;                       // Length of the waveguide, number of spatial samples
   int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
   int  N  = 100;                       // Number of time steps to take in simulation
 
@@ -18152,7 +18153,7 @@ void testWaveEquation1D()
   // Do the time stepping and at each step, produce a plot for inspection:
   for(int n = 0; n < N; n++)
   {
-    rsPlotVectors(u, u1);
+    rsPlotVectors(u);
     //rsPlotVectors(u, v, a);        // Plot the displacement, velocity, acceleration waves
 
     // Plot a smoothed version of the displacement u:
@@ -18160,10 +18161,10 @@ void testWaveEquation1D()
     //rsArrayTools::movingAverage3pt(&us[0], M, &us[0]);
     //rsPlotVectors(u, us);            // Plot displacement an smoothed displacement
 
-    rsStepWaveEquation1D_1(u, v);    // Has parasitic oscillations
+    //rsStepWaveEquation1D_1(u, v);    // Has parasitic oscillations
     //rsStepWaveEquation1D_2(u, v, a);   // Is unstable!
 
-    rsStepWaveEquation1D_3(u, u1);  // Is unstable!
+    rsStepWaveEquation1D_3(u, u1);  // 
   }
 
 
@@ -18178,6 +18179,14 @@ void testWaveEquation1D()
   //
   // - Could we perhaps form a sensible output signal picked up at some location m by using
   //   a sum like out = u[m-1] + u[m] + u[m+1]? ...Nope - that looks messy, too!
+  // 
+  // - With the FDS scheme from PASP, we we come back to the initial state again at time step 
+  //   n = 18 with M = 10. When the displacement wave gets reflected at either end of the string,
+  //   the displacement disappears for one sample instant. It's as if  the impulse is somehow 
+  //   "inside the boundary" for the duration of one sampling period or something. Generally, the 
+  //   result of this scheme looks good and produces results that are in line with the 
+  //   expectations. So, at last, we have one working prototype reference implementation to compare
+  //   all upcoming schemes against. Yay!
   //
   // ToDo:
   //

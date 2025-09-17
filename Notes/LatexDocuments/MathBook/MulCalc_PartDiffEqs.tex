@@ -165,7 +165,8 @@ I used waves on a pond of water as an example for the sort of phenomena that the
 % https://en.wikipedia.org/wiki/Navier%E2%80%93Stokes_equations
 
 \paragraph{Electrodynamics} ...tbc...
-% aka Maxwell's Equations
+% aka Maxwell's Equations -> this is a *system* of PDEs not just a single PDE -> even more difficult
+% to handle
 % maybe rename to electrodynamics
 
 \paragraph{Magnetohydrodynamics} ...tbc...
@@ -192,22 +193,44 @@ I used waves on a pond of water as an example for the sort of phenomena that the
 % see Arens, pg 1090
 
 
-\subsection{Solution Methods}
+\subsection{Analytical Solution Methods}
 
 % https://en.wikipedia.org/wiki/Integrable_system
 
-\subsubsection{Analytical Methods}
 
-%\paragraph{Green's Functions}
-%\paragraph{Separation of Variables}
-%\paragraph{Method of Characteristics}
-% what else? product ansatz?
+\subsubsection{Separation of Variables}
 
-\subsubsection{Numerical Methods}
 
-%\paragraph{Finite Difference Methods}
-%\paragraph{Finite Volume Methods}
-%\paragraph{Finite Element Methods}
+\subsubsection{Method of Characteristics}
+
+\subsubsection{Laplace Transform}
+
+\subsubsection{Green's Functions}
+
+
+
+
+% what else? product ansatz? Laplace transform
+
+\subsection{Numerical Solution Methods}
+
+
+
+\subsubsection{Finite Difference Schemes}
+\emph{Finite difference schemes} (FDS) are the simplest and most intuitive sort of numerical solution methods for PDEs. The idea is basically to discretize the problem domain, i.e. formulate it in terms of spatial and temporal samples, then replace all derivatives with finite difference approximations and thereby obtain a (possibly large) system of equations and then solve that system. ...TBC...
+
+% Distinctions between methods for static systems (where we don't have a time-stepping) such as the Laplace equation and dynamic systems (where we must do time stepping) such as the wave equation.
+
+\paragraph{Features of an FDS}
+A finite difference scheme is called \emph{consistent}, when it gives back the original PDE in the limit when all step sizes approach zero. A method is called \emph{convergent}, when all the solutions that it produces\footnote{for all possible initial conditions and boundary conditions} converge pointwise towards solutions of the original PDE when the step sizes approach zero. ...TBC...explain stability, well-posedness, etc.
+
+
+% See PASP, page 661 ff
+
+
+\subsubsection{Finite Volume Methods}
+
+\subsubsection{Finite Element Methods}
 
 
 
@@ -243,6 +266,13 @@ https://www.youtube.com/watch?v=L3SEW6fJASE
 
 The Most Important Concept in Physics. #SoME4
 https://www.youtube.com/watch?v=3bH-3dINo7E
+
+
+
+Laplace equation in 3D:  u_xx + u_yy + u_zz = 0
+Wave equation in 2D:     u_xx + u_yy - u_tt = 0
+
+Both are PDEs in 3 independent variables and both are 2nd order in all variables. The only difference (besides the different name for the 3rd coordinate) is that in the 1st, we have all plusses and in the 2nd, we have both plusses and minusses (well just one minus, but one is enough). I think, that's the difference between "elliptic" and "hyperbolic" PDEs? Compare that to euqations of conic sections from analytical geometry. If that is right, what would parabolic in between case look like? Maybe the derivative wrt to the 3rd coordinate must be zero? But then the solution would just be constant wrt to that variable. Figure out!
 
 
 \end{comment}

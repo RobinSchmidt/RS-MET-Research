@@ -12161,21 +12161,21 @@ void testCompositeness()
 
 
     // Setup:
-  int N = 5001;    // highest natural number n in the plot (x-axis)
+  int N = 2001;    // Highest natural number n in the plot (x-axis)
 
   using VecD = std::vector<double>;
   rsPrimeFactorTable<int> tbl(N);
 
-  VecD f(N), fr(N), lfr(N), lg2(N);
+  // Compute compositeness and related quantities:
+  VecD f(N), fr(N), lfr(N), lg2(N), cr(N);
   for(int n = 0; n < N; n++)
   {
     f[n]   = tbl.getNumFactors(n);    // Compositeness
     fr[n]  = 1.0 / f[n];              // Primality (reciprocal of compositeness)
     lfr[n] = rsLog2(fr[n]);           // Log of primality
     lg2[n] = rsLog2((double)n);       // Envelope of compositeness
+    cr[n]  = f[n] / lg2[n];           // Relative compositeness
   }
-
-
 
   // Count the number of primes, half-primes, third-primes, etc. up to some given n:
   auto countFractionalPrimes = [&](int m)
@@ -12197,31 +12197,41 @@ void testCompositeness()
   VecD c2 = countFractionalPrimes(2);
   VecD c3 = countFractionalPrimes(3);
   VecD c4 = countFractionalPrimes(4);
+  VecD c5 = countFractionalPrimes(5);
 
-
-  //rsPlotVectors(f, lg2);
+  // Comnpositeness and related functions:
+  rsPlotVectors(f, lg2);
   //rsPlotVector(fr);
   //rsPlotVector(lfr);
+  //rsPlotVector(cr);      // ToDo: Plot with dots or stems
 
-  rsPlotVectors(c1, c2, c3, c4);
+  // Counting functions:
+  //rsPlotVectors(c1, c2, c3, c4, c5);
 
   // Observations:
   //
   // - As expected, the "compositeness" function f(n) is bounded/enveloped by log2(n). The peaks 
-  //   that actually touch the envelope are the powers of 2.
+  //   that actually touch the envelope are the powers of 2. They have the maximum number of 
+  //   factors that is possible relative to the size of the number.
   // 
-  // - c2 is above c1 but c3 is *not* above c2. It's in between. At least, up to n = 2000
+  // - c2 is above c1 but c3 is *not* above c2. It's in between. At least, up to n = 2000. Between
+  //   10k and 20k, they get rather close, though. the higher counting functions are even lower 
+  //   initially
   //
   //
   //  ToDo:
-  //
-  // - Plot related functions such as the prime counting function, the semiprime counting function
-  //   (defined as the number of numbers up to n that have exactly 2 factor), etc. 
   //
   // - Maybe define  dm(n) = sum_{k=1}^m ck(n). It's a counting function that counts the number of
   //   numbers that have up to m factors. I think, we can also implement it more directly by using
   //   if(f[n] <= m)  instead of  if(f[n] == m). Wait! No! That is not the same thing! Maybe both
   //   functions could be interesting.
+  //
+  // - Make histograms for the distributions of the numbers of factors for various ranges. Like:
+  //   How many numbers in the range 0..1000 have 1 factor, 2 factors, 3 factors, etc. Then: how
+  //   many numbers in the range 1000..2000 ...etc. Try to figure out how these histograms change
+  //   as function of the range limits. Where is the peak, the mode, the median, etc.
+  //
+  // - Maybe plot differences i.e. things like f[n] - f[n-1]
 }
 
 
@@ -18446,6 +18456,15 @@ void rsWaveGuideStep1(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
   // up a physical displacement at m = 0 or m = M-1 by forming wL[0] + wR[0]  or  wL[M-1] + wR[M-1]
   // would invariantly always yield zero (assuming rL = rR = -1). This it exactly how it should be 
   // because the displacement is supposed to be indeed zero at the endpoints at all times.
+
+  // ToDo:
+  //
+  // - Implement a function that doesn't reflect the waves from left-traveling into the 
+  //   right-traveling portion but instead just does circular shifts in both arrayw wL,wR. I think
+  //   this corresponds to periodic boundary conditions. Such peridic boundary conditions would 
+  //   correspond to a torus-shaped tube in which pressure waves travel. Verify this! Are there
+  //   any acoustic instruments that use such a toroidal tube? Maybe try to build one. Maybe use 
+  //   concentric tubes for the different notes.
 }
 // rename to rsStepWaveGuide1
 

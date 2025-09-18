@@ -9839,7 +9839,8 @@ void testShanksTrafo1()
   //              S[n+1] - 2*S[n] + S[n-1]
   //
   // This new sequence T will converge faster under certain conditions (What are these conditions? 
-  // Are there any at all?). We test it using as example the Leibniz series for pi:
+  // Are there any at all?). We test it using as example the slowly converging Leibniz series for 
+  // pi:
   //
   //   pi = 4/1 - 4/3 + 4/5 - 4/7 + 4/9 - 4/11 + ... = sum_{n=0}^inf 4/(2*n+1)
   //
@@ -10055,7 +10056,7 @@ void testShanksFormula()
   //   q = -P/2 +- sqrt(P^2/4 - Q)   with  P = -(dL+dR)/dL, Q = dR/dL
   //
   // Verify these formulas! I have derived them by hand so there may be mistakes. I suppose, 
-  // backsubstituting and solving for A and then simplifying further will give the formuals used in
+  // backsubstituting and solving for A and then simplifying further will give the formulas used in
   // the Shanks trafo. But maybe by estimating not only A but also a and q, we can do something 
   // more? Maybe we can take a sequence x[n] and for each n, compute A[n],a[n],q[n] then apply 
   // lowpass smoothing to the these 3 and then produce y[n] = A + a? The rationale is that at 
@@ -10180,6 +10181,12 @@ void testShanksFormula()
   //   Outputting a0 amounts to evaluating the polynomial at t=0. Evaluating it at t=1 or t=-1 
   //   would amount to output a0+a1+a2 or a0-a1+a2 respectively. Maybe these could be used as 
   //   alternatives. 
+  //
+  // - Maybe try a model of the form: x(t) = a0 + a1/t + a2/t^2. The rationale is that inverse 
+  //   powers have a decaying character as t grows bigger, so they may be a more suitable model 
+  //   when we assume the signal to be some constant plus terms that decay. Maybe for this, we 
+  //   should use t=1 as time origin an associate it with the leftmost sample, for example x[n-2]
+  //   when we use the three sample x[n], x[n-1], x[n-2] to estimate the model parameters.
 }
 
 
@@ -10209,7 +10216,7 @@ void testShanksFilter()
 
   // Observations:
   //
-  // - The first two samples are zero and then it immediately jumps to the convergence value of 1.
+  // - The first two samples are zero and then it immediately jumps to the convergence limit of 1.
   //   This can be explained by the fact that the Shanks trafo actually estimates the A in a signal
   //   model of the form x[n] = A + alpha * q^n  with |q| < 1. See 
   //   https://en.wikipedia.org/wiki/Shanks_transformation#Motivation

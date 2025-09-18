@@ -77,7 +77,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //eulersNumberViaPascalsTriangle();
   //testBellTriangle();
   //testEulerTransformation();
-  //testShanksTransformation();
+  testShanksTransformation();   // Could be useful for a nonlinear filter?
   //testCesaroSum();
   //testFejerSum();
   //testGreensFunction();  // stub

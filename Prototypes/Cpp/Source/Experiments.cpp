@@ -11587,7 +11587,7 @@ void testPrimeFactorTable()
   // -What about coprimes?
   // -What about counting functions of "half-primes", "third-primes", "quarter-primes" etc. 
   //  defined as numbers with exactly 2, 3, 4, etc. factors? (my definition - check if some such 
-  //  definition already exists)
+  //  definition already exists) ...Update: See testCompositeness(). There, we do such a thing.
   // -maybe plot cumulative sums of sums and counts of prime-factors
   //
   // See:
@@ -12098,7 +12098,7 @@ void testSquarity()
   //   Order doesn't matter but parentheses do. i.e. (2*3)*5 is different from 2*(3*5) but not
   //   from (3*2)*5 or 5*(2*3) or 5*(3*2) etc. I think we want to identify isomorphic trees with
   //   one another. Call the function that returns this number nbt(x) for "num of binary trees"
-  //   or nmt (number of multiplicative trees). But maybe it's simpler to first let order matter.
+  //   or nmt (number of multiplicatiion trees). But maybe it's simpler to first let order matter.
   //   That would give us a factor of n!. Another factor would come from the the number of possible
   //   parenthisations of a product of n numbers. 
   //   ...but what if a factor occurs multiple times? Surely we want 2*2 to be equal to 2*2 even
@@ -12155,6 +12155,9 @@ void testCompositeness()
   //     f(p*q) = f(p) + f(q) + g(p,q)  or   (f(p) + f(q)) * g(p,q)
   //
   //   where g(p,q) is some function in terms of the GCDs of num(p),den(p),num(q),den(q)
+  //
+  // - Figure out, if this concept of the "compositeness" function f already exists (maybe under a
+  //   different name). It would actually surprise me if it didn't.
 
 
     // Setup:
@@ -12184,7 +12187,7 @@ void testCompositeness()
     c1[n] = cnt;
   }
 
-  // Produce the semiprime counting function which we call c2(n) in this context:
+  // Produce the semiprime (or halfprime) counting function which we call c2(n) in this context:
   VecD c2(N);
   cnt = 0;
   for(int n = 0; n < N; n++) 
@@ -12194,13 +12197,32 @@ void testCompositeness()
     c2[n] = cnt;
   }
 
+  // Now the 3rd-prime counting function:
+  VecD c3(N);
+  cnt = 0;
+  for(int n = 0; n < N; n++)
+  {
+    if(f[n] == 3)
+      cnt++;
+    c3[n] = cnt;
+  }
+
+  // ToDo: Factor out the repetitive code into a lambda function that we can call like:
+  // 
+  //   VecD c1 = countFractionalPrimes(1);
+  //   VecD c2 = countFractionalPrimes(2);
+  //   VecD c3 = countFractionalPrimes(3);
+  //   ...
+
+
+
 
   //rsPlotVectors(f, lg2);
   //rsPlotVector(fr);
   //rsPlotVector(lfr);
 
+  rsPlotVectors(c1, c2, c3);
 
-  rsPlotVectors(c1, c2);
 
   // Observations:
   //

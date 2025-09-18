@@ -12168,7 +12168,7 @@ void testCompositeness()
 
 
     // Setup:
-  int N = 2001;    // Highest natural number n in the plot (x-axis)
+  int N = 5001;    // Highest natural number n in the plot (x-axis)
 
   using VecD = std::vector<double>;
   rsPrimeFactorTable<int> tbl(N);
@@ -12207,13 +12207,24 @@ void testCompositeness()
   VecD c5 = countFractionalPrimes(5);
 
   // Comnpositeness and related functions:
-  rsPlotVectors(f, lg2);
+  //rsPlotVectors(f, lg2);
   //rsPlotVector(fr);
   //rsPlotVector(lfr);
   //rsPlotVector(cr);      // ToDo: Plot with dots or stems
 
   // Counting functions:
   //rsPlotVectors(c1, c2, c3, c4, c5);
+
+  GNUPlotter plt;
+  plt.setToDarkMode();
+  plt.setPixelSize(1800, 900);
+  plt.setLogScale("x", 2.0);
+  //plt.addCommand("set xtics 2, 2, 5000 logscale");
+  plt.addCommand("set xtics 1, 2");
+  plt.setGraphStyles("lines lw 1", "points ps 1 pt 7");
+  plt.plotArrays(N, &lg2[0], &f[0]);
+  // Maybe use dots
+ 
 
   // Observations:
   //
@@ -12227,6 +12238,9 @@ void testCompositeness()
   //
   //
   //  ToDo:
+  // 
+  // - Plot it with a logarithmic x-axis. I think, it should look quasi-periodic with such an axis
+  //   although further to the right, more details will be filled in.
   //
   // - Maybe define  dm(n) = sum_{k=1}^m ck(n). It's a counting function that counts the number of
   //   numbers that have up to m factors. I think, we can also implement it more directly by using

@@ -91,7 +91,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testDivisors();
   //testGcdLcm();                    // stub
   //testSquarity();
-  //testCompositeness();
+  testCompositeness();
   //testFiniteField();
   //testFieldExtensions();
   //testRingExtensions();

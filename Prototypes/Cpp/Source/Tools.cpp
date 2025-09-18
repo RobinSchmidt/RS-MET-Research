@@ -8013,14 +8013,16 @@ public:
   /** Returns the number of prime factors of the given n. By convention, it will return 1 when n is
   zero or one. */
   T getNumFactors(T n) const { return (T) factors[n].size(); }
+  // ToDo: Figure out if this convention makes sense. Maybe returning zero makes more sense.
 
   T getNthPrime(T n) const { return primes[n]; }  // verify!
 
 
   bool isPrime(T n) const { return getNumFactors(n) == 1; }
 
-
   const std::vector<T>& getFactors(T n) const { return factors[n]; }
+  // Are these the distinct factors? I don't think so. I think for n = 60, it would return
+  // [2,2,3,5] -> verify and document!
 
 
 

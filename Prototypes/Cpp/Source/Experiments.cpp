@@ -12109,10 +12109,8 @@ void testSquarity()
 
 void testCompositeness()
 {
-  // Stub
-
-  // The idea is define a number theoretical function f(n) that might be called "compositeness" or
-  // maybe granularity as follows. If 
+  // The idea is to define a number theoretical function f(n) that might be called "compositeness" 
+  // or maybe "granularity" as follows. If 
   // 
   //   n = p1^k1 * p2^k1 * p3^k2 * ... * pM^kM
   //
@@ -12136,6 +12134,7 @@ void testCompositeness()
   // pi != 2^a+1 or 2^a-1 or whatever. All these constrained compositeness functions also satisfy 
   // the same functional equation.
   //
+  // 
   // ToDo:
   //
   // - Plot the function and/or maybe plot 1/f(x) which could perhaps be called primality. Primes
@@ -12144,10 +12143,75 @@ void testCompositeness()
   // - Plot log2(n) / f(n). The base 2 logarithm is the maximum number of factors that a number n 
   //   could possibly have. In this case, all factors would be as small as possible. Only powers 
   //   of 2 reach the maximum value of 1. Maybe call it relative compositeness or something like 
-  //   that.
+  //   that. It measures, how composite a number is relative to its size where 1 means: as 
+  //   composite as possible
+  //
+  // - Try to find a compositeness function for rational numbers. Maybe just add the 
+  //   compositenesses of numerator and denominator. Will ist still satisfy the functional 
+  //   equation. Or maybe only when all 4 numbers (both numerators and denominators) are mutually
+  //   prime. Consider ((2*3)/(7*11)) * ((7*11)/(2*3)). It would have a compositeness of zero. But 
+  //   maybe it satisfies a more general functioal equation like
+  //
+  //     f(p*q) = f(p) + f(q) + g(p,q)  or   (f(p) + f(q)) * g(p,q)
+  //
+  //   where g(p,q) is some function in terms of the GCDs of num(p),den(p),num(q),den(q)
+
+
+    // Setup:
+  int N = 2001;    // highest natural number n in the plot (x-axis)
+
+  using VecD = std::vector<double>;
+  rsPrimeFactorTable<int> tbl(N);
+
+  VecD f(N), fr(N), lfr(N), lg2(N);
+  for(int n = 0; n < N; n++)
+  {
+    f[n]   = tbl.getNumFactors(n);    // Compositeness
+    fr[n]  = 1.0 / f[n];              // Primality (reciprocal of compositeness)
+    lfr[n] = rsLog2(fr[n]);           // Log of primality
+    lg2[n] = rsLog2((double)n);       // Envelope of compositeness
+  }
 
 
 
+  // Produce the prime counting function which we call c1(n) in this context:
+  VecD c1(N);
+  int cnt = 0;
+  for(int n = 2; n < N; n++) // Start a n=2 because  f[0] = f[1] = 1  by bad convention
+  {
+    if(f[n] == 1)
+      cnt++;
+    c1[n] = cnt;
+  }
+
+  // Produce the semiprime counting function which we call c2(n) in this context:
+  VecD c2(N);
+  cnt = 0;
+  for(int n = 0; n < N; n++) 
+  {
+    if(f[n] == 2)
+      cnt++;
+    c2[n] = cnt;
+  }
+
+
+  //rsPlotVectors(f, lg2);
+  //rsPlotVector(fr);
+  //rsPlotVector(lfr);
+
+
+  rsPlotVectors(c1, c2);
+
+  // Observations:
+  //
+  // - As expected, the "compositeness" function f(n) is bounded/enveloped by log2(n). The peaks 
+  //   that actually touch the envelope are the powers of 2.
+  //
+  //
+  //  ToDo:
+  //
+  // - Plot related functions such as the prime counting function, the semiprime counting function
+  //   (defined as the number of numbers up to n that have exactly 2 factor), etc. 
 }
 
 

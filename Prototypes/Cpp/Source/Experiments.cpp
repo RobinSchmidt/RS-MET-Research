@@ -18047,15 +18047,20 @@ void rsStepWaveEquation1D_2(std::vector<T>& u, std::vector<T>& v, std::vector<T>
   }
 }
 
-/** Does not work yet!
-
-Implements the finite difference scheme (FDS) from PASP, page 660 which is defined by the 
+/** Implements the finite difference scheme (FDS) from PASP, page 660 which is defined by the 
 update equation:
 
    u[n+1,m] = u[n,m+1] + u[n,m-1] - u[n-1,m]
 
 The vector u contains the wave variable of displacement and u1 contains the displacement one step
-before, i.e. the unit delayed displacement. ...TBC... */
+before, i.e. the unit delayed displacement. On page 671, it is mentioned that this scheme is also
+known as leapfrog recursion. ...TBC... 
+
+See:
+https://ccrma.stanford.edu/~jos/pasp/Finite_Difference_Schemes_I.html
+https://ccrma.stanford.edu/~jos/pasp/Equivalence_Digital_Waveguide_Finite.html
+https://arxiv.org/pdf/physics/0407032
+*/
 template<class T>
 void rsStepWaveEquation1D_3(std::vector<T>& u, std::vector<T>& u1)
 {
@@ -18068,11 +18073,7 @@ void rsStepWaveEquation1D_3(std::vector<T>& u, std::vector<T>& u1)
   // Compute new shape of the string using the finite difference scheme:
   Vec uNew(M);
   for(int m = 1; m < M-1; m++)
-  {
     uNew[m] = u[m+1] + u[m-1] - u1[m];
-    //uNew[m] = u[m]  +  (u[m+1] + u[m-1] - u1[m]);
-    //uNew[m] = u[m]  -  (u[m+1] + u[m-1] - u1[m]);
-  }
 
   // Update state of the string:
   u1 = u;
@@ -18081,8 +18082,10 @@ void rsStepWaveEquation1D_3(std::vector<T>& u, std::vector<T>& u1)
   // ToDo:
   //
   // - Try to reformulate it in terms of u and v := u - u1, i.e. in terms of the displacement and
-  //   the "velocity" v where the velocity is taken to be the difference of the displacement now 
-  //   and one time step before. This is more physical.
+  //   the "velocity" v where the velocity is taken to be the difference of the displacement "now"
+  //   (at time n) and one time step before (at time n-1). This is more physical. I think the v can
+  //   then be interpreted as the average string velocity in the time interval from n-1 to n. So, 
+  //   if we want to assign a time instant to v, then it should be n-0.5 (verify!).
   //
   // - Figure out and document how to convert desired initial condition for u and v to 
   //   corresponding initial conditions for u and u1. From a user's perspective, it makes more 
@@ -18103,6 +18106,11 @@ void rsStepWaveEquation1D_3(std::vector<T>& u, std::vector<T>& u1)
   //   stands, we have implemented the special case of c = 1 in which the wave travels one spatial
   //   sample in every time step, I think. It results from setting X = c*T where X is the spatial 
   //   sampling interval (grid density) and T is the temporal sampling interval (sample rate).
+  //
+  // 
+  // See also:
+  //
+  // - https://en.wikipedia.org/wiki/Leapfrog_integration
 }
 // Needs tests!
 //
@@ -18141,8 +18149,8 @@ void testWaveEquation1D()
 
   // Set up inital conditions:
   u[m]    = 1.0;
-  //u1[m-1] = 0.5;
-  //u1[m+1] = 0.5;
+  u1[m-1] = 0.5;
+  u1[m+1] = 0.5;
 
 
   //v[m] = 1.0;
@@ -18164,7 +18172,7 @@ void testWaveEquation1D()
     //rsStepWaveEquation1D_1(u, v);    // Has parasitic oscillations
     //rsStepWaveEquation1D_2(u, v, a);   // Is unstable!
 
-    rsStepWaveEquation1D_3(u, u1);  // 
+    rsStepWaveEquation1D_3(u, u1);     // This works fine!
   }
 
 
@@ -18191,10 +18199,11 @@ void testWaveEquation1D()
   // - For th PASP scheme, it seems to be indeed appropriate to set the initial condition for u1 to
   //   u1[m-1] = u1[m+1] = 0.5. If we leave it at zero, I think, this would physically correspond 
   //   to having a nonzero initial velocity somewhere in the range m-1,m,m+1 (I'm not sure exactly 
-  //   where -> figure out!). The effect on the simulation result is that we see a train of 3 
+  //   where -> Figure out!). The effect on the simulation result is that we see a train of 3 
   //   spikes traveling along the string. At least, that how it looks for m = 3. ToDo: Try it with
   //   a longer string (like M=30) and placing the farther away from the boundary.
   //
+  // 
   // ToDo:
   //
   // - Try using a more realistic initial condition such as a triangular shape for the displacement
@@ -18212,18 +18221,32 @@ void testWaveEquation1D()
   //       u1[m-1] += 0.5 * u[m];
   //       u1[m+1] += 0.5 * u[m]
   //     }
-  //     u1[0] = u1[M-1] = 0:
+  //     u1[0] = u1[M-1] = 0; // Because after the loop, they may not be zero anymore.
   //   
   //    With this code, we should be able to set up an appropriate u1 given any desired u assuming
-  //    that the initial velocity is zero along the whole string.
+  //    that the initial velocity is zero along the whole string. When this works, try to 
+  //    generalize to support an arbitrary initial velocity distribution along the string.
+  //    One could perhaps also use a gather algorithm rather than this scatter algorithm above. 
+  //    Maybe that would be cleaner and more efficient. But it would be less intuitive, so maybe
+  //    implement both variants. Use scattering for a prototype version and gathering for use in 
+  //    production.
   // 
-  //
   // - Try to derive time stepping formulas from the expected state at time n = 1. What we expect 
   //   is that an initial displacement spike at m splits into two spikes of half the amplitude at
   //   m-1 and m+1.
   //
   // - Compare to class rsWaveEquation1D in PartialDifferentialEquations.h in the prototypes.
-
+  //
+  // - Apply an arbitrary 3-point MA to u and u1 after each update step. It should use the coeffs
+  //   [c/2, 1-c, c/2]  where  c = smooth * (2/3)  with a user parameter "smooth" such that with 
+  //   smooth = 1, we have the coeffs  [1,1,1]/3. Or maybe leave out the scaling by 2/3. Maybe it 
+  //   could make sense to have [0.5,0,0.5] at full smoothing. Verify if applying smoothing to u 
+  //   and u1 yields the same results as smoothing only u and keeping u1 always as u[n-1], i.e. 
+  //   copying u into a temp array before doing the time step and assigning u1 to that temp array
+  //   after the step. I think, it should be equivalent because we are dealing with LTI systems 
+  //   here (spatial smoothing and temporal delay are both LTI). I think, the spatial aspect can be
+  //   viewed as dealing with a MIMO (multi in, multi out) LTI system. We have one time signal for 
+  //   each spatial sample along the string. Verify and document this! 
 }
 
 
@@ -18261,7 +18284,11 @@ displacement is fixed at zero at both ends. A physical wave variable such as the
 displacement of a string is given by the sum of both buffers. The physical interpretation of the 
 buffers is that they store the spatial samples of the traveling wave components. The contents of 
 the buffers themselves do not correspond to any measurable physical quantity. They are a 
-theoretical modeling device and only their sum gives a meaningful physical quantity.
+theoretical modeling device and only their sum gives a meaningful physical quantity. Maybe they are
+somewhat analoguous to complex phasors in regular DSP theory? These phasors themselves do not 
+represent a signal, but when appropriately combined (i.e. when we add two complex conjugate phasors
+together) we get a real-valued signal. Here, we add together the two (non-physical) traveling wave
+components instead. I'm not sure, if this is a good analogy, though.
 
 The time step moves the content of wL one spatial sample to the left and the content of wR one 
 spatial sample to the right. The now "freed" or "emptied" positions at the right end of wL and at 

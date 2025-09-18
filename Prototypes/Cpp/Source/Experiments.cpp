@@ -18093,6 +18093,7 @@ bool rsAreEndsZero(
   // Can be extended to support even more input vectors if needed
 }
 
+/** This scheme is, so far, useless. It produces crap. */
 template<class T>
 void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
 {
@@ -18145,6 +18146,7 @@ void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
   // access to the acceleration a from the previous time step
 }
 
+/** This is unstable! */
 template<class T>
 void rsStepWaveEquation1D_2(std::vector<T>& u, std::vector<T>& v, std::vector<T>& a)
 {
@@ -18177,14 +18179,17 @@ void rsStepWaveEquation1D_2(std::vector<T>& u, std::vector<T>& v, std::vector<T>
   }
 }
 
-/** Implements the finite difference scheme (FDS) from PASP, page 660 which is defined by the 
-update equation:
+/** Implements the finite difference scheme (FDS) also known as finite difference time domain 
+(FDTD) solver from PASP, page 660 which is defined by the update equation:
 
    u[n+1,m] = u[n,m+1] + u[n,m-1] - u[n-1,m]
 
 The vector u contains the wave variable of displacement and u1 contains the displacement one step
-before, i.e. the unit delayed displacement. On page 671, it is mentioned that this scheme is also
-known as leapfrog recursion. ...TBC... 
+before, i.e. the unit delayed displacement. The scheme is derived by replacing spatial and temporal
+derivatives in the wave equation by central difference approximations. The resulting scheme is know
+as leapfrog recursion (see page 671). This scheme has some nice properties: It is efficient, stable
+and even exact at the spatial sample points. Another noteworthy feature is that it is equivalent to
+a numerical solver based on waveguides. ...TBC... 
 
 See:
 https://ccrma.stanford.edu/~jos/pasp/Finite_Difference_Schemes_I.html
@@ -18242,6 +18247,9 @@ void rsStepWaveEquation1D_3(std::vector<T>& u, std::vector<T>& u1)
   //
   // - https://en.wikipedia.org/wiki/Leapfrog_integration
 }
+// Rename to rsStepWaveEquationleapFrog. Maybe put it as static function into a class
+// rsWaveEquation1D_Naive
+
 // Needs tests!
 //
 // I think an appropriate initial condition for an impulse like initial state at m is:
@@ -18279,14 +18287,16 @@ void testWaveEquation1D()
 
   // Set up inital conditions:
   u[m]    = 1.0;
+
+
   u1[m-1] = 0.5;
   u1[m+1] = 0.5;
+  // ToDo: implement a general function: 
+  // rsInitOldDisplacementsForLeapFrog(const Vec& u, Vec* u1). It should 
+  // scatter the shape in u using the rule u1[m-1] = u1[m+1] = 0.5*u[m]
 
 
-  //v[m] = 1.0;
-  //a[m] = 1.0;
 
- 
 
   // Do the time stepping and at each step, produce a plot for inspection:
   for(int n = 0; n < N; n++)
@@ -18299,10 +18309,9 @@ void testWaveEquation1D()
     //rsArrayTools::movingAverage3pt(&us[0], M, &us[0]);
     //rsPlotVectors(u, us);            // Plot displacement an smoothed displacement
 
-    //rsStepWaveEquation1D_1(u, v);    // Has parasitic oscillations
+    //rsStepWaveEquation1D_1(u, v);      // Has parasitic oscillations
     //rsStepWaveEquation1D_2(u, v, a);   // Is unstable!
-
-    rsStepWaveEquation1D_3(u, u1);     // This works fine!
+    rsStepWaveEquation1D_3(u, u1);       // This works fine!
   }
 
 

@@ -12039,8 +12039,6 @@ void testSquarity()
   rsPlotVectorsXY(x, y);
 
 
-
-
   // Observations:
   //
   // - Before hitting 1 for square numbers, the squarity function seems to increase. For numbers
@@ -12109,7 +12107,48 @@ void testSquarity()
   //   parenthesize an expression is given by the Catalan numbers.
 }
 
+void testCompositeness()
+{
+  // Stub
 
+  // The idea is define a number theoretical function f(n) that might be called "compositeness" or
+  // maybe granularity as follows. If 
+  // 
+  //   n = p1^k1 * p2^k1 * p3^k2 * ... * pM^kM
+  //
+  // Then we define 
+  //
+  //   f(n) = k1 + k2 + k3 + ... + kM
+  //
+  // For example, f(60) = 4 because 60 = 2^2 * 3^1 * 5^1 = 2 * 2 * 3 * 5. In the last 
+  // representation where all factors occur according to their multiplicity, we just need to count
+  // the factors to compute f(n). The interesting feature of this function is that it satisfies:
+  //
+  //   f(m*n) = f(m) + f(n)
+  //
+  // just like logarithms do. Maybe we could call all functions that satisfy this functional 
+  // equation as "functionally logarithmic" or something. A lot of relevant number theoretical 
+  // functions are multiplicative. That is, they satisfy: f(m*n) = f(m) * f(n). Other areas of math
+  // focus on linear functions which satisfy additivity: f(m+n) = f(m) + f(n). This feature here 
+  // mixes both operations. I think, in DSP, such functions are called homomorphic (verify!). We
+  // can create infinitely many variations of such functions by counting/summing the ki only when
+  // the corresponding base pi satisfies some additional constraints. Fopr example pi != 2 or
+  // pi != 2^a+1 or 2^a-1 or whatever. All these constrained compositeness functions also satisfy 
+  // the same functional equation.
+  //
+  // ToDo:
+  //
+  // - Plot the function and/or maybe plot 1/f(x) which could perhaps be called primality. Primes
+  //   have a primality of 1, semiprimes have a primality of 1/2, etc.
+  //
+  // - Plot log2(n) / f(n). The base 2 logarithm is the maximum number of factors that a number n 
+  //   could possibly have. In this case, all factors would be as small as possible. Only powers 
+  //   of 2 reach the maximum value of 1. Maybe call it relative compositeness or something like 
+  //   that.
+
+
+
+}
 
 
 

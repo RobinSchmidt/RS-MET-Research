@@ -12161,7 +12161,7 @@ void testCompositeness()
 
 
     // Setup:
-  int N = 2001;    // highest natural number n in the plot (x-axis)
+  int N = 5001;    // highest natural number n in the plot (x-axis)
 
   using VecD = std::vector<double>;
   rsPrimeFactorTable<int> tbl(N);
@@ -12177,63 +12177,51 @@ void testCompositeness()
 
 
 
-  // Produce the prime counting function which we call c1(n) in this context:
-  VecD c1(N);
-  int cnt = 0;
-  for(int n = 2; n < N; n++) // Start a n=2 because  f[0] = f[1] = 1  by bad convention
+  // Count the number of primes, half-primes, third-primes, etc. up to some given n:
+  auto countFractionalPrimes = [&](int m)
   {
-    if(f[n] == 1)
-      cnt++;
-    c1[n] = cnt;
-  }
-
-  // Produce the semiprime (or halfprime) counting function which we call c2(n) in this context:
-  VecD c2(N);
-  cnt = 0;
-  for(int n = 0; n < N; n++) 
-  {
-    if(f[n] == 2)
-      cnt++;
-    c2[n] = cnt;
-  }
-
-  // Now the 3rd-prime counting function:
-  VecD c3(N);
-  cnt = 0;
-  for(int n = 0; n < N; n++)
-  {
-    if(f[n] == 3)
-      cnt++;
-    c3[n] = cnt;
-  }
-
-  // ToDo: Factor out the repetitive code into a lambda function that we can call like:
-  // 
-  //   VecD c1 = countFractionalPrimes(1);
-  //   VecD c2 = countFractionalPrimes(2);
-  //   VecD c3 = countFractionalPrimes(3);
-  //   ...
-
-
+    VecD c(N);
+    int cnt = 0;
+    for(int n = 2; n < N; n++)
+    {
+      // We start a n = 2 because  f[0] = f[1] = 1  by bad convention. For m = 1, i.e. for the 
+      // normal prime counting function, we want to produce 0 for n = 0 and n = 1 which would not
+      // work if we would start the loop at n = 0.
+      if(f[n] == m)
+        cnt++;
+      c[n] = cnt;
+    }
+    return c;
+  };
+  VecD c1 = countFractionalPrimes(1);
+  VecD c2 = countFractionalPrimes(2);
+  VecD c3 = countFractionalPrimes(3);
+  VecD c4 = countFractionalPrimes(4);
 
 
   //rsPlotVectors(f, lg2);
   //rsPlotVector(fr);
   //rsPlotVector(lfr);
 
-  rsPlotVectors(c1, c2, c3);
-
+  rsPlotVectors(c1, c2, c3, c4);
 
   // Observations:
   //
   // - As expected, the "compositeness" function f(n) is bounded/enveloped by log2(n). The peaks 
   //   that actually touch the envelope are the powers of 2.
+  // 
+  // - c2 is above c1 but c3 is *not* above c2. It's in between. At least, up to n = 2000
   //
   //
   //  ToDo:
   //
   // - Plot related functions such as the prime counting function, the semiprime counting function
   //   (defined as the number of numbers up to n that have exactly 2 factor), etc. 
+  //
+  // - Maybe define  dm(n) = sum_{k=1}^m ck(n). It's a counting function that counts the number of
+  //   numbers that have up to m factors. I think, we can also implement it more directly by using
+  //   if(f[n] <= m)  instead of  if(f[n] == m). Wait! No! That is not the same thing! Maybe both
+  //   functions could be interesting.
 }
 
 

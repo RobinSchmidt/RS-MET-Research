@@ -18146,7 +18146,8 @@ void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
   // access to the acceleration a from the previous time step
 }
 
-/** This is unstable! */
+/** This is unstable! It's just some experimental code that I have written off the cuff and it 
+doesn't work - unsurprisingly. */
 template<class T>
 void rsStepWaveEquation1D_2(std::vector<T>& u, std::vector<T>& v, std::vector<T>& a)
 {
@@ -18177,126 +18178,36 @@ void rsStepWaveEquation1D_2(std::vector<T>& u, std::vector<T>& v, std::vector<T>
     v[m] = vNew;
     a[m] = aNew;
   }
+
+  // Notes:
+  //
+  // - I'm not so sure, if what we do here is really trapezoidal integration in the time domain.
+  //   Isn't the trapezoidal supposed to be implicit? Maybe what we are doing here is just Euler
+  //   with additional 2-point MA smoothing in the time domain? Is that actually different from
+  //   the trapezoidal method?
 }
-
-/** Implements the finite difference scheme (FDS) also known as finite difference time domain 
-(FDTD) solver from PASP, page 660 which is defined by the update equation:
-
-   u[n+1,m] = u[n,m+1] + u[n,m-1] - u[n-1,m]
-
-The vector u contains the wave variable of displacement and u1 contains the displacement one step
-before, i.e. the unit delayed displacement. The scheme is derived by replacing spatial and temporal
-derivatives in the wave equation by central difference approximations. The resulting scheme is know
-as leapfrog recursion (see page 671). This scheme has some nice properties: It is efficient, stable
-and even exact at the spatial sample points. Another noteworthy feature is that it is equivalent to
-a numerical solver based on waveguides. ...TBC... 
-
-See:
-https://ccrma.stanford.edu/~jos/pasp/Finite_Difference_Schemes_I.html
-https://ccrma.stanford.edu/~jos/pasp/Equivalence_Digital_Waveguide_Finite.html
-https://arxiv.org/pdf/physics/0407032
-*/
-template<class T>
-void rsStepWaveEquation1D_3(std::vector<T>& u, std::vector<T>& u1)
-{
-  rsAssert(rsAreSameSize(u, u1));
-  rsAssert(rsAreEndsZero(&u, &u1));
-
-  int M = (int)u.size();
-  using Vec = std::vector<T>;
-
-  // Compute new shape of the string using the finite difference scheme:
-  Vec uNew(M);
-  for(int m = 1; m < M-1; m++)
-    uNew[m] = u[m+1] + u[m-1] - u1[m];
-
-  // Update state of the string:
-  u1 = u;
-  u  = uNew;
-
-  // ToDo:
-  //
-  // - Try to reformulate it in terms of u and v := u - u1, i.e. in terms of the displacement and
-  //   the "velocity" v where the velocity is taken to be the difference of the displacement "now"
-  //   (at time n) and one time step before (at time n-1). This is more physical. I think the v can
-  //   then be interpreted as the average string velocity in the time interval from n-1 to n. So, 
-  //   if we want to assign a time instant to v, then it should be n-0.5 (verify!).
-  //
-  // - Figure out and document how to convert desired initial condition for u and v to 
-  //   corresponding initial conditions for u and u1. From a user's perspective, it makes more 
-  //   sense to specify initial conditions for u and v. Maybe we can implement a function that
-  //   converts between u1 and v. It will probably also have to know about u. That is: u1 = f(u,v)
-  //   and v = g(u,u1) for f,g being the appropriate conversion functions.
-  // 
-  // - Figure out how we can inject signals into the string. Is it enough to just add some signal
-  //   to u[m] to simulate driving the string at position m or do we also need to take care of u1?
-  //   I actually don't think so but this should be verified. Maybe we need to add half of it to
-  //   u1[m-1] and u1[m+1], too? That's actually also plausible.
-  //
-  // - Try to derive a scheme that also involves a 1st spatial derivative. I think, this can be 
-  //   used to model damping. The book gives 1st order finite difference formulas for these. But 
-  //   maybe we should try using 2nd order formulas for these, too.
-  //
-  // - Figure out how we could incoporate an arbitrary wave velocity c into the scheme. As it 
-  //   stands, we have implemented the special case of c = 1 in which the wave travels one spatial
-  //   sample in every time step, I think. It results from setting X = c*T where X is the spatial 
-  //   sampling interval (grid density) and T is the temporal sampling interval (sample rate).
-  //
-  // 
-  // See also:
-  //
-  // - https://en.wikipedia.org/wiki/Leapfrog_integration
-}
-// Rename to rsStepWaveEquationleapFrog. Maybe put it as static function into a class
-// rsWaveEquation1D_Naive
-
-// Needs tests!
-//
-// I think an appropriate initial condition for an impulse like initial state at m is:
-//
-//   u[m]    = 1;
-//   u1[m-1] = 0.5;
-//   u1[m+1] = 0.5;
-//
-// where everything else is zero. Try that!
-
-
 
 void testWaveEquation1D()
 {
-  // We implement a numerical PDE solver scheme for the 1D wave equation. 
-  // 
-  // This doesn't work yet!
-  // Figure out why. So far, I wrote all the code just from the top of my head. ToDo: Compare to
-  // the older implementations and look up the literature (epsecially in Numerical Sound Synthesis
-  // by Stefan Bilbao). I already did some experiments with the wave equation in 1D, 2D and 3D 
-  // following the book. I think, they are somewhere in the main repo. ...TBC...
+  // We implement a numerical PDE solver scheme for the 1D wave equation. ...TBC...
 
   using Real = double;
   using Vec  = std::vector<Real>;
+  using WE   = rsWaveEquation1D_Proto<Real>;
 
   // User parameters:
   int  M  =  10;                       // Length of the waveguide, number of spatial samples
   int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
   int  N  = 100;                       // Number of time steps to take in simulation
 
-
   // Allocate vectors for spatial samples of displacement u, velocity v, acceleration a:
-  Vec u(M), v(M), a(M);
-  Vec u1(M);             // u with one sample time delay
+  Vec u(M);              // Displacement
+  //Vec v(M), a(M);        // Velocity and acceleration (used by soem schemes)
+  Vec u1(M);             // Displacement u with one sample time delay
 
   // Set up inital conditions:
-  u[m]    = 1.0;
-
-
-  u1[m-1] = 0.5;
-  u1[m+1] = 0.5;
-  // ToDo: implement a general function: 
-  // rsInitOldDisplacementsForLeapFrog(const Vec& u, Vec* u1). It should 
-  // scatter the shape in u using the rule u1[m-1] = u1[m+1] = 0.5*u[m]
-
-
-
+  u[m] = 1.0;
+  WE::initForLeapFrog(u, u1);
 
   // Do the time stepping and at each step, produce a plot for inspection:
   for(int n = 0; n < N; n++)
@@ -18309,11 +18220,10 @@ void testWaveEquation1D()
     //rsArrayTools::movingAverage3pt(&us[0], M, &us[0]);
     //rsPlotVectors(u, us);            // Plot displacement an smoothed displacement
 
-    //rsStepWaveEquation1D_1(u, v);      // Has parasitic oscillations
-    //rsStepWaveEquation1D_2(u, v, a);   // Is unstable!
-    rsStepWaveEquation1D_3(u, u1);       // This works fine!
+    //rsStepWaveEquation1D_1(u, v);        // Has parasitic oscillations
+    //rsStepWaveEquation1D_2(u, v, a);     // Is unstable!
+    WE::stepLeapFrog(u, u1);               // This works fine!
   }
-
 
   // Observations:
   //
@@ -18350,31 +18260,9 @@ void testWaveEquation1D()
   //   extreme and actually rather unphysical initial condition. It may nevertheless make sense to
   //   use this to analyze the behavior of the algorithm.
   // 
-  // - Write a function to set up appropriate initial conditions for u1 given u. If we assume zero 
-  //   initial velocity at all points, I think we should scatter then contents of u[m] into
-  //   u1[m-1] and u1[m+1] with weights 0.5. Maybe use this: 
-  //     
-  //     rsZero(u1);
-  //     for(int m = 1; m < M-1; m++)
-  //     {
-  //       u1[m-1] += 0.5 * u[m];
-  //       u1[m+1] += 0.5 * u[m]
-  //     }
-  //     u1[0] = u1[M-1] = 0; // Because after the loop, they may not be zero anymore.
-  //   
-  //    With this code, we should be able to set up an appropriate u1 given any desired u assuming
-  //    that the initial velocity is zero along the whole string. When this works, try to 
-  //    generalize to support an arbitrary initial velocity distribution along the string.
-  //    One could perhaps also use a gather algorithm rather than this scatter algorithm above. 
-  //    Maybe that would be cleaner and more efficient. But it would be less intuitive, so maybe
-  //    implement both variants. Use scattering for a prototype version and gathering for use in 
-  //    production.
-  // 
   // - Try to derive time stepping formulas from the expected state at time n = 1. What we expect 
   //   is that an initial displacement spike at m splits into two spikes of half the amplitude at
   //   m-1 and m+1.
-  //
-  // - Compare to class rsWaveEquation1D in PartialDifferentialEquations.h in the prototypes.
   //
   // - Apply an arbitrary 3-point MA to u and u1 after each update step. It should use the coeffs
   //   [c/2, 1-c, c/2]  where  c = smooth * (2/3)  with a user parameter "smooth" such that with 

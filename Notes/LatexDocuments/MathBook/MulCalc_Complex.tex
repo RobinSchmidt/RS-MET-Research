@@ -166,24 +166,30 @@ It's time to define some more jargon. A complex function is said to be \emph{hol
 \subsubsection{Cauchy's Theorem}
 
 \subsubsection{Some Important Integrals}
-As in real analysis, integrals for integer power functions are very important. Just note that here, we are not computing indefinite integrals (aka antiderivatives) but rather contour integrals around a closed loop. the result of such an integration is not another function but a (complex) number. For a function $f(z) = z^n$, these integrals are given by:
+As in real analysis, integrals for integer power functions are very important. Just note that here, we are not computing indefinite integrals (aka antiderivatives) but rather contour integrals around a closed loop. The result of such an integration is not another function of $z$ but a (complex) number. For a function $f(z) = z^n$, these integrals are given by:
 \begin{equation}
 \oint_{\gamma} z^n \; dz = 
 \begin{cases}
 0        \qquad & n \neq -1 \\
 2 \pi \i \qquad & n = -1
 \end{cases}
+\qquad \qquad
+\oint_{\gamma} \frac{1}{z} \; dz = 2 \pi \i
 \end{equation}
-where the contour $\gamma$ can be any closed loop that winds around the origin exactly once (verify!).
+where the contour $\gamma$ can be any closed loop that winds around the origin exactly once (verify!). Now this result is rather peculiar. It says that the contour integral around a closed loop around the origin (that winds around once) for a monomial function $z^n$ is always zero except for the case $n=-1$ in which case it is equal to $2 \pi i$. The case $n=-1$ means that we are dealing with reciprocation function $f(z) = z^{-1} = \frac{1}{z}$. This function is, among all powers of $z$, the odd one out and it is so important that I have even written down the formula for this special case alongside with the general formula. ...TBC...
+
+% Give interpretation for the integral over 1/z: When traveling along the contour while accumulating all the work along our path (coming from the force exerted by the vector field into our direction of movement) and also observing all the flux that we see passing across our path see (coming from flow of the vector field through our path, i.e. perpendicularly crossing it), the total work done (i.e. the kinetic energy we picked up) along our journey will be zero. But we will have seen a net amount of flux flowing through our path. And that amount is $2 \pi$, beause that happens to be the total angle that we traversed. It's most easy to take the unit circle as the contour $\gamma$ but the result holds for any closed contour with winding number 1 around the origin.
+
+
 
 \subsection{Laurent Series}
+As we have already spoilered in equation (\ref{Eq:LaurentSeriesReal}) in the context of real functions, the \emph{Laurent series} of a function $f$ can be seen as a generalized Taylor expansion that allows also for negative powers. In the complex setting, it is given by:
 \begin{equation}
 f(z) = \sum_{n=-\infty}^{\infty} a_n (z - z_0)^n 
 \qquad \text{where} \qquad
 a_n = \frac{1}{2 \pi i} \oint_{\gamma} \frac{f(z)}{(z-z_0)^{n+1}} \; dz
 \end{equation}
-
-% The formula for the coefficient $a_n$ looks scary, but
+Where I now have also given you the formula to compute the coefficients $a_n$ which I left out in the previous mention, because at that point, you couldn't possibly have made sense of it\footnote{Unless, of course, you already had prior knowledge about complex analysis.}. It may still may look scary, but now we have the tools under our belt to handle it ...TBC...
 
 % https://en.wikipedia.org/wiki/Laurent_series
 

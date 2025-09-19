@@ -18287,7 +18287,9 @@ void testWaveEquation1D()
   //   initial state reoccurs again is 2*(M-1) it means that means the period is actually 2*(M-1)+1
   //   = 2*M-2+1 = 2*M-1. Figure that out excatly and document it! It's important for correct 
   //   tuning of the frequencies that the simluations will produce. An off-by-one error here will 
-  //   cause a slight detuning (or maybe not so slight at higher tuning frequencies).
+  //   cause a slight detuning (or maybe not so slight at higher tuning frequencies) which may not
+  //   be immediately apparent and may therefore be easily overlooked, so double-check, if the 
+  //   tuning is correct.
   // 
   // 
   // ToDo:

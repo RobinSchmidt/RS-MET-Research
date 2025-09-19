@@ -159,23 +159,63 @@ It's time to define some more jargon. A complex function is said to be \emph{hol
 \paragraph{The Polya Potential}
 
 
+
+
 \subsubsection{Cauchy's Integral Formula}
 
 \subsubsection{Cauchy's Theorem}
 
+\subsubsection{Some Important Integrals}
+As in real analysis, integrals for integer power functions are very important. Just note that here, we are not computing indefinite integrals (aka antiderivatives) but rather contour integrals around a closed loop. the result of such an integration is not another function but a (complex) number. For a function $f(z) = z^n$, these integrals are given by:
+\begin{equation}
+\oint_{\gamma} z^n \; dz = 
+\begin{cases}
+0        \qquad & n \neq -1 \\
+2 \pi \i \qquad & n = -1
+\end{cases}
+\end{equation}
+where the contour $\gamma$ can be any closed loop that winds around the origin exactly once (verify!).
 
 \subsection{Laurent Series}
+\begin{equation}
+f(z) = \sum_{n=-\infty}^{\infty} a_n (z - z_0)^n 
+\qquad \text{where} \qquad
+a_n = \frac{1}{2 \pi i} \oint_{\gamma} \frac{f(z)}{(z-z_0)^{n+1}} \; dz
+\end{equation}
+
+% The formula for the coefficient $a_n$ looks scary, but
+
+% https://en.wikipedia.org/wiki/Laurent_series
 
 % Hauptteil, Nebenteil (in German) - maps to poles and zeros? Poles are more important, that's why 
 % the part defined by  them is the Hauptteil?
 
+\subsubsection{The Residue}
+The coefficient $a_{-1}$ for $n=-1$ in the Laurent series expansion of $f(z)$ is so important that it has its own name. It is called the \emph{residue} of $f$ at the given $z_0$. It can be computed as:
+\begin{equation}
+\Res(f,z_0) = a_{-1} = \frac{1}{2 \pi i} \oint_{\gamma} f(z) \; dz
+\end{equation}
+The name residue stems from the fact that it is the only things that remains after we do a contour integration around a closed loop around $z_0$. ...TBC...
+
+
+
 
 \subsection{Cauchy's Residue Theorem}
+Given a complex function $f(z)$ with $N$ residues within a closed contour $\gamma$ of integration, we can compute the value of the contour integral simply as:
+\begin{equation}
+\oint_{\gamma} f(z) \; dz = 2 \pi \i \sum_{n=1}^{N} \Res(f, z_n)
+\end{equation}
+The complicated contour integral boils down to a simple sum over the residues multiplied by $2 \pi \i$.
 
 % https://en.wikipedia.org/wiki/Residue_theorem
 % https://de.wikipedia.org/wiki/Residuensatz
 % https://mathworld.wolfram.com/ResidueTheorem.html
 
+
+% The Most Elegant Theorem in All of Mathematics
+% https://www.youtube.com/watch?v=ZLfLesLRjK8
+% -The Laurent series coeff for n=-1 is called residue because it's the only one that remains after
+%  integration around a contour surrounding z_0
 
 \subsection{Weierstrass's Factorization Theorem}
 

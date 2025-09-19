@@ -18421,7 +18421,7 @@ std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL,
 
   // Allocate waveguide and set up initial conditions:
   Vec wL(M), wR(M);
-  wL[mIn] = wR[mIn] = 1.0;
+  wL[mIn] = wR[mIn] = 0.5;
 
   // Produce output signal:
   Vec y(N);
@@ -18478,9 +18478,9 @@ void testWaveGuideNaiveImpulse()
   using Vec  = std::vector<Real>;
 
   // User parameters:
-  int  M  =  10;                       // Length of the waveguide, number of spatial samples
+  int  M  =  30;                       // Length of the waveguide, number of spatial samples
   int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
-  int  N  = 100;                       // Number of time steps to take in simulation
+  int  N  = 150;                       // Number of time steps to take in simulation
   Real rL =  -1.0;                     // Reflection coeff at left boundary
   Real rR =  -1.0;                     // Reflection coeff at right boundary
 
@@ -18488,7 +18488,7 @@ void testWaveGuideNaiveImpulse()
   Vec wL(M), wR(M);
 
   // Set up initial condition of the string:
-  wL[m] = wR[m] = 1.0;                 // Set a single impulse at location m in both WGs
+  wL[m] = wR[m] = 0.5;                 // Set a single impulse at location m in both WGs
 
   // Do the time stepping and plot the contents of the wave buffers at each time step:
   Vec y(N);
@@ -18496,8 +18496,6 @@ void testWaveGuideNaiveImpulse()
   {
     y[n] = wL[m] + wR[m];
     //rsPlotVectors(  wL, wR);           // Plot the traveling wave components
-
-
     rsWaveGuideStep1(wL, wR, rL, rR);  // Advance the traveling waves by one time step
     // Maybe have a function  rsWaveGuideStep(wL, wR, rL, rR, algo);  which lets us switch between
     // different methods for doing the time step
@@ -18509,16 +18507,28 @@ void testWaveGuideNaiveImpulse()
   // Let's try to use the function that is supposed to create the same output signal and compare
   // the results:
   Vec yR = rsCreateWaveGuideReference(N, M, m, m, rL, rR);
-  rsPlotVectors(y, yR);
+  //rsPlotVectors(y, yR);
   bool ok = y == yR;
   rsAssert(ok);
   
   // Create the same signal using the leapfrog finite difference scheme:
-  //Vec yL = rsCreateLeapFrogReference<Real>(N, M, m, m); // seems faster and scaled by 0.5
-  Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, m, m);
+
+  Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, m-1, m-1);
+  //Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, M-m+1, M-m+1);
   rsPlotVectors(y, yR, yL);
   int dummy = 0;
+  // To get the initial spike right, we need ot have mOut == mIn (i.e. 3rd == 4th parameter). To 
+  // get the period right, we have to use M+1 for the 2nd parameter. To get the negative psikes 
+  // right ...
+  // 
+  //   m-1,m-1: spikes shifted backward by 3
+  //   m,m:     spikes shifted backward by 1
+  //   m+1,m+1: spikes shifted forward  by 1
   //
+  // Apparently, with the leapfrog scheme, adjusting m by an offset of 1 shifts the arrival of the 
+  // 1st reflection by 2 samples. This makes sense because we shift the origin of the spike as well
+  // as the pick up point closer to the wall.
+
 
   // Observations:
   //

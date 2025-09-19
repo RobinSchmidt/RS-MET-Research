@@ -12223,7 +12223,8 @@ void testCompositeness()
   plt.addCommand("set xtics 1, 2");
   plt.setGraphStyles("lines lw 1", "points ps 1 pt 7");
   plt.plotArrays(N, &lg2[0], &f[0]);
-  // Maybe use dots
+  //plt.plotArrays(N, &cr[0]);
+  // Maybe use a semitransparent color for the dots such that overlaps increase the intensity
  
 
   // Observations:
@@ -12250,7 +12251,10 @@ void testCompositeness()
   // - Make histograms for the distributions of the numbers of factors for various ranges. Like:
   //   How many numbers in the range 0..1000 have 1 factor, 2 factors, 3 factors, etc. Then: how
   //   many numbers in the range 1000..2000 ...etc. Try to figure out how these histograms change
-  //   as function of the range limits. Where is the peak, the mode, the median, etc.
+  //   as function of the range limits. Where is the peak, the mode, the median, etc. Maybe we 
+  //   should make a histogram for each range 2^k+1 ... 2^(k+1), i.e. 0..2, 3..4, 5..8, 9..16, 
+  //   17..32, 33..64 etc. Or maybe its better to use 2^k ... 2^(k+1)-1, i.e. 0..1, 2..3, 4..7, 
+  //   8..15, 16..31, 32..63 etc.
   //
   // - Maybe plot differences i.e. things like f[n] - f[n-1]
 }

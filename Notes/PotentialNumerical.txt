@@ -54,7 +54,7 @@ where we define:
 Let's assume, vectorizing a matrix just means re-interpreting it as vector without re-ordering it in 
 memory. That means, we just concatenate all the rows, one after another, into one big vector (I 
 assume a row-major memory layout here). For our example with the 4x5 matrices, we have 
-N = I*J * 4*5 = 20 unknowns, namely the entries of P. We will get an overdetermined linear system of 
+N = I*J = 4*5 = 20 unknowns, namely the entries of P. We will get an overdetermined linear system of 
 2*N+1 = 41 equations that looks in matrix form as follows (RHS means right hand side):
 
            Matrix                         * Vector =  RHS        What the line means     Ansatz
@@ -101,8 +101,11 @@ N = I*J * 4*5 = 20 unknowns, namely the entries of P. We will get an overdetermi
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ D C             V34        V34 = (P34-P33)/dx          B,BD
   _ _ _ _ _ _ _ 1 _ _ _ _ _ _ _ _ _ _ _ _              K          K  =  P12                Konstant 
   
- 
-We can interpret this matrix equation as a linear system of equations of the form:
+In the formatting of the rightmost column, I have used indentation to indicate whether we use a 
+forward, central or backward difference. A foward difference (FD) ansatz is shifted a bit to the 
+left (because it's used at the left (or top) boundary), a central difference (CD) ansatz is written 
+centered, and ...you get the point. We can interpret this matrix equation as a linear system of 
+equations of the form:
 
   M * p = vertcat(u,v,K) = w
      
@@ -121,7 +124,11 @@ field. They differ by a constant shift. The last line fixes P12 at K which can b
 constant. The index of the 1 in the last line selects where we want to fix the potential. Here it is 
 at index corresponding to P12 as example. If we want to fix the potential at index i,j in the data 
 matrix P, the corresponding index in the coefficient matrix is i*J + j, here 1*5 + 2 = 7. The triple 
-i,j,K can be given by the user and default to 0, 0, 0.0. 
+i,j,K can be given by the user and default to 0, 0, 0.0. Maybe it makes sense to select i,j such 
+that they correspond to the x,y coordinates of the origin. In this case, K becomes the value of P at
+the origin. It may make sense to set it to zero, i.e. normalize the solution to P(x=0,y=0) = 0. 
+Remember that potentials can be shifted up or down by an arbitrary constant. The last line is needed
+to determine this constant.
 
 For U = dP/dx = P_x, we have 10 (= 2*5) inner points (two rows) because the top and bottom matrix 
 rows count as boundary points. For V = dP/dy = P_y, we have 12 (= 3*4) inner points (3 columns) 
@@ -130,8 +137,9 @@ nonzero elements in each row are given by: dist(b,a) = 2*J = 2*5 = 10, dist(B,A)
 dist(d,c) = 2, dist(D,C) = 1. 
 
 
-
+----------------------------------------------------------------------------------------------------
 Notes:
+
 -The matrix is sparse but unstructured. Maybe with some clever re-ordering of the vectors, we could
  bring it into a more structured sparse form, like - say - pentadiagonal? But that looks like a 
  nightmare to do. We actually need to restructure not M itself but rather M^T * M. The better idea
@@ -143,31 +151,37 @@ Notes:
  an m-by-n data matrix, the vectors will be of size m*n and the coefficient matrix of the system of 
  size 2*m^2*n^2+1 (I think), so we really need a sparse implementation to handle real world data 
  matrices.
+ 
 -We could make a different ansatz based on a different formula to compute numerical derivatives. A 
  higher order finite difference approximation would give rise to more nonzero coefficients in the 
  matrix. The result might be more accurate at the cost of more computations due to a less sparse 
  matrix. We could perhaps also use formulas for numerical integration (i.e. trapezoidal et al) for 
  the ansatz (not sure, if that makes sense, though).
+ 
 -I think, if we numerically differentiate our so obtained potential using the same differencing 
  formula as was used in the ansatz, we will obtain some sort of best curl-free approximation of our
  original vector field. If it has been (numerically) curl-free in the first place, we should get it 
- back as it was. By "numerically curl-free", I mean a curl-free condition in which derivatives have 
- been replaced by numeric approximations via finite differences. Maybe that can be useful to 
- decompose vector fields according to the Helmholtz decomposition theorem. We could subtract the
- curl-free approximation from the original field to get the curl only. The remainder is then div 
- plus constant flow, I think. See 
+ back as it was. By "numerically curl-free", I mean a curl-free like condition in which the 
+ derivatives have been replaced by the appropriate numeric approximations via finite differences. 
+ Maybe that can be useful to decompose vector fields according to the Helmholtz decomposition 
+ theorem. We could subtract the curl-free approximation from the original field to get the curl 
+ only. The remainder is then div plus constant flow, I think. See 
  https://en.wikipedia.org/wiki/Helmholtz_decomposition
+ 
 -When we use the best curl-free approximation algorithm with a negated V, we might obtain a best
  (numerically) analytic approximation to an arbitrary given complex function that is represented
  by U,V. By "numerically analytic", I mean a function that satisfies the numerical pendants of the
  Cauchy-Riemann equations where the derivatives are replaced by finite differences.
+ 
 -I think, the same approach can be applied to 3D problems, too. Constructing the matrices might be
  even more tedious, though.
+ 
 -I think, when the original vector field u,v was not a gradient field in the first place, then the 
  result produced by this algorithm will be some scalar field whose gradient approximates our 
  original vector field in some least-squares sense? It will be the best (numerically) curl-free 
- approximation to our original field and and subtracting it from our original field will give us
- the pure curl component?
+ approximation to our original field and subtracting it from our original field will give us the 
+ pure curl component?
+ 
 -Could we produce the pure curl component directly more directly by using a suitable ansatz 
  involving differences of numerical partial derivatives? Could we also produce a pure divergence 
  component by a similar ansatz? When trying this, be careful to not confuse "curl component" and 
@@ -175,12 +189,16 @@ Notes:
  (which are both scalar fields in 2D - in 3D, curl is also a vector field but here we are in 2D). 
  By "divergence component", I mean the component of the vector field that contains only its
  divergence.
+ 
 -The goal is to split any vector field F(x,y) into 3 components: F(x,y) = C(x,y) + D(x,y) + R(x,y) 
  where C is the pure curl, D the pure divergence and R everything else (the residual).
+ 
 -A vector field that is obtained as gradient of a scalar field is guaranteed to be curl-free but it 
  may have divergence.
+ 
 -To extract the divergence D from F, maybe we need to solve the problem (F-D)*(F-D) = min, where *
  means the dot product. But that would just produce D=F. I think, we need to apply constraints to D.
+ 
 -Maybe a general constrained least-squares problem of the form (A*x-b)^2 = (A*x-b)^T (A*x-b) = min
  subject to a set of constraints C*x = d can be solved as (P*y-q)^T (P*y-q) = min where 
  P = vertcat(A,C), q = vertcat(b,d), y = vertcat(x,l) where y is the unknown vector to be computed 
@@ -190,6 +208,7 @@ Notes:
  
  
 ToDo: 
+
 -Maybe implement a variant that allows for non-equally spaced data. it should take x,y arrays that
  say, where the samples are...tbc...
 

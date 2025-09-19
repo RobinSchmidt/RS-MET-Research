@@ -18440,6 +18440,26 @@ std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL,
   // Maybe use rsWaveGuideStep2, rsWaveGuideStep3, etc. ...or maybe make it switchable
 }
 
+template<class T>
+std::vector<T> rsCreateLeapFrogReference(int N, int M, int mIn, int mOut)
+{
+  using Vec = std::vector<T>;
+  using WE  = rsWaveEquation1D_Proto<T>;
+
+  // Allocate string and set up initial conditions:
+  Vec u(M), u1(M);
+  u[mIn] = 1.0;
+  WE::initForLeapFrog(u, u1);
+
+  // Produce output signal:
+  Vec y(N);
+  for(int n = 0; n < N; n++)
+  {
+    y[n] = u[mOut];
+    WE::stepLeapFrog(u, u1);
+  }
+  return y;
+}
 
 
 
@@ -18492,7 +18512,13 @@ void testWaveGuideNaiveImpulse()
   rsPlotVectors(y, yR);
   bool ok = y == yR;
   rsAssert(ok);
-   
+  
+  // Create the same signal using the leapfrog finite difference scheme:
+  //Vec yL = rsCreateLeapFrogReference<Real>(N, M, m, m); // seems faster and scaled by 0.5
+  Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, m, m);
+  rsPlotVectors(y, yR, yL);
+  int dummy = 0;
+  //
 
   // Observations:
   //
@@ -19004,7 +19030,7 @@ void testWaveGuide2()
 
 void testWaveGuides()
 {
-  testWaveEquation1D();
+  //testWaveEquation1D();
   testWaveGuideNaiveImpulse();
   testWaveGuide1();
   //testWaveGuide2();

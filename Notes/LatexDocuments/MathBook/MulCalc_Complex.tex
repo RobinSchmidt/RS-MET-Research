@@ -143,7 +143,15 @@ It's time to define some more jargon. A complex function is said to be \emph{hol
 
 \subsection{Complex Integration}
 
+% In real analysis, we integrate over intervals along the real axis. The result is a number that we can geometrically interpret as an area balance. Integrals in complex analysis, on the other hand, can be interpreted physically in terms of work done along a path (real part of the integral) and flux across that path (imaginary part of the integral). For this interpretation, we need to interpret the complex function $f(z)$ as a vector field in the $2D$ plane.
+
 % I think, when we split the integral into its real and imaginary parts, the real part can be intepreted as a work integral along the path and the imaginary part as a flux integral across the path?
+
+% So in complex analysis, the setting is:
+% -We interpret f(z) as a vector field that assigns a vector to each point of the z-plane
+% -We specify a curve that traces out some path in the z-plane along which we intend to integrate
+% -We want to compute the flow along and the flux across our curve
+% ...
 
 % Consider the Polya vector field of $f$:
 % u(x,y) =  \Re(f(z)) =  \Re(f(x + \i y))
@@ -163,7 +171,16 @@ It's time to define some more jargon. A complex function is said to be \emph{hol
 
 \subsubsection{Cauchy's Integral Formula}
 
-\subsubsection{Cauchy's Theorem}
+
+% https://en.wikipedia.org/wiki/Cauchy%27s_integral_formula
+
+
+
+\subsubsection{Cauchy's Integral Theorem}
+
+% https://en.wikipedia.org/wiki/Cauchy%27s_integral_theorem
+
+
 
 \subsubsection{Some Important Integrals}
 As in real analysis, integrals for integer power functions are very important. Just note that here, we are not computing indefinite integrals (aka antiderivatives) but rather contour integrals around a closed loop. The result of such an integration is not another function of $z$ but a (complex) number. For a function $f(z) = z^n$, these integrals are given by:
@@ -176,7 +193,7 @@ As in real analysis, integrals for integer power functions are very important. J
 \qquad \qquad
 \oint_{\gamma} \frac{1}{z} \; dz = 2 \pi \i
 \end{equation}
-where the contour $\gamma$ can be any closed loop that winds around the origin exactly once (verify!). Now this result is rather peculiar. It says that the contour integral around a closed loop around the origin (that winds around once) for a monomial function $z^n$ is always zero except for the case $n=-1$ in which case it is equal to $2 \pi i$. The case $n=-1$ means that we are dealing with reciprocation function $f(z) = z^{-1} = \frac{1}{z}$. This function is, among all powers of $z$, the odd one out and it is so important that I have even written down the formula for this special case alongside with the general formula. ...TBC...
+where the contour $\gamma$ can be any closed loop that winds around the origin exactly once (verify!). Now this result is rather peculiar. It says that the contour integral around a closed loop around the origin (that winds around once) for a monomial function $z^n$ is always zero except for the case $n=-1$ in which case it is equal to $2 \pi i$. The case $n=-1$ means that we are dealing with reciprocation function $f(z) = z^{-1} = \frac{1}{z}$. This function is, among all powers of $z$, the odd one out and it is so important that I have even written down the formula for this special case again alongside with the general formula. ...TBC...
 
 % Give interpretation for the integral over 1/z: When traveling along the contour while accumulating all the work along our path (coming from the force exerted by the vector field into our direction of movement) and also observing all the flux that we see passing across our path see (coming from flow of the vector field through our path, i.e. perpendicularly crossing it), the total work done (i.e. the kinetic energy we picked up) along our journey will be zero. But we will have seen a net amount of flux flowing through our path. And that amount is $2 \pi$, beause that happens to be the total angle that we traversed. It's most easy to take the unit circle as the contour $\gamma$ but the result holds for any closed contour with winding number 1 around the origin.
 
@@ -222,6 +239,8 @@ The complicated contour integral boils down to a simple sum over the residues mu
 % https://www.youtube.com/watch?v=ZLfLesLRjK8
 % -The Laurent series coeff for n=-1 is called residue because it's the only one that remains after
 %  integration around a contour surrounding z_0
+% -Has very nice example at the end for using the theorem to compute a real integral. Namely, that of
+%  cos(x) / (1 + x^2)  along the whole real line. The result is \pi / \e  ...of all things :-O
 
 \subsection{Weierstrass's Factorization Theorem}
 

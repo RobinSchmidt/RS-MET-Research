@@ -18387,10 +18387,26 @@ void rsWaveGuideStep1(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
   // Insert the reflected components into the now "empty" positions:
   //wL[M-1] = rR * xR;
   //wR[0]   = rL * xL;
+  // This is what maed intuitively the most sense to me but it produces a result that is different
+  // from the leapfrog scheme. The period is longer and the arrival times of reflected pulses are
+  // later (I think - verify!).
 
-  // Test (can be used instead the code above):
-  wL[M-2] = rR * xR;
-  wR[1]   = rL * xL;
+  // Test (can be used instead the code above). This code gets the period right but it behaves 
+  // differently when we put the excitation impulse and pickup at m = 0.
+  //wL[M-2] = rR * xR;
+  //wR[1]   = rL * xL;
+  // The leapfrog scheme produces a single impulse at n = 0 with an impulse like excitation at 
+  // m = 0 when the pickup is also at m = 0. This scheme here produces further periodic spikes
+  // with half of the height of the excitation
+
+  // Yet another possible alternative:
+  wL[M-2] += rR * xR;
+  wR[1]   += rL * xL;
+  // This seems to behave exactly like the leapfrog scheme. I think, this might be the right way.
+  // ToDo: Explain why we should add the reflected wave rather than overwrite. I think, it's 
+  // because the slots 0 and M-2 usually aren't empty and if we would overwrite them, we would 
+  // "loose" signals. Figure this out in detail and document it!
+
 
   // Implement different algorithms. Maybe one where we do not first extract xL,xR but just do the 
   // shifts straight away and *then* implement the reflection as 
@@ -18462,7 +18478,67 @@ std::vector<T> rsCreateLeapFrogReference(int N, int M, int mIn, int mOut)
   return y;
 }
 
+bool unitTestWaveGuide1()
+{
+  bool ok = true;
 
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using WE   = rsWaveEquation1D_Proto<Real>;
+
+  int minM = 10;
+  int maxM = 15;
+  //int N    = 3*maxM;
+
+  // Reflection coeffs for left/right end. Using -1 reflects with negation which corresponds to a 
+  // zero displacement boundary condition:
+  Real rL = -1.0;
+  Real rR = -1.0;
+
+  for(int M = minM; M <= maxM; M++)    // Loop over the lengths
+  {
+    // Create an initial displacement distribution
+    int seed = 341;
+    Vec uInit = rsRandomIntVector(M, -5, +5, seed);  // Initial state
+    uInit[0] = uInit[M-1] = 0.0;
+
+    // Create and init state variables for leapfrog solver:
+    Vec u = uInit;
+    Vec u1(M);
+    WE::initForLeapFrog(u, u1);
+
+    // Create and init state variables for shifting solver:
+    Vec wL = 0.5 * uInit;  // Left going wave
+    Vec wR = wL;           // Right going wave
+
+    int N = 3*M;           // The period should be around 2*M so using 3*M makes sure that
+                           // we produce more than one period worth of audio samples
+
+    for(int n = 0; n < N; n++)
+    {
+      // Form the displacement wave by adding left and right travelling wave:
+      Vec w = wL + wR;
+
+      // Compare the two ways of computing the displacement waves
+      ok &= rsIsCloseTo(w, u, 1.e-13);   // Try using lower tolerance - maybe we can use 0?
+      rsPlotVectors(u, w);
+      // w is not zero at the boundary points. At the interior points, the signals match. 
+
+      // Advance the left/right traveling waves wL,wR by one time step via the shifting algo:
+      rsWaveGuideStep1(wL, wR, rL, rR);
+
+      // Advance the displacement wave via the leapfrog scheme:
+      WE::stepLeapFrog(u, u1);
+    }
+
+
+    int dummy = 0;
+
+  }
+
+
+  return ok;
+}
 
 void testWaveGuideNaiveImpulse()
 {
@@ -18479,8 +18555,8 @@ void testWaveGuideNaiveImpulse()
   using Vec  = std::vector<Real>;
 
   // User parameters:
-  int  M  =  30;                       // Length of the waveguide, number of spatial samples
-  int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
+  int  M  =  10;                       // Length of the waveguide, number of spatial samples
+  int  m  =   7;                       // Position of initial impulse along the waveguide (WG)
   int  N  = 150;                       // Number of time steps to take in simulation
   Real rL =  -1.0;                     // Reflection coeff at left boundary
   Real rR =  -1.0;                     // Reflection coeff at right boundary
@@ -18518,6 +18594,11 @@ void testWaveGuideNaiveImpulse()
   //Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, M-m+1, M-m+1);
   rsPlotVectors(y, yR, yL);
   int dummy = 0;
+  // New:
+  // I think, the other algorithm (rsCreateWaveGuideReference()) was flawed before. It has now been
+  // fixed and now, we don't need to fudge with M and m anymore to get a match. 
+  //
+  // Old:
   // To get the initial spike right, we need ot have mOut == mIn (i.e. 3rd == 4th parameter). To 
   // get the period right, we have to use M+1 for the 2nd parameter. To get the negative psikes 
   // right ...
@@ -18585,11 +18666,17 @@ void testWaveGuideNaiveImpulse()
   // 
   // ToDo:
   // 
+  // - Provide two variables for mIn, mOut instead of just a signle m.
+  // 
   // - Implement various functions to set up different initial conditions. Here, we just simply set
   //   one sample to 1. That's good for checking the implementation but not very realistic. Maybe
   //   write a function rsSetupWaveGuidePluck(...) that takes a plucking position and sets up a 
   //   triangular initial condition. Maybe also make a function that sets up various sinusoidal 
   //   modes. Maybe a Gaussian bell, etc.
+  // 
+  // - Implement a unit test that goes through M = 0..20, mIn = 0..20, mOut = 0..20 and for each 
+  //   setting compares outputs of rsCreateWaveGuideReference() and rsCreateLeapFrogReference().
+  //   It should probably use a random initial condition.
   // 
   // - Create different versions of the time stepping algo that implements different ways of 
   //   handling the reflections, i.e. with and without delay.
@@ -19045,9 +19132,13 @@ void testWaveGuide2()
 void testWaveGuides()
 {
   //testWaveEquation1D();
-  testWaveGuideNaiveImpulse();
-  testWaveGuide1();
+  //testWaveGuideNaiveImpulse();
+  //testWaveGuide1();
   //testWaveGuide2();
+
+  bool ok = true;
+  ok &= unitTestWaveGuide1();
+  rsAssert(ok);
 }
 
 //=================================================================================================

@@ -18772,7 +18772,7 @@ void testWaveGuide1()
   using Vec  = std::vector<Real>;
   
   // User parameters:
-  int  N  = 100;             // Number of samples to generate
+  int  N  =  80;             // Number of samples to generate
   int  M1 =   3;             // Length of the delay left hand (not leftward!) delaylines
   int  M2 =   7;             // Dito for right hand delaylines (right in the block diagram)
   Real rR =  -1.0;           // Reflection coeff at right boundary
@@ -18816,6 +18816,13 @@ void testWaveGuide1()
 
   // Test:
   //M = M1 + M2 + 1;
+  //M = M1 + M2 + 2;
+  // I'm not sure if the total length of the waveguide (including the fixed endpoints) needs to be
+  // just M1 + M2 or if we need something extra because the endpoints don't really count or 
+  // something like that
+
+  //mIn = M2; mOut = M1;
+
 
   // Produce reference output via naive algorithm:
   Vec yR = rsCreateWaveGuideReference(N, M, mIn, mOut, rL, rR);
@@ -18845,7 +18852,7 @@ void testWaveGuide1()
     dL1.writeInput(rR * xR2);
     dR1.writeInput(rL * xL2);
 
-    // Do the transfer from the 1st to the 2nd parts:
+    // Do the transmission from the 1st to the 2nd parts:
     dR2.writeInput(xR1);
     dL2.writeInput(xL1);
 
@@ -18958,7 +18965,7 @@ void testWaveGuide1()
 
 
   // Plot the produced output signals:
-  rsPlotVectors(yL, yR);  // Reference signals produced by naive algos. Should be equal.
+  //rsPlotVectors(yL, yR);  // Reference signals produced by naive algos. Should be equal.
   rsPlotVectors(yL, y1);  // Has correct period of 2*(M1+M2). Seems 1 sample too early, though.
   rsPlotVectors(yL, y2);  // Has wrong period.
   rsPlotVectors(yL, y3);  // Is all zeros.

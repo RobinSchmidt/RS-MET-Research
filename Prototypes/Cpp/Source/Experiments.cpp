@@ -18385,12 +18385,12 @@ void rsWaveGuideStep1(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
   rsShiftRight(wR);  // Shift content of wR one step rightward, leftmost position becomes empty
 
   // Insert the reflected components into the now "empty" positions:
-  wL[M-1] = rR * xR;
-  wR[0]   = rL * xL;
+  //wL[M-1] = rR * xR;
+  //wR[0]   = rL * xL;
 
   // Test (can be used instead the code above):
-  //wL[M-2] = rR * xR;
-  //wR[1]   = rL * xL;
+  wL[M-2] = rR * xR;
+  wR[1]   = rL * xL;
 
   // Implement different algorithms. Maybe one where we do not first extract xL,xR but just do the 
   // shifts straight away and *then* implement the reflection as 
@@ -18455,6 +18455,7 @@ std::vector<T> rsCreateLeapFrogReference(int N, int M, int mIn, int mOut)
   Vec y(N);
   for(int n = 0; n < N; n++)
   {
+    //rsPlotVectors(u, u1);             // Plot the wave and delayed wave
     y[n] = u[mOut];
     WE::stepLeapFrog(u, u1);
   }
@@ -18512,8 +18513,8 @@ void testWaveGuideNaiveImpulse()
   rsAssert(ok);
   
   // Create the same signal using the leapfrog finite difference scheme:
-
-  Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, m-1, m-1);
+  Vec yL = rsCreateLeapFrogReference<Real>(N, M, m, m);
+  //Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, m-1, m-1);
   //Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, M-m+1, M-m+1);
   rsPlotVectors(y, yR, yL);
   int dummy = 0;

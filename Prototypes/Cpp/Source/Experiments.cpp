@@ -12114,6 +12114,8 @@ void testSquarity()
   //   parenthesize an expression is given by the Catalan numbers.
 }
 
+//void rsPlotHistogram()
+
 void testCompositeness()
 {
   // The idea is to define a number theoretical function f(n) that might be called "compositeness" 
@@ -18111,7 +18113,7 @@ bool rsAreEndsZero(
   // Can be extended to support even more input vectors if needed
 }
 
-/** This scheme is, so far, useless. It produces crap. */
+/** This scheme is produces parasitic oscillations. */
 template<class T>
 void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
 {
@@ -18162,6 +18164,9 @@ void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
   // update. I think, this would amount to using an Euler step for updating v and a trapezoidal 
   // step for updating u. To implement trapezoidal steps also for v, I think, we would need to have
   // access to the acceleration a from the previous time step
+
+  // Maybe the parasitic oscillations that we observe should not be so surprising. PASP mentions on
+  // page 681 that such artifacts also arise in the leapfrog scheme for certain excitations.
 }
 
 /** This is unstable! It's just some experimental code that I have written off the cuff and it 
@@ -18214,14 +18219,14 @@ void testWaveEquation1D()
   using WE   = rsWaveEquation1D_Proto<Real>;
 
   // User parameters:
-  int  M  =  10;                       // Length of the waveguide, number of spatial samples
+  int  M  =   9;                       // Length of the waveguide, number of spatial samples
   int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
   int  N  = 100;                       // Number of time steps to take in simulation
 
   // Allocate vectors for spatial samples of displacement u, velocity v, acceleration a:
   Vec u(M);              // Displacement
-  //Vec v(M), a(M);        // Velocity and acceleration (used by soem schemes)
-  Vec u1(M);             // Displacement u with one sample time delay
+  Vec v(M), a(M);        // Velocity and acceleration (used by some schemes)
+  Vec u1(M);             // Displacement u with one sample time delay (used by leapfrg scheme)
 
   // Set up inital conditions:
   u[m] = 1.0;
@@ -18230,17 +18235,12 @@ void testWaveEquation1D()
   // Do the time stepping and at each step, produce a plot for inspection:
   for(int n = 0; n < N; n++)
   {
-    rsPlotVectors(u);
-    //rsPlotVectors(u, v, a);        // Plot the displacement, velocity, acceleration waves
+    //rsPlotVectors(u);                     // Displacement only
+    rsPlotVectors(u, v, a);             // Displacement, velocity, acceleration waves
 
-    // Plot a smoothed version of the displacement u:
-    //Vec us = u;
-    //rsArrayTools::movingAverage3pt(&us[0], M, &us[0]);
-    //rsPlotVectors(u, us);            // Plot displacement an smoothed displacement
-
-    //rsStepWaveEquation1D_1(u, v);        // Has parasitic oscillations
-    //rsStepWaveEquation1D_2(u, v, a);     // Is unstable!
-    WE::stepLeapFrog(u, u1);               // This works fine!
+    //rsStepWaveEquation1D_1(u, v);       // Euler scheme. Has parasitic oscillations.
+    //rsStepWaveEquation1D_2(u, v, a);    // Trapezoidal attempt. Is unstable!
+    WE::stepLeapFrog(u, u1);              // This works fine!
   }
 
   // Observations:
@@ -18251,25 +18251,44 @@ void testWaveEquation1D()
   //   original configuration. However, all states in between are a total mess. It looks like we 
   //   have in general a period length of 2*(M-1). Verify this! Is this what we should expect?
   //   With M = 11, we reach the downward spike at n = 10 and the initial configuration at n = 20.
-  //
-  // - Could we perhaps form a sensible output signal picked up at some location m by using
-  //   a sum like out = u[m-1] + u[m] + u[m+1]? ...Nope - that looks messy, too!
+  //   Could we perhaps form a sensible output signal picked up at some location m by using a sum 
+  //   like out = u[m-1] + u[m] + u[m+1]? I.e. do some spatial smoothing? Nope! The result looks
+  //   messy, too!
   // 
-  // - With the FDS scheme from PASP, we we come back to the initial state again at time step 
-  //   n = 18 with M = 10. When the displacement wave gets reflected at either end of the string,
-  //   the displacement disappears for one sample instant. It's as if  the impulse is somehow 
-  //   "inside the boundary" for the duration of one sampling period or something. Generally, the 
-  //   result of this scheme looks good and produces results that are in line with the 
-  //   expectations. So, at last, we have one working prototype reference implementation to compare
-  //   all upcoming schemes against. Yay! 
+  // - The attempted trapezoidal time integration scheme is completely unstable
+  // 
+  // - With the leapfrog FDS scheme from PASP, we we come back to the initial state again at time 
+  //   step  n = 18 with M = 10. When the displacement wave gets reflected at either end of the 
+  //   string, the displacement disappears for one sample instant. It's as if  the impulse is 
+  //   somehow "inside the boundary" for the duration of one sampling period or something. 
+  //   Generally, the result of this scheme looks good and produces results that are in line with 
+  //   the expectations. So, at last, we have one working prototype reference implementation to 
+  //   compare all upcoming schemes against. Yay! 
   // 
   // - For th PASP scheme, it seems to be indeed appropriate to set the initial condition for u1 to
-  //   u1[m-1] = u1[m+1] = 0.5. If we leave it at zero, I think, this would physically correspond 
-  //   to having a nonzero initial velocity somewhere in the range m-1,m,m+1 (I'm not sure exactly 
-  //   where -> Figure out!). The effect on the simulation result is that we see a train of 3 
-  //   spikes traveling along the string. At least, that how it looks for m = 3. ToDo: Try it with
-  //   a longer string (like M=30) and placing the farther away from the boundary.
+  //   u1[m-1] = u1[m+1] = 0.5. Instead of manually doing it here, we now call 
+  //   WE::initForLeapFrog(u, u1) which does the same thing but for a general initial displacement 
+  //   u. It de-interpolates (or scatters) the content of u[m] into u1[m-1] and u1[m+1] with 
+  //   weights 0.5. If we leave u1 at zero, I think, this would physically correspond to having a 
+  //   nonzero initial velocity somewhere in the range m-1,m,m+1 (I'm not sure exactly where. 
+  //   Maybe at m-0.5 and m+0.5? Figure out!). The effect on the simulation result is that we see a 
+  //   train of 3 spikes traveling along the string. At least, that how it looks for m = 3. ToDo: 
+  //   Try it with a longer string (like M=30) and placing the farther away from the boundary and 
+  //   document the observations
   //
+  // 
+  // Conclusions:
+  // 
+  // - The naive Euler scheme and the leapfrog scheme from PASP both produce a temporal period of
+  //   19 samples when M = 10, i.e. the initial state from n = 0 is reproduced again at time 
+  //   n = 18. In general, the index n when repetition occurs is probably 2*(M-1). With M = 8, we 
+  //   come back to the initial state at n = 14 and with M = 9 at n = 16 so 2*(M-1) seems to be the
+  //   correct general formula for the period. I think, when the instant n at which we see the 
+  //   initial state reoccurs again is 2*(M-1) it means that means the period is actually 2*(M-1)+1
+  //   = 2*M-2+1 = 2*M-1. Figure that out excatly and document it! It's important for correct 
+  //   tuning of the frequencies that the simluations will produce. An off-by-one error here will 
+  //   cause a slight detuning (or maybe not so slight at higher tuning frequencies).
+  // 
   // 
   // ToDo:
   //

@@ -18802,10 +18802,20 @@ void testWaveGuide1()
     dL2.reset();
   };
 
+  auto init = [&]() 
+  {
+    resetDelays();
+    dR2.writeInput(0.5);                     // Set up initial conditions as in Fig 2.14
+    dL2.writeInput(0.5);
+  };
+
 
   int M    = M1 + M2;
   int mIn  = M1;
   int mOut = M1;
+
+  // Test:
+  //M = M1 + M2 + 1;
 
   // Produce reference output via naive algorithm:
   Vec yR = rsCreateWaveGuideReference(N, M, mIn, mOut, rL, rR);
@@ -18815,9 +18825,7 @@ void testWaveGuide1()
 
   // The first version of the algorithm. Here, we do the increments of the tap pointers as the 
   // first thing in the per sample computation:
-  resetDelays();
-  dR2.writeInput(1.0);                     // Set up initial conditions as in Fig 2.14:
-  dL2.writeInput(1.0);
+  init();
   Vec y1(N);
   for(int n = 0; n < N; n++)               // Loop through the time steps
   {
@@ -18847,9 +18855,7 @@ void testWaveGuide1()
 
   // The second version of the algorithm. Here, we do the increments of the tap pointers as the 
   // second thing in the per sample computation. They occurr after reading the outputs.
-  resetDelays();
-  dR2.writeInput(1.0);                     // Initialization is the same as in algo 1
-  dL2.writeInput(1.0);
+  init();
   Vec y2(N);
   for(int n = 0; n < N; n++) 
   {
@@ -18873,9 +18879,7 @@ void testWaveGuide1()
 
   // The third version of the algorithm. Here, we do the increments of the tap pointers as the 
   // last thing in the per sample computation.
-  resetDelays();
-  dR2.writeInput(1.0); 
-  dL2.writeInput(1.0);
+  init();
   Vec y3(N);
   for(int n = 0; n < N; n++) 
   {
@@ -18898,9 +18902,7 @@ void testWaveGuide1()
   }
 
   // In this 4th version, we do a hybrid updating strategy ...TBC...
-  resetDelays();
-  dR2.writeInput(1.0);
-  dL2.writeInput(1.0);
+  init();
   Vec y4(N);
   for(int n = 0; n < N; n++)
   {
@@ -18924,9 +18926,7 @@ void testWaveGuide1()
   }
 
   // In this 5th version, we do another hybrid updating strategy ...TBC...
-  resetDelays();
-  dR2.writeInput(1.0);
-  dL2.writeInput(1.0);
+  init();
   Vec y5(N);
   for(int n = 0; n < N; n++)
   {

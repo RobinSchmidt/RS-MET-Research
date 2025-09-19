@@ -18373,6 +18373,7 @@ minus sine. Verify this!  */
 template<class T>
 void rsWaveGuideStep1(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
 {
+  rsAssert(wL.size() >= 2, "Size of the buffers must be at least 2");
   rsAssert(rsAreSameSize(wL, wR), "Sizes of buffers for leftward and rightward wave must match");
 
   // Extract traveling wave components at the left and right boundary for reflection:
@@ -18425,7 +18426,7 @@ void rsWaveGuideStep1(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
   //   any acoustic instruments that use such a toroidal tube? Maybe try to build one. Maybe use 
   //   concentric tubes for the different notes.
 }
-// rename to rsStepWaveGuide1
+// rename to rsStepWaveGuide1 or rsReflectiveShift, 
 
 // Simliar to testWaveGuideNaiveImpulse() but it takes the values N,M,etc. as parameter and also
 // produces an output signal. This is meant to be used to produce reference outputs via the naive
@@ -18487,10 +18488,10 @@ bool unitTestWaveGuide1()
   using WE   = rsWaveEquation1D_Proto<Real>;
 
   // Setup:
-  int  minM = 10;
-  int  maxM = 15;
-  int  seed = 341;
-  Real tol  = 1.e-13;   // Tolerance for numeric equality (Try going lower! Can we use 0?)
+  int  minM =   2;     // 2 is the minimum allowed size
+  int  maxM =  15;
+  int  seed = 341;     // Seed for PRNG for initatialization
+  Real tol  = 0.0;     // Tolerance for numeric equality (Try going lower! Can we use 0?)
 
   // Reflection coeffs for left/right end. Using -1 reflects with negation which corresponds to a 
   // zero displacement boundary condition:
@@ -18531,7 +18532,7 @@ bool unitTestWaveGuide1()
       // boundary as well. But I'm not sure, if the leapfrog algo can somehow produce such outputs.
       // We'll see.
 
-      // Compare the two ways of computing the displacement waves (leapfrog bs shifting):
+      // Compare the two ways of computing the displacement waves (leapfrog vs shifting):
       ok &= rsIsCloseTo(w, u, tol);  
       //rsPlotVectors(u, w);
 
@@ -18557,6 +18558,18 @@ bool unitTestWaveGuide1()
   //   noise and/or some components of periodic waveforms. Maybe the waveguide stepping frequency 
   //   could even be different from the oscillator frequency such that the waveform changes not 
   //   every cycle but, say, after every 2.5 cycles or whatever other number.
+  //
+  // 
+  // ToDo: 
+  // 
+  // - Integrate tests for other steppers. At the moment, the two stepped we have aren't actually 
+  //   true waveguide algorithms anyway. One algo is a finite difference scheme and the other algo 
+  //   is some ad-hoc algorithm to directly implement the travaling and reflection by explicitly
+  //   shifting the buffer contents.
+  //
+  // - Create somne random tests that ensure that rsCreateWaveGuideReference() and
+  //   rsCreateLeapFrogReference() produce the same results. But maybe that should be a separate
+  //   function.
 }
 
 void testWaveGuideNaiveImpulse()
@@ -18575,7 +18588,7 @@ void testWaveGuideNaiveImpulse()
 
   // User parameters:
   int  M  =  10;                       // Length of the waveguide, number of spatial samples
-  int  m  =   7;                       // Position of initial impulse along the waveguide (WG)
+  int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
   int  N  = 150;                       // Number of time steps to take in simulation
   Real rL =  -1.0;                     // Reflection coeff at left boundary
   Real rR =  -1.0;                     // Reflection coeff at right boundary
@@ -18655,7 +18668,8 @@ void testWaveGuideNaiveImpulse()
   //   we will see only odd harmonics because wherever we pick up a signal, its second half wave 
   //   will be the mirror image of its first half wave?
   // 
-  // - Apparently, the reflection itself takes also one time step. When the left-going wave hits
+  // - Outdated:
+  //   Apparently, the reflection itself takes also one time step. When the left-going wave hits
   //   the left wall at time n, at the next sample instant n+1, we see the reflected wave in the 
   //   right going wave and it's also located exactly *at* the wall. Shouldn't it have advanced one
   //   position further to the right at this moment already? It seems like the wave spends two 
@@ -18693,10 +18707,6 @@ void testWaveGuideNaiveImpulse()
   //   triangular initial condition. Maybe also make a function that sets up various sinusoidal 
   //   modes. Maybe a Gaussian bell, etc.
   // 
-  // - Implement a unit test that goes through M = 0..20, mIn = 0..20, mOut = 0..20 and for each 
-  //   setting compares outputs of rsCreateWaveGuideReference() and rsCreateLeapFrogReference().
-  //   It should probably use a random initial condition.
-  // 
   // - Create different versions of the time stepping algo that implements different ways of 
   //   handling the reflections, i.e. with and without delay.
   //
@@ -18710,11 +18720,6 @@ void testWaveGuideNaiveImpulse()
   //   result with the original). I think, doing it this way would really simulate distributed 
   //   damping as opposed to lumped damping (which could be conveniently integrated into the 
   //   reflections). It's costly but this is just for experimentation.
-  //
-  // - Maybe implement a simple PDE solver and compare the results to that. I expect the numerical 
-  //   PDE solver to show artifacts though. The solution produced by the algorithm above is 
-  //   supposed to be exact. However, the comparison with the PDE solver can give us hints which 
-  //   kind of reflection behavior we should expect - should it be with or without delay?
 }
 
 /** Convenience function to set up the delay in the given delayLine. If the requested delay is 
@@ -18797,11 +18802,16 @@ void testWaveGuide1()
     dL2.reset();
   };
 
+
+  int M    = M1 + M2;
+  int mIn  = M1;
+  int mOut = M1;
+
   // Produce reference output via naive algorithm:
-  Vec yR = rsCreateWaveGuideReference(N, M1+M2, M1, M1, rL, rR);
+  Vec yR = rsCreateWaveGuideReference(N, M, mIn, mOut, rL, rR);
   // The total length M is M1+M2. The input is injected at M1. The output is picked up also at M1. 
 
-  Vec yL = rsCreateLeapFrogReference<Real>(N, M1+M2+1, M1, M1);
+  Vec yL = rsCreateLeapFrogReference<Real>(N, M, mIn, mOut);
 
   // The first version of the algorithm. Here, we do the increments of the tap pointers as the 
   // first thing in the per sample computation:
@@ -18948,20 +18958,20 @@ void testWaveGuide1()
 
 
   // Plot the produced output signals:
-  //rsPlotVector(yR);     // Reference signal produced by naive algo.
-  //rsPlotVector(y1);     // Has correct period of 2*(M1+M2). Seems 1 sample too early, though.
-  //rsPlotVector(y2);     // Has wrong period.
-  //rsPlotVector(y3);     // Is all zeros.
-  //rsPlotVector(y4);
-  //rsPlotVector(y5);
-  //rsPlotVectors(y4, y5);  // They look different in the lower half-wave
+  rsPlotVectors(yL, yR);  // Reference signals produced by naive algos. Should be equal.
+  rsPlotVectors(yL, y1);  // Has correct period of 2*(M1+M2). Seems 1 sample too early, though.
+  rsPlotVectors(yL, y2);  // Has wrong period.
+  rsPlotVectors(yL, y3);  // Is all zeros.
+  rsPlotVectors(yL, y4);
+  rsPlotVectors(yL, y5);
+  // None of them matches the reference! Still a lot of work to do!
 
   // Plot reference signal together with one of our output signals:
   //rsPlotVectors(yR, y1);
   //rsPlotVectors(yL, y1);
-  rsPlotVectors(yL, yR, y1);
+  //rsPlotVectors(yL, yR, y1);
 
-  // Observations:
+  // Observations (partially obsolete):
   //
   // - When doing the tap-increments first (before reading the outputs), we see the upward spikes 
   //   at n = 19,39,59,79,99,... so the period is 20 = 2 * (M1 + M2) as expected. However, I would
@@ -19150,14 +19160,14 @@ void testWaveGuide2()
 
 void testWaveGuides()
 {
-  //testWaveEquation1D();
-  //testWaveGuideNaiveImpulse();
-  //testWaveGuide1();
-  //testWaveGuide2();
-
   bool ok = true;
   ok &= unitTestWaveGuide1();
   rsAssert(ok);
+
+  //testWaveEquation1D();
+  //testWaveGuideNaiveImpulse();
+  testWaveGuide1();
+  //testWaveGuide2();
 }
 
 //=================================================================================================

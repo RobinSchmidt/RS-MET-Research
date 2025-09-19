@@ -18694,6 +18694,8 @@ void testWaveGuide1()
   Vec yR = rsCreateWaveGuideReference(N, M1+M2, M1, M1, rL, rR);
   // The total length M is M1+M2. The input is injected at M1. The output is picked up also at M1. 
 
+  Vec yL = rsCreateLeapFrogReference<Real>(N, M1+M2+1, M1, M1);
+
   // The first version of the algorithm. Here, we do the increments of the tap pointers as the 
   // first thing in the per sample computation:
   resetDelays();
@@ -18848,8 +18850,9 @@ void testWaveGuide1()
   //rsPlotVectors(y4, y5);  // They look different in the lower half-wave
 
   // Plot reference signal together with one of our output signals:
-  rsPlotVectors(yR, y1);
-
+  //rsPlotVectors(yR, y1);
+  //rsPlotVectors(yL, y1);
+  rsPlotVectors(yL, yR, y1);
 
   // Observations:
   //

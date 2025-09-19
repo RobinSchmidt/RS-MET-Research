@@ -18486,9 +18486,11 @@ bool unitTestWaveGuide1()
   using Vec  = std::vector<Real>;
   using WE   = rsWaveEquation1D_Proto<Real>;
 
-  int minM = 10;
-  int maxM = 15;
-  //int N    = 3*maxM;
+  // Setup:
+  int  minM = 10;
+  int  maxM = 15;
+  int  seed = 341;
+  Real tol  = 1.e-13;   // Tolerance for numeric equality (Try going lower! Can we use 0?)
 
   // Reflection coeffs for left/right end. Using -1 reflects with negation which corresponds to a 
   // zero displacement boundary condition:
@@ -18497,9 +18499,8 @@ bool unitTestWaveGuide1()
 
   for(int M = minM; M <= maxM; M++)    // Loop over the lengths
   {
-    // Create an initial displacement distribution
-    int seed = 341;
-    Vec uInit = rsRandomIntVector(M, -5, +5, seed);  // Initial state
+    // Create a random initial displacement distribution:
+    Vec uInit = rsRandomIntVector(M, -5, +5, seed+M);
     uInit[0] = uInit[M-1] = 0.0;
 
     // Create and init state variables for leapfrog solver:
@@ -18511,18 +18512,28 @@ bool unitTestWaveGuide1()
     Vec wL = 0.5 * uInit;  // Left going wave
     Vec wR = wL;           // Right going wave
 
-    int N = 3*M;           // The period should be around 2*M so using 3*M makes sure that
-                           // we produce more than one period worth of audio samples
+    // The period of repitition of an output signal should be around 2*M so using N = 3*M for the
+    // number of samples to produce makes sure that we produce more than one period worth signal:
+    int N = 3*M;           
 
+    // Simulate the production of N audio samples. Instead of picking up the output signal at any
+    // particular location on the waveguide, we just make sure that the whole shape in the buffers 
+    // matches. That is: We simulate checking all possible pickup points simultaneously:
     for(int n = 0; n < N; n++)
     {
       // Form the displacement wave by adding left and right travelling wave:
       Vec w = wL + wR;
+      w[0] = w[M-1] = 0;
+      // Unlike the displacement wave u of the leapfrog algo, the shifting algo does not fix w
+      // to zero at the boundary points, so we set them to zero manually here such that the 
+      // following comparison test checks only the interior points. Only these are relevant for
+      // reading off output signals. Well, one could perhaps consider picking up an output at a
+      // boundary as well. But I'm not sure, if the leapfrog algo can somehow produce such outputs.
+      // We'll see.
 
-      // Compare the two ways of computing the displacement waves
-      ok &= rsIsCloseTo(w, u, 1.e-13);   // Try using lower tolerance - maybe we can use 0?
-      rsPlotVectors(u, w);
-      // w is not zero at the boundary points. At the interior points, the signals match. 
+      // Compare the two ways of computing the displacement waves (leapfrog bs shifting):
+      ok &= rsIsCloseTo(w, u, tol);  
+      //rsPlotVectors(u, w);
 
       // Advance the left/right traveling waves wL,wR by one time step via the shifting algo:
       rsWaveGuideStep1(wL, wR, rL, rR);
@@ -18530,14 +18541,22 @@ bool unitTestWaveGuide1()
       // Advance the displacement wave via the leapfrog scheme:
       WE::stepLeapFrog(u, u1);
     }
-
-
-    int dummy = 0;
-
   }
 
-
+  rsAssert(ok, "Waveguide unit test failed!");
   return ok;
+
+  // Observations:
+  //
+  // - It is interesting to note that with a random initial shape, the new shape after each step 
+  //   looks like a totally new random shape. this could be useful to create evolving sounds: Init
+  //   a waveform buffer with a random shape and play it back like an oscillator. After each cycle
+  //   of the oscillator, do a waveform update step to produce a new waveform. If the initial 
+  //   waveform is totally random, this will probably produce some kind of noise but if it is more
+  //   tame, we could get an interesting pseudo-periodic sound. Maybe init with filtered, smoothed 
+  //   noise and/or some components of periodic waveforms. Maybe the waveguide stepping frequency 
+  //   could even be different from the oscillator frequency such that the waveform changes not 
+  //   every cycle but, say, after every 2.5 cycles or whatever other number.
 }
 
 void testWaveGuideNaiveImpulse()

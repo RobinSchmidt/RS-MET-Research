@@ -46,8 +46,13 @@ I = \int_R  f \, dA
 \end{equation}
 where $R$ is the region that we want to integrate over, $d A$ is an infinitesimal area element and $f$ is our function as before but with supressed arguments. In our first case with the rectangular region, we had $R = [a,b] \times [c,d]$ and generally we have $dA = dx dy = dy dx$. When it is clear from the context that we are talking about a double integral, sometimes just one integral symbol is used. This is especially the case when integrals of arbitrary dimensionality are written down. For these, usually just one single integral sign is used and it must be gathered from the context, what dimensionality this integral has.
 
-\subsection{Triple Integrals}
-The definition of the triple integral should now be pretty unsurprising. We'll use the abrreviated notation just introduced and define it as:
+
+
+\subsection{Multiple Integrals}
+It will not surprise you that these ideas can be generalized to arbitrarily many dimensions. Before going fully general, let's look at the 3D case specifically.
+
+\subsubsection{Triple Integrals}
+The definition of the triple integral should now be pretty unsurprising. We'll use the abbreviated notation just introduced and define it as:
 \begin{equation}
 I = \iiint_R f \, dV = \lim_{n \rightarrow \infty} \sum_{k=1}^n \sum_{j=1}^n \sum_{i=1}^n f(x_i, y_j, z_k) \, \Delta x_i \Delta y_j \Delta z_k
 \end{equation}
@@ -57,6 +62,38 @@ Here, $dV$ is an infinitesimal volume element given by $dV = dx dy dz$ and we co
 % use [p,q] for the z-interval - explain that f is already taken and e is a special constant
 
 %\subsection{Integrals in Higher Dimensions}
+
+\subsubsection{Integrals in $n$D Space}
+
+%\paragraph{Notation}
+
+
+\subsubsection{Cauchy Formula for Repeated Integration} 
+
+% https://www.youtube.com/watch?v=2dwQUUDt5Is  What Lies Between a Function and Its Derivative? | Fractional Calculus
+% at 4:50 Cauchy's formula for repeated integration
+
+% How to do two (or more) integrals with just one
+% https://www.youtube.com/watch?v=jNpKKDekS6k
+
+% https://en.wikipedia.org/wiki/Cauchy_formula_for_repeated_integration
+% https://mathworld.wolfram.com/RepeatedIntegral.html
+% https://de.wikipedia.org/wiki/Cauchy-Formel_f%C3%BCr_mehrfache_Integration
+
+% Maybe call this section here "Basic Integration Laws" and make a later section with
+% "More Advanced Integration Laws" which could also include variuos tricks. There is something
+% about integrating theinverse function. IIRC
+%
+% See:
+%
+% https://www.youtube.com/watch?v=4vbXadolbOE  
+% The Most Overlooked Concept in Calculus | Calculus of Inverse Functions
+%
+% https://www.youtube.com/watch?v=TKyOsHqAxf0
+% Integral of Inverse Functions
+
+
+
 
 
 \subsection{The Change of Variables Formula}
@@ -77,6 +114,11 @@ ToDo: give equations (back-and-forth, if possible) for polar, cyclindrical, sphe
 
 % https://en.wikipedia.org/wiki/N-sphere#Spherical_coordinates
 % https://www.youtube.com/watch?v=9cHDii-jHvs
+
+
+
+
+
 
 \begin{comment}
 

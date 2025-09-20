@@ -74,8 +74,15 @@ The idea is now to simply allow the input $x$ to be complex valued to define the
 % Extending the domain of the real valued functions via their power series...
 % What about functiosn with singularities? If they can be expressed as a rational function of power series without singularities (such as tan = sin/cos), we can just evaluate the series of numberator and denominator separately and the use complex division (It requires division to be defined - no problem here, but may be problematic in other mathematicla structures where no division is available). In other cases we may have to fool around suing different expansion points for different regions of the complex plane (as is regularly done in analytic continuation)
 
+\paragraph{Periodicity} ...TBC...ToDo: explain how the complex exponential is $2 \pi$ periodic in the vertical direction , i.e. along the imaginary axis
+
+
 
 \subsubsection{The Complex Logarithm}
+After having the complex exponential function defined, we may next ask about its inverse, the logarithm. ...TBC...explain how the periodicity of the exponential implies that the inverse function is multivalued with infinitely many solutions (even more crazy than in the $n$th root case), explain how the infinite set of solutions can be conceptualized using a helicoid Riemman surface
+
+% What about the Riemann surface for sqrt(z)
+
 % Log - as infinite-valued multifunction. log(r e^{\i \phi}) = \log(r) + \i phi
 
 
@@ -104,7 +111,7 @@ Geometrically, matrices of this form represent a rotation paired with a uniform 
 	\quad \text{where}  \quad
 	r = \sqrt{u_x^2 + u_y^2}, \; \phi = \atan2(u_y, u_x)
 \end{equation}
-Such a geometric transformation might also be called an \emph{amplitwist}. This term was first suggested by Tristan Needham in his excellent book "Visual Complex Analysis" and I like its descriptiveness. Note also that such an amplitwist is precisely the sort of transformation that a multiplication by a complex number achieves. That complex number is of course none other than the value of our derivative. ...tbc...
+Such a geometric transformation might also be called an \emph{amplitwist}. This term was first suggested by Tristan Needham in his excellent book "Visual Complex Analysis" and I like its descriptiveness. Note also that such an amplitwist is precisely the sort of transformation that a multiplication by a complex number achieves. That complex number is, of course, none other than the value of our derivative. ...tbc...
 
 %From an information theoretic point of view, it makes sense that the Jacobian can only have two degrees of freedom if we assume that we want to encode the derivative in a complex number. This is precisely what we want to do here: The derivative of some complex function $f$ at some value $z_0$ should just be a complex number, i.e. an object with two degrees of freedom rather than the four which a general, unconstrained Jacobian would have.
 
@@ -170,6 +177,8 @@ u(x,y) = \Re(w), \; v(x,y) = -\Im(w)
 x = \Re(z), \; y = \Im(z)
 \end{equation}
 It may see strange to negate the imaginary part of $w$ to produce $v$, but we will see a very compelling reason for doing this soon enough. This so produced 2D vector field is called the \emph{Polya vector field} associated with our complex function $f$. TODO: fix clash of notation: we previously used $v = \Im(w)$, so we shouldn't use the conflicting $v = -\Im(w)$ here
+
+% Maybe just use something like \bar{v} ot \hat{v}. The bar might be beset because we already use that notation for complex conjugation elsewhere. It's somewhat ugly though, to always carry around that bar
 
 % It turns out that when $f$ is an analytic function
 

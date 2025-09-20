@@ -18514,10 +18514,13 @@ std::vector<T> rsSpikeCirculationWaveShift(int N, int M, int mIn, int mOut, T rL
 }
 
 
-// Rename to rsSpikeCirculationBiDelay
+// Also produces the same signal as rsSpikeCirculationLeapFrog() and rsSpikeCirculationWaveShift()
+// but with yet another algorithm based on two delay lines. This algorithm implemented here is
+// basically the idea of implementing waveguides vai "bidirectional" delay lines. A "bidirectional"
+// delayline is basically a pair of two delaylines with mutual crossfeedback ...TBC...
 
 template<class T>
-std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL, T rR)
+std::vector<T> rsSpikeCirculationBiDelay(int N, int M, int mIn, int mOut, T rL, T rR)
 {
   using Vec = std::vector<T>;
   using DL  = RAPT::rsDelay<T>;
@@ -18530,7 +18533,7 @@ std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL,
   // "left","right". Or maybe just use dL,dR. 
 
   // Set up initial condition of the string:
-  dl1.addToInputAt(0.5, mIn);
+  dl1.addToInputAt(0.5,   mIn);
   dl2.addToInputAt(0.5, M-mIn);
   // In the 2nd delayline, we need to use M-mIn because this delayline runs "backwards" so the 
   // indices of the positions are all flipped/reflected.
@@ -18540,6 +18543,7 @@ std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL,
   // (typically denoted by y+ and y- in the literature which we denote by P,M for plus/minus here)
   // and for the complete output wave which is just the sum of y+ and y-:
   Vec yP(N), yM(N), y(N);  // y+[n], y-[n], y[n]
+  // Get rid of yP, yM. It's a remnant. We don't need them here.
 
   // Run the model for N samples from the initial conditions without providing further input:
   for(int n = 0; n < N; n++)
@@ -18571,7 +18575,7 @@ std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL,
     // this out and document it!
 
     // Read out the outputs:
-    T out1 = dl1.readOutputAt(mOut);
+    T out1 = dl1.readOutputAt(  mOut);
     T out2 = dl2.readOutputAt(M-mOut);
 
     // Update the tap pointers in the delaylines:
@@ -18737,11 +18741,10 @@ void testWaveGuide2()
   // get a period of 20. ToDo: Change rsCreateLeapFrogReference() such that we can pass it M 
   // directly as well. It should internally do the +1.
  
-  Vec yW = rsCreateWaveGuideReference(N, M, mIn, mOut, -1.0, -1.0);
+  Vec yW = rsSpikeCirculationBiDelay(N, M, mIn, mOut, -1.0, -1.0);
 
 
   rsPlotVectors(yL, yW, yW-yL); // Waveguide output vs leapfrog reference and error
-
 
 
   // Observations:

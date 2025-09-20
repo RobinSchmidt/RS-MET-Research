@@ -18438,7 +18438,7 @@ std::vector<T> rsCreateLeapFrogReference(int N, int M, int mIn, int mOut)
   using WE  = rsWaveEquation1D_Proto<T>;
 
   // Allocate string and set up initial conditions:
-  Vec u(M), u1(M);
+  Vec u(M), u1(M);               // ToDo: Use M+1
   u[mIn] = 1.0;
   WE::initForLeapFrog(u, u1);
 
@@ -18452,8 +18452,13 @@ std::vector<T> rsCreateLeapFrogReference(int N, int M, int mIn, int mOut)
   }
   return y;
 }
-
-
+// Maybe rename to rsCreateLeapFrogSpikeCirculation and rename the functions below also 
+// accordingly. Document the function. It creates the output of a model of the 1D wave equation 
+// (for an e.g. physical string) when the input is a single spike like displacement excitation.
+// The model uses the leapfrog integration scheme. Maybe use a string length of M+1 to be 
+// consistent with the waveguides. Using M+1 results in a period P of P = 2M for the output 
+// signal. Otherwise it would be 2*(M-1) which is inconvenient.
+// rsCreateCirclingSpikeLeapFrog, SpikeCirculationLeapFrog
 
 // Simliar to testWaveGuideNaiveImpulse() but it takes the values N,M,etc. as parameter and also
 // produces an output signal. This is meant to be used to produce reference outputs via the naive
@@ -18461,10 +18466,10 @@ std::vector<T> rsCreateLeapFrogReference(int N, int M, int mIn, int mOut)
 template<class T>
 std::vector<T> rsCreateWaveShiftReference(int N, int M, int mIn, int mOut, T rL, T rR)
 {
-  using Vec  = std::vector<T>;
+  using Vec = std::vector<T>;
 
   // Allocate waveguide and set up initial conditions:
-  Vec wL(M), wR(M);
+  Vec wL(M), wR(M);         // ToDo: Use M+1
   wL[mIn] = wR[mIn] = 0.5;
 
   // Produce output signal:
@@ -18484,9 +18489,82 @@ std::vector<T> rsCreateWaveShiftReference(int N, int M, int mIn, int mOut, T rL,
   // Maybe use rsWaveGuideStep2, rsWaveGuideStep3, etc. ...or maybe make it switchable
 }
 
+template<class T>
+std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL, T rR)
+{
+  using Vec = std::vector<T>;
+  using DL  = RAPT::rsDelay<T>;
+
+  // Create the delaylines and set up the delay time in samples:
+  DL dl1, dl2;
+  rsSetDelay(&dl1, M);
+  rsSetDelay(&dl2, M);
+  // Maybe rename to dlP, dlM where P,M stands for "plus","minus" or to  dlL, dlR where L,R means
+  // "left","right". Or maybe just use dL,dR. 
+
+  // Set up initial condition of the string:
+  dl1.addToInputAt(0.5, mIn);
+  dl2.addToInputAt(0.5, M-mIn);
+  // In the 2nd delayline, we need to use M-mIn because this delayline runs "backwards" so the 
+  // indices of the positions are all flipped/reflected.
+  // ToDo: Explain this in more detail!
+
+  // Allocate buffers to hold the output signals of the forward and backward propagating waves
+  // (typically denoted by y+ and y- in the literature which we denote by P,M for plus/minus here)
+  // and for the complete output wave which is just the sum of y+ and y-:
+  Vec yP(N), yM(N), y(N);  // y+[n], y-[n], y[n]
+
+  // Run the model for N samples from the initial conditions without providing further input:
+  for(int n = 0; n < N; n++)
+  {
+    // During development, we may plot the contents of the delaylines to see what is going on:
+    //rsPlotDelayLineContent(dl1, dl2, true);  // true: Reverse content of dl2
+
+    // Get the outputs of the delay lines for implementing the reflection via crossfeedback:
+    T ref1 = dl1.readOutput();
+    T ref2 = dl2.readOutput();
+
+    // Implement the mutual crossfeedback with inversion:
+    dl1.writeInput(-ref2);
+    dl2.writeInput(-ref1);
+    // ToDo: Use the reflection coeffs rL,rR. We need to establish a consistent convention for 
+    // which is which. rL is supposed to be the one at the left boundary which applies to the 
+    // left-going wave which is supposed to be contained in the 2nd (bottom) delayline.
+
+    // Feed in inputs. We have nothing to do here because we have no ongoing input in this 
+    // experiment. We only excite the string via initial conditions. I think, for feeding a 
+    // continuous input into the string at the mIn, we'd have to do something like:
+    // 
+    // dl1.addToInputAt(mIn, 0.5 * inputSignal);
+    // dl2.addToInputAt(mIn, 0.5 * inputSignal);
+    //
+    // And I think, it's important to add the input before reading the output to get correct 
+    // behavior when mIn == mOut. Verify this! Maybe to get correct behavior with mIn = 0 or 
+    // mIn = M-1 (or M?), we should actually do this before picking up the reflections? Figure 
+    // this out and document it!
+
+    // Read out the outputs:
+    T out1 = dl1.readOutputAt(mOut);
+    T out2 = dl2.readOutputAt(M-mOut);
+
+    // Update the tap pointers in the delaylines:
+    dl1.incrementTapPointers();
+    dl2.incrementTapPointers();
+
+    // Store partial and complete output signals:
+    yP[n] = out1;
+    yM[n] = out2;
+    y[n]  = yP[n] + yM[n];
+  }
+
+  return y;
+}
+
 
 bool unitTestWaveGuide1()
 {
+  // Rename to unitTestWaveShift. It tests the shifting algo agains the leapfrog reference.
+
   bool ok = true;
 
   using Real = double;
@@ -19059,90 +19137,27 @@ void testWaveGuide2()
 
   // I think, the initial delay for the spike to sho up in the plot is given by mOut-mIn
 
-  // Smaller values for initial tests:
-  //M = 10, mIn = 3, N = 50;
-  //M = 15, mIn = 3, N = 50;     // M = 15 is deliberately 2^k - 1
-  //M = 16, mIn = 3, N = 50;
-  //M = 17, mIn = 3, N = 50;
-
   // Generate reference signal to match:
-  //Vec yL = rsCreateLeapFrogReference<Real>(N, M, mIn, mOut);
   Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, mIn, mOut);
   // We need to use M+1 to match the period of the delayline based implementation. With M=10, we
   // get a period of 20. ToDo: Change rsCreateLeapFrogReference() such that we can pass it M 
   // directly as well. It should internally do the +1.
  
-  // Create the delaylines and set up the delay time in samples:
-  DL dl1, dl2;  
-  // Maybe rename to dlP, dlM where P,M stands for "plus","minus" or to  dlL, dlR where L,R means
-  // "left","right". Or maybe just use dL,dR. 
-
-  rsSetDelay(&dl1, M);
-  rsSetDelay(&dl2, M);
+  Vec yW = rsCreateWaveGuideReference(N, M, mIn, mOut, -1.0, -1.0);
 
 
-  // Set up initial condition of the string:
-  dl1.addToInputAt(0.5,   mIn);
-  dl2.addToInputAt(0.5, M-mIn);
-  // In the 2nd delayline, we need to use M-mIn because this delayline runs "backwards" so the 
-  // indices of the positions are all flipped/reflected.
-  // ToDo: Explain this in more detail!
-
-  // Allocate buffers to hold the output signals of the forward and backward propagating waves
-  // (typically denoted by y+ and y- in the literature which we denote by P,M for plus/minus here)
-  // and for the complete output wave which is just the sum of y+ and y-:
-  Vec yP(N), yM(N), y(N);  // y+[n], y-[n], y[n]
+  rsPlotVectors(yL, yW, yW-yL); // Waveguide output vs leapfrog reference and error
 
 
-  // Run the model for N samples from the initial conditions without providing further input:
-  for(int n = 0; n < N; n++)
-  {
-    // During development, we may plot the contents of the delaylines to see what is going on:
-    //rsPlotDelayLineContent(dl1, dl2, true);  // true: Reverse content of dl2
 
-    // Get the outputs of the delay lines for implementing the reflection via crossfeedback:
-    Real ref1 = dl1.readOutput();
-    Real ref2 = dl2.readOutput();
-
-    // Implement the mutual crossfeedback with inversion:
-    dl1.writeInput(-ref2);
-    dl2.writeInput(-ref1);
-    // ToDo: allow using arbitrary refelction coeffs.
-
-    // Feed in inputs. We have nothing to do here because we have no ongoing input in this 
-    // experiment. We only excite the string via initial conditions. I think, for feeding a 
-    // continuous input into the string at the mIn, we'd have to do something like:
-    // 
-    // dl1.addToInputAt(mIn, 0.5 * inputSignal);
-    // dl2.addToInputAt(mIn, 0.5 * inputSignal);
-    //
-    // And I think, it's important to add the input before reading the output to get correct 
-    // behavior when mIn == mOut. Verify this! Maybe to get correct behavior with mIn = 0 or 
-    // mIn = M-1 (or M?), we should actually do this before picking up the reflections?
-
-    // Read out the outputs:
-    Real out1 = dl1.readOutputAt(  mOut);
-    Real out2 = dl2.readOutputAt(M-mOut);
-
-    // Update the tap pointers in the delaylines:
-    dl1.incrementTapPointers();
-    dl2.incrementTapPointers();
-
-    // Store partial and complete output signals:
-    yP[n] = out1;
-    yM[n] = out2;
-    y[n]  = yP[n] + yM[n];
-  }
-
-  // Plot the produced signals:
-  rsPlotVectors(yL, y, y-yL);  // Waveguide output vs leapfrog reference and error
-  rsPlotVectors(y, yP, yM);    // Waveguide output and its right and left going components
 
   // ToDo:
   // 
   // - Write a function rsCreateWaveGuideReference analogous to rsCreateLeapFrogReference() and 
   //   then implement a unit test that compares the outputs of the two algorithms for a range of
-  //   settings for M, mIn, mOut.
+  //   settings for M, mIn, mOut. Create also a unit test that compares the waveguid output 
+  //   against the shifting algo with arbitrary reflection coeffs (which the current 
+  //   implementation of the leap frog algo doesn't support)
   //
   // - Set up the delaylines in a mutual feedback loop. dl1 feeds into dl2 and vice versa. I think,
   //   when we model a string with fixed ends, the feedback should be inverting which means that in

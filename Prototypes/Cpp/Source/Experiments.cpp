@@ -19039,7 +19039,7 @@ void testWaveGuide2()
 
   int M    =  10;            // Length of the delaylines
   int mIn  =   3;            // Input position (for strike, pluck, bow, etc.)
-  int mOut =   3;
+  int mOut =   4;
   int N    =  81;            // Number of samples to render
 
   // Smaller values for initial tests:
@@ -19056,16 +19056,18 @@ void testWaveGuide2()
   // directly as well. It should internally do the +1.
  
   // Create the delaylines and set up the delay time in samples:
-  DL dl1, dl2;  // Maybe rename to dlP, dlM where P,M stands for "plus","minus" or to 
-                // dlL, dlR where L,R means "left","right". Or maybe just use dL,dR
+  DL dl1, dl2;  
+  // Maybe rename to dlP, dlM where P,M stands for "plus","minus" or to  dlL, dlR where L,R means
+  // "left","right". Or maybe just use dL,dR. 
+
   dl1.setMaxDelayInSamples(M);
   dl2.setMaxDelayInSamples(M);
   dl1.setDelayInSamples(M);
   dl2.setDelayInSamples(M);
 
   // Set up initial condition of the string:
-  dl1.addToInputAt(0.5, mIn);
-  dl2.addToInputAt(0.5, mIn);
+  dl1.addToInputAt(0.5,   mIn);
+  dl2.addToInputAt(0.5, M-mIn);
   // I think, this is wrong!
 
   // Test:
@@ -19129,8 +19131,8 @@ void testWaveGuide2()
     // mIn = M-1 (or M?), we should actually do this before picking up the reflections?
 
     // Read out the outputs:
-    Real out1 = dl1.readOutputAt(mOut);
-    Real out2 = dl2.readOutputAt(mOut);
+    Real out1 = dl1.readOutputAt(  mOut);
+    Real out2 = dl2.readOutputAt(M-mOut);
 
     // Update the tap pointers in the delaylines:
     dl1.incrementTapPointers();

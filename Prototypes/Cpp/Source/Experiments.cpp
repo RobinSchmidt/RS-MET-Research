@@ -18462,7 +18462,7 @@ void rsWaveShiftStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
 
 
 template<class T>
-std::vector<T> rsCreateLeapFrogReference(int N, int M, int mIn, int mOut)
+std::vector<T> rsSpikeCirculationLeapFrog(int N, int M, int mIn, int mOut)
 {
   using Vec = std::vector<T>;
   using WE  = rsWaveEquation1D_Proto<T>;
@@ -18488,13 +18488,12 @@ std::vector<T> rsCreateLeapFrogReference(int N, int M, int mIn, int mOut)
 // The model uses the leapfrog integration scheme. Maybe use a string length of M+1 to be 
 // consistent with the waveguides. Using M+1 results in a period P of P = 2M for the output 
 // signal. Otherwise it would be 2*(M-1) which is inconvenient.
-// rsCreateCirclingSpikeLeapFrog, SpikeCirculationLeapFrog
+// rsCreateCirclingSpikeLeapFrog, rsSpikeCirculationLeapFrog
 
-// Simliar to testWaveGuideNaiveImpulse() but it takes the values N,M,etc. as parameter and also
-// produces an output signal. This is meant to be used to produce reference outputs via the naive
-// waveguide algo that can be compared against outputs produced by more efficient algos:
+// Is supposed to produce the same signal as rsSpikeCirculationLeapFrog() but with a different
+// algorithm ...TBC...
 template<class T>
-std::vector<T> rsCreateWaveShiftReference(int N, int M, int mIn, int mOut, T rL, T rR)
+std::vector<T> rsSpikeCirculationWaveShift(int N, int M, int mIn, int mOut, T rL, T rR)
 {
   using Vec = std::vector<T>;
 
@@ -18509,15 +18508,13 @@ std::vector<T> rsCreateWaveShiftReference(int N, int M, int mIn, int mOut, T rL,
     //rsPlotVectors(wL, wR);             // Plot the traveling wave components
     y[n] = wL[mOut] + wR[mOut];        // Read out output signal at mOut
     rsWaveShiftStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
+    // Maybe move into a function WE::stepWaveShift(wL, wR, rL, rR);
   }
   return y;
-
-  // Maybe rename to something like rsGetWaveGuideNaiveImpulseOutput(...) and use it in 
-  // testWaveGuideNaiveImpulse(). Maybe give it a boolean switch for plotting or not plotting.
-  // Being able to switch plotting on and off by the caller may be useful for debugging.
-
-  // Maybe use rsWaveGuideStep2, rsWaveGuideStep3, etc. ...or maybe make it switchable
 }
+
+
+// Rename to rsSpikeCirculationBiDelay
 
 template<class T>
 std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL, T rR)
@@ -18596,10 +18593,8 @@ std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL,
 }
 
 
-bool unitTestWaveGuide1()
+bool unitTestWaveShift()
 {
-  // Rename to unitTestWaveShift. It tests the shifting algo agains the leapfrog reference.
-
   bool ok = true;
 
   using Real = double;
@@ -18737,7 +18732,7 @@ void testWaveGuide2()
   // I think, the initial delay for the spike to sho up in the plot is given by mOut-mIn
 
   // Generate reference signal to match:
-  Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, mIn, mOut);
+  Vec yL = rsSpikeCirculationLeapFrog<Real>(N, M+1, mIn, mOut);
   // We need to use M+1 to match the period of the delayline based implementation. With M=10, we
   // get a period of 20. ToDo: Change rsCreateLeapFrogReference() such that we can pass it M 
   // directly as well. It should internally do the +1.
@@ -18795,7 +18790,7 @@ void testWaveGuide2()
 void testWaveGuides()
 {
   bool ok = true;
-  ok &= unitTestWaveGuide1();
+  ok &= unitTestWaveShift();
   rsAssert(ok);
 
   // Preliminaries (PDE-solvers to produce reference signals):

@@ -18426,6 +18426,36 @@ void rsWaveShiftStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
   //   correspond to a torus-shaped tube in which pressure waves travel. Verify this! Are there
   //   any acoustic instruments that use such a toroidal tube? Maybe try to build one. Maybe use 
   //   concentric tubes for the different notes.
+  //
+  // 
+  // Notes (partially outdated): 
+  //
+  // - Apparently, the reflection itself takes also one time step with the old (commented) 
+  //   version of the algorithm:
+  // 
+  //     wL[M-1] = rR * xR;
+  //     wR[0]   = rL * xL;
+  // 
+  //   When the left-going wave hits the left wall at time n, at the next sample instant n+1, we 
+  //   see the reflected wave in the right going wave and it's also located exactly *at* the wall. 
+  //   Shouldn't it have advanced one position further to the right at this moment already? It 
+  //   seems like the wave spends two sample instants at the wall. It can be fixed by using  
+  //   wL[M-2] = rR * xR; wR[1] = rL * xL;  instead of  wL[M-1] = rR * xR; wR[0] = rL * xL;  but 
+  //   that shortens the period by 2 samples. I also think, that when we use this algo with 
+  //   arbitrarily filled initial arrays, we may lose one of the values. Maybe it's more convenient
+  //   to accept that we deal with a "delayed reflection", i.e. a reflection that takes itself one 
+  //   sample period to take place. It is more obvious when using rL = rR = 1. In this case, it 
+  //   really looks like the wave "rests" for one sample instant at the wall. When using negative 
+  //   reflection coeffs, it uses this resting time to "flip" instead of just resting.
+  // 
+  // - The observation that the reflection itself takes one sample can perhaps be interpreted as 
+  //   follows: In the algorithm as it is implemented, we do not really have any spatial samples
+  //   directly *at* the boundaries. If we would have any, i.e. if wL[0], wR[0], and wL[M-1], 
+  //   wR[M-1] would correspond to actual physical positions, the content of these positions should
+  //   satisfy the boundary conditions at all time instants. that is, we should have 
+  //   wL[0] + wR[0] = 0  and  wL[M-1] + wR[M-1] = 0 at all times for fixed/clamped boundary 
+  //   conditions (i.e. no displacement possible at boundary). I think, more generally, the 
+  //   boundaries should satisfy wL[0] + rL*wR[0] = 0  and  wL[M-1] + rR*wR[M-1] = 0 (verify!).
 }
 // rename to rsStepWaveGuide1 or rsReflectiveShift, 
 
@@ -18661,156 +18691,6 @@ bool unitTestWaveGuide1()
   //   function.
 }
 
-// This is mostly obsolete:
-void testWaveGuideNaiveImpulse()
-{
-  // Naive implementation of the wave propagation of an impulse-shaped waveform along a waveguide.
-  //
-  // We naively implement a propagating wave using two std::vectors for the two traveling wave 
-  // components in a 1D medium such as a string or air column in a tube. We really implement the 
-  // traveling and reflections directly and literally. It is inefficient to do it like this but the
-  // purpose of this experiment is merely to produce the target behavior that we then want to 
-  // realize via the waveguide (i.e. bidirecitonal delay line) approach. It's a preliminary 
-  // experiment to produce some target data that we then want to match with the waveguides.
-
-  using Real = double;                 // Maybe use "Amp" for general amplitude - might be complex later
-  using Vec  = std::vector<Real>;
-
-  // User parameters:
-  int  M  =  10;                       // Length of the waveguide, number of spatial samples
-  int  m  =   3;                       // Position of initial impulse along the waveguide (WG)
-  int  N  = 150;                       // Number of time steps to take in simulation
-  Real rL =  -1.0;                     // Reflection coeff at left boundary
-  Real rR =  -1.0;                     // Reflection coeff at right boundary
-
-  // Create vectors that hold the leftward and rightward traveling wave components:
-  Vec wL(M), wR(M);
-
-  // Set up initial condition of the string:
-  wL[m] = wR[m] = 0.5;                 // Set a single impulse at location m in both WGs
-
-  // Do the time stepping and plot the contents of the wave buffers at each time step:
-  Vec y(N);
-  for(int n = 0; n < N; n++)
-  {
-    y[n] = wL[m] + wR[m];
-    //rsPlotVectors(  wL, wR);           // Plot the traveling wave components
-    rsWaveShiftStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
-    // Maybe have a function  rsWaveGuideStep(wL, wR, rL, rR, algo);  which lets us switch between
-    // different methods for doing the time step
-  }
-
-  // Plot the output signal:
-  //rsPlotVector(y);
-
-  // Let's try to use the function that is supposed to create the same output signal and compare
-  // the results:
-  Vec yR = rsCreateWaveShiftReference(N, M, m, m, rL, rR);
-  //rsPlotVectors(y, yR);
-  bool ok = y == yR;
-  rsAssert(ok);
-  
-  // Create the same signal using the leapfrog finite difference scheme:
-  Vec yL = rsCreateLeapFrogReference<Real>(N, M, m, m);
-  //Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, m-1, m-1);
-  //Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, M-m+1, M-m+1);
-  rsPlotVectors(y, yR, yL);
-  int dummy = 0;
-  // New:
-  // I think, the other algorithm (rsCreateWaveGuideReference()) was flawed before. It has now been
-  // fixed and now, we don't need to fudge with M and m anymore to get a match. 
-  //
-  // Old:
-  // To get the initial spike right, we need ot have mOut == mIn (i.e. 3rd == 4th parameter). To 
-  // get the period right, we have to use M+1 for the 2nd parameter. To get the negative psikes 
-  // right ...
-  // 
-  //   m-1,m-1: spikes shifted backward by 3
-  //   m,m:     spikes shifted backward by 1
-  //   m+1,m+1: spikes shifted forward  by 1
-  //
-  // Apparently, with the leapfrog scheme, adjusting m by an offset of 1 shifts the arrival of the 
-  // 1st reflection by 2 samples. This makes sense because we shift the origin of the spike as well
-  // as the pick up point closer to the wall.
-
-
-  // Observations:
-  //
-  // - After 2M steps, we come back to the original constellation, i.e. wL and wR are the same
-  //   at time step 2M as it was at time 0. When comparing the contents of wL,wR at n = 0 with the
-  //   contents at n = 2M+1, then they are also equal. In these cases, the contents of wL and wR
-  //   are actually different from one another (as opposed to n = 0 and n = 2M where wL,wR have 
-  //   the same content). So we can conlcude that after 2M steps, we indeed reach a situation that
-  //   is the same as the initial situation. There isn't any content swapping between wL and wR 
-  //   going on. By just looking at n = 0 and n = 2M, we couldn't rule out content swapping. But by
-  //   looking at n = 1 and n = 2M+1, we can.
-  // 
-  // - After M steps we see a situation that looks like the initial condition but reflected 
-  //   horizontally. That means, the impulses in wL and wR are now also both equal to each other 
-  //   but are now located at M-1-m rather than at m. When rL = rR = -1, it is also vertically 
-  //   reflected. When rL = rR = +1, it's not vertically reflected. When rL and rR have opposite 
-  //   signs, then one of the waves is reflected and the other one isn't (so their sum would cancel
-  //   to zero). In this case, we do not come back to the initial condition after 2M steps. 
-  //   Instead, we come to a condition that equals the inverted (i.e. negated) initial condition.
-  //   To come back to the original non-inverted initial condition, we need to wait another 2M time
-  //   steps. I think that means that when we use opposite signs for the left and right reflection 
-  //   coeffs, we double the temporal period length of the vibration. Maybe this also implies that 
-  //   we will see only odd harmonics because wherever we pick up a signal, its second half wave 
-  //   will be the mirror image of its first half wave?
-  // 
-  // - Outdated:
-  //   Apparently, the reflection itself takes also one time step. When the left-going wave hits
-  //   the left wall at time n, at the next sample instant n+1, we see the reflected wave in the 
-  //   right going wave and it's also located exactly *at* the wall. Shouldn't it have advanced one
-  //   position further to the right at this moment already? It seems like the wave spends two 
-  //   sample instants at the wall. It can be fixed by using  wL[M-2] = rR * xR; wR[1] = rL * xL;
-  //   instead of  wL[M-1] = rR * xR; wR[0] = rL * xL;  but that shortens the period by 2 samples.
-  //   I also think, that when we use this algo with arbitrarily filled initial arrays, we may lose
-  //   one of the values. Maybe it's more convenient to accept that we deal with a "delayed 
-  //   reflection", i.e. a reflection that takes itself one sample period to take place. It is more 
-  //   obvious when using rL = rR = 1. In this case, it really looks like the wave "rests" for one
-  //   sample instant at the wall. When using negative reflection coeffs, it uses this resting time 
-  //   to "flip" instead of just resting.
-  // 
-  // - For m = 3 and m = 6, the y signal looks the same. Same for m = 4 and m = 5. 
-  // 
-  // 
-  // Conclusions:
-  //
-  // - The observation that the reflection itself takes one sample can perhaps be interpreted as 
-  //   follows: In the algorithm as it is implemented, we do not really have any spatial samples
-  //   directly *at* the boundaries. If we would have any, i.e. if wL[0], wR[0], and wL[M-1], 
-  //   wR[M-1] would correspond to actual physical positions, the content of these positions should
-  //   satisfy the boundary conditions at all time instants. that is, we should have 
-  //   wL[0] + wR[0] = 0  and  wL[M-1] + wR[M-1] = 0 at all times for fixed/clamped boundary 
-  //   conditions (i.e. no displacement possible at boundary). I think, more generally, the 
-  //   boundaries should satisfy wL[0] + rL*wR[0] = 0  and  wL[M-1] + rR*wR[M-1] = 0 (verify!).
-  // 
-  // 
-  // ToDo:
-  // 
-  // - Provide two variables for mIn, mOut instead of just a signle m.
-  // 
-  // - Implement various functions to set up different initial conditions. Here, we just simply set
-  //   one sample to 1. That's good for checking the implementation but not very realistic. Maybe
-  //   write a function rsSetupWaveGuidePluck(...) that takes a plucking position and sets up a 
-  //   triangular initial condition. Maybe also make a function that sets up various sinusoidal 
-  //   modes. Maybe a Gaussian bell, etc.
-  // 
-  // - Create different versions of the time stepping algo that implements different ways of 
-  //   handling the reflections, i.e. with and without delay.
-  //
-  // - Create an animation. To facilitate this, write some infrastructure for producing such 
-  //   animations. This will be very helpful in the development of waveguide models.
-  //
-  // - Experiment with a bit of smoothing before or after each shifting. Maybe handle the 
-  //   boundaries of the buffers periodically. Try a simple 3-point FIR. If the coeffs are [0,1,0],
-  //   there would be no smoothing at all. Maximum smoothing would be obtained by [1,1,1]/3. But 
-  //   maybe we could also use a bidirectional IIR smoothing filter (and then blend the smoothed
-  //   result with the original). I think, doing it this way would really simulate distributed 
-  //   damping as opposed to lumped damping (which could be conveniently integrated into the 
-  //   reflections). It's costly but this is just for experimentation.
-}
 
 /** Convenience function to set up the delay in the given delayLine. If the requested delay is 
 greater than the currently available maximum delay, the maximum delay will automatically be 
@@ -18836,252 +18716,10 @@ void rsSetDelay(RAPT::rsDelay<T>* delayLine, int delayInSamples)
 // may confuse users there.
 
 
-void testWaveGuide1()
-{
-  // I couldn't get this to work but now that testWaveGuide2() actually works, it doesn't seem 
-  // worthwile to keep trying because the other way implemented there is actually better anyway.
-  // So this function may be deleted at some point. But an adapted version of the description 
-  // below should be kept and added to testWaveGuide2().
-
-  // We implement a waveguide using 4 delaylines as shown in PASP, Fig 2.13 page 50 or here:
-  // 
-  //   https://ccrma.stanford.edu/~jos/pasp/Physical_Outputs.html
-  // 
-  // with boundary conditions implemented like shown in Fig 1.14 page 31 or here:
-  // 
-  //   https://ccrma.stanford.edu/~jos/pasp/Digital_Waveguide_Modeling_Elements.html
-  //
-  // although we are a bit more general here and allow the -1 factors to be any numbers. These 
-  // reflection coefficients can be set up via the variables rR,rL below. The input impulse is 
-  // injected according to Fig 2.14 page 51 or here:
-  //
-  //   https://ccrma.stanford.edu/~jos/pasp/Physical_Inputs.html
-  //
-  // The N1,N2 values for the delay lines in these diagrams correspond to our M1,M2 variables here.
-  // I wanted to use M for the delay variables consistency with other parts of the codebase. The 
-  // book itself also often uses M for delay line lengths in many other places.
-
-
-  using Real = double;
-  using DL   = RAPT::rsDelay<Real>;
-  using Vec  = std::vector<Real>;
-  
-  // User parameters:
-  int  N  =  80;             // Number of samples to generate
-  int  M1 =   3;             // Length of the delay left hand (not leftward!) delaylines
-  int  M2 =   7;             // Dito for right hand delaylines (right in the block diagram)
-  Real rR =  -1.0;           // Reflection coeff at right boundary
-  Real rL =  -1.0;           // Reflection coeff at left boundary
-
-  // Create and set up the delaylines:
-  DL dR1, dR2;               // 1st and 2nd part of delay for rightward wave
-  DL dL1, dL2;               // 1st and 2nd part of delay for leftward wave
-  rsSetDelay(&dR1, M1);
-  rsSetDelay(&dR2, M2);
-  rsSetDelay(&dL1, M2);
-  rsSetDelay(&dL2, M1);
-  // We use the convention that dL1 is the bottom-right delay line in the block diagram of Fig 
-  // 2.13. The idea is that the numbering goes around the delaylines in the same way as the signal
-  // flows. But it may be confusing that the dL1 uses N2 and dL2 uses N1. Maybe use different 
-  // names for the delay lines that don't involve numbers. So, with respect to the block diagram, 
-  // we have: dR1: top-left, dR2: top-right, dL1: bottom-right, dL2: bottom-left. As for the 
-  // direction of the waves: in dR1, dR2 the wave travles rightward, in dL1, dL2 the wave travels
-  // leftward. The L,R in the names refer to the traveling direction of the wave.
-
-  // Helper function to reset all delay lines:
-  auto resetDelays = [&]() 
-  {
-    dR1.reset();
-    dR2.reset();
-    dL1.reset();
-    dL2.reset();
-  };
-
-  auto init = [&]() 
-  {
-    resetDelays();
-    dR2.writeInput(0.5);                     // Set up initial conditions as in Fig 2.14
-    dL2.writeInput(0.5);
-  };
-
-
-  int M    = M1 + M2;
-  int mIn  = M1;
-  int mOut = M1;
-
-  // Test:
-  //M = M1 + M2 + 1;
-  //M = M1 + M2 + 2;
-  // I'm not sure if the total length of the waveguide (including the fixed endpoints) needs to be
-  // just M1 + M2 or if we need something extra because the endpoints don't really count or 
-  // something like that
-
-  //mIn = M2; mOut = M1;
-
-
-  // Produce reference output via naive algorithm:
-  Vec yR = rsCreateWaveShiftReference(N, M, mIn, mOut, rL, rR);
-  // The total length M is M1+M2. The input is injected at M1. The output is picked up also at M1. 
-
-  Vec yL = rsCreateLeapFrogReference<Real>(N, M, mIn, mOut);
-
-  // The first version of the algorithm. Here, we do the increments of the tap pointers as the 
-  // first thing in the per sample computation:
-  init();
-  Vec y1(N);
-  for(int n = 0; n < N; n++)               // Loop through the time steps
-  {
-    // Increment the tap-pointers:
-    dR1.incrementTapPointers();
-    dR2.incrementTapPointers();
-    dL1.incrementTapPointers();
-    dL2.incrementTapPointers();
-
-    // Read outputs of the delay lines:
-    Real xR1 = dR1.readOutput();
-    Real xR2 = dR2.readOutput();
-    Real xL1 = dL1.readOutput();
-    Real xL2 = dL2.readOutput();
-
-    // Do the reflections at both ends:
-    dL1.writeInput(rR * xR2);
-    dR1.writeInput(rL * xL2);
-
-    // Do the transmission from the 1st to the 2nd parts:
-    dR2.writeInput(xR1);
-    dL2.writeInput(xL1);
-
-    // Produce and store output signal:
-    y1[n] = xR1 + xL1;
-  }
-
-  // The second version of the algorithm. Here, we do the increments of the tap pointers as the 
-  // second thing in the per sample computation. They occurr after reading the outputs.
-  init();
-  Vec y2(N);
-  for(int n = 0; n < N; n++) 
-  {
-    Real xR1 = dR1.readOutput();           // Read
-    Real xR2 = dR2.readOutput();
-    Real xL1 = dL1.readOutput();
-    Real xL2 = dL2.readOutput();
-
-    dR1.incrementTapPointers();            // Increment
-    dR2.incrementTapPointers();
-    dL1.incrementTapPointers();
-    dL2.incrementTapPointers();
-
-    dL1.writeInput(rR * xR2);              // Write
-    dR1.writeInput(rL * xL2);
-    dR2.writeInput(xR1);
-    dL2.writeInput(xL1);
-
-    y2[n] = xR1 + xL1;
-  }
-
-  // The third version of the algorithm. Here, we do the increments of the tap pointers as the 
-  // last thing in the per sample computation.
-  init();
-  Vec y3(N);
-  for(int n = 0; n < N; n++) 
-  {
-    Real xR1 = dR1.readOutput();           // Read
-    Real xR2 = dR2.readOutput();
-    Real xL1 = dL1.readOutput();
-    Real xL2 = dL2.readOutput();
-
-    dL1.writeInput(rR * xR2);              // Write
-    dR1.writeInput(rL * xL2);
-    dR2.writeInput(xR1);
-    dL2.writeInput(xL1);
-
-    dR1.incrementTapPointers();            // Increment
-    dR2.incrementTapPointers();
-    dL1.incrementTapPointers();
-    dL2.incrementTapPointers();
-
-    y3[n] = xR1 + xL1;
-  }
-
-  // In this 4th version, we do a hybrid updating strategy ...TBC...
-  init();
-  Vec y4(N);
-  for(int n = 0; n < N; n++)
-  {
-    dR1.incrementTapPointers();            // Increment "outer" delay lines
-    dL2.incrementTapPointers();
-
-    Real xR1 = dR1.readOutput();           // Read
-    Real xR2 = dR2.readOutput();
-    Real xL1 = dL1.readOutput();
-    Real xL2 = dL2.readOutput();
-
-    dR2.incrementTapPointers();            // Increment "inner" delay lines
-    dL1.incrementTapPointers();
-
-    dL1.writeInput(rR * xR2);              // Write
-    dR1.writeInput(rL * xL2);
-    dR2.writeInput(xR1);
-    dL2.writeInput(xL1);
-
-    y4[n] = xR1 + xL1;
-  }
-
-  // In this 5th version, we do another hybrid updating strategy ...TBC...
-  init();
-  Vec y5(N);
-  for(int n = 0; n < N; n++)
-  {
-    dR2.incrementTapPointers();            // Increment "inner" delay lines
-    dL1.incrementTapPointers();
-
-    Real xR1 = dR1.readOutput();           // Read
-    Real xR2 = dR2.readOutput();
-    Real xL1 = dL1.readOutput();
-    Real xL2 = dL2.readOutput();
-
-    dR1.incrementTapPointers();            // Increment "outer" delay lines
-    dL2.incrementTapPointers();
-
-    dL1.writeInput(rR * xR2);              // Write
-    dR1.writeInput(rL * xL2);
-    dR2.writeInput(xR1);
-    dL2.writeInput(xL1);
-
-    y5[n] = xR1 + xL1;
-  }
-
-  // ToDo: pre-update R1,R2 and post-update L1,L2 and vice versa
-  // Maybe factor out helper function like readOutputs(), writeInputs(). To do this, we need some
-  // local variables xR1,xR2,xL1,xL2 which these helper functions can access. I gues, we should
-  // set the to zero in resetDelays() which should probably be renamed to reset()
-
-  // Plot the produced output signals:
-  //rsPlotVectors(yL, yR);  // Reference signals produced by naive algos. Should be equal.
-  rsPlotVectors(yL, y1);  // Has correct period of 2*(M1+M2). Seems 1 sample too early, though.
-  rsPlotVectors(yL, y2);  // Has wrong period.
-  rsPlotVectors(yL, y3);  // Is all zeros.
-  rsPlotVectors(yL, y4);
-  rsPlotVectors(yL, y5);
-  // None of them matches the reference! Still a lot of work to do!
-
-  // Plot reference signal together with one of our output signals:
-  //rsPlotVectors(yR, y1);
-  //rsPlotVectors(yL, y1);
-  //rsPlotVectors(yL, yR, y1);
-}
-
-
-
 void testWaveGuide2()
 {
   // First experiment with waveguide modeling. We implement a very simple waveguide model for a
   // string (or air column) by means of a pair of delaylines. ...TBC...
-
-
-
-
-
 
   using Real = double;
   using DL   = RAPT::rsDelay<Real>;
@@ -19143,6 +18781,14 @@ void testWaveGuide2()
   //
   // - Try to create an animation. It's annoying to have to click through the individual plots to
   //   see the time development.
+  // 
+  // - Experiment with a bit of smoothing before or after each step. Maybe handle the 
+  //   boundaries of the buffers periodically. Try a simple 3-point FIR. If the coeffs are [0,1,0],
+  //   there would be no smoothing at all. Maximum smoothing would be obtained by [1,1,1]/3. But 
+  //   maybe we could also use a bidirectional IIR smoothing filter (and then blend the smoothed
+  //   result with the original). I think, doing it this way would really simulate distributed 
+  //   damping as opposed to lumped damping (which could be conveniently integrated into the 
+  //   reflections). It's costly but this is just for experimentation.
 }
 
 
@@ -19154,7 +18800,6 @@ void testWaveGuides()
 
   // Preliminaries (PDE-solvers to produce reference signals):
   //testWaveEquation1D();
-  //testWaveGuideNaiveImpulse();
 
   // Actual waveguide stuff:
   //testWaveGuide1();

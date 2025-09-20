@@ -19038,7 +19038,7 @@ void testWaveGuide2()
   using Vec  = std::vector<Real>;
 
   int M   =   10;            // Length of the delaylines
-  int mIn =    3;            // Input position (for strike, pluck, bow, etc.)
+  int mIn =    5;            // Input position (for strike, pluck, bow, etc.)
   int N   =   81;            // Number of samples to render
 
   // Smaller values for initial tests:
@@ -19063,10 +19063,23 @@ void testWaveGuide2()
   dl2.setDelayInSamples(M);
 
   // Set up initial condition of the string:
-  dl1.addToInputAt(1.0,   mIn);
-  //dl2.addToInputAt(1.0, M-mIn);
-  dl2.addToInputAt(1.0, M-mIn-1);  // Why -1?
-  //dl2.addToInputAt(1.0, mIn);
+  //dl1.addToInputAt(0.5, mIn);
+  //dl2.addToInputAt(0.5, M-mIn);
+  //dl2.addToInputAt(0.5, M-mIn-1);  // Why -1?
+  //dl2.addToInputAt(0.5, mIn);
+
+  int k = 3;
+  dl1.addToInputAt(0.5, k);
+  dl2.addToInputAt(0.5, k);
+  // For M = 3, we try all possible combinations for the delays from (0,0) to (3,3)
+  // None works!. Let's try M = 2. nope! That doesn't give a signal at all. Oh writing at 0,0
+  // produces a zero signal.
+  // Maybe try again with M=3 and try to match only the shape. The delay may be adjusted later
+  // I think, the first spike in the output appears at n = M-k
+  // OK: with: M=10, mIn=5, k=3, both signals have the same shape but are shifted with respect to
+  // one another
+
+
   // ToDo: maybe use clear() initially and/or use a function like writeInputAt() which overwrites
   // instead of accumulating
 
@@ -19120,8 +19133,8 @@ void testWaveGuide2()
 
 
   // Plot the produced signals:
-  rsPlotVectors(y, yL);      // Waveguide output vs leapfrog reference
-  rsPlotVectors(y, yP, yM);
+  rsPlotVectors(yL, y);      // Waveguide output vs leapfrog reference
+  //rsPlotVectors(y, yP, yM);
   int dummy = 0;
 
   // ToDo:

@@ -478,19 +478,26 @@ The \emph{column rank} of a matrix $\mathbf{A}$ is the number of linearly indepe
 % https://en.wikipedia.org/wiki/Rank_(linear_algebra)
 
 \paragraph{Trace}
-The trace of a square matrix $\mathbf{A}$ is the sum of its diagonal elements and denoted by $\tr(\mathbf{A})$. 
+The \emph{trace} of a square matrix $\mathbf{A}$ is the sum of its diagonal elements and denoted by $\tr(\mathbf{A})$. It also happens to be equal to the sum of the eigenvalues $\lambda_i$ (to be defined soon) of $\mathbf{A}$. So we have:
 \begin{equation}
- \tr(\mathbf{A}) = \sum_{i=1}^{n} a_{ii}
+ \tr(\mathbf{A}) = \sum_{i=1}^{n} a_{ii} = \sum_{i = 1}^{n} \lambda_i
 \end{equation}
-For non-square matrices, the trace is not defined. The trace is also equal to the sum of the eigenvalues and it holds that $\tr(\mathbf{A B}) = \tr(\mathbf{B A})$. This implies that similar matrices have the same trace. The trace is linear such that: $\tr(\mathbf{A + B}) = \tr(\mathbf{A}) + \tr(\mathbf{B})$ and $\tr(c \mathbf{A}) = c \tr(\mathbf{A})$. ...TBC...
+For non-square matrices, the trace is not defined. It holds that $\tr(\mathbf{A B}) = \tr(\mathbf{B A})$. This implies that similar matrices (also to be defined later) have the same trace. The trace is linear such that: $\tr(\mathbf{A + B}) = \tr(\mathbf{A}) + \tr(\mathbf{B})$ and $\tr(c \mathbf{A}) = c \tr(\mathbf{A})$. ...TBC...
 
 %https://en.wikipedia.org/wiki/Trace_(linear_algebra)
 
 \paragraph{Determinant}
-Geometrically, the \emph{determinant} of a $(n \times n)$-matrix $\mathbf{A}$ is the amount by which the $n$D hypervolume of any chunk of the vector space $\mathbb{R}^n$ gets expanded or shrunken by multiplying by the matrix. You can imagine this as what happens to the (hyper)volume of the unit hypercube in $\mathbb{R}^n$ when applying the matrix to all of its vertices - but it applies to any other chunk of the space just the same. Note that the determinant also has a sign - so it's a kind of signed volume change factor. The determinant happens to be equal to the product of the eigenvalues. If we have a triangular matrix, then the determinant can be easily be computed as the product of the diagonal entries. If the determinant of a matrix is zero, it means geometrically that a hypervolume of $\mathbb{R}^n$ will be completely collapsed by the matrix into a lower dimensional object. For example, in $\mathbb{R}^3$, a 3D volume could be collapsed into some flat planar 2D object, or just into a 1D line or even into a 0D point. The common feature of all of these 3 cases is that the result has a volume of zero. A matrix with a determinant of zero is called \emph{singular}, one with nonzero determinant is called \emph{regular}. Only regular matrices are invertible. This is geometrically plausible because you cannot undo the total collapse of a dimension - once a dimension has been squashed away, the information about that dimension is irrecoverably lost. 
+Geometrically, the \emph{determinant} of a $(n \times n)$-matrix $\mathbf{A}$ is the amount by which the $n$D hypervolume of any chunk of the vector space $\mathbb{R}^n$ gets expanded or shrunken by multiplying by the matrix. You can imagine this as what happens to the (hyper)volume of the unit hypercube in $\mathbb{R}^n$ when applying the matrix to all of its vertices - but it applies to any other chunk of the space just the same. Note that the determinant also has a sign - so it's a kind of signed volume change factor. The determinant happens to be equal to the product of the eigenvalues:
+\begin{equation}
+ \det(\mathbf{A}) = \prod_{i = 1}^{n} \lambda_i
+\end{equation}
+If we have a triangular matrix, then the determinant can be easily be computed as the product of the diagonal entries. If the determinant of a matrix is zero, it means geometrically that a hypervolume of $\mathbb{R}^n$ will be completely collapsed by the matrix into a lower dimensional object. For example, in $\mathbb{R}^3$, a 3D volume could be collapsed into some flat planar 2D object, or just into a 1D line or even into a 0D point. The common feature of all of these 3 cases is that the result has a volume of zero. A matrix with a determinant of zero is called \emph{singular}, one with nonzero determinant is called \emph{regular}. Only regular matrices are invertible. This is geometrically plausible because you cannot undo the total collapse of a dimension - once a dimension has been squashed away, the information about that dimension is irrecoverably lost. 
 
 \medskip
-There are various ways to compute the determinant - the most practical perhaps being to transform the matrix into triangular form while keeping track of what the transformations do to the determinant (swapping rows changes the sign, multiplying a row by a factor changes the determinant by the same factor). At the end of that transformation process, we would compute the product of diagonal elements and take into account the modifications that accumulated during the transformation. ...VERIFY...TBC...
+There are various ways to compute the determinant - the most practical perhaps being to transform the matrix into triangular form while keeping track of what the transformations do to the determinant (swapping rows changes the sign, multiplying a row by a factor changes the determinant by the same factor). At the end of that transformation process, we would compute the product of diagonal elements and take into account the modifications that accumulated during the transformation. ...VERIFY...TBC...Give specific formulas for $2x2$ and $3x3$ matrices, the Laplace expansion formula (which is impractical due to its computational complexity)
+
+% I think, for the determinuant holds det(k*A) = k^n * det(A). This follows from the geometric interpretation.
+% we also have det(A B) = det(A) * det(B)  and det(A^T) = det(A) (verify!)
 
 % https://en.wikipedia.org/wiki/Determinant
 % https://en.wikipedia.org/wiki/Dieudonn%C3%A9_determinant  generalization
@@ -498,6 +505,8 @@ There are various ways to compute the determinant - the most practical perhaps b
 % Why is the determinant like that?
 % https://www.youtube.com/watch?v=Sv7VseMsOQc
 
+% I think, the determinant is the product of the eigenvalues and the trace is the sum of all the 
+% eigenvalues. So, both of these values "summarize" the eigenvalues in different ways.
 
 \paragraph{Norms}
 Just like for vectors, there exist also various norms for matrices ...TBC...
@@ -744,6 +753,11 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{S}$ su
 
 [...TBC...ToDo: give algorithm to compute $\mathbf{S}$, given $\mathbf{A,B}$. Maybe use high-level pseudo code and refer to an actual (to be written) implementation in the C++ codebase ]
 
+% IIRC, I began to derive an algorithm to compute S and it went rather promising or was even finished. I think
+% it may be somehwere in the notes or maybe in the codebase some code for it already exisst? I think, it 
+% involved finding a linear system for the entries of S. Maybe try
+% A = S B S^-1  ->  A S = S B . Try working it out for the 2x2 case. I think, I may have already done this
+% in some textfile.
 
 % How to find P: write the relation as PA = PB  ->  (PA - PB) = 0  ->  P(A-B) = 0
 % nah! only true if PA = AP, in general we have

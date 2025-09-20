@@ -19037,15 +19037,18 @@ void testWaveGuide2()
   using DL   = RAPT::rsDelay<Real>;
   using Vec  = std::vector<Real>;
 
-  int M   = 100;             // Length of the delaylines
-  int mIn = 30;              // Input position (for strike, pluck, bow, etc.)
-  int N   = 1000;            // Number of samples to render
+  int M   =   10;            // Length of the delaylines
+  int mIn =    3;            // Input position (for strike, pluck, bow, etc.)
+  int N   =   30;            // Number of samples to render
 
   // Smaller values for initial tests:
   //M = 10, mIn = 3, N = 50;
-  M = 15, mIn = 3, N = 50;     // M = 15 is deliberately 2^k - 1
+  //M = 15, mIn = 3, N = 50;     // M = 15 is deliberately 2^k - 1
   //M = 16, mIn = 3, N = 50;
   //M = 17, mIn = 3, N = 50;
+
+  // Generate reference signal to match:
+  Vec yL = rsCreateLeapFrogReference<Real>(N, M, mIn, mIn);
  
   // Create the delaylines and set up the delay time in samples:
   DL dl1, dl2;  // Maybe rename to dlP, dlM where P,M stands for "plus","minus" or to 
@@ -19074,7 +19077,7 @@ void testWaveGuide2()
   for(int n = 0; n < N; n++)
   {
     // During development, we may plot the contents of the delaylines to see what is going on:
-    rsPlotDelayLineContent(dl1, dl2, true);  // true: Reverse content of dl2
+    //rsPlotDelayLineContent(dl1, dl2, true);  // true: Reverse content of dl2
 
     // Preliminary:
     //Real out1 = dl1.getSample(0.0);
@@ -19114,6 +19117,7 @@ void testWaveGuide2()
 
   // Plot the produced signals:
   rsPlotVectors(y, yP, yM);
+  rsPlotVectors(y, yL);      // Waveguide output vs leapfrog reference
   int dummy = 0;
 
   // ToDo:
@@ -19171,10 +19175,13 @@ void testWaveGuides()
   ok &= unitTestWaveGuide1();
   rsAssert(ok);
 
+  // Preliminaries (PDE-solvers to produce reference signals):
   //testWaveEquation1D();
   //testWaveGuideNaiveImpulse();
-  testWaveGuide1();
-  //testWaveGuide2();
+
+  // Actual waveguide stuff:
+  //testWaveGuide1();
+  testWaveGuide2();
 }
 
 //=================================================================================================

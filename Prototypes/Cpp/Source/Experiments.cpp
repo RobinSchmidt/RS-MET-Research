@@ -18826,7 +18826,13 @@ void testWaveGuides()
 
   // ToDo: 
   // 
-  // -
+  // - Try using different lengths M1, M2 for the 2 delay lines in the waveguide model (take care 
+  //   to limit  mIn, mOut to min(M1, M2))
+  //
+  // - Let mIn and/or mOut vary over time. Maybe it can move through the delay line like the phase
+  //   pointer of a table lookup oscillator with its own frequency. Maybe we could even let M 
+  //   (or M1,M2) also vary over time. That would perhaps give us very nice dynamically evolving
+  //   sounds. 
 }
 
 //=================================================================================================

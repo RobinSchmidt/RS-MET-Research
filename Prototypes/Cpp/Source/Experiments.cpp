@@ -18518,7 +18518,6 @@ std::vector<T> rsSpikeCirculationWaveShift(int N, int M, int mIn, int mOut, T rL
 // but with yet another algorithm based on two delay lines. This algorithm implemented here is
 // basically the idea of implementing waveguides vai "bidirectional" delay lines. A "bidirectional"
 // delayline is basically a pair of two delaylines with mutual crossfeedback ...TBC...
-
 template<class T>
 std::vector<T> rsSpikeCirculationBiDelay(int N, int M, int mIn, int mOut, T rL, T rR)
 {
@@ -18539,28 +18538,20 @@ std::vector<T> rsSpikeCirculationBiDelay(int N, int M, int mIn, int mOut, T rL, 
   // indices of the positions are all flipped/reflected.
   // ToDo: Explain this in more detail!
 
-  // Allocate buffers to hold the output signals of the forward and backward propagating waves
-  // (typically denoted by y+ and y- in the literature which we denote by P,M for plus/minus here)
-  // and for the complete output wave which is just the sum of y+ and y-:
-  Vec yP(N), yM(N), y(N);  // y+[n], y-[n], y[n]
-  // Get rid of yP, yM. It's a remnant. We don't need them here.
-
-  // Run the model for N samples from the initial conditions without providing further input:
+  // Produce output signal:
+  Vec y(N);
   for(int n = 0; n < N; n++)
   {
     // During development, we may plot the contents of the delaylines to see what is going on:
     //rsPlotDelayLineContent(dl1, dl2, true);  // true: Reverse content of dl2
 
     // Get the outputs of the delay lines for implementing the reflection via crossfeedback:
-    T ref1 = dl1.readOutput();
-    T ref2 = dl2.readOutput();
+    T ref1 = dl1.readOutput();    // Reflected wave at right end
+    T ref2 = dl2.readOutput();    // Reflected wave at left end
 
     // Implement the mutual crossfeedback with inversion:
-    dl1.writeInput(-ref2);
-    dl2.writeInput(-ref1);
-    // ToDo: Use the reflection coeffs rL,rR. We need to establish a consistent convention for 
-    // which is which. rL is supposed to be the one at the left boundary which applies to the 
-    // left-going wave which is supposed to be contained in the 2nd (bottom) delayline.
+    dl1.writeInput(rL * ref2);    // Reflection at left end
+    dl2.writeInput(rR * ref1);    // Reflection at right end
 
     // Feed in inputs. We have nothing to do here because we have no ongoing input in this 
     // experiment. We only excite the string via initial conditions. I think, for feeding a 
@@ -18572,7 +18563,9 @@ std::vector<T> rsSpikeCirculationBiDelay(int N, int M, int mIn, int mOut, T rL, 
     // And I think, it's important to add the input before reading the output to get correct 
     // behavior when mIn == mOut. Verify this! Maybe to get correct behavior with mIn = 0 or 
     // mIn = M-1 (or M?), we should actually do this before picking up the reflections? Figure 
-    // this out and document it!
+    // this out and document it! But no! The .writeOutput() calls might then overwrite it, 
+    // right? So maybe we should add it after writeOutput. Or maybe we should just disallow
+    // mIn = 0 and mIn = M (or M-1).
 
     // Read out the outputs:
     T out1 = dl1.readOutputAt(  mOut);
@@ -18582,10 +18575,8 @@ std::vector<T> rsSpikeCirculationBiDelay(int N, int M, int mIn, int mOut, T rL, 
     dl1.incrementTapPointers();
     dl2.incrementTapPointers();
 
-    // Store partial and complete output signals:
-    yP[n] = out1;
-    yM[n] = out2;
-    y[n]  = yP[n] + yM[n];
+    // Store output signal:
+    y[n] = out1 + out2;
   }
 
   return y;

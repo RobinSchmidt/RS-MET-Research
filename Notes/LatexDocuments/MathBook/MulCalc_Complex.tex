@@ -168,17 +168,20 @@ It's time to define some more jargon. A complex function is said to be \emph{hol
 % Maybe at first, consider an integral along a straight line between two complex numbers $a,b$ parametrized as $c(t) = (1-t) a + t b$ for $t \in [0,1]$. We can then approximate more complicated paths by a bunch of such straight line segements.
 
 \subsubsection{The Polya Vector Field}
-In vector calculus, we were dealing with vector fields. These were vector valued functions with vectors as inputs. In this context, a 2D vector field was expressed as a pair of bivariate functions $u(x,y), v(x,y)$ and this is precisely the situation that we are dealing with here again but with a different notation. Here, we look at formally univariate functions $w = f(z)$ with the twist that inputs $z$ and outputs $w$ are complex numbers, so they actually package a 2D vector as well. It's reasonable to expect that we can transfer certain ideas back and forth between 2D vector calculus and complex calculus. For this we map a complex function $w = f(z)$ to the vector field:
-\begin{equation}
-w = f(z)
-\qquad \text{maps to:} \qquad
-u(x,y) = \Re(w), \; v(x,y) = -\Im(w)
-\quad \text{where} \quad
-x = \Re(z), \; y = \Im(z)
-\end{equation}
-It may see strange to negate the imaginary part of $w$ to produce $v$, but we will see a very compelling reason for doing this soon enough. This so produced 2D vector field is called the \emph{Polya vector field} associated with our complex function $f$. TODO: fix clash of notation: we previously used $v = \Im(w)$, so we shouldn't use the conflicting $v = -\Im(w)$ here
+In vector calculus, we were dealing with vector fields. These were vector valued functions with vectors as inputs. In this context, a 2D vector field was expressed as a pair of bivariate functions $u(x,y), v(x,y)$ and this is precisely the situation that we are dealing with here again but with a different notation. Here, we look at formally univariate functions $w = f(z)$ with the twist that inputs $z$ and outputs $w$ are complex numbers, so they actually package a 2D vector as well. It's reasonable to expect that we can transfer certain ideas back and forth between 2D vector calculus and complex calculus. ...TBC...
 
-% Maybe just use something like \bar{v} ot \hat{v}. The bar might be beset because we already use that notation for complex conjugation elsewhere. It's somewhat ugly though, to always carry around that bar
+%For this we map a complex function $w = f(z)$ to the vector field:
+%\begin{equation}
+%w = f(z)
+%\qquad \text{maps to:} \qquad
+%u(x,y) = \Re(w), \; v(x,y) = -\Im(w)
+%\quad \text{where} \quad
+%x = \Re(z), \; y = \Im(z)
+%\end{equation}
+%It may see strange to negate the imaginary part of $w$ to produce $v$, but we will see a very compelling reason for doing this soon enough. This so produced 2D vector field is called the \emph{Polya vector field} associated with our complex function $f$. TODO: fix clash of notation: we previously used $v = \Im(w)$, so we shouldn't use the conflicting $v = -\Im(w)$ here
+
+
+% Maybe just use something like \bar{v} ot \hat{v}. The bar might be beset because we already use that notation for complex conjugation elsewhere. It's somewhat ugly though, to always carry around that bar. Maybe use the notation $\mathbf{p (z)}$ where p is a 2D vector and z is also a 2D vector. That is consistent with our use of vector valued functions of vectors used previously. If we write the Polya vector field like that, it may not matter so much anymore how we call its 2nd component because we now have a notation to write the whole vector, so we may not need to reference its components so often anymore. But: the usual notation p_x, p_y to refecrence its components can't be used because we want to use that for partial derivatives. Maybe do indeed use u, \bar{v}. The second is ugly but we may try to avoid it in formulas as much as possible
 
 % It turns out that when $f$ is an analytic function
 
@@ -212,7 +215,7 @@ It turns out that when $f$ is an analytic function, its Polya vector field has s
 
 
 \subsubsection{Some Important Integrals}
-As in real analysis, integrals for integer power functions are very important. Just note that here, we are not computing indefinite integrals (aka antiderivatives) but rather contour integrals around a closed loop. The result of such an integration is not another function of $z$ but a (complex) number. For a function $f(z) = z^n$, these integrals are given by:
+In real analysis, integrals for integer power functions are very important as building blocks for evaluating more complicated integrals. For example, they could be used for integrating a power series term wise. There, integrating may have referred to either: finding an antiderivative (indefinite integration) or finding the area balance under a function (definite integration). In complex analysis, we are mostly concerned with definite integrals along contours (aka curves or paths) and most of the time, these contours will form closed loops. The result of such an integration is not another function of $z$ but a (complex) number. Again, contour integrals of integer power functions are a valuable building block for the evaluation of such integrals for more complicated functions. This is because for these, we have a nice and simple formula available and for more complicated functions, we can (due to linearity of integration) just add up the contributions of the individual monomial terms. For a monomial function $f(z) = z^n$, these contour integrals are given by:
 \begin{equation}
 \oint_{\gamma} z^n \; dz = 
 \begin{cases}
@@ -247,7 +250,7 @@ The coefficient $a_{-1}$ for $n=-1$ in the Laurent series expansion of $f(z)$ is
 \begin{equation}
 \Res(f,z_0) = a_{-1} = \frac{1}{2 \pi i} \oint_{\gamma} f(z) \; dz
 \end{equation}
-The name residue stems from the fact that it is the only things that remains after we do a contour integration around a closed loop around $z_0$. ...TBC...
+The name residue stems from the fact that it is the only thing that remains after we do a contour integration around a closed loop around $z_0$. ...TBC...
 
 
 

@@ -19037,9 +19037,10 @@ void testWaveGuide2()
   using DL   = RAPT::rsDelay<Real>;
   using Vec  = std::vector<Real>;
 
-  int M   =   10;            // Length of the delaylines
-  int mIn =    3;            // Input position (for strike, pluck, bow, etc.)
-  int N   =   81;            // Number of samples to render
+  int M    =  10;            // Length of the delaylines
+  int mIn  =   3;            // Input position (for strike, pluck, bow, etc.)
+  int mOut =   3;
+  int N    =  81;            // Number of samples to render
 
   // Smaller values for initial tests:
   //M = 10, mIn = 3, N = 50;
@@ -19048,8 +19049,8 @@ void testWaveGuide2()
   //M = 17, mIn = 3, N = 50;
 
   // Generate reference signal to match:
-  //Vec yL = rsCreateLeapFrogReference<Real>(N, M, mIn, mIn);
-  Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, mIn, mIn);
+  //Vec yL = rsCreateLeapFrogReference<Real>(N, M, mIn, mOut);
+  Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, mIn, mOut);
   // We need to use M+1 to match the period of the delayline based implementation. With M=10, we
   // get a period of 20. ToDo: Change rsCreateLeapFrogReference() such that we can pass it M 
   // directly as well. It should internally do the +1.
@@ -19104,24 +19105,43 @@ void testWaveGuide2()
     // the crossfeedback and then manually update (i.e. increment with wraparound) the tap 
     // pointers. Also compute the overall output as sum of out1 and out2
 
-    // Get the outputs of the delay lines:
-    Real out1 = dl1.readOutput();
-    Real out2 = dl2.readOutput();
+    // Get the outputs of the delay lines for implementing the reflection via crossfeedback:
+    Real ref1 = dl1.readOutput();
+    Real ref2 = dl2.readOutput();
 
     // Implement the mutual crossfeedback with inversion:
     //dl1.addToInput(-out2);
     //dl2.addToInput(-out1);
-    dl1.writeInput(-out2);
-    dl2.writeInput(-out1);
+    dl1.writeInput(-ref2);
+    dl2.writeInput(-ref1);
     // Maybe instead of addToInput(), we should do something like setInput() or writeInput(). I 
     // think, we want to overwrite the content instead of adding to what is already there.
 
+    // Feed in inputs. We have nothing to do here because we have no ongoing input in this 
+    // experiment. We only excite the string via initial conditions. I think, for feeding a 
+    // continuous input into the string at the mIn, we'd have to do something like:
+    // 
+    // dl1.addToInputAt(mIn, 0.5 * inputSignal);
+    // dl2.addToInputAt(mIn, 0.5 * inputSignal);
+    //
+    // And I think, it's important to add the input before reading the output to get correct 
+    // behavior when mIn == mOut. Verify this! Maybe to get correct behavior with mIn = 0 or 
+    // mIn = M-1 (or M?), we should actually do this before picking up the reflections?
 
+    // Read out the outputs:
+    Real out1 = dl1.readOutputAt(mOut);
+    Real out2 = dl2.readOutputAt(mOut);
 
     // Update the tap pointers in the delaylines:
     dl1.incrementTapPointers();
     dl2.incrementTapPointers();
-    // Maybe let it take an (optional) argument and pass +1 to dl1 and -1 to dl2.
+    // Maybe let it take an (optional) argument and pass +1 to dl1 and -1 to dl2 in order to 
+    // literally implement a bidirectional movement. But maybe not. Maybe for visualiation of the
+    // left and right traveling wvae components, we can just reflect the content of one of the 
+    // delaylines. Maybe in a block diagram use the upper delayline for the right-traveling wave 
+    // and the lower for the left travieling wave. That is consistent with the usual way to depict
+    // delaylines with a feedback path. I usually put the feedback path at the bottom. PASP
+    // also does it this way (see e.g. pg 31).
 
     //dl2.addToInput(-out1);
 

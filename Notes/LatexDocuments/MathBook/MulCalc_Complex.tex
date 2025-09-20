@@ -29,7 +29,7 @@ we already know what we would have to do to evaluate them for any given input $z
 
 
 \subsubsection{Roots, Multifunctions and Algebraic Functions}
-Consider the square root function again. In the definition of the real valued $f(x) = \sqrt{x}$, we already saw a foreshadowing of a potential problem. First of all, we noticed that some real numbers - namely the negative numbers - had no square roots at all. Some other real numbers - the positive ones - actually had two square roots. The two square roots of $4$ are $+2$ and $-2$, for example. We kind of dodged these issues by just saying that for negative inputs, the square root is undefined and for positive input, \emph{the} square root is \emph{defined} to be the positive solution. In the context of complex analysis, we will have to take this issue more seriously. 
+Consider the square root function again. In the definition of the real valued $f(x) = \sqrt{x}$, we already saw a foreshadowing of a potential problem. First of all, we noticed that some real numbers - namely the negative numbers - had no square roots at all. Some other real numbers - the positive ones - actually had two square roots. The two square roots of $4$ are $+2$ and $-2$, for example. In the more elementary chapters, we kind of dodged these issues by just saying that for negative inputs, the square root is undefined and for positive input, \emph{the} square root is \emph{defined} to be the positive solution. In the context of complex analysis, we will have to take this issue more seriously and resolve it in a more principled (but much more complicated) way.
 
 \medskip
 Let's first consider the problem of being unable to meaningfully define the square root for negative inputs. In the realm of complex numbers, that problem goes away completely. The purpose of defining $\i = \sqrt{-1}$ was precisely to deal with that situation. To evaluate $\sqrt{-4}$, we re-express it as $\sqrt{4} \sqrt{-1}$ using our usual laws for square roots to arrive at the solution $\sqrt{-4} = 2 \i$. And in case you wonder (you should!): yes - it is indeed allowed to use these laws. They continue to hold in the complex case. But again, $2 \i$ is not the only possible solution and $-2 \i$ is just as good a solution. Again, we actually have found two solutions. You can verify this by just squaring $2 \i$ and $-2 \i$. In both cases, you'll get $-4$.
@@ -49,7 +49,7 @@ where we have expressed $c$ in its polar form as $c = r e^{\i \phi}$ with $r = |
 ...TBC...
 
 \paragraph{The Roots of Unity}
-Let's have a look at the equation $z^n = 1$ for some given positive integer $n$. The complex numbers that solve that equation are called the $n$th roots of unity. Geometrically, they are the vertices of an $n$-sided regular polygon that has one of its corners at $z = 1$. ...tbc...
+Let's have a look at the equation $z^n = 1$ for some given positive integer $n$. The complex numbers that solve that equation are called the $n$th roots of unity. Geometrically, they are the vertices of an $n$-sided regular polygon that is centered at the origin and has one of its corners at $z = 1$. ...tbc...
 
 %\medskip
 %Indeed, the equation $z^n = c$ has $n$ solutions
@@ -64,7 +64,7 @@ Let's have a look at the equation $z^n = 1$ for some given positive integer $n$.
 % https://en.wikipedia.org/wiki/Riemann_surface
 
 \subsubsection{Exponential and Trigonometric functions}
-Extending the domains of rational and algebraic functions from the real to the complex numbers was a straightforward process requiring only some algebra. The $n$th roots are a bit messy to deal with because we needed to introduce the concept of multivalued functions but they nevertheless did not require much higher level math tools to define. To extend the domains of the exponential and trigonometric functions, we'll need a bigger gun from calculus: power series. The nice thing about power series is that in order to evaluate them, we only need to know how to perform additions and multiplications - and we actually indeed do know, how to add and multiply complex numbers! Using the power series representation of a function is a very common technique in math whenever we desire to define functions of arguments that are not simple numbers. The same idea can also be applied to matrices, multivectors and even operators. But here, we are interested in complex numbers. Let's recall the power series of some functions:
+Extending the domains of rational and algebraic functions from the real to the complex numbers was a straightforward process requiring only some algebra. The $n$th roots are a bit messy to deal with because we needed to introduce the concept of multivalued functions but they nevertheless did not require much higher level math tools to define. To extend the domains of the exponential and trigonometric functions, we'll need a bigger gun from calculus: power series. The nice thing about power series is that in order to evaluate them, we only need to know how to perform additions and multiplications - and we actually indeed do know, how to add and multiply complex numbers! Using the power series representation of a function is a very common technique in math whenever we desire to define functions of arguments that are not simple numbers but for which we nevertheless know how to add them, multiply them and scale them by real numbers\footnote{We need addition to perform the summation, multiplication to form the powers and scaling to apply the coefficients.}. None of these operations are a problem here. We indeed can do all these operations with complex numbers. The same idea can also be applied to matrices, multivectors and even operators. But here, we are interested in complex numbers. Let's recall the power series of some functions:
 \begin{equation}
  \exp(x) = e^x = \sum_{k=0}^{\infty} \frac{x^k}{k!}, \quad
  \sin(x) =  \sum_{k=0}^{\infty} ...
@@ -169,7 +169,11 @@ u(x,y) = \Re(w), \; v(x,y) = -\Im(w)
 \quad \text{where} \quad
 x = \Re(z), \; y = \Im(z)
 \end{equation}
-It may see strange to negate the imaginary part of $w$ to produce $v$, but we will see a very compelling reason for doing this soon enough. 
+It may see strange to negate the imaginary part of $w$ to produce $v$, but we will see a very compelling reason for doing this soon enough. This so produced 2D vector field is called the \emph{Polya vector field} associated with our complex function $f$. TODO: fix clash of notation: we previously used $v = \Im(w)$, so we shouldn't use the conflicting $v = -\Im(w)$ here
+
+% It turns out that when $f$ is an analytic function
+
+% Ahh - damn! This notation of u,v clashes with our previous usage of v and Im(w) rather tahen -Im(w). What can we do? maybe use p,q instead of u,v. We would have p=u, q=-v. P is nice because it's the first letter of Polya. Or maybe just use p = -v and keep using u as is.
 
 
 
@@ -178,6 +182,9 @@ It may see strange to negate the imaginary part of $w$ to produce $v$, but we wi
 % Irrotational vector fields have a symmetric Jacobian (by the second fundamental theorem for potential fields). Holomorphic functions have antisymmetric Jacobians. Maybe that's the reason we need to negate the imaginary part? Wait - no - it's actually antisymmetric plus a nonzero main diagonal
 
 \paragraph{The Polya Potential}
+It turns out that when $f$ is an analytic function, its Polya vector field has some very nice properties that simplify a lot of vector analytic calculations (like evaluating line integrals). Let's recall that analyticity of $f$ means that $f$ satisfies the Cauchy-Riemann equations. ...TBC...Explain that the Polya vector field is curl-free due to one of the equations and divergence-free due to the other one (tell which is which!). Explain that the curl-free property alone qualifies it as a potential field and that divergence-free property is another nice feature on top. Explain which of the properties we would lose if we wouldn't do the negation of the imaginary part (maybe both?). Explain how to calculate the potential.
+
+% I think it's the divergence-free property that rules out minima and maxima in the potential. All stationary points are saddles
 
 
 

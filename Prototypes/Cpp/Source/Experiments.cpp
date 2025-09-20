@@ -18382,6 +18382,18 @@ void rsWaveShiftStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
 //-------------------------------------------------------------------------------------------------
 // Generation of signals using the different steppers:
 
+/** Implements the 1D wave equation using a leapfrog integration scheme. ...TBC...
+
+  N:    Number of signal samples to produce
+  M:    Number of spatial samples along the string minus 1 (!)
+  mIn:  Point of initial excitation spike for the displacement
+  mOut: Pickup point for output signal
+
+It turns out that it is more convenient to use M+1 sample points rather than M because the output
+signal's period will then be exactly 2M and the number M will also be consistent with the actual 
+lengths of the delay lines used in the waveguide implementation. I think, the physical 
+interpretation of M could be the number of string segments between the actual spatial sample 
+points along the string. */
 template<class T>
 std::vector<T> rsSpikeCirculationLeapFrog(int N, int M, int mIn, int mOut)
 {
@@ -18389,7 +18401,7 @@ std::vector<T> rsSpikeCirculationLeapFrog(int N, int M, int mIn, int mOut)
   using WE  = rsWaveEquation1D_Proto<T>;
 
   // Allocate string and set up initial conditions:
-  Vec u(M), u1(M);               // ToDo: Use M+1
+  Vec u(M+1), u1(M+1);               // ToDo: Use M+1
   u[mIn] = 1.0;
   WE::initForLeapFrog(u, u1);
 
@@ -18403,13 +18415,6 @@ std::vector<T> rsSpikeCirculationLeapFrog(int N, int M, int mIn, int mOut)
   }
   return y;
 }
-// Maybe rename to rsCreateLeapFrogSpikeCirculation and rename the functions below also 
-// accordingly. Document the function. It creates the output of a model of the 1D wave equation 
-// (for an e.g. physical string) when the input is a single spike like displacement excitation.
-// The model uses the leapfrog integration scheme. Maybe use a string length of M+1 to be 
-// consistent with the waveguides. Using M+1 results in a period P of P = 2M for the output 
-// signal. Otherwise it would be 2*(M-1) which is inconvenient.
-// rsCreateCirclingSpikeLeapFrog, rsSpikeCirculationLeapFrog
 
 // Is supposed to produce the same signal as rsSpikeCirculationLeapFrog() but with a different
 // algorithm ...TBC...
@@ -18419,7 +18424,7 @@ std::vector<T> rsSpikeCirculationWaveShift(int N, int M, int mIn, int mOut, T rL
   using Vec = std::vector<T>;
 
   // Allocate waveguide and set up initial conditions:
-  Vec wL(M), wR(M);         // ToDo: Use M+1
+  Vec wL(M+1), wR(M+1);         // ToDo: Use M+1
   wL[mIn] = wR[mIn] = 0.5;
 
   // Produce output signal:
@@ -18521,7 +18526,7 @@ bool unitTestWaveShift()
   using WE   = rsWaveEquation1D_Proto<Real>;
 
   // Setup:
-  int  minM =   2;     // 2 is the minimum allowed size
+  int  minM =   1;     // 1 is the minimum allowed size
   int  maxM =  15;
   int  seed = 341;     // Seed for PRNG for initatialization
   Real tol  = 0.0;     // Tolerance for numeric equality (Try going lower! Can we use 0?)
@@ -18534,12 +18539,12 @@ bool unitTestWaveShift()
   for(int M = minM; M <= maxM; M++)    // Loop over the lengths
   {
     // Create a random initial displacement distribution:
-    Vec uInit = rsRandomIntVector(M, -5, +5, seed+M);
-    uInit[0] = uInit[M-1] = 0.0;
+    Vec uInit = rsRandomIntVector(M+1, -5, +5, seed+M);
+    uInit[0] = uInit[M] = 0.0;
 
     // Create and init state variables for leapfrog solver:
     Vec u = uInit;
-    Vec u1(M);
+    Vec u1(M+1);
     WE::initForLeapFrog(u, u1);
 
     // Create and init state variables for shifting solver:
@@ -18557,7 +18562,7 @@ bool unitTestWaveShift()
     {
       // Form the displacement wave by adding left and right travelling wave:
       Vec w = wL + wR;
-      w[0] = w[M-1] = 0;
+      w[0] = w[M] = 0;
       // Unlike the displacement wave u of the leapfrog algo, the shifting algo does not fix w
       // to zero at the boundary points, so we set them to zero manually here such that the 
       // following comparison test checks only the interior points. Only these are relevant for
@@ -18623,9 +18628,9 @@ bool unitTestWaveGuideSpike()
   // Maybe we should consider M+1 rather than M?
 
   // Generate reference signal to match:
-  Vec yL = rsSpikeCirculationLeapFrog<Real>(N, M+1, mIn, mOut            );
-  Vec yS = rsSpikeCirculationWaveShift(     N, M+1, mIn, mOut, -1.0, -1.0);
-  Vec yW = rsSpikeCirculationBiDelay(       N, M,   mIn, mOut, -1.0, -1.0);
+  Vec yL = rsSpikeCirculationLeapFrog<Real>(N, M, mIn, mOut            );
+  Vec yS = rsSpikeCirculationWaveShift(     N, M, mIn, mOut, -1.0, -1.0);
+  Vec yW = rsSpikeCirculationBiDelay(       N, M, mIn, mOut, -1.0, -1.0);
   ok &= yS == yL;
   ok &= yW == yL;
   //rsPlotVectors(yL, yS, yW);
@@ -18637,11 +18642,12 @@ bool unitTestWaveGuideSpike()
   // so we only compare the bi-delay algo to the shifting algo:
   Real rL =  0.8;
   Real rR = -0.9;
-  yS = rsSpikeCirculationWaveShift(N, M+1, mIn, mOut, rL, rR);
-  yW = rsSpikeCirculationBiDelay(  N, M,   mIn, mOut, rL, rR);
+  yS = rsSpikeCirculationWaveShift(N, M, mIn, mOut, rL, rR);
+  yW = rsSpikeCirculationBiDelay(  N, M, mIn, mOut, rL, rR);
   ok &= yS == yW;
-  rsPlotVectors(yS, yW);
+  //rsPlotVectors(yS, yW);
 
+  rsAssert(ok);
   return ok;
 
 
@@ -18656,8 +18662,11 @@ bool unitTestWaveGuideSpike()
   //
   // ToDo:
   // 
-  // - Turn this into a unit test that takes M, mIn, mOut as parameters and produces the 
-  //   recirculating spike with all 3 available algorithms and makes sure that they all match.
+  // - Turn this into a unit test that takes M, mIn, mOut as parameters and then implement a 
+  //   driver that lets all 3 loop trough minM..maxM maybe using minM = 1, maxM = 25. That would 
+  //   do 25^3 = 15625 tests. Maybe a bit excessive. Maybe do not use all values between 1 and 25
+  //   and/or maybe use a lower maxM. The minM should indeed be 1 to include the edge cases. Maybe
+  //   mIn, mOut should even start at zero rather than 1.
   // 
   // - Write a function rsCreateWaveGuideReference analogous to rsCreateLeapFrogReference() and 
   //   then implement a unit test that compares the outputs of the two algorithms for a range of
@@ -18813,12 +18822,11 @@ void testWaveGuides()
   rsAssert(ok);
 
   // Experiments:
-  //testWaveEquation1D();
-  //testWaveGuide1();
+  testWaveEquation1D();
 
   // ToDo: 
   // 
-  // - Fix mismatch of using sometimes M and sometimes M+1 to get the signal period right
+  // -
 }
 
 //=================================================================================================

@@ -18716,8 +18716,10 @@ void testWaveEquation1D()
   //   each spatial sample along the string. Verify and document this! 
 }
 
-void testWaveGuide2()
+bool unitTestWaveGuideSpike()
 {
+  bool ok = true;
+
   using Real = double;
   using DL   = RAPT::rsDelay<Real>;
   using Vec  = std::vector<Real>;
@@ -18731,17 +18733,27 @@ void testWaveGuide2()
   // "happy coincidence". I think mutual primeness will rule out such happy coincidences (verify!).
   // Maybe we should consider M+1 rather than M?
 
-  // I think, the initial delay for the spike to sho up in the plot is given by mOut-mIn
+  //Real tol = 0.0;
+
+
 
   // Generate reference signal to match:
-  Vec yL = rsSpikeCirculationLeapFrog<Real>(N, M+1, mIn, mOut);
-  // We need to use M+1 to match the period of the delayline based implementation. With M=10, we
-  // get a period of 20. ToDo: Change rsCreateLeapFrogReference() such that we can pass it M 
-  // directly as well. It should internally do the +1.
- 
-  Vec yW = rsSpikeCirculationBiDelay(N, M, mIn, mOut, -1.0, -1.0);
+  Vec yL = rsSpikeCirculationLeapFrog<Real>(N, M+1, mIn, mOut            );
+  Vec yS = rsSpikeCirculationWaveShift(     N, M+1, mIn, mOut, -1.0, -1.0);
+  Vec yW = rsSpikeCirculationBiDelay(       N, M,   mIn, mOut, -1.0, -1.0);
+  // We need to use M+1 in the first two implementations to match the period of the delayline based
+  // implementation. With M=10, we get a period of 20. ToDo: Change rsCreateLeapFrogReference() 
+  // such that we can pass it M directly as well. It should internally do the +1.
 
-  rsPlotVectors(yL, yW, yW-yL); // Waveguide output vs leapfrog reference and error
+  ok &= yS == yL;
+  ok &= yW == yL;
+  //rsPlotVectors(yL, yS, yW);  // Uncomment when something goes wrong!
+
+  return ok;
+
+
+
+  //rsPlotVectors(yL, yW, yW-yL); // Waveguide output vs leapfrog reference and error
 
   // Observations:
   //
@@ -18749,6 +18761,8 @@ void testWaveGuide2()
   //   mismatch by using M+1 inside the implementation of the leapfrog algo. M is the more 
   //   convenient parametrization compared to M+1 because the period length is then exactly 2M.
   //
+  // - I think, the initial delay for the spike to show up in the output is given by mOut-mIn
+  // 
   //
   // ToDo:
   // 
@@ -18793,6 +18807,7 @@ void testWaveGuides()
 {
   bool ok = true;
   ok &= unitTestWaveShift();
+  ok &= unitTestWaveGuideSpike();
   rsAssert(ok);
 
   // Preliminaries (PDE-solvers to produce reference signals):
@@ -18800,7 +18815,6 @@ void testWaveGuides()
 
   // Actual waveguide stuff:
   //testWaveGuide1();
-  testWaveGuide2();
 }
 
 //=================================================================================================

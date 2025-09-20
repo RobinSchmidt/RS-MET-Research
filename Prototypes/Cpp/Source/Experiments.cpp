@@ -19039,7 +19039,7 @@ void testWaveGuide2()
 
   int M   =   10;            // Length of the delaylines
   int mIn =    3;            // Input position (for strike, pluck, bow, etc.)
-  int N   =   30;            // Number of samples to render
+  int N   =   81;            // Number of samples to render
 
   // Smaller values for initial tests:
   //M = 10, mIn = 3, N = 50;
@@ -19048,7 +19048,11 @@ void testWaveGuide2()
   //M = 17, mIn = 3, N = 50;
 
   // Generate reference signal to match:
-  Vec yL = rsCreateLeapFrogReference<Real>(N, M, mIn, mIn);
+  //Vec yL = rsCreateLeapFrogReference<Real>(N, M, mIn, mIn);
+  Vec yL = rsCreateLeapFrogReference<Real>(N, M+1, mIn, mIn);
+  // We need to use M+1 to match the period of the delayline based implementation. With M=10, we
+  // get a period of 20. ToDo: Change rsCreateLeapFrogReference() such that we can pass it M 
+  // directly as well. It should internally do the +1.
  
   // Create the delaylines and set up the delay time in samples:
   DL dl1, dl2;  // Maybe rename to dlP, dlM where P,M stands for "plus","minus" or to 
@@ -19116,8 +19120,8 @@ void testWaveGuide2()
 
 
   // Plot the produced signals:
-  rsPlotVectors(y, yP, yM);
   rsPlotVectors(y, yL);      // Waveguide output vs leapfrog reference
+  rsPlotVectors(y, yP, yM);
   int dummy = 0;
 
   // ToDo:

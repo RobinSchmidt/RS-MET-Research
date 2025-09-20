@@ -18342,7 +18342,8 @@ void rsShiftRight(std::vector<T>& v)
   v[0] = T(0);
 }
 
-/** Performs a single update step in a naive waveguide implementation. The vectors wL,wR are the 
+/** Performs a single update step in a naive waveguide implementation using explicit shifting of
+the contents of the buffers with some special care for the reflections. The vectors wL,wR are the
 buffers for the leftward and rightward traveling wave components and rL,rR are the reflection
 coefficients at the left and right boundary respectively. For a lossless waveguide, they should 
 both have an absolute value of 1. If both are -1, this corresponds to boundary conditions where the
@@ -18371,7 +18372,7 @@ a sine is a cosine. I think, we could also use the real part for displacement an
 imaginary part for the velocity (derivative). We need to negate because the derivative of cosine is
 minus sine. Verify this!  */
 template<class T>
-void rsWaveGuideStep1(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
+void rsWaveShiftStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
 {
   rsAssert(wL.size() >= 2, "Size of the buffers must be at least 2");
   rsAssert(rsAreSameSize(wL, wR), "Sizes of buffers for leftward and rightward wave must match");
@@ -18428,34 +18429,7 @@ void rsWaveGuideStep1(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
 }
 // rename to rsStepWaveGuide1 or rsReflectiveShift, 
 
-// Simliar to testWaveGuideNaiveImpulse() but it takes the values N,M,etc. as parameter and also
-// produces an output signal. This is meant to be used to produce reference outputs via the naive
-// waveguide algo that can be compared against outputs produced by more efficient algos:
-template<class T>
-std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL, T rR)
-{
-  using Vec  = std::vector<T>;
 
-  // Allocate waveguide and set up initial conditions:
-  Vec wL(M), wR(M);
-  wL[mIn] = wR[mIn] = 0.5;
-
-  // Produce output signal:
-  Vec y(N);
-  for(int n = 0; n < N; n++)
-  {
-    //rsPlotVectors(wL, wR);             // Plot the traveling wave components
-    y[n] = wL[mOut] + wR[mOut];        // Read out output signal at mOut
-    rsWaveGuideStep1(wL, wR, rL, rR);   // Advance the traveling waves by one time step
-  }
-  return y;
-
-  // Maybe rename to something like rsGetWaveGuideNaiveImpulseOutput(...) and use it in 
-  // testWaveGuideNaiveImpulse(). Maybe give it a boolean switch for plotting or not plotting.
-  // Being able to switch plotting on and off by the caller may be useful for debugging.
-
-  // Maybe use rsWaveGuideStep2, rsWaveGuideStep3, etc. ...or maybe make it switchable
-}
 
 template<class T>
 std::vector<T> rsCreateLeapFrogReference(int N, int M, int mIn, int mOut)
@@ -18478,6 +18452,38 @@ std::vector<T> rsCreateLeapFrogReference(int N, int M, int mIn, int mOut)
   }
   return y;
 }
+
+
+
+// Simliar to testWaveGuideNaiveImpulse() but it takes the values N,M,etc. as parameter and also
+// produces an output signal. This is meant to be used to produce reference outputs via the naive
+// waveguide algo that can be compared against outputs produced by more efficient algos:
+template<class T>
+std::vector<T> rsCreateWaveShiftReference(int N, int M, int mIn, int mOut, T rL, T rR)
+{
+  using Vec  = std::vector<T>;
+
+  // Allocate waveguide and set up initial conditions:
+  Vec wL(M), wR(M);
+  wL[mIn] = wR[mIn] = 0.5;
+
+  // Produce output signal:
+  Vec y(N);
+  for(int n = 0; n < N; n++)
+  {
+    //rsPlotVectors(wL, wR);             // Plot the traveling wave components
+    y[n] = wL[mOut] + wR[mOut];        // Read out output signal at mOut
+    rsWaveShiftStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
+  }
+  return y;
+
+  // Maybe rename to something like rsGetWaveGuideNaiveImpulseOutput(...) and use it in 
+  // testWaveGuideNaiveImpulse(). Maybe give it a boolean switch for plotting or not plotting.
+  // Being able to switch plotting on and off by the caller may be useful for debugging.
+
+  // Maybe use rsWaveGuideStep2, rsWaveGuideStep3, etc. ...or maybe make it switchable
+}
+
 
 bool unitTestWaveGuide1()
 {
@@ -18537,7 +18543,7 @@ bool unitTestWaveGuide1()
       //rsPlotVectors(u, w);
 
       // Advance the left/right traveling waves wL,wR by one time step via the shifting algo:
-      rsWaveGuideStep1(wL, wR, rL, rR);
+      rsWaveShiftStep(wL, wR, rL, rR);
 
       // Advance the displacement wave via the leapfrog scheme:
       WE::stepLeapFrog(u, u1);
@@ -18605,7 +18611,7 @@ void testWaveGuideNaiveImpulse()
   {
     y[n] = wL[m] + wR[m];
     //rsPlotVectors(  wL, wR);           // Plot the traveling wave components
-    rsWaveGuideStep1(wL, wR, rL, rR);  // Advance the traveling waves by one time step
+    rsWaveShiftStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
     // Maybe have a function  rsWaveGuideStep(wL, wR, rL, rR, algo);  which lets us switch between
     // different methods for doing the time step
   }
@@ -18615,7 +18621,7 @@ void testWaveGuideNaiveImpulse()
 
   // Let's try to use the function that is supposed to create the same output signal and compare
   // the results:
-  Vec yR = rsCreateWaveGuideReference(N, M, m, m, rL, rR);
+  Vec yR = rsCreateWaveShiftReference(N, M, m, m, rL, rR);
   //rsPlotVectors(y, yR);
   bool ok = y == yR;
   rsAssert(ok);
@@ -18830,7 +18836,7 @@ void testWaveGuide1()
 
 
   // Produce reference output via naive algorithm:
-  Vec yR = rsCreateWaveGuideReference(N, M, mIn, mOut, rL, rR);
+  Vec yR = rsCreateWaveShiftReference(N, M, mIn, mOut, rL, rR);
   // The total length M is M1+M2. The input is injected at M1. The output is picked up also at M1. 
 
   Vec yL = rsCreateLeapFrogReference<Real>(N, M, mIn, mOut);

@@ -19038,7 +19038,7 @@ void testWaveGuide2()
   using Vec  = std::vector<Real>;
 
   int M   =   10;            // Length of the delaylines
-  int mIn =    5;            // Input position (for strike, pluck, bow, etc.)
+  int mIn =    3;            // Input position (for strike, pluck, bow, etc.)
   int N   =   81;            // Number of samples to render
 
   // Smaller values for initial tests:
@@ -19063,21 +19063,22 @@ void testWaveGuide2()
   dl2.setDelayInSamples(M);
 
   // Set up initial condition of the string:
-  //dl1.addToInputAt(0.5, mIn);
-  //dl2.addToInputAt(0.5, M-mIn);
-  //dl2.addToInputAt(0.5, M-mIn-1);  // Why -1?
-  //dl2.addToInputAt(0.5, mIn);
+  dl1.addToInputAt(0.5, mIn);
+  dl2.addToInputAt(0.5, mIn);
+  // I think, this is wrong!
 
-  int k = 3;
-  dl1.addToInputAt(0.5, k);
-  dl2.addToInputAt(0.5, k);
+  // Test:
+  //int k = 3;
+  //dl1.addToInputAt(0.5, k);
+  //dl2.addToInputAt(0.5, k);
   // For M = 3, we try all possible combinations for the delays from (0,0) to (3,3)
   // None works!. Let's try M = 2. nope! That doesn't give a signal at all. Oh writing at 0,0
   // produces a zero signal.
   // Maybe try again with M=3 and try to match only the shape. The delay may be adjusted later
   // I think, the first spike in the output appears at n = M-k
   // OK: with: M=10, mIn=5, k=3, both signals have the same shape but are shifted with respect to
-  // one another
+  // one another by 7 samples. M=10, mIn=6, k=4 does not work. Neither does M=10, mIn=5, k=2.
+  // Maybe we have to add the inputs into the delaylines with different signs?
 
 
   // ToDo: maybe use clear() initially and/or use a function like writeInputAt() which overwrites
@@ -19128,6 +19129,8 @@ void testWaveGuide2()
     yP[n] = out1;
     yM[n] = out2;
     y[n]  = yP[n] + yM[n];
+    // I think, maybe we need to produce the outputs differently! The purpose of out1, out1 is
+    // only to recirculate the signal. Obtaining the output is yet a whole different story.
   }
   // The delayline content looks still wrong!
 

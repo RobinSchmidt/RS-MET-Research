@@ -18748,6 +18748,11 @@ void rsSetDelay(RAPT::rsDelay<T>* delayLine, int delayInSamples)
 
 void testWaveGuide1()
 {
+  // I couldn't get this to work but now that testWaveGuide2() actually works, it doesn't seem 
+  // worthwile to keep trying because the other way implemented there is actually better anyway.
+  // So this function may be deleted at some point. But an adapted version of the description 
+  // below should be kept and added to testWaveGuide2().
+
   // We implement a waveguide using 4 delaylines as shown in PASP, Fig 2.13 page 50 or here:
   // 
   //   https://ccrma.stanford.edu/~jos/pasp/Physical_Outputs.html
@@ -19171,6 +19176,10 @@ void testWaveGuide2()
   int dummy = 0;
 
   // ToDo:
+  // 
+  // - Write a function rsCreateWaveGuideReference analogous to rsCreateLeapFrogReference() and 
+  //   then implement a unit test that compares the outputs of the two algorithms for a range of
+  //   settings for M, mIn, mOut.
   //
   // - Set up the delaylines in a mutual feedback loop. dl1 feeds into dl2 and vice versa. I think,
   //   when we model a string with fixed ends, the feedback should be inverting which means that in

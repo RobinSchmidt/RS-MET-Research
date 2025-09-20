@@ -19071,10 +19071,9 @@ void testWaveGuide2()
   // Maybe rename to dlP, dlM where P,M stands for "plus","minus" or to  dlL, dlR where L,R means
   // "left","right". Or maybe just use dL,dR. 
 
-  dl1.setMaxDelayInSamples(M);
-  dl2.setMaxDelayInSamples(M);
-  dl1.setDelayInSamples(M);
-  dl2.setDelayInSamples(M);
+  rsSetDelay(&dl1, M);
+  rsSetDelay(&dl2, M);
+
 
   // Set up initial condition of the string:
   dl1.addToInputAt(0.5,   mIn);
@@ -19082,24 +19081,6 @@ void testWaveGuide2()
   // In the 2nd delayline, we need to use M-mIn because this delayline runs "backwards" so the 
   // indices of the positions are all flipped/reflected.
   // ToDo: Explain this in more detail!
-
-  // Test:
-  //int k = 3;
-  //dl1.addToInputAt(0.5, k);
-  //dl2.addToInputAt(0.5, k);
-  // For M = 3, we try all possible combinations for the delays from (0,0) to (3,3)
-  // None works!. Let's try M = 2. nope! That doesn't give a signal at all. Oh writing at 0,0
-  // produces a zero signal.
-  // Maybe try again with M=3 and try to match only the shape. The delay may be adjusted later
-  // I think, the first spike in the output appears at n = M-k
-  // OK: with: M=10, mIn=5, k=3, both signals have the same shape but are shifted with respect to
-  // one another by 7 samples. M=10, mIn=6, k=4 does not work. Neither does M=10, mIn=5, k=2.
-  // Maybe we have to add the inputs into the delaylines with different signs?
-
-
-  // ToDo: maybe use clear() initially and/or use a function like writeInputAt() which overwrites
-  // instead of accumulating
-
 
   // Allocate buffers to hold the output signals of the forward and backward propagating waves
   // (typically denoted by y+ and y- in the literature which we denote by P,M for plus/minus here)
@@ -19113,24 +19094,14 @@ void testWaveGuide2()
     // During development, we may plot the contents of the delaylines to see what is going on:
     //rsPlotDelayLineContent(dl1, dl2, true);  // true: Reverse content of dl2
 
-    // Preliminary:
-    //Real out1 = dl1.getSample(0.0);
-    //Real out2 = dl2.getSample(0.0);
-    // ToDo: Pull the output samples out of the delaylines without updating the tap pointers, apply
-    // the crossfeedback and then manually update (i.e. increment with wraparound) the tap 
-    // pointers. Also compute the overall output as sum of out1 and out2
-
     // Get the outputs of the delay lines for implementing the reflection via crossfeedback:
     Real ref1 = dl1.readOutput();
     Real ref2 = dl2.readOutput();
 
     // Implement the mutual crossfeedback with inversion:
-    //dl1.addToInput(-out2);
-    //dl2.addToInput(-out1);
     dl1.writeInput(-ref2);
     dl2.writeInput(-ref1);
-    // Maybe instead of addToInput(), we should do something like setInput() or writeInput(). I 
-    // think, we want to overwrite the content instead of adding to what is already there.
+    // ToDo: allow using arbitrary refelction coeffs.
 
     // Feed in inputs. We have nothing to do here because we have no ongoing input in this 
     // experiment. We only excite the string via initial conditions. I think, for feeding a 
@@ -19150,30 +19121,16 @@ void testWaveGuide2()
     // Update the tap pointers in the delaylines:
     dl1.incrementTapPointers();
     dl2.incrementTapPointers();
-    // Maybe let it take an (optional) argument and pass +1 to dl1 and -1 to dl2 in order to 
-    // literally implement a bidirectional movement. But maybe not. Maybe for visualiation of the
-    // left and right traveling wvae components, we can just reflect the content of one of the 
-    // delaylines. Maybe in a block diagram use the upper delayline for the right-traveling wave 
-    // and the lower for the left travieling wave. That is consistent with the usual way to depict
-    // delaylines with a feedback path. I usually put the feedback path at the bottom. PASP
-    // also does it this way (see e.g. pg 31).
-
-    //dl2.addToInput(-out1);
 
     // Store partial and complete output signals:
     yP[n] = out1;
     yM[n] = out2;
     y[n]  = yP[n] + yM[n];
-    // I think, maybe we need to produce the outputs differently! The purpose of out1, out1 is
-    // only to recirculate the signal. Obtaining the output is yet a whole different story.
   }
-  // The delayline content looks still wrong!
-
 
   // Plot the produced signals:
-  rsPlotVectors(yL, y);      // Waveguide output vs leapfrog reference
-  //rsPlotVectors(y, yP, yM);
-  int dummy = 0;
+  rsPlotVectors(yL, y, y-yL);  // Waveguide output vs leapfrog reference and error
+  rsPlotVectors(y, yP, yM);    // Waveguide output and its right and left going components
 
   // ToDo:
   // 

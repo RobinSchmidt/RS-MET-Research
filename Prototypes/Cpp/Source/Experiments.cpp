@@ -18558,6 +18558,11 @@ std::vector<T> rsCreateWaveGuideReference(int N, int M, int mIn, int mOut, T rL,
   }
 
   return y;
+
+  // See:
+  // https://ccrma.stanford.edu/~jos/pasp/Digital_Waveguide_Modeling_Elements.html
+  // https://ccrma.stanford.edu/~jos/pasp/Physical_Outputs.html
+  // https://ccrma.stanford.edu/~jos/pasp/Physical_Inputs.html
 }
 
 
@@ -18656,6 +18661,7 @@ bool unitTestWaveGuide1()
   //   function.
 }
 
+// This is mostly obsolete:
 void testWaveGuideNaiveImpulse()
 {
   // Naive implementation of the wave propagation of an impulse-shaped waveform along a waveguide.
@@ -19045,13 +19051,10 @@ void testWaveGuide1()
     y5[n] = xR1 + xL1;
   }
 
-
-
   // ToDo: pre-update R1,R2 and post-update L1,L2 and vice versa
   // Maybe factor out helper function like readOutputs(), writeInputs(). To do this, we need some
   // local variables xR1,xR2,xL1,xL2 which these helper functions can access. I gues, we should
   // set the to zero in resetDelays() which should probably be renamed to reset()
-
 
   // Plot the produced output signals:
   //rsPlotVectors(yL, yR);  // Reference signals produced by naive algos. Should be equal.
@@ -19066,61 +19069,19 @@ void testWaveGuide1()
   //rsPlotVectors(yR, y1);
   //rsPlotVectors(yL, y1);
   //rsPlotVectors(yL, yR, y1);
-
-  // Observations (partially obsolete):
-  //
-  // - When doing the tap-increments first (before reading the outputs), we see the upward spikes 
-  //   at n = 19,39,59,79,99,... so the period is 20 = 2 * (M1 + M2) as expected. However, I would
-  //   have expected to see the spikes at 0,20,40,60,80,... So it seems they are one sample too 
-  //   early. Maybe we can fix this by adjusting (decrementing?) the tap pointers before entering 
-  //   the loop. But that seems a bit hacky. Maybe there is a more principled solution.
-  // 
-  // - When doing the tap increments in the middle (in between reading outputs and writing inputs),
-  //   the upward spikes are at 23,47,71,95 so the period is 24. That is strange! Why does this 
-  //   happen? How is 24 related to the M1, M2 settings? Maybe it's because 
-  //   24 = 2 * ((M1+1) + (M2+1)). Maybe somehow we acquire and additional one sample of delay in 
-  //   each of the 4 delaylines? This smells a bit like the implicit unit delay inherent in setting
-  //   up feedback paths in DSP filters. If this is correct, then we could fix it by shortening M1 
-  //   and M2 by one sample. That would even slightly reduce the required delay memory for the 
-  //   implementation. But somehow that seems implausible because it is not clear where this 
-  //   additional delay could come from. After all, we are not storing any additional state 
-  //   variables from one loop iteration to the next. All data we have available in each iteration 
-  //   are the contents of the delay lines themselves. There is no such thing as a "previous 
-  //   output" in the algo. We don't even have any variables for such a thing.
-  //   
-  // - When doing the tap increments last (after writing inputs), the output signal is all zeros so
-  //   that seems to be totally wrong. But maybe it could be made to work by doing something else
-  //   differently, too? I initially have thought that doing the updates last would be the right 
-  //   way to do it.
-  //
-  //
-  // ToDo:
-  // 
-  // - Try to do a hybrid mixed strategy: Update certain taps before the readout and others after 
-  //   it. Maybe the increments of the delaylines whose outputs are used for feedback should be 
-  //   post-incremented and the others (whose ouputs are used for transfering data within the two
-  //   partial delaylines that make up one half (upper or lower) of the waveguide) pre-incremented? 
-  //   Maybe within such a hybrid update strategy, we could even have some of the updates as the 
-  //   very last thing? Here, I was assuming a hybrid between "first" and "middle" but maybe some 
-  //   hybrid with some updates "last" is possible?
-  // 
-  // - Create a reference signal using the naive WG algorithm, i.e. the one that uses 2 
-  //   std::vectors. We want to try to match the behavior of the naive algo with a more efficient
-  //   delay line based algorithm. The naive algo updates the state of the whole vectors per sample
-  //   by shifting the contents which has a per sample complexity of O(M) when M is the length of 
-  //   the WG (e.g. the virtual string or bore). A delay based algo does it in O(1) per sample.
-  // 
-  // - Fill a std::vector with the desired inital shape and then transfer that shape 
-  //   appropriately into both delaylines. This transfer can then be factored out and reused.
 }
+
 
 
 void testWaveGuide2()
 {
-  // Under construction. Not very far yet.
-
   // First experiment with waveguide modeling. We implement a very simple waveguide model for a
   // string (or air column) by means of a pair of delaylines. ...TBC...
+
+
+
+
+
 
   using Real = double;
   using DL   = RAPT::rsDelay<Real>;
@@ -19150,7 +19111,13 @@ void testWaveGuide2()
 
 
 
-
+  // Observations:
+  //
+  // - For the leapfrog algo, we need to use M+1 rather than M to get a match. ToDo: Fix this 
+  //   mismatch by using M+1 inside the implementation of the leapfrog algo. M is the more 
+  //   convenient parametrization compared to M+1 because the period length is then exactly 2M.
+  //
+  //
   // ToDo:
   // 
   // - Write a function rsCreateWaveGuideReference analogous to rsCreateLeapFrogReference() and 
@@ -19158,22 +19125,6 @@ void testWaveGuide2()
   //   settings for M, mIn, mOut. Create also a unit test that compares the waveguid output 
   //   against the shifting algo with arbitrary reflection coeffs (which the current 
   //   implementation of the leap frog algo doesn't support)
-  //
-  // - Set up the delaylines in a mutual feedback loop. dl1 feeds into dl2 and vice versa. I think,
-  //   when we model a string with fixed ends, the feedback should be inverting which means that in
-  //   the lossless case, dl1 feed into dl2 with gain -1 and dl2 feeds into dl1 also with gain -1.
-  // 
-  // - Set up initial conditions for the delaylines - maybe a Gaussian impulse at some location. Or 
-  //   maybe just a unit impulse to start with. Or maybe a triangular shape like we would get when
-  //   pulling the string at some position.
-  // 
-  // - Plot outputs.
-  //
-  // - Implement means to read out a signal from the waveguide at some given position mOut and a 
-  //   means to feed an exitation signal into the delayline at some position mIn. I think, we 
-  //   should read from dl1 at position mOut and from dl2 at position M-mOut but I'm not sure. 
-  //   Maybe we need to read from both at mOut or from both at M-mOut. Figure this out! The same
-  //   reasoning applies to the excitation.
   //
   //  - Implement lossy case by using a gain factor less of -g instead of -1 where g is some number
   //    with 0 < g <= 1. It should be computed from a desired decay time. Figure out a formula for 
@@ -19189,22 +19140,11 @@ void testWaveGuide2()
   //
   // - Allow for non-integer delays by providing various interpolation methods (linear, cubic, 
   //   Thiran-allpass, etc.)
-  // 
-  // - Check if it works when M is a power of 2. If so, it may mean that at some point where we
-  //   wrap around at maxDelay, we should actually wrap around the the delay instead.
-  //
-  // - Maybe the way it's currently implemented is flawed. Maybe to really implement a 
-  //   bidirectional delayline, we need to increment the tap pointers in dl1 and decrement them in 
-  //   dl2? But I think, it should be possible to do it with both delaylines incrementing. We may 
-  //   just need to configure the read- and write positions differently.
-  //
-  // - Maybe try it first with a naive implementation of a delayline whose length is exactly M such
-  //   that M is also the wrap-around modulus. Maybe the optimization with using a 2^k-1 length 
-  //   with bitmasking for wraparound should be done as an optimization later.
   //
   // - Try to create an animation. It's annoying to have to click through the individual plots to
   //   see the time development.
 }
+
 
 void testWaveGuides()
 {

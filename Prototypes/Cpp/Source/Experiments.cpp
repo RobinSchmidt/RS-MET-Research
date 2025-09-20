@@ -19037,10 +19037,16 @@ void testWaveGuide2()
   using DL   = RAPT::rsDelay<Real>;
   using Vec  = std::vector<Real>;
 
-  int M    =  10;            // Length of the delaylines
-  int mIn  =   3;            // Input position (for strike, pluck, bow, etc.)
-  int mOut =   4;
-  int N    =  81;            // Number of samples to render
+  int M    =  23;     // Length of the delaylines, 2*M is the period of the output
+  int mIn  =   7;     // Exciter position for input (strike, pluck, bow, etc.)
+  int mOut =  11;     // Pickup position for output 
+  int N    =  6*M+1;  // Number of samples to render (3 periods plus one sample more)
+  // For a unit test, we should perhaps make sure that M, mIn, mOut have no common factors (be
+  // mutually prime) in order to not run into situations where it just all works because of some
+  // "happy coincidence". I think mutual primeness will rule out such happy coincidences (verify!).
+  // Maybe we should consider M+1 rather than M?
+
+  // I think, the initial delay for the spike to sho up in the plot is given by mOut-mIn
 
   // Smaller values for initial tests:
   //M = 10, mIn = 3, N = 50;
@@ -19068,7 +19074,9 @@ void testWaveGuide2()
   // Set up initial condition of the string:
   dl1.addToInputAt(0.5,   mIn);
   dl2.addToInputAt(0.5, M-mIn);
-  // I think, this is wrong!
+  // In the 2nd delayline, we need to use M-mIn because this delayline runs "backwards" so the 
+  // indices of the positions are all flipped/reflected.
+  // ToDo: Explain this in more detail!
 
   // Test:
   //int k = 3;

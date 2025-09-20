@@ -161,6 +161,19 @@ It's time to define some more jargon. A complex function is said to be \emph{hol
 % Maybe at first, consider an integral along a straight line between two complex numbers $a,b$ parametrized as $c(t) = (1-t) a + t b$ for $t \in [0,1]$. We can then approximate more complicated paths by a bunch of such straight line segements.
 
 \subsubsection{The Polya Vector Field}
+In vector calculus, we were dealing with vector fields. These were vector valued functions with vectors as inputs. In this context, a 2D vector field was expressed as a pair of bivariate functions $u(x,y), v(x,y)$ and this is precisely the situation that we are dealing with here again but with a different notation. Here, we look at formally univariate functions $w = f(z)$ with the twist that inputs $z$ and outputs $w$ are complex numbers, so they actually package a 2D vector as well. It's reasonable to expect that we can transfer certain ideas back and forth between 2D vector calculus and complex calculus. For this we map a complex function $w = f(z)$ to the vector field:
+\begin{equation}
+w = f(z)
+\qquad \text{maps to:} \qquad
+u(x,y) = \Re(w), \; v(x,y) = -\Im(w)
+\quad \text{where} \quad
+x = \Re(z), \; y = \Im(z)
+\end{equation}
+It may see strange to negate the imaginary part of $w$ to produce $v$, but we will see a very compelling reason for doing this soon enough. 
+
+
+
+
 
 % Irrotational vector fields have a symmetric Jacobian (by the second fundamental theorem for potential fields). Holomorphic functions have antisymmetric Jacobians. Maybe that's the reason we need to negate the imaginary part? Wait - no - it's actually antisymmetric plus a nonzero main diagonal
 
@@ -427,6 +440,14 @@ Make a section about some specific complex functions of interest:
 % https://www.youtube.com/playlist?list=PLDcSwjT2BF_UDdkQ3KQjX5SRQ2DLLwv0R
 % Essence of complex analysis  by Mathemaniac, uses a vector-field approach	
 
+
+ToDo:
+- Wite down the (Polya) vector field components u(x,y) = x^2 - y^2, v(x,y) = -2 x y of the function 
+  f(z) = z^2. Consider a curve given by the unit circle x(t) = cos(t), y(t) = sin(t). Evaluate u,v
+  along that circle to produce two functions u(t), v(t). We should ge a sine and cosine as output
+  again but with twice the frequency. Wiht u(x,y) = x, v(x,y) = y, we would have gooten the original 
+  sine/cosine pair back. We may construct higher degree bivariate polynomimals from z^3, z^4, ... to
+  produce sines/cosines with frequencies of all integer frequencies.
 
 
 https://en.wikipedia.org/wiki/Riemann%E2%80%93Roch_theorem

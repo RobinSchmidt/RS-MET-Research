@@ -18113,6 +18113,58 @@ bool rsAreEndsZero(
   // Can be extended to support even more input vectors if needed
 }
 
+// Maybe move these two functions below into the library. But maybe then we should not assert that
+// v is nonempty and instead check if it is empty and if so, return immediately such that with 
+// empty vectors, the functions do nothing.
+
+/** Shifts the content of the given vector by one position to the left and fills the right end up
+with zero. */
+template<class T>
+void rsShiftLeft(std::vector<T>& v)
+{
+  rsAssert(v.size() > 0, "Size of v must be at least 1"); // or else: access violation
+  for(size_t i = 0; i < v.size()-1; i++)
+    v[i] = v[i+1];
+  v[v.size()-1] = T(0);
+}
+
+/** Shifts the content of the given vector by one position to the right and fills the left end up
+with zero. */
+template<class T>
+void rsShiftRight(std::vector<T>& v)
+{
+  rsAssert(v.size() > 0, "Size of v must be at least 1"); // or else: access violation
+  for(size_t i = v.size()-1; i > 0; i--)
+    v[i] = v[i-1];
+  v[0] = T(0);
+}
+
+/** Convenience function to set up the delay in the given delayLine. If the requested delay is
+greater than the currently available maximum delay, the maximum delay will automatically be
+increased. This is the "convenience" part. It's meant for use in offline experiments but not in
+realtime rendering (because increasing the maximum delay may reallocate memory). */
+template<class T>
+void rsSetDelay(RAPT::rsDelay<T>* delayLine, int delayInSamples)
+{
+  if(delayLine->getMaxDelayInSamples() < delayInSamples)
+    delayLine->setMaxDelayInSamples(delayInSamples);       // May allocate
+  delayLine->setDelayInSamples(delayInSamples);
+}
+// Maybe move into library. In some experiments in the main repo, I often have the 2-line pattern:
+//  
+//   delayLine.setMaxDelayInSamples(M);
+//   delayLine.setDelayInSamples(M);
+//
+// which can then be replaced by the 1-liner:
+//
+//   rsSetDelay(&delayLine, M);
+//
+// But maybe it should be somewhere in the rs_testing module and not in the RAPT library itself. It
+// may confuse users there.
+
+//-------------------------------------------------------------------------------------------------
+// PDE solver steppers
+
 /** This scheme is produces parasitic oscillations. */
 template<class T>
 void rsStepWaveEquation1D_1(std::vector<T>& u, std::vector<T>& v)
@@ -18210,9 +18262,358 @@ void rsStepWaveEquation1D_2(std::vector<T>& u, std::vector<T>& v, std::vector<T>
   //   the trapezoidal method?
 }
 
+/** Performs a single update step in a naive waveguide implementation using explicit shifting of
+the contents of the buffers with some special care for the reflections. The vectors wL,wR are the
+buffers for the leftward and rightward traveling wave components and rL,rR are the reflection
+coefficients at the left and right boundary respectively. For a lossless waveguide, they should
+both have an absolute value of 1. If both are -1, this corresponds to boundary conditions where the
+displacement is fixed at zero at both ends. A physical wave variable such as the actual
+displacement of a string is given by the sum of both buffers. The physical interpretation of the
+buffers is that they store the spatial samples of the traveling wave components. The contents of
+the buffers themselves do not correspond to any measurable physical quantity. They are a
+theoretical modeling device and only their sum gives a meaningful physical quantity. Maybe they are
+somewhat analoguous to complex phasors in regular DSP theory? These phasors themselves do not
+represent a signal, but when appropriately combined (i.e. when we add two complex conjugate phasors
+together) we get a real-valued signal. Here, we add together the two (non-physical) traveling wave
+components instead. I'm not sure, if this is a good analogy, though.
+
+The time step moves the content of wL one spatial sample to the left and the content of wR one
+spatial sample to the right. The now "freed" or "emptied" positions at the right end of wL and at
+the left end of wR will be filled with the reflected wave from the respective other buffer.
+
+...TBC: explain how other boundary conditions can be implemented. I think, rL = rR = +1 corresponds
+to boundary conditions where the velocity is zero at both ends (verify!). What about using complex
+reflection coeffs (and therfore complex waveguide contents)? Does that make any physical sense?
+Even if not, it may be interesting to experiment with nonetheless. Maybe it's useful? I think, it
+does make physical sense when the real part represents velocity and the imaginary part represents
+displacement or in general, the real part represents the derivative of the imaginary part. For a
+sine wave in the imaginary part, we would have a cosine wave in the real part - the derivative of
+a sine is a cosine. I think, we could also use the real part for displacement and the negated(!)
+imaginary part for the velocity (derivative). We need to negate because the derivative of cosine is
+minus sine. Verify this!  */
+template<class T>
+void rsWaveShiftStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
+{
+  rsAssert(wL.size() >= 2, "Size of the buffers must be at least 2");
+  rsAssert(rsAreSameSize(wL, wR), "Sizes of buffers for leftward and rightward wave must match");
+
+  // Extract traveling wave components at the left and right boundary for reflection:
+  int M = (int)wL.size();
+  T xL = wL[0];
+  T xR = wR[M-1];
+
+  // Let the wave components travel by one spacial unit:
+  rsShiftLeft(wL);  // Shift content of wL one step leftward, rightmost position becomes empty
+  rsShiftRight(wR);  // Shift content of wR one step rightward, leftmost position becomes empty
+
+  // Insert the reflected components into the now "empty" positions:
+  //wL[M-1] = rR * xR;
+  //wR[0]   = rL * xL;
+  // This is what maed intuitively the most sense to me but it produces a result that is different
+  // from the leapfrog scheme. The period is longer and the arrival times of reflected pulses are
+  // later (I think - verify!).
+
+  // Test (can be used instead the code above). This code gets the period right but it behaves 
+  // differently when we put the excitation impulse and pickup at m = 0.
+  //wL[M-2] = rR * xR;
+  //wR[1]   = rL * xL;
+  // The leapfrog scheme produces a single impulse at n = 0 with an impulse like excitation at 
+  // m = 0 when the pickup is also at m = 0. This scheme here produces further periodic spikes
+  // with half of the height of the excitation
+
+  // Yet another possible alternative:
+  wL[M-2] += rR * xR;
+  wR[1]   += rL * xL;
+  // This seems to behave exactly like the leapfrog scheme. I think, this might be the right way.
+  // ToDo: Explain why we should add the reflected wave rather than overwrite. I think, it's 
+  // because the slots 0 and M-2 usually aren't empty and if we would overwrite them, we would 
+  // "loose" signals. Figure this out in detail and document it!
+
+
+  // Implement different algorithms. Maybe one where we do not first extract xL,xR but just do the 
+  // shifts straight away and *then* implement the reflection as 
+  // wL[M-1] = rR * wR[M-1]; wR[0] = rL * wL[0]. This should automatically ensure the invariant 
+  // that wL[M-1] - rR * wR[M-1] = 0  and  wR[0] - rL * wL[0] = 0  such that when trying to pick
+  // up a physical displacement at m = 0 or m = M-1 by forming wL[0] + wR[0]  or  wL[M-1] + wR[M-1]
+  // would invariantly always yield zero (assuming rL = rR = -1). This it exactly how it should be 
+  // because the displacement is supposed to be indeed zero at the endpoints at all times.
+
+  // ToDo:
+  //
+  // - Implement a function that doesn't reflect the waves from left-traveling into the 
+  //   right-traveling portion but instead just does circular shifts in both arrayw wL,wR. I think
+  //   this corresponds to periodic boundary conditions. Such peridic boundary conditions would 
+  //   correspond to a torus-shaped tube in which pressure waves travel. Verify this! Are there
+  //   any acoustic instruments that use such a toroidal tube? Maybe try to build one. Maybe use 
+  //   concentric tubes for the different notes.
+  //
+  // 
+  // Notes (partially outdated): 
+  //
+  // - Apparently, the reflection itself takes also one time step with the old (commented) 
+  //   version of the algorithm:
+  // 
+  //     wL[M-1] = rR * xR;
+  //     wR[0]   = rL * xL;
+  // 
+  //   When the left-going wave hits the left wall at time n, at the next sample instant n+1, we 
+  //   see the reflected wave in the right going wave and it's also located exactly *at* the wall. 
+  //   Shouldn't it have advanced one position further to the right at this moment already? It 
+  //   seems like the wave spends two sample instants at the wall. It can be fixed by using  
+  //   wL[M-2] = rR * xR; wR[1] = rL * xL;  instead of  wL[M-1] = rR * xR; wR[0] = rL * xL;  but 
+  //   that shortens the period by 2 samples. I also think, that when we use this algo with 
+  //   arbitrarily filled initial arrays, we may lose one of the values. Maybe it's more convenient
+  //   to accept that we deal with a "delayed reflection", i.e. a reflection that takes itself one 
+  //   sample period to take place. It is more obvious when using rL = rR = 1. In this case, it 
+  //   really looks like the wave "rests" for one sample instant at the wall. When using negative 
+  //   reflection coeffs, it uses this resting time to "flip" instead of just resting.
+  // 
+  // - The observation that the reflection itself takes one sample can perhaps be interpreted as 
+  //   follows: In the algorithm as it is implemented, we do not really have any spatial samples
+  //   directly *at* the boundaries. If we would have any, i.e. if wL[0], wR[0], and wL[M-1], 
+  //   wR[M-1] would correspond to actual physical positions, the content of these positions should
+  //   satisfy the boundary conditions at all time instants. that is, we should have 
+  //   wL[0] + wR[0] = 0  and  wL[M-1] + wR[M-1] = 0 at all times for fixed/clamped boundary 
+  //   conditions (i.e. no displacement possible at boundary). I think, more generally, the 
+  //   boundaries should satisfy wL[0] + rL*wR[0] = 0  and  wL[M-1] + rR*wR[M-1] = 0 (verify!).
+}
+// rename to rsReflectiveShift
+
+//-------------------------------------------------------------------------------------------------
+// Generation of signals using the different steppers:
+
+template<class T>
+std::vector<T> rsSpikeCirculationLeapFrog(int N, int M, int mIn, int mOut)
+{
+  using Vec = std::vector<T>;
+  using WE  = rsWaveEquation1D_Proto<T>;
+
+  // Allocate string and set up initial conditions:
+  Vec u(M), u1(M);               // ToDo: Use M+1
+  u[mIn] = 1.0;
+  WE::initForLeapFrog(u, u1);
+
+  // Produce output signal:
+  Vec y(N);
+  for(int n = 0; n < N; n++)
+  {
+    //rsPlotVectors(u, u1);             // Plot the wave and delayed wave
+    y[n] = u[mOut];
+    WE::stepLeapFrog(u, u1);
+  }
+  return y;
+}
+// Maybe rename to rsCreateLeapFrogSpikeCirculation and rename the functions below also 
+// accordingly. Document the function. It creates the output of a model of the 1D wave equation 
+// (for an e.g. physical string) when the input is a single spike like displacement excitation.
+// The model uses the leapfrog integration scheme. Maybe use a string length of M+1 to be 
+// consistent with the waveguides. Using M+1 results in a period P of P = 2M for the output 
+// signal. Otherwise it would be 2*(M-1) which is inconvenient.
+// rsCreateCirclingSpikeLeapFrog, rsSpikeCirculationLeapFrog
+
+// Is supposed to produce the same signal as rsSpikeCirculationLeapFrog() but with a different
+// algorithm ...TBC...
+template<class T>
+std::vector<T> rsSpikeCirculationWaveShift(int N, int M, int mIn, int mOut, T rL, T rR)
+{
+  using Vec = std::vector<T>;
+
+  // Allocate waveguide and set up initial conditions:
+  Vec wL(M), wR(M);         // ToDo: Use M+1
+  wL[mIn] = wR[mIn] = 0.5;
+
+  // Produce output signal:
+  Vec y(N);
+  for(int n = 0; n < N; n++)
+  {
+    //rsPlotVectors(wL, wR);             // Plot the traveling wave components
+    y[n] = wL[mOut] + wR[mOut];        // Read out output signal at mOut
+    rsWaveShiftStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
+    // Maybe move into a function WE::stepWaveShift(wL, wR, rL, rR);
+  }
+  return y;
+}
+
+// Also produces the same signal as rsSpikeCirculationLeapFrog() and rsSpikeCirculationWaveShift()
+// but with yet another algorithm based on two delay lines. This algorithm implemented here is
+// basically the idea of implementing waveguides vai "bidirectional" delay lines. A "bidirectional"
+// delayline is basically a pair of two delaylines with mutual crossfeedback ...TBC...
+template<class T>
+std::vector<T> rsSpikeCirculationBiDelay(int N, int M, int mIn, int mOut, T rL, T rR)
+{
+  using Vec = std::vector<T>;
+  using DL  = RAPT::rsDelay<T>;
+
+  // Create the delaylines and set up the delay time in samples:
+  DL dl1, dl2;
+  rsSetDelay(&dl1, M);
+  rsSetDelay(&dl2, M);
+  // Maybe rename to dlP, dlM where P,M stands for "plus","minus" or to  dlL, dlR where L,R means
+  // "left","right". Or maybe just use dL,dR. 
+
+  // Set up initial condition of the string:
+  dl1.addToInputAt(0.5, mIn);
+  dl2.addToInputAt(0.5, M-mIn);
+  // In the 2nd delayline, we need to use M-mIn because this delayline runs "backwards" so the 
+  // indices of the positions are all flipped/reflected.
+  // ToDo: Explain this in more detail!
+
+  // Produce output signal:
+  Vec y(N);
+  for(int n = 0; n < N; n++)
+  {
+    // During development, we may plot the contents of the delaylines to see what is going on:
+    //rsPlotDelayLineContent(dl1, dl2, true);  // true: Reverse content of dl2
+
+    // Get the outputs of the delay lines for implementing the reflection via crossfeedback:
+    T ref1 = dl1.readOutput();    // Reflected wave at right end
+    T ref2 = dl2.readOutput();    // Reflected wave at left end
+
+    // Implement the mutual crossfeedback with inversion:
+    dl1.writeInput(rL * ref2);    // Reflection at left end
+    dl2.writeInput(rR * ref1);    // Reflection at right end
+
+    // Feed in inputs. We have nothing to do here because we have no ongoing input in this 
+    // experiment. We only excite the string via initial conditions. I think, for feeding a 
+    // continuous input into the string at the mIn, we'd have to do something like:
+    // 
+    // dl1.addToInputAt(mIn, 0.5 * inputSignal);
+    // dl2.addToInputAt(mIn, 0.5 * inputSignal);
+    //
+    // And I think, it's important to add the input before reading the output to get correct 
+    // behavior when mIn == mOut. Verify this! Maybe to get correct behavior with mIn = 0 or 
+    // mIn = M-1 (or M?), we should actually do this before picking up the reflections? Figure 
+    // this out and document it! But no! The .writeOutput() calls might then overwrite it, 
+    // right? So maybe we should add it after writeOutput. Or maybe we should just disallow
+    // mIn = 0 and mIn = M (or M-1).
+
+    // Read out the outputs:
+    T out1 = dl1.readOutputAt(mOut);
+    T out2 = dl2.readOutputAt(M-mOut);
+
+    // Update the tap pointers in the delaylines:
+    dl1.incrementTapPointers();
+    dl2.incrementTapPointers();
+
+    // Store output signal:
+    y[n] = out1 + out2;
+  }
+
+  return y;
+
+  // See:
+  // https://ccrma.stanford.edu/~jos/pasp/Digital_Waveguide_Modeling_Elements.html
+  // https://ccrma.stanford.edu/~jos/pasp/Physical_Outputs.html
+  // https://ccrma.stanford.edu/~jos/pasp/Physical_Inputs.html
+}
+
+//-------------------------------------------------------------------------------------------------
+// Waveguide Unit Tests
+
+/** Unit test for the "wave-shifting" algorithm. We compare it against the leapfrog PDE integration
+scheme. Both algorithms should produce identical results. */
+bool unitTestWaveShift()
+{
+  bool ok = true;
+
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using WE   = rsWaveEquation1D_Proto<Real>;
+
+  // Setup:
+  int  minM =   2;     // 2 is the minimum allowed size
+  int  maxM =  15;
+  int  seed = 341;     // Seed for PRNG for initatialization
+  Real tol  = 0.0;     // Tolerance for numeric equality (Try going lower! Can we use 0?)
+
+  // Reflection coeffs for left/right end. Using -1 reflects with negation which corresponds to a 
+  // zero displacement boundary condition:
+  Real rL = -1.0;
+  Real rR = -1.0;
+
+  for(int M = minM; M <= maxM; M++)    // Loop over the lengths
+  {
+    // Create a random initial displacement distribution:
+    Vec uInit = rsRandomIntVector(M, -5, +5, seed+M);
+    uInit[0] = uInit[M-1] = 0.0;
+
+    // Create and init state variables for leapfrog solver:
+    Vec u = uInit;
+    Vec u1(M);
+    WE::initForLeapFrog(u, u1);
+
+    // Create and init state variables for shifting solver:
+    Vec wL = 0.5 * uInit;  // Left going wave
+    Vec wR = wL;           // Right going wave
+
+    // The period of repitition of an output signal should be around 2*M so using N = 3*M for the
+    // number of samples to produce makes sure that we produce more than one period worth signal:
+    int N = 3*M;
+
+    // Simulate the production of N audio samples. Instead of picking up the output signal at any
+    // particular location on the waveguide, we just make sure that the whole shape in the buffers 
+    // matches. That is: We simulate checking all possible pickup points simultaneously:
+    for(int n = 0; n < N; n++)
+    {
+      // Form the displacement wave by adding left and right travelling wave:
+      Vec w = wL + wR;
+      w[0] = w[M-1] = 0;
+      // Unlike the displacement wave u of the leapfrog algo, the shifting algo does not fix w
+      // to zero at the boundary points, so we set them to zero manually here such that the 
+      // following comparison test checks only the interior points. Only these are relevant for
+      // reading off output signals. Well, one could perhaps consider picking up an output at a
+      // boundary as well. But I'm not sure, if the leapfrog algo can somehow produce such outputs.
+      // We'll see.
+
+      // Compare the two ways of computing the displacement waves (leapfrog vs shifting):
+      ok &= rsIsCloseTo(w, u, tol);
+      //rsPlotVectors(u, w);
+
+      // Advance the left/right traveling waves wL,wR by one time step via the shifting algo:
+      rsWaveShiftStep(wL, wR, rL, rR);
+
+      // Advance the displacement wave via the leapfrog scheme:
+      WE::stepLeapFrog(u, u1);
+    }
+  }
+
+  rsAssert(ok, "Waveguide unit test failed!");
+  return ok;
+
+  // Observations:
+  //
+  // - It is interesting to note that with a random initial shape, the new shape after each step 
+  //   looks like a totally new random shape. this could be useful to create evolving sounds: Init
+  //   a waveform buffer with a random shape and play it back like an oscillator. After each cycle
+  //   of the oscillator, do a waveform update step to produce a new waveform. If the initial 
+  //   waveform is totally random, this will probably produce some kind of noise but if it is more
+  //   tame, we could get an interesting pseudo-periodic sound. Maybe init with filtered, smoothed 
+  //   noise and/or some components of periodic waveforms. Maybe the waveguide stepping frequency 
+  //   could even be different from the oscillator frequency such that the waveform changes not 
+  //   every cycle but, say, after every 2.5 cycles or whatever other number.
+  //
+  // 
+  // ToDo: 
+  // 
+  // - Integrate tests for other steppers. At the moment, the two stepped we have aren't actually 
+  //   true waveguide algorithms anyway. One algo is a finite difference scheme and the other algo 
+  //   is some ad-hoc algorithm to directly implement the travaling and reflection by explicitly
+  //   shifting the buffer contents.
+  //
+  // - Create somne random tests that ensure that rsCreateWaveGuideReference() and
+  //   rsCreateLeapFrogReference() produce the same results. But maybe that should be a separate
+  //   function.
+}
+
+//-------------------------------------------------------------------------------------------------
+// Waveguide Experiments
+
 void testWaveEquation1D()
 {
-  // We implement a numerical PDE solver scheme for the 1D wave equation. ...TBC...
+  // We implement different numerical PDE solver schemes for the 1D wave equation. The default 
+  // scheme that is known to work very well is the leapfrog scheme that is explained in PASP. But
+  // here, we also try to use different update rules to see what they produce, what flaws they 
+  // have, etc. ...TBC...
 
   using Real = double;
   using Vec  = std::vector<Real>;
@@ -18315,402 +18716,8 @@ void testWaveEquation1D()
   //   each spatial sample along the string. Verify and document this! 
 }
 
-
-// Maybe move these two functions below into the library. But maybe then we should not assert that
-// v is nonempty and instead check if it is empty and if so, return immediately such that with 
-// empty vectors, the functions do nothing.
-
-/** Shifts the content of the given vector by one position to the left and fills the right end up 
-with zero. */
-template<class T>
-void rsShiftLeft(std::vector<T>& v)
-{
-  rsAssert(v.size() > 0, "Size of v must be at least 1"); // or else: access violation
-  for(size_t i = 0; i < v.size()-1; i++)
-    v[i] = v[i+1];
-  v[v.size()-1] = T(0);
-}
-
-/** Shifts the content of the given vector by one position to the right and fills the left end up
-with zero. */
-template<class T>
-void rsShiftRight(std::vector<T>& v)
-{
-  rsAssert(v.size() > 0, "Size of v must be at least 1"); // or else: access violation
-  for(size_t i = v.size()-1; i > 0; i--)
-    v[i] = v[i-1];
-  v[0] = T(0);
-}
-
-/** Performs a single update step in a naive waveguide implementation using explicit shifting of
-the contents of the buffers with some special care for the reflections. The vectors wL,wR are the
-buffers for the leftward and rightward traveling wave components and rL,rR are the reflection
-coefficients at the left and right boundary respectively. For a lossless waveguide, they should 
-both have an absolute value of 1. If both are -1, this corresponds to boundary conditions where the
-displacement is fixed at zero at both ends. A physical wave variable such as the actual 
-displacement of a string is given by the sum of both buffers. The physical interpretation of the 
-buffers is that they store the spatial samples of the traveling wave components. The contents of 
-the buffers themselves do not correspond to any measurable physical quantity. They are a 
-theoretical modeling device and only their sum gives a meaningful physical quantity. Maybe they are
-somewhat analoguous to complex phasors in regular DSP theory? These phasors themselves do not 
-represent a signal, but when appropriately combined (i.e. when we add two complex conjugate phasors
-together) we get a real-valued signal. Here, we add together the two (non-physical) traveling wave
-components instead. I'm not sure, if this is a good analogy, though.
-
-The time step moves the content of wL one spatial sample to the left and the content of wR one 
-spatial sample to the right. The now "freed" or "emptied" positions at the right end of wL and at 
-the left end of wR will be filled with the reflected wave from the respective other buffer. 
-
-...TBC: explain how other boundary conditions can be implemented. I think, rL = rR = +1 corresponds
-to boundary conditions where the velocity is zero at both ends (verify!). What about using complex 
-reflection coeffs (and therfore complex waveguide contents)? Does that make any physical sense?
-Even if not, it may be interesting to experiment with nonetheless. Maybe it's useful? I think, it 
-does make physical sense when the real part represents velocity and the imaginary part represents
-displacement or in general, the real part represents the derivative of the imaginary part. For a 
-sine wave in the imaginary part, we would have a cosine wave in the real part - the derivative of
-a sine is a cosine. I think, we could also use the real part for displacement and the negated(!) 
-imaginary part for the velocity (derivative). We need to negate because the derivative of cosine is
-minus sine. Verify this!  */
-template<class T>
-void rsWaveShiftStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
-{
-  rsAssert(wL.size() >= 2, "Size of the buffers must be at least 2");
-  rsAssert(rsAreSameSize(wL, wR), "Sizes of buffers for leftward and rightward wave must match");
-
-  // Extract traveling wave components at the left and right boundary for reflection:
-  int M = (int)wL.size();
-  T xL = wL[0];
-  T xR = wR[M-1];
-
-  // Let the wave components travel by one spacial unit:
-  rsShiftLeft( wL);  // Shift content of wL one step leftward, rightmost position becomes empty
-  rsShiftRight(wR);  // Shift content of wR one step rightward, leftmost position becomes empty
-
-  // Insert the reflected components into the now "empty" positions:
-  //wL[M-1] = rR * xR;
-  //wR[0]   = rL * xL;
-  // This is what maed intuitively the most sense to me but it produces a result that is different
-  // from the leapfrog scheme. The period is longer and the arrival times of reflected pulses are
-  // later (I think - verify!).
-
-  // Test (can be used instead the code above). This code gets the period right but it behaves 
-  // differently when we put the excitation impulse and pickup at m = 0.
-  //wL[M-2] = rR * xR;
-  //wR[1]   = rL * xL;
-  // The leapfrog scheme produces a single impulse at n = 0 with an impulse like excitation at 
-  // m = 0 when the pickup is also at m = 0. This scheme here produces further periodic spikes
-  // with half of the height of the excitation
-
-  // Yet another possible alternative:
-  wL[M-2] += rR * xR;
-  wR[1]   += rL * xL;
-  // This seems to behave exactly like the leapfrog scheme. I think, this might be the right way.
-  // ToDo: Explain why we should add the reflected wave rather than overwrite. I think, it's 
-  // because the slots 0 and M-2 usually aren't empty and if we would overwrite them, we would 
-  // "loose" signals. Figure this out in detail and document it!
-
-
-  // Implement different algorithms. Maybe one where we do not first extract xL,xR but just do the 
-  // shifts straight away and *then* implement the reflection as 
-  // wL[M-1] = rR * wR[M-1]; wR[0] = rL * wL[0]. This should automatically ensure the invariant 
-  // that wL[M-1] - rR * wR[M-1] = 0  and  wR[0] - rL * wL[0] = 0  such that when trying to pick
-  // up a physical displacement at m = 0 or m = M-1 by forming wL[0] + wR[0]  or  wL[M-1] + wR[M-1]
-  // would invariantly always yield zero (assuming rL = rR = -1). This it exactly how it should be 
-  // because the displacement is supposed to be indeed zero at the endpoints at all times.
-
-  // ToDo:
-  //
-  // - Implement a function that doesn't reflect the waves from left-traveling into the 
-  //   right-traveling portion but instead just does circular shifts in both arrayw wL,wR. I think
-  //   this corresponds to periodic boundary conditions. Such peridic boundary conditions would 
-  //   correspond to a torus-shaped tube in which pressure waves travel. Verify this! Are there
-  //   any acoustic instruments that use such a toroidal tube? Maybe try to build one. Maybe use 
-  //   concentric tubes for the different notes.
-  //
-  // 
-  // Notes (partially outdated): 
-  //
-  // - Apparently, the reflection itself takes also one time step with the old (commented) 
-  //   version of the algorithm:
-  // 
-  //     wL[M-1] = rR * xR;
-  //     wR[0]   = rL * xL;
-  // 
-  //   When the left-going wave hits the left wall at time n, at the next sample instant n+1, we 
-  //   see the reflected wave in the right going wave and it's also located exactly *at* the wall. 
-  //   Shouldn't it have advanced one position further to the right at this moment already? It 
-  //   seems like the wave spends two sample instants at the wall. It can be fixed by using  
-  //   wL[M-2] = rR * xR; wR[1] = rL * xL;  instead of  wL[M-1] = rR * xR; wR[0] = rL * xL;  but 
-  //   that shortens the period by 2 samples. I also think, that when we use this algo with 
-  //   arbitrarily filled initial arrays, we may lose one of the values. Maybe it's more convenient
-  //   to accept that we deal with a "delayed reflection", i.e. a reflection that takes itself one 
-  //   sample period to take place. It is more obvious when using rL = rR = 1. In this case, it 
-  //   really looks like the wave "rests" for one sample instant at the wall. When using negative 
-  //   reflection coeffs, it uses this resting time to "flip" instead of just resting.
-  // 
-  // - The observation that the reflection itself takes one sample can perhaps be interpreted as 
-  //   follows: In the algorithm as it is implemented, we do not really have any spatial samples
-  //   directly *at* the boundaries. If we would have any, i.e. if wL[0], wR[0], and wL[M-1], 
-  //   wR[M-1] would correspond to actual physical positions, the content of these positions should
-  //   satisfy the boundary conditions at all time instants. that is, we should have 
-  //   wL[0] + wR[0] = 0  and  wL[M-1] + wR[M-1] = 0 at all times for fixed/clamped boundary 
-  //   conditions (i.e. no displacement possible at boundary). I think, more generally, the 
-  //   boundaries should satisfy wL[0] + rL*wR[0] = 0  and  wL[M-1] + rR*wR[M-1] = 0 (verify!).
-}
-// rename to rsStepWaveGuide1 or rsReflectiveShift, 
-
-
-
-template<class T>
-std::vector<T> rsSpikeCirculationLeapFrog(int N, int M, int mIn, int mOut)
-{
-  using Vec = std::vector<T>;
-  using WE  = rsWaveEquation1D_Proto<T>;
-
-  // Allocate string and set up initial conditions:
-  Vec u(M), u1(M);               // ToDo: Use M+1
-  u[mIn] = 1.0;
-  WE::initForLeapFrog(u, u1);
-
-  // Produce output signal:
-  Vec y(N);
-  for(int n = 0; n < N; n++)
-  {
-    //rsPlotVectors(u, u1);             // Plot the wave and delayed wave
-    y[n] = u[mOut];
-    WE::stepLeapFrog(u, u1);
-  }
-  return y;
-}
-// Maybe rename to rsCreateLeapFrogSpikeCirculation and rename the functions below also 
-// accordingly. Document the function. It creates the output of a model of the 1D wave equation 
-// (for an e.g. physical string) when the input is a single spike like displacement excitation.
-// The model uses the leapfrog integration scheme. Maybe use a string length of M+1 to be 
-// consistent with the waveguides. Using M+1 results in a period P of P = 2M for the output 
-// signal. Otherwise it would be 2*(M-1) which is inconvenient.
-// rsCreateCirclingSpikeLeapFrog, rsSpikeCirculationLeapFrog
-
-// Is supposed to produce the same signal as rsSpikeCirculationLeapFrog() but with a different
-// algorithm ...TBC...
-template<class T>
-std::vector<T> rsSpikeCirculationWaveShift(int N, int M, int mIn, int mOut, T rL, T rR)
-{
-  using Vec = std::vector<T>;
-
-  // Allocate waveguide and set up initial conditions:
-  Vec wL(M), wR(M);         // ToDo: Use M+1
-  wL[mIn] = wR[mIn] = 0.5;
-
-  // Produce output signal:
-  Vec y(N);
-  for(int n = 0; n < N; n++)
-  {
-    //rsPlotVectors(wL, wR);             // Plot the traveling wave components
-    y[n] = wL[mOut] + wR[mOut];        // Read out output signal at mOut
-    rsWaveShiftStep(wL, wR, rL, rR);   // Advance the traveling waves by one time step
-    // Maybe move into a function WE::stepWaveShift(wL, wR, rL, rR);
-  }
-  return y;
-}
-
-
-// Also produces the same signal as rsSpikeCirculationLeapFrog() and rsSpikeCirculationWaveShift()
-// but with yet another algorithm based on two delay lines. This algorithm implemented here is
-// basically the idea of implementing waveguides vai "bidirectional" delay lines. A "bidirectional"
-// delayline is basically a pair of two delaylines with mutual crossfeedback ...TBC...
-template<class T>
-std::vector<T> rsSpikeCirculationBiDelay(int N, int M, int mIn, int mOut, T rL, T rR)
-{
-  using Vec = std::vector<T>;
-  using DL  = RAPT::rsDelay<T>;
-
-  // Create the delaylines and set up the delay time in samples:
-  DL dl1, dl2;
-  rsSetDelay(&dl1, M);
-  rsSetDelay(&dl2, M);
-  // Maybe rename to dlP, dlM where P,M stands for "plus","minus" or to  dlL, dlR where L,R means
-  // "left","right". Or maybe just use dL,dR. 
-
-  // Set up initial condition of the string:
-  dl1.addToInputAt(0.5,   mIn);
-  dl2.addToInputAt(0.5, M-mIn);
-  // In the 2nd delayline, we need to use M-mIn because this delayline runs "backwards" so the 
-  // indices of the positions are all flipped/reflected.
-  // ToDo: Explain this in more detail!
-
-  // Produce output signal:
-  Vec y(N);
-  for(int n = 0; n < N; n++)
-  {
-    // During development, we may plot the contents of the delaylines to see what is going on:
-    //rsPlotDelayLineContent(dl1, dl2, true);  // true: Reverse content of dl2
-
-    // Get the outputs of the delay lines for implementing the reflection via crossfeedback:
-    T ref1 = dl1.readOutput();    // Reflected wave at right end
-    T ref2 = dl2.readOutput();    // Reflected wave at left end
-
-    // Implement the mutual crossfeedback with inversion:
-    dl1.writeInput(rL * ref2);    // Reflection at left end
-    dl2.writeInput(rR * ref1);    // Reflection at right end
-
-    // Feed in inputs. We have nothing to do here because we have no ongoing input in this 
-    // experiment. We only excite the string via initial conditions. I think, for feeding a 
-    // continuous input into the string at the mIn, we'd have to do something like:
-    // 
-    // dl1.addToInputAt(mIn, 0.5 * inputSignal);
-    // dl2.addToInputAt(mIn, 0.5 * inputSignal);
-    //
-    // And I think, it's important to add the input before reading the output to get correct 
-    // behavior when mIn == mOut. Verify this! Maybe to get correct behavior with mIn = 0 or 
-    // mIn = M-1 (or M?), we should actually do this before picking up the reflections? Figure 
-    // this out and document it! But no! The .writeOutput() calls might then overwrite it, 
-    // right? So maybe we should add it after writeOutput. Or maybe we should just disallow
-    // mIn = 0 and mIn = M (or M-1).
-
-    // Read out the outputs:
-    T out1 = dl1.readOutputAt(  mOut);
-    T out2 = dl2.readOutputAt(M-mOut);
-
-    // Update the tap pointers in the delaylines:
-    dl1.incrementTapPointers();
-    dl2.incrementTapPointers();
-
-    // Store output signal:
-    y[n] = out1 + out2;
-  }
-
-  return y;
-
-  // See:
-  // https://ccrma.stanford.edu/~jos/pasp/Digital_Waveguide_Modeling_Elements.html
-  // https://ccrma.stanford.edu/~jos/pasp/Physical_Outputs.html
-  // https://ccrma.stanford.edu/~jos/pasp/Physical_Inputs.html
-}
-
-
-bool unitTestWaveShift()
-{
-  bool ok = true;
-
-  using Real = double;
-  using Vec  = std::vector<Real>;
-  using WE   = rsWaveEquation1D_Proto<Real>;
-
-  // Setup:
-  int  minM =   2;     // 2 is the minimum allowed size
-  int  maxM =  15;
-  int  seed = 341;     // Seed for PRNG for initatialization
-  Real tol  = 0.0;     // Tolerance for numeric equality (Try going lower! Can we use 0?)
-
-  // Reflection coeffs for left/right end. Using -1 reflects with negation which corresponds to a 
-  // zero displacement boundary condition:
-  Real rL = -1.0;
-  Real rR = -1.0;
-
-  for(int M = minM; M <= maxM; M++)    // Loop over the lengths
-  {
-    // Create a random initial displacement distribution:
-    Vec uInit = rsRandomIntVector(M, -5, +5, seed+M);
-    uInit[0] = uInit[M-1] = 0.0;
-
-    // Create and init state variables for leapfrog solver:
-    Vec u = uInit;
-    Vec u1(M);
-    WE::initForLeapFrog(u, u1);
-
-    // Create and init state variables for shifting solver:
-    Vec wL = 0.5 * uInit;  // Left going wave
-    Vec wR = wL;           // Right going wave
-
-    // The period of repitition of an output signal should be around 2*M so using N = 3*M for the
-    // number of samples to produce makes sure that we produce more than one period worth signal:
-    int N = 3*M;           
-
-    // Simulate the production of N audio samples. Instead of picking up the output signal at any
-    // particular location on the waveguide, we just make sure that the whole shape in the buffers 
-    // matches. That is: We simulate checking all possible pickup points simultaneously:
-    for(int n = 0; n < N; n++)
-    {
-      // Form the displacement wave by adding left and right travelling wave:
-      Vec w = wL + wR;
-      w[0] = w[M-1] = 0;
-      // Unlike the displacement wave u of the leapfrog algo, the shifting algo does not fix w
-      // to zero at the boundary points, so we set them to zero manually here such that the 
-      // following comparison test checks only the interior points. Only these are relevant for
-      // reading off output signals. Well, one could perhaps consider picking up an output at a
-      // boundary as well. But I'm not sure, if the leapfrog algo can somehow produce such outputs.
-      // We'll see.
-
-      // Compare the two ways of computing the displacement waves (leapfrog vs shifting):
-      ok &= rsIsCloseTo(w, u, tol);  
-      //rsPlotVectors(u, w);
-
-      // Advance the left/right traveling waves wL,wR by one time step via the shifting algo:
-      rsWaveShiftStep(wL, wR, rL, rR);
-
-      // Advance the displacement wave via the leapfrog scheme:
-      WE::stepLeapFrog(u, u1);
-    }
-  }
-
-  rsAssert(ok, "Waveguide unit test failed!");
-  return ok;
-
-  // Observations:
-  //
-  // - It is interesting to note that with a random initial shape, the new shape after each step 
-  //   looks like a totally new random shape. this could be useful to create evolving sounds: Init
-  //   a waveform buffer with a random shape and play it back like an oscillator. After each cycle
-  //   of the oscillator, do a waveform update step to produce a new waveform. If the initial 
-  //   waveform is totally random, this will probably produce some kind of noise but if it is more
-  //   tame, we could get an interesting pseudo-periodic sound. Maybe init with filtered, smoothed 
-  //   noise and/or some components of periodic waveforms. Maybe the waveguide stepping frequency 
-  //   could even be different from the oscillator frequency such that the waveform changes not 
-  //   every cycle but, say, after every 2.5 cycles or whatever other number.
-  //
-  // 
-  // ToDo: 
-  // 
-  // - Integrate tests for other steppers. At the moment, the two stepped we have aren't actually 
-  //   true waveguide algorithms anyway. One algo is a finite difference scheme and the other algo 
-  //   is some ad-hoc algorithm to directly implement the travaling and reflection by explicitly
-  //   shifting the buffer contents.
-  //
-  // - Create somne random tests that ensure that rsCreateWaveGuideReference() and
-  //   rsCreateLeapFrogReference() produce the same results. But maybe that should be a separate
-  //   function.
-}
-
-
-/** Convenience function to set up the delay in the given delayLine. If the requested delay is 
-greater than the currently available maximum delay, the maximum delay will automatically be 
-increased. This is the "convenience" part. It's meant for use in offline experiments but not in 
-realtime rendering (because increasing the maximum delay may reallocate memory). */
-template<class T>
-void rsSetDelay(RAPT::rsDelay<T>* delayLine, int delayInSamples)
-{
-  if(delayLine->getMaxDelayInSamples() < delayInSamples)
-    delayLine->setMaxDelayInSamples(delayInSamples);       // May allocate
-  delayLine->setDelayInSamples(delayInSamples);
-}
-// Maybe move into library. In some experiments in the main repo, I often have the 2-line pattern:
-//  
-//   delayLine.setMaxDelayInSamples(M);
-//   delayLine.setDelayInSamples(M);
-//
-// which can then be replaced by the 1-liner:
-//
-//   rsSetDelay(&delayLine, M);
-//
-// But maybe it should be somewhere in the rs_testing module and not in the RAPT library itself. It
-// may confuse users there.
-
-
 void testWaveGuide2()
 {
-  // First experiment with waveguide modeling. We implement a very simple waveguide model for a
-  // string (or air column) by means of a pair of delaylines. ...TBC...
-
   using Real = double;
   using DL   = RAPT::rsDelay<Real>;
   using Vec  = std::vector<Real>;
@@ -18734,9 +18741,7 @@ void testWaveGuide2()
  
   Vec yW = rsSpikeCirculationBiDelay(N, M, mIn, mOut, -1.0, -1.0);
 
-
   rsPlotVectors(yL, yW, yW-yL); // Waveguide output vs leapfrog reference and error
-
 
   // Observations:
   //
@@ -18746,6 +18751,9 @@ void testWaveGuide2()
   //
   //
   // ToDo:
+  // 
+  // - Turn this into a unit test that takes M, mIn, mOut as parameters and produces the 
+  //   recirculating spike with all 3 available algorithms and makes sure that they all match.
   // 
   // - Write a function rsCreateWaveGuideReference analogous to rsCreateLeapFrogReference() and 
   //   then implement a unit test that compares the outputs of the two algorithms for a range of

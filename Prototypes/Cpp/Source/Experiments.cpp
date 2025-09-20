@@ -18635,12 +18635,12 @@ bool unitTestWaveGuideSpike()
 
   // Now a test with some artbitrary reflection coeffs. The leapfrog algo doesn't support this yet
   // so we only compare the bi-delay algo to the shifting algo:
-  Real rL =  0.5;
-  Real rR = -0.5;
+  Real rL =  0.8;
+  Real rR = -0.9;
   yS = rsSpikeCirculationWaveShift(N, M+1, mIn, mOut, rL, rR);
   yW = rsSpikeCirculationBiDelay(  N, M,   mIn, mOut, rL, rR);
   ok &= yS == yW;
-  //rsPlotVectors(yS, yW);
+  rsPlotVectors(yS, yW);
 
   return ok;
 

@@ -18605,6 +18605,93 @@ bool unitTestWaveShift()
   //   function.
 }
 
+bool unitTestWaveGuideSpike()
+{
+  bool ok = true;
+
+  using Real = double;
+  using DL   = RAPT::rsDelay<Real>;
+  using Vec  = std::vector<Real>;
+
+  int M    =  23;     // Length of the delaylines, 2*M is the period of the output
+  int mIn  =   7;     // Exciter position for input (strike, pluck, bow, etc.)
+  int mOut =  11;     // Pickup position for output 
+  int N    =  6*M+1;  // Number of samples to render (3 periods plus one sample more)
+  // For a unit test, we should perhaps make sure that M, mIn, mOut have no common factors (be
+  // mutually prime) in order to not run into situations where it just all works because of some
+  // "happy coincidence". I think mutual primeness will rule out such happy coincidences (verify!).
+  // Maybe we should consider M+1 rather than M?
+
+  // Generate reference signal to match:
+  Vec yL = rsSpikeCirculationLeapFrog<Real>(N, M+1, mIn, mOut            );
+  Vec yS = rsSpikeCirculationWaveShift(     N, M+1, mIn, mOut, -1.0, -1.0);
+  Vec yW = rsSpikeCirculationBiDelay(       N, M,   mIn, mOut, -1.0, -1.0);
+  ok &= yS == yL;
+  ok &= yW == yL;
+  //rsPlotVectors(yL, yS, yW);
+  // We need to use M+1 in the first two implementations to match the period of the delayline based
+  // implementation. With M=10, we get a period of 20. ToDo: Change rsCreateLeapFrogReference() 
+  // such that we can pass it M directly as well. It should internally do the +1.
+
+  // Now a test with some artbitrary reflection coeffs. The leapfrog algo doesn't support this yet
+  // so we only compare the bi-delay algo to the shifting algo:
+  Real rL =  0.5;
+  Real rR = -0.5;
+  yS = rsSpikeCirculationWaveShift(N, M+1, mIn, mOut, rL, rR);
+  yW = rsSpikeCirculationBiDelay(  N, M,   mIn, mOut, rL, rR);
+  ok &= yS == yW;
+  //rsPlotVectors(yS, yW);
+
+  return ok;
+
+
+  // Observations:
+  //
+  // - For the leapfrog algo, we need to use M+1 rather than M to get a match. ToDo: Fix this 
+  //   mismatch by using M+1 inside the implementation of the leapfrog algo. M is the more 
+  //   convenient parametrization compared to M+1 because the period length is then exactly 2M.
+  //
+  // - I think, the initial delay for the spike to show up in the output is given by mOut-mIn
+  // 
+  //
+  // ToDo:
+  // 
+  // - Turn this into a unit test that takes M, mIn, mOut as parameters and produces the 
+  //   recirculating spike with all 3 available algorithms and makes sure that they all match.
+  // 
+  // - Write a function rsCreateWaveGuideReference analogous to rsCreateLeapFrogReference() and 
+  //   then implement a unit test that compares the outputs of the two algorithms for a range of
+  //   settings for M, mIn, mOut. Create also a unit test that compares the waveguid output 
+  //   against the shifting algo with arbitrary reflection coeffs (which the current 
+  //   implementation of the leap frog algo doesn't support)
+  //
+  //  - Implement lossy case by using a gain factor less of -g instead of -1 where g is some number
+  //    with 0 < g <= 1. It should be computed from a desired decay time. Figure out a formula for 
+  //    g when the decay time is given as user parameter (in samples).
+  //
+  // - Try what happens when we make one or both reflections non-inverting.
+  //
+  // - Wrap the whole functionality into a class. The extend this class by incorporating damping 
+  //   and dispersion filters at the reflecting ends (or maybe just at one end). Maybe allow for 
+  //   general filters in direct form for this. Or maybe better in biquad-chain form. Maybe 
+  //   implement both (in 2 different classes). For the firect form version, we can model it after
+  //   the way we do it with the allpass delays.
+  //
+  // - Allow for non-integer delays by providing various interpolation methods (linear, cubic, 
+  //   Thiran-allpass, etc.)
+  //
+  // - Try to create an animation. It's annoying to have to click through the individual plots to
+  //   see the time development.
+  // 
+  // - Experiment with a bit of smoothing before or after each step. Maybe handle the 
+  //   boundaries of the buffers periodically. Try a simple 3-point FIR. If the coeffs are [0,1,0],
+  //   there would be no smoothing at all. Maximum smoothing would be obtained by [1,1,1]/3. But 
+  //   maybe we could also use a bidirectional IIR smoothing filter (and then blend the smoothed
+  //   result with the original). I think, doing it this way would really simulate distributed 
+  //   damping as opposed to lumped damping (which could be conveniently integrated into the 
+  //   reflections). It's costly but this is just for experimentation.
+}
+
 //-------------------------------------------------------------------------------------------------
 // Waveguide Experiments
 
@@ -18716,105 +18803,22 @@ void testWaveEquation1D()
   //   each spatial sample along the string. Verify and document this! 
 }
 
-bool unitTestWaveGuideSpike()
-{
-  bool ok = true;
-
-  using Real = double;
-  using DL   = RAPT::rsDelay<Real>;
-  using Vec  = std::vector<Real>;
-
-  int M    =  23;     // Length of the delaylines, 2*M is the period of the output
-  int mIn  =   7;     // Exciter position for input (strike, pluck, bow, etc.)
-  int mOut =  11;     // Pickup position for output 
-  int N    =  6*M+1;  // Number of samples to render (3 periods plus one sample more)
-  // For a unit test, we should perhaps make sure that M, mIn, mOut have no common factors (be
-  // mutually prime) in order to not run into situations where it just all works because of some
-  // "happy coincidence". I think mutual primeness will rule out such happy coincidences (verify!).
-  // Maybe we should consider M+1 rather than M?
-
-  //Real tol = 0.0;
-
-
-
-  // Generate reference signal to match:
-  Vec yL = rsSpikeCirculationLeapFrog<Real>(N, M+1, mIn, mOut            );
-  Vec yS = rsSpikeCirculationWaveShift(     N, M+1, mIn, mOut, -1.0, -1.0);
-  Vec yW = rsSpikeCirculationBiDelay(       N, M,   mIn, mOut, -1.0, -1.0);
-  // We need to use M+1 in the first two implementations to match the period of the delayline based
-  // implementation. With M=10, we get a period of 20. ToDo: Change rsCreateLeapFrogReference() 
-  // such that we can pass it M directly as well. It should internally do the +1.
-
-  ok &= yS == yL;
-  ok &= yW == yL;
-  //rsPlotVectors(yL, yS, yW);  // Uncomment when something goes wrong!
-
-  return ok;
-
-
-
-  //rsPlotVectors(yL, yW, yW-yL); // Waveguide output vs leapfrog reference and error
-
-  // Observations:
-  //
-  // - For the leapfrog algo, we need to use M+1 rather than M to get a match. ToDo: Fix this 
-  //   mismatch by using M+1 inside the implementation of the leapfrog algo. M is the more 
-  //   convenient parametrization compared to M+1 because the period length is then exactly 2M.
-  //
-  // - I think, the initial delay for the spike to show up in the output is given by mOut-mIn
-  // 
-  //
-  // ToDo:
-  // 
-  // - Turn this into a unit test that takes M, mIn, mOut as parameters and produces the 
-  //   recirculating spike with all 3 available algorithms and makes sure that they all match.
-  // 
-  // - Write a function rsCreateWaveGuideReference analogous to rsCreateLeapFrogReference() and 
-  //   then implement a unit test that compares the outputs of the two algorithms for a range of
-  //   settings for M, mIn, mOut. Create also a unit test that compares the waveguid output 
-  //   against the shifting algo with arbitrary reflection coeffs (which the current 
-  //   implementation of the leap frog algo doesn't support)
-  //
-  //  - Implement lossy case by using a gain factor less of -g instead of -1 where g is some number
-  //    with 0 < g <= 1. It should be computed from a desired decay time. Figure out a formula for 
-  //    g when the decay time is given as user parameter (in samples).
-  //
-  // - Try what happens when we make one or both reflections non-inverting.
-  //
-  // - Wrap the whole functionality into a class. The extend this class by incorporating damping 
-  //   and dispersion filters at the reflecting ends (or maybe just at one end). Maybe allow for 
-  //   general filters in direct form for this. Or maybe better in biquad-chain form. Maybe 
-  //   implement both (in 2 different classes). For the firect form version, we can model it after
-  //   the way we do it with the allpass delays.
-  //
-  // - Allow for non-integer delays by providing various interpolation methods (linear, cubic, 
-  //   Thiran-allpass, etc.)
-  //
-  // - Try to create an animation. It's annoying to have to click through the individual plots to
-  //   see the time development.
-  // 
-  // - Experiment with a bit of smoothing before or after each step. Maybe handle the 
-  //   boundaries of the buffers periodically. Try a simple 3-point FIR. If the coeffs are [0,1,0],
-  //   there would be no smoothing at all. Maximum smoothing would be obtained by [1,1,1]/3. But 
-  //   maybe we could also use a bidirectional IIR smoothing filter (and then blend the smoothed
-  //   result with the original). I think, doing it this way would really simulate distributed 
-  //   damping as opposed to lumped damping (which could be conveniently integrated into the 
-  //   reflections). It's costly but this is just for experimentation.
-}
-
 
 void testWaveGuides()
 {
+  // Unit tests:
   bool ok = true;
   ok &= unitTestWaveShift();
   ok &= unitTestWaveGuideSpike();
   rsAssert(ok);
 
-  // Preliminaries (PDE-solvers to produce reference signals):
+  // Experiments:
   //testWaveEquation1D();
-
-  // Actual waveguide stuff:
   //testWaveGuide1();
+
+  // ToDo: 
+  // 
+  // - Fix mismatch of using sometimes M and sometimes M+1 to get the signal period right
 }
 
 //=================================================================================================

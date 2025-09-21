@@ -18864,6 +18864,9 @@ void testWaveGuide1()
   int mOut =  10;       // Pick up point for output
   int N    = 6*M;       // Number of samples to produce
 
+  // Create target reference signal with leapfrog PDE solver:
+  Vec yt = rsSpikeCirculationLeapFrog<T>(N, M, mIn, mOut);
+
   // Create and set up the waveguide:
   WG wg;
   wg.setMaxStringLength(M);
@@ -18874,6 +18877,7 @@ void testWaveGuide1()
   // Produce impulse response of waveguide and compare it to target signal:
   Vec y = impulseResponse(wg, N, 1.0);
 
+  rsPlotVectors(yt, y);
   rsPlotVector(y);
 
 

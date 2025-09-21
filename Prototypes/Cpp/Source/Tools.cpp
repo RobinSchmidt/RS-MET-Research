@@ -8835,10 +8835,13 @@ TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
   // Implement the mutual crossfeedback using the reflection coefficients:
   delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
   delay2.writeInput(reflectRight * ref1);  // Reflection at right end
-  // Maybe we should use 
-  // delay1.addToInputAt(reflectLeft  * ref2,   0);
-  // ...
-  // i.e. don't overwrite but add to what is already there?
+
+  // Test:
+  //delay1.addToInputAt(reflectLeft  * ref2, 0);  // Reflection at left end
+  //delay2.addToInputAt(reflectRight * ref1, M);  // Reflection at right end
+  // I hoped that doing it this way may fix the problems when trying to use mIn = 0 but all it
+  // does is making the system ustable
+
 
   // Feed in the inputs at the driving point mIn. The signal goes into bot the right and left 
   // going traveling wave components with weight 0.5:
@@ -8852,7 +8855,7 @@ TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
   // mIn = 0 and mIn = M (or M-1).
 
   // During development, we may plot the contents of the delaylines to see what is going on:
-  rsPlotDelayLineContent(delay1, delay2, true);  // true: Reverse content of delay2
+  //rsPlotDelayLineContent(delay1, delay2, true);  // true: Reverse content of delay2
 
   // Read out the outputs at the pickup point mOut:
   TSig out1 = delay1.readOutputAt(  mOut);

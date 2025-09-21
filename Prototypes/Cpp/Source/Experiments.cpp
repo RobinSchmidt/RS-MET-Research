@@ -18483,8 +18483,8 @@ std::vector<T> rsSpikeCirculationBiDelay(int N, int M, int mIn, int mOut, T rL, 
     // experiment. We only excite the string via initial conditions. I think, for feeding a 
     // continuous input into the string at the mIn, we'd have to do something like:
     // 
-    // dl1.addToInputAt(mIn, 0.5 * inputSignal);
-    // dl2.addToInputAt(mIn, 0.5 * inputSignal);
+    // dl1.addToInputAt(  mIn, 0.5 * inputSignal);
+    // dl2.addToInputAt(M-mIn, 0.5 * inputSignal);
     //
     // And I think, it's important to add the input before reading the output to get correct 
     // behavior when mIn == mOut. Verify this! Maybe to get correct behavior with mIn = 0 or 
@@ -18705,12 +18705,14 @@ bool unitTestWaveGuideClass()  // Find better name!
 {
   bool ok = true;
 
-  using T  = double;
-  using WG = rsWaveGuide<T, T>;
+  using T   = double;
+  using WG  = rsWaveGuide<T, T>;
+  using Vec = std::vector<T>;
 
-  int M    = 30;
-  int mIn  =  7;
-  int mOut = 11;
+  int M    =  30;
+  int mIn  =   7;
+  int mOut =  11;
+  int N    = 200;   // Number of samples to produce
 
   // Create and set up the waveguide:
   WG wg;
@@ -18719,6 +18721,18 @@ bool unitTestWaveGuideClass()  // Find better name!
   wg.setDrivingPoint(mIn);
   wg.setPickUpPoint(mOut);
 
+  // Create target reference signal with leapfrog PDE solver:
+  Vec yt = rsSpikeCirculationLeapFrog<T>(N, M, mIn, mOut);
+
+  // Create signal using the realtime waveguide class:
+  Vec y(N);
+  y[0] = wg.getSample(1.0);
+  for(int n = 1; n < N; n++)
+    y[n] = wg.getSample(0.0);
+  // Maybe use rsImpulseResponse (or similar)
+
+  ok &= y == yt;
+  //rsPlotVectors(yt, y);
 
   return ok;
 }

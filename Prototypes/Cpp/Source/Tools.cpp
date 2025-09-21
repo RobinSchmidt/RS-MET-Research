@@ -8807,8 +8807,37 @@ protected:
 template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
 {
-  return in;   // Preliminary
+  //return in;   // Preliminary
 
+  // Get the outputs of the delay lines for implementing the reflection via crossfeedback:
+  TSig ref1 = delay1.readOutput();         // Reflected wave at right end
+  TSig ref2 = delay2.readOutput();         // Reflected wave at left end
+
+  // Implement the mutual crossfeedback using the reflection coefficients:
+  delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
+  delay2.writeInput(reflectRight * ref1);  // Reflection at right end
+
+  // Feed in the inputs at the driving point mIn. The signal goes into bot the right and left 
+  // going traveling wave components with weight 0.5:
+  delay1.addToInputAt(0.5 * in,   mIn);
+  delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
+  // I think, it's important to add the input before reading the output to get correct 
+  // behavior when mIn == mOut. Verify this! Maybe to get correct behavior with mIn = 0 or 
+  // mIn = M-1 (or M?), we should actually do this before picking up the reflections? Figure 
+  // this out and document it! But no! The .writeOutput() calls might then overwrite it, 
+  // right? So maybe we should add it after writeOutput. Or maybe we should just disallow
+  // mIn = 0 and mIn = M (or M-1).
+
+  // Read out the outputs at the pickup point mOut:
+  TSig out1 = delay1.readOutputAt(  mOut);
+  TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
+
+  // Update the tap pointers in the delaylines:
+  delay1.incrementTapPointers();
+  delay2.incrementTapPointers();
+
+  // The output signal is the sum of the right going and left going traveling waves:
+  return out1 + out2;
 }
 
 template<class TSig, class TPar>

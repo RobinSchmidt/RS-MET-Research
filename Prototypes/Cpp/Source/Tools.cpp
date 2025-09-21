@@ -8739,6 +8739,16 @@ TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& y, const TVec& u)
 
 //=================================================================================================
 
+/** Implements a waveguide based filter with adjustable length, driving point and pickup point. 
+It's a simple implementation that only supports integer lengths. We don't do any fractional delay
+approximations here.
+ 
+
+References:
+
+  PASP: Physical Audio Signal Processing (Julius O. Smith)
+
+*/
 
 template<class TSig, class TPar>
 class rsWaveGuide
@@ -8773,6 +8783,12 @@ public:
 
   void setPickUpPoint(int newLocation)  {  mOut = newLocation; updateDelaySettings();  }
 
+  void setReflectionCoeffs(TPar leftEnd, TPar rightEnd)
+  {
+    reflectLeft  = leftEnd; 
+    reflectRight = rightEnd;
+  }
+
   //-----------------------------------------------------------------------------------------------
   // \name Processing
 
@@ -8793,8 +8809,9 @@ protected:
   RAPT::rsDelay<TSig> delay1, delay2;
 
   // Reflection coefficients:
-  TSig reflectLeft  = TSig(-1);
-  TSig reflectRight = TSig(-1);
+  TPar reflectLeft  = TPar(-1);
+  TPar reflectRight = TPar(-1);
+  // Maybe it should be of type TPar.
 
   int M    = 30;
   int mIn  =  7;
@@ -8807,8 +8824,6 @@ protected:
 template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
 {
-  //return in;   // Preliminary
-
   // Get the outputs of the delay lines for implementing the reflection via crossfeedback:
   TSig ref1 = delay1.readOutput();         // Reflected wave at right end
   TSig ref2 = delay2.readOutput();         // Reflected wave at left end

@@ -18709,10 +18709,13 @@ bool unitTestWaveGuideClass()  // Find better name!
   using WG  = rsWaveGuide<T, T>;
   using Vec = std::vector<T>;
 
-  int M    =  30;
-  int mIn  =   7;
-  int mOut =  11;
-  int N    = 200;   // Number of samples to produce
+  int M    =  20;       // Length of the waveguide in (spatial) samples
+  int mIn  =   7;       // Driving point for input
+  int mOut =  11;       // Pick up point for output
+  int N    = 200;       // Number of samples to produce
+
+  // Create target reference signal with leapfrog PDE solver:
+  Vec yt = rsSpikeCirculationLeapFrog<T>(N, M, mIn, mOut);
 
   // Create and set up the waveguide:
   WG wg;
@@ -18721,20 +18724,19 @@ bool unitTestWaveGuideClass()  // Find better name!
   wg.setDrivingPoint(mIn);
   wg.setPickUpPoint(mOut);
 
-  // Create target reference signal with leapfrog PDE solver:
-  Vec yt = rsSpikeCirculationLeapFrog<T>(N, M, mIn, mOut);
-
-  // Create signal using the realtime waveguide class:
-  Vec y(N);
-  y[0] = wg.getSample(1.0);
-  for(int n = 1; n < N; n++)
-    y[n] = wg.getSample(0.0);
-  // Maybe use rsImpulseResponse (or similar)
-
+  // Produce impulse response of waveguide and compare it to target signal:
+  Vec y = impulseResponse(wg, N, 1.0);
   ok &= y == yt;
   //rsPlotVectors(yt, y);
 
   return ok;
+
+
+  // ToDo:
+  //
+  // - Test using arbitrary reflection coefficients. For this, we need to produce a target signal
+  //   with the waveshifting solver because the leapfrog solver does not yet support arbitrary
+  //   reflection coeffs (corresponding to arbitrary boundary conditions)
 }
 
 

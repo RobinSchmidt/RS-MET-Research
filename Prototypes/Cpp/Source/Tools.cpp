@@ -8737,6 +8737,59 @@ TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& y, const TVec& u)
 }
 
 
+//=================================================================================================
+
+
+template<class TSig, class TPar>
+class rsWaveGuide
+{
+
+public:
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  // ToDo:
+  //void setStringLength(int newLength);
+  //void setDrivingPoint(int newLoaction);
+  //void setPickUpPoint(int newLocation);
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Processing
+
+  TSig getSample(TSig in);
+
+  void reset()
+  {
+    delay1.reset();
+    delay2.reset();
+  }
+
+
+
+protected:
+
+  RAPT::rsDelay<TSig> delay1, delay2;
+
+  // Reflection coefficients:
+  TSig reflectLeft  = TSig(-1);
+  TSig reflectRight = TSig(-1);
+
+  int M    = 30;
+  int mIn  =  7;
+  int mOut = 11;
+
+  // ToDo: find better default values
+
+};
+
+template<class TSig, class TPar>
+TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
+{
+  return in;   // Preliminary
+
+}
+
 
 //=================================================================================================
 

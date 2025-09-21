@@ -18461,7 +18461,8 @@ std::vector<T> rsSpikeCirculationBiDelay(int N, int M, int mIn, int mOut, T rL, 
   dl2.addToInputAt(0.5, M-mIn);
   // In the 2nd delayline, we need to use M-mIn because this delayline runs "backwards" so the 
   // indices of the positions are all flipped/reflected.
-  // ToDo: Explain this in more detail!
+  // ToDo: Explain this in more detail! Maybe give the function another parameter nIn that 
+  // determines at which sample instant we feed in the unit impulse into the string
 
   // Produce output signal:
   Vec y(N);
@@ -18493,7 +18494,7 @@ std::vector<T> rsSpikeCirculationBiDelay(int N, int M, int mIn, int mOut, T rL, 
     // mIn = 0 and mIn = M (or M-1).
 
     // Read out the outputs:
-    T out1 = dl1.readOutputAt(mOut);
+    T out1 = dl1.readOutputAt(  mOut);
     T out2 = dl2.readOutputAt(M-mOut);
 
     // Update the tap pointers in the delaylines:
@@ -18506,7 +18507,28 @@ std::vector<T> rsSpikeCirculationBiDelay(int N, int M, int mIn, int mOut, T rL, 
 
   return y;
 
-  // See:
+  // ToDo:
+  //
+  // - Wrap the whole functionality into a class. The extend this class by incorporating damping 
+  //   and dispersion filters at the reflecting ends (or maybe just at one end). Maybe allow for 
+  //   general filters in direct form for this. Or maybe better in biquad-chain form. Maybe 
+  //   implement both (in 2 different classes). For the firect form version, we can model it after
+  //   the way we do it with the allpass delays.
+  //
+  // - Allow for non-integer delays by providing various interpolation methods (linear, cubic, 
+  //   Thiran-allpass, etc.)
+  // 
+  // - Experiment with a bit of smoothing before or after each step. Maybe handle the 
+  //   boundaries of the buffers periodically. Try a simple 3-point FIR. If the coeffs are [0,1,0],
+  //   there would be no smoothing at all. Maximum smoothing would be obtained by [1,1,1]/3. But 
+  //   maybe we could also use a bidirectional IIR smoothing filter (and then blend the smoothed
+  //   result with the original). I think, doing it this way would really simulate distributed 
+  //   damping as opposed to lumped damping (which could be conveniently integrated into the 
+  //   reflections). It's costly but this is just for experimentation.
+  //
+  //
+  // See also:
+  // 
   // https://ccrma.stanford.edu/~jos/pasp/Digital_Waveguide_Modeling_Elements.html
   // https://ccrma.stanford.edu/~jos/pasp/Physical_Outputs.html
   // https://ccrma.stanford.edu/~jos/pasp/Physical_Inputs.html
@@ -18673,33 +18695,25 @@ bool unitTestWaveGuideSpike()
   //   settings for M, mIn, mOut. Create also a unit test that compares the waveguid output 
   //   against the shifting algo with arbitrary reflection coeffs (which the current 
   //   implementation of the leap frog algo doesn't support)
-  //
-  //  - Implement lossy case by using a gain factor less of -g instead of -1 where g is some number
-  //    with 0 < g <= 1. It should be computed from a desired decay time. Figure out a formula for 
-  //    g when the decay time is given as user parameter (in samples).
-  //
-  // - Try what happens when we make one or both reflections non-inverting.
-  //
-  // - Wrap the whole functionality into a class. The extend this class by incorporating damping 
-  //   and dispersion filters at the reflecting ends (or maybe just at one end). Maybe allow for 
-  //   general filters in direct form for this. Or maybe better in biquad-chain form. Maybe 
-  //   implement both (in 2 different classes). For the firect form version, we can model it after
-  //   the way we do it with the allpass delays.
-  //
-  // - Allow for non-integer delays by providing various interpolation methods (linear, cubic, 
-  //   Thiran-allpass, etc.)
-  //
+  // 
   // - Try to create an animation. It's annoying to have to click through the individual plots to
   //   see the time development.
-  // 
-  // - Experiment with a bit of smoothing before or after each step. Maybe handle the 
-  //   boundaries of the buffers periodically. Try a simple 3-point FIR. If the coeffs are [0,1,0],
-  //   there would be no smoothing at all. Maximum smoothing would be obtained by [1,1,1]/3. But 
-  //   maybe we could also use a bidirectional IIR smoothing filter (and then blend the smoothed
-  //   result with the original). I think, doing it this way would really simulate distributed 
-  //   damping as opposed to lumped damping (which could be conveniently integrated into the 
-  //   reflections). It's costly but this is just for experimentation.
+  //
 }
+
+bool unitTestWaveGuideClass()  // Find better name!
+{
+  bool ok = true;
+
+  using T  = double;
+  using WG = rsWaveGuide<T, T>;
+
+  WG wg;
+
+
+  return ok;
+}
+
 
 //-------------------------------------------------------------------------------------------------
 // Waveguide Experiments
@@ -18819,15 +18833,23 @@ void testWaveGuides()
   bool ok = true;
   ok &= unitTestWaveShift();
   ok &= unitTestWaveGuideSpike();
+  ok &= unitTestWaveGuideClass();
   rsAssert(ok);
 
   // Experiments:
   testWaveEquation1D();
 
+
   // ToDo: 
   // 
-  // - Try using different lengths M1, M2 for the 2 delay lines in the waveguide model (take care 
-  //   to limit  mIn, mOut to min(M1, M2))
+  // - Try implementing different boundary conditions for the leapfrog solver. We want to also be
+  //   able to realize zero-velocity. We also want the left and right boundary to have independent
+  //   boundary conditions. We actually can already do this with the shifting and the waveguide
+  //   model but I want it also in a proper PDE solver.
+  // 
+  // - Try using different lengths M1, M2 for the 2 delay lines in the waveguide model. Take care 
+  //   to limit mIn and mOut to min(M1, M2) in this case. What if we don't do that. Maybe we still
+  //   get reasonable output in caes where mOut > M just with an additional delay? Figure this out!
   //
   // - Let mIn and/or mOut vary over time. Maybe it can move through the delay line like the phase
   //   pointer of a table lookup oscillator with its own frequency. Maybe we could even let M 

@@ -8864,6 +8864,19 @@ void rsWaveGuide<TSig, TPar>::updateDelaySettings()
   // ToDo: Limit mIn, mOut to the safe range. I think its 0..M or maybe 1...M-1
 }
 
+/*
+ToDo:
+
+- Document the physical interpretation and spectral and temporal effects of the settings. I think,
+  the initial delay for the spike to show up in the output is given by mOut-mIn. Document also
+  what comb-filtering effects we should expect. I think, driving the string at M/p will not be 
+  able to excite modes that have their maxima at locations k * M/p. Putting the pickup at M/p
+  will make us unable to pick up such modes. I think, this is a controllability/observability thing
+  in the jargon of control systems. So, I think we should expect to see two series of notches in
+  the generally harmonic spectrum.
+  
+  
+*/
 
 
 

@@ -18672,16 +18672,6 @@ bool unitTestWaveGuideSpike()
   rsAssert(ok);
   return ok;
 
-
-  // Observations:
-  //
-  // - For the leapfrog algo, we need to use M+1 rather than M to get a match. ToDo: Fix this 
-  //   mismatch by using M+1 inside the implementation of the leapfrog algo. M is the more 
-  //   convenient parametrization compared to M+1 because the period length is then exactly 2M.
-  //
-  // - I think, the initial delay for the spike to show up in the output is given by mOut-mIn
-  // 
-  //
   // ToDo:
   // 
   // - Turn this into a unit test that takes M, mIn, mOut as parameters and then implement a 
@@ -18729,6 +18719,15 @@ bool unitTestWaveGuideClass()  // Find better name!
   ok &= y == yt;
   //rsPlotVectors(yt, y);
 
+  // Let's now make a test with arbitrary reflection coefficients:
+  T rL = 0.9;
+  T rR = 0.8;
+  wg.setReflectionCoeffs(rL, rR);
+  yt = rsSpikeCirculationWaveShift(N, M, mIn, mOut, rL, rR);
+  y  = impulseResponse(wg, N, 1.0);
+  ok &= y == yt;
+  //rsPlotVectors(yt, y);
+
   return ok;
 
 
@@ -18737,6 +18736,9 @@ bool unitTestWaveGuideClass()  // Find better name!
   // - Test using arbitrary reflection coefficients. For this, we need to produce a target signal
   //   with the waveshifting solver because the leapfrog solver does not yet support arbitrary
   //   reflection coeffs (corresponding to arbitrary boundary conditions)
+  //
+  // - Try what happens when we try to put mIn, mOut at 0 and or M (or M-1?). Is this even 
+  //   possible? Maybe these are the only points that do not intrdocue comb filtering artifacts?
 }
 
 

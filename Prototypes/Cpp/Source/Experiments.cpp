@@ -18853,9 +18853,53 @@ void testWaveEquation1D()
   //   each spatial sample along the string. Verify and document this! 
 }
 
+void testWaveGuide1()
+{
+  using T   = double;
+  using WG  = rsWaveGuide<T, T>;
+  using Vec = std::vector<T>;
+
+  int M    = 100;       // Length of the waveguide in (spatial) samples
+  int mIn  =   0;       // Driving point for input
+  int mOut =  10;       // Pick up point for output
+  int N    = 6*M;       // Number of samples to produce
+
+  // Create and set up the waveguide:
+  WG wg;
+  wg.setMaxStringLength(M);
+  wg.setStringLength(M);
+  wg.setDrivingPoint(mIn);
+  wg.setPickUpPoint(mOut);
+
+  // Produce impulse response of waveguide and compare it to target signal:
+  Vec y = impulseResponse(wg, N, 1.0);
+
+  rsPlotVector(y);
+
+
+  // Observations:
+  // 
+  // - The period is given by 2*M.
+  //
+  // - The first spike in the impulse response appears at n = mOut - mIn.
+  //
+  // - When mOut = mIn, we see a second spike which goes dwonward with amplitude 0.5 at
+  //   n = mIn + mOut. Before the cycle repeats at n = M, we see another downward spike of 0.5
+  //   at n = M - (mIn + mOut)
+  //
+  //
+  // ToDo:
+  //
+  // - Plot spectra and figure out where notches occur due to nodes in the standing wave. This
+  //   will depend on the placement of mIn and mOut. When mIn is in a node of a given mode, the
+  //   frequency can not be excited. When mOut is in a node, the frequency cannot be picked up.
+  //   
+}
 
 void testWaveGuides()
 {
+  testWaveGuide1();
+
   // Unit tests:
   bool ok = true;
   ok &= unitTestWaveShift();
@@ -18864,7 +18908,8 @@ void testWaveGuides()
   rsAssert(ok);
 
   // Experiments:
-  testWaveEquation1D();
+  //testWaveEquation1D();
+  testWaveGuide1();
 
 
   // ToDo: 

@@ -8741,7 +8741,10 @@ TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& y, const TVec& u)
 
 /** Implements a waveguide based filter with adjustable length, driving point and pickup point. 
 It's a simple implementation that only supports integer lengths. We don't do any fractional delay
-approximations here.
+approximations here. A waveguide can be seen as an efficient numerical solution method to the
+1D wave equation that describes the motion of a string (like a guitar or violin string) or the 
+pressure waves in a column of air in a long cylindrical bore (like a flute or organ pipe). In our
+member function names, we may occasionally refer to the mental image of a string, though.
  
 
 References:
@@ -8776,6 +8779,8 @@ public:
     M = rsMin(M, newMaxLength);
     updateDelaySettings();
   }
+  // Maybe call it just setLength. It does not necessarily represent a string although that is the
+  // most intuitive way of visualizing it.
 
   void setStringLength(int newLength)   { M = newLength; updateDelaySettings();  }
   
@@ -8811,7 +8816,6 @@ protected:
   // Reflection coefficients:
   TPar reflectLeft  = TPar(-1);
   TPar reflectRight = TPar(-1);
-  // Maybe it should be of type TPar.
 
   int M    = 30;
   int mIn  =  7;
@@ -8831,6 +8835,10 @@ TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
   // Implement the mutual crossfeedback using the reflection coefficients:
   delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
   delay2.writeInput(reflectRight * ref1);  // Reflection at right end
+  // Maybe we should use 
+  // delay1.addToInputAt(reflectLeft  * ref2,   0);
+  // ...
+  // i.e. don't overwrite but add to what is already there?
 
   // Feed in the inputs at the driving point mIn. The signal goes into bot the right and left 
   // going traveling wave components with weight 0.5:
@@ -8842,6 +8850,9 @@ TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
   // this out and document it! But no! The .writeOutput() calls might then overwrite it, 
   // right? So maybe we should add it after writeOutput. Or maybe we should just disallow
   // mIn = 0 and mIn = M (or M-1).
+
+  // During development, we may plot the contents of the delaylines to see what is going on:
+  rsPlotDelayLineContent(delay1, delay2, true);  // true: Reverse content of delay2
 
   // Read out the outputs at the pickup point mOut:
   TSig out1 = delay1.readOutputAt(  mOut);

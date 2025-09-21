@@ -18860,8 +18860,8 @@ void testWaveGuide1()
   using Vec = std::vector<T>;
 
   int M    = 100;       // Length of the waveguide in (spatial) samples
-  int mIn  =   0;       // Driving point for input
-  int mOut =  10;       // Pick up point for output
+  int mIn  =  20;       // Driving point for input
+  int mOut =  30;       // Pick up point for output
   int N    = 6*M;       // Number of samples to produce
 
   // Create target reference signal with leapfrog PDE solver:
@@ -18878,14 +18878,15 @@ void testWaveGuide1()
   Vec y = impulseResponse(wg, N, 1.0);
 
   rsPlotVectors(yt, y);
-  rsPlotVector(y);
+  //rsPlotVector(y);
 
 
   // Observations:
   // 
   // - The period is given by 2*M.
   //
-  // - The first spike in the impulse response appears at n = mOut - mIn.
+  // - The first spike in the impulse response appears at n = mOut - mIn. What if mIn > mOut?
+  //   Do we get a wrapraound? Or is it the absolute value of the difference?
   //
   // - When mOut = mIn, we see a second spike which goes dwonward with amplitude 0.5 at
   //   n = mIn + mOut. Before the cycle repeats at n = M, we see another downward spike of 0.5

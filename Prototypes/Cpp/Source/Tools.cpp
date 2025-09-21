@@ -8828,6 +8828,10 @@ protected:
 template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
 {
+  // Test - add input before reding the outputs:
+  //delay1.addToInputAt(0.5 * in, mIn);
+  //delay2.addToInputAt(0.5 * in, M-mIn);
+
   // Get the outputs of the delay lines for implementing the reflection via crossfeedback:
   TSig ref1 = delay1.readOutput();         // Reflected wave at right end
   TSig ref2 = delay2.readOutput();         // Reflected wave at left end
@@ -8840,7 +8844,8 @@ TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
   //delay1.addToInputAt(reflectLeft  * ref2, 0);  // Reflection at left end
   //delay2.addToInputAt(reflectRight * ref1, M);  // Reflection at right end
   // I hoped that doing it this way may fix the problems when trying to use mIn = 0 but all it
-  // does is making the system ustable
+  // does is making the system ustable. Maybe adding the input before reading the output for
+  // reflection?
 
 
   // Feed in the inputs at the driving point mIn. The signal goes into bot the right and left 
@@ -8867,6 +8872,20 @@ TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
 
   // The output signal is the sum of the right going and left going traveling waves:
   return out1 + out2;
+
+
+  // ToDo:
+  //
+  // - Try a different order of the steps: 
+  // 
+  //     (1) write   (i.e. delay1.addToInputAt(...))
+  // 
+  //     (2) read    (i.e. TSig out1 = delay1.readOutputAt(..))
+  // 
+  //     (3) update  (i.e. TSig ref1 = delay1.readOutput(), 
+  //                       delay1.writeInput(reflectLeft  * ref2);
+  //                       delay1.incrementTapPointers();)
+  //   
 }
 
 template<class TSig, class TPar>

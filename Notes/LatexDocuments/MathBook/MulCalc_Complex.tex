@@ -215,7 +215,7 @@ It turns out that when $f$ is an analytic function, its Polya vector field has s
 
 
 \subsubsection{Some Important Integrals}
-In real analysis, integrals for integer power functions are very important as building blocks for evaluating more complicated integrals. For example, they could be used for integrating a power series term wise. There, integrating may have referred to either: finding an antiderivative (indefinite integration) or finding the area balance under a function (definite integration). In complex analysis, we are mostly concerned with definite integrals along contours (aka curves or paths) and most of the time, these contours will form closed loops. The result of such an integration is not another function of $z$ but a (complex) number. Again, contour integrals of integer power functions are a valuable building block for the evaluation of such integrals for more complicated functions. This is because for these, we have a nice and simple formula available and for more complicated functions, we can (due to linearity of integration) just add up the contributions of the individual monomial terms. For a monomial function $f(z) = z^n$, these contour integrals are given by:
+In real analysis, integrals for integer power functions are very important as building blocks for evaluating more complicated integrals. For example, they could be used for integrating a power series term wise. There, integrating may have referred to either: finding an antiderivative (indefinite integration) or finding the area balance under a function (definite integration). In complex analysis, we are mostly concerned with definite integrals along contours (aka curves or paths) and most of the time, these contours will form closed loops. The result of such an integration is not another function of $z$ but a (complex) number. Again, contour integrals of integer power functions are a valuable building block for the evaluation of such integrals for more complicated functions. This is because for these, we have a nice and simple formula available and for more complicated functions, we can (due to linearity of integration) just add up the contributions of the individual monomial terms, if we assume the function to be given as a series expansion. For a monomial\footnote{I'm using the term monomial a bit loosely here in the sense that it can refer to an expression like $z^n$ where $n$ is allowed to be any integer. The usual definition assumes $n$ being a natural number so we are actually dealing with a generalized notion of monomials here.} function $f(z) = z^n$, these contour integrals are given by:
 \begin{equation}
 \oint_{\gamma} z^n \; dz = 
 \begin{cases}
@@ -225,7 +225,9 @@ In real analysis, integrals for integer power functions are very important as bu
 \qquad \qquad
 \oint_{\gamma} \frac{1}{z} \; dz = 2 \pi \i
 \end{equation}
-where the contour $\gamma$ can be any closed loop that winds around the origin exactly once (verify!). Now this result is rather peculiar. It says that the contour integral around a closed loop around the origin (that winds around once) for a monomial function $z^n$ is always zero except for the case $n=-1$ in which case it is equal to $2 \pi i$. The case $n=-1$ means that we are dealing with reciprocation function $f(z) = z^{-1} = \frac{1}{z}$. This function is, among all powers of $z$, the odd one out and it is so important that I have even written down the formula for this special case again alongside with the general formula. ...TBC...
+where the contour $\gamma$ can be any closed loop that winds counterclockwise around the origin exactly once\footnote{Such a loop is said to have a \emph{winding number} of $1$} (verify!). Now this result is rather peculiar. It says that the contour integral around a closed loop around the origin (with winding number 1) for a monomial function $z^n$ is always zero except for the case $n=-1$ in which case it is equal to $2 \pi i$. The case $n=-1$ means that we are dealing with reciprocation function $f(z) = z^{-1} = \frac{1}{z}$. This function is, among all powers of $z$, the odd one out and it is so important that I have even written down the formula for this special case again alongside with the general formula. ...TBC...
+
+% ToDo: mention winding numbers and what changes when the contour loops around multiple times. The value just gets multiplied by the winding number. This number can also be neagtive which means that the loop encircles the origin clockwise rather than counterclockwise
 
 % Give interpretation for the integral over 1/z: When traveling along the contour while accumulating all the work along our path (coming from the force exerted by the vector field into our direction of movement) and also observing all the flux that we see passing across our path see (coming from flow of the vector field through our path, i.e. perpendicularly crossing it), the total work done (i.e. the kinetic energy we picked up) along our journey will be zero. But we will have seen a net amount of flux flowing through our path. And that amount is $2 \pi$, beause that happens to be the total angle that we traversed. It's most easy to take the unit circle as the contour $\gamma$ but the result holds for any closed contour with winding number 1 around the origin.
 
@@ -234,11 +236,12 @@ where the contour $\gamma$ can be any closed loop that winds around the origin e
 \subsection{Laurent Series}
 As we have already spoilered in equation (\ref{Eq:LaurentSeriesReal}) in the context of real functions, the \emph{Laurent series} of a function $f$ can be seen as a generalized Taylor expansion that allows also for negative powers. In the complex setting, it is given by:
 \begin{equation}
+\label{Eq:LaurentSeries}
 f(z) = \sum_{n=-\infty}^{\infty} a_n (z - z_0)^n 
 \qquad \text{where} \qquad
 a_n = \frac{1}{2 \pi i} \oint_{\gamma} \frac{f(z)}{(z-z_0)^{n+1}} \; dz
 \end{equation}
-Where I now have also given you the formula to compute the coefficients $a_n$ which I left out in the previous mention, because at that point, you couldn't possibly have made sense of it\footnote{Unless, of course, you already had prior knowledge about complex analysis.}. It may still may look scary, but now we have the tools under our belt to handle it ...TBC...
+Where I now have also given you the formula to compute the coefficients $a_n$ which I left out in the previous mention, because at that point, you couldn't possibly have made sense of it\footnote{Unless, of course, you already had prior knowledge about complex analysis.} and it may have scared the hell out of you. It may still may look a bit scary, but now we have the tools under our belt to handle it ...TBC...
 
 % https://en.wikipedia.org/wiki/Laurent_series
 
@@ -250,7 +253,7 @@ The coefficient $a_{-1}$ for $n=-1$ in the Laurent series expansion of $f(z)$ is
 \begin{equation}
 \Res(f,z_0) = a_{-1} = \frac{1}{2 \pi i} \oint_{\gamma} f(z) \; dz
 \end{equation}
-The name residue stems from the fact that it is the only thing that remains after we do a contour integration around a closed loop around $z_0$. ...TBC...
+This is because for $n=-1$, the denominator $(z-z_0)^{n+1}$ in the calculation formula for $a_n$ in equation (\ref{Eq:LaurentSeries}) simplifies to 1. The name residue stems from the fact that it is the only thing that remains after we do a contour integration around a closed loop\footnote{Again: with winding number one. You know the drill by now, so I'll henceforth assume that to be implied.} around $z_0$. ...TBC...
 
 
 

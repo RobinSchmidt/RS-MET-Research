@@ -18414,6 +18414,34 @@ std::vector<T> rsSpikeCirculationLeapFrog(int N, int M, int mIn, int mOut)
     WE::stepLeapFrog(u, u1);
   }
   return y;
+
+  // Notes:
+  //
+  // - I think, an ad-hoc way to incorporate distributed damping would be to modify the leap-frog 
+  //   step by subtracting a small fraction of the current velocity from the displacement. This 
+  //   velocity could be computed as (u - u1). Actually no: it seems physically more plausible to 
+  //   subtract it from the acceleration (in damping, the velocity produces a *force* which is 
+  //   proportional to acceleration). But in the solver scheme, we do not explicitly represent the
+  //   acceleration so it's not clear how to do that. Another ad-hoc way may be to just scale down
+  //   the displacement a bit by a factor.
+  // 
+  // - A more pricipled way to introduce string damping would be to to start with a modified PDE 
+  //   that includes damping. This would involve adding (or subtracting?) a term proportional to 
+  //   the first time-derivative of the displacement. Starting from this modified PDE, we would
+  //   re-derive the solver scheme by replacing the time and space derivatives by finite 
+  //   differences. It seems to make sense to use a central difference for the additional required 
+  //   temporal derivative beacuse we already use central differences for the other two 
+  //   derivatives (i.e. the 2nd temporal and the 2nd spatial derivative in the undamped wave 
+  //   equation).
+  //
+  // - A potentially cheaper way to dampen the oscillations over time is to include damping into 
+  //   the reflections. Doing that would be straightforward with the waveguide algorithm and also
+  //   with the shifting algorithm but I'm not sure how to do it in the actual PDE solver scheme.
+  //   I also don't know yet how to introduce arbitrary boundary conditions into the leapfrog 
+  //   scheme. Another thing to figure out. It will probably involve using special update rules
+  //   for the endpoints of the string. Currently, these special update rules just say: "don't 
+  //   update them at all" or "keep them fixed (at zero)". By the way: What happens if we fix them
+  //   to some value other than zero? ..just for fun and out of couriosity.
 }
 
 // Is supposed to produce the same signal as rsSpikeCirculationLeapFrog() but with a different

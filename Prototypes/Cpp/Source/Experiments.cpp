@@ -18425,7 +18425,7 @@ std::vector<T> rsSpikeCirculationLeapFrog(int N, int M, int mIn, int mOut)
   //   acceleration so it's not clear how to do that. Another ad-hoc way may be to just scale down
   //   the displacement a bit by a factor.
   // 
-  // - A more pricipled way to introduce string damping would be to to start with a modified PDE 
+  // - A more principled way to introduce string damping would be to to start with a modified PDE 
   //   that includes damping. This would involve adding (or subtracting?) a term proportional to 
   //   the first time-derivative of the displacement. Starting from this modified PDE, we would
   //   re-derive the solver scheme by replacing the time and space derivatives by finite 
@@ -18887,9 +18887,9 @@ void testWaveGuide1()
   using WG  = rsWaveGuide<T, T>;
   using Vec = std::vector<T>;
 
-  int M    = 100;       // Length of the waveguide in (spatial) samples
-  int mIn  =  20;       // Driving point for input
-  int mOut =  30;       // Pick up point for output
+  int M    =  97;       // Length of the waveguide in (spatial) samples
+  int mIn  =  17;       // Driving point for input
+  int mOut =  43;       // Pick up point for output
   int N    = 6*M;       // Number of samples to produce
 
   // Create target reference signal with leapfrog PDE solver:

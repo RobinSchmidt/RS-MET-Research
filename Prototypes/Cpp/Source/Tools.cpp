@@ -8825,6 +8825,45 @@ protected:
 
 };
 
+
+// New:
+template<class TSig, class TPar>
+TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
+{
+  // Write inputs into the delaylines at the driving point mIn. The signal goes into both the right
+  // and left going traveling wave components with weight 0.5:
+  delay1.addToInputAt(0.5 * in,   mIn);
+  delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
+
+  // Read out the outputs at the pickup point mOut:
+  TSig out1 = delay1.readOutputAt(  mOut);
+  TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
+
+
+  // This code should usually be commented out but can be uncommented for debugging such that we 
+  // may plot the contents of the delaylines to see what is going on:
+  //rsPlotDelayLineContent(delay1, delay2, true);  // true: Reverse content of delay2
+  // ToDo: Maybe also plot the sum of the contents of both delay lines (with the content of the
+  // 2nd reversed). This sum correponds to the physical displacement so we would see the physical
+  // shape of the string at the current instant.
+
+
+  // Implement the mutual crossfeedback using the reflection coefficients:
+  TSig ref1 = delay1.readOutput();         // Reflected wave at right end
+  TSig ref2 = delay2.readOutput();         // Reflected wave at left end
+  delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
+  delay2.writeInput(reflectRight * ref1);  // Reflection at right end
+
+  // Update the tap pointers in the delaylines:
+  delay1.incrementTapPointers();
+  delay2.incrementTapPointers();
+
+  // The output signal is the sum of the right going and left going traveling waves:
+  return out1 + out2;
+}
+
+// Old:
+/*
 template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
 {
@@ -8887,6 +8926,7 @@ TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
   //                       delay1.incrementTapPointers();)
   //   
 }
+*/
 
 template<class TSig, class TPar>
 void rsWaveGuide<TSig, TPar>::updateDelaySettings()

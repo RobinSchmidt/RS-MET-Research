@@ -8860,6 +8860,11 @@ TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
 
   // The output signal is the sum of the right going and left going traveling waves:
   return out1 + out2;
+
+  // This still produces wrong results when mIn = 0 where "wrong" means: Different from the
+  // leapfrog PDE solver scheme which I take as reference for the ground truth. Although: that in
+  // itself may be questionable. Actually, it's impossible to excite the string in the leapfrog
+  // scheme at 0 because we assume this value to be fixed there.
 }
 
 // Old:

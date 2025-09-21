@@ -18887,13 +18887,16 @@ void testWaveGuide1()
   using WG  = rsWaveGuide<T, T>;
   using Vec = std::vector<T>;
 
-  int M    =  97;       // Length of the waveguide in (spatial) samples
-  int mIn  =  17;       // Driving point for input
-  int mOut =  43;       // Pick up point for output
+  int M    =  10;       // Length of the waveguide (number of segments)
+  int mIn  =   0;       // Driving point for input
+  int mOut =   3;       // Pick up point for output
   int N    = 6*M;       // Number of samples to produce
 
-  // Create target reference signal with leapfrog PDE solver:
-  Vec yt = rsSpikeCirculationLeapFrog<T>(N, M, mIn, mOut);
+  // Create target reference signals with leapfrog PDE solver and with the wave-shifting algo:
+  Vec yL = rsSpikeCirculationLeapFrog<T>(N, M, mIn, mOut);
+  Vec yS = rsSpikeCirculationWaveShift(  N, M, mIn, mOut, -1.0, -1.0);
+  rsPlotVectors(yL, yS);  // Check, if they are the same
+  // Nope! With mIn = 0, yS is all zeros!
 
   // Create and set up the waveguide:
   WG wg;
@@ -18905,7 +18908,8 @@ void testWaveGuide1()
   // Produce impulse response of waveguide and compare it to target signal:
   Vec y = impulseResponse(wg, N, 1.0);
 
-  rsPlotVectors(yt, y);
+  rsPlotVectors(yL, y);
+  rsPlotVectors(yS, y);
   //rsPlotVector(y);
 
 

@@ -18454,6 +18454,7 @@ std::vector<T> rsSpikeCirculationWaveShift(int N, int M, int mIn, int mOut, T rL
   // Allocate waveguide and set up initial conditions:
   Vec wL(M+1), wR(M+1);         // ToDo: Use M+1
   wL[mIn] = wR[mIn] = 0.5;
+  // Maybe if mIn = 0, we should do wR[M] = 0.5 instead? And if mIn = M we should do wL[0] = 0.5?
 
   // Produce output signal:
   Vec y(N);
@@ -18926,6 +18927,9 @@ void testWaveGuide1()
   //
   //
   // ToDo:
+  // 
+  // - Check what the leapfrog algo does with mIn = 0. I actually think, it should be impossible
+  //   to excite the string at the boundary with this algo.
   //
   // - Plot spectra and figure out where notches occur due to nodes in the standing wave. This
   //   will depend on the placement of mIn and mOut. When mIn is in a node of a given mode, the

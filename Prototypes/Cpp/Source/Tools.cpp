@@ -8746,13 +8746,32 @@ class rsWaveGuide
 
 public:
 
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Lifetime
+
+  rsWaveGuide()
+  {
+    setMaxStringLength(M);
+  }
+
+
   //-----------------------------------------------------------------------------------------------
   // \name Setup
 
-  // ToDo:
-  //void setStringLength(int newLength);
-  //void setDrivingPoint(int newLoaction);
-  //void setPickUpPoint(int newLocation);
+  void setMaxStringLength(int newMaxLength) 
+  { 
+    delay1.setMaxDelayInSamples(newMaxLength); 
+    delay2.setMaxDelayInSamples(newMaxLength);
+    M = rsMin(M, newMaxLength);
+    updateDelaySettings();
+  }
+
+  void setStringLength(int newLength)   { M = newLength; updateDelaySettings();  }
+  
+  void setDrivingPoint(int newLoaction) {  mIn = newLoaction; updateDelaySettings();  }
+
+  void setPickUpPoint(int newLocation)  {  mOut = newLocation; updateDelaySettings();  }
 
   //-----------------------------------------------------------------------------------------------
   // \name Processing
@@ -8768,6 +8787,8 @@ public:
 
 
 protected:
+
+  void updateDelaySettings();
 
   RAPT::rsDelay<TSig> delay1, delay2;
 
@@ -8789,6 +8810,17 @@ TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
   return in;   // Preliminary
 
 }
+
+template<class TSig, class TPar>
+void rsWaveGuide<TSig, TPar>::updateDelaySettings()
+{
+  delay1.setDelayInSamples(M);
+  delay2.setDelayInSamples(M);
+
+  // ToDo: Limit mIn, mOut to the safe range. I think its 0..M or maybe 1...M-1
+}
+
+
 
 
 //=================================================================================================

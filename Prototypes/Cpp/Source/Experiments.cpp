@@ -18708,7 +18708,16 @@ bool unitTestWaveGuideClass()  // Find better name!
   using T  = double;
   using WG = rsWaveGuide<T, T>;
 
+  int M    = 30;
+  int mIn  =  7;
+  int mOut = 11;
+
+  // Create and set up the waveguide:
   WG wg;
+  wg.setMaxStringLength(M);
+  wg.setStringLength(M);
+  wg.setDrivingPoint(mIn);
+  wg.setPickUpPoint(mOut);
 
 
   return ok;

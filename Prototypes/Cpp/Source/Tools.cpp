@@ -8804,7 +8804,7 @@ public:
   // New algorithm that does the readout before the reflection
 
 
-  TSig getSample(TSig in) { return getSample1(in); }
+  TSig getSample(TSig in) { return getSample2(in); }
   // Can be used to easily switch between the two variants of the algorithm via changing one line
   // of code (just one character actually - just switch between 1 and 2)
 
@@ -8822,6 +8822,9 @@ public:
 protected:
 
   inline void injectInput(TSig in);
+
+
+  inline TSig pickUpOutput();
 
 
   /** Called from the various getSample1() etc. methods. Factors out the reflection code that is 
@@ -8872,16 +8875,16 @@ TSig rsWaveGuide<TSig, TPar>::getSample1(TSig in)
   //rsPlotDelayLineContent(delay1, delay2, true);  // true: Reverse content of delay2
 
   // Read out the outputs at the pickup point mOut:
-  TSig out1 = delay1.readOutputAt(  mOut);
-  TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
+  //TSig out1 = delay1.readOutputAt(  mOut);
+  //TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
+  TSig out = pickUpOutput();
 
   // Update the tap pointers in the delaylines:
   //delay1.incrementTapPointers();
   //delay2.incrementTapPointers();
   updateTaps();
 
-  // The output signal is the sum of the right going and left going traveling waves:
-  return out1 + out2;
+  return out;
 }
 
 template<class TSig, class TPar>
@@ -8894,9 +8897,10 @@ TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
   injectInput(in);
 
   // Read out the outputs at the pickup point mOut:
-  TSig out1 = delay1.readOutputAt(  mOut);
-  TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
+  //TSig out1 = delay1.readOutputAt(  mOut);
+  //TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
   // Factor out into function readOutput() that also does the summing.
+  TSig out = pickUpOutput();
 
 
   // This code should usually be commented out but can be uncommented for debugging such that we 
@@ -8914,8 +8918,7 @@ TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
   //delay1.incrementTapPointers();
   //delay2.incrementTapPointers();
 
-  // The output signal is the sum of the right going and left going traveling waves:
-  return out1 + out2;
+  return out;
 
   // This still produces wrong results when mIn = 0 where "wrong" means: Different from the
   // leapfrog PDE solver scheme which I take as reference for the ground truth. Although: that in
@@ -8949,6 +8952,15 @@ inline void rsWaveGuide<TSig, TPar>::injectInput(TSig in)
   // and left going traveling wave components with weight 0.5:
   delay1.addToInputAt(0.5 * in,   mIn);
   delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
+}
+
+template<class TSig, class TPar>
+inline TSig rsWaveGuide<TSig, TPar>::pickUpOutput()
+{
+  // Read out the outputs at the pickup point mOut:
+  TSig out1 = delay1.readOutputAt(  mOut);
+  TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
+  return out1 + out2;                      // Output is sum of right- and left going wave
 }
 
 template<class TSig, class TPar>

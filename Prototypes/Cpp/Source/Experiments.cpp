@@ -18950,6 +18950,11 @@ void testWaveGuide1()
   //   function that sawps the order of reading and writing and let's see what that produces.
   //   Maybe make also a variant that does the reflection before the read/write. Try every 
   //   possible way to do it and document the results.
+  // 
+  // - Maybe split the function doReflections() into two: doLeftReflection()/doRightReflection()
+  //   and maybe use different orders of operations whenever  mIn = 0  or  mIn = M. When mIn = 0,
+  //   it doesn't matter when we do the right reflection but it does matter when we do the left 
+  //   reflection and vice versa. 
   //
   //
   // ToDo:

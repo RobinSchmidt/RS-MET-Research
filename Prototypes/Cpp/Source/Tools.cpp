@@ -8798,10 +8798,11 @@ public:
   // \name Processing
 
   TSig getSample1(TSig in);
-  // Old algorithm that does the readout after the reflection
+  // Old algorithm with operation order: reflect -> extract -> inject
 
   TSig getSample2(TSig in);
-  // New algorithm that does the readout before the reflection
+  // New algorithm with operation order: inject -> extract -> reflect
+  // Maybe name the algos like getSampleInExRef, getSampleRefExIn, etc.
 
 
   TSig getSample(TSig in) { return getSample2(in); }
@@ -8824,14 +8825,18 @@ protected:
   inline void injectInput(TSig in);
 
 
-  inline TSig pickUpOutput();
+  inline TSig extractOutput();
+  // Maybe rename to extractOutput
 
 
   /** Called from the various getSample1() etc. methods. Factors out the reflection code that is 
   used by all of them. */
   inline void doReflections();
+  // Maybe rename to reflectWaves, reflectBoundaryValues, reflectFeedback, reflectAtBoundaries,
+  // reflectAtEnds, 
 
   inline void updateTaps();
+  // Maybe rename to transportWaves, shiftWaves, advanceTime, stepTime
 
 
 
@@ -8858,50 +8863,21 @@ template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSample1(TSig in)
 {
   doReflections();
-
-  // Feed in the inputs at the driving point mIn. The signal goes into bot the right and left 
-  // going traveling wave components with weight 0.5:
-  //delay1.addToInputAt(0.5 * in,   mIn);
-  //delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
   injectInput(in);
-  // I think, it's important to add the input before reading the output to get correct 
-  // behavior when mIn == mOut. Verify this! Maybe to get correct behavior with mIn = 0 or 
-  // mIn = M-1 (or M?), we should actually do this before picking up the reflections? Figure 
-  // this out and document it! But no! The .writeOutput() calls might then overwrite it, 
-  // right? So maybe we should add it after writeOutput. Or maybe we should just disallow
-  // mIn = 0 and mIn = M (or M-1).
 
   // During development, we may plot the contents of the delaylines to see what is going on:
   //rsPlotDelayLineContent(delay1, delay2, true);  // true: Reverse content of delay2
 
-  // Read out the outputs at the pickup point mOut:
-  //TSig out1 = delay1.readOutputAt(  mOut);
-  //TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
-  TSig out = pickUpOutput();
-
-  // Update the tap pointers in the delaylines:
-  //delay1.incrementTapPointers();
-  //delay2.incrementTapPointers();
+  TSig out = extractOutput();
   updateTaps();
-
   return out;
 }
 
 template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
 {
-  // Write inputs into the delaylines at the driving point mIn. The signal goes into both the right
-  // and left going traveling wave components with weight 0.5:
-  //delay1.addToInputAt(0.5 * in,   mIn);
-  //delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
   injectInput(in);
-
-  // Read out the outputs at the pickup point mOut:
-  //TSig out1 = delay1.readOutputAt(  mOut);
-  //TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
-  // Factor out into function readOutput() that also does the summing.
-  TSig out = pickUpOutput();
-
+  TSig out = extractOutput();
 
   // This code should usually be commented out but can be uncommented for debugging such that we 
   // may plot the contents of the delaylines to see what is going on:
@@ -8910,14 +8886,8 @@ TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
   // 2nd reversed). This sum correponds to the physical displacement so we would see the physical
   // shape of the string at the current instant.
 
-  // Implement the mutual crossfeedback using the reflection coefficients:
   doReflections();
-
-  // Update the tap pointers in the delaylines:
   updateTaps();
-  //delay1.incrementTapPointers();
-  //delay2.incrementTapPointers();
-
   return out;
 
   // This still produces wrong results when mIn = 0 where "wrong" means: Different from the
@@ -8955,7 +8925,7 @@ inline void rsWaveGuide<TSig, TPar>::injectInput(TSig in)
 }
 
 template<class TSig, class TPar>
-inline TSig rsWaveGuide<TSig, TPar>::pickUpOutput()
+inline TSig rsWaveGuide<TSig, TPar>::extractOutput()
 {
   // Read out the outputs at the pickup point mOut:
   TSig out1 = delay1.readOutputAt(  mOut);

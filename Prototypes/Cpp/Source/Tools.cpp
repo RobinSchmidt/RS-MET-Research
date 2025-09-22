@@ -8804,7 +8804,7 @@ public:
   // New algorithm that does the readout before the reflection
 
 
-  TSig getSample(TSig in) { return getSample2(in); }
+  TSig getSample(TSig in) { return getSample1(in); }
   // Can be used to easily switch between the two variants of the algorithm via changing one line
   // of code (just one character actually - just switch between 1 and 2)
 
@@ -8821,11 +8821,16 @@ public:
 
 protected:
 
+  inline void injectInput(TSig in);
+
+
   /** Called from the various getSample1() etc. methods. Factors out the reflection code that is 
   used by all of them. */
   inline void doReflections();
 
   inline void updateTaps();
+
+
 
 
 
@@ -8853,8 +8858,9 @@ TSig rsWaveGuide<TSig, TPar>::getSample1(TSig in)
 
   // Feed in the inputs at the driving point mIn. The signal goes into bot the right and left 
   // going traveling wave components with weight 0.5:
-  delay1.addToInputAt(0.5 * in,   mIn);
-  delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
+  //delay1.addToInputAt(0.5 * in,   mIn);
+  //delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
+  injectInput(in);
   // I think, it's important to add the input before reading the output to get correct 
   // behavior when mIn == mOut. Verify this! Maybe to get correct behavior with mIn = 0 or 
   // mIn = M-1 (or M?), we should actually do this before picking up the reflections? Figure 
@@ -8883,8 +8889,9 @@ TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
 {
   // Write inputs into the delaylines at the driving point mIn. The signal goes into both the right
   // and left going traveling wave components with weight 0.5:
-  delay1.addToInputAt(0.5 * in,   mIn);
-  delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
+  //delay1.addToInputAt(0.5 * in,   mIn);
+  //delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
+  injectInput(in);
 
   // Read out the outputs at the pickup point mOut:
   TSig out1 = delay1.readOutputAt(  mOut);
@@ -8931,6 +8938,17 @@ TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
   // - Instead of taking the leapfrog algo as ground truth, try to theoretically figure out what
   //   sort of signal we should expect when driving the string at the boundary and compare that to
   //   the actual computed results of the various algorithms.
+}
+
+
+
+template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::injectInput(TSig in)
+{
+  // Write inputs into the delaylines at the driving point mIn. The signal goes into both the right
+  // and left going traveling wave components with weight 0.5:
+  delay1.addToInputAt(0.5 * in,   mIn);
+  delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
 }
 
 template<class TSig, class TPar>

@@ -8804,7 +8804,7 @@ public:
   // New algorithm that does the readout before the reflection
 
 
-  TSig getSample(TSig in) { return getSample1(in); }
+  TSig getSample(TSig in) { return getSample2(in); }
   // Can be used to easily switch between the two variants of the algorithm via changing one line
   // of code (just one character actually - just switch between 1 and 2)
 

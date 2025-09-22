@@ -18382,7 +18382,10 @@ void rsWaveShiftStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
 //-------------------------------------------------------------------------------------------------
 // Generation of signals using the different steppers:
 
-/** Implements the 1D wave equation using a leapfrog integration scheme. ...TBC...
+/** Implements the 1D wave equation using a leapfrog integration scheme to generate a reference 
+signal that can be used to verify more efficient wvae-equation solvers such as digital waveguides.
+The initial condition is a single spike at mIn. This spike circulates around the string hence the
+name of the function. The output is picked up at mOut. 
 
   N:    Number of signal samples to produce
   M:    Number of spatial samples along the string minus 1 (!)
@@ -18391,9 +18394,9 @@ void rsWaveShiftStep(std::vector<T>& wL, std::vector<T>& wR, T rL, T rR)
 
 It turns out that it is more convenient to use M+1 sample points rather than M because the output
 signal's period will then be exactly 2M and the number M will also be consistent with the actual 
-lengths of the delay lines used in the waveguide implementation. I think, the physical 
-interpretation of M could be the number of string segments between the actual spatial sample 
-points along the string. */
+lengths of the delay lines used in the waveguide implementation. I think, a possible physical 
+interpretation of M itself could be the number of string segments between the actual M+1 spatial 
+sample points along the string. */
 template<class T>
 std::vector<T> rsSpikeCirculationLeapFrog(int N, int M, int mIn, int mOut)
 {
@@ -18889,9 +18892,9 @@ void testWaveGuide1()
   using Vec = std::vector<T>;
 
   int M    =  10;       // Length of the waveguide (number of segments)
-  int mIn  = M-1;       // Driving point for input
-  int mOut = M-1;       // Pick up point for output
-  int N    = 6*M;       // Number of samples to produce
+  int mIn  =   0;       // Driving point for input
+  int mOut =   0;       // Pick up point for output
+  int N    = 8*M;       // Number of samples to produce
 
   // Create target reference signals with leapfrog PDE solver and with the wave-shifting algo:
   Vec yL = rsSpikeCirculationLeapFrog<T>(N, M, mIn, mOut);
@@ -18909,9 +18912,11 @@ void testWaveGuide1()
   // Produce impulse response of waveguide and compare it to target signal:
   Vec y = impulseResponse(wg, N, 1.0);
 
+  rsPlotVectors(y);              // Plot the waveguidesiganl alone
+  //rsPlotVectors(yL);           // Plot the leapfrog signal alone
   //rsPlotVectors(yL, y);
   //rsPlotVectors(yS, y);
-  rsPlotVectors(yL, yS, y);
+  //rsPlotVectors(yL, yS, y);  // Compare with both other algorithms
 
 
   // Observations:
@@ -18934,7 +18939,17 @@ void testWaveGuide1()
   //   implementation is actually the one that does the right thing and maybe the question which of
   //   the two possible results (inverted or not) is more correct is a matter of convention? It is
   //   determined by the actual implementation order of operations which conceptually are supposed
-  //   to happen all at the same time? I'm not sure about this, though.
+  //   to happen all at the same time? I'm not sure about this, though. Maybe we should just 
+  //   pragmatically use the principle of least astonishment and adopt a convention that leads
+  //   to an impulse response that starts with a positive spike at n = 0 when mIn = mOut = 0. This
+  //   actually happens with both algos, though (getSample1() and getSample2()). However: The old 
+  //   algo getSample1() produces this single impulse *only* whereas the new algo getSample2() 
+  //   produces the initial impulse of height 1 followed by alternating impulses of height 0.5.
+  //   The latter is clearly preferable. But why is it alternating and why is it half the height?
+  //   Shouldn't we expect to just see a train of positive spikes? Try making a getSample3() 
+  //   function that sawps the order of reading and writing and let's see what that produces.
+  //   Maybe make also a variant that does the reflection before the read/write. Try every 
+  //   possible way to do it and document the results.
   //
   //
   // ToDo:

@@ -8772,6 +8772,8 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Setup
 
+  /** Sets the maximum length of the string. In a realtime context, this should be called on setup
+  time (not during realtime operation) because it may re-allocate memory for the delay lines. */
   void setMaxStringLength(int newMaxLength) 
   { 
     delay1.setMaxDelayInSamples(newMaxLength); 
@@ -8782,12 +8784,22 @@ public:
   // Maybe call it just setLength. It does not necessarily represent a string although that is the
   // most intuitive way of visualizing it.
 
+  /** Sets the length of the virtual string in terms of spatial samples. If you set it to some 
+  number M, the output signal of the waveguide will produce a signal with a period of 2*M. */
   void setStringLength(int newLength)   { M = newLength; updateDelaySettings();  }
   
+  /** Sets the position along the string (in terms of spatial samples) at which the external 
+  output signal is injected into the string, i.e. the point where the string is driven by an 
+  excitation signal. */
   void setDrivingPoint(int newLoaction) {  mIn = newLoaction; updateDelaySettings();  }
 
+  /** Sets the position along the string (in terms of spatial samples) at which we extract the 
+  output signal, i.e. the point where e pick up that string's movement. */
   void setPickUpPoint(int newLocation)  {  mOut = newLocation; updateDelaySettings();  }
 
+  /** Sets the reflection coefficients for the left and right boundary, i.e. the left and right 
+  ends of the string. Setting both to -1 corresponds to a boundary condition where both ends are
+  fixed to zero displacement. ...TBC... */
   void setReflectionCoeffs(TPar leftEnd, TPar rightEnd)
   {
     reflectLeft  = leftEnd; 

@@ -18955,6 +18955,11 @@ void testWaveGuide1()
   //   and maybe use different orders of operations whenever  mIn = 0  or  mIn = M. When mIn = 0,
   //   it doesn't matter when we do the right reflection but it does matter when we do the left 
   //   reflection and vice versa. 
+  // 
+  // - Maybe to obtain arbitrary frequencies with such waveguide models, we should not bother with
+  //   trying to implement fractional delay line lengths but rather just resample the output of an
+  //   integer length delay line on the fly. The rationale is that the artifacts may be less this 
+  //   way because we interpolate only once rather than interpolating within a feedback loop.
   //
   //
   // ToDo:
@@ -18966,6 +18971,13 @@ void testWaveGuide1()
   //   will depend on the placement of mIn and mOut. When mIn is in a node of a given mode, the
   //   frequency can not be excited. When mOut is in a node, the frequency cannot be picked up.
   //   
+  // - Implement all possible ordering of reflect/inject/extract and plot the outputs of these 
+  //   cases for the edge cases mIn = 0, mIn = M, maybe with and without mOut = mIn. Maybe try 
+  //   also mOut = 0 and mOut = M while mIn is an interior point. Do this in a separate 
+  //   function testWaveGuide2(). Here in this test, we should only look at the non-edge cases and
+  //   demonstrate that in these cases, all 3 algorithms (waveguide, leapfrog, waveshift) produce
+  //   the same outputs. In the non edge cases, it should not matter at all which operation order
+  //   we use wihtin the waveguide algo. Make a unit test to verify this!
 }
 
 void testWaveGuides()

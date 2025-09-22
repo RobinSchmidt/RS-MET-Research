@@ -8805,7 +8805,7 @@ public:
   // Maybe name the algos like getSampleInExRef, getSampleRefExIn, etc.
 
 
-  TSig getSample(TSig in) { return getSample2(in); }
+  TSig getSample(TSig in) { return getSample1(in); }
   // Can be used to easily switch between the two variants of the algorithm via changing one line
   // of code (just one character actually - just switch between 1 and 2)
 
@@ -8824,18 +8824,15 @@ protected:
 
   inline void injectInput(TSig in);
 
-
   inline TSig extractOutput();
-  // Maybe rename to extractOutput
-
-
+ 
   /** Called from the various getSample1() etc. methods. Factors out the reflection code that is 
   used by all of them. */
-  inline void doReflections();
+  inline void reflectAtEnds();
   // Maybe rename to reflectWaves, reflectBoundaryValues, reflectFeedback, reflectAtBoundaries,
   // reflectAtEnds, 
 
-  inline void updateTaps();
+  inline void stepTime();
   // Maybe rename to transportWaves, shiftWaves, advanceTime, stepTime
 
 
@@ -8862,14 +8859,14 @@ protected:
 template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSample1(TSig in)
 {
-  doReflections();
+  reflectAtEnds();
   injectInput(in);
 
   // During development, we may plot the contents of the delaylines to see what is going on:
   //rsPlotDelayLineContent(delay1, delay2, true);  // true: Reverse content of delay2
 
   TSig out = extractOutput();
-  updateTaps();
+  stepTime();
   return out;
 }
 
@@ -8886,8 +8883,8 @@ TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
   // 2nd reversed). This sum correponds to the physical displacement so we would see the physical
   // shape of the string at the current instant.
 
-  doReflections();
-  updateTaps();
+  reflectAtEnds();
+  stepTime();
   return out;
 
   // This still produces wrong results when mIn = 0 where "wrong" means: Different from the
@@ -8934,7 +8931,7 @@ inline TSig rsWaveGuide<TSig, TPar>::extractOutput()
 }
 
 template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::doReflections()
+inline void rsWaveGuide<TSig, TPar>::reflectAtEnds()
 {
   // Implement the mutual crossfeedback using the reflection coefficients:
   TSig ref1 = delay1.readOutput();         // Reflected wave at right end
@@ -8944,7 +8941,7 @@ inline void rsWaveGuide<TSig, TPar>::doReflections()
 }
 
 template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::updateTaps()
+inline void rsWaveGuide<TSig, TPar>::stepTime()
 {
   // Update the tap pointers in the delaylines:
   delay1.incrementTapPointers();

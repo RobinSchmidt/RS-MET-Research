@@ -8804,7 +8804,7 @@ public:
   // New algorithm that does the readout before the reflection
 
 
-  TSig getSample(TSig in) { return getSample2(in); }
+  TSig getSample(TSig in) { return getSample1(in); }
   // Can be used to easily switch between the two variants of the algorithm via changing one line
   // of code (just one character actually - just switch between 1 and 2)
 
@@ -8820,6 +8820,10 @@ public:
 
 
 protected:
+
+  /** Called from the various getSample1() etc. methods. Factors out the reflection code that is 
+  used by all of them. */
+  inline void doReflections();
 
   void updateDelaySettings();
 
@@ -8841,25 +8845,7 @@ protected:
 template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSample1(TSig in)
 {
-  // Test - add input before reding the outputs:
-  //delay1.addToInputAt(0.5 * in, mIn);
-  //delay2.addToInputAt(0.5 * in, M-mIn);
-
-  // Get the outputs of the delay lines for implementing the reflection via crossfeedback:
-  TSig ref1 = delay1.readOutput();         // Reflected wave at right end
-  TSig ref2 = delay2.readOutput();         // Reflected wave at left end
-
-  // Implement the mutual crossfeedback using the reflection coefficients:
-  delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
-  delay2.writeInput(reflectRight * ref1);  // Reflection at right end
-
-  // Test:
-  //delay1.addToInputAt(reflectLeft  * ref2, 0);  // Reflection at left end
-  //delay2.addToInputAt(reflectRight * ref1, M);  // Reflection at right end
-  // I hoped that doing it this way may fix the problems when trying to use mIn = 0 but all it
-  // does is making the system ustable. Maybe adding the input before reading the output for
-  // reflection?
-
+  doReflections();
 
   // Feed in the inputs at the driving point mIn. The signal goes into bot the right and left 
   // going traveling wave components with weight 0.5:
@@ -8898,6 +8884,7 @@ TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
   // Read out the outputs at the pickup point mOut:
   TSig out1 = delay1.readOutputAt(  mOut);
   TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
+  // Factor out into function readOutput() that also does the summing.
 
 
   // This code should usually be commented out but can be uncommented for debugging such that we 
@@ -8907,12 +8894,8 @@ TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
   // 2nd reversed). This sum correponds to the physical displacement so we would see the physical
   // shape of the string at the current instant.
 
-
   // Implement the mutual crossfeedback using the reflection coefficients:
-  TSig ref1 = delay1.readOutput();         // Reflected wave at right end
-  TSig ref2 = delay2.readOutput();         // Reflected wave at left end
-  delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
-  delay2.writeInput(reflectRight * ref1);  // Reflection at right end
+  doReflections();
 
   // Update the tap pointers in the delaylines:
   delay1.incrementTapPointers();
@@ -8944,7 +8927,15 @@ TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
   //   the actual computed results of the various algorithms.
 }
 
-
+template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::doReflections()
+{
+  // Implement the mutual crossfeedback using the reflection coefficients:
+  TSig ref1 = delay1.readOutput();         // Reflected wave at right end
+  TSig ref2 = delay2.readOutput();         // Reflected wave at left end
+  delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
+  delay2.writeInput(reflectRight * ref1);  // Reflection at right end
+}
 
 template<class TSig, class TPar>
 void rsWaveGuide<TSig, TPar>::updateDelaySettings()

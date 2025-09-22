@@ -18892,8 +18892,8 @@ void testWaveGuide1()
   using Vec = std::vector<T>;
 
   int M    =  10;       // Length of the waveguide (number of segments)
-  int mIn  =   0;       // Driving point for input
-  int mOut =   0;       // Pick up point for output
+  int mIn  =   3;       // Driving point for input
+  int mOut =   7;       // Pick up point for output
   int N    = 8*M;       // Number of samples to produce
 
   // Create target reference signals with leapfrog PDE solver and with the wave-shifting algo:
@@ -18912,11 +18912,11 @@ void testWaveGuide1()
   // Produce impulse response of waveguide and compare it to target signal:
   Vec y = impulseResponse(wg, N, 1.0);
 
-  rsPlotVectors(y);              // Plot the waveguidesiganl alone
+  //rsPlotVectors(y)             // Plot the waveguidesiganl alone
   //rsPlotVectors(yL);           // Plot the leapfrog signal alone
   //rsPlotVectors(yL, y);
   //rsPlotVectors(yS, y);
-  //rsPlotVectors(yL, yS, y);  // Compare with both other algorithms
+  rsPlotVectors(yL, yS, y);      // Compare with both other algorithms
 
 
   // Observations:

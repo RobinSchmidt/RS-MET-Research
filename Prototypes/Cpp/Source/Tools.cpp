@@ -8797,7 +8797,19 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Processing
 
-  TSig getSample(TSig in);
+  TSig getSample1(TSig in);
+  // Old algorithm that does the readout after the reflection
+
+  TSig getSample2(TSig in);
+  // New algorithm that does the readout before the reflection
+
+
+  TSig getSample(TSig in) { return getSample1(in); }
+  // Can be used to easily switch between the two variants of the algorithm via changing one line
+  // of code (just one character actually - just switch between 1 and 2)
+
+
+
 
   void reset()
   {
@@ -8826,51 +8838,8 @@ protected:
 };
 
 
-// New:
 template<class TSig, class TPar>
-TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
-{
-  // Write inputs into the delaylines at the driving point mIn. The signal goes into both the right
-  // and left going traveling wave components with weight 0.5:
-  delay1.addToInputAt(0.5 * in,   mIn);
-  delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
-
-  // Read out the outputs at the pickup point mOut:
-  TSig out1 = delay1.readOutputAt(  mOut);
-  TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
-
-
-  // This code should usually be commented out but can be uncommented for debugging such that we 
-  // may plot the contents of the delaylines to see what is going on:
-  //rsPlotDelayLineContent(delay1, delay2, true);  // true: Reverse content of delay2
-  // ToDo: Maybe also plot the sum of the contents of both delay lines (with the content of the
-  // 2nd reversed). This sum correponds to the physical displacement so we would see the physical
-  // shape of the string at the current instant.
-
-
-  // Implement the mutual crossfeedback using the reflection coefficients:
-  TSig ref1 = delay1.readOutput();         // Reflected wave at right end
-  TSig ref2 = delay2.readOutput();         // Reflected wave at left end
-  delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
-  delay2.writeInput(reflectRight * ref1);  // Reflection at right end
-
-  // Update the tap pointers in the delaylines:
-  delay1.incrementTapPointers();
-  delay2.incrementTapPointers();
-
-  // The output signal is the sum of the right going and left going traveling waves:
-  return out1 + out2;
-
-  // This still produces wrong results when mIn = 0 where "wrong" means: Different from the
-  // leapfrog PDE solver scheme which I take as reference for the ground truth. Although: that in
-  // itself may be questionable. Actually, it's impossible to excite the string in the leapfrog
-  // scheme at 0 because we assume this value to be fixed there.
-}
-
-// Old:
-/*
-template<class TSig, class TPar>
-TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
+TSig rsWaveGuide<TSig, TPar>::getSample1(TSig in)
 {
   // Test - add input before reding the outputs:
   //delay1.addToInputAt(0.5 * in, mIn);
@@ -8916,22 +8885,66 @@ TSig rsWaveGuide<TSig, TPar>::getSample(TSig in)
 
   // The output signal is the sum of the right going and left going traveling waves:
   return out1 + out2;
-
-
-  // ToDo:
-  //
-  // - Try a different order of the steps: 
-  // 
-  //     (1) write   (i.e. delay1.addToInputAt(...))
-  // 
-  //     (2) read    (i.e. TSig out1 = delay1.readOutputAt(..))
-  // 
-  //     (3) update  (i.e. TSig ref1 = delay1.readOutput(), 
-  //                       delay1.writeInput(reflectLeft  * ref2);
-  //                       delay1.incrementTapPointers();)
-  //   
 }
-*/
+
+template<class TSig, class TPar>
+TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
+{
+  // Write inputs into the delaylines at the driving point mIn. The signal goes into both the right
+  // and left going traveling wave components with weight 0.5:
+  delay1.addToInputAt(0.5 * in,   mIn);
+  delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
+
+  // Read out the outputs at the pickup point mOut:
+  TSig out1 = delay1.readOutputAt(  mOut);
+  TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
+
+
+  // This code should usually be commented out but can be uncommented for debugging such that we 
+  // may plot the contents of the delaylines to see what is going on:
+  //rsPlotDelayLineContent(delay1, delay2, true);  // true: Reverse content of delay2
+  // ToDo: Maybe also plot the sum of the contents of both delay lines (with the content of the
+  // 2nd reversed). This sum correponds to the physical displacement so we would see the physical
+  // shape of the string at the current instant.
+
+
+  // Implement the mutual crossfeedback using the reflection coefficients:
+  TSig ref1 = delay1.readOutput();         // Reflected wave at right end
+  TSig ref2 = delay2.readOutput();         // Reflected wave at left end
+  delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
+  delay2.writeInput(reflectRight * ref1);  // Reflection at right end
+
+  // Update the tap pointers in the delaylines:
+  delay1.incrementTapPointers();
+  delay2.incrementTapPointers();
+
+  // The output signal is the sum of the right going and left going traveling waves:
+  return out1 + out2;
+
+  // This still produces wrong results when mIn = 0 where "wrong" means: Different from the
+  // leapfrog PDE solver scheme which I take as reference for the ground truth. Although: that in
+  // itself may be questionable. Actually, it's impossible to excite the string in the leapfrog
+  // scheme at 0 because we assume this value to be fixed there. See functions stepLeapFrog() and
+  // initForLeapFrog() in class rsWaveEquation1D_Proto. I'm not sure if they deal correctly with
+  // cases where we drive the boundary points (or init them with nonzero values). But on the other
+  // hand, we have a unit test that compares the results of the leapfrog algo with that of the
+  // shifting algo where we simulate the simultaneous driving at all points (by just randomly 
+  // initializing all the spatial samples) and both algorithms apparently produce the same results.
+  // That would mean that if we are doing it wrong, we are doing it wrong in both algorithms in the
+  // same way and that seems rather unlikely given that the two algorithms are quite different.
+  //
+  // 
+  // ToDo: 
+  // 
+  // - Look at some reference implementations. Maybe check out the STK and/or maybe there
+  //   are some MatLab files associated with the PASP book
+  //
+  // - Instead of taking the leapfrog algo as ground truth, try to theoretically figure out what
+  //   sort of signal we should expect when driving the string at the boundary and compare that to
+  //   the actual computed results of the various algorithms.
+}
+
+
 
 template<class TSig, class TPar>
 void rsWaveGuide<TSig, TPar>::updateDelaySettings()

@@ -199,6 +199,32 @@ It turns out that when $f$ is an analytic function, its Polya vector field has s
 % I think it's the divergence-free property that rules out minima and maxima in the potential. All stationary points are saddles
 
 
+\subsubsection{Contour Integrals} 
+In complex analysis, the integrals we are mostly interested in are so called contour integrals. To set these up, we need as first ingredient a given \emph{contour} $\gamma$. This is some curve in the complex plane. That means $\gamma$ is a function from some real interval $[a,b]$ into the complex plane $\gamma: [a,b] \rightarrow \mathbb{C}$. As second ingredient, we need out actual function $f(z)$ which we want to integrate. When we then define the contour integral of $f(z)$ along the contour $\gamma$ like this:
+\begin{equation}
+\int_{\gamma} f(z) \; dz = \int_a^b f(z(t)) z'(t) \; dt
+\end{equation}
+then what we mean by this is the following procedure: We split the interval $[a,b]$ into (infinitely) many small parts and at each value $t \in [a,b]$, we first evaluate $\gamma(t)$. Then .... ...TBC...
+
+% dz = z'(t) dt
+
+\paragraph{Example}
+Let our contour be the unit circle parameterized as $\gamma(t) = e^{\i t}$ with $t \in [0, 2\pi]$.
+
+% Maybe take f(z) = sin(z) / z
+
+% https://en.wikipedia.org/wiki/Contour_integration#Contour_integrals
+% Uses the notation f(z(t)) z'(t) dt
+% but maybe it's better to use f(\gamma(t)) \gamma'(t) dt
+% 
+
+% https://en.wikipedia.org/wiki/Line_integral#Line_integral_of_a_vector_field
+
+% Wie integriert man komplexe Funktionen? (Funktionentheorie)
+% https://www.youtube.com/watch?v=_opXzi09t9I  at 14:30
+
+% Wie integriert man komplexe Funktionen? (Funktionentheorie)
+% https://www.youtube.com/watch?v=7mrsZzXmibg
 
 
 \subsubsection{Cauchy's Integral Formula}
@@ -520,6 +546,8 @@ https://math.mit.edu/~jorloff/18.04/notes/topic3.pdf
 Resources:
 https://en.wikipedia.org/wiki/Riemann_surface	
 https://en.wikipedia.org/wiki/Hypercomplex_analysis
+https://en.wikipedia.org/wiki/List_of_complex_analysis_topics
+https://en.wikipedia.org/wiki/Line_integral
 
 
 Using Complex Analysis to Factorize Power Series

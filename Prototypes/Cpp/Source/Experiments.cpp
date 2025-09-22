@@ -18889,14 +18889,14 @@ void testWaveGuide1()
   using Vec = std::vector<T>;
 
   int M    =  10;       // Length of the waveguide (number of segments)
-  int mIn  =   0;       // Driving point for input
-  int mOut =   3;       // Pick up point for output
+  int mIn  = M-1;       // Driving point for input
+  int mOut = M-1;       // Pick up point for output
   int N    = 6*M;       // Number of samples to produce
 
   // Create target reference signals with leapfrog PDE solver and with the wave-shifting algo:
   Vec yL = rsSpikeCirculationLeapFrog<T>(N, M, mIn, mOut);
   Vec yS = rsSpikeCirculationWaveShift(  N, M, mIn, mOut, -1.0, -1.0);
-  rsPlotVectors(yL, yS);  // Check, if they are the same
+  //rsPlotVectors(yL, yS);  // Check, if they are the same
   // Nope! With mIn = 0, yS is all zeros!
 
   // Create and set up the waveguide:
@@ -18909,9 +18909,9 @@ void testWaveGuide1()
   // Produce impulse response of waveguide and compare it to target signal:
   Vec y = impulseResponse(wg, N, 1.0);
 
-  rsPlotVectors(yL, y);
-  rsPlotVectors(yS, y);
-  //rsPlotVector(y);
+  //rsPlotVectors(yL, y);
+  //rsPlotVectors(yS, y);
+  rsPlotVectors(yL, yS, y);
 
 
   // Observations:
@@ -18924,6 +18924,17 @@ void testWaveGuide1()
   // - When mOut = mIn, we see a second spike which goes dwonward with amplitude 0.5 at
   //   n = mIn + mOut. Before the cycle repeats at n = M, we see another downward spike of 0.5
   //   at n = M - (mIn + mOut)
+  // 
+  // - With mIn = 0, using the old algorithm where we do the reading of the output after the  
+  //   reflection, the resulting signal looks similar to the leapfrog result but it has only half
+  //   of the amplitude. With the new implementation where we do the read out before the 
+  //   reflection, we see an additional negation (in addition to the scaling by 0.5). However:
+  //   it is very questionable anyway to treat the leapfrog PDE solver result as ground truth. I
+  //   think, it is not (yet) able to handle a moving boundary anyway. Maybe the waveguide 
+  //   implementation is actually the one that does the right thing and maybe the question which of
+  //   the two possible results (inverted or not) is more correct is a matter of convention? It is
+  //   determined by the actual implementation order of operations which conceptually are supposed
+  //   to happen all at the same time? I'm not sure about this, though.
   //
   //
   // ToDo:

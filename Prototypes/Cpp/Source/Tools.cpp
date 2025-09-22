@@ -8797,27 +8797,23 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Processing
 
-  TSig getSample1(TSig in);
-  // Old algorithm with operation order: reflect -> extract -> inject
-
-  TSig getSample2(TSig in);
-  // New algorithm with operation order: inject -> extract -> reflect
-  // Maybe name the algos like getSampleInExRef, getSampleRefExIn, etc.
-
-
-  TSig getSample(TSig in) { return getSample1(in); }
+  /** Produces one output sample at a time. */
+  TSig getSample(TSig in) { return getSampleInExRef(in); }
   // Can be used to easily switch between the two variants of the algorithm via changing one line
-  // of code (just one character actually - just switch between 1 and 2)
+  // of code. The different algorithms may show different behaviors in ertain edge cases when
+  // the input tap is at one of the boundaries. In these cases, the exact order of the operations
+  // in the per sample computation matters.  ...TBC... ToDo: Figure out and document if having the
+  // pick up point at a boundary (while the driving point is on the interior) will also lead to
+  // different behavior of the different variants
 
+  /** Computes an output sample using the operation order: reflect -> inject -> extract. */
+  TSig getSampleRefInEx(TSig in);
 
+  /** Computes an output sample using the operation order: inject -> extract -> reflect. */
+  TSig getSampleInExRef(TSig in);
 
-
-  void reset()
-  {
-    delay1.reset();
-    delay2.reset();
-  }
-
+  /** Resets the waveguide to its initial state. Clears the content of the delay lines. */
+  void reset() { delay1.reset(); delay2.reset(); }
 
 
 protected:
@@ -8842,28 +8838,28 @@ protected:
   the delay lines. It's called from the various getSampleXXX() methods. */
   inline void stepTime();
 
-
-
-
+  /** Updates the settings of our two delay lines accoring to the user parameters M, mIn, mOut. */
   void updateDelaySettings();
 
-  RAPT::rsDelay<TSig> delay1, delay2;
+
+  // Embedded DSP objects:
+  RAPT::rsDelay<TSig> delay1, delay2;  // The two delay lines that make up the waveguide
 
   // Reflection coefficients:
-  TPar reflectLeft  = TPar(-1);
-  TPar reflectRight = TPar(-1);
+  TPar reflectLeft  = TPar(-1);        // Reflection coefficient at left boundary
+  TPar reflectRight = TPar(-1);        // Reflection coefficient at right boundary
 
-  int M    = 30;
-  int mIn  =  7;
-  int mOut = 11;
-
+  // Delay line settings:
+  int M    = 30;                       // Length of the delay lines. Half the period of output.
+  int mIn  =  7;                       // Driving point for input
+  int mOut = 11;                       // Pick up point for output
   // ToDo: find better default values
 
 };
 
 
 template<class TSig, class TPar>
-TSig rsWaveGuide<TSig, TPar>::getSample1(TSig in)
+TSig rsWaveGuide<TSig, TPar>::getSampleRefInEx(TSig in)
 {
   reflectAtEnds();
   injectInput(in);
@@ -8877,7 +8873,7 @@ TSig rsWaveGuide<TSig, TPar>::getSample1(TSig in)
 }
 
 template<class TSig, class TPar>
-TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
+TSig rsWaveGuide<TSig, TPar>::getSampleInExRef(TSig in)
 {
   injectInput(in);
   TSig out = extractOutput();

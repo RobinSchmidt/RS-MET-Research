@@ -8744,7 +8744,8 @@ It's a simple implementation that only supports integer lengths. We don't do any
 approximations here. A waveguide can be seen as an efficient numerical solution method to the
 1D wave equation that describes the motion of a string (like a guitar or violin string) or the 
 pressure waves in a column of air in a long cylindrical bore (like a flute or organ pipe). In our
-member function names, we may occasionally refer to the mental image of a string, though.
+member function names and in the documentation, we may occasionally refer to the mental image of a
+string, though.
  
 
 References:
@@ -8804,6 +8805,8 @@ public:
   {
     reflectLeft  = leftEnd; 
     reflectRight = rightEnd;
+    // ToDo: Maybe assert that they are in the stable range (inside +-1). Maybe clip them to that
+    // range.
   }
 
   //-----------------------------------------------------------------------------------------------

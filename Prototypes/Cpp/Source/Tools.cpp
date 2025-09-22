@@ -8822,19 +8822,25 @@ public:
 
 protected:
 
+  /** Injects the given input signal into the waveguide at the driving point which can be set up 
+  via setDrivingPoint(). Injection of a signal into the waveguide entails distributing it equally
+  into both delay lines with weight 0.5. It's called from the various getSampleXXX() methods.  */
   inline void injectInput(TSig in);
 
+  /** Extracts one physical output sample from the waveguide by reading out the delay lines that
+  store the right- and left going waves and adds them up. The point along the string at which the
+  signal is picked up can be set by setPickUpPoint(). It's called from the various getSampleXXX() 
+  methods. */
   inline TSig extractOutput();
  
-  /** Called from the various getSample1() etc. methods. Factors out the reflection code that is 
-  used by all of them. */
+  /** Performs the reflections at the left and right boundaries. This is one of the steps in the
+  per sample algorithm, so it's called from the various getSampleXXX() methods. It implements the 
+  mutual crossfeedback between the two delay lines using our reflection coefficients. */
   inline void reflectAtEnds();
-  // Maybe rename to reflectWaves, reflectBoundaryValues, reflectFeedback, reflectAtBoundaries,
-  // reflectAtEnds, 
 
+  /** Steps the time forward by one sample instant. This basically moves/advances the pointers in 
+  the delay lines. It's called from the various getSampleXXX() methods. */
   inline void stepTime();
-  // Maybe rename to transportWaves, shiftWaves, advanceTime, stepTime
-
 
 
 

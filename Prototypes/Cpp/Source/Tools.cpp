@@ -8804,7 +8804,7 @@ public:
   // New algorithm that does the readout before the reflection
 
 
-  TSig getSample(TSig in) { return getSample1(in); }
+  TSig getSample(TSig in) { return getSample2(in); }
   // Can be used to easily switch between the two variants of the algorithm via changing one line
   // of code (just one character actually - just switch between 1 and 2)
 
@@ -8824,6 +8824,10 @@ protected:
   /** Called from the various getSample1() etc. methods. Factors out the reflection code that is 
   used by all of them. */
   inline void doReflections();
+
+  inline void updateTaps();
+
+
 
   void updateDelaySettings();
 
@@ -8866,8 +8870,9 @@ TSig rsWaveGuide<TSig, TPar>::getSample1(TSig in)
   TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
 
   // Update the tap pointers in the delaylines:
-  delay1.incrementTapPointers();
-  delay2.incrementTapPointers();
+  //delay1.incrementTapPointers();
+  //delay2.incrementTapPointers();
+  updateTaps();
 
   // The output signal is the sum of the right going and left going traveling waves:
   return out1 + out2;
@@ -8898,8 +8903,9 @@ TSig rsWaveGuide<TSig, TPar>::getSample2(TSig in)
   doReflections();
 
   // Update the tap pointers in the delaylines:
-  delay1.incrementTapPointers();
-  delay2.incrementTapPointers();
+  updateTaps();
+  //delay1.incrementTapPointers();
+  //delay2.incrementTapPointers();
 
   // The output signal is the sum of the right going and left going traveling waves:
   return out1 + out2;
@@ -8935,6 +8941,14 @@ inline void rsWaveGuide<TSig, TPar>::doReflections()
   TSig ref2 = delay2.readOutput();         // Reflected wave at left end
   delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
   delay2.writeInput(reflectRight * ref1);  // Reflection at right end
+}
+
+template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::updateTaps()
+{
+  // Update the tap pointers in the delaylines:
+  delay1.incrementTapPointers();
+  delay2.incrementTapPointers();
 }
 
 template<class TSig, class TPar>

@@ -8833,7 +8833,8 @@ public:
   /** Computes an output sample using the operation order: inject -> reflect -> extract. */
   TSig getSampleInRefEx(TSig in);
 
-  /** Computes an output sample using the operation order: reflect -> inject -> extract. */
+
+  /** Computes an output sample using the operation order: extract -> inject -> reflect. */
   TSig getSampleExInRef(TSig in);
 
   /** Computes an output sample using the operation order: extract -> reflect -> inject. */
@@ -8843,7 +8844,11 @@ public:
   /** Computes an output sample using the operation order: reflect -> inject -> extract. */
   TSig getSampleRefInEx(TSig in);
 
-  // ToDo: RefExIn
+  /** Computes an output sample using the operation order: reflect -> exctract -> inject. */
+  TSig getSampleRefExIn(TSig in);
+
+
+
 
   // We need to following 6 variants of the algorithm: 1: InExRef, 2: InRefEx, 
   // 3: ExInRef, 4: ExRefIn, 5: RefInEx, 6: RefExIn. We arrive a 6 versions because we have 3
@@ -8980,10 +8985,6 @@ TSig rsWaveGuide<TSig, TPar>::getSampleExRefIn(TSig in)
   return out;
 }
 
-
-
-
-
 template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSampleRefInEx(TSig in)
 {
@@ -8993,6 +8994,18 @@ TSig rsWaveGuide<TSig, TPar>::getSampleRefInEx(TSig in)
   stepTime();
   return out;
 }
+
+template<class TSig, class TPar>
+TSig rsWaveGuide<TSig, TPar>::getSampleRefExIn(TSig in)
+{
+  reflectAtEnds();             // Reflect
+  TSig out = extractOutput();  // Extract
+  injectInput(in);             // Inject
+  stepTime();
+  return out;
+}
+
+
 
 
 

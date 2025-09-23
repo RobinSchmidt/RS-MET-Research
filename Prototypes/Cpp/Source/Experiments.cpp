@@ -18996,9 +18996,16 @@ void testWaveGuide2()
   int M    =  10;       // Length of the waveguide (number of segments)
   int mIn  =   0;       // Driving point for input
   int mOut =   0;       // Pick up point for output
-  int N    = 6*M;       // Number of samples to produce
+  int N    = 8*M;       // Number of samples to produce
+
+
 
   WG wg;
+  wg.setMaxStringLength(M);
+  wg.setStringLength(M);
+  wg.setDrivingPoint(mIn);
+  wg.setPickUpPoint(mOut);
+
   Vec yIER(N), yIRE(N), yEIR(N), yERI(N), yRIE(N), yREI(N);
 
   // Create the different variations of the output signal:
@@ -19012,6 +19019,7 @@ void testWaveGuide2()
   for(int n = 1; n < N; n++)
     yIRE[n] = wg.getSampleInRefEx(0.0);
 
+
   wg.reset();
   yEIR[0] = wg.getSampleExInRef(1.0);
   for(int n = 1; n < N; n++)
@@ -19023,20 +19031,36 @@ void testWaveGuide2()
     yERI[n] = wg.getSampleExRefIn(0.0);
 
 
+  wg.reset();
+  yRIE[0] = wg.getSampleRefInEx(1.0);
+  for(int n = 1; n < N; n++)
+    yRIE[n] = wg.getSampleRefInEx(0.0);
+
+
+  wg.reset();
+  yREI[0] = wg.getSampleRefExIn(1.0);
+  for(int n = 1; n < N; n++)
+    yREI[n] = wg.getSampleRefExIn(0.0);
+
+
+
+
 
   // ...more to come...
 
 
   // Plot the results:
-  rsPlotVectors(yIER, yIRE, yEIR, yERI);
+  rsPlotVectors(yIER);
+  rsPlotVectors(yIRE);
+
+  //rsPlotVectors(yIER, yIRE, yEIR, yERI, yRIE, yREI);
 
 
   // Observations:
   //
-  // - yIER, yIRE, yEIR, yERI look actually the same. ..should we expect that? 
-  //
-  // - With N = 6M, it looks like we see only 2 cycles but I expected to see 3. What's going on 
-  //   with this?
+  // - M = 10, mIn = mOut = 0:
+  //   yIER has initial spike with amplitude 1 at n=0, a 2nd spike of 0.5 at n=20, then a downard 
+  //   spike at n=32 of -0.5, then up at n= 40 with +0.5 and then the pattern repeats.
 }
 
 

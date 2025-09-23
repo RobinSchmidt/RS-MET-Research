@@ -8833,7 +8833,12 @@ public:
   /** Computes an output sample using the operation order: inject -> reflect -> extract. */
   TSig getSampleInRefEx(TSig in);
 
-  // ToDo: ExInRef, ExRefIn
+  /** Computes an output sample using the operation order: reflect -> inject -> extract. */
+  TSig getSampleExInRef(TSig in);
+
+  /** Computes an output sample using the operation order: extract -> reflect -> inject. */
+  TSig getSampleExRefIn(TSig in);
+
 
   /** Computes an output sample using the operation order: reflect -> inject -> extract. */
   TSig getSampleRefInEx(TSig in);
@@ -8954,6 +8959,30 @@ TSig rsWaveGuide<TSig, TPar>::getSampleInRefEx(TSig in)
   stepTime();
   return out;
 }
+
+template<class TSig, class TPar>
+TSig rsWaveGuide<TSig, TPar>::getSampleExInRef(TSig in)
+{
+  TSig out = extractOutput();  // Extract
+  injectInput(in);             // Inject
+  reflectAtEnds();             // Reflect
+  stepTime();
+  return out;
+}
+
+template<class TSig, class TPar>
+TSig rsWaveGuide<TSig, TPar>::getSampleExRefIn(TSig in)
+{
+  TSig out = extractOutput();  // Extract
+  reflectAtEnds();             // Reflect
+  injectInput(in);             // Inject
+  stepTime();
+  return out;
+}
+
+
+
+
 
 template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSampleRefInEx(TSig in)

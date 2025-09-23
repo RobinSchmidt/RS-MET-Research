@@ -19012,16 +19012,31 @@ void testWaveGuide2()
   for(int n = 1; n < N; n++)
     yIRE[n] = wg.getSampleInRefEx(0.0);
 
+  wg.reset();
+  yEIR[0] = wg.getSampleExInRef(1.0);
+  for(int n = 1; n < N; n++)
+    yEIR[n] = wg.getSampleExInRef(0.0);
+
+  wg.reset();
+  yERI[0] = wg.getSampleExRefIn(1.0);
+  for(int n = 1; n < N; n++)
+    yERI[n] = wg.getSampleExRefIn(0.0);
+
+
+
   // ...more to come...
 
 
   // Plot the results:
-  rsPlotVectors(yIER, yIRE);
+  rsPlotVectors(yIER, yIRE, yEIR, yERI);
 
 
   // Observations:
   //
-  // - yIER and yIRE are actually the same. ..should we expect that? 
+  // - yIER, yIRE, yEIR, yERI look actually the same. ..should we expect that? 
+  //
+  // - With N = 6M, it looks like we see only 2 cycles but I expected to see 3. What's going on 
+  //   with this?
 }
 
 

@@ -8764,10 +8764,14 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Lifetime
 
+  /** Default constructor. Initially allocates an unrealistically small amount delay line 
+  memory. ...TBC...  */
   rsWaveGuide()
   {
     setMaxStringLength(M);
   }
+  // ToDo: Maybe do not yet allocate here at all. Rationale: The client code will likely want to
+  // allocate more memory anyway so it would just be a wasted allocatio
 
 
   //-----------------------------------------------------------------------------------------------
@@ -8819,16 +8823,38 @@ public:
   // the input tap is at one of the boundaries. In these cases, the exact order of the operations
   // in the per sample computation matters.  ...TBC... ToDo: Figure out and document if having the
   // pick up point at a boundary (while the driving point is on the interior) will also lead to
-  // different behavior of the different variants
-
-  /** Computes an output sample using the operation order: reflect -> inject -> extract. */
-  TSig getSampleRefInEx(TSig in);
+  // different behavior of the different variants. The default behavior should follow the 
+  // priciple of least astonishment. Following that, we need to pick the most appropriate version 
+  // of the algorith here. I think, it's InExRef but this needs to be verified.
 
   /** Computes an output sample using the operation order: inject -> extract -> reflect. */
   TSig getSampleInExRef(TSig in);
 
+  /** Computes an output sample using the operation order: inject -> reflect -> extract. */
+  TSig getSampleInRefEx(TSig in);
+
+  // ToDo: ExInRef, ExRefIn
+
+  /** Computes an output sample using the operation order: reflect -> inject -> extract. */
+  TSig getSampleRefInEx(TSig in);
+
+  // ToDo: RefExIn
+
+  // We need to following 6 variants of the algorithm: 1: InExRef, 2: InRefEx, 
+  // 3: ExInRef, 4: ExRefIn, 5: RefInEx, 6: RefExIn. We arrive a 6 versions because we have 3
+  // operations (inject, extract, reflect) that we want to permute. That leads to 3! = 6 different
+  // possible algorithms which will produce the same results in the typical case where the string 
+  // is being driven somewhere along its length but may behave differently in edge cases where we 
+  // are driving the string directly at a boundary point.
+
+
   /** Resets the waveguide to its initial state. Clears the content of the delay lines. */
   void reset() { delay1.reset(); delay2.reset(); }
+
+
+
+
+
 
 
 protected:
@@ -8873,25 +8899,13 @@ protected:
 };
 
 
-template<class TSig, class TPar>
-TSig rsWaveGuide<TSig, TPar>::getSampleRefInEx(TSig in)
-{
-  reflectAtEnds();
-  injectInput(in);
 
-  // During development, we may plot the contents of the delaylines to see what is going on:
-  //rsPlotDelayLineContent(delay1, delay2, true);  // true: Reverse content of delay2
-
-  TSig out = extractOutput();
-  stepTime();
-  return out;
-}
-
+/*
 template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSampleInExRef(TSig in)
 {
-  injectInput(in);
-  TSig out = extractOutput();
+  injectInput(in);             // Inject
+  TSig out = extractOutput();  // Extract
 
   // This code should usually be commented out but can be uncommented for debugging such that we 
   // may plot the contents of the delaylines to see what is going on:
@@ -8900,7 +8914,7 @@ TSig rsWaveGuide<TSig, TPar>::getSampleInExRef(TSig in)
   // 2nd reversed). This sum correponds to the physical displacement so we would see the physical
   // shape of the string at the current instant.
 
-  reflectAtEnds();
+  reflectAtEnds();             // Reflect
   stepTime();
   return out;
 
@@ -8917,15 +8931,40 @@ TSig rsWaveGuide<TSig, TPar>::getSampleInExRef(TSig in)
   // same way and that seems rather unlikely given that the two algorithms are quite different.
   //
   // 
-  // ToDo: 
-  // 
-  // - Look at some reference implementations. Maybe check out the STK and/or maybe there
-  //   are some MatLab files associated with the PASP book
-  //
-  // - Instead of taking the leapfrog algo as ground truth, try to theoretically figure out what
-  //   sort of signal we should expect when driving the string at the boundary and compare that to
-  //   the actual computed results of the various algorithms.
+
 }
+*/
+
+template<class TSig, class TPar>
+TSig rsWaveGuide<TSig, TPar>::getSampleInExRef(TSig in)
+{
+  injectInput(in);             // Inject
+  TSig out = extractOutput();  // Extract
+  reflectAtEnds();             // Reflect
+  stepTime();
+  return out;
+}
+
+template<class TSig, class TPar>
+TSig rsWaveGuide<TSig, TPar>::getSampleInRefEx(TSig in)
+{
+  injectInput(in);             // Inject
+  reflectAtEnds();             // Reflect
+  TSig out = extractOutput();  // Extract
+  stepTime();
+  return out;
+}
+
+template<class TSig, class TPar>
+TSig rsWaveGuide<TSig, TPar>::getSampleRefInEx(TSig in)
+{
+  reflectAtEnds();             // Reflect
+  injectInput(in);             // Inject
+  TSig out = extractOutput();  // Extract
+  stepTime();
+  return out;
+}
+
 
 
 
@@ -8984,30 +9023,36 @@ ToDo:
   will make us unable to pick up such modes. I think, this is a controllability/observability thing
   in the jargon of control systems. So, I think we should expect to see two series of notches in
   the generally harmonic spectrum.
-  
-  
+
+- Look at some reference implementations. Maybe check out the STK and/or maybe there
+  are some MatLab files associated with the PASP book
+
+- Instead of taking the leapfrog algo as ground truth, try to theoretically figure out what
+  sort of signal we should expect when driving the string at the boundary and compare that to
+  the actual computed results of the various algorithms.
+
 */
 
 
 
 //=================================================================================================
-
 /** A class for representing Quaternions. Quaternions are a kind of 4-dimensional numbers similar 
 to how complex numbers are 2-dimensional numbers. In fact, the complex numbers are found as a 2D 
 subset within the quaternions. A quaternion q can be written as:
 
   q = q0 + i*q1 + j*q2 + k*q3
 
-where i,j,k are three different imaginary units which all satisfy the squaring to one property, 
-i.e. i^2 = j^2 = k^2 = 1. They also satisfy the cyclic product relations: i*j = -j*i = k, 
-j*k = -k*j = i, k*i = -i*k = j. In some contexts, it is useful to view a quaternion as being 
-composed of a scalar part q0 and a 3D vector part (q1,q2,q3). This is also the way, it is 
-internally represented here in this class. It's - of course - also possible to just represent it 
-by 4 raw numbers without structuring them further but I think, the formal scalar + vector 
-representation reveals some more insights. One could also represent quaternions a pair of complex
-numbers z,w as q = z + w*j...tbc... 
+where i,j,k are three different imaginary units which all satisfy the squaring to minus one 
+property, i.e. i^2 = j^2 = k^2 = -1. They also satisfy the cyclic product relations: 
+i*j = -j*i = k, j*k = -k*j = i, k*i = -i*k = j and the relation ijk = -1. In some contexts, it is
+useful to view a quaternion as being composed of a scalar part q0 and a 3D vector part (q1,q2,q3).
+This is also the way, it is internally represented here in this class. It is, of course, also 
+possible to just represent it by 4 raw numbers without structuring them further but I think, the 
+formal scalar + vector representation reveals some more insights. One could also represent 
+quaternions a pair of complex numbers z,w as q = z + w*j.  ...TBC... 
 
 References
+
   (1) Mathematik mit 2x2 Matrizen (Hans Jürgen Korsch)   */
 
 template<class T> 
@@ -9015,9 +9060,12 @@ class rsQuaternion2
 {
   // we need to append a "2" because there is already some other definition of rsQuaternion 
   // in Relativity.h ...this old one should probably be superseded by this...or maybe implement
-  // various representations - maybe they all have theri strengths and weaknesses? Maybe if one
+  // various representations - maybe they all have their strengths and weaknesses? Maybe if one
   // turns out to be the most efficient computationally (maybe the raw one?), the others may 
-  // nevertheless provide certain other insights?
+  // nevertheless provide certain other insights and it may therefore be valuable to have different
+  // implementations to use them in different contexts. We should then probably have some 
+  // convenient conversion functions between the representations. I think, they should be free 
+  // functions.
 
 public:
 
@@ -9034,17 +9082,32 @@ public:
   }
   // see (1) pg 128
 
-  /** [q,p] = q*p - p*q */
+  /** Returns the commutator of q and p defined as [q,p] = q*p - p*q. The scalar part will always 
+  be zero and the vector part is twice the cross product of the vector parts of q and p. That's 
+  also the way we compute it here. Note that order of q and p is important. The commutator itself 
+  is not commutative. Instead, it's anti-commutative: [q,p] = -[p,q] due to the anti-commutativity
+  of the cross product. */
   static rsQuaternion2 commutator(const rsQuaternion2& q, const rsQuaternion2& p)
   {
     return rsQuaternion2(T(0), T(2)*rsCross(q.v, p.v));
+
+    // Of course, we could just use the definition of the commutator and return q*p - p*q but this
+    // would be less efficient and also less insightful.
   }
 
-  /** {q,p} = q*p + p*q */
+  /** Returns the anti-commutator of q and p defined as  {q,p} = q*p + p*q. The scalar part will be
+  minus twice the dot product of the vector parts of q and p and the vector part will be zero. 
+  That's also the way we compute it here. The order of q and p doesn't matter because the 
+  anti-commutator is commutative: {q,p} = {p,q} due to the commutativity of the dot product. */
   static rsQuaternion2 anticommutator(const rsQuaternion2& q, const rsQuaternion2& p)
   {
     rsQuaternion2(T(-2)*rsDot(q.v*p.v), rsVector3D<T>(0,0,0));
   }
+
+  // It is interesting to note that the scalar parts of the inputs are not used in the computations
+  // of the commutator and the anti-commutator. They are functions of the vector parts only. ToDo:
+  // Figure out the implications of that. Is this property useful in certain contexts? If so, where
+  // and why?
 
 
 protected:

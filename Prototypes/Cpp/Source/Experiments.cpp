@@ -18894,7 +18894,7 @@ void testWaveGuide1()
   int M    =  10;       // Length of the waveguide (number of segments)
   int mIn  =   3;       // Driving point for input
   int mOut =   7;       // Pick up point for output
-  int N    = 8*M;       // Number of samples to produce
+  int N    = 6*M;       // Number of samples to produce
 
   // Create target reference signals with leapfrog PDE solver and with the wave-shifting algo:
   Vec yL = rsSpikeCirculationLeapFrog<T>(N, M, mIn, mOut);
@@ -18980,9 +18980,55 @@ void testWaveGuide1()
   //   we use wihtin the waveguide algo. Make a unit test to verify this!
 }
 
+void testWaveGuide2()
+{
+  // Under construction
+
+  // In this experiment, we compare the outputs of the different variations of the getSample() 
+  // function of class rsWaveguide. We try all possible orderings of the three operations: inject,
+  // extract, reflect. Thy will show different behavior in the edge case where we drive the string
+  // at a boundary point. ...TBC...
+
+  using T   = double;
+  using WG  = rsWaveGuide<T, T>;
+  using Vec = std::vector<T>;
+
+  int M    =  10;       // Length of the waveguide (number of segments)
+  int mIn  =   0;       // Driving point for input
+  int mOut =   0;       // Pick up point for output
+  int N    = 6*M;       // Number of samples to produce
+
+  WG wg;
+  Vec yIER(N), yIRE(N), yEIR(N), yERI(N), yRIE(N), yREI(N);
+
+  // Create the different variations of the output signal:
+  wg.reset();
+  yIER[0] = wg.getSampleInExRef(1.0);
+  for(int n = 1; n < N; n++)
+    yIER[n] = wg.getSampleInExRef(0.0);
+
+  wg.reset();
+  yIRE[0] = wg.getSampleInRefEx(1.0);
+  for(int n = 1; n < N; n++)
+    yIRE[n] = wg.getSampleInRefEx(0.0);
+
+  // ...more to come...
+
+
+  // Plot the results:
+  rsPlotVectors(yIER, yIRE);
+
+
+  // Observations:
+  //
+  // - yIER and yIRE are actually the same. ..should we expect that? 
+}
+
+
 void testWaveGuides()
 {
-  testWaveGuide1();
+  //testWaveGuide1();
+  testWaveGuide2();
 
   // Unit tests:
   bool ok = true;
@@ -18990,6 +19036,7 @@ void testWaveGuides()
   ok &= unitTestWaveGuideSpike();
   ok &= unitTestWaveGuideClass();
   rsAssert(ok);
+  // Factor out into a function rsUnitTestsWaveGuide()
 
   // Experiments:
   //testWaveEquation1D();
@@ -19011,6 +19058,9 @@ void testWaveGuides()
   //   pointer of a table lookup oscillator with its own frequency. Maybe we could even let M 
   //   (or M1,M2) also vary over time. That would perhaps give us very nice dynamically evolving
   //   sounds. 
+  //
+  // - Create a function for experimenting with trying to implement arbitrary boundary conditions
+  //   in the leapfrog integration scheme.
 }
 
 //=================================================================================================

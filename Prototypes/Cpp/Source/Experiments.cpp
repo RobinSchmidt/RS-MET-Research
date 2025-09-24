@@ -18883,6 +18883,11 @@ void testWaveEquation1D()
   //   here (spatial smoothing and temporal delay are both LTI). I think, the spatial aspect can be
   //   viewed as dealing with a MIMO (multi in, multi out) LTI system. We have one time signal for 
   //   each spatial sample along the string. Verify and document this! 
+  //
+  // - Try modeling a stiff string by replacing the unit delay by 1st order allpass filters and 
+  //   also by including a 4th order derivative term into the wave-equation and deriving a 
+  //   numerical solver scheme for that. Maybe the result will be something that is equivalent to
+  //   the unit delay to allpass approach?
 }
 
 void testWaveGuide1()
@@ -18982,30 +18987,30 @@ void testWaveGuide1()
 
 void testWaveGuide2()
 {
-  // Under construction
-
   // In this experiment, we compare the outputs of the different variations of the getSample() 
   // function of class rsWaveguide. We try all possible orderings of the three operations: inject,
   // extract, reflect. Thy will show different behavior in the edge case where we drive the string
   // at a boundary point. ...TBC...
 
+  // Setup:
+  int M    =  10;                      // Length of the waveguide (number of segments)
+  int mIn  =   0;                      // Driving point for input
+  int mOut =   0;                      // Pick up point for output
+  int N    = 8*M;                      // Number of samples to produce
+
+  // For convenience:
   using T   = double;
   using WG  = rsWaveGuide<T, T>;
   using Vec = std::vector<T>;
 
-  int M    =  10;       // Length of the waveguide (number of segments)
-  int mIn  =   0;       // Driving point for input
-  int mOut =   0;       // Pick up point for output
-  int N    = 8*M;       // Number of samples to produce
-
-
-
+  // Create waveguide filter:
   WG wg;
   wg.setMaxStringLength(M);
   wg.setStringLength(M);
   wg.setDrivingPoint(mIn);
   wg.setPickUpPoint(mOut);
 
+  // Allocate vectors for the results:
   Vec yIER(N), yIRE(N), yEIR(N), yERI(N), yRIE(N), yREI(N);
 
   // Create the different variations of the output signal:
@@ -19019,7 +19024,6 @@ void testWaveGuide2()
   for(int n = 1; n < N; n++)
     yIRE[n] = wg.getSampleInRefEx(0.0);
 
-
   wg.reset();
   yEIR[0] = wg.getSampleExInRef(1.0);
   for(int n = 1; n < N; n++)
@@ -19030,42 +19034,55 @@ void testWaveGuide2()
   for(int n = 1; n < N; n++)
     yERI[n] = wg.getSampleExRefIn(0.0);
 
-
   wg.reset();
   yRIE[0] = wg.getSampleRefInEx(1.0);
   for(int n = 1; n < N; n++)
     yRIE[n] = wg.getSampleRefInEx(0.0);
-
 
   wg.reset();
   yREI[0] = wg.getSampleRefExIn(1.0);
   for(int n = 1; n < N; n++)
     yREI[n] = wg.getSampleRefExIn(0.0);
 
-
-
-
-
-  // ...more to come...
-
-
   // Plot the results:
   rsPlotVectors(yIER);
   rsPlotVectors(yIRE);
-
-  //rsPlotVectors(yIER, yIRE, yEIR, yERI, yRIE, yREI);
+  rsPlotVectors(yEIR);
+  rsPlotVectors(yERI);
+  rsPlotVectors(yRIE);
+  rsPlotVectors(yREI);
+  rsPlotVectors(yIER, yIRE, yEIR, yERI, yRIE, yREI);
 
 
   // Observations:
   //
   // - M = 10, mIn = mOut = 0:
   //   yIER has initial spike with amplitude 1 at n=0, a 2nd spike of 0.5 at n=20, then a downard 
-  //   spike at n=32 of -0.5, then up at n= 40 with +0.5 and then the pattern repeats.
+  //   spike at n=32 of -0.5, then up at n= 40 with +0.5 and then the pattern repeats. I will write
+  //   this henceforth as: 
+  //   yIER: 0:+1.0, 20:+0.5, 32:-0.5, 40:+0.5, 52:-0.5, ...
+  //   yIRE: all zeros
+  //   yEIR: 20:+0.5, 32:-0.5, 40:+0.5, 52:-0.5, ...
+  //   yERI: 20:-0.5, 32:+0.5, 40:-0.5, 52:+0.5, ...
+  //   yRIE: 0:+1.0 then all zeros
+  //   yREI: all zeros
+  //
+  // - M = 10, mIn = mOut = M:
+  //
+  // - M = 10, mIn = 0, mOut = M:
+  //
+  // - M = 10, mIn = M, mOut = 0:
+  //
+  // - M = 10, mIn = M, mOut = 1:
+  //
+  // ...
 }
 
 
 void testWaveGuides()
 {
+  // Experiments:
+  //testWaveEquation1D();
   //testWaveGuide1();
   testWaveGuide2();
 
@@ -19076,10 +19093,6 @@ void testWaveGuides()
   ok &= unitTestWaveGuideClass();
   rsAssert(ok);
   // Factor out into a function rsUnitTestsWaveGuide()
-
-  // Experiments:
-  //testWaveEquation1D();
-  testWaveGuide1();
 
 
   // ToDo: 

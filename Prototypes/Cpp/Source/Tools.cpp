@@ -8939,9 +8939,6 @@ TSig rsWaveGuide<TSig, TPar>::getSampleInExRef(TSig in)
   // initializing all the spatial samples) and both algorithms apparently produce the same results.
   // That would mean that if we are doing it wrong, we are doing it wrong in both algorithms in the
   // same way and that seems rather unlikely given that the two algorithms are quite different.
-  //
-  // 
-
 }
 */
 

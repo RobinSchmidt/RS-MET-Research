@@ -623,6 +623,9 @@ which is called the characteristic equation. [the right one, I think]
 % The lhs is a matrix-vecztor product whereas the right hand side is just a scalar multplication with the sclaing factor $\lambda$.
 
 
+% #SoME4 Why do we even care about Eigen-stuff? A refresher and a cool application in control theory
+% https://www.youtube.com/watch?v=zNzTXm-E8Wk
+
 \paragraph{Eigenvalues and Characteristic Polynomial}
 If we expand the left hand side of the characteristic equation $\det ( \mathbf{A} - \lambda \mathbf{I} ) = 0$ according to the rules for how determinants are computed, it will turn out that we will get a polynomial in $\lambda$ of degree $n$. This polynomial is called the \emph{characteristic polynomial} of the matrix  $\mathbf{A}$. The right hand side says that this polynomial should be equal to zero for $\lambda$ to be an eigenvalue. Another way to say that is that an eigenvalue $\lambda$ is a root of the characteristic polynomial. We know that roots of polynomials may have a multiplicity, i.e. in the product form of the polynomial, the linear factor that corresponds to the root may occur multiple times. The multiplicity of the eigenvalue as the root of the characteristic polynomial is called the \emph{algebraic multiplicity} of the eigenvalue and denoted by $\alg(\lambda)$. Note that even for matrices of real numbers, the eigenvalues may be complex. If the matrix is real, then complex eigenvalues will always come in pairs of conjugates [VERIFY!].
 

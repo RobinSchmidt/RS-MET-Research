@@ -12262,6 +12262,47 @@ void testCompositeness()
 }
 
 
+void testPrimeDecomposition()
+{
+  // Under construction.
+
+  // The fundamental theorem of arithmetic tells us that every natural number can be uniquely (up 
+  // to order of the factors) decomposed into a product of primes (where it is allowed that prime
+  // factors can have a multiplicity). The primes themselves cannot be decomposed any further in
+  // a multiplicative way. But what about decomposing them additively? That's what we want to 
+  // explore here experimentally. Maybe there will be no way of doing it in a unique fashion even
+  // if we put constraints on how the decomposition should look like but maybe with some 
+  // appropriate constraints, there may be ways that are interesting enough to warrant a closer 
+  // look?
+  //
+  // My first conjecture is that every prime number > 2 can be written as the sum of just two 
+  // smaller prime powers (we may allow the exponent 0 or maybe we allow the 1 to occur as summand 
+  // as well - I think, this is relevant only for 3=2+1. Maybe we could even allow to write 2=1+1). 
+  // For example:  3=2+1, 5=3+2, 7=5+2, 11=3^2+2=2^3+3, 13=3^2+2^2=11+2, 17=13+2^2, 19=11+2^3, 
+  // 23=2^4+7, 27=23+2^2, 29=27+2, 31=29+2=23+2^3, 37=2^5+5, ...
+  // With this experiment, I want to verify, that this list goes on. I want to also figure out how
+  // the number of different ways to do it grows (on average) with the size of the number. That is:
+  // for every prime p up to some upper limit pMax, we want to find all possible additive 
+  // decompositions into two prime powers. ...TBC...
+  // 
+  // Maybe when we alternate steps of prime decompositions with steps of additively decomposing
+  // the primes in some additive way, we can represent all numbers as "trees" whose leaf nodes are
+  // nothing but 1s and maybe if the additive decomposition of primes is clever, we can minimize
+  // the height of these trees? Maybe when we additively decompose primes and there are multiple 
+  // options to do it, it is (in most cases) preferable to pick a decomposition in which the
+  // two summands have roughly the same size because that gives us the greatest amount of 
+  // "breakdown" in the sense that the two constituents are as small as they can be?
+  //
+  // 
+  // See also:
+  //
+  // https://en.wikipedia.org/wiki/Lemoine%27s_conjecture
+  // https://en.wikipedia.org/wiki/Goldbach%27s_conjecture (not about primes but otherwise similar)
+
+
+
+}
+
 
 // Finite field stuff:
 
@@ -18989,13 +19030,13 @@ void testWaveGuide2()
 {
   // In this experiment, we compare the outputs of the different variations of the getSample() 
   // function of class rsWaveguide. We try all possible orderings of the three operations: inject,
-  // extract, reflect. Thy will show different behavior in the edge case where we drive the string
+  // extract, reflect. They will show different behavior in the edge case where we drive the string
   // at a boundary point. ...TBC...
 
   // Setup:
   int M    =  10;                      // Length of the waveguide (number of segments)
   int mIn  =   0;                      // Driving point for input
-  int mOut =   0;                      // Pick up point for output
+  int mOut =   1;                      // Pick up point for output
   int N    = 8*M;                      // Number of samples to produce
 
   // For convenience:

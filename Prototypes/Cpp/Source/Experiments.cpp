@@ -12309,8 +12309,9 @@ void testPrimeDecomposition()
 
 
 
-  using Int  = int;
-  using Vec  = std::vector<Int>;
+  using Int   = int;
+  using Vec   = std::vector<Int>;
+  using Vec2  = rsVector2D<Int>;
 
   Int maxN = 256;
 
@@ -12322,6 +12323,7 @@ void testPrimeDecomposition()
   // But we don't only want primes but also prime powers:
   Vec primePowers;
   primePowers.reserve(maxN*2); // *2 should be more than enough, I guess? Verify!
+  primePowers.push_back(1);
   for(size_t i = 0; i < primes.size(); i++)
   {
     Int p = primes[i];
@@ -12334,6 +12336,28 @@ void testPrimeDecomposition()
   }
   rsSort(primePowers);
   // Maybe factor this out into a convenience function rsMakeTableOfPrimePowers(maxN)
+
+  // Now compute the decompositions
+  std::vector<std::vector<Vec2>> decomps(primes.size());
+  for(size_t i = 0; i < primes.size(); i++)
+  {
+    Int p = primes[i];
+    for(size_t j = 0; j < primePowers.size(); j++)
+    {
+      Int a = primePowers[j];
+      Int b = p - a;
+      if(b < 1) // Maybe break also if b < a
+        break;
+      size_t k = rsFind(primePowers, b);
+      if(k != primePowers.size())
+      {
+        // If a+b is an additive decomposition of p made of prime powers, store the two summands:
+        decomps[i].push_back(Vec2(a, b));
+      }
+    }
+    int dummy = 0;
+  }
+
 
 
 

@@ -12262,6 +12262,13 @@ void testCompositeness()
 }
 
 
+// Maybe move to library
+template<class T>
+void rsSort(T& s)
+{
+  std::sort(s.begin(), s.end());
+}
+
 void testPrimeDecomposition()
 {
   // Under construction.
@@ -12294,13 +12301,43 @@ void testPrimeDecomposition()
   // "breakdown" in the sense that the two constituents are as small as they can be?
   //
   // 
-  // See also:
+  // See also (for similar conjectures):
   //
   // https://en.wikipedia.org/wiki/Lemoine%27s_conjecture
+  // https://en.wikipedia.org/wiki/Goldbach%27s_weak_conjecture
   // https://en.wikipedia.org/wiki/Goldbach%27s_conjecture (not about primes but otherwise similar)
 
 
 
+  using Int  = int;
+  using Vec  = std::vector<Int>;
+
+  Int maxN = 256;
+
+
+  // Fill a table with primes for later use:
+  Vec primes;
+  rsFindPrimesUpTo(primes, maxN);
+
+  // But we don't only want primes but also prime powers:
+  Vec primePowers;
+  primePowers.reserve(maxN*2); // *2 should be more than enough, I guess? Verify!
+  for(size_t i = 0; i < primes.size(); i++)
+  {
+    Int p = primes[i];
+    Int v = p;
+    while(v <= maxN)
+    {
+      primePowers.push_back(v);
+      v *= p;
+    }
+  }
+  rsSort(primePowers);
+  // Maybe factor this out into a convenience function rsMakeTableOfPrimePowers(maxN)
+
+
+
+  int dummy = 0;
 }
 
 

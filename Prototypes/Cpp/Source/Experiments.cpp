@@ -12290,7 +12290,8 @@ void testPrimeDecomposition()
   // With this experiment, I want to verify, that this list goes on. I want to also figure out how
   // the number of different ways to do it grows (on average) with the size of the number. That is:
   // for every prime p up to some upper limit pMax, we want to find all possible additive 
-  // decompositions into two prime powers. ...TBC...
+  // decompositions into two prime powers. 
+  // ...OK - Done. And the conjecture turned out to be false!
   // 
   // Maybe when we alternate steps of prime decompositions with steps of additively decomposing
   // the primes in some additive way, we can represent all numbers as "trees" whose leaf nodes are
@@ -12313,7 +12314,7 @@ void testPrimeDecomposition()
   using Vec   = std::vector<Int>;
   using Vec2  = rsVector2D<Int>;
 
-  Int maxN = 256;
+  Int maxN = 10000;
 
 
   // Fill a table with primes for later use:
@@ -12346,7 +12347,8 @@ void testPrimeDecomposition()
     {
       Int a = primePowers[j];
       Int b = p - a;
-      if(b < 1) // Maybe break also if b < a
+      //if(b < 1) // Maybe break also if b < a
+      if(b < a)   // Avoid the symmetric solutions
         break;
       size_t k = rsFind(primePowers, b);
       if(k != primePowers.size())
@@ -12355,13 +12357,18 @@ void testPrimeDecomposition()
         decomps[i].push_back(Vec2(a, b));
       }
     }
-    int dummy = 0;
   }
-
-
+  // Ha! At index 34 (corresponding to the prime 149), there is no additive decomposition found! 
+  // So, the conjecture was false, after all!
 
 
   int dummy = 0;
+
+
+  // ToDo:
+  //
+  // - Figure out, if the density of primes which cannot be expressed as sum of two prime powers
+  //   increases.
 }
 
 

@@ -12369,6 +12369,9 @@ void testPrimeDecomposition()
   //
   // - Figure out, if the density of primes which cannot be expressed as sum of two prime powers
   //   increases.
+  //
+  // - Try other potentially useful additive decompositions of prime numbers. Maybe p1+p2+1 or 
+  //   p1+p2-1 (where p1, p2 are both primes)? Or (p1+p2)/p3?
 }
 
 
@@ -18886,11 +18889,18 @@ bool unitTestWaveGuideClass()  // Find better name!
 //-------------------------------------------------------------------------------------------------
 // Waveguide Experiments
 
-void testWaveEquation1D()
+void testWaveEquation1D()  // Maybe rename to testWavEqFinDifSolvers1D
 {
-  // We implement different numerical PDE solver schemes for the 1D wave equation. The default 
-  // scheme that is known to work very well is the leapfrog scheme that is explained in PASP. But
-  // here, we also try to use different update rules to see what they produce, what flaws they 
+  // We implement different numerical PDE solver schemes for the 1D wave equation based on finite 
+  // difference approximations. The default scheme that is known to work very well is the leapfrog
+  // scheme that is explained in PASP. The scheme is based on using 2nd order central difference 
+  // approximations for the spatial and temporal derivatives and then expressing the update rule in
+  // terms of two past states, i.e. it computes u[n] from u[n-1], u[n-2] which is often expressed
+  // in the literature as computing u[n+1] from u[n], u[n-1], i.e. with a 1 sample time-shift which
+  // is just a matter of notaional convention, i.e. whether we want to call the produced state in 
+  // each time step as the "current" state (at time n) or the "next" state (at time n+1). 
+  // 
+  // But here, we also try to use different update rules to see what they produce, what flaws they 
   // have, etc. ...TBC...
 
   using Real = double;
@@ -19001,6 +19011,12 @@ void testWaveEquation1D()
 
 void testWaveGuide1()
 {
+  // Rename to testWaveGuideVsWaveEq
+
+  // We experimentally verify that the leapfrog PDE solver scheme for the wave-equation, my own 
+  // ad-hoc wave-shifting scheme and the waveguide approach produce the same results as they 
+  // should via the theory.
+
   using T   = double;
   using WG  = rsWaveGuide<T, T>;
   using Vec = std::vector<T>;
@@ -19094,12 +19110,12 @@ void testWaveGuide1()
   //   we use wihtin the waveguide algo. Make a unit test to verify this!
 }
 
-void testWaveGuide2()
+void testWaveGuideEdgeCases()
 {
   // In this experiment, we compare the outputs of the different variations of the getSample() 
   // function of class rsWaveguide. We try all possible orderings of the three operations: inject,
   // extract, reflect. They will show different behavior in the edge case where we drive the string
-  // at a boundary point. ...TBC...
+  // at a boundary point and/or pick up the signal at a boundary point. ...TBC...
 
   // Setup:
   int M    =  10;                      // Length of the waveguide (number of segments)
@@ -19188,12 +19204,58 @@ void testWaveGuide2()
 }
 
 
+void testWaveGuideScattering()
+{
+  // Stub
+
+
+  // ToDo:
+  //
+  // - Set up a single waveguide of length M.
+  //
+  // - Introduce a scattering junction along the waveguide as spatial sample mS, the scattering 
+  //   location. Simulate an impedance step from R1 to R2 there (adjustable as user parameters).
+  //   Compute the reflection coeff for the scattering junction. I think, it's given by 
+  //   k = (R2-R1)/(R2+R1). See PASP, page 562. Then use that coeff in a Kelly-Lochbaum scattering 
+  //   junction.
+  // 
+  // - Make plots of the contents of the waveguides at interesting time steps (e.g. whne an 
+  //   impulse from the initial conditions hits the impedance step (i.e. the position mS). We expect
+  //   to the in the right going wave, a scaled dow setp to be transmitted whereas in the left going
+  //   wave, another part of the spike gets reflected.
+  //
+  // - Maybe make also an implementation based on using 2 actual waveguide objects instead of doing
+  //   the scattering internally inside one waveguide. Ultimately, we want to create waveguide 
+  //   modeling framework that supports both: scattering within waveguides and scattering between
+  //   waveguides.
+  //
+  // - Try to simulate the scattering also with the wave-shifting and with the leapfrog scheme. 
+  //
+  // - Try to come up with a way of scattering signals within a single delay line by picking up
+  //   some signal at some point within it (thereby "draining" the signal at that point partially)
+  //   and feeding it back in at some other point. We imagine to "move" a part of the signal from
+  //   one point to another. I think, it involves having a coeff c with 0 <= c <= 1 and then 
+  //   picking up the delay line content tmp = delayLine[mIn]; then multiplying 
+  //   delayLine[mIn] *= (1-c); then adding delayLine[mOut] += c*tmp; ..or something along these 
+  //   lines. I think, this is also the correct order for the operations for the edge case 
+  //   mIn = mOut. I think, depending on whether mIn > mOut or vice versa, we either increase the
+  //   delay for a part of the signal or we introduce a feedback loop. Verify this! Maybe such a 
+  //   scheme could give us a cheap way to increase the complexity of the delay patterns in FDNs.
+  //   Each delay line itself would already produce some pattern. I'm not sure, if that messes with
+  //   feedback stability, though. I think, the required condition is that, whatever we do, the 
+  //   delay line must remain an allpass. Actually, we could replace delay lines with more genenral
+  //   allpasses in an FDN anyway. Experiment with splitting each delay line into 2,3 or 4 serial
+  //   allpasses. Or maybe into nested allpasses.
+}
+
+
 void testWaveGuides()
 {
   // Experiments:
   //testWaveEquation1D();
   //testWaveGuide1();
-  testWaveGuide2();
+  testWaveGuideEdgeCases();
+  testWaveGuideScattering();
 
   // Unit tests:
   bool ok = true;

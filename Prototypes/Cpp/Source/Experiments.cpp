@@ -19221,7 +19221,7 @@ void testWaveGuideScattering()
 
   // Setup:
   int M    = 29;                       // Length of the waveguide (number of segments)
-  int mIn  = 29;                       // Driving point for input
+  int mIn  = 19;                       // Driving point for input
   int m    = 23;                       // Scatter point (it occcurs between m-1 and m)
   T   k    =  0.25;                    // Reflection coeff at scatter point
   int mOut = 10;                       // Pick up point for output (not actually used, I think)
@@ -19235,9 +19235,21 @@ void testWaveGuideScattering()
   wg.setPickUpPoint(mOut);
 
   // Set up the initial state for the waveguide:
-  Vec vInit;
+  Vec vInit(M);
   vInit[mIn] = 1;
-  //wg.setState(vInit);   // Needs to be implemented!
+  wg.setState(&vInit[0], M);
+
+  // Do the time stepping and at each time step, plot the content of the waveguide:
+  for(int n = 0; n < N; n++)
+  {
+    rsPlotDelayLineContent(wg.getDelayLine1(), wg.getDelayLine2(), true);
+    // true: Reverse content of delay2
+    // ToDo: Factor out into rsPlotWaveGuideContent(wg);
+
+
+    wg.getSample(0.0);  // Preliminary
+
+  }
 
 
 

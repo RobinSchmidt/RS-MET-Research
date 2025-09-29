@@ -8813,6 +8813,19 @@ public:
     // range.
   }
 
+  void setState(const TSig* newState, int stateSize);
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+
+  const RAPT::rsDelay<TSig>& getDelayLine1() const { return delay1; }
+
+  const RAPT::rsDelay<TSig>& getDelayLine2() const { return delay2; }
+
+
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Processing (High Level)
@@ -8906,6 +8919,26 @@ protected:
   // ToDo: Find better default values
 
 };
+
+
+
+template<class TSig, class TPar>
+void rsWaveGuide<TSig, TPar>::setState(const TSig* newState, int stateSize)
+{
+  rsAssert(stateSize == M); // Is this correct or should it be M+1?
+  // ToDo: Maybe be a bit more liberal here. If the passed state buffer has a too small size, just
+  // fill the rest with zeros and if it has a too larger size, ignore the final portion of it
+
+  for(int m = 0; m < M; m++)
+  {
+    TSig x = 0.5 * newState[m];
+    delay1.writeInputAt(x,   m);
+    delay2.writeInputAt(x, M-m);
+  }
+
+
+}
+
 
 
 // Obsolete:

@@ -19200,13 +19200,49 @@ void testWaveGuideEdgeCases()
   //
   // - M = 10, mIn = M, mOut = 1:
   //
+  // 
+  // Conclusions:
+  // 
+  // - I think, either inject -> extract -> reflect (IER) or extract -> inject -> reflect (EIR)
+  //   make the most sense. Maybe among these two EIR, seems the better default choice.
+  // 
   // ...
 }
 
 
 void testWaveGuideScattering()
 {
-  // Stub
+  // Under construction.
+
+  // For convenience:
+  using T   = double;
+  using WG  = rsWaveGuide<T, T>;
+  using Vec = std::vector<T>;
+
+  // Setup:
+  int M    = 29;                       // Length of the waveguide (number of segments)
+  int mIn  = 29;                       // Driving point for input
+  int m    = 23;                       // Scatter point (it occcurs between m-1 and m)
+  T   k    =  0.25;                    // Reflection coeff at scatter point
+  int mOut = 10;                       // Pick up point for output (not actually used, I think)
+  int N    = 8*M;                      // Number of samples to produce
+
+  // Create waveguide filter:
+  WG wg;
+  wg.setMaxStringLength(M);
+  wg.setStringLength(M);
+  wg.setDrivingPoint(mIn);
+  wg.setPickUpPoint(mOut);
+
+  // Set up the initial state for the waveguide:
+  Vec vInit;
+  vInit[mIn] = 1;
+  //wg.setState(vInit);   // Needs to be implemented!
+
+
+
+  int dummy = 0;
+
 
 
   // ToDo:
@@ -19254,7 +19290,7 @@ void testWaveGuides()
   // Experiments:
   //testWaveEquation1D();
   //testWaveGuide1();
-  testWaveGuideEdgeCases();
+  //testWaveGuideEdgeCases();
   testWaveGuideScattering();
 
   // Unit tests:

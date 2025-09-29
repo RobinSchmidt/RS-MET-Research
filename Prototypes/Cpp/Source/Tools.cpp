@@ -8813,8 +8813,9 @@ public:
     // range.
   }
 
+
   //-----------------------------------------------------------------------------------------------
-  // \name Processing
+  // \name Processing (High Level)
 
   /** Produces one output sample at a time. */
   TSig getSample(TSig in) { return getSampleInExRef(in); }
@@ -8827,12 +8828,18 @@ public:
   // priciple of least astonishment. Following that, we need to pick the most appropriate version 
   // of the algorith here. I think, it's InExRef but this needs to be verified.
 
+  /** Resets the waveguide to its initial state. Clears the content of the delay lines. */
+  void reset() { delay1.reset(); delay2.reset(); }
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Processing (Low Level)
+
   /** Computes an output sample using the operation order: inject -> extract -> reflect. */
   TSig getSampleInExRef(TSig in);
 
   /** Computes an output sample using the operation order: inject -> reflect -> extract. */
   TSig getSampleInRefEx(TSig in);
-
 
   /** Computes an output sample using the operation order: extract -> inject -> reflect. */
   TSig getSampleExInRef(TSig in);
@@ -8840,34 +8847,18 @@ public:
   /** Computes an output sample using the operation order: extract -> reflect -> inject. */
   TSig getSampleExRefIn(TSig in);
 
-
   /** Computes an output sample using the operation order: reflect -> inject -> extract. */
   TSig getSampleRefInEx(TSig in);
 
   /** Computes an output sample using the operation order: reflect -> exctract -> inject. */
   TSig getSampleRefExIn(TSig in);
 
+  // We have 6 versions because we have 3 operations (inject, extract, reflect) that we want to 
+  // permute in all possible ways. That leads to 3! = 6 different possible algorithms which will 
+  // produce the same results in the typical case where the string is being driven somewhere along
+  // its length but may behave differently in edge cases where we are driving the string directly 
+  // at a boundary point.
 
-
-
-  // We need to following 6 variants of the algorithm: 1: InExRef, 2: InRefEx, 
-  // 3: ExInRef, 4: ExRefIn, 5: RefInEx, 6: RefExIn. We arrive a 6 versions because we have 3
-  // operations (inject, extract, reflect) that we want to permute. That leads to 3! = 6 different
-  // possible algorithms which will produce the same results in the typical case where the string 
-  // is being driven somewhere along its length but may behave differently in edge cases where we 
-  // are driving the string directly at a boundary point.
-
-
-  /** Resets the waveguide to its initial state. Clears the content of the delay lines. */
-  void reset() { delay1.reset(); delay2.reset(); }
-
-
-
-
-
-
-
-protected:
 
   /** Injects the given input signal into the waveguide at the driving point which can be set up 
   via setDrivingPoint(). Injection of a signal into the waveguide entails distributing it equally
@@ -8885,9 +8876,17 @@ protected:
   mutual crossfeedback between the two delay lines using our reflection coefficients. */
   inline void reflectAtEnds();
 
+  inline void scatterAt(int m, TPar k);
+  // Under construction
+
   /** Steps the time forward by one sample instant. This basically moves/advances the pointers in 
   the delay lines. It's called from the various getSampleXXX() methods. */
   inline void stepTime();
+
+
+  //-----------------------------------------------------------------------------------------------
+
+protected:
 
   /** Updates the settings of our two delay lines accoring to the user parameters M, mIn, mOut. */
   void updateDelaySettings();
@@ -8904,12 +8903,12 @@ protected:
   int M    = 30;                       // Length of the delay lines. Half the period of output.
   int mIn  =  7;                       // Driving point for input
   int mOut = 11;                       // Pick up point for output
-  // ToDo: find better default values
+  // ToDo: Find better default values
 
 };
 
 
-
+// Obsolete:
 /*
 template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSampleInExRef(TSig in)
@@ -9003,10 +9002,6 @@ TSig rsWaveGuide<TSig, TPar>::getSampleRefExIn(TSig in)
 }
 
 
-
-
-
-
 template<class TSig, class TPar>
 inline void rsWaveGuide<TSig, TPar>::injectInput(TSig in)
 {
@@ -9033,6 +9028,25 @@ inline void rsWaveGuide<TSig, TPar>::reflectAtEnds()
   TSig ref2 = delay2.readOutput();         // Reflected wave at left end
   delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
   delay2.writeInput(reflectRight * ref1);  // Reflection at right end
+}
+
+template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::scatterAt(int m, TPar k)
+{
+  // Sanity checks:
+  rsAssert(m >= 0        && m <= M,        "Scatter point out of range");
+  rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stabe range");
+
+  // Read delay line contents from top and bottom rail:
+  TSig uTL = delay1.readOutputAt(m-1);  // TL: top-left
+  TSig uBR = delay2.readOutputAt(M-m);  // BR: bottom-right
+
+
+  // ...more to do...
+
+
+
+  int dummy = 0;
 }
 
 template<class TSig, class TPar>

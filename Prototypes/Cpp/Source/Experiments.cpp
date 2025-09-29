@@ -19246,9 +19246,15 @@ void testWaveGuideScattering()
     // true: Reverse content of delay2
     // ToDo: Factor out into rsPlotWaveGuideContent(wg);
 
+    // We use the extract -> inject -> reflect (EIR) order of operations as basis and insert the 
+    // scattering step before the reflection:
+    T out = wg.extractOutput();    // Extract
+    wg.injectInput(0.0);           // Inject
+    wg.scatterAt(m, k);            // Scatter
+    wg.reflectAtEnds();            // Reflect
+    wg.stepTime();
 
-    wg.getSample(0.0);  // Preliminary
-
+    //wg.getSample(0.0);  // Preliminary
   }
 
 

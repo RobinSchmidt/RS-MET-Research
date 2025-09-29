@@ -9071,13 +9071,22 @@ inline void rsWaveGuide<TSig, TPar>::scatterAt(int m, TPar k)
   rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stabe range");
 
   // Read delay line contents from top and bottom rail:
-  TSig uTL = delay1.readOutputAt(m-1);  // TL: top-left
-  TSig uBR = delay2.readOutputAt(M-m);  // BR: bottom-right
+  TSig uTL = delay1.readOutputAt(m-1);    // TL: top-left,      f^+_{i-1}
+  //TSig uTR = delay1.readOutputAt(m);      // TR: top-right,     f^+_i
+  TSig uBR = delay2.readOutputAt(M-m);    // BR: bottom-right,  f^-_i
+  //TSig uBL = delay2.readOutputAt(M-m-1);  // BL: bottom-left,   f^-_{i-1}
 
+  // Compute the scattered signals (see to PASP, page 564 and 570, Fig. C.17 and C.20):
+  TSig uTR = (1+k) * uTL + (-k) * uBR;  // TR: top-right, upper transmission + reflection
+  TSig uBL = (1-k) * uBR +  (k) * uTL;  // BL: bottom-left, lower transmission + reflection
 
-  // ...more to do...
+  // Write the scattered signals back into the delay lines at the appropriate places:
+  //delay1.writeInputAt(uTR, m);
+  //delay2.writeInputAt(uBL, M-m-1);
+  delay1.addToInputAt(uTR, m);
+  delay2.addToInputAt(uBL, M-m-1);
 
-
+  // Verify all of this! Maybe we should read at m,M-m and also write at m,M-m
 
   int dummy = 0;
 }

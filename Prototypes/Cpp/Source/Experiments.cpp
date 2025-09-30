@@ -19220,21 +19220,19 @@ void testWaveGuideScattering()
   using Vec = std::vector<T>;
 
   // Setup:
-  int M    = 29;                 // Length of the waveguide (number of segments)
-  int mIn  = 19;                 // Driving point for input
-  int mS    = 23;                // Scatter point (it occcurs between m-1 and m)
-  T   k    = 0.5;                // Reflection coeff at scatter point
-  int mOut = 10;                 // Pick up point for output (not actually used, I think)
+  int M    = 13;                 // Length of the waveguide (number of segments)
+  int mIn  =  8;                 // Driving point for input
+  int mS   = 10;                 // Scatter point (it occcurs between m-1 and m)
+  T   k    = +0.5;               // Reflection coeff at scatter point k = (R2-R1)/(R2+R1)
+  int mOut = 10;                 // Pick up point for output (not actually used)
   int N    = 8*M;                // Number of samples to produce
-
-  M = 11, mIn = 5, mS = 7;       // Test
 
   // Create waveguide filter:
   WG wg;
   wg.setMaxStringLength(M);
   wg.setStringLength(M);
-  wg.setDrivingPoint(mIn);
-  wg.setPickUpPoint(mOut);
+  wg.setDrivingPoint(mIn);       // Doesn't really matter.
+  wg.setPickUpPoint(mOut);       // Dito.
 
   // Set up the initial state for the waveguide:
   Vec vInit(M);
@@ -19244,29 +19242,33 @@ void testWaveGuideScattering()
   // Do the time stepping and at each time step, plot the content of the waveguide:
   for(int n = 0; n < N; n++)
   {
+    // Plot the waveguide state/content:
     rsPlotWaveGuideContent(wg);
-
-    //rsPlotDelayLineContent(wg.getDelayLine1(), wg.getDelayLine2(), true);
-    // true: Reverse content of delay2
-    // ToDo: Factor out into rsPlotWaveGuideContent(wg);
 
     // We use the extract -> inject -> reflect (EIR) order of operations as basis and insert the 
     // scattering step before the reflection:
-    T out = wg.extractOutput();    // Extract
-    wg.injectInput(0.0);           // Inject
-    wg.scatterAt(mS, k);           // Scatter
-    wg.reflectAtEnds();            // Reflect
-    wg.stepTime();
-
-    //wg.getSample(0.0);  // Preliminary
+    T out = wg.extractOutput();  // Extract. Doesn't matter here (we don't use it later).
+    wg.injectInput(0.0);         // Inject. Doesn't matter either (it's zero anyway).
+    wg.scatterAt(mS, k);         // Scatter at position mS with coeff k
+    wg.reflectAtEnds();          // Reflect at both ends as usual
+    wg.stepTime();               // Step time one sample instant forward (updates delay taps).
   }
 
-
-
-  int dummy = 0;
-
-
-
+  // Observations:
+  //
+  // - With k = -1, the scattering junction acts just like an (inverting) termination. That is:
+  //   The partial waveguide 0..mS acts just like a waveguide that is shorter than the whole 0..M
+  //   waveguide. The portion mS+1..M remains at zero ("silent") at all times. Or..wait! Sometimes,
+  //   there seems to pop up a spike at the actual right boundary out of nowhere! What is this? Is
+  //   this a bug? -> Investigate more closely! Maybe it's an artifact of the way, we plot the 
+  //   content of the delay line? Maybe we see a wrapped around "ghost" sample for some (buggy) 
+  //   reason?
+  // 
+  // - With k = +1, the scattering junction first acts like a non-inverting termination but the 
+  //   portion to the right of the junction does not remain silent. Instead, there's a pulse 
+  //   recirculating there as well. Could this be even unstable? Check that!
+  //
+  //
   // ToDo:
   //
   // - Introduce a scattering junction along the waveguide as spatial sample mS, the scattering 
@@ -19276,6 +19278,9 @@ void testWaveGuideScattering()
   //   junction.
   // 
   // - Check behavior for k = 0. In this case, the scattering should have no effect at all.
+  // 
+  // - Check behavior in cases of k = -1 and k = 1. I think, in these cases the scattering junction
+  //   should act just like a termination.
   // 
   // - Make plots of the contents of the waveguides at interesting time steps (e.g. whne an 
   //   impulse from the initial conditions hits the impedance step (i.e. the position mS). We expect

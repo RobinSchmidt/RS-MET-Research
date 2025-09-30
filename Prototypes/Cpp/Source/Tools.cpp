@@ -8747,10 +8747,9 @@ pressure waves in a column of air in a long cylindrical bore (like a flute or or
 member function names and in the documentation, we may occasionally refer to the mental image of a
 string, though.
  
-
 References:
 
-  PASP: Physical Audio Signal Processing (Julius O. Smith)
+  PASP: Physical Audio Signal Processing (Julius O. Smith), https://ccrma.stanford.edu/~jos/pasp
 
 */
 
@@ -8889,8 +8888,15 @@ public:
   mutual crossfeedback between the two delay lines using our reflection coefficients. */
   inline void reflectAtEnds();
 
+  /** Implements a Kelly-Lochbaum scattering junction at the spatial location m with the reflection
+  coefficient k. For an impedance change from R1 to R2 when going from left to right, the coeff
+  can be computed as k = (R2-R1)/(R2+R1). See PASP, page 562 or here:
+  https://ccrma.stanford.edu/~jos/pasp/Kelly_Lochbaum_Scattering_Junctions.html
+  https://ccrma.stanford.edu/~jos/pasp/Reflection_Coefficient.html
+  The function can be called inside the per-sample computations for example immediately before
+  calling reflectAtEnds() which actually performs a quite similar computation just without the
+  transmission part. */
   inline void scatterAt(int m, TPar k);
-  // Under construction - ist still very buggy!
 
   /** Steps the time forward by one sample instant. This basically moves/advances the pointers in 
   the delay lines. It's called from the various getSampleXXX() methods. */
@@ -9068,25 +9074,29 @@ inline void rsWaveGuide<TSig, TPar>::scatterAt(int m, TPar k)
 {
   // Sanity checks:
   rsAssert(m >= 0        && m <= M,        "Scatter point out of range");
-  rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stabe range");
+  rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stable range");
 
   // Read delay line contents from top and bottom rail:
-  TSig uTL = delay1.readOutputAt(m);      // TL: top-left,      f^+_{i-1}
-  //TSig uTR = delay1.readOutputAt(m);      // TR: top-right,     f^+_i
-  TSig uBR = delay2.readOutputAt(M-m);    // BR: bottom-right,  f^-_i
-  //TSig uBL = delay2.readOutputAt(M-m-1);  // BL: bottom-left,   f^-_{i-1}
+  TSig uTL = delay1.readOutputAt(  m);     // TL: top-left,      f^+_{i-1}
+  TSig uBR = delay2.readOutputAt(M-m);     // BR: bottom-right,  f^-_i
 
   // Compute the scattered signals (see to PASP, page 564 and 570, Fig. C.17 and C.20):
-  TSig uTR = (1+k) * uTL + (-k) * uBR;  // TR: top-right, upper transmission + reflection
-  TSig uBL = (1-k) * uBR +  (k) * uTL;  // BL: bottom-left, lower transmission + reflection
+  TSig uTR = (1+k)*uTL - k*uBR;            // Upper rail transmission + reflection
+  TSig uBL = (1-k)*uBR + k*uTL;            // Lower rail transmission + reflection
 
   // Write the scattered signals back into the delay lines at the appropriate places:
-  delay1.addToInputAt(uTR, m);
-  delay2.addToInputAt(uBL, M-m);
+  delay1.writeInputAt(uTR,   m);           // TR: top-right,     f^+_i
+  delay2.writeInputAt(uBL, M-m);           // BL: bottom-left,   f^-_{i-1}
 
-  // Verify all of this! Maybe we should read at m,M-m and also write at m,M-m
+  // Verify all of this! Implement also the one-multiply form from page 571 using the alpha 
+  // parameter. This one can be generalized to junctions of more than 2 waveguides.
 
-  int dummy = 0;
+  // See:
+  // https://ccrma.stanford.edu/~jos/pasp/Kelly_Lochbaum_Scattering_Junctions.html
+
+  // ToDo:
+  // https://ccrma.stanford.edu/~jos/pasp/One_Multiply_Scattering_Junctions.html
+  // https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
 }
 
 template<class TSig, class TPar>

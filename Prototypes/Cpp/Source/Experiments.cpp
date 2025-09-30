@@ -19220,12 +19220,14 @@ void testWaveGuideScattering()
   using Vec = std::vector<T>;
 
   // Setup:
-  int M    = 29;                       // Length of the waveguide (number of segments)
-  int mIn  = 19;                       // Driving point for input
-  int m    = 23;                       // Scatter point (it occcurs between m-1 and m)
-  T   k    =  0.25;                    // Reflection coeff at scatter point
-  int mOut = 10;                       // Pick up point for output (not actually used, I think)
-  int N    = 8*M;                      // Number of samples to produce
+  int M    = 29;                 // Length of the waveguide (number of segments)
+  int mIn  = 19;                 // Driving point for input
+  int mS    = 23;                // Scatter point (it occcurs between m-1 and m)
+  T   k    = 0.5;                // Reflection coeff at scatter point
+  int mOut = 10;                 // Pick up point for output (not actually used, I think)
+  int N    = 8*M;                // Number of samples to produce
+
+  M = 11, mIn = 5, mS = 7;       // Test
 
   // Create waveguide filter:
   WG wg;
@@ -19242,7 +19244,9 @@ void testWaveGuideScattering()
   // Do the time stepping and at each time step, plot the content of the waveguide:
   for(int n = 0; n < N; n++)
   {
-    rsPlotDelayLineContent(wg.getDelayLine1(), wg.getDelayLine2(), true);
+    rsPlotWaveGuideContent(wg);
+
+    //rsPlotDelayLineContent(wg.getDelayLine1(), wg.getDelayLine2(), true);
     // true: Reverse content of delay2
     // ToDo: Factor out into rsPlotWaveGuideContent(wg);
 
@@ -19250,7 +19254,7 @@ void testWaveGuideScattering()
     // scattering step before the reflection:
     T out = wg.extractOutput();    // Extract
     wg.injectInput(0.0);           // Inject
-    wg.scatterAt(m, k);            // Scatter
+    wg.scatterAt(mS, k);           // Scatter
     wg.reflectAtEnds();            // Reflect
     wg.stepTime();
 
@@ -19265,18 +19269,25 @@ void testWaveGuideScattering()
 
   // ToDo:
   //
-  // - Set up a single waveguide of length M.
-  //
   // - Introduce a scattering junction along the waveguide as spatial sample mS, the scattering 
   //   location. Simulate an impedance step from R1 to R2 there (adjustable as user parameters).
   //   Compute the reflection coeff for the scattering junction. I think, it's given by 
   //   k = (R2-R1)/(R2+R1). See PASP, page 562. Then use that coeff in a Kelly-Lochbaum scattering 
   //   junction.
   // 
+  // - Check behavior for k = 0. In this case, the scattering should have no effect at all.
+  // 
   // - Make plots of the contents of the waveguides at interesting time steps (e.g. whne an 
   //   impulse from the initial conditions hits the impedance step (i.e. the position mS). We expect
   //   to the in the right going wave, a scaled dow setp to be transmitted whereas in the left going
   //   wave, another part of the spike gets reflected.
+  // 
+  // - Check, if the sum of the traveling waves stays bounded even if the traveling waves themselves
+  //   may not.
+  // 
+  // - Implement also power normalized (or power preserving) scattering junctions. Maybe implement
+  //   different variants of the scatterAt() function. scatterAtKL (for Kelly-Lochbaum), 
+  //   scatterAtPN (for power preserving) etc.
   //
   // - Maybe make also an implementation based on using 2 actual waveguide objects instead of doing
   //   the scattering internally inside one waveguide. Ultimately, we want to create waveguide 

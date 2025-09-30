@@ -8890,7 +8890,7 @@ public:
   inline void reflectAtEnds();
 
   inline void scatterAt(int m, TPar k);
-  // Under construction
+  // Under construction - ist still very buggy!
 
   /** Steps the time forward by one sample instant. This basically moves/advances the pointers in 
   the delay lines. It's called from the various getSampleXXX() methods. */
@@ -9071,7 +9071,7 @@ inline void rsWaveGuide<TSig, TPar>::scatterAt(int m, TPar k)
   rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stabe range");
 
   // Read delay line contents from top and bottom rail:
-  TSig uTL = delay1.readOutputAt(m-1);    // TL: top-left,      f^+_{i-1}
+  TSig uTL = delay1.readOutputAt(m);      // TL: top-left,      f^+_{i-1}
   //TSig uTR = delay1.readOutputAt(m);      // TR: top-right,     f^+_i
   TSig uBR = delay2.readOutputAt(M-m);    // BR: bottom-right,  f^-_i
   //TSig uBL = delay2.readOutputAt(M-m-1);  // BL: bottom-left,   f^-_{i-1}
@@ -9081,10 +9081,8 @@ inline void rsWaveGuide<TSig, TPar>::scatterAt(int m, TPar k)
   TSig uBL = (1-k) * uBR +  (k) * uTL;  // BL: bottom-left, lower transmission + reflection
 
   // Write the scattered signals back into the delay lines at the appropriate places:
-  //delay1.writeInputAt(uTR, m);
-  //delay2.writeInputAt(uBL, M-m-1);
   delay1.addToInputAt(uTR, m);
-  delay2.addToInputAt(uBL, M-m-1);
+  delay2.addToInputAt(uBL, M-m);
 
   // Verify all of this! Maybe we should read at m,M-m and also write at m,M-m
 
@@ -9107,6 +9105,25 @@ void rsWaveGuide<TSig, TPar>::updateDelaySettings()
 
   // ToDo: Limit mIn, mOut to the safe range. I think its 0..M or maybe 1...M-1
 }
+
+
+
+
+template<class TSig, class TPar>
+void rsPlotWaveGuideContent(const rsWaveGuide<TSig, TPar>& wg)
+{
+  rsPlotDelayLineContent(wg.getDelayLine1(), wg.getDelayLine2(), true);
+  // true: Reverse content of delay2
+
+  // ToDo:
+  //
+  // - Maybe plot also the sum of the contents of both delay lines because it is that sum that 
+  //   represents our actual physical signal. However - showing only the sum may hide some 
+  //   undesirable effects. For example, there may be situations in which the signals inside the
+  //   waveguides grow without bound while their sum stays bounded. 
+}
+
+
 
 /*
 ToDo:

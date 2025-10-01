@@ -9099,12 +9099,9 @@ inline void rsWaveGuide<TSig, TPar>::scatterAtKL(int m, TPar k)
   // Verify all of this! Implement also the one-multiply form from page 571 using the alpha 
   // parameter. This one can be generalized to junctions of more than 2 waveguides.
 
-  // See:
-  // https://ccrma.stanford.edu/~jos/pasp/Kelly_Lochbaum_Scattering_Junctions.html
+  // See: https://ccrma.stanford.edu/~jos/pasp/Kelly_Lochbaum_Scattering_Junctions.html
 
-  // ToDo:
-  // https://ccrma.stanford.edu/~jos/pasp/One_Multiply_Scattering_Junctions.html
-  // https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
+  // ToDo: https://ccrma.stanford.edu/~jos/pasp/One_Multiply_Scattering_Junctions.html
 }
 
 template<class TSig, class TPar>
@@ -9114,11 +9111,24 @@ inline void rsWaveGuide<TSig, TPar>::scatterAtPN(int m, TPar k)
   rsAssert(m >= 0        && m <= M, "Scatter point out of range");
   rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stable range");
 
+  // Read delay line contents from top and bottom rail:
+  TSig uTL = delay1.readOutputAt(  m);     // TL: top-left,      f^+_{i-1}
+  TSig uBR = delay2.readOutputAt(M-m);     // BR: bottom-right,  f^-_i
 
-  // ...
+  // Compute the scattered signals (see to PASP, page 572, Fig. C.22 and Eq. C.66):
+  TPar c = rsSqrt(1 - k*k);                // Cosine of theta = asin(k)
+  TSig uTR = c*uTL - k*uBR;                // Upper rail transmission + reflection
+  TSig uBL = c*uBR + k*uTL;                // Lower rail transmission + reflection
 
+  // Write the scattered signals back into the delay lines at the appropriate places:
+  delay1.writeInputAt(uTR,   m);           // TR: top-right,     f^+_i
+  delay2.writeInputAt(uBL, M-m);           // BL: bottom-left,   f^-_{i-1}
 
-  int dummy = 0;
+  // See: https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
+
+  // ToDo: implement a variant that takes both k and c as parameters (and maybe rename k to s) to
+  // avoid having to compute k when the caller can more efficiently compute both. The one-parameter
+  // version should just call the two-param version with k and sqrt(1-k^2)
 }
 
 template<class TSig, class TPar>
@@ -9184,7 +9194,10 @@ ToDo:
   as a member here - but maybe we can do it in a subclass, though.).
 
 - Maybe implement transformers, gyrators and dualizers (see PASP, pg 616 ff). Maybe they can act at
-  a point inside the waveguide or on the whole waveguide state (i.e. maybe implement both).
+  a point inside the waveguide or on the whole waveguide state (i.e. maybe implement both). The
+  transformer should perhaps be based on a function rsDelay::scaleContentAt because it would be
+  inefficient to use readOutputAt() and writeInputAt(). It should perhaps be a function 
+  transformAt() or applyTransformerAt() similar to scatterAt()
 
 - Maybe factor out a class rsWaveGuideBase that doesn't have mIn and mOut members. Maybe it should 
   have the low level functions like injectInput, extractOutput, reflectAtEnds, scatterAt, etc. 

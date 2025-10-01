@@ -417,6 +417,27 @@ https://www.youtube.com/watch?v=1l1reJ5k0xw
   shape so the initial "value" is actually a whole function or shape.
 
 
+The functions that are equal to their own third derivative
+https://www.youtube.com/watch?v=OSL5z-fzBsg
+-Shows the general solution of the ODE f''' = f or f''' - f = 0.
+-Uses the ansatz: f = k1*f1 + k2*f2 + k3*f3 for 3 constants k1,k2,k3 and 3 linearly independent
+ solution functions f1,f2,f3
+-Uses an exponential ansatz f(x) = k e^{a x} with f'''(x) = k a^3 e^{a x} which leads to a^3 = 1.
+ a^3 = 1 has the 3 solutions a1 = 1, a2 = (-1+sqrt(-3))/2, a3 = (-1-sqrt(-3))/2 = a2^2
+-The general solution is f(x) = k1 e^x + k2 e^{a1 x} + k3 e^{a2 x}. 
+-For a real valued solution, we must have k2 = k3 and we get:
+ f(x) = k1 e^x + k2 (e^(-x/2) sin(b x)) + k3 (e^(-x/2) cos(b x))  with b = sqrt(3)/2
+-So: The interesting solution (i.e. the one which is not just e^x) is an exponentially decaying
+ sinusoid (with a specific frequency, phase and decay rate)
+-A commnet says: Ex. 3.11 p. 137 form Carl M. Bender, Steven A. Orszag, Advanced Mathematical
+ Methods for Scientists and Engineers Asymptotic Methods and Perturbation Theory, 1978.
+
+The functions that are equal to their own n-th derivative
+https://www.youtube.com/watch?v=fnFabzutXNg
+-f^{(n)} = f -> f(x) = sum_{k=0}^n c_n e^{x e^{i w_k}}   with w_k = (2 pi k) / n
+-Gives also formulas for the real valued solutions. They are based on observing that the real and
+ imaginary part of a complex valued solution to the ODE are also solutions to the ODE, so we
+ just need to extract real and imag parts of the complex solutions. 
 
 
 \end{comment}

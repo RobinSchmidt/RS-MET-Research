@@ -951,7 +951,7 @@ That means, addition of Neumann integers just works element-wise by making use o
 % What about exponentiaion? first with integers as exponents but then also with other
 % rationals as exponents...radical numbers? What about algebraic numbers?
 
-\subsubsection{Real Numbers} The reals can be constructed from the rationals by a technique called \emph{Dedekind cuts}. That's the most complicated step in the construction of the number system. Let's approach it by using the irrational number $\sqrt{2}$ as example. As a Dedekind cut, we represent it as follows:
+\subsubsection{Real Numbers} The reals can be constructed from the rationals by a technique called \emph{Dedekind cuts}\footnote{An alternative construction would be via Cauchy sequences.}. That's the most complicated step in the construction of the number system. Let's approach it by using the irrational number $\sqrt{2}$ as example. As a Dedekind cut, we represent it as follows:
 \begin{equation}
 \sqrt{2} = (A, B) \qquad \text{where} \qquad
 A = \{a \in \mathbb{Q} : a^2  <   2 \vee   a   <  0\}, \quad
@@ -980,6 +980,15 @@ That is: the real number $\sqrt{2}$ is represented as a pair of sets of rational
 
 % https://de.wikipedia.org/wiki/Dedekindscher_Schnitt
 
+
+
+% what is a real number exactly?
+% https://www.youtube.com/watch?v=ASXe5boIC08
+% -Mentions both ways to construct the reals (Dedekind cuts and Cauchy sequences) and their
+%  respective emphasis on different aspects of the reals.
+% -Defines the real valued exponential function a^x in terms of rational exponents as:
+%  a^x = \sup \{ a^q : q \in Q, q <= x  \}
+% -A real number is an element of a complete ordered field
 
 
 \subsubsection{Complex Numbers} Having the real numbers in hand, constructing the complex numbers is actually very simple. We just define a complex number as a pair of real numbers. That's it. This time, we don't even need equivalence classes or infinite sets. Of course, we still need to define the operations of addition and multiplication. But that is also easy. Addition, once again, just works element wise.  ...TBC...ToDo: explain multiplication, explain that C is algebraically complete, cannot be ordered into an ordered field, maybe explain also subtraction and division

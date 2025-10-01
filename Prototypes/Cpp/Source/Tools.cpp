@@ -8849,6 +8849,7 @@ public:
 
   /** Computes an output sample using the operation order: inject -> extract -> reflect. */
   TSig getSampleInExRef(TSig in);
+  // Maybe rename to getSample_IER, etc.
 
   /** Computes an output sample using the operation order: inject -> reflect -> extract. */
   TSig getSampleInRefEx(TSig in);
@@ -8896,7 +8897,12 @@ public:
   The function can be called inside the per-sample computations for example immediately before
   calling reflectAtEnds() which actually performs a quite similar computation just without the
   transmission part. */
-  inline void scatterAt(int m, TPar k);
+  inline void scatterAtKL(int m, TPar k);
+
+  inline void scatterAtPN(int m, TPar k);
+  // power-normalized scattering
+
+
 
   /** Steps the time forward by one sample instant. This basically moves/advances the pointers in 
   the delay lines. It's called from the various getSampleXXX() methods. */
@@ -8917,12 +8923,14 @@ protected:
   // Reflection coefficients:
   TPar reflectLeft  = TPar(-1);        // Reflection coefficient at left boundary
   TPar reflectRight = TPar(-1);        // Reflection coefficient at right boundary
+  // Using -1, i.e. inverting reflections, corresponds to a fixed end boundary condition (aka 
+  // Dirichlet boundary condition.). This seems to be a reasonable default behavior.
 
   // Delay line settings:
   int M    = 30;                       // Length of the delay lines. Half the period of output.
   int mIn  =  7;                       // Driving point for input
   int mOut = 11;                       // Pick up point for output
-  // ToDo: Find better default values
+  // ToDo: Find better default values. These were chosen out of convenience during R&D.
 
 };
 
@@ -9070,7 +9078,7 @@ inline void rsWaveGuide<TSig, TPar>::reflectAtEnds()
 }
 
 template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::scatterAt(int m, TPar k)
+inline void rsWaveGuide<TSig, TPar>::scatterAtKL(int m, TPar k)
 {
   // Sanity checks:
   rsAssert(m >= 0        && m <= M,        "Scatter point out of range");
@@ -9097,6 +9105,20 @@ inline void rsWaveGuide<TSig, TPar>::scatterAt(int m, TPar k)
   // ToDo:
   // https://ccrma.stanford.edu/~jos/pasp/One_Multiply_Scattering_Junctions.html
   // https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
+}
+
+template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::scatterAtPN(int m, TPar k)
+{
+  // Sanity checks:
+  rsAssert(m >= 0        && m <= M, "Scatter point out of range");
+  rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stable range");
+
+
+  // ...
+
+
+  int dummy = 0;
 }
 
 template<class TSig, class TPar>
@@ -9152,6 +9174,30 @@ ToDo:
 - Instead of taking the leapfrog algo as ground truth, try to theoretically figure out what
   sort of signal we should expect when driving the string at the boundary and compare that to
   the actual computed results of the various algorithms.
+
+- Maybe have a function to compute the total stored energy. Maybe that function needs different
+  implementations depending on what physical quantity we represent with the traveling wave 
+  variable (displacement, force, velocity, pressure, etc.). Maybe we need also some functions to 
+  convert the wave variables between different quantities. For example, force can be converted to
+  velocity via R = f/v  ->  v = f/R, f = v*R where R is the wave impedance. (Verify! Cite source.).
+  Maybe such conversion functions should take the impedance as argument (we don't want to store it
+  as a member here - but maybe we can do it in a subclass, though.).
+
+- Maybe implement transformers, gyrators and dualizers (see PASP, pg 616 ff). Maybe they can act at
+  a point inside the waveguide or on the whole waveguide state (i.e. maybe implement both).
+
+- Maybe factor out a class rsWaveGuideBase that doesn't have mIn and mOut members. Maybe it should 
+  have the low level functions like injectInput, extractOutput, reflectAtEnds, scatterAt, etc. 
+  where, in case of when these functions need additional info that is currently taken from member
+  variables (such as mIn, mOut), they should be passed in as additional parameters. The reason
+  being that we may want to build waveguide based structures that are not necessarrily based on
+  having a single injection point and a single extraction point. That is something that we should 
+  build on top of a more basic, low level structure. Or maybe keep injectInput/extractOutput in
+  the subclass as is and in the baseclass have injectInputAt/extractOutputAt functions. The 
+  implementation of injectInput() in the subclass should then just call 
+  Base::injectInputAt(in, mIn) or something like that. Maybe the subclass could be named 
+  rsWaveGuideFilter or rsWaveGuideFilter_1In_1Out and the baseclass just rsWaveGuide. Maybe look
+  up how we did it with the different delays and/or allpass delays.
 
 */
 

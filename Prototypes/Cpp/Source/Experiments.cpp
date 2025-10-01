@@ -19249,7 +19249,8 @@ void testWaveGuideScattering()
     // scattering step before the reflection:
     T out = wg.extractOutput();  // Extract. Doesn't matter here (we don't use it later).
     wg.injectInput(0.0);         // Inject. Doesn't matter either (it's zero anyway).
-    wg.scatterAt(mS, k);         // Scatter at position mS with coeff k
+    wg.scatterAtKL(mS, k);       // Kelly-Lochbaum scattering at position mS with coeff k
+    //wg.scatterAtPN(mS, k);       // Power normalized scattering at position mS with coeff k
     wg.reflectAtEnds();          // Reflect at both ends as usual
     wg.stepTime();               // Step time one sample instant forward (updates delay taps).
   }

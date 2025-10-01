@@ -8812,7 +8812,18 @@ public:
     // range.
   }
 
+  /** Sets up the state of the waveguide by distributing the given shape appropriately into the
+  delay lines for the right- and left-traveling wave. This can be used to set an initial condition 
+  for displacement (or velocity) to emulate pluck (or struck) strings. Whether the given newState 
+  represents displacement or velocity or something else is up to the interpretation of the caller.
+  If you use the waveguide to represent displacement waves, then the given newState would represent
+  the initialshape of the string (before it is released) and we would emulate a plucked string. If 
+  the waveguide represents velocity waves, then the given newState would represent the initial 
+  velocity distribution of the string at the moment of striking it. */
   void setState(const TSig* newState, int stateSize);
+  // ToDo: Wite a similar function but instead of directly writing the newState into the delay 
+  // lines, add it to what's already there. That could be used to (crudely) emulating to strike
+  // the string while it already is in motion.
 
 
   //-----------------------------------------------------------------------------------------------
@@ -9211,6 +9222,13 @@ ToDo:
   Base::injectInputAt(in, mIn) or something like that. Maybe the subclass could be named 
   rsWaveGuideFilter or rsWaveGuideFilter_1In_1Out and the baseclass just rsWaveGuide. Maybe look
   up how we did it with the different delays and/or allpass delays.
+
+- Figure out what happens if we do not reflect the waves at all, i.e. use reflection coeffs of zero
+  or just leave out the reflection step. How could we interpret such a situation physcially? Maybe 
+  it corresponds to a string that just continues to go on after the (now missing) termination. It 
+  would correspond to a conceptually infinitely long string but we just do not really care or 
+  emulate what is going on in the portions of the string that are beyond our view window. The 
+  traveling wave signals would just travel out of sight and get lost, so to speak.
 
 */
 

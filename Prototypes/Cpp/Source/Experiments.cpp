@@ -348,7 +348,7 @@ bool testKalmanFilter()
 
 
 //-------------------------------------------------------------------------------------------------
-// move some of this code to rapt:
+// move some of this code to ImageProcessing.cpp:
 
 // simple box filter for smoothing/blurring an image
 // maybe have options for edge handling: periodic, ignore, repeat, ...

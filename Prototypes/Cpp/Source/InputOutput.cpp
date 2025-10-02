@@ -1,4 +1,7 @@
 
+//#################################################################################################
+// Plotting with GNUPlotCPP
+
 //=================================================================================================
 // Convenience functions for certain types of plots. Maybe move to library, maybe into rs_testing 
 // module into TestTools/Plotting.h. Maybe at some point even into GNUPlotCPP itself.
@@ -485,10 +488,6 @@ void rsContourMapPlotter<T>::plot()
 
 //=================================================================================================
 
-
-
-//-------------------------------------------------------------------------------------------------
-
 /** Suclass of rsFieldPlotter2D to plot a 2D vector fields as arrow map. */
 
 template<class T>
@@ -598,6 +597,181 @@ void rsGradientFieldPlotter<T>::setFunction(const std::function<T(T x, T y)>& ne
 
 //=================================================================================================
 
+/** A class for plotting height maps ...TBC...  */
+
+template<class T>
+class rsHeightMapPlotter
+{
+
+public:
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  /** Sets scaling factors for the final image to be produced. The idea is that the actual 
+  evaluation of the potential might have to done on a grid that is coarser than the final image due
+  to it being too compuational expensive to directly evaluate it on a finer grid. We would the 
+  evaluate it on a coarser grid and obtain the final image using interpolation of this coarse grid 
+  data.  ...tbc... */
+  void setImageScaling(int newScaleX, int newScaleY) { scaleX = newScaleX; scaleY = newScaleY; }
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Plotting
+
+  /** Given a matrix z of height values and a range of x- and y-values such that 
+  z(i, j) = height(x_i, y_i) where x_i = xMin + (xMax-xMin) / Nx where Nx is the number of samples 
+  of the height z along the x-axis (given by z.numRows) and likewise for y_i, this function 
+  produces an image of that height data by converting the matrix to an image, possibly scaling it
+  up according to our scaling settings and post-processing the result by drawing in contour lines, 
+  etc. (ToDo: later we may also draw in the coordinate axes)   */
+  rsImage<T> getHeightMapImage(const rsMatrix<T> z, T xMin, T xMax, T yMin, T yMax);
+
+
+  rsImage<T> getHeightMapImage(const std::function<T(T x, T y)>& f, 
+    T xMin, T xMax, T yMin, T yMax, int w, int h);
+
+
+  // ToDo:
+  // -Add a function that does the same thing but instead of taking a data matrix, it takes a 
+  //  std::function<T(T, T)> with two inputs and one output. Eventually, we want to pass functions 
+  //  like rsPolyaPotentialEvaluator::square (wrapped into std::function) to that
+
+
+  /** A helper function to convert data from rsMatrix to rsImage. */
+  static rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize);
+
+  /** Post processes raw image data of the function values (normalization, scaling, drawing of 
+  contour lines, etc.) */
+  rsImage<T> postProcess(const rsImage<T> img, T xMin, T xMax, T yMin, T yMax);
+
+
+
+protected:
+
+  int scaleX = 1, scaleY = 1;
+
+};
+// Notes:
+// -I considered to give it two template parameters TPix, TVal like rsImageContourPlotter, but that
+//  doesn't seem to make sense here and one common T seems enough. There, we may want to use 
+//  TPix != TVal becase the class actually *draws* lines in some user given color. But we don't do
+//  that here, so we don't need that complication.
+//
+// ToDo:
+// -see rsImageContourPlotter for API design
+
+template<class T>
+rsImage<T> rsHeightMapPlotter<T>::rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
+{
+  int w = mat.getNumRows();
+  int h = mat.getNumColumns();
+  rsImage<T> img(w, h);
+  for(int i = 0; i < w; i++)
+    for(int j = 0; j < h; j++)
+      img(i, j) = mat(i, j);
+  if(normalize)
+    rsImageProcessor<T>::normalize(img);
+  return img;
+  // ToDo:
+  // -Maybe give the user options, how the matrix row/cols should be interpreted in terms of pixel
+  //  coordinates, i.e. how we map between the two index pairs. At the moment, we interpret the
+  //  row index of the matrix as x-coordinate in the image and the column index as y-coordinate. 
+  //  That means, when looking at the matrix itself, it represents the transposed/rotated image.
+}
+template<class T>
+rsImage<T> rsHeightMapPlotter<T>::getHeightMapImage(const std::function<T(T x, T y)>& f,
+  T xMin, T xMax, T yMin, T yMax, int w, int h)
+{
+  rsImage<T> img(w, h);
+  T dx = (xMax - xMin) / w;
+  T dy = (yMax - yMin) / h;
+  for(int j = 0; j < h; j++) {
+    T y = yMin + j*dy;
+    for(int i = 0; i < w; i++) {
+      T x = xMin + i*dx;
+      img(i, j) = f(x, y); }}
+  return postProcess(img, xMin, xMax, yMin, yMax);
+}
+
+template<class T>
+rsImage<T> rsHeightMapPlotter<T>::getHeightMapImage(const rsMatrix<T> P, 
+  T xMin, T xMax, T yMin, T yMax)
+{
+  // Convert matrix P to image and post-process it by scaling it up to the final resolution and
+  // drawing in some contour lines:
+  rsImage<T> img = rsMatrixToImage(P, true);
+  return postProcess(img, xMin, xMax, yMin, yMax);
+}
+
+template<class T>
+rsImage<T> rsHeightMapPlotter<T>::postProcess(const rsImage<T> imgIn, 
+  T xMin, T xMax, T yMin, T yMax)
+{
+  rsImage<T> img = imgIn;
+  rsImageProcessor<T>::normalize(img);
+  if(scaleX > 1 || scaleY > 1)
+    img = rsImageProcessor<T>::interpolateBilinear(img, scaleX, scaleY);
+
+  // Plot contour lines:
+  int numContourLines = 40;   // make member, give the user a setter for that
+  rsImageContourPlotter<T, T> cp;  
+  rsImage<T> tmp = img;
+  for(int i = 0; i < numContourLines; i++)
+  {
+    T level = T(i) / T(numContourLines);
+    cp.drawContour(tmp, level, img, T(0.1875), true);
+  }
+  rsImageProcessor<T>::normalize(img);  // May need new normalization after adding contours
+  // Maybe in the contour plotter, use a saturating addition when drawing in the pixels. That could 
+  // avoid the second normalization and also look better overall.
+
+  return img;
+
+  // Notes:
+  // -The xMin, ... parameters are not yet used here but maybe we can use them later to draw 
+  //  coordinate axes.
+}
+
+//=================================================================================================
+
+/** A class for plotting Polya potentials of complex functions. It pulls together functionality 
+from rsHeightMapPlotter (which is a superclass of this) and rsPolyaPotentialEvaluator (which is 
+used locally where needed). The class makes it convenient to produce images of Polya potentials of
+complex functions. ...tbc...  */
+
+template<class T>
+class rsPolyaPotentialPlotter : public rsHeightMapPlotter<T>
+{
+
+public:
+
+  using Complex = std::complex<T>; 
+
+  /** Given a complex function w = f(z) and and ranges for the real and imaginary parts of the 
+  function argument (xMin, ...) and a number of samples for sampling the function along the real 
+  (x) and imaginary (y) axis, this function produces an image of the function's Polya vector 
+  field. tbc... */
+  rsImage<T> getPolyaPotentialImage(std::function<Complex (Complex z)> f, 
+    T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
+
+};
+
+template<class T>
+rsImage<T> rsPolyaPotentialPlotter<T>::getPolyaPotentialImage(
+  std::function<Complex (Complex z)> f,
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
+{
+  rsMatrix<T> P = rsPolyaPotentialEvaluator<T>::estimatePolyaPotential(
+    f, xMin, xMax, yMin, yMax, Nx, Ny);              // Find Polya potential numerically
+  return rsHeightMapPlotter<T>::getHeightMapImage(
+    P, xMin, xMax, yMin, yMax);                      // Convert data to image and post-process
+}
+
+
+//#################################################################################################
+// Console output tools
+
 /** A class to let console applications show their progress when performing a long task. It 
 repeatedly writes a "percentage done" in the format " 45%" to the console. Note that the initial
 whitespace is intentional to allow for the first digit when it hits 100%. It deletes and overwrites
@@ -665,7 +839,8 @@ protected:
 
 };
 
-//=================================================================================================
+//#################################################################################################
+// Video Generation stuff
 
 /** A class for representing videos. It is mostly intended to be used to accumulate frames of an
 animation into an array of images. */

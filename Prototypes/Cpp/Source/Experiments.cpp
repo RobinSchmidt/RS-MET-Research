@@ -17971,7 +17971,7 @@ void testWaveGuide1()
   // should via the theory.
 
   using T   = double;
-  using WG  = rsWaveGuide<T, T>;
+  using WGF = rsWaveGuideFilter<T, T>;
   using Vec = std::vector<T>;
 
   int M    =  10;       // Length of the waveguide (number of segments)
@@ -17986,14 +17986,14 @@ void testWaveGuide1()
   // Nope! With mIn = 0, yS is all zeros!
 
   // Create and set up the waveguide:
-  WG wg;
-  wg.setMaxStringLength(M);
-  wg.setStringLength(M);
-  wg.setDrivingPoint(mIn);
-  wg.setPickUpPoint(mOut);
+  WGF wgf;
+  wgf.setMaxStringLength(M);
+  wgf.setStringLength(M);
+  wgf.setDrivingPoint(mIn);
+  wgf.setPickUpPoint(mOut);
 
   // Produce impulse response of waveguide and compare it to target signal:
-  Vec y = impulseResponse(wg, N, 1.0);
+  Vec y = impulseResponse(wgf, N, 1.0);
 
   //rsPlotVectors(y)             // Plot the waveguidesiganl alone
   //rsPlotVectors(yL);           // Plot the leapfrog signal alone
@@ -18078,49 +18078,49 @@ void testWaveGuideEdgeCases()
 
   // For convenience:
   using T   = double;
-  using WG  = rsWaveGuide<T, T>;
+  using WGF = rsWaveGuideFilter<T, T>;
   using Vec = std::vector<T>;
 
   // Create waveguide filter:
-  WG wg;
-  wg.setMaxStringLength(M);
-  wg.setStringLength(M);
-  wg.setDrivingPoint(mIn);
-  wg.setPickUpPoint(mOut);
+  WGF wgf;
+  wgf.setMaxStringLength(M);
+  wgf.setStringLength(M);
+  wgf.setDrivingPoint(mIn);
+  wgf.setPickUpPoint(mOut);
 
   // Allocate vectors for the results:
   Vec yIER(N), yIRE(N), yEIR(N), yERI(N), yRIE(N), yREI(N);
 
   // Create the different variations of the output signal:
-  wg.reset();
-  yIER[0] = wg.getSampleInExRef(1.0);
+  wgf.reset();
+  yIER[0] = wgf.getSampleInExRef(1.0);
   for(int n = 1; n < N; n++)
-    yIER[n] = wg.getSampleInExRef(0.0);
+    yIER[n] = wgf.getSampleInExRef(0.0);
 
-  wg.reset();
-  yIRE[0] = wg.getSampleInRefEx(1.0);
+  wgf.reset();
+  yIRE[0] = wgf.getSampleInRefEx(1.0);
   for(int n = 1; n < N; n++)
-    yIRE[n] = wg.getSampleInRefEx(0.0);
+    yIRE[n] = wgf.getSampleInRefEx(0.0);
 
-  wg.reset();
-  yEIR[0] = wg.getSampleExInRef(1.0);
+  wgf.reset();
+  yEIR[0] = wgf.getSampleExInRef(1.0);
   for(int n = 1; n < N; n++)
-    yEIR[n] = wg.getSampleExInRef(0.0);
+    yEIR[n] = wgf.getSampleExInRef(0.0);
 
-  wg.reset();
-  yERI[0] = wg.getSampleExRefIn(1.0);
+  wgf.reset();
+  yERI[0] = wgf.getSampleExRefIn(1.0);
   for(int n = 1; n < N; n++)
-    yERI[n] = wg.getSampleExRefIn(0.0);
+    yERI[n] = wgf.getSampleExRefIn(0.0);
 
-  wg.reset();
-  yRIE[0] = wg.getSampleRefInEx(1.0);
+  wgf.reset();
+  yRIE[0] = wgf.getSampleRefInEx(1.0);
   for(int n = 1; n < N; n++)
-    yRIE[n] = wg.getSampleRefInEx(0.0);
+    yRIE[n] = wgf.getSampleRefInEx(0.0);
 
-  wg.reset();
-  yREI[0] = wg.getSampleRefExIn(1.0);
+  wgf.reset();
+  yREI[0] = wgf.getSampleRefExIn(1.0);
   for(int n = 1; n < N; n++)
-    yREI[n] = wg.getSampleRefExIn(0.0);
+    yREI[n] = wgf.getSampleRefExIn(0.0);
 
   // Plot the results:
   rsPlotVectors(yIER);
@@ -18144,7 +18144,11 @@ void testWaveGuideEdgeCases()
   //   yERI: 20:-0.5, 32:+0.5, 40:-0.5, 52:+0.5, ...
   //   yRIE: 0:+1.0 then all zeros
   //   yREI: all zeros
+  //   -> yEIR or yIER are the least suprising results.
   //
+  // - M = 10, mIn = 0, mOut = 1:
+  //   yIER: 1:-0.5, 19:+0.5, 21:-0.5, 39:+0.5, 41:-0.5, ...
+  // 
   // - M = 10, mIn = mOut = M:
   //
   // - M = 10, mIn = 0, mOut = M:
@@ -18169,7 +18173,7 @@ void testWaveGuideScattering()
 
   // For convenience:
   using T   = double;
-  using WG  = rsWaveGuide<T, T>;
+  using WGF = rsWaveGuideFilter<T, T>;
   using Vec = std::vector<T>;
 
   // Setup:
@@ -18181,31 +18185,31 @@ void testWaveGuideScattering()
   int N    = 8*M;                // Number of samples to produce
 
   // Create waveguide filter:
-  WG wg;
-  wg.setMaxStringLength(M);
-  wg.setStringLength(M);
-  wg.setDrivingPoint(mIn);       // Doesn't really matter.
-  wg.setPickUpPoint(mOut);       // Dito.
+  WGF wgf;
+  wgf.setMaxStringLength(M);
+  wgf.setStringLength(M);
+  wgf.setDrivingPoint(mIn);       // Doesn't really matter.
+  wgf.setPickUpPoint(mOut);       // Dito.
 
   // Set up the initial state for the waveguide:
   Vec vInit(M);
   vInit[mIn] = 1;
-  wg.setState(&vInit[0], M);
+  wgf.setState(&vInit[0], M);
 
   // Do the time stepping and at each time step, plot the content of the waveguide:
   for(int n = 0; n < N; n++)
   {
     // Plot the waveguide state/content:
-    rsPlotWaveGuideContent(wg);
+    rsPlotWaveGuideContent(wgf);
 
     // We use the extract -> inject -> reflect (EIR) order of operations as basis and insert the 
     // scattering step before the reflection:
-    T out = wg.extractOutput();  // Extract. Doesn't matter here (we don't use it later).
-    wg.injectInput(0.0);         // Inject. Doesn't matter either (it's zero anyway).
-    //wg.scatterAtKL(mS, k);       // Kelly-Lochbaum scattering at position mS with coeff k
-    wg.scatterAtPN(mS, k);       // Power normalized scattering at position mS with coeff k
-    wg.reflectAtEnds();          // Reflect at both ends as usual
-    wg.stepTime();               // Step time one sample instant forward (updates delay taps).
+    T out = wgf.extractOutput();  // Extract. Doesn't matter here (we don't use it later).
+    wgf.injectInput(0.0);         // Inject. Doesn't matter either (it's zero anyway).
+    //wgf.scatterAtKL(mS, k);       // Kelly-Lochbaum scattering at position mS with coeff k
+    wgf.scatterAtPN(mS, k);       // Power normalized scattering at position mS with coeff k
+    wgf.reflectAtEnds();          // Reflect at both ends as usual
+    wgf.stepTime();               // Step time one sample instant forward (updates delay taps).
   }
 
   // Observations:
@@ -18277,8 +18281,8 @@ void testWaveGuides()
 {
   // Experiments:
   //testWaveEquation1D();
-  //testWaveGuide1();
-  //testWaveGuideEdgeCases();
+  testWaveGuide1();
+  testWaveGuideEdgeCases();
   testWaveGuideScattering();
 
   // Unit tests:

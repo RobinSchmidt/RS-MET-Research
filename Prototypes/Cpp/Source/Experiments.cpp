@@ -56,7 +56,6 @@ bool testRandomVectors()
   // Yep: T == C. So we can use the sqrt implementation.
 
 
-
   // Create the uncorrelated input noise:
   rsNoiseGenerator2<Real> prng;
   prng.setOrder(order);  // Will it work independently from the order?
@@ -218,8 +217,6 @@ bool testKalmanFilter()
   kf.initState(x0, Q);                    // Test - doesn't seem to have any effect
 
 
-
-
   // Try to clean up the measured position and velocity using the Kalman filter:
   Arr pf(N), vf(N);                // Filtered position and velocity
   Vec u(0, 0);
@@ -233,7 +230,6 @@ bool testKalmanFilter()
 
     int dummy = 0;
   }
-
 
 
   //rsPlotVectors(p,   v);   // True position and velocity
@@ -342,8 +338,6 @@ bool testKalmanFilter()
   //
   // - https://www.kalmanfilter.net/default.aspx
   //
-
-
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -369,21 +363,19 @@ void testGaussBlurFIR()
   gaussBlur3x3(y3, y33); IP::normalize(y33); writeImageToFilePPM(y33, "Gauss3+3.ppm");
   gaussBlur3x3(y5, y53); IP::normalize(y53); writeImageToFilePPM(y53, "Gauss5+3.ppm");
   gaussBlur5x5(y5, y55); IP::normalize(y55); writeImageToFilePPM(y55, "Gauss5+5.ppm");
-
-
   // Maybe factor out into a lambda function to be called like 
   // writeKernelFile(x, &gausBlur3x3, "3x3") etc.
 
 
   // Observations:
-  // -Gauss5 and Gauss7 look almost indistiguishable. I guess, they have the same width of the 
-  //  Gaussian and in the 7x7 kernel, the outer sections have negligible amplitude.
-
-
+  // 
+  // - Gauss5 and Gauss7 look almost indistiguishable. I guess, they have the same width of the 
+  //   Gaussian and in the 7x7 kernel, the outer sections have negligible amplitude.
+  //
+  //
   // ToDo:
-  // -Compare 5x5 blur to applying a 3x3 blur twice, likewise with 7x7 blurs etc.
-
-  int dummy = 0;
+  // 
+  // - Compare 5x5 blur to applying a 3x3 blur twice, likewise with 7x7 blurs etc.
 }
 
 void testGaussBlurIIR()
@@ -395,12 +387,10 @@ void testGaussBlurIIR()
   // controls shape - the higher, the better we approximate a true Gaussian - 5 or 6 seems to be
   // good enough
 
-
   //radius = 30.f; // test
-
   //numPasses = 1; // for testing decay
 
-  // try with w != h
+  // ToDo: try with w != h
 
   RAPT::rsImage<float> x(w,h), y(w,h);  // input and output images
 
@@ -664,13 +654,10 @@ void animateComplexExponentialBlur()
 
 /** Implements a chain of identical first order filters. 
 
-
 the prepareForBackwardPass function does not work correctly because onyl for the first stage, we
 can assume that the output goes to zero at the edges - for all follwoign stages, this assumption is
 wrong because the filters that com before still produce nonzero outputs - bottom line: it doesn't
-work as intended for image processing.
-
-*/
+work as intended for image processing.  */
 
 template<class TSig, class TPar>  // use TSig, TPar
 class rsFirstOrderFilterChain

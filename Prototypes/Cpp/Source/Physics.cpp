@@ -698,6 +698,38 @@ void rsPlotWaveGuideContent(const rsWaveGuide<TSig, TPar>& wg)
 }
 
 
+//=================================================================================================
+
+template<class TSig, class TPar>
+class rsWaveGuideFilter : public rsWaveGuide<TSig, TPar>
+{
+
+public:
+
+
+protected:
+
+
+  // ToDo: 
+  // 
+  // - Drag the reflection coeffs and the mIn, mOut members and their setters from the rsWaveGuide 
+  //   baseclass into this subclass. This will require some adaptions to the member functions of 
+  //   rsWaveGuide. The reflectAtEnds() function should take the reflection coeffs as parameters.
+  //   The functions injectInput() and extractOutput() need to get mIn and mOut as additional 
+  //   parameters respectively. The different getSample_() functions should be moved into the 
+  //   subclass. Maybe the reflectAtEnds() function can be split into two: reflectAtLeftEnd(),
+  //   reflectAtRightEnd(). The reflectAtEnds() can remain as convenience function that calls
+  //   the left/right functions internally
+  //
+  // - Maybe find a more specific name for this class. A waveguide with multiple driving points
+  //   and multiple pickup points is also a filter
+};
+
+
+
+
+
+
 /*
 ToDo:
 
@@ -770,5 +802,8 @@ ToDo:
   cancellation going on? Figure this out and document it.
 
 */
+
+
+
 
 

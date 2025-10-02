@@ -19007,6 +19007,16 @@ void testWaveEquation1D()  // Maybe rename to testWavEqFinDifSolvers1D
   //   also by including a 4th order derivative term into the wave-equation and deriving a 
   //   numerical solver scheme for that. Maybe the result will be something that is equivalent to
   //   the unit delay to allpass approach?
+  //
+  // - Figure out how to excite the string in the leapfrog scheme at 0. Currently we assume this 
+  //   value to be fixed there. See functions stepLeapFrog() and initForLeapFrog() in class 
+  //   rsWaveEquation1D_Proto. I'm not sure if they deal correctly with cases where we drive the 
+  //   boundary points (or init them with nonzero values). But on the other hand, we have a unit 
+  //   test that compares the results of the leapfrog algo with that of the shifting algo where we 
+  //   simulate the simultaneous driving at all points (by just randomly initializing all the 
+  //   spatial samples) and both algorithms apparently produce the same results. That would mean 
+  //   that if we are doing it wrong, we are doing it wrong in both algorithms in the same way and
+  //   that seems rather unlikely given that the two algorithms are quite different.
 }
 
 void testWaveGuide1()

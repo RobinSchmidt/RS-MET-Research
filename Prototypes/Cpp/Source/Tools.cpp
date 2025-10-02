@@ -8821,9 +8821,19 @@ public:
   the waveguide represents velocity waves, then the given newState would represent the initial 
   velocity distribution of the string at the moment of striking it. */
   void setState(const TSig* newState, int stateSize);
-  // ToDo: Wite a similar function but instead of directly writing the newState into the delay 
-  // lines, add it to what's already there. That could be used to (crudely) emulating to strike
-  // the string while it already is in motion.
+  // ToDo: 
+  // -Write a similar function but instead of directly writing the newState into the delay 
+  //  lines, add it to what's already there. That could be used to (crudely) emulating to strike
+  //  the string while it already is in motion.
+  // -Rename to something like setDisplacementState. Have a similar function for setVeloityState
+  //  and maybe also functions that set initial displacement and velocity at the same time. I 
+  //  think, the translation from traveling waves is: y[m] = yR[m] + yL[m], 
+  //  v[m] = yR[m] - yL[m] or v[m] = yL[m] - yR[m]. We need to invert these relations to go from
+  //  displacement and velocity (y,v) to right and left traveling (displacement) waves yR,yL. But:
+  //  what if we do not want to represent displacement waves but rather velocity or force waves?
+  // -Maybe have also functions that directly init the traveling waves components, i.e. without 
+  //  conversion from physical variables.
+
 
 
   //-----------------------------------------------------------------------------------------------
@@ -8945,8 +8955,6 @@ protected:
 
 };
 
-
-
 template<class TSig, class TPar>
 void rsWaveGuide<TSig, TPar>::setState(const TSig* newState, int stateSize)
 {
@@ -8960,44 +8968,7 @@ void rsWaveGuide<TSig, TPar>::setState(const TSig* newState, int stateSize)
     delay1.writeInputAt(x,   m);
     delay2.writeInputAt(x, M-m);
   }
-
-
 }
-
-
-
-// Obsolete:
-/*
-template<class TSig, class TPar>
-TSig rsWaveGuide<TSig, TPar>::getSampleInExRef(TSig in)
-{
-  injectInput(in);             // Inject
-  TSig out = extractOutput();  // Extract
-
-  // This code should usually be commented out but can be uncommented for debugging such that we 
-  // may plot the contents of the delaylines to see what is going on:
-  //rsPlotDelayLineContent(delay1, delay2, true);  // true: Reverse content of delay2
-  // ToDo: Maybe also plot the sum of the contents of both delay lines (with the content of the
-  // 2nd reversed). This sum correponds to the physical displacement so we would see the physical
-  // shape of the string at the current instant.
-
-  reflectAtEnds();             // Reflect
-  stepTime();
-  return out;
-
-  // This still produces wrong results when mIn = 0 where "wrong" means: Different from the
-  // leapfrog PDE solver scheme which I take as reference for the ground truth. Although: that in
-  // itself may be questionable. Actually, it's impossible to excite the string in the leapfrog
-  // scheme at 0 because we assume this value to be fixed there. See functions stepLeapFrog() and
-  // initForLeapFrog() in class rsWaveEquation1D_Proto. I'm not sure if they deal correctly with
-  // cases where we drive the boundary points (or init them with nonzero values). But on the other
-  // hand, we have a unit test that compares the results of the leapfrog algo with that of the
-  // shifting algo where we simulate the simultaneous driving at all points (by just randomly 
-  // initializing all the spatial samples) and both algorithms apparently produce the same results.
-  // That would mean that if we are doing it wrong, we are doing it wrong in both algorithms in the
-  // same way and that seems rather unlikely given that the two algorithms are quite different.
-}
-*/
 
 template<class TSig, class TPar>
 TSig rsWaveGuide<TSig, TPar>::getSampleInExRef(TSig in)
@@ -9229,6 +9200,16 @@ ToDo:
   would correspond to a conceptually infinitely long string but we just do not really care or 
   emulate what is going on in the portions of the string that are beyond our view window. The 
   traveling wave signals would just travel out of sight and get lost, so to speak.
+
+- Maybe a basic waveguide class should not have member variables for the reflection coeffs. Maybe
+  reflections should be handled by higher level "driver" code as well. Possibly in a more general
+  framework that also allows scattering between multiple waveguides and/or that treats reflections
+  at the ends as special cases of scattering. Maybe reflectAtEnds() would correspond to 
+  scatterAt(0, -1) or scatterAt(0, +1) or something?
+
+- Maybe parametrize the waveguide class with a template parameter for the delay class to use such 
+  that we can use the same waveguide code for integer delay lines as well as interpolating delay
+  lines.
 
 */
 

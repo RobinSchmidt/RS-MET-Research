@@ -770,7 +770,41 @@ rsImage<T> rsPolyaPotentialPlotter<T>::getPolyaPotentialImage(
 
 
 //#################################################################################################
-// Console output tools
+// Image read/write
+
+template<class T>
+bool writeComplexImageToFilePPM(const rsImage<std::complex<T>>& img, const char* path)
+{
+  int w = img.getWidth();
+  int h = img.getHeight();
+  rsImage<T> imgR(w,h), imgI(w,h), imgA(w,h), imgP(w,h);
+  for(int j = 0; j < h; j++) {
+    for(int i = 0; i < w; i++) {
+      imgR(i, j) = img(i, j).real();
+      imgI(i, j) = img(i, j).imag();
+      imgA(i, j) = abs(img(i, j));
+      imgP(i, j) = arg(img(i, j)); }}
+
+
+  rsImageProcessor<T>::normalize(imgR);
+  rsImageProcessor<T>::normalize(imgI);
+  rsImageProcessor<T>::normalize(imgA);
+  rsImageProcessor<T>::normalize(imgP);
+
+  writeImageToFilePPM(imgR, "RealPart.ppm");
+  writeImageToFilePPM(imgI, "ImagPart.ppm");
+  writeImageToFilePPM(imgA, "AbsValue.ppm");
+  writeImageToFilePPM(imgP, "Phase.ppm");
+  // todo: make writing all parts (re,im,abs,phase) optional, use single temp image for all parts
+  // -use path variable - append Re,Im,Abs,Phs - requires that the writer function does not expect
+  //  the .ppm extension to be passed - the function should append it itself - this requires a lot
+  //  of code to be modified
+
+  return true;  // preliminary
+}
+
+//#################################################################################################
+// Console output
 
 /** A class to let console applications show their progress when performing a long task. It 
 repeatedly writes a "percentage done" in the format " 45%" to the console. Note that the initial

@@ -12,7 +12,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Signal Processing:
   //testRandomVectors();               // Stub
-  //testKalmanFilter();                // Under construction - doesn't work yet
+  testKalmanFilter();                // Under construction - doesn't work yet
 
 
   // Image processing:
@@ -26,9 +26,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //plotComplexGauss1D();
   //testComplexGaussBlurIIR();
 
-  testUpDownSample1D();              // up- and downsampling with lossless roundtrip
-  testUpDownSample1D_2();
-  testUpDownSample2D();              // stub, dito but for images
+  //testUpDownSample1D();              // up- and downsampling with lossless roundtrip
+  //testUpDownSample1D_2();
+  //testUpDownSample2D();              // stub, dito but for images
 
 
   //epidemic();
@@ -78,7 +78,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //eulersNumberViaPascalsTriangle();
   //testBellTriangle();
   //testEulerTransformation();
-  //testShanksTransformation();   // Could be useful for a nonlinear filter?
+  testShanksTransformation();   // Could be useful for a nonlinear filter?
   //testCesaroSum();
   //testFejerSum();
   //testGreensFunction();  // stub

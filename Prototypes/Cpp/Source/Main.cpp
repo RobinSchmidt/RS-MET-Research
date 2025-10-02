@@ -12,7 +12,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Signal Processing:
   //testRandomVectors();               // Stub
-  testKalmanFilter();                // Under construction - doesn't work yet
+  //testKalmanFilter();                // Under construction - doesn't work yet
 
 
   // Image processing:

@@ -1,22 +1,23 @@
-#include "Tools.cpp"         // this includes rapt and rosic
-#include "Attractors.cpp"
+// ToDo: Organize the way, we include and compile this code more properly!
+
 #include <regex>
-//#include <numeric>           // iota
+//#include <numeric>                           // iota
 
+#include "../JuceLibraryCode/JuceHeader.h"     // JUCE modules like RAPT, rosic, etc.
 
-// Preliminary:
+#include "Tools.cpp"                           // Various stuff
+#include "Attractors.cpp"                      // Elan's library of chaotic ODEs
+
+// My educational math library:
 #include "../../../Libraries/C++/Math/Set.h"
 #include "../../../Libraries/C++/Math/FieldExtensions.h"
 #include "../../../Libraries/C++/Math/FiniteField.h"
-
 #include "../../../Libraries/C++/Math/Set.cpp"
 #include "../../../Libraries/C++/Math/FieldExtensions.cpp"
 #include "../../../Libraries/C++/Math/FiniteField.cpp"
 
-// ToDo: Organize the way, we include and compile this code more properly!
-
-
-
+using namespace RAPT;                          // Maybe get rid
+using namespace rosic;                         // Dito
 
 
 //-------------------------------------------------------------------------------------------------

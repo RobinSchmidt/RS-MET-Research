@@ -1,6 +1,3 @@
-#include "../JuceLibraryCode/JuceHeader.h"
-using namespace RAPT;   // maybe get rid
-using namespace rosic;  // dito
 
 // ToDo:
 //

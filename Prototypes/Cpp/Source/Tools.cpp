@@ -2,10 +2,17 @@
 using namespace RAPT;   // maybe get rid
 using namespace rosic;  // dito
 
+// ToDo:
+//
+// - Split the contents of this file into different source files to order the different functions
+//   and classes by topic. Maybe Math.cpp, Physics.cpp, SignalProcessing.cpp, ImageProcessing.cpp,
+//   InputOutput.cpp (Plotting, Video-Generation, etc.). I already have split out the 
+//   Renderings.cpp file at some point. Do the same for other topics!
+
 
 // UNDER CONSTRUCTION - works but needs optimizations (some of which are very low hanging fruits)
 //
-// A square-root function for matrices based on Newtion iteration
+// A square-root function for matrices based on Newton iteration
 template<class T>
 rsMatrix<T> rsSqrtNewton(const rsMatrix<T>& A)
 {

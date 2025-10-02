@@ -9215,6 +9215,15 @@ ToDo:
   that we can use the same waveguide code for integer delay lines as well as interpolating delay
   lines.
 
+- Analyze the eigenvalues of the Kelly-Lochbaum scattering matrix given by A = [1+k,-k; k,1-k] 
+  (verify!). What are the genral conditions for a lossless scattering matrix anyway? All 
+  eigenvalues must have absolute value of 1, maybe? I can see why the power-normalized scattering
+  marix is lossless. It's a rotation matrix, after all. But in the case of Kelly-Lochbaum, it's not
+  so obvious. Maybe it actually isn't lossless, after all? But nah! That seems implausible. I 
+  think, that would imply instability (or decay) of the whole system (i.e. the waveguide (network)
+  that uses Kelly-Lochbaum scattering). Or would it? Or maybe there is some sort of pole-zero 
+  cancellation going on? Figure this out and document it.
+
 */
 
 

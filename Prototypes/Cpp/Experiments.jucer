@@ -18,8 +18,15 @@
     <GROUP id="{9D6FC012-FDEA-B506-96A3-33E47579AA64}" name="Source">
       <FILE id="bIdKbP" name="Attractors.cpp" compile="0" resource="0" file="Source/Attractors.cpp"/>
       <FILE id="NqOD66" name="Experiments.cpp" compile="0" resource="0" file="Source/Experiments.cpp"/>
+      <FILE id="Hc0YzS" name="ImageProcessing.cpp" compile="0" resource="0"
+            file="Source/ImageProcessing.cpp"/>
+      <FILE id="noNb5o" name="InputOutput.cpp" compile="0" resource="0" file="Source/InputOutput.cpp"/>
       <FILE id="IgKNsd" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="L17KPC" name="Math.cpp" compile="0" resource="0" file="Source/Math.cpp"/>
+      <FILE id="BmoJTh" name="Physics.cpp" compile="0" resource="0" file="Source/Physics.cpp"/>
       <FILE id="GBQYF5" name="Renderings.cpp" compile="0" resource="0" file="Source/Renderings.cpp"/>
+      <FILE id="e2uDuK" name="SignalProcessing.cpp" compile="0" resource="0"
+            file="Source/SignalProcessing.cpp"/>
       <FILE id="thHrCT" name="Tools.cpp" compile="0" resource="0" file="Source/Tools.cpp"/>
     </GROUP>
   </MAINGROUP>

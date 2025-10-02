@@ -8,6 +8,14 @@
 #include "Tools.cpp"                           // Various stuff
 #include "Attractors.cpp"                      // Elan's library of chaotic ODEs
 
+// The new file organization:
+#include "Math.cpp"
+#include "Physics.cpp"
+#include "SignalProcessing.cpp"
+#include "ImageProcessing.cpp"
+#include "InputOutput.cpp"
+
+
 // My educational math library:
 #include "../../../Libraries/C++/Math/Set.h"
 #include "../../../Libraries/C++/Math/FieldExtensions.h"

@@ -5,8 +5,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"     // JUCE modules like RAPT, rosic, etc.
 
-#include "Tools.cpp"                           // Various stuff
-#include "Attractors.cpp"                      // Elan's library of chaotic ODEs
 
 // The new file organization:
 #include "Math.cpp"
@@ -14,6 +12,9 @@
 #include "SignalProcessing.cpp"
 #include "ImageProcessing.cpp"
 #include "InputOutput.cpp"
+
+#include "Tools.cpp"                           // Various stuff
+#include "Attractors.cpp"                      // Elan's library of chaotic ODEs
 
 
 // My educational math library:

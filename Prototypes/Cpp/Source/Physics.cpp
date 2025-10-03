@@ -423,6 +423,11 @@ public:
   inline TSig extractOutputAt(int m);
   // Maybe declare const
 
+  /** Implements reflections at the left and right end of the waveguide using the given 
+  reflection coefficients. */
+  inline void reflectAtEnds(TPar reflectLeft, TPar reflectRight);
+  // ToDo: Document the physicla interpretation of these coeffs in terms of boundary conditions,
+  // stabilit, etc.
 
 
   /** Implements a Kelly-Lochbaum scattering junction at the spatial location m with the reflection
@@ -492,7 +497,17 @@ inline TSig rsWaveGuide<TSig, TPar>::extractOutputAt(int m)
   return out1 + out2;                    // Output is sum of right- and left going wave
 }
 
+template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::reflectAtEnds(TPar reflectLeft, TPar reflectRight)
+{
+  // Implement the mutual crossfeedback using the reflection coefficients:
+  TSig ref1 = delay1.readOutput();         // Right going wave reflected at right end
+  TSig ref2 = delay2.readOutput();         // Left going wave refelcted at left end
+  delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
+  delay2.writeInput(reflectRight * ref1);  // Reflection at right end
 
+  // Maybe rename the coeffs to rL,rR and the signals ref1/2 to yR,yL
+}
 
 
 
@@ -525,6 +540,8 @@ inline void rsWaveGuide<TSig, TPar>::scatterAtKL(int m, TPar k)
 
   // Maybe factor out functions isValidIndex(m), isStableScatterCoeff(k) for the assertions and
   // use similar assertions whereever it makes sense.
+
+  // Use y instead of u. Make notation consistent with reflectAtEnds, extractOutputsAt, etc.
 }
 
 template<class TSig, class TPar>
@@ -780,12 +797,12 @@ template<class TSig, class TPar>
 inline void rsWaveGuideFilter<TSig, TPar>::reflectAtEnds()
 {
   // Implement the mutual crossfeedback using the reflection coefficients:
-  TSig ref1 = delay1.readOutput();         // Reflected wave at right end
-  TSig ref2 = delay2.readOutput();         // Reflected wave at left end
-  delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
-  delay2.writeInput(reflectRight * ref1);  // Reflection at right end
+  //TSig ref1 = delay1.readOutput();         // Reflected wave at right end
+  //TSig ref2 = delay2.readOutput();         // Reflected wave at left end
+  //delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
+  //delay2.writeInput(reflectRight * ref1);  // Reflection at right end
 
-  // ToDo: implement this as: Base::reflectAtEnds(reflectLeft, reflectRight);
+  Base::reflectAtEnds(reflectLeft, reflectRight);
 }
 
 template<class TSig, class TPar>

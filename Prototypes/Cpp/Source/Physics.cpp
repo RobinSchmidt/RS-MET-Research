@@ -828,19 +828,6 @@ ToDo:
   inefficient to use readOutputAt() and writeInputAt(). It should perhaps be a function 
   transformAt() or applyTransformerAt() similar to scatterAt()
 
-- Maybe factor out a class rsWaveGuideBase that doesn't have mIn and mOut members. Maybe it should 
-  have the low level functions like injectInput, extractOutput, reflectAtEnds, scatterAt, etc. 
-  where, in case of when these functions need additional info that is currently taken from member
-  variables (such as mIn, mOut), they should be passed in as additional parameters. The reason
-  being that we may want to build waveguide based structures that are not necessarrily based on
-  having a single injection point and a single extraction point. That is something that we should 
-  build on top of a more basic, low level structure. Or maybe keep injectInput/extractOutput in
-  the subclass as is and in the baseclass have injectInputAt/extractOutputAt functions. The 
-  implementation of injectInput() in the subclass should then just call 
-  Base::injectInputAt(in, mIn) or something like that. Maybe the subclass could be named 
-  rsWaveGuideFilter or rsWaveGuideFilter_1In_1Out and the baseclass just rsWaveGuide. Maybe look
-  up how we did it with the different delays and/or allpass delays.
-
 - Figure out what happens if we do not reflect the waves at all, i.e. use reflection coeffs of zero
   or just leave out the reflection step. How could we interpret such a situation physcially? Maybe 
   it corresponds to a string that just continues to go on after the (now missing) termination. It 
@@ -848,15 +835,10 @@ ToDo:
   emulate what is going on in the portions of the string that are beyond our view window. The 
   traveling wave signals would just travel out of sight and get lost, so to speak.
 
-- Maybe a basic waveguide class should not have member variables for the reflection coeffs. Maybe
-  reflections should be handled by higher level "driver" code as well. Possibly in a more general
-  framework that also allows scattering between multiple waveguides and/or that treats reflections
-  at the ends as special cases of scattering. Maybe reflectAtEnds() would correspond to 
-  scatterAt(0, -1) or scatterAt(0, +1) or something?
-
 - Maybe parametrize the waveguide class with a template parameter for the delay class to use such 
   that we can use the same waveguide code for integer delay lines as well as interpolating delay
-  lines.
+  lines. Eventually, we want to be able to create waveguides of non-integer length using different
+  (user adjustable) interpolation methods (Lagrange, Thiran, Hermite, sinc, etc.)
 
 - Analyze the eigenvalues of the Kelly-Lochbaum scattering matrix given by A = [1+k,-k; k,1-k] 
   (verify!). What are the genral conditions for a lossless scattering matrix anyway? All 

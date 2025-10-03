@@ -415,6 +415,11 @@ public:
   /** Injects an input into the waveguide at the given location m. */
   inline void injectInputAt(TSig in, int m);
 
+  /** Extracts an output from the waveguide at the given location m. */
+  inline TSig extractOutputAt(int m);
+  // Maybe declare const
+
+
 
   /** Implements a Kelly-Lochbaum scattering junction at the spatial location m with the reflection
   coefficient k. For an impedance change from R1 to R2 when going from left to right, the coeff
@@ -472,6 +477,18 @@ inline void rsWaveGuide<TSig, TPar>::injectInputAt(TSig in, int m)
   delay1.addToInputAt(x,   m);  // Index used as is for right going wave
   delay2.addToInputAt(x, M-m);  // Index must be reflected for left going wave
 }
+
+template<class TSig, class TPar>
+inline TSig rsWaveGuide<TSig, TPar>::extractOutputAt(int m)
+{
+  rsAssert(isValidIndex(m), "Index out of range in rsWaveGuide::extractOutputAt");
+
+  TSig out1 = delay1.readOutputAt(  m);  // Index used as is for right going wave
+  TSig out2 = delay2.readOutputAt(M-m);  // Index must be reflected for left going wave
+  return out1 + out2;                    // Output is sum of right- and left going wave
+}
+
+
 
 
 
@@ -748,11 +765,11 @@ template<class TSig, class TPar>
 inline TSig rsWaveGuideFilter<TSig, TPar>::extractOutput()
 {
   // Read out the outputs at the pickup point mOut:
-  TSig out1 = delay1.readOutputAt(  mOut);
-  TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
-  return out1 + out2;                      // Output is sum of right- and left going wave
+  //TSig out1 = delay1.readOutputAt(  mOut);
+  //TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
+  //return out1 + out2;                      // Output is sum of right- and left going wave
 
-  // ToDo: implement this as: return Base::extractOutputAt(mOut);
+  return Base::extractOutputAt(mOut);
 }
 
 template<class TSig, class TPar>

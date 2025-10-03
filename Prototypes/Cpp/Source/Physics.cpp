@@ -409,6 +409,12 @@ public:
 
   bool isValidIndex(int m) const { return (m >= 0 && m <= M); }
 
+  bool isStableScatterCoeff(TPar k)
+  {
+    return rsAbs(k) <= TPar(1);
+    //return (k >= TPar(-1) && k <= TPar(+1));
+  }
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Processing
@@ -427,7 +433,7 @@ public:
   reflection coefficients. */
   inline void reflectAtEnds(TPar reflectLeft, TPar reflectRight);
   // ToDo: Document the physicla interpretation of these coeffs in terms of boundary conditions,
-  // stabilit, etc.
+  // stability, etc.
 
 
   /** Implements a Kelly-Lochbaum scattering junction at the spatial location m with the reflection
@@ -498,19 +504,20 @@ inline TSig rsWaveGuide<TSig, TPar>::extractOutputAt(int m)
 }
 
 template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::reflectAtEnds(TPar reflectLeft, TPar reflectRight)
+inline void rsWaveGuide<TSig, TPar>::reflectAtEnds(TPar kL, TPar kR)
 {
+  rsAssert(isStableScatterCoeff(kL) && isStableScatterCoeff(kR), 
+    "Unstable reflection coeff in rsWaveGuide::reflectAtEnds");
+
   // Implement the mutual crossfeedback using the reflection coefficients:
-  TSig ref1 = delay1.readOutput();         // Right going wave reflected at right end
-  TSig ref2 = delay2.readOutput();         // Left going wave refelcted at left end
-  delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
-  delay2.writeInput(reflectRight * ref1);  // Reflection at right end
+  TSig ref1 = delay1.readOutput();   // Right going wave reflected at right end
+  TSig ref2 = delay2.readOutput();   // Left going wave refelcted at left end
+  delay1.writeInput(kL * ref2);      // Reflection at left end
+  delay2.writeInput(kR * ref1);      // Reflection at right end
 
   // Maybe rename the coeffs to rL,rR and the signals ref1/2 to yR,yL
+  // Or maybe use kL,kR to emphasize the similarity to scattering (done)
 }
-
-
-
 
 template<class TSig, class TPar>
 inline void rsWaveGuide<TSig, TPar>::scatterAtKL(int m, TPar k)
@@ -699,6 +706,7 @@ public:
   signal is picked up can be set by setPickUpPoint(). It's called from the various getSampleXXX() 
   methods. */
   inline TSig extractOutput();
+  // Declare const
  
   /** Performs the reflections at the left and right boundaries. This is one of the steps in the
   per sample algorithm, so it's called from the various getSampleXXX() methods. It implements the 
@@ -771,37 +779,22 @@ protected:
   //   repo.
 };
 
+// Maybe move these implementations into the class:
 template<class TSig, class TPar>
 inline void rsWaveGuideFilter<TSig, TPar>::injectInput(TSig in)
 {
-  // Write inputs into the delaylines at the driving point mIn. The signal goes into both the right
-  // and left going traveling wave components with weight 0.5:
-  //delay1.addToInputAt(0.5 * in,   mIn);
-  //delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
-
   Base::injectInputAt(in, mIn);
 }
 
 template<class TSig, class TPar>
 inline TSig rsWaveGuideFilter<TSig, TPar>::extractOutput()
 {
-  // Read out the outputs at the pickup point mOut:
-  //TSig out1 = delay1.readOutputAt(  mOut);
-  //TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
-  //return out1 + out2;                      // Output is sum of right- and left going wave
-
   return Base::extractOutputAt(mOut);
 }
 
 template<class TSig, class TPar>
 inline void rsWaveGuideFilter<TSig, TPar>::reflectAtEnds()
 {
-  // Implement the mutual crossfeedback using the reflection coefficients:
-  //TSig ref1 = delay1.readOutput();         // Reflected wave at right end
-  //TSig ref2 = delay2.readOutput();         // Reflected wave at left end
-  //delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
-  //delay2.writeInput(reflectRight * ref1);  // Reflection at right end
-
   Base::reflectAtEnds(reflectLeft, reflectRight);
 }
 

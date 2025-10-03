@@ -719,7 +719,12 @@ protected:
   //   parameters respectively. The different getSample_() functions should be moved into the 
   //   subclass. Maybe the reflectAtEnds() function can be split into two: reflectAtLeftEnd(),
   //   reflectAtRightEnd(). The reflectAtEnds() can remain as convenience function that calls
-  //   the left/right functions internally
+  //   the left/right functions internally. Maybe the subclass should have injectInput(), 
+  //   extractOutput() methods without second parameter. these hsould just call 
+  //   Base::injectInput(in, mIn), Base::extractOutput(mOut) respectively. Maybe the basclass 
+  //   methods should then be renamed to injectInputAt(), extractAoutputAt(). Maybe the subclass 
+  //   should also have a parameter-less reflectAtEnds() function. Maybe the subclass needs to
+  //   override set(Max)StringLength in order to limit mIn, mOut to the range 0..M
   //
   // - Maybe find a more specific name for this class. A waveguide with multiple driving points
   //   and multiple pickup points is also a filter

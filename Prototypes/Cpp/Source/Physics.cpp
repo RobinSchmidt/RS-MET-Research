@@ -570,7 +570,8 @@ public:
     reflectLeft  = leftEnd; 
     reflectRight = rightEnd;
     // ToDo: Maybe assert that they are in the stable range (inside +-1). Maybe clip them to that
-    // range.
+    // range. But maybe this class is too low-level to have such safeguarding here. But maybe
+    // we should have assertions.
   }
 
 
@@ -640,6 +641,7 @@ protected:
   // Using -1, i.e. inverting reflections, corresponds to a fixed end boundary condition (aka 
   // Dirichlet boundary condition.). This seems to be a reasonable default behavior.
 
+  // Driving and pickup points:
   int mIn  =  7;                       // Driving point for input
   int mOut = 11;                       // Pick up point for output
   // ToDo: Find better default values. These were chosen out of convenience during R&D.
@@ -657,11 +659,24 @@ protected:
   //   subclass. Maybe the reflectAtEnds() function can be split into two: reflectAtLeftEnd(),
   //   reflectAtRightEnd(). The reflectAtEnds() can remain as convenience function that calls
   //   the left/right functions internally. Maybe the subclass should have injectInput(), 
-  //   extractOutput() methods without second parameter. these hsould just call 
-  //   Base::injectInput(in, mIn), Base::extractOutput(mOut) respectively. Maybe the basclass 
+  //   extractOutput() methods without second parameter. These should just call 
+  //   Base::injectInput(in, mIn), Base::extractOutput(mOut) respectively. Maybe the baseclass 
   //   methods should then be renamed to injectInputAt(), extractAoutputAt(). Maybe the subclass 
-  //   should also have a parameter-less reflectAtEnds() function. Maybe the subclass needs to
-  //   override set(Max)StringLength in order to limit mIn, mOut to the range 0..M
+  //   should also have a parameter-less reflectAtEnds() function. 
+  // 
+  // - Maybe the subclass needs to override set(Max)StringLength in order to limit mIn, mOut to the
+  //   range 0..M. But this sort of polymorphism will then only work at compile time which is fine
+  //   for my typical use cases but it may be dangerous when some client code assumes that this 
+  //   polymorphism also works dynamically, i.e. at runtime. But making set(Max)StringLength 
+  //   virtual in the baseclass just for this may be not worth it in terms of performance hit. I 
+  //   mean, it's actually not such a big deal but the general philosophy of my library is to avoid
+  //   virtual functions in the low level DSP and number crunching classes and rsWaveGuide 
+  //   qualifies as such. Maybe we can just document that the client code should take care. Maybe 
+  //   we can somehow make it somewhat safe to have mIn, mOut outside the range 0..M. By 
+  //   "somewhat", I mean that in such cases, we may get weird audio output but no access 
+  //   violations. It should be considered a bug in the driver code when it tries to set mIn or 
+  //   mOut outside the range 0..M. It may actually already be "somewhat" safe in that manner. 
+  //   Verify and document that!
   //
   // - Maybe find a more specific name for this class. A waveguide with multiple driving points
   //   and multiple pickup points is also a filter. Maybe rsWaveGuideFilter_In1_Out1
@@ -672,6 +687,15 @@ protected:
   //   the particular ways done here. For example, one could imagine using waveguides with
   //   multiple injection and extraction (i.e. driving and pickup) points or even networks of
   //   (terminated) waveguides.
+  //
+  // - Implement the usual getTransferFunction() and getTransferFunctionAt() member functions like
+  //   those we have in rsDelay, rsAllpassComb, etc.. The former should return an object of type
+  //   rsSparseRationalFunction or maybe some subclass thereof. I think, I have made a subclass
+  //   specifically for transfer functions of digital filters. I think it does some 
+  //   canonicalizations differently than the general purpose class, e.g. normalizing to 
+  //   a[0] = 1 rather than a[N] = 1 or something. Not sure, what the name of that was or where it
+  //   is. That can be looked up in the experimental code for the allpass-comb stuff in the main 
+  //   repo.
 };
 
 template<class TSig, class TPar>
@@ -766,6 +790,10 @@ TSig rsWaveGuideFilter<TSig, TPar>::getSampleRefExIn(TSig in)
   injectInput(in);             // Inject
   stepTime();
   return out;
+
+  // Maybe we need to write Base::stepTime(); because some compilers complain when accessing
+  // inherited members in class templates without such a qualification. I'm not sure, if this 
+  // applies to member functions but I have it seen happening for member variables.
 }
 
 /*

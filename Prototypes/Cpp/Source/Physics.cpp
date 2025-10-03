@@ -294,19 +294,24 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
 
 //=================================================================================================
 
-/** 
+/** Implements a digital waveguide based on a so called "bidirectional" delay line which is 
+basically a particular configuration of two delay lines with mutual cross feedback. A waveguide can
+be seen as an efficient numerical solution method to the 1D wave equation that describes the motion
+of a string (like a guitar or violin string) or the pressure waves in a column of air in a long 
+cylindrical bore (like a flute or organ pipe). Even conical pipes can be modeled with a waveguide. 
+In our member function names and in the documentation, we may occasionally nevertheless refer to 
+the mental image of a string, even though the waveguide could model some other kind of physical 
+system.
 
-
-Outdated - now applies to subclass rsWaveGuideFilter:
-
-Implements a waveguide based filter with adjustable length, driving point and pickup point. 
-It's a simple implementation that only supports integer lengths. We don't do any fractional delay
-approximations here. A waveguide can be seen as an efficient numerical solution method to the
-1D wave equation that describes the motion of a string (like a guitar or violin string) or the 
-pressure waves in a column of air in a long cylindrical bore (like a flute or organ pipe). Even 
-conical pipes can be modeled with a waveguide. In our member function names and in the 
-documentation, we may occasionally nevertheless refer to the mental image of a string, even though
-the waveguide could model some other kind of physical system.
+The class is supposed to be used from some sort of driver code which can interact with the 
+waveguide through an API that lets the driver inject inputs and/or pick up outputs at arbitrary 
+positions along the string. The driver code may also trigger scattering at arbitrary positions and
+it may orchestrate a network of several interconnected waveguides and their interactions with other
+models such as nonlinear excitation algorithms. This class is supposed to be the basic building 
+block of waveguide based physical models of musical instruments but it is not yet a normal DSP 
+block (such as oscillators, filters, etc.) in its own right. To see how a very simple driver could
+look like, look at the subclass rsWaveGuideFilter which gives you the normal API that you expect
+from a DSP building block for signal filtering (i.e. getSample(), etc.). ...TBC...
  
 References:
 
@@ -397,6 +402,8 @@ public:
   // extractOutputAt() or extractForwardOutputAt(int m), extractBackwardOutputAt(int m) or
   // extractOutputsAt(int m, TSig* yR, TSig* yR)
 
+  bool isValidIndex(int m) const { return (m >= 0 && m <= M); }
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Processing
@@ -455,14 +462,14 @@ void rsWaveGuide<TSig, TPar>::setState(const TSig* newState, int stateSize)
   }
 }
 
-
 template<class TSig, class TPar>
 inline void rsWaveGuide<TSig, TPar>::injectInputAt(TSig in, int m)
 {
-  // Write inputs into the delaylines at the driving point mIn. The signal goes into both the right
-  // and left going traveling wave components with weight 0.5:
-  delay1.addToInputAt(0.5 * in,   m);
-  delay2.addToInputAt(0.5 * in, M-m);    // Index must be reflected for left going wave
+  rsAssert(isValidIndex(m), "Index out of range in rsWaveGuide::injectInputAt");
+
+  TSig x = TSig(0.5) * in;      // Signal goes into both delay lines with weight 0.5
+  delay1.addToInputAt(x,   m);  // Index used as is for right going wave
+  delay2.addToInputAt(x, M-m);  // Index must be reflected for left going wave
 }
 
 
@@ -556,6 +563,16 @@ void rsPlotWaveGuideContent(const rsWaveGuide<TSig, TPar>& wg)
 
 
 //=================================================================================================
+
+/** Implements a waveguide based filter with adjustable length, driving point and pickup point. 
+It's implemented as a subclass of rsWaveGuide and thereby provides example code how a suitable 
+driver code for the waveguide class could look like in a very simple case (perhaps the simplest 
+possible). The resulting filter can be used like a regular filter, i.e. it provides the usual
+getSample(TSig in) API like many other filter classes in RAPT do. Spectrally, the filter can be 
+seen as a particular kind of comb filter that emulates the effects that occur when driving a string
+at a particular driving point and listening to it at a particular pick-up point. I think, this will
+result in two series of comb frequencies and is equivalent to two comb filters in series (Verify! 
+See PASP book. Maybe it's even more complicated - the length should also play a role). ...TBC... */
 
 template<class TSig, class TPar>
 class rsWaveGuideFilter : public rsWaveGuide<TSig, TPar>
@@ -865,6 +882,19 @@ ToDo:
   think, that would imply instability (or decay) of the whole system (i.e. the waveguide (network)
   that uses Kelly-Lochbaum scattering). Or would it? Or maybe there is some sort of pole-zero 
   cancellation going on? Figure this out and document it.
+
+- In PASP, pg 277 or here https://ccrma.stanford.edu/~jos/pasp/Summary_Lumped_Modeling.html
+  it is said that "when the mass is in contact with the string, it creates a scattering junction on
+  the string having reflection and transmission coefficients that are first-order filters". So that
+  means that when we want to create a general framework for waveguide based synthesis, the 
+  rsWaveGuide class needs some way of implementing (temporary, e.g. time-varying) scattering 
+  junctions with filters instead of just coeffs. The time-varying aspect should be handled by the
+  driver code and the scattering filters should be kept in the driver, too. But the rsWaveGuide 
+  class needs soem sensibe API, to let the driver pass in a filter object. Maybe the scatterAt
+  functions should take a pointer to a filter object or something. The class for that filter should
+  be general enough to handle all sorts of scattring filters and mesh nicely with the rest of the
+  library. Maybe a pointer to rsBiquadChain or rsStateVariableFilterChain or something like that
+  could be appropriate.
 
 */
 

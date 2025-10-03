@@ -358,8 +358,8 @@ public:
     M = rsMin(M, newMaxLength);
     updateDelaySettings();
   }
-  // Maybe call it just setLength. It does not necessarily represent a string although that is the
-  // most intuitive way of visualizing it.
+  // Maybe call it just setMaxLength. It does not necessarily represent a string although that is 
+  // the most intuitive way of visualizing it. Or maybe setMaxNumSpatialSamples
 
   /** Sets the length of the virtual string in terms of spatial samples. If you set it to some 
   number M, the output signal of the waveguide will produce a signal with a period of 2*M. */
@@ -368,6 +368,7 @@ public:
     M = newLength; 
     updateDelaySettings();  
   }
+  // Rename to setLength or setNumSpatialSamples
   
   /** Sets up the state of the waveguide by distributing the given shape appropriately into the
   delay lines for the right- and left-traveling wave. This can be used to set an initial condition 
@@ -407,6 +408,9 @@ public:
   // extractOutputAt() or extractForwardOutputAt(int m), extractBackwardOutputAt(int m) or
   // extractOutputsAt(int m, TSig* yR, TSig* yR)
 
+  int getLength() const { return M; }
+  // Maybe rename to getNumSpatialSamples()
+
   bool isValidIndex(int m) const { return (m >= 0 && m <= M); }
 
   bool isStableScatterCoeff(TPar k) const { return rsAbs(k) <= TPar(1); }
@@ -421,7 +425,13 @@ public:
   /** Injects an input into the waveguide at the given location m. */
   inline void injectInputAt(TSig in, int m);
 
-  /** Extracts an output from the waveguide at the given location m. */
+  /** Extracts a pair of the non-physical traveling wave variables from the waveguide and stores 
+  them in yR and yL where yR represets the rightward going traveling wave and yL the leftward 
+  going traveling wave. */
+  inline void getTravelingWavesAt(int m, TSig* yR, TSig* yL) const;
+
+  /** Extracts an output sample of the physical wave variable (such as displacement, pressure, 
+  etc.) from the waveguide at the given location m. */
   inline TSig extractOutputAt(int m) const;
 
   /** Implements reflections at the left and right end of the waveguide using the given 
@@ -480,7 +490,11 @@ protected:
   //   tap-pointers of the two delay lines to be somehow in sync? If so, we should verify that in 
   //   the consistency check as well. By the way: What happens when the delay lines have unequal 
   //   lengths? Could that be an interesting extension? It wouldn't be physically meaningful but 
-  //   maybe it's musically useful nonetheless? 
+  //   maybe it's musically useful nonetheless?
+  //
+  // - Maybe in addition to extractOutputAt which computes the sum of the traveling wave variables,
+  //   provide also a function to extract the difference. Maybe rename extractOutputAt to
+  //   extractOutputSumAt. 
 };
 
 template<class TSig, class TPar>
@@ -509,13 +523,20 @@ inline void rsWaveGuide<TSig, TPar>::injectInputAt(TSig in, int m)
 }
 
 template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::getTravelingWavesAt(int m, TSig* yR, TSig* yL) const
+{
+  rsAssert(isValidIndex(m), "Index out of range in rsWaveGuide::getTravelingWavesAt");
+
+  *yR = delay1.readOutputAt(  m);        // Index used as is for right going wave
+  *yL = delay2.readOutputAt(M-m);        // Index must be reflected for left going wave
+}
+
+template<class TSig, class TPar>
 inline TSig rsWaveGuide<TSig, TPar>::extractOutputAt(int m) const
 {
-  rsAssert(isValidIndex(m), "Index out of range in rsWaveGuide::extractOutputAt");
-
-  TSig out1 = delay1.readOutputAt(  m);  // Index used as is for right going wave
-  TSig out2 = delay2.readOutputAt(M-m);  // Index must be reflected for left going wave
-  return out1 + out2;                    // Output is sum of right- and left going wave
+  TSig yR, yL;
+  getTravelingWavesAt(m, &yR, &yL);      // Extract right- and left going traveling waves
+  return yR + yL;
 }
 
 template<class TSig, class TPar>

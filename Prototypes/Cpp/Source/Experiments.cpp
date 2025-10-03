@@ -18289,6 +18289,8 @@ bool unitTestsWaveGuide()
 
 void testWaveGuides()
 {
+  // Let's always run the unit tests before running the experimental code below (with potentially 
+  // new functionality) to ensure that we don't break anything by adding the new functionality:
   bool ok = unitTestsWaveGuide();
   rsAssert(ok);
 
@@ -18297,16 +18299,6 @@ void testWaveGuides()
   testWaveGuide1();
   testWaveGuideEdgeCases();
   testWaveGuideScattering();
-
-  /*
-  // Unit tests:
-  bool ok = true;
-  ok &= unitTestWaveShift();
-  ok &= unitTestWaveGuideSpike();
-  ok &= unitTestWaveGuideClass();
-  rsAssert(ok);
-  // Factor out into a function rsUnitTestsWaveGuide() ..done
-  */
 
 
   // ToDo: 

@@ -294,7 +294,12 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
 
 //=================================================================================================
 
-/** Implements a waveguide based filter with adjustable length, driving point and pickup point. 
+/** 
+
+
+Outdated - now applies to subclass rsWaveGuideFilter:
+
+Implements a waveguide based filter with adjustable length, driving point and pickup point. 
 It's a simple implementation that only supports integer lengths. We don't do any fractional delay
 approximations here. A waveguide can be seen as an efficient numerical solution method to the
 1D wave equation that describes the motion of a string (like a guitar or violin string) or the 
@@ -541,6 +546,7 @@ class rsWaveGuideFilter : public rsWaveGuide<TSig, TPar>
 
 public:
 
+  using Base = rsWaveGuide<TSig, TPar>;    // For convenience
   
   //-----------------------------------------------------------------------------------------------
   // \name Setup
@@ -637,11 +643,13 @@ protected:
   int mIn  =  7;                       // Driving point for input
   int mOut = 11;                       // Pick up point for output
   // ToDo: Find better default values. These were chosen out of convenience during R&D.
+  // Maybe rename to drivingPoint, pickupPoint
 
 
   // ToDo: 
   // 
-  // - Drag the reflection coeffs and the mIn, mOut members and their setters from the rsWaveGuide 
+  // - DONE (mostly)
+  //   Drag the reflection coeffs and the mIn, mOut members and their setters from the rsWaveGuide 
   //   baseclass into this subclass. This will require some adaptions to the member functions of 
   //   rsWaveGuide. The reflectAtEnds() function should take the reflection coeffs as parameters.
   //   The functions injectInput() and extractOutput() need to get mIn and mOut as additional 
@@ -654,10 +662,16 @@ protected:
   //   methods should then be renamed to injectInputAt(), extractAoutputAt(). Maybe the subclass 
   //   should also have a parameter-less reflectAtEnds() function. Maybe the subclass needs to
   //   override set(Max)StringLength in order to limit mIn, mOut to the range 0..M
-  //   ...partially done
   //
   // - Maybe find a more specific name for this class. A waveguide with multiple driving points
-  //   and multiple pickup points is also a filter
+  //   and multiple pickup points is also a filter. Maybe rsWaveGuideFilter_In1_Out1
+  //
+  // - Maybe the reflection stuff can go into an intermediate class like rsTerminatedWaveGuide
+  //   or rsWaveGuideTerminated. Rationale: We may want to re-use the reflection facilities
+  //   without necessarily having the input/output injection/extraction stuff implemented in 
+  //   the particular ways done here. For example, one could imagine using waveguides with
+  //   multiple injection and extraction (i.e. driving and pickup) points or even networks of
+  //   (terminated) waveguides.
 };
 
 template<class TSig, class TPar>
@@ -667,6 +681,8 @@ inline void rsWaveGuideFilter<TSig, TPar>::injectInput(TSig in)
   // and left going traveling wave components with weight 0.5:
   delay1.addToInputAt(0.5 * in,   mIn);
   delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
+
+  // ToDo: implement this as: Base::injectInputAt(in, mIn);
 }
 
 template<class TSig, class TPar>
@@ -676,6 +692,8 @@ inline TSig rsWaveGuideFilter<TSig, TPar>::extractOutput()
   TSig out1 = delay1.readOutputAt(  mOut);
   TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
   return out1 + out2;                      // Output is sum of right- and left going wave
+
+  // ToDo: implement this as: return Base::extractOutputAt(mOut);
 }
 
 template<class TSig, class TPar>
@@ -686,6 +704,8 @@ inline void rsWaveGuideFilter<TSig, TPar>::reflectAtEnds()
   TSig ref2 = delay2.readOutput();         // Reflected wave at left end
   delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
   delay2.writeInput(reflectRight * ref1);  // Reflection at right end
+
+  // ToDo: implement this as: Base::reflectAtEnds(reflectLeft, reflectRight);
 }
 
 template<class TSig, class TPar>
@@ -747,15 +767,6 @@ TSig rsWaveGuideFilter<TSig, TPar>::getSampleRefExIn(TSig in)
   stepTime();
   return out;
 }
-
-
-
-
-
-
-
-
-
 
 /*
 ToDo:

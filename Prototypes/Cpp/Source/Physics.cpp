@@ -295,24 +295,28 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
 //=================================================================================================
 
 /** Implements a digital waveguide based on a so called "bidirectional" delay line which is 
-basically a particular configuration of two delay lines with mutual cross feedback. A waveguide can
-be seen as an efficient numerical solution method to the 1D wave equation that describes the motion
-of a string (like a guitar or violin string) or the pressure waves in a column of air in a long 
-cylindrical bore (like a flute or organ pipe). Even conical pipes can be modeled with a waveguide. 
-In our member function names and in the documentation, we may occasionally nevertheless refer to 
-the mental image of a string, even though the waveguide could model some other kind of physical 
-system.
+basically a particular configuration of two delay lines with mutual cross feedback. A digital 
+waveguide can be seen as an efficient method to implement a numerical solver for the 1D wave 
+equation. This is a partial differential equation (PDE) which describes the motion of a string 
+(like a guitar or violin string) or the pressure waves in a column of air in a long cylindrical 
+bore (like a flute or organ pipe). Conical pipes can also be modeled with a waveguide. In our
+member function names and in the documentation, we may occasionally nevertheless refer to the 
+mental image of a string, even though the waveguide could model some other kind of physical 
+system. The string is taken to be the prototypical example of a 1D system in which waves 
+propagate.
 
 The class is supposed to be used from some sort of driver code which can interact with the 
 waveguide through an API that lets the driver inject inputs and/or pick up outputs at arbitrary 
-positions along the string. The driver code may also trigger scattering at arbitrary positions and
-it may orchestrate a network of several interconnected waveguides and their interactions with other
-algorithms such as nonlinear models of string or bore excitation (such as bowing, reeds, etc.). 
-This class is supposed to be the basic building block of waveguide based physical models of musical
-instruments but it is not yet a normal DSP block (such as oscillators, filters, etc.) in its own 
-right. To see how a very simple driver could look like, look at the subclass rsWaveGuideFilter 
-which gives you the normal API that you expect from a DSP building block for signal filtering (i.e.
-getSample(), etc.). ...TBC...
+positions along the string. The driver code may also trigger scattering (i.e. partial reflection 
+and transmission) at arbitrary positions along the string. More complex drivers may even 
+orchestrate a whole network of several interconnected waveguides and/or interactions of waveguides
+with other algorithms such as nonlinear models of string or bore excitation (such as bowing, reeds,
+lips, etc.). This class is supposed to be the basic building block of waveguide based physical 
+models of musical instruments but it does not work like a normal DSP block (such as oscillators, 
+filters, etc.) in its own right. It has an API that is a bit different from those kinds of DSP 
+units. To see how a very simple driver could look like, look at the subclass rsWaveGuideFilter 
+which gives you the normal API that you expect from a DSP building block for signal filtering
+(i.e. getSample(), etc.) and uses a waveguide internally to do its work. ...TBC...
  
 References:
 

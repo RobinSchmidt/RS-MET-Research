@@ -307,11 +307,12 @@ The class is supposed to be used from some sort of driver code which can interac
 waveguide through an API that lets the driver inject inputs and/or pick up outputs at arbitrary 
 positions along the string. The driver code may also trigger scattering at arbitrary positions and
 it may orchestrate a network of several interconnected waveguides and their interactions with other
-models such as nonlinear excitation algorithms. This class is supposed to be the basic building 
-block of waveguide based physical models of musical instruments but it is not yet a normal DSP 
-block (such as oscillators, filters, etc.) in its own right. To see how a very simple driver could
-look like, look at the subclass rsWaveGuideFilter which gives you the normal API that you expect
-from a DSP building block for signal filtering (i.e. getSample(), etc.). ...TBC...
+algorithms such as nonlinear models of string or bore excitation (such as bowing, reeds, etc.). 
+This class is supposed to be the basic building block of waveguide based physical models of musical
+instruments but it is not yet a normal DSP block (such as oscillators, filters, etc.) in its own 
+right. To see how a very simple driver could look like, look at the subclass rsWaveGuideFilter 
+which gives you the normal API that you expect from a DSP building block for signal filtering (i.e.
+getSample(), etc.). ...TBC...
  
 References:
 

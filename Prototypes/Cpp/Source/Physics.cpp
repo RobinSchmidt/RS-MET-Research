@@ -404,6 +404,10 @@ public:
   /** Resets the waveguide to its initial state. Clears the content of the delay lines. */
   void reset() { delay1.reset(); delay2.reset(); }
 
+  /** Injects an input into the waveguide at the given location m. */
+  inline void injectInputAt(TSig in, int m);
+
+
   /** Implements a Kelly-Lochbaum scattering junction at the spatial location m with the reflection
   coefficient k. For an impedance change from R1 to R2 when going from left to right, the coeff
   can be computed as k = (R2-R1)/(R2+R1). See PASP, page 562 or here:
@@ -450,6 +454,19 @@ void rsWaveGuide<TSig, TPar>::setState(const TSig* newState, int stateSize)
     delay2.writeInputAt(x, M-m);
   }
 }
+
+
+template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::injectInputAt(TSig in, int m)
+{
+  // Write inputs into the delaylines at the driving point mIn. The signal goes into both the right
+  // and left going traveling wave components with weight 0.5:
+  delay1.addToInputAt(0.5 * in,   m);
+  delay2.addToInputAt(0.5 * in, M-m);    // Index must be reflected for left going wave
+}
+
+
+
 
 template<class TSig, class TPar>
 inline void rsWaveGuide<TSig, TPar>::scatterAtKL(int m, TPar k)
@@ -703,10 +720,10 @@ inline void rsWaveGuideFilter<TSig, TPar>::injectInput(TSig in)
 {
   // Write inputs into the delaylines at the driving point mIn. The signal goes into both the right
   // and left going traveling wave components with weight 0.5:
-  delay1.addToInputAt(0.5 * in,   mIn);
-  delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
+  //delay1.addToInputAt(0.5 * in,   mIn);
+  //delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
 
-  // ToDo: implement this as: Base::injectInputAt(in, mIn);
+  Base::injectInputAt(in, mIn);
 }
 
 template<class TSig, class TPar>

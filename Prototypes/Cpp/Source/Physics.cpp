@@ -298,9 +298,10 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
 It's a simple implementation that only supports integer lengths. We don't do any fractional delay
 approximations here. A waveguide can be seen as an efficient numerical solution method to the
 1D wave equation that describes the motion of a string (like a guitar or violin string) or the 
-pressure waves in a column of air in a long cylindrical bore (like a flute or organ pipe). In our
-member function names and in the documentation, we may occasionally refer to the mental image of a
-string, though.
+pressure waves in a column of air in a long cylindrical bore (like a flute or organ pipe). Even 
+conical pipes can be modeled with a waveguide. In our member function names and in the 
+documentation, we may occasionally nevertheless refer to the mental image of a string, even though
+the waveguide could model some other kind of physical system.
  
 References:
 
@@ -325,7 +326,9 @@ public:
     setMaxStringLength(M);
   }
   // ToDo: Maybe do not yet allocate here at all. Rationale: The client code will likely want to
-  // allocate more memory anyway so it would just be a wasted allocatio
+  // allocate more memory anyway so it would just be a wasted allocation. And in the great scheme
+  // of things, we may create a lot of waveguide objects in instrument simulations, so it may 
+  // actually matter a bit in terms of initialization costs.
 
 
   //-----------------------------------------------------------------------------------------------
@@ -345,28 +348,12 @@ public:
 
   /** Sets the length of the virtual string in terms of spatial samples. If you set it to some 
   number M, the output signal of the waveguide will produce a signal with a period of 2*M. */
-  void setStringLength(int newLength)   { M = newLength; updateDelaySettings();  }
-  
-  /** Sets the position along the string (in terms of spatial samples) at which the external 
-  output signal is injected into the string, i.e. the point where the string is driven by an 
-  excitation signal. */
-  void setDrivingPoint(int newLoaction) {  mIn = newLoaction; updateDelaySettings();  }
-
-  /** Sets the position along the string (in terms of spatial samples) at which we extract the 
-  output signal, i.e. the point where e pick up that string's movement. */
-  void setPickUpPoint(int newLocation)  {  mOut = newLocation; updateDelaySettings();  }
-
-  /** Sets the reflection coefficients for the left and right boundary, i.e. the left and right 
-  ends of the string. Setting both to -1 corresponds to a boundary condition where both ends are
-  fixed to zero displacement. ...TBC... */
-  void setReflectionCoeffs(TPar leftEnd, TPar rightEnd)
-  {
-    reflectLeft  = leftEnd; 
-    reflectRight = rightEnd;
-    // ToDo: Maybe assert that they are in the stable range (inside +-1). Maybe clip them to that
-    // range.
+  void setStringLength(int newLength)   
+  { 
+    M = newLength; 
+    updateDelaySettings();  
   }
-
+  
   /** Sets up the state of the waveguide by distributing the given shape appropriately into the
   delay lines for the right- and left-traveling wave. This can be used to set an initial condition 
   for displacement (or velocity) to emulate pluck (or struck) strings. Whether the given newState 
@@ -397,10 +384,192 @@ public:
   const RAPT::rsDelay<TSig>& getDelayLine1() const { return delay1; }
 
   const RAPT::rsDelay<TSig>& getDelayLine2() const { return delay2; }
+  // Maybe try to avoid exposing these internals to the outside. Client code should not directly 
+  // access these delay lines! I think, we currently need this access just for plotting purposes
+  // for R&D anyway. Maybe that can be solved in a better way. Maybe we can declare the plotting
+  // functions as friend. A bit ugly but still better than exposing the internals to everyone. Or
+  // Maybe the plotting functions could be based on calling (to be written) functions like 
+  // extractOutputAt() or extractForwardOutputAt(int m), extractBackwardOutputAt(int m) or
+  // extractOutputsAt(int m, TSig* yR, TSig* yR)
 
 
   //-----------------------------------------------------------------------------------------------
-  // \name Processing (High Level)
+  // \name Processing
+
+  /** Resets the waveguide to its initial state. Clears the content of the delay lines. */
+  void reset() { delay1.reset(); delay2.reset(); }
+
+  /** Implements a Kelly-Lochbaum scattering junction at the spatial location m with the reflection
+  coefficient k. For an impedance change from R1 to R2 when going from left to right, the coeff
+  can be computed as k = (R2-R1)/(R2+R1). See PASP, page 562 or here:
+  https://ccrma.stanford.edu/~jos/pasp/Kelly_Lochbaum_Scattering_Junctions.html
+  https://ccrma.stanford.edu/~jos/pasp/Reflection_Coefficient.html
+  The function can be called inside the per-sample computations for example immediately before
+  calling reflectAtEnds() which actually performs a quite similar computation just without the
+  transmission part. */
+  inline void scatterAtKL(int m, TPar k);
+  // Maybe rename to scatterAt_KL
+
+  inline void scatterAtPN(int m, TPar k);
+  // power-normalized scattering
+
+  /** Steps the time forward by one sample instant. This basically moves/advances the pointers in 
+  the delay lines. It's called from the various getSampleXXX() methods. */
+  inline void stepTime();
+
+
+  //-----------------------------------------------------------------------------------------------
+
+protected:
+
+  /** Updates the settings of our two delay lines according to the user parameter M. */
+  void updateDelaySettings();
+  // Rename to updateDelays() ...or maybe get rid entirely. It doesn't really do much.
+
+  RAPT::rsDelay<TSig> delay1, delay2;  // The two delay lines that make up the waveguide
+  int M = 30;                          // Length of the delay lines. Half the period of output.
+
+};
+
+template<class TSig, class TPar>
+void rsWaveGuide<TSig, TPar>::setState(const TSig* newState, int stateSize)
+{
+  rsAssert(stateSize == M); // Is this correct or should it be M+1?
+  // ToDo: Maybe be a bit more liberal here. If the passed state buffer has a too small size, just
+  // fill the rest with zeros and if it has a too larger size, ignore the final portion of it
+
+  for(int m = 0; m < M; m++)
+  {
+    TSig x = 0.5 * newState[m];
+    delay1.writeInputAt(x,   m);
+    delay2.writeInputAt(x, M-m);
+  }
+}
+
+template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::scatterAtKL(int m, TPar k)
+{
+  // Sanity checks:
+  rsAssert(m >= 0        && m <= M,        "Scatter point out of range");
+  rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stable range");
+
+  // Read delay line contents from top and bottom rail:
+  TSig uTL = delay1.readOutputAt(  m);     // TL: top-left,      f^+_{i-1}
+  TSig uBR = delay2.readOutputAt(M-m);     // BR: bottom-right,  f^-_i
+
+  // Compute the scattered signals (see to PASP, page 564 and 570, Fig. C.17 and C.20):
+  TSig uTR = (1+k)*uTL - k*uBR;            // Upper rail transmission + reflection
+  TSig uBL = (1-k)*uBR + k*uTL;            // Lower rail transmission + reflection
+
+  // Write the scattered signals back into the delay lines at the appropriate places:
+  delay1.writeInputAt(uTR,   m);           // TR: top-right,     f^+_i
+  delay2.writeInputAt(uBL, M-m);           // BL: bottom-left,   f^-_{i-1}
+
+  // Verify all of this! Implement also the one-multiply form from page 571 using the alpha 
+  // parameter. This one can be generalized to junctions of more than 2 waveguides.
+
+  // See: https://ccrma.stanford.edu/~jos/pasp/Kelly_Lochbaum_Scattering_Junctions.html
+
+  // ToDo: https://ccrma.stanford.edu/~jos/pasp/One_Multiply_Scattering_Junctions.html
+
+  // Maybe factor out functions isValidIndex(m), isStableScatterCoeff(k) for the assertions and
+  // use similar assertions whereever it makes sense.
+}
+
+template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::scatterAtPN(int m, TPar k)
+{
+  // Sanity checks:
+  rsAssert(m >= 0        && m <= M, "Scatter point out of range");
+  rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stable range");
+
+  // Read delay line contents from top and bottom rail:
+  TSig uTL = delay1.readOutputAt(  m);     // TL: top-left,      f^+_{i-1}
+  TSig uBR = delay2.readOutputAt(M-m);     // BR: bottom-right,  f^-_i
+
+  // Compute the scattered signals (see to PASP, page 572, Fig. C.22 and Eq. C.66):
+  TPar c = rsSqrt(1 - k*k);                // Cosine of theta = asin(k)
+  TSig uTR = c*uTL - k*uBR;                // Upper rail transmission + reflection
+  TSig uBL = c*uBR + k*uTL;                // Lower rail transmission + reflection
+
+  // Write the scattered signals back into the delay lines at the appropriate places:
+  delay1.writeInputAt(uTR,   m);           // TR: top-right,     f^+_i
+  delay2.writeInputAt(uBL, M-m);           // BL: bottom-left,   f^-_{i-1}
+
+  // See: https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
+
+  // ToDo: implement a variant that takes both k and c as parameters (and maybe rename k to s) to
+  // avoid having to compute k when the caller can more efficiently compute both. The one-parameter
+  // version should just call the two-param version with k and sqrt(1-k^2)
+}
+
+template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::stepTime()
+{
+  // Update the tap pointers in the delaylines:
+  delay1.incrementTapPointers();
+  delay2.incrementTapPointers();
+}
+
+template<class TSig, class TPar>
+void rsWaveGuide<TSig, TPar>::updateDelaySettings()
+{
+  delay1.setDelayInSamples(M);
+  delay2.setDelayInSamples(M);
+}
+
+template<class TSig, class TPar>
+void rsPlotWaveGuideContent(const rsWaveGuide<TSig, TPar>& wg)
+{
+  rsPlotDelayLineContent(wg.getDelayLine1(), wg.getDelayLine2(), true);
+  // true: Reverse content of delay2
+
+  // ToDo:
+  //
+  // - Maybe plot also the sum of the contents of both delay lines because it is that sum that 
+  //   represents our actual physical signal. However - showing only the sum may hide some 
+  //   undesirable effects. For example, there may be situations in which the signals inside the
+  //   waveguides grow without bound while their sum stays bounded. 
+}
+
+
+//=================================================================================================
+
+template<class TSig, class TPar>
+class rsWaveGuideFilter : public rsWaveGuide<TSig, TPar>
+{
+
+public:
+
+  
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  /** Sets the position along the string (in terms of spatial samples) at which the external 
+  output signal is injected into the string, i.e. the point where the string is driven by an 
+  excitation signal. */
+  void setDrivingPoint(int newLoaction) {  mIn = newLoaction; }
+  // ToDo: make sure that 0 <= mIn <= M
+
+  /** Sets the position along the string (in terms of spatial samples) at which we extract the 
+  output signal, i.e. the point where e pick up that string's movement. */
+  void setPickUpPoint(int newLocation)  {  mOut = newLocation; }
+    // ToDo: make sure that 0 <= mOut <= M
+
+  /** Sets the reflection coefficients for the left and right boundary, i.e. the left and right 
+  ends of the string. Setting both to -1 corresponds to a boundary condition where both ends are
+  fixed to zero displacement. ...TBC... */
+  void setReflectionCoeffs(TPar leftEnd, TPar rightEnd)
+  {
+    reflectLeft  = leftEnd; 
+    reflectRight = rightEnd;
+    // ToDo: Maybe assert that they are in the stable range (inside +-1). Maybe clip them to that
+    // range.
+  }
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Processing
 
   /** Produces one output sample at a time. */
   TSig getSample(TSig in) { return getSampleInExRef(in); }
@@ -413,12 +582,6 @@ public:
   // priciple of least astonishment. Following that, we need to pick the most appropriate version 
   // of the algorith here. I think, it's InExRef but this needs to be verified.
 
-  /** Resets the waveguide to its initial state. Clears the content of the delay lines. */
-  void reset() { delay1.reset(); delay2.reset(); }
-
-
-  //-----------------------------------------------------------------------------------------------
-  // \name Processing (Low Level)
 
   /** Computes an output sample using the operation order: inject -> extract -> reflect. */
   TSig getSampleInExRef(TSig in);
@@ -462,36 +625,8 @@ public:
   mutual crossfeedback between the two delay lines using our reflection coefficients. */
   inline void reflectAtEnds();
 
-  /** Implements a Kelly-Lochbaum scattering junction at the spatial location m with the reflection
-  coefficient k. For an impedance change from R1 to R2 when going from left to right, the coeff
-  can be computed as k = (R2-R1)/(R2+R1). See PASP, page 562 or here:
-  https://ccrma.stanford.edu/~jos/pasp/Kelly_Lochbaum_Scattering_Junctions.html
-  https://ccrma.stanford.edu/~jos/pasp/Reflection_Coefficient.html
-  The function can be called inside the per-sample computations for example immediately before
-  calling reflectAtEnds() which actually performs a quite similar computation just without the
-  transmission part. */
-  inline void scatterAtKL(int m, TPar k);
-
-  inline void scatterAtPN(int m, TPar k);
-  // power-normalized scattering
-
-
-
-  /** Steps the time forward by one sample instant. This basically moves/advances the pointers in 
-  the delay lines. It's called from the various getSampleXXX() methods. */
-  inline void stepTime();
-
-
-  //-----------------------------------------------------------------------------------------------
 
 protected:
-
-  /** Updates the settings of our two delay lines accoring to the user parameters M, mIn, mOut. */
-  void updateDelaySettings();
-
-
-  // Embedded DSP objects:
-  RAPT::rsDelay<TSig> delay1, delay2;  // The two delay lines that make up the waveguide
 
   // Reflection coefficients:
   TPar reflectLeft  = TPar(-1);        // Reflection coefficient at left boundary
@@ -499,215 +634,9 @@ protected:
   // Using -1, i.e. inverting reflections, corresponds to a fixed end boundary condition (aka 
   // Dirichlet boundary condition.). This seems to be a reasonable default behavior.
 
-  // Delay line settings:
-  int M    = 30;                       // Length of the delay lines. Half the period of output.
   int mIn  =  7;                       // Driving point for input
   int mOut = 11;                       // Pick up point for output
   // ToDo: Find better default values. These were chosen out of convenience during R&D.
-
-};
-
-template<class TSig, class TPar>
-void rsWaveGuide<TSig, TPar>::setState(const TSig* newState, int stateSize)
-{
-  rsAssert(stateSize == M); // Is this correct or should it be M+1?
-  // ToDo: Maybe be a bit more liberal here. If the passed state buffer has a too small size, just
-  // fill the rest with zeros and if it has a too larger size, ignore the final portion of it
-
-  for(int m = 0; m < M; m++)
-  {
-    TSig x = 0.5 * newState[m];
-    delay1.writeInputAt(x,   m);
-    delay2.writeInputAt(x, M-m);
-  }
-}
-
-template<class TSig, class TPar>
-TSig rsWaveGuide<TSig, TPar>::getSampleInExRef(TSig in)
-{
-  injectInput(in);             // Inject
-  TSig out = extractOutput();  // Extract
-  reflectAtEnds();             // Reflect
-  stepTime();
-  return out;
-}
-
-template<class TSig, class TPar>
-TSig rsWaveGuide<TSig, TPar>::getSampleInRefEx(TSig in)
-{
-  injectInput(in);             // Inject
-  reflectAtEnds();             // Reflect
-  TSig out = extractOutput();  // Extract
-  stepTime();
-  return out;
-}
-
-template<class TSig, class TPar>
-TSig rsWaveGuide<TSig, TPar>::getSampleExInRef(TSig in)
-{
-  TSig out = extractOutput();  // Extract
-  injectInput(in);             // Inject
-  reflectAtEnds();             // Reflect
-  stepTime();
-  return out;
-}
-
-template<class TSig, class TPar>
-TSig rsWaveGuide<TSig, TPar>::getSampleExRefIn(TSig in)
-{
-  TSig out = extractOutput();  // Extract
-  reflectAtEnds();             // Reflect
-  injectInput(in);             // Inject
-  stepTime();
-  return out;
-}
-
-template<class TSig, class TPar>
-TSig rsWaveGuide<TSig, TPar>::getSampleRefInEx(TSig in)
-{
-  reflectAtEnds();             // Reflect
-  injectInput(in);             // Inject
-  TSig out = extractOutput();  // Extract
-  stepTime();
-  return out;
-}
-
-template<class TSig, class TPar>
-TSig rsWaveGuide<TSig, TPar>::getSampleRefExIn(TSig in)
-{
-  reflectAtEnds();             // Reflect
-  TSig out = extractOutput();  // Extract
-  injectInput(in);             // Inject
-  stepTime();
-  return out;
-}
-
-
-template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::injectInput(TSig in)
-{
-  // Write inputs into the delaylines at the driving point mIn. The signal goes into both the right
-  // and left going traveling wave components with weight 0.5:
-  delay1.addToInputAt(0.5 * in,   mIn);
-  delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
-}
-
-template<class TSig, class TPar>
-inline TSig rsWaveGuide<TSig, TPar>::extractOutput()
-{
-  // Read out the outputs at the pickup point mOut:
-  TSig out1 = delay1.readOutputAt(  mOut);
-  TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
-  return out1 + out2;                      // Output is sum of right- and left going wave
-}
-
-template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::reflectAtEnds()
-{
-  // Implement the mutual crossfeedback using the reflection coefficients:
-  TSig ref1 = delay1.readOutput();         // Reflected wave at right end
-  TSig ref2 = delay2.readOutput();         // Reflected wave at left end
-  delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
-  delay2.writeInput(reflectRight * ref1);  // Reflection at right end
-}
-
-template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::scatterAtKL(int m, TPar k)
-{
-  // Sanity checks:
-  rsAssert(m >= 0        && m <= M,        "Scatter point out of range");
-  rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stable range");
-
-  // Read delay line contents from top and bottom rail:
-  TSig uTL = delay1.readOutputAt(  m);     // TL: top-left,      f^+_{i-1}
-  TSig uBR = delay2.readOutputAt(M-m);     // BR: bottom-right,  f^-_i
-
-  // Compute the scattered signals (see to PASP, page 564 and 570, Fig. C.17 and C.20):
-  TSig uTR = (1+k)*uTL - k*uBR;            // Upper rail transmission + reflection
-  TSig uBL = (1-k)*uBR + k*uTL;            // Lower rail transmission + reflection
-
-  // Write the scattered signals back into the delay lines at the appropriate places:
-  delay1.writeInputAt(uTR,   m);           // TR: top-right,     f^+_i
-  delay2.writeInputAt(uBL, M-m);           // BL: bottom-left,   f^-_{i-1}
-
-  // Verify all of this! Implement also the one-multiply form from page 571 using the alpha 
-  // parameter. This one can be generalized to junctions of more than 2 waveguides.
-
-  // See: https://ccrma.stanford.edu/~jos/pasp/Kelly_Lochbaum_Scattering_Junctions.html
-
-  // ToDo: https://ccrma.stanford.edu/~jos/pasp/One_Multiply_Scattering_Junctions.html
-}
-
-template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::scatterAtPN(int m, TPar k)
-{
-  // Sanity checks:
-  rsAssert(m >= 0        && m <= M, "Scatter point out of range");
-  rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stable range");
-
-  // Read delay line contents from top and bottom rail:
-  TSig uTL = delay1.readOutputAt(  m);     // TL: top-left,      f^+_{i-1}
-  TSig uBR = delay2.readOutputAt(M-m);     // BR: bottom-right,  f^-_i
-
-  // Compute the scattered signals (see to PASP, page 572, Fig. C.22 and Eq. C.66):
-  TPar c = rsSqrt(1 - k*k);                // Cosine of theta = asin(k)
-  TSig uTR = c*uTL - k*uBR;                // Upper rail transmission + reflection
-  TSig uBL = c*uBR + k*uTL;                // Lower rail transmission + reflection
-
-  // Write the scattered signals back into the delay lines at the appropriate places:
-  delay1.writeInputAt(uTR,   m);           // TR: top-right,     f^+_i
-  delay2.writeInputAt(uBL, M-m);           // BL: bottom-left,   f^-_{i-1}
-
-  // See: https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
-
-  // ToDo: implement a variant that takes both k and c as parameters (and maybe rename k to s) to
-  // avoid having to compute k when the caller can more efficiently compute both. The one-parameter
-  // version should just call the two-param version with k and sqrt(1-k^2)
-}
-
-template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::stepTime()
-{
-  // Update the tap pointers in the delaylines:
-  delay1.incrementTapPointers();
-  delay2.incrementTapPointers();
-}
-
-template<class TSig, class TPar>
-void rsWaveGuide<TSig, TPar>::updateDelaySettings()
-{
-  delay1.setDelayInSamples(M);
-  delay2.setDelayInSamples(M);
-
-  // ToDo: Limit mIn, mOut to the safe range. I think its 0..M or maybe 1...M-1
-}
-
-
-template<class TSig, class TPar>
-void rsPlotWaveGuideContent(const rsWaveGuide<TSig, TPar>& wg)
-{
-  rsPlotDelayLineContent(wg.getDelayLine1(), wg.getDelayLine2(), true);
-  // true: Reverse content of delay2
-
-  // ToDo:
-  //
-  // - Maybe plot also the sum of the contents of both delay lines because it is that sum that 
-  //   represents our actual physical signal. However - showing only the sum may hide some 
-  //   undesirable effects. For example, there may be situations in which the signals inside the
-  //   waveguides grow without bound while their sum stays bounded. 
-}
-
-
-//=================================================================================================
-
-template<class TSig, class TPar>
-class rsWaveGuideFilter : public rsWaveGuide<TSig, TPar>
-{
-
-public:
-
-
-protected:
 
 
   // ToDo: 
@@ -725,10 +654,103 @@ protected:
   //   methods should then be renamed to injectInputAt(), extractAoutputAt(). Maybe the subclass 
   //   should also have a parameter-less reflectAtEnds() function. Maybe the subclass needs to
   //   override set(Max)StringLength in order to limit mIn, mOut to the range 0..M
+  //   ...partially done
   //
   // - Maybe find a more specific name for this class. A waveguide with multiple driving points
   //   and multiple pickup points is also a filter
 };
+
+template<class TSig, class TPar>
+inline void rsWaveGuideFilter<TSig, TPar>::injectInput(TSig in)
+{
+  // Write inputs into the delaylines at the driving point mIn. The signal goes into both the right
+  // and left going traveling wave components with weight 0.5:
+  delay1.addToInputAt(0.5 * in,   mIn);
+  delay2.addToInputAt(0.5 * in, M-mIn);    // Index must be reflected for left going wave
+}
+
+template<class TSig, class TPar>
+inline TSig rsWaveGuideFilter<TSig, TPar>::extractOutput()
+{
+  // Read out the outputs at the pickup point mOut:
+  TSig out1 = delay1.readOutputAt(  mOut);
+  TSig out2 = delay2.readOutputAt(M-mOut); // Index must be reflected for left going wave
+  return out1 + out2;                      // Output is sum of right- and left going wave
+}
+
+template<class TSig, class TPar>
+inline void rsWaveGuideFilter<TSig, TPar>::reflectAtEnds()
+{
+  // Implement the mutual crossfeedback using the reflection coefficients:
+  TSig ref1 = delay1.readOutput();         // Reflected wave at right end
+  TSig ref2 = delay2.readOutput();         // Reflected wave at left end
+  delay1.writeInput(reflectLeft  * ref2);  // Reflection at left end
+  delay2.writeInput(reflectRight * ref1);  // Reflection at right end
+}
+
+template<class TSig, class TPar>
+TSig rsWaveGuideFilter<TSig, TPar>::getSampleInExRef(TSig in)
+{
+  injectInput(in);             // Inject
+  TSig out = extractOutput();  // Extract
+  reflectAtEnds();             // Reflect
+  stepTime();
+  return out;
+}
+
+template<class TSig, class TPar>
+TSig rsWaveGuideFilter<TSig, TPar>::getSampleInRefEx(TSig in)
+{
+  injectInput(in);             // Inject
+  reflectAtEnds();             // Reflect
+  TSig out = extractOutput();  // Extract
+  stepTime();
+  return out;
+}
+
+template<class TSig, class TPar>
+TSig rsWaveGuideFilter<TSig, TPar>::getSampleExInRef(TSig in)
+{
+  TSig out = extractOutput();  // Extract
+  injectInput(in);             // Inject
+  reflectAtEnds();             // Reflect
+  stepTime();
+  return out;
+}
+
+template<class TSig, class TPar>
+TSig rsWaveGuideFilter<TSig, TPar>::getSampleExRefIn(TSig in)
+{
+  TSig out = extractOutput();  // Extract
+  reflectAtEnds();             // Reflect
+  injectInput(in);             // Inject
+  stepTime();
+  return out;
+}
+
+template<class TSig, class TPar>
+TSig rsWaveGuideFilter<TSig, TPar>::getSampleRefInEx(TSig in)
+{
+  reflectAtEnds();             // Reflect
+  injectInput(in);             // Inject
+  TSig out = extractOutput();  // Extract
+  stepTime();
+  return out;
+}
+
+template<class TSig, class TPar>
+TSig rsWaveGuideFilter<TSig, TPar>::getSampleRefExIn(TSig in)
+{
+  reflectAtEnds();             // Reflect
+  TSig out = extractOutput();  // Extract
+  injectInput(in);             // Inject
+  stepTime();
+  return out;
+}
+
+
+
+
 
 
 

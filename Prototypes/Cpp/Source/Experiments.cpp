@@ -17783,7 +17783,7 @@ bool unitTestWaveGuideClass()  // Find better name!
   bool ok = true;
 
   using T   = double;
-  using WG  = rsWaveGuide<T, T>;
+  using WGF = rsWaveGuideFilter<T, T>;
   using Vec = std::vector<T>;
 
   int M    =  20;       // Length of the waveguide in (spatial) samples
@@ -17795,23 +17795,23 @@ bool unitTestWaveGuideClass()  // Find better name!
   Vec yt = rsSpikeCirculationLeapFrog<T>(N, M, mIn, mOut);
 
   // Create and set up the waveguide:
-  WG wg;
-  wg.setMaxStringLength(M);
-  wg.setStringLength(M);
-  wg.setDrivingPoint(mIn);
-  wg.setPickUpPoint(mOut);
+  WGF wgf;
+  wgf.setMaxStringLength(M);
+  wgf.setStringLength(M);
+  wgf.setDrivingPoint(mIn);
+  wgf.setPickUpPoint(mOut);
 
   // Produce impulse response of waveguide and compare it to target signal:
-  Vec y = impulseResponse(wg, N, 1.0);
+  Vec y = impulseResponse(wgf, N, 1.0);
   ok &= y == yt;
   //rsPlotVectors(yt, y);
 
   // Let's now make a test with arbitrary reflection coefficients:
   T rL = 0.9;
   T rR = 0.8;
-  wg.setReflectionCoeffs(rL, rR);
+  wgf.setReflectionCoeffs(rL, rR);
   yt = rsSpikeCirculationWaveShift(N, M, mIn, mOut, rL, rR);
-  y  = impulseResponse(wg, N, 1.0);
+  y  = impulseResponse(wgf, N, 1.0);
   ok &= y == yt;
   //rsPlotVectors(yt, y);
 
@@ -18277,21 +18277,36 @@ void testWaveGuideScattering()
 }
 
 
+bool unitTestsWaveGuide()
+{
+  bool ok = true;
+  ok &= unitTestWaveShift();
+  ok &= unitTestWaveGuideSpike();
+  ok &= unitTestWaveGuideClass(); // Rename to unitTestWaveGuideFilter
+  //rsAssert(ok);
+  return ok;
+}
+
 void testWaveGuides()
 {
+  bool ok = unitTestsWaveGuide();
+  rsAssert(ok);
+
   // Experiments:
   //testWaveEquation1D();
   testWaveGuide1();
   testWaveGuideEdgeCases();
   testWaveGuideScattering();
 
+  /*
   // Unit tests:
   bool ok = true;
   ok &= unitTestWaveShift();
   ok &= unitTestWaveGuideSpike();
   ok &= unitTestWaveGuideClass();
   rsAssert(ok);
-  // Factor out into a function rsUnitTestsWaveGuide()
+  // Factor out into a function rsUnitTestsWaveGuide() ..done
+  */
 
 
   // ToDo: 

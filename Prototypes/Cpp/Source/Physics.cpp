@@ -806,7 +806,19 @@ protected:
   //   canonicalizations differently than the general purpose class, e.g. normalizing to 
   //   a[0] = 1 rather than a[N] = 1 or something. Not sure, what the name of that was or where it
   //   is. That can be looked up in the experimental code for the allpass-comb stuff in the main 
-  //   repo.
+  //   repo. 
+  // 
+  // - I think, it doesn't make sense to let class rsWaveGuide have such transfer function 
+  //   computation functions because the waveguide itself doesn't yet have well-defined inputs and
+  //   outputs and also does not yet have any opinion about (i.e. settings for) how to do 
+  //   reflections and possibly also scattering. These are all things that will determine the 
+  //   ultimate transfer function that any waveguide based filter will realize. However, the driver
+  //   code may need some way to inquire certain waveguide settings that determine the transfer 
+  //   function. The most obvious thing being the length M which we already can inquire via 
+  //   getLength() but maybe there is more (or will be in the future). The API of rsWaveGuide 
+  //   should support all the required inquiries and the actual computation of the transfer 
+  //   function should then be done by the driver, incorporating its knowledge about how it 
+  //   actually uses the waveguide.
 };
 
 template<class TSig, class TPar>

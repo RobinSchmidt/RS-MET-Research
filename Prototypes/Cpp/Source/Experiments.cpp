@@ -18296,8 +18296,8 @@ void testWaveGuides()
 
   // Experiments:
   //testWaveEquation1D();
-  testWaveGuide1();
-  testWaveGuideEdgeCases();
+  //testWaveGuide1();
+  //testWaveGuideEdgeCases();
   testWaveGuideScattering();
 
 

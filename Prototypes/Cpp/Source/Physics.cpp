@@ -397,9 +397,9 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
-  const RAPT::rsDelay<TSig>& getDelayLine1() const { return delay1; }
+  //const RAPT::rsDelay<TSig>& getDelayLine1() const { return delay1; }
 
-  const RAPT::rsDelay<TSig>& getDelayLine2() const { return delay2; }
+  //const RAPT::rsDelay<TSig>& getDelayLine2() const { return delay2; }
   // Maybe try to avoid exposing these internals to the outside. Client code should not directly 
   // access these delay lines! I think, we currently need this access just for plotting purposes
   // for R&D anyway. Maybe that can be solved in a better way. Maybe we can declare the plotting
@@ -409,7 +409,8 @@ public:
   // extractOutputsAt(int m, TSig* yR, TSig* yR)
 
   int getLength() const { return M; }
-  // Maybe rename to getNumSpatialSamples()
+  // Maybe rename to getNumSpatialSamples(). But that's rather long. Well - maybe not. getLength()
+  // seems actually fine.
 
   bool isValidIndex(int m) const { return (m >= 0 && m <= M); }
 
@@ -628,15 +629,27 @@ void rsWaveGuide<TSig, TPar>::updateDelaySettings()
   delay2.setDelayInSamples(M);
 }
 
+
+
+
 template<class TSig, class TPar>
 void rsPlotWaveGuideContent(const rsWaveGuide<TSig, TPar>& wg)
 {
-  rsPlotDelayLineContent(wg.getDelayLine1(), wg.getDelayLine2(), true);
+  // New:
+  int M = wg.getLength();
+  std::vector<TSig> yR(M+1), yL(M+1);
+  for(int m = 0; m <= M; m++)
+    wg.getTravelingWavesAt(m, &yR[m], &yL[m]);
+  rsPlotVectors(yR, yL);
+
+  // Old:
+  //rsPlotDelayLineContent(wg.getDelayLine1(), wg.getDelayLine2(), true);
   // true: Reverse content of delay2
 
   // ToDo:
   // 
-  // - Implement this functionality without accessing the delay lines in wg. Instead, use 
+  // - DONE.
+  //   Implement this functionality without accessing the delay lines in wg. Instead, use 
   //   wg.getLength() and wg.getTravelingWavesAt(int m, TSig* yR, TSig* yL) to extract the two
   //   traveling waves into two std::vectors and then plot those. Then get rid of the 
   //   wg.getDelayLine1/2 member functions in rswaveGuide. The waveguide class should not expose

@@ -450,11 +450,21 @@ public:
   The function can be called inside the per-sample computations for example immediately before
   calling reflectAtEnds() which actually performs a quite similar computation just without the
   transmission part. */
-  inline void scatterAtKL(int m, TPar k);
-  // Maybe rename to scatterAt_KL
+  inline void scatterAt_KL(int m, TPar k);
+  // ToDo: Document in which way this form scattering can be  seen as "lossless". See PASP, pg 561.
+  // There, it says that "signal power is conserved at the junction".
 
-  inline void scatterAtPN(int m, TPar k);
-  // power-normalized scattering
+  /** Implements a power normalized scattering junction at the spatial location m with the 
+  reflection coefficient k. See PASP
+  https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
+  The coefficient k in this context can be interpreted as the sine of an angle in a 2D rotation. 
+  That is: Let k = sin(w) such that w = asin(k). Then the wave gets reflected with a factor of 
+  sin(w) and transmitted with a factor of cos(w). We also have that cos(w) = sqrt(1 - k^2) because
+  sin^2(w) + cos^2(w) = 1 for any w.  ...TBC...  */
+  inline void scatterAt_PN(int m, TPar k);
+  // Rename to scatterAt_NW
+  // PASP, pg 572 says: "a more precise term would be normalized wave scattering junction"
+
 
   /** Steps the time forward by one sample instant. This basically moves/advances the pointers in 
   the delay lines. */
@@ -557,7 +567,7 @@ inline void rsWaveGuide<TSig, TPar>::reflectAtEnds(TPar kL, TPar kR)
 }
 
 template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::scatterAtKL(int m, TPar k)
+inline void rsWaveGuide<TSig, TPar>::scatterAt_KL(int m, TPar k)
 {
   // Sanity checks:
   rsAssert(m >= 0        && m <= M,        "Scatter point out of range");
@@ -589,7 +599,7 @@ inline void rsWaveGuide<TSig, TPar>::scatterAtKL(int m, TPar k)
 }
 
 template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::scatterAtPN(int m, TPar k)
+inline void rsWaveGuide<TSig, TPar>::scatterAt_PN(int m, TPar k)
 {
   // Sanity checks:
   rsAssert(m >= 0        && m <= M, "Scatter point out of range");

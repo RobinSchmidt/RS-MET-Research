@@ -519,9 +519,13 @@ public:
   This coefficient can be used with the function scatterAt_KL() to implement the scattering that 
   occurs at impedance steps along the string.  */
   static TPar reflectionCoeff(TPar R1, TPar R2) { return (R2 - R1) / (R2 + R1); }
-  // ToDo: Maybe we could also write a function that directly computes the s,c coeffs for a 
-  // normalized wave scattering junction (see below). Maybe there are some optimization 
-  // opportunities in these calculations (not sure, though).
+  // ToDo: 
+  // -Maybe we could also write a function that directly computes the s,c coeffs for a 
+  //  normalized wave scattering junction (see below). Maybe there are some optimization 
+  //  opportunities in these calculations (not sure, though).
+
+  // ToDo: implement C.69,C.127 (transformerCoeff or transformerTurnsRatio. There's also some
+  // talk about gyrators and dualizers
 
 
 

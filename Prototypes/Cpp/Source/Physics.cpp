@@ -423,17 +423,27 @@ public:
   /** Resets the waveguide to its initial state. Clears the content of the delay lines. */
   void reset() { delay1.reset(); delay2.reset(); }
 
-  /** Injects an input into the waveguide at the given location m. */
-  inline void injectInputAt(TSig in, int m);
-
-  /** Extracts a pair of the non-physical traveling wave variables from the waveguide and stores 
-  them in yR and yL where yR represets the rightward going traveling wave and yL the leftward 
-  going traveling wave. */
-  inline void getTravelingWavesAt(int m, TSig* yR, TSig* yL) const;
+  /** Injects an input into the waveguide at the given location m. This writes the given input 
+  sample value */
+  inline void injectInputAt(TSig input, int m);
+  // Maybe swap the parameters. Maybe m should come first for consistency with the other member
+  // functions. But check also how other classes from RAPT handle it - especially rsDelay. 
+  // Replicate the conventions used there.
 
   /** Extracts an output sample of the physical wave variable (such as displacement, pressure, 
-  etc.) from the waveguide at the given location m. */
+  etc.) from the waveguide at the given location m. This just pulls out the rightward and leftward
+  traveling wave components from the delay lines and adds them */
   inline TSig extractOutputAt(int m) const;
+
+  /** Writes a pair of the non-physical traveling wave variables into the waveguide at the spatial
+  sample position m where yR represets the rightward going traveling wave and yL the leftward going
+  traveling wave. */
+  inline void setTravelingWavesAt(int m, TSig yR, TSig yL);
+
+  /** Extracts a pair of the non-physical traveling wave variables from the waveguide at the 
+  spatial sample position m and stores them in yR and yL where yR represets the rightward going 
+  traveling wave and yL the leftward going traveling wave. */
+  inline void getTravelingWavesAt(int m, TSig* yR, TSig* yL) const;
 
   /** Implements reflections at the left and right end of the waveguide using the given 
   reflection coefficients. */
@@ -469,8 +479,6 @@ public:
   // function here can then call that lower level function as scatterAt_NW(m, k, sqrt(1-k*k)).
 
 
-  // ToDo:
-  //inline void setTravelingWavesAt(int m, TSig yR, TSig yL);
 
 
   /** Steps the time forward by one sample instant. This basically moves/advances the pointers in 
@@ -533,11 +541,31 @@ void rsWaveGuide<TSig, TPar>::setState(const TSig* newState, int stateSize)
 template<class TSig, class TPar>
 inline void rsWaveGuide<TSig, TPar>::injectInputAt(TSig in, int m)
 {
-  rsAssert(isValidIndex(m), "Index out of range in rsWaveGuide::injectInputAt");
-
   TSig x = TSig(0.5) * in;               // Signal goes into both delay lines with weight 0.5
-  delay1.addToInputAt(x,   m);           // Index used as is for right going wave
-  delay2.addToInputAt(x, M-m);           // Index must be reflected for left going wave
+  setTravelingWavesAt(m, x, x);
+
+  //rsAssert(isValidIndex(m), "Index out of range in rsWaveGuide::injectInputAt");
+
+  //TSig x = TSig(0.5) * in;               // Signal goes into both delay lines with weight 0.5
+  //delay1.addToInputAt(x,   m);           // Index used as is for right going wave
+  //delay2.addToInputAt(x, M-m);           // Index must be reflected for left going wave
+}
+
+template<class TSig, class TPar>
+inline TSig rsWaveGuide<TSig, TPar>::extractOutputAt(int m) const
+{
+  TSig yR, yL;
+  getTravelingWavesAt(m, &yR, &yL);      // Extract right- and left going traveling waves
+  return yR + yL;
+}
+
+template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::setTravelingWavesAt(int m, TSig yR, TSig yL)
+{
+  rsAssert(isValidIndex(m), "Index out of range in rsWaveGuide::setTravelingWavesAt");
+
+  delay1.addToInputAt(yR,   m);          // Index used as is for right going wave
+  delay2.addToInputAt(yL, M-m);          // Index must be reflected for left going wave
 }
 
 template<class TSig, class TPar>
@@ -547,14 +575,6 @@ inline void rsWaveGuide<TSig, TPar>::getTravelingWavesAt(int m, TSig* yR, TSig* 
 
   *yR = delay1.readOutputAt(  m);        // Index used as is for right going wave
   *yL = delay2.readOutputAt(M-m);        // Index must be reflected for left going wave
-}
-
-template<class TSig, class TPar>
-inline TSig rsWaveGuide<TSig, TPar>::extractOutputAt(int m) const
-{
-  TSig yR, yL;
-  getTravelingWavesAt(m, &yR, &yL);      // Extract right- and left going traveling waves
-  return yR + yL;
 }
 
 template<class TSig, class TPar>

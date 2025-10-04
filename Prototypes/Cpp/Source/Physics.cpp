@@ -428,7 +428,17 @@ public:
   inline void injectInputAt(TSig input, int m);
   // Maybe swap the parameters. Maybe m should come first for consistency with the other member
   // functions. But check also how other classes from RAPT handle it - especially rsDelay. 
-  // Replicate the conventions used there.
+  // Replicate the conventions used there. Hmm - OK - there, we pass the value first (in
+  // writeInputAt(), addToInputAt(), etc.), so maybe
+  // we should adapt the other functions like setTravelingWavesAt. Or maybe chaneg the convention
+  // in rsDelay. But that requires a lot of care because it's already used all over the place.
+  // Check also, if we have other classes where we can write values into specific locations and
+  // see how we do it there - for example in rsMatrix, rsArrayTools, etc. Establish a consistent
+  // convention - either index-first or value-first - for such getters and setters throughout the 
+  // library. I tend to thing that index-first is nicer liguistically because the "...At" in the 
+  // function names already suggests that the thing that comes next is a description of a location.
+  // OK: rsMatrix::setRow, rsPolynomial::setCoeff also use the index-first convention. I think, we
+  // should really change it in rsDelay
 
   /** Extracts an output sample of the physical wave variable (such as displacement, pressure, 
   etc.) from the waveguide at the given location m. This just pulls out the rightward and leftward
@@ -543,12 +553,6 @@ inline void rsWaveGuide<TSig, TPar>::injectInputAt(TSig in, int m)
 {
   TSig x = TSig(0.5) * in;               // Signal goes into both delay lines with weight 0.5
   setTravelingWavesAt(m, x, x);
-
-  //rsAssert(isValidIndex(m), "Index out of range in rsWaveGuide::injectInputAt");
-
-  //TSig x = TSig(0.5) * in;               // Signal goes into both delay lines with weight 0.5
-  //delay1.addToInputAt(x,   m);           // Index used as is for right going wave
-  //delay2.addToInputAt(x, M-m);           // Index must be reflected for left going wave
 }
 
 template<class TSig, class TPar>

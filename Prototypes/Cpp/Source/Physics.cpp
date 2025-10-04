@@ -635,6 +635,12 @@ void rsPlotWaveGuideContent(const rsWaveGuide<TSig, TPar>& wg)
   // true: Reverse content of delay2
 
   // ToDo:
+  // 
+  // - Implement this functionality without accessing the delay lines in wg. Instead, use 
+  //   wg.getLength() and wg.getTravelingWavesAt(int m, TSig* yR, TSig* yL) to extract the two
+  //   traveling waves into two std::vectors and then plot those. Then get rid of the 
+  //   wg.getDelayLine1/2 member functions in rswaveGuide. The waveguide class should not expose
+  //   its implementation details like that.
   //
   // - Maybe plot also the sum of the contents of both delay lines because it is that sum that 
   //   represents our actual physical signal. However - showing only the sum may hide some 

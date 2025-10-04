@@ -18166,7 +18166,6 @@ void testWaveGuideEdgeCases()
   // ...
 }
 
-
 void testWaveGuideScattering()
 {
   // Under construction.
@@ -18276,6 +18275,17 @@ void testWaveGuideScattering()
   //   allpasses. Or maybe into nested allpasses.
 }
 
+void testWaveGuideNetwork()
+{
+  using T   = double;
+  using WGN = rsWaveGuideNetwork<T, T>;
+
+  WGN wgn;
+
+
+  int dummy = 0;
+}
+
 
 bool unitTestsWaveGuide()
 {
@@ -18298,7 +18308,8 @@ void testWaveGuides()
   //testWaveEquation1D();
   //testWaveGuide1();
   //testWaveGuideEdgeCases();
-  testWaveGuideScattering();
+  //testWaveGuideScattering();
+  testWaveGuideNetwork();
 
 
   // ToDo: 

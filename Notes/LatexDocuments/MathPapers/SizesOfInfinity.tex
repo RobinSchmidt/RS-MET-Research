@@ -589,11 +589,13 @@ product A*B. The set of all possible relations between A and B is the power set 
 has cardinality 2^(a*b), I think.
 
 Consider the growth function of the set of all finite sets as defined by the set birthing function
-described in SetTheory.txt. Discuss what this means with respect to how fast sequences of sets can
-grow. It appears that the growth of all sets should set an upper bound on how fast sets can grow - 
-but I think, this is onlydue to allowing only elementary operations in the set birthing process. If 
-at each step/day, we would allow to form the set of all functions of all previously known sets, we'd
-get a faster growing sequence of sets.
+described in RS-MET-Research\Notes\LatexDocuments\MathBook\Scratch\SetTheory.txt.
+Discuss what this means with respect to how fast sequences of sets can grow. It appears that the growth of all sets should set an upper bound on how fast sets can grow - but I think, this is only due to allowing only elementary operations in the set birthing process. If at each step/day, we would allow to form the set of all functions of all previously known sets, we'd get a faster growing sequence of sets. As derived
+
+Consider the size of the set of all injective functions from a set A to another (bigger) set B. Let
+a = |A|, b = |B|. Take as example A = {1,2,3}, B = {4,5,6,7,8}. We need to map 1 somewhere. For this we have b possibilities. Then we need to map 2 for which we have b-1 possibilities because the functions needs to be injective so we can't choose the same image as for 1. For mapping 3, we have b-2 possibilities and so on. I think, we arrive in general at 
+(b-0)*(b-1)*(b-2)*(b-3)*...*(b-(a-1))  ...verify and compare with size of the set of all bijections from a set A of size a to itself - this is the set of all permutations and therefore, the number is given by a!.
+
 
 
 https://www.youtube.com/watch?v=iaUwNuaSLUk

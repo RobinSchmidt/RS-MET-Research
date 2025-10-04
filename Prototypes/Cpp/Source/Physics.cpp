@@ -524,7 +524,7 @@ public:
   //  normalized wave scattering junction (see below). Maybe there are some optimization 
   //  opportunities in these calculations (not sure, though).
 
-  // ToDo: implement C.69,C.127 (transformerCoeff or transformerTurnsRatio. There's also some
+  // ToDo: implement C.69,C.127 (transformerCoeff or transformerTurnsRatio). There's also some
   // talk about gyrators and dualizers
 
 
@@ -538,8 +538,9 @@ protected:
   // Rename to updateDelays or setupDelays Or maybe get rid entirely. It doesn't really do much.
 
   RAPT::rsDelay<TSig> delay1, delay2;  // The two delay lines that make up the waveguide
-  int M = 30;                          // Length of the delay lines. 
-
+  int  M = 30;                         // Length of the delay lines. 
+  //TPar R = TPar(1);                    // Wave impedance of the string (not used yet)
+ 
   // Notes:
   //
   // - The member variable M represents the length of the waveguide in spatial samples. It is 
@@ -1058,8 +1059,45 @@ ToDo:
   have functions like getTravelingWavesAt(), which it already has, and also a corresponding
   setTravelingWavesAt(int m, TSig yR, TSig yL) that would write the traveling wave variables.
 
-
 */
+
+//=================================================================================================
+
+/** Under construction. Just a stub at the moment.
+
+Implements a network of an arbitrary number of waveguides that are arbitrarily interconnected by 
+means of scattering junctions. */
+
+template<class TSig, class TPar>
+class rsWaveGuideNetwork  // Nickname: ScatterNet
+{
+
+public:
+
+
+
+protected:
+
+
+  std::vector<rsWaveGuide<TSig, TPar>> waveguides;
+
+  struct Junction
+  {
+    int  i1, i2;           // Indices of the two involved waveguides
+    int  m1, m2;           // Spatial sample indices in the two waveguides
+    //TPar k;                // Scattering coefficient
+    //rsMatrix4x4<TPar> A;  // Scattering matrix
+    rsMatrix2x2<TPar> A;  // Scattering matrix
+  };
+  // Special cases: i := i1 == i2 and m := m1 == m2 represents scattering within the single 
+  // waveguide with index i at location m. If additionally m == 0 or m == M and k == 1 or k == -1, 
+  // then this implements a reflection at one of the ends.
+
+  std::vector<Junction> junctions;
+
+  // Maybe have different kinds of junctions
+
+};
 
 
 

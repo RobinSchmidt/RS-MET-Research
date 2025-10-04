@@ -454,16 +454,23 @@ public:
   // ToDo: Document in which way this form scattering can be  seen as "lossless". See PASP, pg 561.
   // There, it says that "signal power is conserved at the junction".
 
-  /** Implements a power normalized scattering junction at the spatial location m with the 
-  reflection coefficient k. See PASP
+  /** Implements scattering junction at the spatial location m with the reflection coefficient k 
+  that is suitable when the delay lines contain root-power waves as described in PASP, pg 559, 
+  Eq C.53 and here:
+  https://ccrma.stanford.edu/~jos/pasp/Root_Power_Waves.html
   https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
+  On page 572, the book says: "a more precise term would be normalized wave scattering junction".
   The coefficient k in this context can be interpreted as the sine of an angle in a 2D rotation. 
   That is: Let k = sin(w) such that w = asin(k). Then the wave gets reflected with a factor of 
   sin(w) and transmitted with a factor of cos(w). We also have that cos(w) = sqrt(1 - k^2) because
-  sin^2(w) + cos^2(w) = 1 for any w.  ...TBC...  */
-  inline void scatterAt_PN(int m, TPar k);
-  // Rename to scatterAt_NW
-  // PASP, pg 572 says: "a more precise term would be normalized wave scattering junction"
+  sin^2(w) + cos^2(w) = 1 for any w. */
+  inline void scatterAt_NW(int m, TPar k);
+  // ToDo: Implement a version of that that takes s = sin(w) and c = cos(w) as parameters. This 
+  // function here can then call that lower level function as scatterAt_NW(m, k, sqrt(1-k*k)).
+
+
+  // ToDo:
+  //inline void setTravelingWavesAt(int m, TSig yR, TSig yL);
 
 
   /** Steps the time forward by one sample instant. This basically moves/advances the pointers in 
@@ -599,7 +606,7 @@ inline void rsWaveGuide<TSig, TPar>::scatterAt_KL(int m, TPar k)
 }
 
 template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::scatterAt_PN(int m, TPar k)
+inline void rsWaveGuide<TSig, TPar>::scatterAt_NW(int m, TPar k)
 {
   // Sanity checks:
   rsAssert(m >= 0        && m <= M, "Scatter point out of range");
@@ -973,6 +980,12 @@ ToDo:
   be general enough to handle all sorts of scattering filters and mesh nicely with the rest of the
   library. Maybe a pointer to rsBiquadChain or rsStateVariableFilterChain or something like that
   could be appropriate. The same should be possible for the reflections at the ends.
+
+- Maybe in order to facilitate arbitrary signal manipulations in the driver (such as reading, then 
+  filtering, then writing back - as needed in filtered scattering), the class rsWaveGuide should
+  have functions like getTravelingWavesAt(), which it already has, and also a corresponding
+  setTravelingWavesAt(int m, TSig yR, TSig yL) that would write the traveling wave variables.
+
 
 */
 

@@ -408,6 +408,14 @@ public:
   // extractOutputAt() or extractForwardOutputAt(int m), extractBackwardOutputAt(int m) or
   // extractOutputsAt(int m, TSig* yR, TSig* yR)
 
+  /** Returns the number M of spatial samples along this waveguide (i.e. the "string"). This equals
+  the amount of delay that is used in both of the delay lines (each one uses M samples of delay). 
+  When the waveguide is terminated at both ends such that traveling waves get reflected there, then 
+  the temporal periodicity of recirculating standing waves, will be given by 2*M samples. This 
+  temporal periodicity is, of course, independent from the location m where the signal is picked 
+  up. When, in addition to reflections at the ends, we also introduce scattering (i.e. partial 
+  reflection and transmission) somewhere along the string, the temporal patterns in the output 
+  signal become more complicated... ...TBC... */
   int getLength() const { return M; }
   // Maybe rename to getNumSpatialSamples(). But that's rather long. Well - maybe not. getLength()
   // seems actually fine.
@@ -467,35 +475,54 @@ public:
   /** Implements a Kelly-Lochbaum scattering junction at the spatial location m with the reflection
   coefficient k. For an impedance change from R1 to R2 when going from left to right, the coeff
   can be computed as k = (R2-R1)/(R2+R1). See PASP, page 562 or here:
-  https://ccrma.stanford.edu/~jos/pasp/Kelly_Lochbaum_Scattering_Junctions.html
-  https://ccrma.stanford.edu/~jos/pasp/Reflection_Coefficient.html
+    https://ccrma.stanford.edu/~jos/pasp/Kelly_Lochbaum_Scattering_Junctions.html
+    https://ccrma.stanford.edu/~jos/pasp/Reflection_Coefficient.html
   The function can be called inside the per-sample computations for example immediately before
   calling reflectAtEnds() which actually performs a quite similar computation just without the
   transmission part. */
   inline void scatterAt_KL(int m, TPar k);
-  // ToDo: Document in which way this form scattering can be  seen as "lossless". See PASP, pg 561.
-  // There, it says that "signal power is conserved at the junction".
+  // ToDo: 
+  // -Document in which way this form scattering can be  seen as "lossless". See PASP, pg 561.
+  //  There, it says that "signal power is conserved at the junction".
+
 
   /** Implements scattering junction at the spatial location m with the reflection coefficient k 
   that is suitable when the delay lines contain root-power waves as described in PASP, pg 559, 
   Eq C.53 and here:
-  https://ccrma.stanford.edu/~jos/pasp/Root_Power_Waves.html
-  https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
-  On page 572, the book says: "a more precise term would be normalized wave scattering junction".
-  The coefficient k in this context can be interpreted as the sine of an angle in a 2D rotation. 
-  That is: Let k = sin(w) such that w = asin(k). Then the wave gets reflected with a factor of 
-  sin(w) and transmitted with a factor of cos(w). We also have that cos(w) = sqrt(1 - k^2) because
-  sin^2(w) + cos^2(w) = 1 for any w. */
-  inline void scatterAt_NW(int m, TPar k);
-  // ToDo: Implement a version of that that takes s = sin(w) and c = cos(w) as parameters. This 
-  // function here can then call that lower level function as scatterAt_NW(m, k, sqrt(1-k*k)).
+    https://ccrma.stanford.edu/~jos/pasp/Root_Power_Waves.html
+    https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
+  On page 572, the book says: "a more precise term would be normalized wave scattering junction"
+  so that's why we use the suffix NW here for "normalized wave". The coefficient k in this context
+  can be interpreted as the sine of an angle in a 2D rotation. That is: Let k = sin(w) such that 
+  w = asin(k). Then the wave gets reflected with a factor of sin(w) and transmitted with a factor 
+  of cos(w). We also have that cos(w) = sqrt(1 - k^2) because sin^2(w) + cos^2(w) = 1 for any w. */
+  inline void scatterAt_NW(int m, TPar k) { scatterAt_NW(m, k, rsSqrt(TPar(1) - k*k)); }
 
+  /** A two parameter version of scatterAt_NW(int m, TPar k) that takes the sine s and cosine c of 
+  an angle as parameters rather than the reflection coeff k. It will be more efficient to 
+  precompute these s,c values once and then use this function to do the actual (per sample) 
+  scattering because the one parameter version involves computing a square root. ...TBC... */
   inline void scatterAt_NW(int m, TPar s, TPar c);
-
 
   /** Steps the time forward by one sample instant. This basically moves/advances the pointers in 
   the delay lines. */
   inline void stepTime();
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Static Member Functions. Here, we implement some general formulas that are relevant in
+  // the context of digital waveguide synthesis
+
+  /** Computes the reflection coefficient for an impedance step from a wave impedance of R1 in the
+  left section of a string to a wave impedance of R2 in the right section of the string. See:
+    https://ccrma.stanford.edu/~jos/pasp/Reflection_Coefficient.html
+  This coefficient can be used with the function scatterAt_KL() to implement the scattering that 
+  occurs at impedance steps along the string.  */
+  static TPar reflectionCoeff(TPar R1, TPar R2) { return (R2 - R1) / (R2 + R1); }
+  // ToDo: Maybe we could also write a function that directly computes the s,c coeffs for a 
+  // normalized wave scattering junction (see below). Maybe there are some optimization 
+  // opportunities in these calculations (not sure, though).
+
 
 
   //-----------------------------------------------------------------------------------------------
@@ -526,9 +553,19 @@ protected:
   //   lines have the same length and that this length is equal to M. This can be used for unit 
   //   tests and in assertions to catch bugs during development. Maybe we should also expect the
   //   tap-pointers of the two delay lines to be somehow in sync? If so, we should verify that in 
-  //   the consistency check as well. By the way: What happens when the delay lines have unequal 
-  //   lengths? Could that be an interesting extension? It wouldn't be physically meaningful but 
-  //   maybe it's musically useful nonetheless?
+  //   the consistency check as well. 
+  // 
+  // - By the way: What happens when the delay lines have unequal lengths? Could that be an 
+  //   interesting extension? It wouldn't be physically meaningful but maybe it's musically useful
+  //   nonetheless? Or maybe it actually could be interpreted physically, for example in terms of 
+  //   the wave velocity being direction dependent? The medium being anisotropic in some weird way?
+  //   I think normal anisotropy does not distiguish between forward and backward travel, i.e. the 
+  //   speed depends only on direction in the sense of an angle of a line but not on orientation in
+  //   the sense of the tip of an arrow. But maybe there are media where this is different? I 
+  //   think, acoustic waves in moving media move differently when going with or against the flow. 
+  //   Like when there is some current (like a wind in the air), the speed of sound is higher into
+  //   the direction of the wind compared to against the wind? Or maybe it was the other way 
+  //   around?
   //
   // - Maybe in addition to extractOutputAt which computes the sum of the traveling wave variables,
   //   provide also a function to extract the difference. Maybe rename extractOutputAt to
@@ -544,7 +581,7 @@ void rsWaveGuide<TSig, TPar>::setState(const TSig* newState, int stateSize)
 
   for(int m = 0; m < M; m++)
   {
-    TSig x = 0.5 * newState[m];
+    TSig x = TSig(0.5) * newState[m];
     delay1.writeInputAt(x,   m);
     delay2.writeInputAt(x, M-m);
   }
@@ -640,35 +677,6 @@ inline void rsWaveGuide<TSig, TPar>::scatterAt_KL(int m, TPar k)
 }
 
 template<class TSig, class TPar>
-inline void rsWaveGuide<TSig, TPar>::scatterAt_NW(int m, TPar k)
-{
-  // New:
-  scatterAt_NW(m, k, rsSqrt(TPar(1) - k*k));
-
-  // Old:
-  /*
-  // Sanity checks:
-  rsAssert(m >= 0        && m <= M, "Scatter point out of range");
-  rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stable range");
-
-  // Read delay line contents from top and bottom rail:
-  TSig uTL = delay1.readOutputAt(  m);   // TL: top-left,      f^+_{i-1}
-  TSig uBR = delay2.readOutputAt(M-m);   // BR: bottom-right,  f^-_i
-
-  // Compute the scattered signals (see to PASP, page 572, Fig. C.22 and Eq. C.66):
-  TPar c = rsSqrt(1 - k*k);              // Cosine of theta = asin(k)
-  TSig uTR = c*uTL - k*uBR;              // Upper rail transmission + reflection
-  TSig uBL = c*uBR + k*uTL;              // Lower rail transmission + reflection
-
-  // Write the scattered signals back into the delay lines at the appropriate places:
-  delay1.writeInputAt(uTR,   m);         // TR: top-right,     f^+_i
-  delay2.writeInputAt(uBL, M-m);         // BL: bottom-left,   f^-_{i-1}
-
-  // See: https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
-  */
-}
-
-template<class TSig, class TPar>
 inline void rsWaveGuide<TSig, TPar>::scatterAt_NW(int m, TPar s, TPar c)
 {
   // Sanity checks:
@@ -708,43 +716,36 @@ void rsWaveGuide<TSig, TPar>::updateDelaySettings()
   delay2.setDelayInSamples(M);
 }
 
-
-
+//-------------------------------------------------------------------------------------------------
+// Free (i.e. non-member) functions for helping with research, development and debugging using 
+// class rsWaveGuide:
 
 template<class TSig, class TPar>
 void rsPlotWaveGuideContent(const rsWaveGuide<TSig, TPar>& wg)
 {
-  // New:
   int M = wg.getLength();
   std::vector<TSig> yR(M+1), yL(M+1);
   for(int m = 0; m <= M; m++)
     wg.getTravelingWavesAt(m, &yR[m], &yL[m]);
   rsPlotVectors(yR, yL);
 
-  // Old:
-  //rsPlotDelayLineContent(wg.getDelayLine1(), wg.getDelayLine2(), true);
-  // true: Reverse content of delay2
-
   // ToDo:
   // 
-  // - DONE.
-  //   Implement this functionality without accessing the delay lines in wg. Instead, use 
-  //   wg.getLength() and wg.getTravelingWavesAt(int m, TSig* yR, TSig* yL) to extract the two
-  //   traveling waves into two std::vectors and then plot those. Then get rid of the 
-  //   wg.getDelayLine1/2 member functions in rswaveGuide. The waveguide class should not expose
-  //   its implementation details like that.
+  // - Document why the vector length of yR, yL is M+1 rather than M. I think, it is because
+  //   M is the maximum amount of delay that is used and a delay line with a max delay of M needs
+  //   to store M+1 signal values - at least when we use it like here (where at time n, we may want
+  //   to write into before we read out of it) - I think. -> Verify! But whatever the correct 
+  //   explanation may be from an algorithmic point of view, it is indeed true that the delay 
+  //   lines in rsWaveGuide store M+1 signal values as can be seen for example in the 
+  //   implementation of rsDelay::setMaxDelayInSamples(). ...but verify that, too! See also 
+  //   comments in rsPlotDelayLineContent().
   //
   // - Maybe plot also the sum of the contents of both delay lines because it is that sum that 
   //   represents our actual physical signal. However - showing only the sum may hide some 
   //   undesirable effects. For example, there may be situations in which the signals inside the
-  //   waveguides grow without bound while their sum stays bounded. Maybe the difference could
-  //   also have some relevance? Could it be that it always represents the velocity if the sum 
-  //   represents displacement? Could it in general always represent the "dual" wave variable
-  //   with respect to the sum? If that is the case, we should document that somewhere in 
-  //   rsWaveGuide. Maybe by having member functions extractOutputAt(..), extractDualOutputAt(..) 
-  //   or something like this.
+  //   waveguides grow without bound while their sum stays bounded. If the difference also has 
+  //   some relevance, we may plot that, too.
 }
-
 
 //=================================================================================================
 

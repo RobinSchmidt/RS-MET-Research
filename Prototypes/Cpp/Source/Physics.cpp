@@ -438,7 +438,9 @@ public:
   // library. I tend to thing that index-first is nicer liguistically because the "...At" in the 
   // function names already suggests that the thing that comes next is a description of a location.
   // OK: rsMatrix::setRow, rsPolynomial::setCoeff also use the index-first convention. I think, we
-  // should really change it in rsDelay
+  // should really change it in rsDelay. Maybe try to do this with assistence from GitHub Copilot
+  // at some point. Seems to be a perfect task to do with AI. Then we could also check, if there
+  // are any other classes in the library that need similar adjustments.
 
   /** Extracts an output sample of the physical wave variable (such as displacement, pressure, 
   etc.) from the waveguide at the given location m. This just pulls out the rightward and leftward
@@ -488,7 +490,7 @@ public:
   // ToDo: Implement a version of that that takes s = sin(w) and c = cos(w) as parameters. This 
   // function here can then call that lower level function as scatterAt_NW(m, k, sqrt(1-k*k)).
 
-
+  inline void scatterAt_NW(int m, TPar s, TPar c);
 
 
   /** Steps the time forward by one sample instant. This basically moves/advances the pointers in 
@@ -558,9 +560,17 @@ inline void rsWaveGuide<TSig, TPar>::injectInputAt(TSig in, int m)
 template<class TSig, class TPar>
 inline TSig rsWaveGuide<TSig, TPar>::extractOutputAt(int m) const
 {
-  TSig yR, yL;
-  getTravelingWavesAt(m, &yR, &yL);      // Extract right- and left going traveling waves
-  return yR + yL;
+  TSig yR, yL;                           // Non-physical right- and left going traveling waves
+  getTravelingWavesAt(m, &yR, &yL);      // Extract traveling waves variables at spatial sample m
+  return yR + yL;                        // The physical wave variable is their sum
+
+  // ToDo:
+  //
+  // - Figure out if their difference yR - yL (or yL - yR) also have physical interpretations, 
+  //   perhaps as "dual" wave variables? Like, for example, when the primal wave variable as 
+  //   computed here via the sum is displacement, the dual could be velocity? If that is the case,
+  //   then maybe we should have a member function extractDualOutputAt(int m) as well. If it is not
+  //   the case, then document that too such that we will not have to wonder about it again later.
 }
 
 template<class TSig, class TPar>
@@ -632,6 +642,11 @@ inline void rsWaveGuide<TSig, TPar>::scatterAt_KL(int m, TPar k)
 template<class TSig, class TPar>
 inline void rsWaveGuide<TSig, TPar>::scatterAt_NW(int m, TPar k)
 {
+  // New:
+  scatterAt_NW(m, k, rsSqrt(TPar(1) - k*k));
+
+  // Old:
+  /*
   // Sanity checks:
   rsAssert(m >= 0        && m <= M, "Scatter point out of range");
   rsAssert(k >= TPar(-1) && k <= TPar(+1), "Scattering coeff out of stable range");
@@ -650,10 +665,33 @@ inline void rsWaveGuide<TSig, TPar>::scatterAt_NW(int m, TPar k)
   delay2.writeInputAt(uBL, M-m);         // BL: bottom-left,   f^-_{i-1}
 
   // See: https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
+  */
+}
 
-  // ToDo: implement a variant that takes both k and c as parameters (and maybe rename k to s) to
-  // avoid having to compute k when the caller can more efficiently compute both. The one-parameter
-  // version should just call the two-param version with k and sqrt(1-k^2)
+template<class TSig, class TPar>
+inline void rsWaveGuide<TSig, TPar>::scatterAt_NW(int m, TPar s, TPar c)
+{
+  // Sanity checks:
+  rsAssert(isValidIndex(m),         "Scatter point out of range");
+  rsAssert(isStableScatterCoeff(s), "Scattering coeff out of stable range");
+  // Maybe check also that s^2 + c^2 = 1 up to some tolerance. Maybe have a function like
+  // rsIsSinCosPair(s, c, tol) for such a check somewhere in the library. It could also check
+  // that -1 <= s,c <= +1 in addition to s^2 + c^2 = 1. Then we could get rid of the
+  // call to isStableScatterCoeff(s) above because that check would be included.
+
+  // Read delay line contents from top and bottom rail:
+  TSig uTL = delay1.readOutputAt(  m);   // TL: top-left,      f^+_{i-1}
+  TSig uBR = delay2.readOutputAt(M-m);   // BR: bottom-right,  f^-_i
+
+  // Compute the scattered signals (see to PASP, page 572, Fig. C.22 and Eq. C.66):
+  TSig uTR = c*uTL - s*uBR;              // Upper rail transmission + reflection
+  TSig uBL = c*uBR + s*uTL;              // Lower rail transmission + reflection
+
+  // Write the scattered signals back into the delay lines at the appropriate places:
+  delay1.writeInputAt(uTR,   m);         // TR: top-right,     f^+_i
+  delay2.writeInputAt(uBL, M-m);         // BL: bottom-left,   f^-_{i-1}
+
+  // See: https://ccrma.stanford.edu/~jos/pasp/Normalized_Scattering_Junctions.html
 }
 
 template<class TSig, class TPar>
@@ -699,7 +737,12 @@ void rsPlotWaveGuideContent(const rsWaveGuide<TSig, TPar>& wg)
   // - Maybe plot also the sum of the contents of both delay lines because it is that sum that 
   //   represents our actual physical signal. However - showing only the sum may hide some 
   //   undesirable effects. For example, there may be situations in which the signals inside the
-  //   waveguides grow without bound while their sum stays bounded. 
+  //   waveguides grow without bound while their sum stays bounded. Maybe the difference could
+  //   also have some relevance? Could it be that it always represents the velocity if the sum 
+  //   represents displacement? Could it in general always represent the "dual" wave variable
+  //   with respect to the sum? If that is the case, we should document that somewhere in 
+  //   rsWaveGuide. Maybe by having member functions extractOutputAt(..), extractDualOutputAt(..) 
+  //   or something like this.
 }
 
 

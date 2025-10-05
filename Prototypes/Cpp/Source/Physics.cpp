@@ -1074,20 +1074,60 @@ class rsWaveGuideNetwork  // Nickname: ScatterNet
 
 public:
 
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  void addWaveGuide(int maxLength, int initialLength);
+  // Maybe the initial length should be optional and default to the max-length? We could implement
+  // this by giving the parameter a default value of -1 and then inside the function, check for -1
+  // and if it is -1 indeed, we would use maxLength for the initialization, otherwise the passed
+  // value. Maybe it should also take an impedance as parameter?
+
+  //void setWaveGuideLength(int index, int newLength);
+  // For updating the length during operation
+
+  void addScatterJunction(int i1, int m1, int i2, int m2, TPar k);
+  // Maybe the scatter coeff k should be optional, defaulting to some invlaid value (like nan) and 
+  // if it is nan in the call, we will ignore it and instead compute the coeff from the impedances
+  // of the two waveguides. That requires to give rsWaveGuide a member for the impedance. In 
+  // contexts where we don't need it, we can just ignore it.
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+  int getNumWaveGuides() const { return (int) waveGuides.size(); }
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Processing
+
+  inline void injectInputAt(int wgIndex, int position, TSig signalValue);
+
+  inline TSig extractOutputAt(int wgIndex, int position);
+
+
+
+
+
+
 
 
 protected:
 
 
-  std::vector<rsWaveGuide<TSig, TPar>> waveguides;
+  std::vector<rsWaveGuide<TSig, TPar>> waveGuides;
 
   struct Junction
   {
+    Junction(int index1, int position1, int index2, int position2, TPar scatterCoeff)
+      : i1(index1), m1(position1), i2(index2), m2(position2), k(scatterCoeff) { }
+
     int  i1, i2;           // Indices of the two involved waveguides
     int  m1, m2;           // Spatial sample indices in the two waveguides
-    //TPar k;                // Scattering coefficient
+    TPar k;                // Scattering coefficient
     //rsMatrix4x4<TPar> A;  // Scattering matrix
-    rsMatrix2x2<TPar> A;  // Scattering matrix
+    //rsMatrix2x2<TPar> A;  // Scattering matrix
   };
   // Special cases: i := i1 == i2 and m := m1 == m2 represents scattering within the single 
   // waveguide with index i at location m. If additionally m == 0 or m == M and k == 1 or k == -1, 
@@ -1095,11 +1135,45 @@ protected:
 
   std::vector<Junction> junctions;
 
-  // Maybe have different kinds of junctions
+  // Maybe have different kinds of junctions. Maybe some that scatter only conditionally, for 
+  // example, when the distance between the waves in the two involved strings is below some 
+  // threshhold. That would realize a nonlinearity that switches the scattering on and off based
+  // on the current positions of both strings. Maybe the hard switch can also be somehow softened
+  // to "fade in" the scattering continuously when the strings approach one another.
 
 };
 
+template<class TSig, class TPar>
+void rsWaveGuideNetwork<TSig, TPar>::addWaveGuide(int maxLength, int initialLength)
+{
+  // This leads to memory errors:
+  /*
+  rsWaveGuide<TSig, TPar> wg;
+  wg.setMaxStringLength(maxLength);
+  wg.setStringLength(initialLength);
+  //wg.setImpedance(waveImpedance);   // Maybe add that later
+  waveGuides.push_back(wg);
+  */
 
 
+  // Maybe we need to use emplace_back or implement a copy constructor in rsDelay or something like
+  // that. At the moment, DSP objects from the RAPT library are not really supposed to be used that
+  // way we try to do here. They are not designed to be copyable. Or maybe create a pointer to an
+  // rsWaveGuide object here and store an array of pointers in waveguides. Then we must manually
+  // manage the memory here.
+  // https://en.cppreference.com/w/cpp/container/vector/emplace_back
+  auto& wg = waveGuides.emplace_back();         // Default-constructs a new waveguide at the end
+  wg.setMaxStringLength(maxLength);
+  wg.setStringLength(initialLength);
+  //wg.setImpedance(waveImpedance);   // Maybe add that later
+  int dummy = 0;
+  // Hmm - this also doesn't seem to work
 
+}
 
+template<class TSig, class TPar>
+void rsWaveGuideNetwork<TSig, TPar>::addScatterJunction(int i1, int m1, int i2, int m2, TPar k)
+{
+  Junction j(i1, m1, i2, m2, k);
+  junctions.push_back(j);
+}

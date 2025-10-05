@@ -1106,6 +1106,13 @@ public:
 
   int getNumWaveGuides() const { return (int) waveGuides.size(); }
 
+  //int getWaveGuideLength(int i) const { return waveguides[i].getLength(); }
+
+  const rsWaveGuide<TSig, TPar>* getWaveGuide(int i) const 
+  { 
+    return waveGuides[i].get();
+    //return waveGuides[i];
+  }
 
   //-----------------------------------------------------------------------------------------------
   // \name Processing
@@ -1123,8 +1130,15 @@ public:
 
 protected:
 
-
-  std::vector<std::unique_ptr<rsWaveGuide<TSig, TPar>>> waveGuides;
+  //std::vector<rsWaveGuide<TSig, TPar>> waveGuides;   // Old
+  std::vector<std::unique_ptr<rsWaveGuide<TSig, TPar>>> waveGuides;  // New
+  // The vector of waveguide objects needs to use (smart) pointers because the class rsWaveGuide
+  // contains members of type rsDelay which are not copyable. This leads to memory errors when 
+  // trying to use a vector of objects because std::vector may have to copy stuff when it's 
+  // re-allocating. 
+  // 
+  // OK - we will now get a compiler error when we try to copy an rsDelayLine object. This was 
+  // achieved by deleting the copy constructor and copy assignment operator. 
 
   struct Junction
   {
@@ -1154,36 +1168,11 @@ protected:
 template<class TSig, class TPar>
 void rsWaveGuideNetwork<TSig, TPar>::addWaveGuide(int maxLength, int initialLength)
 {
-  // This leads to memory errors:
-  /*
-  rsWaveGuide<TSig, TPar> wg;
-  wg.setMaxStringLength(maxLength);
-  wg.setStringLength(initialLength);
-  //wg.setImpedance(waveImpedance);   // Maybe add that later
-  waveGuides.push_back(wg);
-  */
-
   auto wg = std::make_unique<rsWaveGuide<TSig, TPar>>();
   wg->setMaxStringLength(maxLength);
   wg->setStringLength(initialLength);
+  //wg->setImpedance(impedance);          // Maybe add later
   waveGuides.push_back(std::move(wg));
-
-  /*
-  // Maybe we need to use emplace_back or implement a copy constructor in rsDelay or something like
-  // that. At the moment, DSP objects from the RAPT library are not really supposed to be used that
-  // way we try to do here. They are not designed to be copyable. Or maybe create a pointer to an
-  // rsWaveGuide object here and store an array of pointers in waveguides. Then we must manually
-  // manage the memory here.
-  // https://en.cppreference.com/w/cpp/container/vector/emplace_back
-  auto& wg = waveGuides.emplace_back();         // Default-constructs a new waveguide at the end
-  wg.setMaxStringLength(maxLength);
-  wg.setStringLength(initialLength);
-  //wg.setImpedance(waveImpedance);   // Maybe add that later
-  int dummy = 0;
-  // Hmm - this also doesn't seem to work. 
-  */
-
-
 }
 
 template<class TSig, class TPar>
@@ -1192,3 +1181,38 @@ void rsWaveGuideNetwork<TSig, TPar>::addScatterJunction(int i1, int m1, int i2, 
   Junction j(i1, m1, i2, m2, k);
   junctions.push_back(j);
 }
+
+
+/** Plots the contents of all the waveguides in the given waveguide network. */
+template<class TSig, class TPar>
+void rsPlotContents(const rsWaveGuideNetwork<TSig, TPar>& wgn)
+{
+  GNUPlotter plt;
+  std::vector<TSig> yR, yL;
+  int num = wgn.getNumWaveGuides();
+  for(int i = 0; i < num; i++)
+  {
+    const rsWaveGuide<TSig, TPar>* wg = wgn.getWaveGuide(i);
+    int M = wg->getLength(); 
+    yR.resize(M+1);             // ToDo: Document why +1, see rsPlotWaveGuideContent
+    yL.resize(M+1);
+    for(int m = 0; m <= M; m++)
+      wg->getTravelingWavesAt(m, &yR[m], &yL[m]);
+    plt.addDataArrays(M+1, &yR[0]);
+    plt.addDataArrays(M+1, &yL[0]);
+  }
+  plt.plot();
+
+
+  // Notes:
+  //
+  // - We can't use a single call to plt.addDataArrays(M+1, &yR[0], &yL[0]); instead of the two 
+  //   calls plt.addDataArrays(M+1, &yR[0]); plt.addDataArrays(M+1, &yL[0]); because that would 
+  //   mean to interpret yR as x-axis values and yL as corresponding y-axis values, which is the 
+  //   wrong interpretation of the data for our purposes here. Instead, we want the data to be 
+  //   interpreted as two independent sets of y-axis values that shall be plotted against the 
+  //   index. This is what two calls with just 1 array argument achieve. When addDataArrays()
+  //   receives just one array, it automatically assumes that we want to plot the content of the
+  //   given array against the index which is indeed what we want here.
+}
+

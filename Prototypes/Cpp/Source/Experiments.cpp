@@ -18292,20 +18292,17 @@ void testWaveGuideNetwork()
   // Create and configure the network of waveguides:
   WGN wgn;
   wgn.addWaveGuide(M1, M1);                    // Add 1st waveguide WG1
-  int dummy = 0;
   wgn.addWaveGuide(M2, M2);                    // Add 2nd waveguide WG2
-  dummy = 1;
-  //wgn.addScatterJunction(0,  0, 0,  0, -1.0);  // Reflection at left end of WG1
-  //wgn.addScatterJunction(1, M2, 1, M2, -1.0);  // Reflection at right end of WG2
-  //wgn.addScatterJunction(0, M1, 2,  0,  0.5);  // Scattering between WG1 and WG2
+  wgn.addScatterJunction(0,  0, 0,  0, -1.0);  // Reflection at left end of WG1
+  wgn.addScatterJunction(1, M2, 1, M2, -1.0);  // Reflection at right end of WG2
+  wgn.addScatterJunction(0, M1, 2,  0,  0.5);  // Scattering between WG1 and WG2
 
-  //int dummy = 0;
+  rsPlotContents(wgn);
+  int dummy = 0;
 
   // Observations:
   //
-  // - We seem to get memory errors. Maybe it's a double-free? Figure this out and fix it! It seems
-  //   like the 2nd call to wgn.addWaveGuide leads to a destructor call on the wg that was first 
-  //   created?
+  // - 
 }
 
 
@@ -18334,7 +18331,7 @@ void testWaveGuides()
   //testWaveGuide1();
   //testWaveGuideEdgeCases();
   //testWaveGuideScattering();
-  testWaveGuideNetwork();
+  //testWaveGuideNetwork();
 
 
   // ToDo: 

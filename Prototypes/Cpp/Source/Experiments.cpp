@@ -18281,13 +18281,19 @@ void testWaveGuideNetwork()
   // between them ...TBC...
 
   using T   = double;
+  using Vec = std::vector<T>;
   using WGN = rsWaveGuideNetwork<T, T>;
 
   // Setup:
-  int M1 = 50;       // Length of 1st WG
-  int M2 = 40;       // Length of 2nd WG
-  T   R1 =  3.0;     // Impedance of 1st WG
-  T   R2 =  7.0;     // Impedance of 2nd WG
+  int N    = 500;       // Number of samples to produce
+  int M1   =  20;       // Length of 1st WG
+  int M2   =  15;       // Length of 2nd WG
+  //T   R1   =   1.0;     // Impedance of 1st WG
+  //T   R2   =   1.0;     // Impedance of 2nd WG
+  int iIn  =   0;       // Index of waveguide where to inject the input
+  int mIn  =   5;       // Position within the wvaguide where we inject the input
+  int mOut =   1;       // Index of the waveguide where we pick up the output
+  int iOut =   7;       // Position within the waveguide where we pick up the output
 
   // Create and configure the network of waveguides:
   WGN wgn;
@@ -18297,12 +18303,33 @@ void testWaveGuideNetwork()
   wgn.addScatterJunction(1, M2, 1, M2, -1.0);  // Reflection at right end of WG2
   wgn.addScatterJunction(0, M1, 2,  0,  0.5);  // Scattering between WG1 and WG2
 
+  // Run the waveguide network:
+  Vec y(N);
+  wgn.injectInputAt(iIn, mIn, 1.0);
+  for(int n = 0; n < N; n++)
+  {
+    rsPlotContents(wgn);
+    y[n] = wgn.extractOutputAt(mOut, iOut);
+    wgn.scatter();
+    wgn.stepTime();
+    // If we had further inputs, we would have to inject them here somewhere before calling 
+    // stepTime(), too
+  }
+
+
+
   rsPlotContents(wgn);
   int dummy = 0;
 
   // Observations:
   //
   // - 
+  //
+  //
+  // ToDo:
+  //
+  // - Maybe add special convenience member functions to add the reflections that we can call 
+  //   like: wgn.addLeftReflection(0, -1.0); wgn.addRightReflection(1, -1.0);
 }
 
 

@@ -583,6 +583,12 @@ protected:
   // - Maybe in addition to extractOutputAt which computes the sum of the traveling wave variables,
   //   provide also a function to extract the difference. Maybe rename extractOutputAt to
   //   extractOutputSumAt. 
+  //
+  // - Uncomment the line TPar R = TPar(1); It seems to be indeed appropriate to store the wave 
+  //   impedance as a member variable. See PASP, pg 49. From there, it is clear that R is an 
+  //   important feature of the waveguide that can be used in various formulas. For example, to
+  //   convert between different wave variables (such as force and velocity), to compute 
+  //   scattering coefficients when wavguides get connected, etc.
 };
 
 template<class TSig, class TPar>
@@ -621,6 +627,9 @@ inline TSig rsWaveGuide<TSig, TPar>::extractOutputAt(int m) const
   //   computed here via the sum is displacement, the dual could be velocity? If that is the case,
   //   then maybe we should have a member function extractDualOutputAt(int m) as well. If it is not
   //   the case, then document that too such that we will not have to wonder about it again later.
+  //   Aha - that seems to be indeed the case. See PASP, pg 530 ff and 556 ff. But the conversion 
+  //   from/to traveling waves is not so straightforward in case of displacement and velocity. It's
+  //   easier when force and velocity are used to describe the state of the string
 }
 
 template<class TSig, class TPar>
@@ -1121,7 +1130,9 @@ public:
 
   inline TSig extractOutputAt(int wgIndex, int position);
 
+  inline void scatter();
 
+  inline void stepTime();
 
 
 
@@ -1181,6 +1192,54 @@ void rsWaveGuideNetwork<TSig, TPar>::addScatterJunction(int i1, int m1, int i2, 
   Junction j(i1, m1, i2, m2, k);
   junctions.push_back(j);
 }
+
+template<class TSig, class TPar>
+void rsWaveGuideNetwork<TSig, TPar>::injectInputAt(int i, int m, TSig x)
+{
+  waveGuides[i]->injectInputAt(x, m);
+}
+
+template<class TSig, class TPar>
+TSig rsWaveGuideNetwork<TSig, TPar>::extractOutputAt(int i, int m)
+{
+  return waveGuides[i]->extractOutputAt(m);
+}
+
+template<class TSig, class TPar>
+void rsWaveGuideNetwork<TSig, TPar>::scatter()
+{
+  int numJunctions = (int) junctions.size();
+  for(int j = 0; j < numJunctions; j++)
+  {
+    int  i1 = junctions[j].i1;
+    int  m1 = junctions[j].m1;
+    int  i2 = junctions[j].i2;
+    int  m2 = junctions[j].m2;
+    TPar k  = junctions[j].k;
+
+    // Extract outputs:
+    TSig yR, yL, zR, zL;
+    waveGuides[i1]->getTravelingWavesAt(m1, &yR, &yL);
+    waveGuides[i2]->getTravelingWavesAt(m2, &zR, &zL);
+
+    // ...more to do...
+  }
+
+  // I think, for maximum flexibility and efficiency the junctions should really just store the
+  // 2x2 scattering matrix. Maybe as rsMatrix2x2 object or as 4 values a,b,c,d. It's efficient 
+  // because we don't need to do any coefficient calculations here. It's flexible because it
+  // allows us to potentially use other kinds of 2x2 matrices for scattering, i.e. we are not
+  // constrained to use Kelly-Lochbaum or rotation matrices.
+}
+
+template<class TSig, class TPar>
+void rsWaveGuideNetwork<TSig, TPar>::stepTime()
+{
+  for(size_t i = 0; i < waveGuides.size(); i++)
+    waveGuides[i]->stepTime();
+}
+
+
 
 
 /** Plots the contents of all the waveguides in the given waveguide network. */

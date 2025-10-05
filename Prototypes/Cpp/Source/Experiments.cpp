@@ -18284,24 +18284,28 @@ void testWaveGuideNetwork()
   using WGN = rsWaveGuideNetwork<T, T>;
 
   // Setup:
-  int M1 = 30;       // Length of 1st WG
-  int M2 = 20;       // Length of 2nd WG
+  int M1 = 50;       // Length of 1st WG
+  int M2 = 40;       // Length of 2nd WG
   T   R1 =  3.0;     // Impedance of 1st WG
   T   R2 =  7.0;     // Impedance of 2nd WG
 
   // Create and configure the network of waveguides:
   WGN wgn;
   wgn.addWaveGuide(M1, M1);                    // Add 1st waveguide WG1
-  wgn.addWaveGuide(M2, M2);                    // Add 2nd waveguide WG2
-  wgn.addScatterJunction(0,  0, 0,  0, -1.0);  // Reflection at left end of WG1
-  wgn.addScatterJunction(1, M2, 1, M2, -1.0);  // Reflection at right end of WG2
-  wgn.addScatterJunction(0, M1, 2,  0,  0.5);  // Scattering between WG1 and WG2
-
   int dummy = 0;
+  wgn.addWaveGuide(M2, M2);                    // Add 2nd waveguide WG2
+  dummy = 1;
+  //wgn.addScatterJunction(0,  0, 0,  0, -1.0);  // Reflection at left end of WG1
+  //wgn.addScatterJunction(1, M2, 1, M2, -1.0);  // Reflection at right end of WG2
+  //wgn.addScatterJunction(0, M1, 2,  0,  0.5);  // Scattering between WG1 and WG2
+
+  //int dummy = 0;
 
   // Observations:
   //
-  // - We seem to get memory errors. Maybe it's a double-free? Figure this out and fix it!
+  // - We seem to get memory errors. Maybe it's a double-free? Figure this out and fix it! It seems
+  //   like the 2nd call to wgn.addWaveGuide leads to a destructor call on the wg that was first 
+  //   created?
 }
 
 
@@ -18317,6 +18321,9 @@ bool unitTestsWaveGuide()
 
 void testWaveGuides()
 {
+  testWaveGuideNetwork();   // Temporarily copied to the top for debugging
+
+
   // Let's always run the unit tests before running the experimental code below (with potentially 
   // new functionality) to ensure that we don't break anything by adding the new functionality:
   bool ok = unitTestsWaveGuide();

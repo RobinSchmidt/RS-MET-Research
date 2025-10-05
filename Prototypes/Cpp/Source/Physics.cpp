@@ -345,6 +345,14 @@ public:
   // of things, we may create a lot of waveguide objects in instrument simulations, so it may 
   // actually matter a bit in terms of initialization costs.
 
+  ~rsWaveGuide()
+  {
+    int dummy = 0;
+  }
+  // The explicitly defined destructor exists only to set a breakpoint here for debugging so we can
+  // track when a waveguide object gets destroyed. That's also why we have the dummy instruction 
+  // here. In Visual Studio, it often doesn't work right when trying to set breakpoints at closing 
+  // braces. Sometimes it works fine but sometimes it doesn't - I don't know why.
 
   //-----------------------------------------------------------------------------------------------
   // \name Setup
@@ -1116,7 +1124,7 @@ public:
 protected:
 
 
-  std::vector<rsWaveGuide<TSig, TPar>> waveGuides;
+  std::vector<std::unique_ptr<rsWaveGuide<TSig, TPar>>> waveGuides;
 
   struct Junction
   {
@@ -1155,7 +1163,12 @@ void rsWaveGuideNetwork<TSig, TPar>::addWaveGuide(int maxLength, int initialLeng
   waveGuides.push_back(wg);
   */
 
+  auto wg = std::make_unique<rsWaveGuide<TSig, TPar>>();
+  wg->setMaxStringLength(maxLength);
+  wg->setStringLength(initialLength);
+  waveGuides.push_back(std::move(wg));
 
+  /*
   // Maybe we need to use emplace_back or implement a copy constructor in rsDelay or something like
   // that. At the moment, DSP objects from the RAPT library are not really supposed to be used that
   // way we try to do here. They are not designed to be copyable. Or maybe create a pointer to an
@@ -1167,7 +1180,9 @@ void rsWaveGuideNetwork<TSig, TPar>::addWaveGuide(int maxLength, int initialLeng
   wg.setStringLength(initialLength);
   //wg.setImpedance(waveImpedance);   // Maybe add that later
   int dummy = 0;
-  // Hmm - this also doesn't seem to work
+  // Hmm - this also doesn't seem to work. 
+  */
+
 
 }
 

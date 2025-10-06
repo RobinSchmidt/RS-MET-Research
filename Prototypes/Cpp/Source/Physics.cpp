@@ -391,12 +391,23 @@ public:
   // -Write a similar function but instead of directly writing the newState into the delay 
   //  lines, add it to what's already there. That could be used to (crudely) emulating to strike
   //  the string while it already is in motion.
-  // -Rename to something like setDisplacementState. Have a similar function for setVeloityState
+  // -Rename to something like setDisplacementState. Have a similar function for setVelocityState
   //  and maybe also functions that set initial displacement and velocity at the same time. I 
   //  think, the translation from traveling waves is: y[m] = yR[m] + yL[m], 
   //  v[m] = yR[m] - yL[m] or v[m] = yL[m] - yR[m]. We need to invert these relations to go from
   //  displacement and velocity (y,v) to right and left traveling (displacement) waves yR,yL. But:
   //  what if we do not want to represent displacement waves but rather velocity or force waves?
+  // -PASP says on page 336 (), or here 
+  //  https://ccrma.stanford.edu/~jos/pasp/Karplus_Strong_Algorithm.html
+  //  that indeed the sum of upper and lower delay lines is the displacement and the difference is
+  //  the velocity. So - yeah - I think we should have functions setDisplacementState, 
+  //  setVelocityState and just setState. The last one should set both and the other two just 
+  //  assume zeros for the respective other wave variable. Maybe it would also make sense to
+  //  rename injectInput/extractOutput to injectDisplacementInput/extractDisplacementOutput and 
+  //  write corresponding functions for velocity inputs and outputs, too. The names are quite long
+  //  so maybe injectInput/extractOutput should remain as aliases for convenience. But maybe not.
+  //  Maybe functions with these names should always inject/extract both: displacement and 
+  //  velocity. The injection could perhaps make the velocity optional (i.e. default to zero).
   // -Maybe have also functions that directly init the traveling waves components, i.e. without 
   //  conversion from physical variables.
 
@@ -1208,6 +1219,8 @@ TSig rsWaveGuideNetwork<TSig, TPar>::extractOutputAt(int i, int m)
 template<class TSig, class TPar>
 void rsWaveGuideNetwork<TSig, TPar>::scatter()
 {
+  // Under construction! This does not yet work!
+
   int numJunctions = (int) junctions.size();
   for(int j = 0; j < numJunctions; j++)
   {
@@ -1217,10 +1230,20 @@ void rsWaveGuideNetwork<TSig, TPar>::scatter()
     int  m2 = junctions[j].m2;
     TPar k  = junctions[j].k;
 
-    // Extract outputs:
+    // Extract waves:
     TSig yR, yL, zR, zL;
     waveGuides[i1]->getTravelingWavesAt(m1, &yR, &yL);
     waveGuides[i2]->getTravelingWavesAt(m2, &zR, &zL);
+
+    // Compute scattered waves:
+    TSig yRs, yLs, zRs, zLs;
+    yRs = (1+k) * yR;
+    yLs = yL - k * zL;
+    zRs = (1-k) * zR;
+    zLs = zL + k * yL;
+    // Does this make sense? Verify! Maybe before implementing the scattering between two 
+    // waveguides, try to implement reflection via scattering within a single waveguide
+
 
     // ...more to do...
   }

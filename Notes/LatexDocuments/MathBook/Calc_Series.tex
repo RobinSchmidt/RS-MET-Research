@@ -25,6 +25,17 @@ This limit, if it exists and is finite, is called the \emph{sum} of the series. 
 
 % ToDo: frame the production of a series from a sequence in terms of a transformation - it is one - albeit not a regular one, in general.
 
+% Series are just a special kind of sequences - namely those which are produced by a very specific
+% production rule. This production rule is to take a partial sum over a given other sequence. One
+% could argue that this makes the construction a bit more complicated but one could also argue that
+% sequences are just more general in that they allow arbitrary construction rules - which may be 
+% even more complicated than taking partial sums over a given sequence. I think, for series, we may
+% also have more rules to apply which apply only because of the special construction rule. Maybe the
+% integral test for convergence is an example for such a rule. It can't be applied to an arbitrary
+% sequences. So, in some ways, series are a more "advanced" topic than sequences in that they 
+% require sequences to be understood to even approach it but in other ways, they are just a special
+% case of the more general concept of sequences. This may be confusing to the beginner.
+
 \subsubsection{Some Important Sums}
 ToDo: give formulas for finite and infinite geometric series, infinite alternating harmonic series, inverse-squares ("Basel-problem"), explain divergence of harmonic series
 
@@ -129,6 +140,18 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 
 % https://mathworld.wolfram.com/EulerTransform.html
 % https://en.wikipedia.org/wiki/Euler_summation
+
+% A series goes to infinity BUT "slower than" the series of 1/n?
+% https://www.youtube.com/watch?v=sJ1eSTWl8EU
+% -Doesn't really call it like that - but it's about a rate of divergence. Usually one sees
+%  discussion of rates of convergence - but asking for a rate of divergence could also be
+%  interesting
+% -Maybe it makes sense to compare rates of convergence to zero with rates of divergence
+%  to infinity of sequences by turning the divergent sequence into a convergent one by taking
+%  the reciprocals of the elements. To make the comparison also applicable to sequences (a_n)
+%  that converge to sopme arbitrary limit A, we can consider the sequence (a_n-A) which converges
+%  to zero with the same rate as (a_n) converges to A. I'm intnetionally reverting back to talk
+%  about sequences here rather than series because it makes more sense this way.
 
 \subsection{Power Series}
 A power series is a series that involves a variable $x$. We imagine that we have a given sequence $(a_n)$ and we will intepret this as a sequence of coefficients of a series of powers of $x$, i.e. a sort of infinite polynomial. We will consider the series:

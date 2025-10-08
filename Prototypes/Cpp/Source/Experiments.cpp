@@ -18275,8 +18275,22 @@ void testWaveGuideScattering()
   //   allpasses. Or maybe into nested allpasses.
 }
 
+void testWaveGuideChain()
+{
+  // Under construction
+
+
+  // ToDo:
+  //
+  // - Implement a series connection of an arbitrary number of waveguides that connect to their 
+  //   neighbors via scattering junctions. Maybe the physical interpretation is similar to
+  //   a Kelly-Lochbaum vocal tract model ...TBC...
+}
+
 void testWaveGuideNetwork()
 {
+  // Under construction - just a stub at the moment
+
   // Here, we create a small example network of just two waveguides with a scattering junction 
   // between them ...TBC...
 

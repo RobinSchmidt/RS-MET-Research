@@ -543,8 +543,10 @@ public:
   //  normalized wave scattering junction (see below). Maybe there are some optimization 
   //  opportunities in these calculations (not sure, though).
 
-  // ToDo: implement C.69,C.127 (transformerCoeff or transformerTurnsRatio). There's also some
-  // talk about gyrators and dualizers
+  // ToDo: implement PASP C.69,C.127 (transformerCoeff or transformerTurnsRatio) 
+  // g = sqrt((1-k)/(1+k)) = sqrt(R2/R1). There's also some talk about gyrators and dualizers, 
+  // page 29: c = sqrt(K/epsilon) = sqrt(tension / mass_density) is the wave propagation speed, 
+  // page 555: R = sqrt(K*epsilon) = K/c = epsilon*c
 
 
 
@@ -559,6 +561,18 @@ protected:
   RAPT::rsDelay<TSig> delay1, delay2;  // The two delay lines that make up the waveguide
   int  M = 30;                         // Length of the delay lines. 
   //TPar R = TPar(1);                    // Wave impedance of the string (not used yet)
+  // Maybe store also the wave speed c. Together with the wave impedance R, we can compute physical
+  // quantities like tension and mass density via the formulas  R = sqrt(K*epsilon) = K/c 
+  // = epsilon*c (PASP, page 555) such that K = R*c, epsilon = R/c. Maybe these quantities could be 
+  // relevant when we want to implement physical interactions. Maybe the impedance R alone is not 
+  // enough information for certain interactions? I think, the value of c can then be interpreted
+  // in terms of the temporal sampling rate T ( = 1/sampleRate) and the spatial sampling interval 
+  // X (= 1/sampleDensity). The natural choice is X = c*T (PASP, page 533) which is the choice that
+  // a digital waveguide implements. That means, setting the wave speed c to one or another value 
+  // does not really affect the waveguide algorithm but it affects the interpretation of the 
+  // spatial samples. We could have a function like getSpatialSampleDensity(TPar sampleRate) which 
+  // would take the sample rate at which we run the algorith as input and return 
+  // X = c/T = c*sampleRate as output.
  
   // Notes:
   //
@@ -600,6 +614,11 @@ protected:
   //   important feature of the waveguide that can be used in various formulas. For example, to
   //   convert between different wave variables (such as force and velocity), to compute 
   //   scattering coefficients when wavguides get connected, etc.
+  //
+  // See also:
+  // 
+  // - https://ccrma.stanford.edu/~jos/SMAC03S/SMAC03S.pdf
+  //
 };
 
 template<class TSig, class TPar>
@@ -1219,7 +1238,10 @@ TSig rsWaveGuideNetwork<TSig, TPar>::extractOutputAt(int i, int m)
 template<class TSig, class TPar>
 void rsWaveGuideNetwork<TSig, TPar>::scatter()
 {
-  // Under construction! This does not yet work!
+  // Under construction! This does not yet work! ..well...I think, the approach may be misguided.
+  // I don't think it makes sense to implement intercations between different waveguides with that
+  // kind of scattering junction. What I'm trying to do here it to exchange energy between two
+  // strings - but I think, this is not how that works.
 
   int numJunctions = (int) junctions.size();
   for(int j = 0; j < numJunctions; j++)

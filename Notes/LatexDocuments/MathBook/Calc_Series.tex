@@ -31,10 +31,14 @@ This limit, if it exists and is finite, is called the \emph{sum} of the series. 
 % sequences are just more general in that they allow arbitrary construction rules - which may be 
 % even more complicated than taking partial sums over a given sequence. I think, for series, we may
 % also have more rules to apply which apply only because of the special construction rule. Maybe the
-% integral test for convergence is an example for such a rule. It can't be applied to an arbitrary
+% integral test for convergence is an example for such a rule. It can't be applied to arbitrary
 % sequences. So, in some ways, series are a more "advanced" topic than sequences in that they 
 % require sequences to be understood to even approach it but in other ways, they are just a special
-% case of the more general concept of sequences. This may be confusing to the beginner.
+% case of the more general concept of sequences. This may be confusing to the beginner. But I think,
+% it can be said that sequences are more fundamental than series. Actually, our "Infinite Anythings"
+% section could also be named "Misc Sequences". Infinite products, the convergents of continued
+% fraction expansions, successive approximations in a Newton-Raphson iteration scheme, etc. - they
+% are all just specific families of sequences.
 
 \subsubsection{Some Important Sums}
 ToDo: give formulas for finite and infinite geometric series, infinite alternating harmonic series, inverse-squares ("Basel-problem"), explain divergence of harmonic series
@@ -152,6 +156,10 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 %  that converge to sopme arbitrary limit A, we can consider the sequence (a_n-A) which converges
 %  to zero with the same rate as (a_n) converges to A. I'm intnetionally reverting back to talk
 %  about sequences here rather than series because it makes more sense this way.
+% -The example in the video of a series that diverges more slowly than 1/n is 1/(n*log(n)). Can we
+%  produce even slower diverging series - maybe by using 1/(n*log(n^k)) or 1/(n*(log(n))^k) for
+%  some k > 1? I think the first one just boils down to 1/(n*k*log(n)) so it's just a linear
+%  scaling so it's not very interesting.
 
 \subsection{Power Series}
 A power series is a series that involves a variable $x$. We imagine that we have a given sequence $(a_n)$ and we will intepret this as a sequence of coefficients of a series of powers of $x$, i.e. a sort of infinite polynomial. We will consider the series:

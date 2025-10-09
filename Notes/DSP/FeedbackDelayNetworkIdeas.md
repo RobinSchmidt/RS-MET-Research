@@ -20,12 +20,12 @@ Moreover, in a practical implementation, one would have to include damping facto
 filters in the feedback paths. The factors could be thought of as being absorbed into the matrix, 
 though. But it's usually more convenient to leave the matrix unitary and do the scaling of the 
 feedback signals explicitly before or after the matrix. When we include damping, we could place the
-damping filters (typically lowpass or low shelving filters) directly after the delaylines or after 
-the feedback matrix. If we put the damping filters directly after the delaylines and want to pick 
-up the y1,y2,y3 signals after the delaylines, too, then it may make sense to pick them up in 
-between the delays and the dampers such that the first reflections are undamped. Or maybe it's 
-actually desirable to already dampen the first reflections. That's actually more physically 
-plausible. In that case, they should be picked up after the dampers.
+damping filters (typically lowpass- or (attenuating) high-shelving filters) directly after the 
+delaylines or after the feedback matrix. If we put the damping filters directly after the 
+delaylines and want to pick up the y1,y2,y3 signals after the delaylines, too, then it may make 
+sense to pick them up in between the delays and the dampers such that the first reflections are 
+undamped. Or maybe it's actually desirable to already dampen the first reflections. That's actually
+more physically plausible. In that case, they should be picked up after the dampers.
 
 The delays are usually chosen to be pairwise mutually prime. That avoids repetitive patterns in 
 the impulse response as much as possible. In other words, the length of the inevitable periodicity 
@@ -71,7 +71,7 @@ ToDo
   (assuming high shelvers) by taking its square root? Try it!
 
 - Try picking up output signals after the A filters *and* after the B filters. This should be 
-  particularly good for the initial echo density because we will see earyl reflectios with all 9
+  particularly good for the initial echo density because we will see early reflectios with all 9
   delay values.
 
 - Try to find optimization algorithms for the delay times that search for assignments of the 6 

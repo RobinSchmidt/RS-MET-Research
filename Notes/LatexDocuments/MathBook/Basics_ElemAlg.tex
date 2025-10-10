@@ -462,6 +462,34 @@ All of ALGEBRA explained in just 10 minutes!
 https://www.youtube.com/watch?v=5Bdr4oD2SXg
 
 
+Caution:
+
+Algebra is also about manipulating expressions where the goal is mostly to *simplify* them as much
+as possible. However, in a derivation, it is not always advisable to simplify all expressions as 
+much as possible as soon as possible. In situations where we want to derive an expression that 
+depends on some general variable, say a natural number n, when we first try a couple of small 
+values of n like n = 0,1,2,3 in order to try to see a pattern for general n emerge, it may be better
+to not eagerly simplify everything as soon as possible. The reason is that a general pattern may be 
+easier to spot in unsimplified expressions. As a simple exampe, consider the case where we are given
+a sequence of rational numbers like: 
+
+5/5, 8/7, 11/9, 14/11, 17/13, 20/15, 23/17, 26/19, 29/21, 32/23, 35/25, 38/27, 41/29, 44/31, ...
+
+These numbers follow the general rule a_n = (3n+2)/(2n+3). This rule is much easier to spot in the
+sequence in the given unsimplified form where unsimplified in this case means that the fractions
+are unreduced. If we would reduce 5/5 to 1/1 and 20/15 to 4/3 and 35/25 to 7/5 and so on, the rule
+may be harder to guess. The numbers can be produced by ths following Python snippet:
+
+for n in range(1,30):
+    print(3*n+2, 2*n+3)
+
+The lesson to be learned is that a too eager simplification may obfuscate patterns that may be more
+apparent in the more complicated form. The example involved just rational numbers but the same 
+considerations apply to more complicated situations where we need to deal to expressions involving
+variables. When working with computer algebra systems, it is tempting to always request a fully
+simplified expression. Sometimes it may be better to resist that temptation. But it depends.
+
+
 \end{comment}
 
 

@@ -235,7 +235,7 @@ We have produced bigger rings from given ones by adjoining elements or forming p
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Ideals}
-The notion of an \emph{ideal} is more restrictive than that of a subring. Among other requirements, a subring $S$ must be closed under multiplication. For an ideal $I$ of $R$, the closure under multiplication requirement is tightened: It must be the case that the products of elements $i \in I$ from the ideal $I$ with elements $r \in R$ from the original ring $R$ must again produce elements inside the ideal. The subset is not only closed in the sense that you \emph{cannot leave it} but also acts as an "attractor" in the sense that you immediately \emph{get sucked into it} as soon as you multiply \emph{anything} by an element of it, so to speak. Another way to characterize an ideal is to say, that for every element that is inside the ideal, all of its multiples (as in: products with other ring elements) are also inside the ideal. When you hear "ideal" you may translate that in your head into "absorbing subring". If the ring is not commutative, we must distinguish between left, right and two-sided ideals. For these, we require:
+The notion of an \emph{ideal} is more restrictive than that of a subring. Among other requirements, a subring $S$ must be closed under multiplication. For an ideal $I$ of $R$, the closure under multiplication requirement is tightened: It must be the case that the products of elements $i \in I$ from the ideal $I$ with elements $r \in R$ from the original ring $R$, \emph{not} necessarily from $I$, must again produce elements inside the ideal. The subset is not only closed in the sense that you \emph{cannot leave it} but also acts as an "attractor" in the sense that you immediately \emph{get sucked into it} as soon as you multiply \emph{anything} by an element of it, so to speak. Another way to characterize an ideal is to say, that for every element that is inside the ideal, all of its multiples (as in: products with other ring elements) are also inside the ideal. When you hear "ideal" you may translate that in your head into "absorbing subring". If the ring is not commutative, we must distinguish between left, right and two-sided ideals. For these, we require:
 
 \medskip
 \begin{tabular}{l l}
@@ -393,12 +393,23 @@ The definition of the two-sided version is the set of all finite sums of product
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Homomorphisms}
-We have already met group homomorphisms. These are defined by a function $f: G \rightarrow H$ such that $f(a b) = f(a) f(b)$. Analogously, we define a \emph{ring homomorphism} to be a function from one ring $f: R \rightarrow  S$ from one ring $R$ to some (possibly) other ring $S$ that respects both of our ring operations. That is:
+We have already met group homomorphisms. These are defined by a function $f: G \rightarrow H$ such that $f(a b) = f(a) f(b)$. Analogously, we define a \emph{ring homomorphism} to be a function $f: R \rightarrow  S$ from one ring $R$ to some (possibly) other ring $S$ that respects both of our ring operations and the multiplicative identity. That is:
 \begin{equation}
   f(a   +   b) = f(a)   +   f(b), \qquad
-  f(a \cdot b) = f(a) \cdot f(b)
+  f(a \cdot b) = f(a) \cdot f(b), \qquad
+  f(1_R) = 1_S
 \end{equation}
-where again, it is implicitly understood that on the left hand side, we use the $+,\cdot$ operations of $R$ and on the right hand side, we use the $+,\cdot$ operations of $S$. When we talk about rings and just say "homomorphism" rather than "ring homomorphism" then it is implicitly understood that we talk about a ring homomorphism. TODO: isomorphism, automorphism, ...
+where again, it is implicitly understood that on the left hand side, we use the $+,\cdot$ operations of $R$ and on the right hand side, we use the $+,\cdot$ operations of $S$. By $1_R$ we denote the multiplicative identity in $R$ and by $1_S$ the multiplicative identity in $S$. From this definition follows (among many other facts) that $f(0_R) = 0_S$ and $\forall a \in R: f(-a) = -f(a)$. As you may have guessed, $0_R$ and $0_S$ denote the additive identities in $R$ and $S$ respectively. When we talk about rings and just say "homomorphism" rather than "ring homomorphism" then it is implicitly understood that we talk about a ring homomorphism. TODO: isomorphism, automorphism, list more facts that follow 
+
+% For more facts that follow from the definition, see:
+% https://en.wikipedia.org/wiki/Ring_homomorphism#Properties
+
+% Maybe use (or at least mention) the notation:
+% $f(a +_R b) = f(a) +_S f(b)$  and  $f(a \times_R b) = f(a) \times_S f(b)$
+% Using indices in the operators is more consistent with our usage of indices for the identity
+% elements. I think, we should either use explicit notation everywhere or implicit notation 
+% everywhere. Maybe state the definition in both notations.
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Quotient Rings}
@@ -647,6 +658,10 @@ What was Fermat’s “Marvelous" Proof? | Infinite Series
 https://www.youtube.com/watch?v=SsVl7_R2MvI
 -When you have a ring, you can talk about primality
 
+
+Turn a number system into a geometric space. Intro to algebraic geometry, Spec(R) and schemes.#SoME4
+https://www.youtube.com/watch?v=6q9LipVbI80
+-About schemes
 
 
 ToDo:

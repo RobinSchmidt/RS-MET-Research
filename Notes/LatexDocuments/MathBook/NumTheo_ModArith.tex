@@ -134,18 +134,33 @@ We know from calculus that a sequence of real numbers $(s_n)$ is said to \emph{c
 \subsection{$q$-analog Numbers}
 
 \subsubsection{The $q$-Integers}
-A normal integer $n$ can be viewed as the result of adding up $n$ ones:
+A positive integer $n$ can be viewed as the result of adding up $n$ ones:
 \begin{equation}
 n = \underbrace{1 + 1 + 1 + \ldots + 1}_{n\rm\ times} 
   = \sum_{k=0}^{n-1} 1
 \end{equation}
-We may generalize this idea by introducing a parameter $q$ and defining a so called $q$-integer, denoted as $[n]_q$, as follows:
+We may generalize this idea by introducing a parameter $q$ and defining a so called $q$-integer, which we denote by $[n]_q$, as follows:
 \begin{equation}
 [n]_q = 1 + q + q^2 + \ldots + q^{n-1} 
       = \sum_{k=0}^{n-1} q^k
       \overset{q \neq 1}{=} \frac{1 - q^n}{1 - q}
 \end{equation}
-where the last equality is just the closed form solution of a finite geometric series and applies only for $q \neq 1$. However, for $q = 1$, we also know what to do because in this special case, the $q$-integers just reduce to the plain old regular integers, i.e. for $q=1$, we have $[n]_q = [n]_1 = n$. It is also worth noting that $0$ and $1$ are mapped unchanged for any value of $q$. That is: For any $q$ whatsoever, we will always have: $[0]_q = 0$ and $[1]_q = 1$.
+where the last equality is just the closed form solution of a finite geometric series and applies only for $q \neq 1$. However, for $q = 1$, we also know what to do because in this special case, the $q$-integers just reduce to the plain old regular integers, i.e. for $q=1$, we have $[n]_q = [n]_1 = n$. It is also worth noting that $0$ and $1$ are mapped unchanged for any value of $q$. That is: For any $q$ whatsoever, we will always have: $[0]_q = 0$ and $[1]_q = 1$. For negative numbers $-n$, where $n$ is still a positive integer as before, we can derive that:
+\begin{equation}
+[-n]_q = - \left( \frac{1}{q} + \frac{1}{q^2} + \ldots + \frac{1}{q^n}  \right)
+\end{equation}
+for any $q \neq 0$.
+
+\paragraph{Arithmetic}
+Numbers are only interesting if we can do calculations with them, so we will now define the basic arithmetic operations on $q$-integers. Addition of two $q$-integers $[m]_q$ and $[n]_q$ is defined as:
+\begin{equation}
+[m]_q \oplus_q [n]_q = [m]_q + q^m [n]_q = [m + n]_q
+\end{equation}
+and the multiplication of them is defined as:
+\begin{equation}
+[m]_q \otimes_q [n]_q = [m]_q \cdot [n]_{q^m} = [m \cdot n]_q
+\end{equation}
+where we have introduced the new symbols $\oplus_q$ and $\otimes_q$ to denote our new, special addition and multiplication operations on the $q$-integers. The $+$ and $\cdot$ on the mid- and right hand sides denote our regular old plus and times operations. ...TBC...ToDo: Explain where these definitions come from, i.e. what motivates them. Mention commutativity etc.
 
 % ToDo:
 % -Define (or rather derive) that for q != 0, we have:

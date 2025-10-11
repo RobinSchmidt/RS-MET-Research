@@ -134,6 +134,22 @@ We know from calculus that a sequence of real numbers $(s_n)$ is said to \emph{c
 \subsection{$q$-analog Numbers}
 
 \subsubsection{The $q$-Integers}
+A normal integer $n$ can be viewed as the result of adding up $n$ ones:
+\begin{equation}
+n = \underbrace{1 + 1 + 1 + \ldots + 1}_{n\rm\ times} 
+  = \sum_{k=0}^{n-1} 1
+\end{equation}
+We may generalize this idea by introducing a parameter $q$ and defining a so called $q$-integer, denoted as $[n]_q$, as follows:
+\begin{equation}
+[n]_q = 1 + q + q^2 + \ldots + q^{n-1} 
+      = \sum_{k=0}^{n-1} q^k
+      \overset{q \neq 1}{=} \frac{1 - q^n}{1 - q}
+\end{equation}
+where the last equality is just the closed form solution of a finite geometric series and applies only for $q \neq 1$. However, for $q = 1$, we also know what to do because in this special case, the $q$-integers just reduce to the plain old regular integers, i.e. for $q=1$, we have $[n]_q = [n]_1 = n$. It is also worth noting that $0$ and $1$ are mapped unchanged for any value of $q$. That is: For any $q$ whatsoever, we will always have: $[0]_q = 0$ and $[1]_q = 1$.
+
+% ToDo:
+% -Define (or rather derive) that for q != 0, we have:
+%  [-n]_q = -(1/q + 1/q^2 + ... + 1/q^n)
 
 % I think, the q stands for quantum?
 

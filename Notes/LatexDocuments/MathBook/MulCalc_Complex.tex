@@ -63,6 +63,32 @@ Let's have a look at the equation $z^n = 1$ for some given positive integer $n$.
 % principal values, Riemann surfaces, primitive roots
 % https://en.wikipedia.org/wiki/Riemann_surface
 
+
+\paragraph{Primitive and Principal Roots}
+As we have seen, in the complex domain, the $n$th root function is multi valued. Among the possible values that solve the equation $z^n = w$ for some given right hand side $w$, some are designated as more fundamental than others and have special names.
+
+% ToDo: point out the danger of confusing the two notions. The words sound similar and the meaning 
+% is similar as well - but the definitions are subtly different nonetheless.
+
+% https://en.wikipedia.org/wiki/Root_of_unity#General_definition
+% -> contains definitions of "primitive root"
+
+% https://en.wiktionary.org/wiki/principal_root
+% -> pricipal root greates real part and positive imaginary part (implies: smallest angle?)
+% https://en.wikipedia.org/wiki/Principal_value#Square_root
+
+% https://mathworld.wolfram.com/PrimitiveRoot.html
+% https://mathworld.wolfram.com/PrincipalRootofUnity.html
+
+% I think, the notions of primitive and/or principal roots apply also to modular integers.
+
+% I think, a primitive n-th root is one whose powers are able to generate all the other n-th roots.
+% The priciple root is just one of them. Consider the 6-th roots of unity and denote the principal 
+% value by r. Among the other 6th roots, I think, r^5 would also qualify as "primitive" because its
+% powers also generate all 6th roots of unity (but in a different order than the powers of r 
+% itself). I think r^m is a primitive root whenever m and n are mutually prime? ...verify all of 
+% this - I'm not sure.
+
 \subsubsection{Exponential and Trigonometric functions}
 Extending the domains of rational and algebraic functions from the real to the complex numbers was a straightforward process requiring only some algebra. The $n$th roots are a bit messy to deal with because we needed to introduce the concept of multivalued functions but they nevertheless did not require much higher level math tools to define. To extend the domains of the exponential and trigonometric functions, we'll need a bigger gun from calculus: power series. The nice thing about power series is that in order to evaluate them, we only need to know how to perform additions and multiplications - and we actually indeed do know, how to add and multiply complex numbers! Using the power series representation of a function is a very common technique in math whenever we desire to define functions of arguments that are not simple numbers but for which we nevertheless know how to add them, multiply them and scale them by real numbers\footnote{We need addition to perform the summation, multiplication to form the powers and scaling to apply the coefficients. It may appear that scaling by a coefficient and multiplication are the same thing. But this is only the case here, because the (real) scaling factors can also be regarded as complex numbers. But if the objects are matrices, for example, scaling by a scalar factor and (matrix) multiplication are indeed different operations.}. None of these operations are a problem here. We indeed can do all these operations with complex numbers. The same idea can also be applied to matrices, multivectors and even operators. But here, we are interested in complex numbers. Let's recall the power series of some functions:
 \begin{equation}

@@ -23846,6 +23846,7 @@ float Q_rsqrt(float number)
 }
 // https://www.youtube.com/watch?v=p8u_k2LIZyo
 // https://medium.com/hard-mode/the-legendary-fast-inverse-square-root-e51fee3b49d9
+// https://www.youtube.com/watch?v=KC07QP8m3fY
 
 // Translation:
 // "evil floating point bit level hacking": use i to re-interpret y as long

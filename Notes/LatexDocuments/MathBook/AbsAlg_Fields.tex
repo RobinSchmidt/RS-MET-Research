@@ -5,6 +5,7 @@ In the realm of abstract algebra, a \emph{field} is a ring with some additional 
 \item Every element except the additive neutral element has a multiplicative inverse element.
 \item Multiplication is commutative.
 \end{itemize}
+% ToDo: maybe instead of "itemize", use the same formatting as below (using tabular)
 Because these properties are stated at a pretty high level, let's state them boiled down to a lower level:
 
 \medskip
@@ -36,9 +37,7 @@ Multiplication distributes over addition:
 \medskip
 [TODO: verify that the list is complete]
 
-Any mathematical structure that satisfies these requirements is a structure in which can do calculations and solve equations in the same way as we are used to from the rational or real numbers. The rational numbers can be seen as the prototypical example of a field after which the abstraction was modeled. We don't need a right-distributive law because we have required a commutative multiplication. As usual, we will use $\mathbb{F}^*$ as a shorthand for $\mathbb{F} \setminus \{0\}$. With this definition, we could also say that a field $\mathbb{F}$ is a set with two operations $+$ and $\cdot$ such that $(\mathbb{F},+,\cdot)$ forms a commutative unital ring and  $(\mathbb{F}^*,\cdot)$ forms a commutative group. [VERIFY!] 
-
-%So, a field is a ring in which we also have multiplicative inverses for all elements except for the additive neutral element.
+Any mathematical structure that satisfies these requirements is a structure in which can do calculations and solve equations in the same way as we are used to from the rational or real numbers. The rational numbers can be seen as the prototypical example of a field after which the abstraction was modeled. We don't need a right-distributive law because we have required a commutative multiplication. As usual, we will use $\mathbb{F}^*$ as a shorthand for $\mathbb{F} \setminus \{0\}$. With this definition, we could also say that a field $\mathbb{F}$ is a set with two operations $+$ and $\cdot$ such that $(\mathbb{F},+,\cdot)$ forms a commutative unital ring and  $(\mathbb{F}^*,\cdot)$ forms a commutative group and the operations $+$ and $\cdot$ are related by the distributive law. [VERIFY!] So, a field is a ring in which we also have multiplicative inverses for all elements except for the additive neutral element.
 
 % If F has these porperties except commutativity for multiplication, then it's called a skew field (ex: Quaternions) ...does it need to be anticommutative? No - I don't think so - it's also called a division ring:
 % https://en.wikipedia.org/wiki/Division_ring
@@ -199,7 +198,12 @@ If we adjoin one or more transcendental numbers, i.e. numbers like the semicircl
 \subsubsection{Division by Zero}
 We learn already in elementary school that division by zero is "impossible". The history of mathematics is full of examples of things that were at one point deemed to be impossible which became possible later by extending the number system suitably. Subtracting 5 from 3 is impossible in the natural numbers but no problem in the integers. Dividing 3 by 5 is impossible in the integers but doable in the rationals. Taking the square root of 2 is impossible in the rationals but totally fine in the reals. Finally, taking the square root of a negative number is impossible in the reals but possible in the complex numbers. So, one might hope that with a suitable definition that extends our number system even further, also the problem of division by zero might be solved. Unfortunately, it turns out that doing so will necessarily invalidate one of our most basic calculation rules ...TBC...
 
-\paragraph{The Extended Real Line}...TBC..explain projective real line 
+\paragraph{Infinity} It's very tempting to adjoin an infinite element $\infty$ to our field and define $1/0 = \infty$. OK - so let's try that ...TBC...explain how taking left and right limits of $f(x) = 1/x$ for $x \rightarrow 0$ leads to the ideas of positive and negative infinity, how it is not possible to calculate with these values like with ordinary numbers (we cannot distinguish between $\infty$ and $3 \cdot \infty + 5$, for example, can't uniquely solve equations involving $\infty$, etc.).
+
+\paragraph{Unsigned Infinity}...TBC..explain projective (and extended) real line, unsigned infinity, the number circle
+
+% The Extended Real Line
+
 
 % Field Extensions and the Hyperreals
 % https://www.youtube.com/watch?v=A7vRtMyR9gE&list=PLHW2zF4VTA-cidobAyHGzugw-XXh_H5tL&index=3
@@ -210,14 +214,20 @@ We learn already in elementary school that division by zero is "impossible". The
 
 % https://en.wikipedia.org/wiki/Extended_real_number_line
 
+\paragraph{Wheel Theory}...ToDo: explain how the new "bottom" element arises from indeterminate forms like $0/0$ and $\infty / \infty$ that may arise in the projective real line, how it relates to the NaN value(s) in IEEE-754 floating point arithmetic
 
-\paragraph{Hyperreal Numbers} Let's again start with the field of real numbers $\mathbb{R}$ and adjoin a special number $\omega$ with the property that $\omega > r$ for any real number $r$. For such a number to be larger than any real number, it must somehow be infinite. To make the set a field, we must also add $1/\omega$ which we will denote as $\epsilon$. That epsilon is called an infinitesimal and it has the property that it is greater than zero but less than any positive real number.  ...TBC...explain standard part, dual numbers
-
-\paragraph{Wheel Theory}...
+% I think, NaN is not exactly the same as the bottom element of wheel theory because the NaNs are signed whereas the bottom is unsigned
 
 %Was passiert, wenn man durch 0 dividiert
 %https://www.youtube.com/watch?v=_b51R7eSgxw&list=PL542920k_cOq1gzagygodiAQg5WA6h2K4&index=4
 
+% https://en.wikipedia.org/wiki/Wheel_theory
+
+\paragraph{Hyperreal Numbers} Let's again start with the field of real numbers $\mathbb{R}$ and adjoin a special number $\omega$ with the property that $\omega > r$ for any real number $r$. For such a number to be larger than any real number, it must somehow be infinite. To make the set a field, we must also add $1/\omega$ which we will denote as $\epsilon$. That epsilon is called an infinitesimal and it has the property that it is greater than zero but less than any positive real number.  ...TBC...explain standard part, dual numbers, explain why $\epsilon$ is not the same thing as a true zero.
+
+\paragraph{Impossibility} OK - so we have seen a couple of attempts to deal with division by zero in a way that doesn't just flatly disallow it. What can we learn from these attempts? Is any of them viable or maybe even compelling? If not, could better ways exist that are just waiting to be discovered? ToDo: Explain which axioms we would need to give up if we really wanted to somehow define a division by zero.
+
+% I think, there is a youtube video (I think, by Miceal Penn) which actually presents a field where division by zero is defined - but it's a trivial field having only one or two elements...or maybe zero? Not sure anymore. But I think, it's the only example where it works. A curious edge case that is not really useful in practice.
 
 
 

@@ -18,6 +18,7 @@ An inner product space is a vector space $V$ where an inner product between any 
 
 
 
+
 %===================================================================================================
 \subsection{Normed Space}
 A \emph{normed space} is a vector space $V$ on which a norm function is defined. That means, for each element $\mathbf{v} \in V$, we can compute the norm of $\mathbf{v}$, denoted as $|\mathbf{v}|$. The output of that function will be a non-negative real number which we interpret as a measure of the size or length of the vector. To qualify as a norm, our norm function must satisfy a couple of more properties. We have already met them in slightly different form in the section about elementary functions. Let $\mathbf{v} \in V$ and let $\lambda$ be in the set of scalars. Then:
@@ -36,7 +37,7 @@ Triangle inequality:  & $|\mathbf{v} + \mathbf{w}| \leq |\mathbf{v}| + |\mathbf{
 % https://en.wikipedia.org/wiki/Normed_vector_space
 
 \paragraph{Induced Norm}
-If our vector space $V$ happens to be an inner product space, then we can use the inner product to define a norm as $|\mathbf{v}| = \sqrt{\langle \mathbf{v,v}  \rangle}$. The so defined function does indeed meet all the requirements for a norm. For any norm that was induced by an inner product, the parallelogram equation holds: $|x+y|^2 + |x-y|^2 = 2(|x|^2 + |y|^2)$. With this \emph{induced norm}, we see that every inner product space is also a normed space. But the set of normed spaces is more general. To define a norm, we do not necessarily need to have an inner product. Other norms are possible, too. That means, the idea of a normed space is more general than the idea of a topological space.
+If our vector space $V$ happens to be an inner product space, then we can use the inner product to define a norm as $|\mathbf{v}| = \sqrt{\langle \mathbf{v,v}  \rangle}$. The so defined function does indeed meet all the requirements for a norm. For any norm that was induced by an inner product, the parallelogram equation holds: $|x+y|^2 + |x-y|^2 = 2(|x|^2 + |y|^2)$. With this \emph{induced norm}, we see that every inner product space is also a normed space. But the set of normed spaces is more general. To define a norm, we do not necessarily need to have an inner product. Other norms are possible, too. That means, the idea of a normed space is more general than the idea of an inner product space.
 
 % https://www.youtube.com/watch?v=qwsvXa7nIGg
 % at 16:44 - for norms that are induced by an inner product, the parallelogram equation holds
@@ -48,7 +49,8 @@ If our vector space $V$ happens to be an inner product space, then we can use th
 
 \paragraph{$L^p$-Norm} Let's consider vectors $\mathbf{x} = (x_1, x_2, \ldots, x_n)$ in $\mathbb{R}^n$. For such a vector, the $L^p$ norm for some given real number $0 < p \leq \infty$ is defined as: $ |\mathbf{x}|_p = (|x_1|^p + |x_2|^p + \ldots + |x_n|^p)^{1/p}$. For $p=2$ we get the $L^2$ norm which is just our usual Euclidean norm. It can be verified that for $p=1$, the parallelogram equation does not hold (in fact, it holds only for $p = 2$, I think - VERIFY!). That means we have found at least one norm that is not induced by an inner product. We cannot find an inner product that would induce this norm when we believe that any such induced norm is bound to satisfy the parallelogram equation. This confirms that the notion of a normed space is more general than the notion of an inner product space. Another important special case for the $L^p$ norm is the case where $p = \infty$. This norm just is just equal to the maximum of the absolute values of the components of $\mathbf{x}$.
 
-%[TODO: explain the $L^\infty$ norm]
+% [TODO: explain the $L^\infty$ norm]
+% Maybe we could even relax the $0 < p \leq \infty$ requirement to $0 \leq p \leq \infty$. Maybe $p$ could even become negative? But if we allow p = 0, we will have to deal with expressions of the form 0^0. Maybe if we define 0^0 = 1, it could makes sense. This "norm" would then count the number of nonzero components in a vector, I think.
 
 %If we assume the parallelogram equation to be true for any norm induced by an inner product, this confirms that the
 
@@ -105,11 +107,18 @@ The requirements for a norm and for a metric are sufficiently similar that we ca
 \paragraph{Minkowski and Manhattan Distance}
 The \emph{Minkowski distance} is to metrics what the $L^p$-norm is to norms. Let $\mathbf{x,y}$ be two vectors in $\mathbb{R}^n$ and $p \in \mathbb{Z}$. Then, the Minkowski distance of order $p$ between the vectors is defined as $d_M(\mathbf{x,y}) = (\sum_{i=1}^n |x_i - y_i|^p )^{1/p}$. The special case for $p=1$ is also called Manhattan distance or city block distance or taxicab distance. It is the total distance that you would have to walk if you can't take the direct diagonal route but instead have to piece your path together from purely horizontal and vertical segments (or, more generally, take partial paths on an orthogonal grid). This is how the streets are laid out in Manhattan, hence the name. 
 
+% https://en.wikipedia.org/wiki/Minkowski_distance
+
 \medskip
 By the way: Do not confuse the Minkowski distance with the Minkowski metric from special relativity. The latter is something else and it actually wouldn't even qualify as a metric according to our definition here because it can become negative.
 
+% The Minkowski metric is sometimes called a pseudo-metric and the vector space of 4D spacetime is called a Minkowski space (verify!). That's just a side note, though. Here, we will be concerned only positive metrics
+
+% https://en.wikipedia.org/wiki/Minkowski_space
+% https://en.wikipedia.org/wiki/Pseudo-Euclidean_space
+
 \paragraph{Hamming Distance} 
-It is interesting to see a distance measure defined on a set that is very uncommon in mathematics: the set of strings - in the computer science or programmer sense. The \emph{Hamming distance} between two strings is defined to be number of positions in which the two strings differ. The Hamming distance between strings of zeros and ones is an important tool in the design and analysis of error detection and correction schemes in noisy digital communication channels. 
+It is interesting to see a distance measure defined on a set that is very uncommon in mathematics: the set of strings - in the computer science or programmer sense. The \emph{Hamming distance} between two strings is defined to be number of positions in which the two strings differ. The Hamming distance between binary strings (i.e. strings of zeros and ones) is an important tool in the design and analysis of error detection and correction schemes in noisy digital communication channels. 
 
 \paragraph{Levenshtein Distance} 
 The \emph{Levenshtein distance} between two strings is the minimum number of editing operations (deletions, replacements or insertions of characters) that one would need to transform one string into the other. It is also a bona fide metric according to our definition. It is important in applications like automatic correction of human inputs from a computer keyboard.
@@ -152,7 +161,7 @@ We can use the metric $d$ to define a certain classification of sets that is imp
 \medskip
 The open ball $B_\varepsilon(x)$ is the set of points, whose distance to $x$ is less than $\varepsilon$. Using $\varepsilon$ indicates that we intend to allow this value to become arbitrarily small as long as it is greater than zero. Intuitively, we may envision $B_\varepsilon(x)$ as a (possibly very small) halo around $x$. In $\mathbb{R}$, the "open balls" are open intervals, in $\mathbb{R}^2$ they are open circular discs, in $\mathbb{R}^3$ they are actual balls, i.e. filled spheres (but excluding the surface - that exclusion is what makes them "open") and in higher dimensions $\mathbb{R}^n$, they are filled $n$D hyperspheres (again excluding their $(n-1)$-dimensional boundary).
 
-\paragraph{Definition: Interior Point} A point $x \in X$ is said to be an \emph{interior point} of $x$, if there exists an $\varepsilon > 0$ such that $B_\varepsilon(x) \subseteq X$. 
+\paragraph{Definition: Interior Point} A point $x \in X$ is said to be an \emph{interior point} of $X$, if there exists an $\varepsilon > 0$ such that $B_\varepsilon(x) \subseteq X$. 
 
 %https://en.wikipedia.org/wiki/Interior_(topology)
 
@@ -160,6 +169,8 @@ The open ball $B_\varepsilon(x)$ is the set of points, whose distance to $x$ is 
 Intuitively, an interior point of a set $X$ is a point $x$ that admits us to define a (possibly small) halo around it that is fully contained in the set $X$.
 
 \paragraph{Definition: Open Set} A set $X$ is said to be \emph{open}, if all of its elements are interior points. 
+
+% ToDo: define exterior points and boundary points and point out that these 3 sets of points (interior, exterior, boundary) are imoprtant in topology
 
 \medskip
 Intuitively, an open set does not have any boundary points as elements of the set. A boundary point of a set $X$ is usually defined to be a point $x$ where every $\varepsilon$-ball around the point contains points that are inside the set $X$ as well as points that are outside the set $X$. When a set is open, we can always find some (possibly tiny) open ball around it that is fully inside the set. Open sets are important in analysis because in open sets, we can be sure to be able to approach any point from any direction which is what we need to define (directional) derivatives. On a boundary point, such a definition may not be possible.
@@ -234,7 +245,7 @@ Note that this definition of compactness only applies to metric space. For more 
 
 %===================================================================================================
 \subsection{Topological Space}
-In geometry, we study shapes. These shapes are defined by the spatial relationships between the points that make up the shape. The essential quantity that captures all these spatial relationships is the notion of a distance between two points. All other shape-determining quantities like angles, sizes, etc. can ultimately be boiled down to questions about distances. In topology, we want to abstract from the actual shape and path towards this goal is to forget about quantitative measures of distance. In a \emph{topological space}, we can talk about "distances" and "closeness" between of elements and "neighborhoods" of elements in a purely qualitative way. This way will not need to refer to a metric function $d(x,y)$ that tells us precisely, how far apart the points $x$ and $y$ are. The only fundamental notion that we will need to refer to is that of an open set. In the context of metric spaces, open sets are defined via open balls which in turn are defined in terms of a metric. For topology, we will obviously need an alternative definition for what "open set" is supposed to mean if we want to do away with the metric. That new definition should be compatible with the old one in the sense of being equivalent when the space happens to be a metric space.
+In geometry, we study shapes. These shapes are defined by the spatial relationships between the points that make up the shape. The essential quantity that captures all these spatial relationships is the notion of a distance between two points. All other shape-determining quantities like angles, sizes, etc. can ultimately be boiled down to questions about distances. In topology, we want to abstract from the actual shape and the path towards this goal is to forget about quantitative measures of distance. In a \emph{topological space}, we can talk about "distances" and "closeness" between of elements and "neighborhoods" of elements in a purely qualitative way. This way will not need to refer to a metric function $d(x,y)$ that tells us precisely, how far apart the points $x$ and $y$ are. The only fundamental notion that we will need to refer to is that of an open set. In the context of metric spaces, open sets are defined via open balls which in turn are defined in terms of a metric. For topology, we will obviously need an alternative definition for what "open set" is supposed to mean if we want to do away with the metric. That new definition should be compatible with the old one in the sense of being equivalent when the space happens to be a metric space.
 
 % Maybe mention the formula for the (cosine of) angle in terms of the scalar product
 
@@ -266,11 +277,13 @@ We have seen how we can define an open subset of a set $X$ when we have a metric
 
 
 \medskip
-Note how our subsequent generalizations led to the following onion like structure of subset inclusions: inner product spaces $\subset$ normed spaces $\subset$ metric spaces $\subset$ topological spaces. The topological space is now finally the abstraction that we want to work with and upon which the mathematical field of topology revolves around. To build intuition, we will nevertheless usually use a more concrete space like $\mathbb{R}^n$ that we can intuitively understand (although even that can get hard when $n > 3$).
+Note how our subsequent generalizations led to the following onion like structure of subset inclusions: inner product spaces $\subset$ normed spaces $\subset$ metric spaces $\subset$ topological spaces. The topological space is now finally the abstraction that we want to work with and which the mathematical field of topology revolves around. To build intuition, we will nevertheless usually use a more concrete space like $\mathbb{R}^n$ that we can intuitively understand (although even that can get hard when $n > 3$).
 
 
 
+%\paragraph{Basis of a Topology} 
 
+% https://en.wikipedia.org/wiki/Base_(topology)
 
 
 %\subsubsection{A Taxonomy of Sets Revisited}
@@ -318,6 +331,8 @@ Some kinds of topological spaces occur often enough that mathematicians found it
 \paragraph{Hausdorff Spaces} [VERIFY!] A topological space is called a \emph{Hausdorff space}, when any two elements $x,y$ of that space can be separated by disjoint open sets. That means we can always find two disjoint open sets $X,Y$ such that $x$ is in $X$ but not in $Y$ and $y$ is in $Y$ but not in $X$. The set $X$ surrounds $x$ and the set $Y$ surrounds $y$ and the sets $X,Y$ don't meet or even overlap. Every metric space is a Hausdorff space.
 
 ...TBC...
+
+% Give an example of a non-metric Hausdorff space. Explain why Hausdorff spaces are a relevant notion.
 
 
 % https://de.wikipedia.org/wiki/Hausdorff-Raum

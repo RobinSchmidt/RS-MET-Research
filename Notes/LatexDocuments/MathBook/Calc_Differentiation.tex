@@ -671,6 +671,18 @@ The derivative, as presented here, is an idea that applies to real functions $f:
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Alternative Definitions}
 
+% ToDo: Rename this to "Pseudoderivatives". They actually don't always work the same way. I think,
+% the backward difference should be fine, though. But the central one is definitely problematic. 
+% See:
+% Do You REALLY Understand Derivative? | Symmetric Derivative and Generalized Pseudoderivative
+% https://www.youtube.com/watch?v=oIhdrMh3UJw
+%
+% I think, these alternative definitions are equivalent to the standard definition only in the case 
+% of a differentiable (and therefore also continuous) function. In the case of some "mean" 
+% functions, the usual derivative will detect this by breaking down (due to a non-existent limit) 
+% but, for example, the central difference may continue to work just fine.
+
+
 \paragraph{Backward Difference}
 In (\ref{Eq:Derivative}), we have defined the derivative as:
 \begin{equation}
@@ -725,12 +737,18 @@ f'(x) = x \lim_{q \rightarrow 1} \frac{(q-1)(q+1)}{(q - 1)}
 which gives us the same result as the original definition in (\ref{Eq:Derivative}), as it should. This alternative definition is also related to the so called quantum derivative which is basically the same definition just without taking the limit. Sometimes, this alternative definition is much easier to evaluate than the standard definition. That's why I wanted to mention it. This is especially true when $f(x) = x^n$. With the standard definition, you'd have to expand a term of the form $(x+h)^n$ using the binomial theorem whereas with the alternative definition, things cancel nicely. However, usually, we do not evaluate derivatives using the definition via a limit (standard or alternative) anyway. Instead, we use our table of elementary derivatives together with our differentiation rules.
 %Fortunately, we don't have to go through this tedious procedure via the limit every time we need to compute a derivative.
 
+% But: How does this alternative definition of the derivative (with the limit) behave at x=0? This
+% might be a problematic point because q*x = x = 0 for x = 0, so we would get a division by zero.
+% Actually, this problem should already occur even before taking the limit. 
+
 % https://en.wikipedia.org/wiki/Q-derivative
 % The definitions above are based on the $h$-calculus. There's also a $q$-calculus
 
 % https://link.springer.com/chapter/10.1007/978-1-4613-0071-7_22
 % https://en.wikipedia.org/wiki/Quantum_calculus#History
 
+% This is NOT differentiation.
+% https://www.youtube.com/watch?v=h6pgvzoGNfA
 
 % The algebra of derivatives. And what they don't tell you. #SoME4
 % https://www.youtube.com/watch?v=xdwuyXrObSA

@@ -1108,7 +1108,7 @@ bool testUpDownSample1D()
   //  Maybe also have the condition that the upsampled signal must interpolate the original such 
   //  that y[2*m] = x[m]
   // 
-  // -Rename a0,a1,a2,... to d0,d1,d2, etc. and h to d. The d stands for downsampling kernel
+  // -[DONE] Rename a0,a1,a2,... to d0,d1,d2, etc. and h to d. The d stands for downsampling kernel
   // -Rename b0,b1,..  to u0,u1,... The u stands fopr upsampling kernel.
   // -Use consitently n as index for the original, non-oversampled signal, m as index for the 
   //  oversampled signal, M for the oversampling factor such that m = n*M. The length of the input
@@ -1298,7 +1298,7 @@ bool testUpDownSample2D()
   //    f d b d f
   //    e f c f e
   //
-  // where a = a0, b = a1, c = a2 in the old notation used for the 1D case. Bilinear interpolation 
+  // where a = d0, b = d1, c = d2 in the old notation used for the 1D case. Bilinear interpolation 
   // would spread into 4 output pixels. I think the condition that kernel must sum to 1 remains. In 
   // this case, this means: a + 4*(b+c+d+e) + 8*f = 1. Maybe the a + 2(b+c) = 1 condition should 
   // also remain valid because when we apply this to a single line, it should work as before? Maybe 
@@ -1306,8 +1306,8 @@ bool testUpDownSample2D()
   // values dependent on distance from the center. We have 6 coeffs, so we need 5 equations if we 
   // want to treat a as free parameter as before. Maybe this is good:
   //
-  //    (1) 1 = a + 2*(b+c)                   as before: a1 = 1 - a0
-  //    (2) 0 = c + b/2                       as before: a2 = -a1 / 2
+  //    (1) 1 = a + 2*(b+c)                   as before: d1 = 1 - d0
+  //    (2) 0 = c + b/2                       as before: d2 = -d1 / 2
   //    (3) 1 = a + 4*(b+c+d+e) + 8*f         total sum of unity
   //    (4) d = b / sqrt(2)
   //    (5) e = c / sqrt(2)

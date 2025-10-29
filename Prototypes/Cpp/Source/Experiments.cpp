@@ -893,25 +893,24 @@ bool testUpDownSample1D()
   // -(1) The total sum of weights should be 1
   // -(2) The ends must be -0.5 times the values next to the end. I think, this is because the 
   //      spike spreads with weight 0.5 into the adjacent samples int the oversampled signal.
-  // -Let's express the kernel in general as [a2 a1 a0 a1 a2] where a0 is the center coeff. I 
+  // -Let's express the kernel in general as [d2 d1 d0 d1 d2] where d0 is the center coeff. I 
   //  think, the conditions can now be formulated as:
-  //    (1) a0 + 2*(a1+a2) = 1
-  //    (2) a2 = -a1/2
-  //  This should give us a 1-parametric family of filter kernels. Maybe use a0 as parameter. 
-  //  Substitute a2 = -a1/2 into (1): a0 + 2*(a1 - a1/2) = 1 and solve for a1:
-  //  a1 = 1 - a0. Let's try it:
-  Real a0 = 0.625;     // interesting values: 1, 0.75, 0.6875, 2/3, 0.625, 0.5
-  Real a1 = 1 - a0;
-  Real a2 = -a1 / 2;
-  h = Vec({a2, a1, a0, a1, a2});
-  // Yes! It works! We now can tweak the kernel by tweaking a0. Setting a0 = 1 just takes the 
-  // middle sample and does not do any filtering at all. Using a0 = 0.5 introduces a rather strong
-  // filtering. Maybe we should impose the additional condition that a1 = a0/2. That leads to 
-  // a0 = 2/3. That's not a very nice number in base 2 though and leads to rounding errors. Using 
-  // a0 = 0.75 may be a bit to little filtering. Maybe use 11/16 = 0.6875 or 10/16 = 0.625. Maybe
-  // try to figure out the 2D version, then try a couple of values of a0 and select the best 
+  //    (1) d0 + 2*(d1+d2) = 1
+  //    (2) d2 = -d1/2
+  //  This should give us a 1-parametric family of filter kernels. Maybe use d0 as parameter. 
+  //  Substitute d2 = -d1/2 into (1): d0 + 2*(d1 - d1/2) = 1 and solve for d1:
+  //  d1 = 1 - d0. Let's try it:
+  Real d0 = 0.625;     // interesting values: 1, 0.75, 0.6875, 2/3, 0.625, 0.5
+  Real d1 = 1 - d0;
+  Real d2 = -d1 / 2;
+  h = Vec({d2, d1, d0, d1, d2});
+  // Yes! It works! We now can tweak the kernel by tweaking d0. Setting d0 = 1 just takes the 
+  // middle sample and does not do any filtering at all. Using d0 = 0.5 introduces a rather strong
+  // filtering. Maybe we should impose the additional condition that d1 = d0/2. That leads to 
+  // d0 = 2/3. That's not a very nice number in base 2 though and leads to rounding errors. Using 
+  // d0 = 0.75 may be a bit to little filtering. Maybe use 11/16 = 0.6875 or 10/16 = 0.625. Maybe
+  // try to figure out the 2D version, then try a couple of values of d0 and select the best 
   // downsampling filter by eye.
-  // ToDo: rename a0,a1,a2 to d0,d1,d2 and rename h to d (for downsampler)
 
   // Apply the filter kernel to y and then decimate yf naively. This should give back x:
   Vec yf = filter(y, h, true);
@@ -926,25 +925,25 @@ bool testUpDownSample1D()
   // cropping after downsampling. But below, we solve it more elegantly anyway...
   
   // Now with the convenience functions:
-  a0  = 0.625;
+  d0  = 0.625;
   x   = Vec({7,-2,1,-6,5,-3,4,-1,3}); 
   y   = upsampleBy2_Lin(x);
-  xr  = downsampleBy2_Lin(y, a0);
+  xr  = downsampleBy2_Lin(y, d0);
   err = x - xr;
   ok &= rsIsAllZeros(err);
 
-  // Create kernels for various values of a0 and store them in a 2D array. The 1st index is the 
+  // Create kernels for various values of d0 and store them in a 2D array. The 1st index is the 
   // kernel index, then 2nd is the sample index:
-  Real aLo  = 0.5;        // Lowest value for a0. With 0.5, we get a flat freq response.
-  Real aHi  = 1.0;        // Highest value for a0. With 1.0
-  int  aNum = 7;
-  Mat  kernels(aNum, 5);  // The kernels have length 5
-  for(int i = 0; i < aNum; i++)
+  Real dLo  = 0.5;        // Lowest value for d0. With 0.5, we get a flat freq response.
+  Real dHi  = 1.0;        // Highest value for d0. With 1.0
+  int  dNum = 7;
+  Mat  kernels(dNum, 5);  // The kernels have length 5
+  for(int i = 0; i < dNum; i++)
   {
-    a0 = aLo + i*(aHi-aLo)/(aNum-1);
-    a1 = 1 - a0;
-    a2 = -a1 / 2;
-    h  = Vec({a2, a1, a0, a1, a2});
+    d0 = dLo + i*(dHi-dLo)/(dNum-1);
+    d1 = 1 - d0;
+    d2 = -d1 / 2;
+    h  = Vec({d2, d1, d0, d1, d2});
     kernels.setRow(i, h);
   }
 
@@ -958,7 +957,7 @@ bool testUpDownSample1D()
   // The condition for this is that the convolution of u with each kernel must have a value of 1 at 
   // the center values of zeros at all even indices (I think) when we define the origin to be at 
   // the center. ...TBC...Verify
-  for(int i = 0; i < aNum; i++)
+  for(int i = 0; i < dNum; i++)
   {
     // Convolve i-th of downsampling kernel with upsampling kernel u:
     Vec d  = kernels.getRowAsVector(i);
@@ -976,7 +975,7 @@ bool testUpDownSample1D()
     // are our wiggle room that we can use to optimize the frequency response.
 
     // Plot the convolution result:
-    rsStemPlot(du);
+    //rsStemPlot(du);
     // ToDo: Maybe plot the frequency response of du. I think, it is desirable to have it as flat 
     // as possible up to fs/4 and then go down as steeply as possible from fs/4 to fs/2. And these
     // two requirements are probably conflicting such that we need to strike a trade off. But maybe
@@ -1011,10 +1010,10 @@ bool testUpDownSample1D()
   // Observations:
   // -All freq responses meet in the point at 0.25*fs, 0dB
   // -They seem to all have a bump at around 0.165*fs
-  // -For a0 = 0.75, there seems to be a notch at the Nyquist freq 0.5*fs. That seems to be the 
+  // -For d0 = 0.75, there seems to be a notch at the Nyquist freq 0.5*fs. That seems to be the 
   //  most desirable response.
   // -The desired freq-response is that of a halfband filter because we use it to downsample by 2.
-  // -Conclusion: a0 = 0.75 seems a good overall choice for the downsampling. 
+  // -Conclusion: d0 = 0.75 seems a good overall choice for the downsampling. 
   // -The convolved du kernels become more and more triangular shaped as the center weight a0 is 
   //  increased from 0.5 to 1.0. The final one is [0 0 1/2 1 1/2 0 0]. The first one looks more 
   //  like a bump with flaps that go into the negative range at the outsides. The reason that we
@@ -1039,11 +1038,11 @@ bool testUpDownSample1D()
   // -Find pairs of filters for M=4 by convolving the ones for M=2 with themselves.
   // -Find pairs of filter kernels with longer length for better quality.
   // -Figure out the z-domain transfer function of downsampling filter a. I think, it's
-  //    H(z) = a0 + a1*(z^-1 + z^1) + a2*(z^-2 + z^2)
+  //    H(z) = d0 + d1*(z^-1 + z^1) + d2*(z^-2 + z^2)
   //  Setting it to zero gives:
-  //    0 = a0     + a1*(z^-1 + z^1) + a2*(z^-2 + z^2)
-  //      = a0*z^2 + a1*(z+z^3)      + a2*(1 + z^4)
-  //  Try to solve it explicitly as function of a0. It's a quartic, so it should be possible.
+  //    0 = d0     + d1*(z^-1 + z^1) + d2*(z^-2 + z^2)
+  //      = d0*z^2 + d1*(z+z^3)      + d2*(1 + z^4)
+  //  Try to solve it explicitly as function of d0. It's a quartic, so it should be possible.
   // -Write function upsampleViaDuplication and use it together with AT::decimateViaMean. This 
   //  should also give a lossless roundtrip. However, the quality of the upsampled data will be
   //  suboptimal. Is it possible to use something other than pixel duplication for the upsampling 
@@ -1056,18 +1055,18 @@ bool testUpDownSample1D()
   // -Maybe we can somehow generalize this: given an upsampling kernel, find a (set of) 
   //  downsampling kernels that yield a lossless roundtrip. The upsampling-by-2 kernel for linear
   //  interpolation in 1D can be written as [0.5, 1, 0.5] = [b1 b0 b1]. I think, it is the 0.5 that
-  //  appears in the a2 = -0.5*a1 condition. I think, we must have b0*a2 + b1*a1 = 0? ...and in 
-  //  general sum_{i,j} bi*aj = 0  where i = 2-j and the 2 is the length of the "forward wing" of 
+  //  appears in the d2 = -0.5*d1 condition. I think, we must have b0*d2 + b1*d1 = 0? ...and in 
+  //  general sum_{i,j} bi*dj = 0  where i = 2-j and the 2 is the length of the "forward wing" of 
   //  the kernel i.e. the maximum index when we assume index 0 to be at the center and let the 
-  //  leftward indices be negative. We don't write a_{-1}, a_{-2} though, because they are equal
-  //  to a_1, a_2 due to symmetry (using LaTeX subscript notation here for the index). 
-  // -OK - let's try it with a0 = 0.75, a1 = 0.25, a2 = -0.125
+  //  leftward indices be negative. We don't write d_{-1}, d_{-2} though, because they are equal
+  //  to d_1, d_2 due to symmetry (using LaTeX subscript notation here for the index). 
+  // -OK - let's try it with d0 = 0.75, d1 = 0.25, d2 = -0.125
   //    b = [b2 b1 b0 b1 b2] = [ 0      0.5   1     0.5    0    ]
-  //    a = [a2 a1 a0 a1 a2] = [-0.125  0.25  0.75  0.25  -0.125]
+  //    d = [d2 d1 d0 d1 d2] = [-0.125  0.25  0.75  0.25  -0.125]
   //  so we get:
-  //    b0*a2 + b1*a1 + b2*a0 = 1*(-0.125) + 0.5*0.25 + 0*0.75 = -0.125 + 0.125 = 0
+  //    b0*d2 + b1*d1 + b2*d0 = 1*(-0.125) + 0.5*0.25 + 0*0.75 = -0.125 + 0.125 = 0
   //  so the formula works in this case. I'm not sure, if it's generally the right formula, though.
-  //  let's try a0 = 0.8, a1 = 0.2, a2 = -0.1 and b0 = 1, b1 = 0.5, b2 = 0 as before:
+  //  let's try d0 = 0.8, d1 = 0.2, d2 = -0.1 and b0 = 1, b1 = 0.5, b2 = 0 as before:
   //    1*(-0.1) + 0.5*0.2 + 0*0.8 = -0.1 + 0.1 = 0
   //  OK, works in this case, too. But whether the formula with the sum holds in general for longer
   //  kernels needs to be figured out. If it does work, we have a way to produce a downsampling 

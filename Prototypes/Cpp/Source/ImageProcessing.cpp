@@ -801,7 +801,9 @@ public:
   // In this case, we would in both cases just sum over all pixels and the ratio would always be 
   // unity. And if we have to pick one row and one column, the center makes the most sense. Maybe it 
   // would make sense to use all rows/cols if we introduce a weight for each row/col that depends on
-  // how far away that row/col is from the center - maybe like 1/distance or something.
+  // how far away that row/col is from the center - maybe like 1/distance or something. Maybe the 
+  // name is a bit misleading because it usually refers to width/height without taking into account
+  // the values of the pixels/weights.
 
 
   /** Measures how anisotropic the kernel is by comparing the sum of the center horizontal strip 

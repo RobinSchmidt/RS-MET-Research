@@ -11,7 +11,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 {
 
   // Signal Processing:
-  //testRandomVectors();               // Stub
+  //testRandomVectors();               // Stub - Produce random vectors with user specified covariance matrix
   //testKalmanFilter();                // Under construction - doesn't work yet
 
 
@@ -26,6 +26,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //plotComplexGauss1D();
   //testComplexGaussBlurIIR();
 
+  // Resampling:
   //testUpDownSample1D();              // up- and downsampling with lossless roundtrip
   //testUpDownSample1D_2();
   //testUpDownSample2D();              // stub, dito but for images

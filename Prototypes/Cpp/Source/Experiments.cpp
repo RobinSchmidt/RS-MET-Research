@@ -33,7 +33,13 @@ using namespace rosic;                         // Dito
 
 bool testRandomVectors()
 {
-  // We produce correlated random 2D vectors with a given covariance matrix.
+  // We produce a sequence of correlated random 2D vectors with a given covariance matrix. We start
+  // with a vector valued sequence x[n] = (x1[n], x2[n]) or shorter x = (x1,x2) or x_n = (x1,x2)_n
+  // in which the components x1,x2 of each vector are uncorellated. Form that, we produce the 
+  // sequence y = (y1,y2) or y_n = (y1,y2)_n of correllated vectors by computing each vector y from
+  // the corresponding vector x as y = A*x for some matrix A that is related to the desired 
+  // covariance matrix C. Namely, A is the matrix square root of C. The matrix C can be set up by
+  // the user.
 
   bool ok = true;
 
@@ -94,11 +100,12 @@ bool testRandomVectors()
   Real d22 = AT::sumOfSquares( &y2[0],         N) / N;
   Real d12 = AT::sumOfProducts(&y1[0], &y2[0], N) / N;
   // We want: d11 == C(0,0), d22 == C(1,1), d12 == C(0,1) == C(1,0). Only approximately, of course
-  // because it's all noisy. The values look good.
+  // because it's all noisy. The values look to be in the right ballpark for N = 1000 and are quite
+  // close to the desired values for N = 10000.
 
 
-  rsPlotVectors(x1, x2);
-  rsPlotVectors(y1, y2);
+  rsPlotVectors(x1, x2);   // These signals are uncorrelated
+  rsPlotVectors(y1, y2);   // These signals are correlated
 
   return ok;
 
@@ -918,7 +925,7 @@ bool testUpDownSample1D()
   err = x - xr;
   ok &= rsIsAllZeros(err);
 
-  // Create kernels for various values of a0 and store then in a 2D array. The 1st index is the 
+  // Create kernels for various values of a0 and store them in a 2D array. The 1st index is the 
   // kernel index, then 2nd is the sample index:
   Real aLo  = 0.5;
   Real aHi  = 1.0;
@@ -947,11 +954,27 @@ bool testUpDownSample1D()
   // Observations:
   // -All freq responses meet in the point at 0.25*fs, 0dB
   // -They seem to all have a bump at around 0.165*fs
-  // -For a0 = 0.75, there seems to be a notch at the nyquist freq 0.5*fs. 
+  // -For a0 = 0.75, there seems to be a notch at the Nyquist freq 0.5*fs. That seems to be the 
+  //  most desirable response.
   // -The desired freq-response is that of a halfband filter because we use it to downsample by 2.
   // -Conclusion: a0 = 0.75 seems a good overall choice for the downsampling. 
 
   // ToDo:
+  // -Try to convolve the linear interpolation kernel with the h-kernel. I think, the result should
+  //  be a unit impulse for the identity operation to work. Or maybe it's enough if it has a value 
+  //  of 1 at the center n=0 and values of 0 at n=k*M where M is the oversampling factor (here M=2)
+  //  and k is any integer. The linear interpolation kernel for M=2 is [0.5 1.0 0.5]. I can be 
+  //  decomposed intto two phases (in the polyphase filtering sense) of [0.0 1.0 0.0] and 
+  //  [0.5 0.0 0.5] in the oversampled time domain. Let's use index n for the original time domain
+  //  and m = n*M for the oversampled domain with oversampling factor M. Then, in the n-domain, the 
+  //  two phases would look like [0 1] and [1/2 1/2]. Whenever m%M == 0, we would use 
+  //  y[m] = 1*x[n] + 0*x[n-1] and whenever m%M == 1, we would use y[m] = (x[n] + x[n-1])/2
+  // -Try to find a pair of interpolator/decimator kernels for upsampling by a factor of M=3. That 
+  //  may be easier because the interpolator kernel length is odd so it can be symmetric around its
+  //  center sample. An even kernel is symmetric around the midpoint between the two center 
+  //  samples which may be inconvenient.
+  // -Find pairs of filters for M=4 by convolving the ones for M=2 with themselves.
+  // -Find pairs of filter kernels with longer length for better quality.
   // -Figure out the z-domain transfer function of downsampling filter a. I think, it's
   //    H(z) = a0 + a1*(z^-1 + z^1) + a2*(z^-2 + z^2)
   //  Setting it to zero gives:
@@ -968,7 +991,7 @@ bool testUpDownSample1D()
   //  operation due to information loss in the downsampling). 
   // -Try to create a scheme using cubic interpolation in the upsampling step. 
   // -Maybe we can somehow generalize this: given an upsampling kernel, find a (set of) 
-  //  downsampling kernels that yield a lossless roundtrip. The upsampling kernel for linear 
+  //  downsampling kernels that yield a lossless roundtrip. The upsampling-by-2 kernel for linear
   //  interpolation in 1D can be written as [0.5, 1, 0.5] = [b1 b0 b1]. I think, it is the 0.5 that
   //  appears in the a2 = -0.5*a1 condition. I think, we must have b0*a2 + b1*a1 = 0? ...and in 
   //  general sum_{i,j} bi*aj = 0  where i = 2-j and the 2 is the length of the "forward wing" of 
@@ -1017,7 +1040,9 @@ bool testUpDownSample1D()
   //  x = [x0,x1,x2,...,xm,..., x_{M-1}], y = [y0,y1,y2,...,yn,..., y_{N-1}] where x is the 
   //  original and y the upsampled signal such that N=2*M, n=2*m. Assume to use 4 coeffs for 
   //  upsampling and that they are symmetrical, so actually only need two, and call them a1,a2.
-  //  We have y[n] = a1*(x[...])...TBC...
+  //  We have y[n] = a1*(x[...])...TBC...Oh! That notation is inconsistent with what was 
+  //  introduced earlier (where M was used as oversampling factor, the original sample index was n
+  //  and m=n*M was the oversampled index). Fix that!
   //  Maybe also have the condition that the upsampled signal must interpolate the original such 
   //  that y[2*m] = x[m]
 
@@ -1191,6 +1216,9 @@ bool testUpDownSample1D_2()
 
 bool testUpDownSample2D()
 {
+  // Under construction. We want to create a lossless pair of upsampling/downsampling filters for
+  // images, i.e. implement for 2D what we previuosly did for 1D.
+
   // For the 2D version, start with the assumption of bilinear interpolation for upsampling. We'll 
   // need a 5x5 kernel for downsampling. Let's express the kernel as:
   //
@@ -1215,7 +1243,7 @@ bool testUpDownSample2D()
   //    (5) e = c / sqrt(2)
   //
   // Maybe the 2D version of the kernel can be simply obtained by convolving a horizontal and a 
-  // vertical version of the 1D kernel? I think, that is equivalen to to putting weighted copy of
+  // vertical version of the 1D kernel? I think, that is equivalent to to putting weighted copy of
   // the kernel into each row (or column) of the 5x5 kernel where the weight is again taken from 
   // the corresponding column (or row) index. That means, if the 1D kernel is [c b a b c]m then the 
   // 2D version would be:
@@ -1234,8 +1262,9 @@ bool testUpDownSample2D()
   //  interpolateBilinear(const rsImage<T>& img, 2, 2)
   // -I think, the upsampling kernel for linear bilinear interpolation is given by:
   //
-  //   0.0  0.25  0.0
-  //   0.25 
+  //    0   1/4   0                     1/4  0  1/4
+  //   1/4   1   1/4   or maybe it's     0   1   0  
+  //    0   1/4   0                     1/4  0  1/4
 
 
   bool ok = true;

@@ -849,13 +849,7 @@ bool testUpDownSample1D()
   // of filtering before downsampling. It is actually possible to achieve exact reconstruction with
   // a variety of 5-point filters parametrized by a single parameter. This is detailed below.
   
-  // ToDo: 
-  // -Rename a0,a1,a2,... to d0,d1,d2, etc. and h to d. The d stands for downsampling kernel
-  // -Rename b0,b1,..  to u0,u1,... The u stands fopr upsampling kernel.
-  // -Use consitently n as index for the original, non-oversampled signal, m as index for the 
-  //  oversampled signal, M for the oversampling factor such that m = n*M. The length of the input
-  //  is N and the length of the oversampled signal is N*M.
-  // -Use fraction notation like 1/4 rather that decimal notation like 0.25
+
 
   // For convenience:
   using Real = double;
@@ -1114,6 +1108,14 @@ bool testUpDownSample1D()
   //  and m=n*M was the oversampled index). Fix that!
   //  Maybe also have the condition that the upsampled signal must interpolate the original such 
   //  that y[2*m] = x[m]
+  // 
+  // -Rename a0,a1,a2,... to d0,d1,d2, etc. and h to d. The d stands for downsampling kernel
+  // -Rename b0,b1,..  to u0,u1,... The u stands fopr upsampling kernel.
+  // -Use consitently n as index for the original, non-oversampled signal, m as index for the 
+  //  oversampled signal, M for the oversampling factor such that m = n*M. The length of the input
+  //  is N and the length of the oversampled signal is N*M.
+  // -Use fraction notation like 1/4 rather that decimal notation like 0.25
+  // -Do all of this also in the functions below.
 
   // -See also:
   //  https://en.wikipedia.org/wiki/Upsampling

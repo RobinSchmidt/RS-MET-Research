@@ -849,6 +849,13 @@ bool testUpDownSample1D()
   // of filtering before downsampling. It is actually possible to achieve exact reconstruction with
   // a variety of 5-point filters parametrized by a single parameter. This is detailed below.
   
+  // ToDo: 
+  // -Rename a0,a1,a2,... to d0,d1,d2, etc. and h to d. The d stands for downsampling kernel
+  // -Rename b0,b1,..  to u0,u1,... The u stands fopr upsampling kernel.
+  // -Use consitently n as index for the original, non-oversampled signal, m as index for the 
+  //  oversampled signal, M for the oversampling factor such that m = n*M. The length of the input
+  //  is N and the length of the oversampled signal is N*M.
+  // -Use fraction notation like 1/4 rather that decimal notation like 0.25
 
   // For convenience:
   using Real = double;
@@ -859,8 +866,14 @@ bool testUpDownSample1D()
   bool ok = true;
 
   // Create test signal
-  Vec x({0,-2,1,-6,5,-3,4,-1,0});         // First and last mus currently be zero
+  Vec x({0,-2,1,-6,5,-3,4,-1,0});         // First and last must currently be zero. 
   int Nx = (int) x.size();
+  // ToDo: Explain why first and last samples must be zero. I think, it's because we check if the 
+  // output after the roundtrip is equal to the input but this is only true when we disregard the
+  // boundary values. In a realtime context, this doesn't matter anyway because in this setting,
+  // we deal with a continuous stream of data and there really aren't any boundary values to deal 
+  // with. We may also imagine the boundaries to be in the infinitely distant past and future.
+
 
   // Upsample by a factor of 2:
   int Ny = 2*Nx;

@@ -835,6 +835,19 @@ void testComplexGaussBlurIIR()
 
 }
 
+
+// Move to library:
+template<class T>
+std::vector<T> rsConvolve(const std::vector<T>& x, const std::vector<T>& h)
+{
+  int Nx = (int) x.size();
+  int Nh = (int) h.size();
+  int Ny = Nx + Nh - 1;
+  std::vector<T> y(Ny);
+  rsArrayTools::convolve(&x[0], Nx, &h[0], Nh, &y[0]);
+  return y;
+}
+
 bool testUpDownSample1D()
 {
   // Some experiments with upsampling/downsampling schemes that are supposed to be an identity
@@ -904,6 +917,7 @@ bool testUpDownSample1D()
   // a0 = 0.75 may be a bit to little filtering. Maybe use 11/16 = 0.6875 or 10/16 = 0.625. Maybe
   // try to figure out the 2D version, then try a couple of values of a0 and select the best 
   // downsampling filter by eye.
+  // ToDo: rename a0,a1,a2 to d0,d1,d2 and rename h to d (for downsampler)
 
   // Apply the filter kernel to y and then decimate yf naively. This should give back x:
   Vec yf = filter(y, h, true);
@@ -927,8 +941,8 @@ bool testUpDownSample1D()
 
   // Create kernels for various values of a0 and store them in a 2D array. The 1st index is the 
   // kernel index, then 2nd is the sample index:
-  Real aLo  = 0.5;
-  Real aHi  = 1.0;
+  Real aLo  = 0.5;        // Lowest value for a0. With 0.5, we get a flat freq response.
+  Real aHi  = 1.0;        // Highest value for a0. With 1.0
   int  aNum = 7;
   Mat  kernels(aNum, 5);  // The kernels have length 5
   for(int i = 0; i < aNum; i++)
@@ -940,6 +954,45 @@ bool testUpDownSample1D()
     kernels.setRow(i, h);
   }
 
+  // Create the kernel that represents the upsampler, i.e. the linear interpolator, in the 
+  // oversampled domain. The mental image is that upsampling consists of zero-stuffing and then 
+  // applying that FIR kernel to the zero-stuffed, upsampled signal to obtain a signal with the
+  // anti-imaging filter applied:
+  Vec u = { 0.5, 1.0, 0.5 };        // The "u" stands for "upsampler"
+
+  // Verify that convolving each of the rows in "kernels" leads to a transparent up -> down chain.
+  // The condition for this is that the convolution of u with each kernel must have a value of 1 at 
+  // the center values of zeros at all even indices (I think) when we define the origin to be at 
+  // the center. ...TBC...Verify
+  for(int i = 0; i < aNum; i++)
+  {
+    // Convolve i-th of downsampling kernel with upsampling kernel u:
+    Vec d  = kernels.getRowAsVector(i);
+    Vec du = rsConvolve(d, u); 
+
+    // Verify transpareny conditions:
+    int n0 = 3;             // Center index of du is our zero. In general, du.size()/2, I think.
+    ok &= du[n0]   == 1.0;
+    ok &= du[n0+2] == 0.0;
+    ok &= du[n0-2] == 0.0;
+
+    // Plot the convolution result:
+    //rsPlotVector(du);
+    rsStemPlot(du);      // Maybe this is more appropriate than rsPlotVector
+    // ToDo: Maybe plot the frequency response of du
+
+    // Note:
+    //
+    // - Conceptually, it would probably make more sense to call it ud rather than du and compute 
+    //   it as  ud = rsConvolve(u, d)  because in practice, we apply upsampling first and then 
+    //   downsampling. But it doesn't matter because convolution is commutative anyway. Maybe it 
+    //   even makes more sense to write it this way because in math, function compositions also 
+    //   reads from right to left such that with this mathy function composition convention, du 
+    //   would actually indeed mean: first apply u, then apply d if u and d are see as functions to
+    //   be applied to a signal: du(x) would mean d(u(x)).
+  }
+
+
   // Plot frequency responses for the kernels:
   using Plt = SpectrumPlotter<Real>;
   Plt plt;
@@ -947,6 +1000,11 @@ bool testUpDownSample1D()
   plt.setFreqAxisUnit(Plt::FreqAxisUnits::normalized);
   plt.plotSpectraOfRows(kernels);
   // The plots are not normalized to 0 dB. Figure out why and fix it!
+
+
+
+
+
 
   rsAssert(ok);
   return ok;
@@ -958,6 +1016,9 @@ bool testUpDownSample1D()
   //  most desirable response.
   // -The desired freq-response is that of a halfband filter because we use it to downsample by 2.
   // -Conclusion: a0 = 0.75 seems a good overall choice for the downsampling. 
+  // -The convolved du kernels become more and more triangular shaped as the center weight a0 is 
+  //  increased from 0.5 to 1.0. The final one is [0 0 1/2 1 1/2 0 0]. The first one looks more 
+  //  like a bump with flaps that go into the negative range at the outsides
 
   // ToDo:
   // -Try to convolve the linear interpolation kernel with the h-kernel. I think, the result should

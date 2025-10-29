@@ -893,8 +893,8 @@ bool testUpDownSample1D()
   // -(1) The total sum of weights should be 1
   // -(2) The ends must be -0.5 times the values next to the end. I think, this is because the 
   //      spike spreads with weight 0.5 into the adjacent samples int the oversampled signal.
-  // -Let's express the kernel in general as [d2 d1 d0 d1 d2] where d0 is the center coeff. I 
-  //  think, the conditions can now be formulated as:
+  // -Let's express the downsampling kernel in general as [d2 d1 d0 d1 d2] where d0 is the center 
+  // coeff. I think, the conditions can now be formulated as:
   //    (1) d0 + 2*(d1+d2) = 1
   //    (2) d2 = -d1/2
   //  This should give us a 1-parametric family of filter kernels. Maybe use d0 as parameter. 
@@ -903,7 +903,7 @@ bool testUpDownSample1D()
   Real d0 = 0.625;     // interesting values: 1, 0.75, 0.6875, 2/3, 0.625, 0.5
   Real d1 = 1 - d0;
   Real d2 = -d1 / 2;
-  h = Vec({d2, d1, d0, d1, d2});
+  h = Vec({d2, d1, d0, d1, d2});  // Rename to d
   // Yes! It works! We now can tweak the kernel by tweaking d0. Setting d0 = 1 just takes the 
   // middle sample and does not do any filtering at all. Using d0 = 0.5 introduces a rather strong
   // filtering. Maybe we should impose the additional condition that d1 = d0/2. That leads to 
@@ -951,7 +951,7 @@ bool testUpDownSample1D()
   // oversampled domain. The mental image is that upsampling consists of zero-stuffing and then 
   // applying that FIR kernel to the zero-stuffed, upsampled signal to obtain a signal with the
   // anti-imaging filter applied:
-  Vec u = { 0.5, 1.0, 0.5 };        // The "u" stands for "upsampler"
+  Vec u = { 0.5, 1.0, 0.5 };        // The "u" stands for "upsampling kernel"
 
   // Verify that convolving each of the rows in "kernels" leads to a transparent up -> down chain.
   // The condition for this is that the convolution of u with each kernel must have a value of 1 at 
@@ -1052,32 +1052,30 @@ bool testUpDownSample1D()
   //  visually in terms of being close to the original (down-then-up is, of course, no identity 
   //  operation due to information loss in the downsampling). 
   // -Try to create a scheme using cubic interpolation in the upsampling step. 
-  // -Maybe we can somehow generalize this: given an upsampling kernel, find a (set of) 
+  // -Maybe we can somehow generalize this: given an upsampling kernel u, find a (set of) 
   //  downsampling kernels that yield a lossless roundtrip. The upsampling-by-2 kernel for linear
-  //  interpolation in 1D can be written as [0.5, 1, 0.5] = [b1 b0 b1]. I think, it is the 0.5 that
-  //  appears in the d2 = -0.5*d1 condition. I think, we must have b0*d2 + b1*d1 = 0? ...and in 
-  //  general sum_{i,j} bi*dj = 0  where i = 2-j and the 2 is the length of the "forward wing" of 
+  //  interpolation in 1D can be written as [0.5, 1, 0.5] = [u1 u0 u1]. I think, it is the 0.5 that
+  //  appears in the d2 = -0.5*d1 condition. I think, we must have u0*d2 + u1*d1 = 0? ...and in 
+  //  general sum_{i,j} ui*dj = 0  where i = 2-j and the 2 is the length of the "forward wing" of 
   //  the kernel i.e. the maximum index when we assume index 0 to be at the center and let the 
   //  leftward indices be negative. We don't write d_{-1}, d_{-2} though, because they are equal
   //  to d_1, d_2 due to symmetry (using LaTeX subscript notation here for the index). 
   // -OK - let's try it with d0 = 0.75, d1 = 0.25, d2 = -0.125
-  //    b = [b2 b1 b0 b1 b2] = [ 0      0.5   1     0.5    0    ]
+  //    u = [u2 u1 u0 u1 u2] = [ 0      0.5   1     0.5    0    ]
   //    d = [d2 d1 d0 d1 d2] = [-0.125  0.25  0.75  0.25  -0.125]
   //  so we get:
-  //    b0*d2 + b1*d1 + b2*d0 = 1*(-0.125) + 0.5*0.25 + 0*0.75 = -0.125 + 0.125 = 0
+  //    u0*d2 + u1*d1 + u2*d0 = 1*(-0.125) + 0.5*0.25 + 0*0.75 = -0.125 + 0.125 = 0
   //  so the formula works in this case. I'm not sure, if it's generally the right formula, though.
-  //  let's try d0 = 0.8, d1 = 0.2, d2 = -0.1 and b0 = 1, b1 = 0.5, b2 = 0 as before:
+  //  let's try d0 = 0.8, d1 = 0.2, d2 = -0.1 and u0 = 1, u1 = 0.5, u2 = 0 as before:
   //    1*(-0.1) + 0.5*0.2 + 0*0.8 = -0.1 + 0.1 = 0
   //  OK, works in this case, too. But whether the formula with the sum holds in general for longer
   //  kernels needs to be figured out. If it does work, we have a way to produce a downsampling 
-  //  kernel when the upsampling kernel is given (or the other way around)
-  // -Maybe use notation d0, d1, d2, ... for the downsampling coeffs and u0, u1, u2 for the 
-  //  upsampling  coeffs.
+  //  kernel d when the upsampling kernel u is given (or the other way around)
   // -It would be interesting, if this could also work for IIR filters. When we have an analytic 
-  //  expression for a_n, we may be able to derive an expression of b_n and then design a filter
-  //  that has that b_n sequence as impulse response.
-  // -Maybe approach it the other way around: assume the downsampling algorithm as given and try to 
-  //  find an appropriate upsampling algorithm such that up -> down gives the identity. Maybe 
+  //  expression for d_n, we may be able to derive an expression of u_n and then design a filter
+  //  that has that u_n sequence as impulse response.
+  // -Maybe approach it the other way around: assume the downsampling kernel d as given and try to 
+  //  find an appropriate upsampling kernel u such that up -> down gives the identity. Maybe 
   //  assume averaging as downsampling method
   // -The eventual goal is to later make a 2D version of the found schemes to use them for image
   //  processing in upsampled images. But first things first and the first thing is the 1D version.
@@ -1109,7 +1107,7 @@ bool testUpDownSample1D()
   //  that y[2*m] = x[m]
   // 
   // -[DONE] Rename a0,a1,a2,... to d0,d1,d2, etc. and h to d. The d stands for downsampling kernel
-  // -Rename b0,b1,..  to u0,u1,... The u stands fopr upsampling kernel.
+  // -Rename b0,b1,..  to u0,u1,... The u stands for upsampling kernel.
   // -Use consitently n as index for the original, non-oversampled signal, m as index for the 
   //  oversampled signal, M for the oversampling factor such that m = n*M. The length of the input
   //  is N and the length of the oversampled signal is N*M.

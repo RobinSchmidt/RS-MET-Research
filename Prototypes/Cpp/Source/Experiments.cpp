@@ -835,19 +835,6 @@ void testComplexGaussBlurIIR()
 
 }
 
-
-// Move to library:
-template<class T>
-std::vector<T> rsConvolve(const std::vector<T>& x, const std::vector<T>& h)
-{
-  int Nx = (int) x.size();
-  int Nh = (int) h.size();
-  int Ny = Nx + Nh - 1;
-  std::vector<T> y(Ny);
-  rsArrayTools::convolve(&x[0], Nx, &h[0], Nh, &y[0]);
-  return y;
-}
-
 bool testUpDownSample1D()
 {
   // Some experiments with upsampling/downsampling schemes that are supposed to be an identity
@@ -970,16 +957,25 @@ bool testUpDownSample1D()
     Vec d  = kernels.getRowAsVector(i);
     Vec du = rsConvolve(d, u); 
 
-    // Verify transpareny conditions:
+    // Verify transparency (i.e. perfect roundtrip reconstruction) conditions:
     int n0 = 3;             // Center index of du is our zero. In general, du.size()/2, I think.
     ok &= du[n0]   == 1.0;
     ok &= du[n0+2] == 0.0;
     ok &= du[n0-2] == 0.0;
+    // For longer kernels, we would need to check du at n0 +- 2*j to be zero where j ranges over 
+    // the integers up to (n0-1)/2, I think (verify!). For oversampling factors M other than 2, we 
+    // would need to check at n0 +- M*j against zero. What the filter does at all the other samples
+    // doesn't concern us because these samples will be discarded in the downsampling step. These
+    // are our wiggle room that we can use to optimize the frequency response.
 
     // Plot the convolution result:
-    //rsPlotVector(du);
-    rsStemPlot(du);      // Maybe this is more appropriate than rsPlotVector
-    // ToDo: Maybe plot the frequency response of du
+    rsStemPlot(du);
+    // ToDo: Maybe plot the frequency response of du. I think, it is desirable to have it as flat 
+    // as possible up to fs/4 and then go down as steeply as possible from fs/4 to fs/2. And these
+    // two requirements are probably conflicting such that we need to strike a trade off. But maybe
+    // what we actually should try to optimize is not the frequency response of du but rather those
+    // of d _and_ u. Although, here we treat u as given anyway. But in a more general setting, both
+    // of them matter and both should be reasonable in their own right.
 
     // Note:
     //
@@ -1002,10 +998,6 @@ bool testUpDownSample1D()
   // The plots are not normalized to 0 dB. Figure out why and fix it!
 
 
-
-
-
-
   rsAssert(ok);
   return ok;
 
@@ -1018,7 +1010,10 @@ bool testUpDownSample1D()
   // -Conclusion: a0 = 0.75 seems a good overall choice for the downsampling. 
   // -The convolved du kernels become more and more triangular shaped as the center weight a0 is 
   //  increased from 0.5 to 1.0. The final one is [0 0 1/2 1 1/2 0 0]. The first one looks more 
-  //  like a bump with flaps that go into the negative range at the outsides
+  //  like a bump with flaps that go into the negative range at the outsides. The reason that we
+  //  have some freedom of choice for the downsampling filters is that we do not care what the 
+  //  filter produces at the sample indices that we intend to throw away in the subsequent 
+  //  decimation step.
 
   // ToDo:
   // -Try to convolve the linear interpolation kernel with the h-kernel. I think, the result should

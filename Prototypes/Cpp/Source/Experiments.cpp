@@ -1125,7 +1125,7 @@ bool testUpDownSample1D_2()
 {
   bool ok = true;
 
-  // Let's assume that we are given the downsampling kernel as [a1 a0 a1] = [0.25 0.5 0.25]. Now we 
+  // Let's assume that we are given the downsampling kernel as [d1 d0 d1] = [0.25 0.5 0.25]. Now we 
   // want to find a corresponding upsampling kernel [b1 b0 b1] or [b2 b1 b0 b1 b2]. Consider the 
   // situation:
   //
@@ -1138,33 +1138,33 @@ bool testUpDownSample1D_2()
   // kernel of the form [0.25 0.5 0.25]
 
   // Let's assume, our hypothesized condition  
-  //   b0*a2 + b1*a1 + b2*a0 = 0
-  // is the correct equation. Then with our given a0 = 0.5, a1 = 0.25, a2 = 0, this becomes:
+  //   b0*d2 + b1*d1 + b2*d0 = 0
+  // is the correct equation. Then with our given d0 = 0.5, d1 = 0.25, d2 = 0, this becomes:
   //   b0*0 + b1*0.25 + b2*0.5 = 0
 
   // Maybe impose additionally: b0 + 2*(b1 + b2) = 2 because this is the sum which the linear 
   // interpolation upsampling kernel gives. Maybe also require b0 = 1, also like in linear 
   // interpolation. Or maybe leave b0 as free parameter. OK, so we have 2 equations:
-  //   (1)  0 = b1/4 + b2/2 = b0*a2 + b1*a1 + b2*a0
+  //   (1)  0 = b1/4 + b2/2 = b0*d2 + b1*d1 + b2*d0
   //   (2)  2 = b0 + 2*(b1 + b2)
   // although the second is questionable. I think, the number 2 can be explained by the fact that 
   // we upsample by a factor of 2. If we would upsample by 3, then the coeffs should sum to 3, I 
   // guess. We'll see. Let's solve the 1st equation for b2:
   //   b2 = -b1/2
-  // This is very reminscent of the a2 = -a1/2 that we had above. Interesting! Substituting b2 into 
+  // This is very reminscent of the d2 = -d1/2 that we had above. Interesting! Substituting b2 into 
   // (2) and solving for b1 gives:
   //   2 = b0 + 2*(b1 - b1/2)  
   //   2-b0 = 2*(b1 - b1/2) = 2*b1 - b1 = b1   ->   b1 = 2 - b0
   //
-  // Let's solve the 1st equation for b2 assuming general a-coeffs:
-  //   b2 = -(b0*a2 + b1*a1) / a0      (= -(b0*0 + b1*0.25) / 0.5 = -b1/2 for our choice of a)
+  // Let's solve the 1st equation for b2 assuming general d-coeffs:
+  //   b2 = -(b0*d2 + b1*d1) / d0      (= -(b0*0 + b1*0.25) / 0.5 = -b1/2 for our choice of d)
   // Substitute b2 into (2):
-  //   2 = b0 + 2*(b1 - (b0*a2 + b1*a1) / a0)
-  // and solve for b1 using wolfram alpha with "solve 2 = b0 + 2 (b1 - (b0 a2 + b1 a1)/a0) for b1"
+  //   2 = b0 + 2*(b1 - (b0*d2 + b1*d1) / d0)
+  // and solve for b1 using wolfram alpha with "solve 2 = b0 + 2 (b1 - (b0 d2 + b1 d1)/d0) for b1"
   // gives:
-  //   b1 = (2*a0 - a0*b0 + 2*a2*b0) / (2*(a0-a1))
+  //   b1 = (2*d0 - d0*b0 + 2*d2*b0) / (2*(d0-d1))
   // and the equation for b2 is already given above. Here it is again:
-  //   b2 = -(b0*a2 + b1*a1) / a0 
+  //   b2 = -(b0*d2 + b1*d1) / d0 
 
 
   // OK - let's try it:
@@ -1177,28 +1177,28 @@ bool testUpDownSample1D_2()
 
 
   // Define coeffs of the downsampling (averaging) kernel a:
-  Real a0 = 0.5;
-  Real a1 = 0.25;
-  Real a2 = 0.0;
+  Real d0 = 0.5;
+  Real d1 = 0.25;
+  Real d2 = 0.0;
 
-  // Try some other kernels (The kernel should satisfy a0 + 2*(a1 + a2) = 1, I think):
-  //a0 = 0.6; a1 = 0.2; a2 = 0.0;  // Yes. Works also.
-  //a0 = 0.8; a1 = 0.1; a2 = 0.0;  // also OK.
-  //a0 = 0.4; a1 = 0.2; a2 = 0.1;  // Nope! Maybe a2 != 0 is the culprit? But why?
+  // Try some other kernels (The kernel should satisfy d0 + 2*(d1 + d2) = 1, I think):
+  //d0 = 0.6; d1 = 0.2; d2 = 0.0;  // Yes. Works also.
+  //d0 = 0.8; d1 = 0.1; d2 = 0.0;  // also OK.
+  //d0 = 0.4; d1 = 0.2; d2 = 0.1;  // Nope! Maybe d2 != 0 is the culprit? But why?
 
   // Define coeffs of the upsampling (interpolation) kernel b:
   Real b0 = 1.25;       // Try some other values
   //b0 = 1.5;
   //b0 = 1.0;
-  Real b1 = (2*a0 - a0*b0 + 2*a2*b0) / (2*(a0-a1));  // Verify!
-  Real b2 = -(b0*a2 + b1*a1) / a0;                   // Verify!
+  Real b1 = (2*d0 - d0*b0 + 2*d2*b0) / (2*(d0-d1));  // Verify!
+  Real b2 = -(b0*d2 + b1*d1) / d0;                   // Verify!
   // Some sets of coeffs are:
   //   b0 = 1.0,   b1 = 1.0,  b2 = -0.5;
   //   b0 = 1.5,   b1 = 0.5,  b2 = -0.25
   //   b0 = 1.25,  b1 = 0.75, b2 = -0.375
   // where we only select b0 and b1,b2 follow via the formulas. These b-coeffs resulted from 
-  // choosing a0 = 0.5, a1 = 0.25, a2 = 0. Maybe plot the frequency responses for various choices
-  // of b0. But the kernel for a given a. Maybe first optimize a, then select b.
+  // choosing d0 = 0.5, d1 = 0.25, d2 = 0. Maybe plot the frequency responses for various choices
+  // of b0. But the kernel for a given d.(?) Maybe first optimize d, then select b.
 
   // Create test signal
   //Vec x({7,-2,1,-6,5,-3,4,-1,3});
@@ -1243,8 +1243,8 @@ bool testUpDownSample1D_2()
   Vec xr(Nx);
   for(int i = 2; i < Nx-2; i++) {  // i is index into x
     int j = 2*i;                   // j is center index into y
-    xr[i] = a0*y[j] + a1*(y[j-1] + y[j+1]) + a2*(y[j-2] + y[j+2]);
-    xr[i] /= a0;   // why is this needed?
+    xr[i] = d0*y[j] + d1*(y[j-1] + y[j+1]) + d2*(y[j-2] + y[j+2]);
+    xr[i] /= d0;   // why is this needed?
   }
 
   // ToDo: handle edges. Maybe the loop can go from i=1 to i < Nx-1 like in
@@ -1257,8 +1257,8 @@ bool testUpDownSample1D_2()
   return ok;
 
   // ToDo:
-  // -Figure out why it doesn't work when a2 != 0. Maybe we still have mistakes in some of the 
-  //  formulas. The xr[i] /= a0 is pretty strange anyway. I don't really understand it and have 
+  // -Figure out why it doesn't work when d2 != 0. Maybe we still have mistakes in some of the 
+  //  formulas. The xr[i] /= d0 is pretty strange anyway. I don't really understand it and have 
   //  found it by trial and error.
 
   
@@ -1268,14 +1268,14 @@ bool testUpDownSample1D_2()
 
 
   // ToDo:
-  // -Let the user prescribe the downsampling kernel a0,a1 or maybe even a0,a1,a2. Then compute
+  // -Let the user prescribe the downsampling kernel d0,d1 or maybe even d0,d1,d2. Then compute
   //  the upsampling kernel b0,b1,b2 from:
-  //    (1)  0 = b0*a2 + b1*a1 + a0*b2         (1st term is 0 bcs a2 = 0 here)
+  //    (1)  0 = b0*d2 + b1*d1 + d0*b2         (1st term is 0 bcs d2 = 0 here)
   //    (2)  2 = b0 + 2*(b1 + b2)
   // -Do also the converse: Let the user specify the upsampling kernel as b0,b1,b2 and compute from
-  //  that the downsampling kernel a0,a1,a2 from:
-  //    (1)  0 = a0*b2 + a1*b1 + a2*b0
-  //    (2)  1 = a0 + 2*(a1 + a2)
+  //  that the downsampling kernel d0,d1,d2 from:
+  //    (1)  0 = d0*b2 + d1*b1 + d2*b0
+  //    (2)  1 = d0 + 2*(d1 + d2)
   // -These sets of equations look nicely symmetric. The 1st is always the same, the 2nd has equal
   //  right hand sides (just with roles of a and b swapped)
 

@@ -28,7 +28,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Resampling:
   testUpDownSample1D();              // up- and downsampling with lossless roundtrip
-  //testUpDownSample1D_2();
+  testUpDownSample1D_2();
   //testUpDownSample2D();              // stub, dito but for images
 
 

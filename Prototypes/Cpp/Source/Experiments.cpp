@@ -874,7 +874,7 @@ bool testUpDownSample1D()
   Vec y  = resampleLinear(x, Ny);
 
   // Define the filter kernel for downsampling:
-  Vec h({-0.25, 0.5, 0.5, 0.5, -0.25});   // maybe rename h to a
+  Vec h({-0.25, 0.5, 0.5, 0.5, -0.25});   // maybe rename to d
   // This kernel has been found by considering the situation arising from upsampling an impulse by a 
   // factor 2 via linear interpolation. This gives:
   //
@@ -1094,6 +1094,24 @@ bool testUpDownSample1D()
   //  pixel from the original positions [...] the “magic” kernel can be factorized into a 
   //  nearest-neighbor upsampling to the “doubled” (or “tiled”) grid, i.e. {1, 1}, followed by 
   //  convolution with a regular {1/4, 1/2, 1/4} kernel  "
+  // 
+  // -Write a function that takes as input an arbitrary filter kernel h[n] and an oversampling
+  //  factor M and that produces a suitable complementary kernel g[n] such that in the convolution
+  //  product of h and g, we satisfy the "perfect roundtrip" condition. This condition say that:
+  //  at all indices n = k*M where k is any integer, the convolution result must be 0 except for 
+  //  k = 0 where it must be 1. The problem may not have unique solution so the function may need
+  //  to impose some additional requirements. Maybe they can be given in terms of additional 
+  //  parameters. Or maybe there is some natural way to choose a unique solution based on some 
+  //  sort of optimality criterion. Maybe we could also minimize the length of the result by 
+  //  imposing the constraint that soem outer coeffs need to be zero. I think, this function can 
+  //  then be used to produce a downsampling kernel d[n] from a given upsampling kernel u[n] or 
+  //  vice versa. Maybe the problem can be simplified by assuming symmetric kernels.
+  // 
+  // -Try different upsampling filter kernels derived from: Lagrange interpolation, Hermite 
+  //  interpolation, B-Spline smoothing (may not interpolate, i.e. pass through orignal data 
+  //  points), binomial coeffs e.g. [1 1]/2, [1 2 1]/4, [1 3 3 1]/8, [1 4 6 4 1]/16, ...,
+  //  windowed sinc interpolation, etc.
+  // 
   //
   // -Maybe try to express the  upsample -> downsample  roundtrip in terms of the upsampling and 
   //  downsampling coeffs and from the roundtrip equations, derive condtions for the coeffs. Let
@@ -1107,7 +1125,7 @@ bool testUpDownSample1D()
   //  that y[2*m] = x[m]
   // 
   // -[DONE] Rename a0,a1,a2,... to d0,d1,d2, etc. and h to d. The d stands for downsampling kernel
-  // -Rename b0,b1,..  to u0,u1,... The u stands for upsampling kernel.
+  // -[DONE] Rename b0,b1,..  to u0,u1,... The u stands for upsampling kernel.
   // -Use consitently n as index for the original, non-oversampled signal, m as index for the 
   //  oversampled signal, M for the oversampling factor such that m = n*M. The length of the input
   //  is N and the length of the oversampled signal is N*M.
@@ -1124,7 +1142,7 @@ bool testUpDownSample1D_2()
   bool ok = true;
 
   // Let's assume that we are given the downsampling kernel as [d1 d0 d1] = [0.25 0.5 0.25]. Now we 
-  // want to find a corresponding upsampling kernel [b1 b0 b1] or [b2 b1 b0 b1 b2]. Consider the 
+  // want to find a corresponding upsampling kernel [u1 u0 u1] or [u2 u1 u0 u1 u2]. Consider the 
   // situation:
   //
   //   in-index:   0   1   2   3   4   5    6    7    8
@@ -1136,36 +1154,35 @@ bool testUpDownSample1D_2()
   // kernel of the form [0.25 0.5 0.25]
 
   // Let's assume, our hypothesized condition  
-  //   b0*d2 + b1*d1 + b2*d0 = 0
+  //   u0*d2 + u1*d1 + u2*d0 = 0
   // is the correct equation. Then with our given d0 = 0.5, d1 = 0.25, d2 = 0, this becomes:
-  //   b0*0 + b1*0.25 + b2*0.5 = 0
+  //   u0*0 + u1*0.25 + u2*0.5 = 0
 
-  // Maybe impose additionally: b0 + 2*(b1 + b2) = 2 because this is the sum which the linear 
-  // interpolation upsampling kernel gives. Maybe also require b0 = 1, also like in linear 
-  // interpolation. Or maybe leave b0 as free parameter. OK, so we have 2 equations:
-  //   (1)  0 = b1/4 + b2/2 = b0*d2 + b1*d1 + b2*d0
-  //   (2)  2 = b0 + 2*(b1 + b2)
+  // Maybe impose additionally: u0 + 2*(u1 + u2) = 2 because this is the sum which the linear 
+  // interpolation upsampling kernel gives. Maybe also require u0 = 1, also like in linear 
+  // interpolation. Or maybe leave u0 as free parameter. OK, so we have 2 equations:
+  //   (1)  0 = u1/4 + u2/2 = u0*d2 + u1*d1 + u2*d0
+  //   (2)  2 = u0 + 2*(u1 + u2)
   // although the second is questionable. I think, the number 2 can be explained by the fact that 
   // we upsample by a factor of 2. If we would upsample by 3, then the coeffs should sum to 3, I 
-  // guess. We'll see. Let's solve the 1st equation for b2:
-  //   b2 = -b1/2
-  // This is very reminscent of the d2 = -d1/2 that we had above. Interesting! Substituting b2 into 
-  // (2) and solving for b1 gives:
-  //   2 = b0 + 2*(b1 - b1/2)  
-  //   2-b0 = 2*(b1 - b1/2) = 2*b1 - b1 = b1   ->   b1 = 2 - b0
+  // guess. We'll see. Let's solve the 1st equation for u2:
+  //   u2 = -u1/2
+  // This is very reminscent of the d2 = -d1/2 that we had above. Interesting! Substituting u2 into 
+  // (2) and solving for u1 gives:
+  //   2 = u0 + 2*(u1 - u1/2)  
+  //   2-u0 = 2*(u1 - u1/2) = 2*u1 - u1 = u1   ->   u1 = 2 - u0
   //
-  // Let's solve the 1st equation for b2 assuming general d-coeffs:
-  //   b2 = -(b0*d2 + b1*d1) / d0      (= -(b0*0 + b1*0.25) / 0.5 = -b1/2 for our choice of d)
-  // Substitute b2 into (2):
-  //   2 = b0 + 2*(b1 - (b0*d2 + b1*d1) / d0)
-  // and solve for b1 using wolfram alpha with "solve 2 = b0 + 2 (b1 - (b0 d2 + b1 d1)/d0) for b1"
+  // Let's solve the 1st equation for u2 assuming general d-coeffs:
+  //   u2 = -(u0*d2 + u1*d1) / d0      (= -(u0*0 + u1*0.25) / 0.5 = -u1/2 for our choice of d)
+  // Substitute u2 into (2):
+  //   2 = u0 + 2*(u1 - (u0*d2 + u1*d1) / d0)
+  // and solve for u1 using wolfram alpha with "solve 2 = u0 + 2 (u1 - (u0 d2 + u1 d1)/d0) for u1"
   // gives:
-  //   b1 = (2*d0 - d0*b0 + 2*d2*b0) / (2*(d0-d1))
-  // and the equation for b2 is already given above. Here it is again:
-  //   b2 = -(b0*d2 + b1*d1) / d0 
+  //   u1 = (2*d0 - d0*u0 + 2*d2*u0) / (2*(d0-d1))
+  // and the equation for u2 is already given above. Here it is again:
+  //   u2 = -(u0*d2 + u1*d1) / d0 
 
-
-  // OK - let's try it:
+  // ...OK - let's try it:
 
   // For convenience:
   using Real = double;
@@ -1181,22 +1198,22 @@ bool testUpDownSample1D_2()
 
   // Try some other kernels (The kernel should satisfy d0 + 2*(d1 + d2) = 1, I think):
   //d0 = 0.6; d1 = 0.2; d2 = 0.0;  // Yes. Works also.
-  //d0 = 0.8; d1 = 0.1; d2 = 0.0;  // also OK.
+  //d0 = 0.8; d1 = 0.1; d2 = 0.0;  // Also OK.
   //d0 = 0.4; d1 = 0.2; d2 = 0.1;  // Nope! Maybe d2 != 0 is the culprit? But why?
 
   // Define coeffs of the upsampling (interpolation) kernel b:
-  Real b0 = 1.25;       // Try some other values
-  //b0 = 1.5;
-  //b0 = 1.0;
-  Real b1 = (2*d0 - d0*b0 + 2*d2*b0) / (2*(d0-d1));  // Verify!
-  Real b2 = -(b0*d2 + b1*d1) / d0;                   // Verify!
+  Real u0 = 1.25;       // Try some other values
+  //u0 = 1.5;
+  //u0 = 1.0;
+  Real u1 = (2*d0 - d0*u0 + 2*d2*u0) / (2*(d0-d1));  // Verify!
+  Real u2 = -(u0*d2 + u1*d1) / d0;                   // Verify!
   // Some sets of coeffs are:
-  //   b0 = 1.0,   b1 = 1.0,  b2 = -0.5;
-  //   b0 = 1.5,   b1 = 0.5,  b2 = -0.25
-  //   b0 = 1.25,  b1 = 0.75, b2 = -0.375
-  // where we only select b0 and b1,b2 follow via the formulas. These b-coeffs resulted from 
+  //   u0 = 1.0,   u1 = 1.0,  u2 = -0.5;
+  //   u0 = 1.5,   u1 = 0.5,  u2 = -0.25
+  //   u0 = 1.25,  u1 = 0.75, u2 = -0.375
+  // where we only select u0 and u1,u2 follow via the formulas. These u-coeffs resulted from 
   // choosing d0 = 0.5, d1 = 0.25, d2 = 0. Maybe plot the frequency responses for various choices
-  // of b0. But the kernel for a given d.(?) Maybe first optimize d, then select b.
+  // of u0. But the kernel for a given d.(?) Maybe first optimize d, then select b.
 
   // Create test signal
   //Vec x({7,-2,1,-6,5,-3,4,-1,3});
@@ -1215,8 +1232,8 @@ bool testUpDownSample1D_2()
   }
 
   // Apply the upsampling filter:
-  Vec b({b2, b1, b0, b1, b2});
-  Vec yf = filter(y, b, true);
+  Vec u({u2, u1, u0, u1, u2});
+  Vec yf = filter(y, u, true);
   // With this upsampling scheme, none of the original sample values from x survive in yf. The 
   // values are now all intermingled with some neighbor values. That's a bit strange because it
   // violates our intuition that the upsampled data should interpolate the original data, i.e. 
@@ -1229,12 +1246,12 @@ bool testUpDownSample1D_2()
   // y[2*i] = x[i]. It's just the y[2*i+1] that we need to fill in. With linear interpolation, 
   // the kernel in the original domain would be [0.5 0.5] such that 
   // y[2*i+1] = 0.5 * (x[i] + x[i+1]). After upsampling with zero stuffing, i.e. just 
-  // preliminarily setting y[2*i+1] = 0, one could apply the kernel [0.5 1.0 0.5] as post 
-  // processing filter. This should give the same oversampled end result. Maybe try a 4-point
+  // preliminarily setting y[2*i+1] = 0, one could apply the kernel [0.5 1.0 0.5] = [1 2 1]/2 as 
+  // post processing filter. This should give the same oversampled end result. Maybe try a 4-point
   // kernel in the original domain [1 3 3 1]/8. Linear would be [1 1]/2. Somehow these look like
-  // lines of Pascal's triangle? Is that a coincidence? Maybe try also [1 5 10 10 5 1]/32. I think,
-  // these lines may approach a Gaussian bell curve? Try to plot it! Maybe add code for that to 
-  // testGaussBlurFIR. 
+  // lines of Pascal's triangle? Is that a coincidence? Maybe try also [1 4 6 4 1]/16 and
+  // [1 5 10 10 5 1]/32. I think, these lines may approach a Gaussian bell curve? Try to plot it! 
+  // Maybe add code for that to testGaussBlurFIR. 
 
   // Now do the downsampling:
 
@@ -1267,12 +1284,12 @@ bool testUpDownSample1D_2()
 
   // ToDo:
   // -Let the user prescribe the downsampling kernel d0,d1 or maybe even d0,d1,d2. Then compute
-  //  the upsampling kernel b0,b1,b2 from:
-  //    (1)  0 = b0*d2 + b1*d1 + d0*b2         (1st term is 0 bcs d2 = 0 here)
-  //    (2)  2 = b0 + 2*(b1 + b2)
-  // -Do also the converse: Let the user specify the upsampling kernel as b0,b1,b2 and compute from
+  //  the upsampling kernel u0,u1,u2 from:
+  //    (1)  0 = u0*d2 + u1*d1 + d0*u2         (1st term is 0 bcs d2 = 0 here)
+  //    (2)  2 = u0 + 2*(u1 + u2)
+  // -Do also the converse: Let the user specify the upsampling kernel as u0,u1,u2 and compute from
   //  that the downsampling kernel d0,d1,d2 from:
-  //    (1)  0 = d0*b2 + d1*b1 + d2*b0
+  //    (1)  0 = d0*u2 + d1*u1 + d2*u0
   //    (2)  1 = d0 + 2*(d1 + d2)
   // -These sets of equations look nicely symmetric. The 1st is always the same, the 2nd has equal
   //  right hand sides (just with roles of a and b swapped)

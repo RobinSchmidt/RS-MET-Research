@@ -1,0 +1,36 @@
+The goal is to produce a pair of FIR filter kernels u[m] and d[m] where u is used for upsampling and
+d for downsampling such that an upsample -> downsample roundtrip is an identity operation. The 
+setting is as follows: We get an input signal x[n] and we want to oversample it by a factor M. We 
+first produce a signal y[m] by zero stuffing the original input signal. We will have y[m=n*M] = x[n]
+and for all other values m that are not a multiple of M, y[m] is zero. To this y signal, we apply 
+the upsampling filter which we represent by its impulse respone u[m] to obtain z[m]. z[m] shall be 
+smoothed version of y[m]. The filter u[m] serves as anti-imaging lowpass. Then, we apply to z[m] the
+downsampling filter represented by its impulse response (aka kernel) d[m] to obtain w[m]. What we 
+want is:
+
+  w[n*M] = y[n*M]
+
+such that when decimating w[m] to extract every M-th value, we get our original signal x[n] back 
+exactly. For values of m that are not a multiple of M, we do not yet have any conditions. For the 
+time being, these values can be whatever they want to be. We will later use these as degrees of 
+freedom to optimize our filters u[m],d[m] to some criteria.
+
+
+
+
+
+...TBC...
+
+
+ToDo: 
+
+- Derive formulas/algorithms to produce a downsampling kernel d for a given upsampling kernel u (or
+  vice versa)
+
+See also in RS-MET-Research/Prototypes/Cpp/Source/Main.cpp:
+
+  testUpDownSample1D();
+  testUpDownSample1D_2();
+  
+There are some implemetations of very small special cases of the general scheme that we want to 
+derive here.

@@ -34,3 +34,9 @@ See also in RS-MET-Research/Prototypes/Cpp/Source/Main.cpp:
   
 There are some implemetations of very small special cases of the general scheme that we want to 
 derive here.
+
+
+
+Resources:
+
+https://www2.seas.gwu.edu/~ayoussef/papers/ImageDownUpSampling-CISST99.pdf

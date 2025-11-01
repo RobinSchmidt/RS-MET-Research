@@ -14,8 +14,17 @@ There are some numbers that have \emph{only} the trivial divisors. These very sp
 %The first few
 ...TBC...give table of first 100 or so prime numbers.
 
+% ToDo: This should be a higher level section - at the same level as division
+
 \medskip
 Because prime numbers are so special and important, it would be nice to have some sort of formula or algorithm to produce all the prime numbers. Ideally, we would like to define a function $p(n)$ that spits out the $n$th prime number. If you can find such a formula for $p(n)$ that is easy to evaluate, eternal fame is yours. It's not at all easy and actually one of the holy grails of mathematics.
+
+% The Correct Definition of Prime Numbers | They taught you WRONG!
+% https://www.youtube.com/watch?v=yu13sjeHFXo
+% -Defines primes by the property: A number p is a prime iff for all integers a,b:
+%  p | ab  ->  p|a or p|b
+% -For the integers, this definition is equivalent to the simpler definition above but this 
+%  definition here is better suited for generalizations to other number systems
 
 \paragraph{Willans' Formula}
 But what exactly do I mean by "easy to evaluate"? If anything is allowed, then it is indeed possible to write down an explicit formula for the $n$th prime. For example, this beast here:
@@ -212,6 +221,8 @@ Two numbers $n$ and $m$ are said to be \emph{coprime} or \emph{mututally prime} 
 \subsection{Number Theoretic Functions}
 \emph{Number theoretic functions}, sometimes also called \emph{arithmetic functions}, are functions that take a natural number $n$ as input and produce as output another number. Real or complex outputs are allowed in general but more typically, the outputs are also integers [VERIFY]. These functions encode some property about the natural numbers. We have already encountered the number of divisors function $d(n)$ as an example of such a number theoretic function. But there are many more. Before introducing them one by one, we'll first talk about some general features that these functions may or may not have. ...TBC...
 
+% Should be a section, not a subsection
+
 % explain multiplicativity as an important feature. I think, it means that f(m*n) = f(m) * f(n)
 
 % https://en.wikipedia.org/wiki/Arithmetic_function
@@ -223,6 +234,8 @@ Two numbers $n$ and $m$ are said to be \emph{coprime} or \emph{mututally prime} 
 
 % The Euler Totient Function: A MASTERCLASS! | Number Theory Lecture!
 % https://www.youtube.com/watch?v=60ibhKzLzL8
+
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Prime Counting Function}

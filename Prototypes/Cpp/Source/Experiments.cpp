@@ -884,11 +884,13 @@ std::vector<T> rsUpSample(const std::vector<T>& x, int M, const std::vector<T>& 
   //   filter. Maybe reflect that by renaming the function and its parameters to 
   //   rsUpSample(x, M, h). Now x can be any signal and h is just interpreted as the anti-imaging 
   //   filter to be used.
+  //
+  // - Maybe rename to rsUpSample1D - or maybe not
 }
 
-bool testStretchConv1D()
+bool testStretchConv1D()  // Rename to testUpSample1D
 {
-  // Tests if our function rsStretchConvolve() produces the expected outputs for (scaled) linear 
+  // Tests if our function rsUpSample() produces the expected outputs for (scaled) linear 
   // interpolation kernels.
 
   bool ok = true;
@@ -1214,7 +1216,6 @@ bool testUpDownSample1D_1()
   //  points), binomial coeffs e.g. [1 1]/2, [1 2 1]/4, [1 3 3 1]/8, [1 4 6 4 1]/16, ...,
   //  windowed sinc interpolation, etc.
   // 
-  //
   // -Maybe try to express the  upsample -> downsample  roundtrip in terms of the upsampling and 
   //  downsampling coeffs and from the roundtrip equations, derive condtions for the coeffs. Let
   //  x = [x0,x1,x2,...,xm,..., x_{M-1}], y = [y0,y1,y2,...,yn,..., y_{N-1}] where x is the 
@@ -1225,6 +1226,14 @@ bool testUpDownSample1D_1()
   //  and m=n*M was the oversampled index). Fix that!
   //  Maybe also have the condition that the upsampled signal must interpolate the original such 
   //  that y[2*m] = x[m]
+  // 
+  // - Try to design pairs of IIR upsampling/downsampling filters. The conditions for perfect 
+  //   reconstruction are that the impulse response must be zero at multiples of M and 1 at 0. We 
+  //   could force an IIR filter to have zero crossings at multiples of M by designing it in terms
+  //   of modal filters that produce sine waves (with phase zero) at (normalized) frequencies that 
+  //   happen to be multiples of 1/M (I think). GitHub Copilot also suggested to look at comb 
+  //   filters.
+  //   
   // 
   // -[DONE] Rename a0,a1,a2,... to d0,d1,d2, etc. and h to d. The d stands for downsampling kernel
   // -[DONE] Rename b0,b1,..  to u0,u1,... The u stands for upsampling kernel.

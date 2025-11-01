@@ -864,17 +864,18 @@ std::vector<T> rsZeroStuff(const std::vector<T>& x, int M)
   //   fillWithZeros() step after creating y.
 }
 
-/** Stretches the kernel h1 by the factor M using zero stuffing and then convolves the result of 
-that with kernel h2. This operation has the following interpretation: If we assume that h1 is a 
-filter kernel that is used for upsampling by some factor L (the value of which is irrelevant here) 
-and then the result of that upsampling by L is again upsampled by a factor of M using the kernel 
-h2, we will at the end of the day have upsampled our signal by the factor L*M with some resulting 
-kernel. This function computes that resulting kernel. */
+/** Upsamples the signal x by the factor M using zero stuffing and then convolves the result of 
+that with kernel h which can be interpreted as anti-imaging filter. This operation can also be 
+interpreted as follows: If we assume that x is itself a filter kernel that is used for upsampling
+by some factor L (the value of which is irrelevant here) and then the result of that upsampling by
+L is again upsampled by a factor of M using the kernel h, we will at the end of the day have 
+upsampled our signal by the factor L*M with some resulting kernel. This function computes that 
+resulting kernel. */
 template<class T>
-std::vector<T> rsStretchConvolve(const std::vector<T>& h1, int M, const std::vector<T>& h2)
+std::vector<T> rsUpSample(const std::vector<T>& x, int M, const std::vector<T>& h)
 {
-  std::vector<T> h1z = rsZeroStuff(h1, M);
-  return rsConvolve(h1z, h2);
+  std::vector<T> xz = rsZeroStuff(x, M);
+  return rsConvolve(xz, h);
 
   // ToDo:
   //
@@ -906,8 +907,8 @@ bool testStretchConv1D()
 
   // Verify that (linearly) upsampling by 2-then-3 or by 3-then-2 yields the same result as 
   // upsampling by 6 directly:
-  Vec u_2_3 = rsStretchConvolve(u_2, 3, u_3);  ok &= u_2_3 == u_6;
-  Vec u_3_2 = rsStretchConvolve(u_3, 2, u_2);  ok &= u_3_2 == u_6;
+  Vec u_2_3 = rsUpSample(u_2, 3, u_3);  ok &= u_2_3 == u_6;
+  Vec u_3_2 = rsUpSample(u_3, 2, u_2);  ok &= u_3_2 == u_6;
 
   return ok;
 

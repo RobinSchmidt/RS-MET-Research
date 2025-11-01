@@ -832,8 +832,54 @@ void testComplexGaussBlurIIR()
   //  ...why? ..compare 25 and 35
   // -the abs looks quite squarish - not circular is it should (maybe plot contour lines to
   //  see it better)
-
 }
+
+template<class T>
+std::vector<T> rsZeroStuff(const std::vector<T>& x, int M)
+{
+  size_t Nx = x.size();
+
+  size_t Ny = Nx * M;                  
+  // Maybe (M-1)*(Nx-1) + Nx is enough? Rationale: Between any two elements in x, we insert M-1 
+  // zeros and there are Nx-1 "gaps" between the elements of x. The + Nx is for the original 
+  // elements in x
+
+  std::vector<T> y(Ny);                // Will init y with all zeros
+  for(size_t n = 0; n < Nx; n++)
+    y[n*M] = x[n];
+  return y;
+}
+
+/** Stretches the vector g by the factor M using zero stuffing and then convolves the result of 
+that with kernel h. ...TBC... ToDo: Explain what this is good for */
+template<class T>
+std::vector<T> rsStretchConvolve(const std::vector<T>& x, int M, const std::vector<T>& h)
+{
+  std::vector<T> xz = rsZeroStuff(x, M);
+  return rsConvolve(xz, h);
+}
+
+bool testStretchConv1D()
+{
+  bool ok = true;
+
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+  // The two basic upsampling kernels for upsampling by factor 2, 3 and 6 respectively, assuming
+  // linear interpolation. Actually, u2 should be divided by 2 and u3 by 3, so we are actually 
+  // using scaled versions of the kernels here because then the numbers are nicer (i.e. integers).
+  Vec u2 = { 1, 2, 1 };
+  Vec u3 = { 1, 2, 3, 2, 1 };
+  Vec u6 = { 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 };
+
+
+  Vec u6_2 = rsStretchConvolve(u2, 3, u3); // upsample by 2 then 3 -> 6
+
+
+  return ok;
+}
+
 
 bool testUpDownSample1D_1()
 {
@@ -1303,6 +1349,7 @@ bool testUpDownSample1D()
 {
   bool ok = true;
 
+  ok &= testStretchConv1D();
   ok &= testUpDownSample1D_1();
   ok &= testUpDownSample1D_2();
 

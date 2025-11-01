@@ -839,7 +839,8 @@ std::vector<T> rsZeroStuff(const std::vector<T>& x, int M)
 {
   size_t Nx = x.size();
 
-  size_t Ny = Nx * M;                  
+  //size_t Ny = Nx * M;
+  size_t Ny = (M-1)*(Nx-1) + Nx;    
   // Maybe (M-1)*(Nx-1) + Nx is enough? Rationale: Between any two elements in x, we insert M-1 
   // zeros and there are Nx-1 "gaps" between the elements of x. The + Nx is for the original 
   // elements in x
@@ -866,16 +867,17 @@ bool testStretchConv1D()
   using Real = double;
   using Vec  = std::vector<Real>;
 
-  // The two basic upsampling kernels for upsampling by factor 2, 3 and 6 respectively, assuming
-  // linear interpolation. Actually, u2 should be divided by 2 and u3 by 3, so we are actually 
-  // using scaled versions of the kernels here because then the numbers are nicer (i.e. integers).
-  Vec u2 = { 1, 2, 1 };
-  Vec u3 = { 1, 2, 3, 2, 1 };
-  Vec u6 = { 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 };
+  // The upsampling kernels for linearly upsampling by factor 2, 3 and 6 respectively. Actually, u2
+  // should be divided by 2 and u3 by 3 and u6 by 6, so we are actually using scaled versions of 
+  // the kernels here because then the numbers are nicer (i.e. integers).
+  Vec u_2 = { 1, 2, 1 };
+  Vec u_3 = { 1, 2, 3, 2, 1 };
+  Vec u_6 = { 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 };
 
-
-  Vec u6_2 = rsStretchConvolve(u2, 3, u3); // upsample by 2 then 3 -> 6
-
+  // Verify that (linearly) upsampling by 2-then-3 or by 3-then-2 yields the same result as 
+  // upsampling by 6 directly:
+  Vec u_2_3 = rsStretchConvolve(u_2, 3, u_3);  ok &= u_2_3 == u_6;
+  Vec u_3_2 = rsStretchConvolve(u_3, 2, u_2);  ok &= u_3_2 == u_6;
 
   return ok;
 }

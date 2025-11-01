@@ -888,7 +888,7 @@ std::vector<T> rsUpSample(const std::vector<T>& x, int M, const std::vector<T>& 
   // - Maybe rename to rsUpSample1D - or maybe not
 }
 
-bool testStretchConv1D()  // Rename to testUpSample1D
+bool testUpSample1D()  // Rename to testUpSample1D
 {
   // Tests if our function rsUpSample() produces the expected outputs for (scaled) linear 
   // interpolation kernels.
@@ -1414,7 +1414,7 @@ bool testUpDownSample1D()
 {
   bool ok = true;
 
-  ok &= testStretchConv1D();
+  ok &= testUpSample1D();
   ok &= testUpDownSample1D_1();
   ok &= testUpDownSample1D_2();
 

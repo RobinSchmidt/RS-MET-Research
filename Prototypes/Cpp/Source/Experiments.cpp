@@ -835,7 +835,7 @@ void testComplexGaussBlurIIR()
 
 }
 
-bool testUpDownSample1D()
+bool testUpDownSample1D_1()
 {
   // Some experiments with upsampling/downsampling schemes that are supposed to be an identity
   // operation when executed in sequence. A simple scheme for upsampling by 2 would be to use 
@@ -1298,6 +1298,17 @@ bool testUpDownSample1D_2()
   //  should be that the upsampling factor is >= 1. There are some ideas for that in 
   //  MiscMathNotes.txt in the private repo.
 }
+
+bool testUpDownSample1D()
+{
+  bool ok = true;
+
+  ok &= testUpDownSample1D_1();
+  ok &= testUpDownSample1D_2();
+
+  return ok;
+}
+
 
 bool testUpDownSample2D()
 {

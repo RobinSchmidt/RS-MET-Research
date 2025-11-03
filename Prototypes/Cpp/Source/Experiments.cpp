@@ -903,9 +903,9 @@ bool testUpSample1D()
   Vec u_6 = { 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 };
 
   // Verify that (linearly) upsampling by 2-then-3 or by 3-then-2 yields the same result as 
-  // upsampling by 6 directly:
-  Vec u_2_3 = rsUpSample(u_2, 3, u_3);  ok &= u_2_3 == u_6;
-  Vec u_3_2 = rsUpSample(u_3, 2, u_2);  ok &= u_3_2 == u_6;
+  // upsampling by 6 directly. Thanks to using integers, we can use exact equality comparisions:
+  Vec u_2_3 = rsUpSample(u_2, 3, u_3); ok &= u_2_3 == u_6;
+  Vec u_3_2 = rsUpSample(u_3, 2, u_2); ok &= u_3_2 == u_6;
 
   return ok;
 

@@ -834,11 +834,11 @@ void testComplexGaussBlurIIR()
   //  see it better)
 }
 
-/** Zero stuffs the signal x by the factor M, i.e. produces a new vector y in which between any 
-values in x, M-1 zeros will be interspersed. This operation can be viewed as the first step in 
-upsampling a signal by the factor M. The second step would then be to filter the result of the 
-zero-stuffing with a filter (typically lowpass) that is called the anti-imaging filter in this
-context. */
+/** Zero stuffs the signal x by the factor M, i.e. produces a new signal y in which between any 
+pair of values in x, M-1 zeros will be interspersed. This operation can be viewed as the first step
+in upsampling a signal by the factor M. The second step would then be to filter the result of the 
+zero-stuffing with a filter (typically a lowpass) that is called the anti-imaging filter in this
+context. @see rsUpSample(). */
 template<class T>
 std::vector<T> rsZeroStuff(const std::vector<T>& x, int M)
 {
@@ -853,11 +853,12 @@ std::vector<T> rsZeroStuff(const std::vector<T>& x, int M)
   // 
   // - The length Ny of the result y is (M-1)*(Nx-1) + Nx because between any two elements in x, we
   //   insert M-1 zeros and there are Nx-1 "gaps" between the elements of x where we need to insert
-  //   our zeros. The + Nx is for the original elements in x. If we would use just M*Nx instead, we
-  //   would produce a vector y whose last M-1 values would be all zeros, so the somewhat 
+  //   these zeros. The + Nx is for the original elements in x. If we would use just M*Nx instead, 
+  //   we would produce a vector y whose last M-1 values would be all zeros, so the somewhat 
   //   complicated formula can be seen as a way to scrap away these extra zeros at the end of the 
   //   resulting signal. Maybe in some contexts it would be more convenient to keep them? I'm not 
-  //   sure.
+  //   sure. Maybe if that turns out to be the case, we could add an optional boolean parameter 
+  //   "trimTrailingZeros" or something similar (defaulting to true).
   //
   // - We rely on zero intitialization of std::vector here. When implementing this for some other
   //   array class that perhaps doesn't init the allocated memory, we would have to add some
@@ -879,16 +880,10 @@ std::vector<T> rsUpSample(const std::vector<T>& x, int M, const std::vector<T>& 
 
   // ToDo:
   //
-  // - Figure out if this operation could be useful in other contexts as well. I guess, we could 
-  //   also use it to just upsample any signal h1 by factor m and then use h2 as the anti-imaging 
-  //   filter. Maybe reflect that by renaming the function and its parameters to 
-  //   rsUpSample(x, M, h). Now x can be any signal and h is just interpreted as the anti-imaging 
-  //   filter to be used.
-  //
-  // - Maybe rename to rsUpSample1D - or maybe not
+  // - Maybe rename to rsUpSample1D. Or maybe not. Maybe 1D should be the default assumption.
 }
 
-bool testUpSample1D()  // Rename to testUpSample1D
+bool testUpSample1D()
 {
   // Tests if our function rsUpSample() produces the expected outputs for (scaled) linear 
   // interpolation kernels.
@@ -920,22 +915,29 @@ bool testUpSample1D()  // Rename to testUpSample1D
   //   Maybe create a helper function testUpsample(int L, int M) and call that in a double loop
   //   over l = 1..L, and m = 1..M. It should internally create the three vectors 
   //   uL = {1, 2, .., L, .., 2, 1}, uM = {1, 2, .., M, .., 2, 1}, 
-  //   uLM = {1, 2, .., L*M, .., 2, 1} and then do the rsStretchConvolve with uL,uM and uM,uL 
-  //   internally and compare the results to uLM.
+  //   uLM = {1, 2, .., L*M, .., 2, 1} and then do the rsUpSample with uL,uM and uM,uL internally
+  //   and compare the results to uLM.
   //
   // - We actually do not really verify that the upsampling results are the same. We just verify 
   //   that the resulting kernel looks as expected which should imply that the upsampling results 
   //   will be the same. Maybe check that directly by actually upsampling some signal. Maybe use a
   //   sequence of random integers for that. Maybe then test that also with arbitrary kernels - 
   //   maybe just containing random numbers. Maybe try using weird kernel lengths that do not 
-  //   necessarily have anything to do with the number M. Try even lengths, too.
+  //   necessarily have anything to do with the numbers L and M. Try even lengths, too.
   //
-  // - Maybe integrate the functions rsZeroStuff and rsStretchConvolve into RAPT in 
-  //   StandardVectorTools.h. Maybe make also lower level versions in rsArrayTools.h that operate 
-  //   on C arrays.
+  // - Maybe integrate the functions rsZeroStuff and rsUpSample into RAPT in 
+  //   StandardContainerTools.h. Maybe make also lower level versions in rsArrayTools.h that 
+  //   operate on raw C arrays.
   //
   // - Maybe test if the roundoff behavior is better or worse with direct upsampling by L*M or 
-  //   succesive upsampling by L-then-M and M-then-N. 
+  //   succesive upsampling by L-then-M and M-then-L. 
+  //
+  // - Document the general formula for the lengths of the linear interpolation kernels. I think,
+  //   it's given by 2*M-1. Also explain that this length may be very different for other types of
+  //   interpolation (i.e. anti-imaging) filters such that there is no general rule. This is why 
+  //   rsUpSample really needs the parameter M. The desired oversampling factor M cannot in 
+  //   general be inferred from the length of h and/or x because the function doesn't assume any 
+  //   particular type of anti-imaging filter.
 }
 
 

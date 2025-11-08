@@ -38,8 +38,27 @@ u and a 5th order filter d, we can express the convolution as the following matr
 The perfect reconstruction conditions give us 3 equations (verify!):
 
   u1*d0 + u0*d1         = 0    Eq. 1
-  u2*d0 + u1*d1 + u0*d3 = 1    Eq. 2
+  u2*d0 + u1*d1 + u0*d2 = 1    Eq. 2
           u2*d1 + u1*d2 = 0    Eq. 3
+
+		  
+Nope! This is wrong! The system must look like (I think):
+
+  u0  0   0   0   0      d0     r0
+  u1  u0  0   0   0      d1     r1  <--- = 0   Eq. 1
+  u2  u1  u0  0   0   *  d2  =  r2
+  0   u2  u1  u0  0      d3     r3  <--- = 1   Eq. 2
+  0   0   u2  u1  u0     d4     r4
+  0   0   0   u2  u1            r5  <--- = 0   Eq. 3
+  0   0   0   0   u2            r6
+
+So our 3 equations are:
+
+  u1*d0 + u0*d1                         = 0    Eq. 1
+          u2*d1 + u1*d2 + u0*d3         = 1    Eq. 2
+                          u2*d3 + u1*d4 = 0    Eq. 3
+  
+		  
   
 We have 5 unknowns d0,d1,d2,d3,d4 so to uniquely determine them, we need more equations. Some 
 possible additional conditions for d that could make sense are:

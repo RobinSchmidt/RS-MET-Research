@@ -1412,13 +1412,66 @@ bool testUpDownSample1D_2()
   //  MiscMathNotes.txt in the private repo.
 }
 
+bool testUpDownSampleFilters()
+{
+  // Under construction...
+
+  // We try to generate the downsampling filter kernel d = d[n] from a given upsampling kernel 
+  // u = u[n] systematically by posing the problem as linear system of equations and solving it.
+  // ...TBC...
+
+  bool ok = true;
+
+  // For convenience:
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using Mat  = RAPT::rsMatrix<Real>;
+  using LA   = RAPT::rsLinearAlgebraNew;
+  //using AT   = RAPT::rsArrayTools;
+
+  // Define oversampling factor and upsampling kernel:
+  int M = 2;                           // Oversampling factor
+  Vec u = { 1, 2, 1 }; u = 0.5*u;      // Upsampling kernel (linear interpolation)
+
+  // Allocate and populate coefficient matrix:
+  int L = 5;                           // Length of downsampling kernel
+  Mat A(L, L);                         // Coefficient matrix
+  A(0, 0) = u[1];
+  A(0, 1) = u[0];
+  // ...more to do...
+
+  // Allocate and populate right hand side:
+  Vec r(L);
+  // ...more to do...
+
+  // Compute downsampling kernel:
+  Vec d = LA::solve(A, r);
+
+
+  // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation
+  // up to roundoff error:
+  // ...
+
+
+
+  return ok;
+}
+
+
+
+
 bool testUpDownSample1D()
 {
   bool ok = true;
 
+  // Under construction:
+  ok &= testUpDownSampleFilters();
+
+  // Unit Tests:
   ok &= testUpSample1D();
   ok &= testUpDownSample1D_1();
   ok &= testUpDownSample1D_2();
+  ok &= testUpDownSampleFilters();
 
   return ok;
 }

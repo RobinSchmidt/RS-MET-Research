@@ -1443,12 +1443,27 @@ bool testUpDownSampleFilters()
   //    d0 +    d1 +    d2 +    d3 +    d4 = 1    Eq. 4
   //    d0 -    d1 +    d2 -    d3 +    d4 = 0    Eq. 5
   int L = 5;                           // Length of downsampling kernel
+  
   Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,
                  0  , u[2], u[1], u[0],  0  ,
                  0  ,  0  ,  0  , u[2], u[1],
                  1  ,  1  ,  1  ,  1  ,  1  ,
                  1  , -1  ,  1  , -1  ,  1    });
   Vec r({0, 1, 0, 1, 0});
+  // Oh! I think, the 2nd to last row is linearly dependent of the first 3. If we just sum the 
+  // first 3 rows, we get a constant row! I guess, that means the unit gain at DC condition of 
+  // Eq. 4 is automatically satisfied when Eq. 1,2,3 are satisfied?
+ 
+
+  /*
+  Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,
+                 0  , u[2], u[1], u[0],  0  ,
+                 0  ,  0  ,  0  , u[2], u[1],
+                 1  ,  1  ,  1  ,  1  ,  1  ,
+                 0  ,  0  ,  1  ,  0  ,  0    });
+  Vec r({0, 1, 0, 1, 1});
+  */
+
   // I think, the length L is generally N + 2*(N-1) when N is the length of the upsampling kernel u
   // but I'm not sure about that
 

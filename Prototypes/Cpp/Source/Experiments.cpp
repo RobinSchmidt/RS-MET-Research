@@ -1433,19 +1433,32 @@ bool testUpDownSampleFilters()
   int M = 2;                           // Oversampling factor
   Vec u = { 1, 2, 1 }; u = 0.5*u;      // Upsampling kernel (linear interpolation)
 
-  // Allocate and populate coefficient matrix:
-  int L = 5;                           // Length of downsampling kernel
-  Mat A(L, L);                         // Coefficient matrix
-  A(0, 0) = u[1];
-  A(0, 1) = u[0];
-  // ...more to do...
 
-  // Allocate and populate right hand side:
-  Vec r(L);
-  // ...more to do...
+
+  // Create coefficient matrix and right hand side of the following system of equations:
+  // 
+  // u1*d0 + u0*d1                         = 0    Eq. 1
+  //         u2*d1 + u1*d2 + u0*d3         = 1    Eq. 2
+  //                         u2*d3 + u1*d4 = 0    Eq. 3
+  //    d0 +    d1 +    d2 +    d3 +    d4 = 1    Eq. 4
+  //    d0 -    d1 +    d2 -    d3 +    d4 = 0    Eq. 5
+  int L = 5;                           // Length of downsampling kernel
+  Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,
+                 0  , u[2], u[1], u[0],  0  ,
+                 0  ,  0  ,  0  , u[2], u[1],
+                 1  ,  1  ,  1  ,  1  ,  1  ,
+                 1  , -1  ,  1  , -1  ,  1    });
+  Vec r({0, 1, 0, 1, 0});
+  // I think, the length L is generally N + 2*(N-1) when N is the length of the upsampling kernel u
+  // but I'm not sure about that
+
 
   // Compute downsampling kernel:
   Vec d = LA::solve(A, r);
+
+  // Verify solution:
+  Vec r2 = A*d;  // Should be equal to r
+  // It isn't equal to r. Instead, it's all zeros. It appears that the matrix A is singular
 
 
   // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation

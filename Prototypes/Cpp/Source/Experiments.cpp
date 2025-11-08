@@ -1458,7 +1458,9 @@ bool testUpDownSampleFilters()
 
   // Verify solution:
   Vec r2 = A*d;  // Should be equal to r
-  // It isn't equal to r. Instead, it's all zeros. It appears that the matrix A is singular
+  // It isn't equal to r. Instead, it's all zeros. It appears that the matrix A is singular. It 
+  // seems to fail in the last row. Maybe we should try a different last row. Maybe try normalizing
+  // the middle sample d[2] to 1.
 
 
   // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation

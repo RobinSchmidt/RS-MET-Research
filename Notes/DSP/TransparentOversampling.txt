@@ -27,23 +27,6 @@ freedom to optimize our filters u[m],d[m] to some criteria.
 Let's denote r[m] the filter resulting from the convolution of u[m] and d[m]. For a 3rd order filter 
 u and a 5th order filter d, we can express the convolution as the following matrix-vector equation:
 
-  u0  0   0   0  0     d0     r0
-  u1  u0  0   0  0     d1     r1  <--- = 0   Eq. 1
-  u2  u1  u0  0  0  *  d2  =  r2
-  u2  u1  u0  0  0     d3     r3  <--- = 1   Eq. 2
-  u2  u1  u0  0  0     d4     r4
-  0   u2  u1  0  0            r5  <--- = 0   Eq. 3
-  0   0   u2  0  0            r6
-							  
-The perfect reconstruction conditions give us 3 equations (verify!):
-
-  u1*d0 + u0*d1         = 0    Eq. 1
-  u2*d0 + u1*d1 + u0*d2 = 1    Eq. 2
-          u2*d1 + u1*d2 = 0    Eq. 3
-
-		  
-Nope! This is wrong! The system must look like (I think):
-
   u0  0   0   0   0      d0     r0
   u1  u0  0   0   0      d1     r1  <--- = 0   Eq. 1
   u2  u1  u0  0   0   *  d2  =  r2
@@ -51,26 +34,30 @@ Nope! This is wrong! The system must look like (I think):
   0   0   u2  u1  u0     d4     r4
   0   0   0   u2  u1            r5  <--- = 0   Eq. 3
   0   0   0   0   u2            r6
-
-So our 3 equations are:
+							  
+The perfect reconstruction conditions give us 3 equations from the marked 3 lines (verify!):
 
   u1*d0 + u0*d1                         = 0    Eq. 1
           u2*d1 + u1*d2 + u0*d3         = 1    Eq. 2
                           u2*d3 + u1*d4 = 0    Eq. 3
-  
-		  
-  
-We have 5 unknowns d0,d1,d2,d3,d4 so to uniquely determine them, we need more equations. Some 
+
+We have 5 unknowns d0,d1,d2,d3,d4 so to uniquely determine them, we need 2 more equations. Some 
 possible additional conditions for d that could make sense are:
 
-  Unit gain at DC: d0 + d1 + d2 + d3 + d4 = 1
+  Unit gain at DC:    d0 + d1 + d2 + d3 + d4 = 1   Eq. 4
+  Zero gain at fs/2:  d0 - d1 + d2 - d3 + d4 = 0   Eq. 5   (verify!)
   
-  Maybe zero gain at fs/2:  some alternating sum must be 0?
+
+
+Other ideas for conditions to satisfy:
+-Symmetry around the midpoint like d3 = d1, d4 = d0? 
+-Maybe we can also impose requirements of r such as: r1 + r2 + r3 + r4 + r5 + r6 = 1, etc.?
   
-  Symmetry around the midpoint like d3 = d1, d4 = d0? Maybe we can also impose requirements of r 
-  such as: r1 + r2 + r3 + r4 + r5 + r6 = 1, etc.?
   
   
+  
+  
+----------------------------------------------------------------------------------------------------  
 Let's take the symmetric case and denote the impulse responses in a way such that the middle sample 
 gets index zero such that u = [u1 u0 u1], d = [d2 d1 d0 d1 d2], r = [r3 r2 r1 r0 r1 r2 r3]. In this 
 case, the matrix-vector equation looks like:
@@ -119,7 +106,7 @@ Wait - no! We don't have 5 unknowns! We have only 3, namely d0,d1,d2.
 
 
 
-
+----------------------------------------------------------------------------------------------------
 ToDo: 
 
 - Derive formulas/algorithms to produce a downsampling kernel d for a given upsampling kernel u (or

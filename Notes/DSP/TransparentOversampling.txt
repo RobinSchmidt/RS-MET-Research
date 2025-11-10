@@ -44,8 +44,12 @@ The perfect reconstruction conditions give us 3 equations from the marked 3 line
 We have 5 unknowns d0,d1,d2,d3,d4 so to uniquely determine them, we need 2 more equations. Some 
 possible additional conditions for d that could make sense are:
 
-  Unit gain at DC:    d0 + d1 + d2 + d3 + d4 = 1   Eq. 4
-  Zero gain at fs/2:  d0 - d1 + d2 - d3 + d4 = 0   Eq. 5   (verify!)
+  Unit gain at DC:    d0 + d1 + d2 + d3 + d4 = 1   
+  Zero gain at fs/2:  d0 - d1 + d2 - d3 + d4 = 0   (verify!)
+  Odd symmetry:       d3 = d1   or   d3 - d1 = 0   
+                      d4 = d0   or   d4 - d0 = 0   
+  Even symmetry:      d3 = -d1  or   d3 + d1 = 0   
+                      d4 = -d0  or   d4 + d0 = 0
   
 
 

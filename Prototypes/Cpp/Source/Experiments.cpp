@@ -1414,10 +1414,14 @@ bool testUpDownSample1D_2()
 
 bool testUpDownSampleFilters()
 {
-  // Under construction...
+  // Under construction...doesn't work yet. 
 
   // We try to generate the downsampling filter kernel d = d[n] from a given upsampling kernel 
   // u = u[n] systematically by posing the problem as linear system of equations and solving it.
+  // For some more details about what is going on here, look up the file:
+  // 
+  //   RS-MET-Research/Notes/DSP/TransparentOversampling.txt
+  // 
   // ...TBC...
 
   bool ok = true;
@@ -1437,11 +1441,12 @@ bool testUpDownSampleFilters()
 
   // Create coefficient matrix and right hand side of the following system of equations:
   // 
-  // u1*d0 + u0*d1                         = 0    Eq. 1
-  //         u2*d1 + u1*d2 + u0*d3         = 1    Eq. 2
-  //                         u2*d3 + u1*d4 = 0    Eq. 3
-  //    d0 +    d1 +    d2 +    d3 +    d4 = 1    Eq. 4
-  //    d0 -    d1 +    d2 -    d3 +    d4 = 0    Eq. 5
+  // u1*d0 + u0*d1                         = 0    Eq. 1:  r1 = 0
+  //         u2*d1 + u1*d2 + u0*d3         = 1    Eq. 2:  r3 = 1
+  //                         u2*d3 + u1*d4 = 0    Eq. 3:  r5 = 0
+  // 
+  //    d0 +    d1 +    d2 +    d3 +    d4 = 1    Eq. 4:  Unit gain at DC
+  //    d0 -    d1 +    d2 -    d3 +    d4 = 0    Eq. 5:  Zero gain at Nyquist
   int L = 5;                           // Length of downsampling kernel
   
   Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,
@@ -1453,6 +1458,12 @@ bool testUpDownSampleFilters()
   // Oh! I think, the 2nd to last row is linearly dependent of the first 3. If we just sum the 
   // first 3 rows, we get a constant row! I guess, that means the unit gain at DC condition of 
   // Eq. 4 is automatically satisfied when Eq. 1,2,3 are satisfied?
+  // 
+  // Maybe rename r to b because in the textfile, we use r for something else, namely for the 
+  // result of the convolution of u and d. The vector b is the right hand side of our linear 
+  // system. Some of its components are indeed also components of the desired RHS but calling the
+  // whole vector r would nevertheless be inconsistent. Calling it b would be consistent with the
+  // usual notation A x = b for linear systems.
  
 
   /*
@@ -1464,15 +1475,13 @@ bool testUpDownSampleFilters()
   Vec r({0, 1, 0, 1, 1});
   */
 
-  // I think, the length L is generally N + 2*(N-1) when N is the length of the upsampling kernel u
-  // but I'm not sure about that
 
-
-  // Compute downsampling kernel:
+  // Compute downsampling kernel by solving the linear system:
   Vec d = LA::solve(A, r);
 
   // Verify solution:
-  Vec r2 = A*d;  // Should be equal to r
+  Vec r2 = A*d;  
+  ok &= r2 == r;  // r2 = A*d should be equal to r
   // It isn't equal to r. Instead, it's all zeros. It appears that the matrix A is singular. It 
   // seems to fail in the last row. Maybe we should try a different last row. Maybe try normalizing
   // the middle sample d[2] to 1.
@@ -1482,9 +1491,20 @@ bool testUpDownSampleFilters()
   // up to roundoff error:
   // ...
 
-
-
   return ok;
+
+
+  // Notes:
+  //
+  // - I think, the length L of the downsampling kernel d is generally L = N + 2*(N-1) when N is 
+  //   the length of the upsampling kernel u. But I'm not sure about that. -> Verify!
+  //
+  //
+  // ToDo:
+  //
+  // - At the moment, we run into singular matrices for the linear system that we try to solve. I 
+  //   think, we need to rethink the conditions (i.e. the equations) that we require from the 
+  //   downsampling kernel d. 
 }
 
 

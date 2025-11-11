@@ -1435,8 +1435,12 @@ bool testUpDownSampleFilters()
   //using AT   = RAPT::rsArrayTools;
 
   // Define oversampling factor and upsampling kernel:
-  int M = 2;                           // Oversampling factor
+  int M = 2;                           // Oversampling factor (not yet(?) used by the code below)
   Vec u = { 1, 2, 1 }; u = 0.5*u;      // Upsampling kernel (linear interpolation)
+
+  // Test - try to avoid running into a singular matrix A by using some "random" upsampling 
+  // kernel:
+  //u = Vec({ 1, -1, 3 });
 
 
   // Create coefficient matrix and right hand side of the following system of equations:
@@ -1449,12 +1453,12 @@ bool testUpDownSampleFilters()
   //    d0 -    d1 +    d2 -    d3 +    d4 = 0    Eq. 5:  Zero gain at Nyquist (verify!)
   int L = 5;                           // Length of downsampling kernel
   
-  Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
-                 0  , u[2], u[1], u[0],  0  ,       // Eq. 2
-                 0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
-                 1  ,  1  ,  1  ,  1  ,  1  ,       // Eq. 4
-                 1  , -1  ,  1  , -1  ,  1    });   // Eq. 5
-  Vec b({0, 1, 0, 1, 0});
+  //Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+  //               0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+  //               0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+  //               1  ,  1  ,  1  ,  1  ,  1  ,       // Eq. 4
+  //               1  , -1  ,  1  , -1  ,  1    });   // Eq. 5
+  //Vec b({0, 1, 0, 1, 0});
   // Oh! I think, the 2nd to last row is linearly dependent of the first 3. If we just sum the 
   // first 3 rows, we get a constant row! I guess, that means the unit gain at DC condition of 
   // Eq. 4 is automatically satisfied when Eq. 1,2,3 are satisfied?
@@ -1465,7 +1469,8 @@ bool testUpDownSampleFilters()
   // whole vector r would nevertheless be inconsistent. Calling it b would be consistent with the
   // usual notation A x = b for linear systems. ...done!
  
-  // This set of requirements also leads to a singular matrix A:
+  // This set of requirements (unit gain at DC, center coeff equal to 1) also leads to a singular 
+  // matrix A:
   //Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,
   //               0  , u[2], u[1], u[0],  0  ,
   //               0  ,  0  ,  0  , u[2], u[1],
@@ -1475,12 +1480,23 @@ bool testUpDownSampleFilters()
   // I think, the culprit is already line 4 (starting counting at 1 as we do in math). It seems to
   // be proportional to the sum of lines 1..3.
 
-  // Try using the symmetry requirement:
+  // Try using the symmetry requirements d1 == d3, d0 == d4 - this also gives a singular matrix:
+  Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+                 0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+                 0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+                 0  ,  1  ,  0  , -1  ,  0  ,       // d1 - d3 = 0
+                 1  ,  0  ,  0  ,  0  , -1    });   // d0 - d4 = 0
+  Vec b({0, 1, 0, 0, 0});
+  // What the hell is going on? are the first 3 lines already linearly dependent? But no - that 
+  // can't be the case because among them, line 1 is the only one with a nonzero 1st entry, line 2
+  // the only one with a nonzero middle entry and line 3 the only one with a nonzero last entry so
+  // there is no way to obtain one of the three as a linear combination of the two others.
 
 
 
   // Compute downsampling kernel by solving the linear system:
   Vec d = LA::solve(A, b);
+  // ASSERTS! The matrix A is singular!
 
   // Verify solution:
   Vec b2 = A*d;  
@@ -1510,10 +1526,19 @@ bool testUpDownSampleFilters()
   //   think, we need to rethink the conditions (i.e. the equations) that we require from the 
   //   downsampling kernel d. 
   //
-  // - If the symmetry conditions turn out to work, write a function that produce a symmetric 
-  //   kernel by construction. I think, that reduces the system from 5x5 to 3x3 in the example 
-  //   above...well - at least when we formulate it in a way that also assumes the upsampling 
-  //   kernel to be symmetric. In this case, u = [u0 u1 u0], d = [d0 d1 d2 d1 d0].
+  // - If the symmetry conditions turn out to work, write a function that produces a symmetric 
+  //   kernel d by construction, i.e. doesn't impose symmetry by two equations. I think, that 
+  //   reduces the matrix of the linear system from 5x5 to 3x3 in the example above. ...well - at
+  //   least when we formulate it in a way that also assumes the upsampling kernel to be symmetric.
+  //   In this case, u = [u0 u1 u0], d = [d0 d1 d2 d1 d0]. 
+  //
+  // - Try investigating the singular matrices with a matrix oriented math software like 
+  //   Matlab/Octave and or a computer algebra system like SageMath. Maybe that will give us a clue
+  //   why we always get singular matrices.
+  //
+  // - When we use something like u = { 1, -1, 3 }; instead of u = {1, 2, 1} * 0.5, we get a 
+  //   regular matrix A with the symmetry constraints. OK - good to know - but that u is, of 
+  //   course, totally wrong as upsampling kernel.
 }
 
 

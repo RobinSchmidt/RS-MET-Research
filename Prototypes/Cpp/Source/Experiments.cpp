@@ -1414,7 +1414,8 @@ bool testUpDownSample1D_2()
 
 bool testUpDownSampleFilters()
 {
-  // Under construction...doesn't work yet. 
+  // Under construction. It doesn't work yet. I still have to figure out, what requirements we need
+  // to use in order to get a non-singular matrix.
 
   // We try to generate the downsampling filter kernel d = d[n] from a given upsampling kernel 
   // u = u[n] systematically by posing the problem as linear system of equations and solving it.
@@ -1438,7 +1439,6 @@ bool testUpDownSampleFilters()
   Vec u = { 1, 2, 1 }; u = 0.5*u;      // Upsampling kernel (linear interpolation)
 
 
-
   // Create coefficient matrix and right hand side of the following system of equations:
   // 
   // u1*d0 + u0*d1                         = 0    Eq. 1:  r1 = 0
@@ -1446,15 +1446,15 @@ bool testUpDownSampleFilters()
   //                         u2*d3 + u1*d4 = 0    Eq. 3:  r5 = 0
   // 
   //    d0 +    d1 +    d2 +    d3 +    d4 = 1    Eq. 4:  Unit gain at DC
-  //    d0 -    d1 +    d2 -    d3 +    d4 = 0    Eq. 5:  Zero gain at Nyquist
+  //    d0 -    d1 +    d2 -    d3 +    d4 = 0    Eq. 5:  Zero gain at Nyquist (verify!)
   int L = 5;                           // Length of downsampling kernel
   
-  Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,
-                 0  , u[2], u[1], u[0],  0  ,
-                 0  ,  0  ,  0  , u[2], u[1],
-                 1  ,  1  ,  1  ,  1  ,  1  ,
-                 1  , -1  ,  1  , -1  ,  1    });
-  Vec r({0, 1, 0, 1, 0});
+  Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+                 0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+                 0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+                 1  ,  1  ,  1  ,  1  ,  1  ,       // Eq. 4
+                 1  , -1  ,  1  , -1  ,  1    });   // Eq. 5
+  Vec b({0, 1, 0, 1, 0});
   // Oh! I think, the 2nd to last row is linearly dependent of the first 3. If we just sum the 
   // first 3 rows, we get a constant row! I guess, that means the unit gain at DC condition of 
   // Eq. 4 is automatically satisfied when Eq. 1,2,3 are satisfied?
@@ -1463,28 +1463,32 @@ bool testUpDownSampleFilters()
   // result of the convolution of u and d. The vector b is the right hand side of our linear 
   // system. Some of its components are indeed also components of the desired RHS but calling the
   // whole vector r would nevertheless be inconsistent. Calling it b would be consistent with the
-  // usual notation A x = b for linear systems.
+  // usual notation A x = b for linear systems. ...done!
  
+  // This set of requirements also leads to a singular matrix A:
+  //Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,
+  //               0  , u[2], u[1], u[0],  0  ,
+  //               0  ,  0  ,  0  , u[2], u[1],
+  //               1  ,  1  ,  1  ,  1  ,  1  ,     
+  //               0  ,  0  ,  1  ,  0  ,  0    });  // Normalize middle sample d[2] to 1.
+  //Vec b({0, 1, 0, 1, 1});
+  // I think, the culprit is already line 4 (starting counting at 1 as we do in math). It seems to
+  // be proportional to the sum of lines 1..3.
 
-  /*
-  Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,
-                 0  , u[2], u[1], u[0],  0  ,
-                 0  ,  0  ,  0  , u[2], u[1],
-                 1  ,  1  ,  1  ,  1  ,  1  ,
-                 0  ,  0  ,  1  ,  0  ,  0    });
-  Vec r({0, 1, 0, 1, 1});
-  */
+  // Try using the symmetry requirement:
+
 
 
   // Compute downsampling kernel by solving the linear system:
-  Vec d = LA::solve(A, r);
+  Vec d = LA::solve(A, b);
 
   // Verify solution:
-  Vec r2 = A*d;  
-  ok &= r2 == r;  // r2 = A*d should be equal to r
-  // It isn't equal to r. Instead, it's all zeros. It appears that the matrix A is singular. It 
-  // seems to fail in the last row. Maybe we should try a different last row. Maybe try normalizing
-  // the middle sample d[2] to 1.
+  Vec b2 = A*d;  
+  ok &= b2 == b;  // b2 = A*d should be equal to b
+  // FAILS!
+  // It isn't equal to b. Instead, it's all zeros. It appears that the matrix A is singular. The 
+  // Gaussian elimination algo seems to fail in the last row. Maybe we should try a different last
+  // row. Maybe try normalizing the middle sample d[2] to 1.
 
 
   // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation
@@ -1505,6 +1509,11 @@ bool testUpDownSampleFilters()
   // - At the moment, we run into singular matrices for the linear system that we try to solve. I 
   //   think, we need to rethink the conditions (i.e. the equations) that we require from the 
   //   downsampling kernel d. 
+  //
+  // - If the symmetry conditions turn out to work, write a function that produce a symmetric 
+  //   kernel by construction. I think, that reduces the system from 5x5 to 3x3 in the example 
+  //   above...well - at least when we formulate it in a way that also assumes the upsampling 
+  //   kernel to be symmetric. In this case, u = [u0 u1 u0], d = [d0 d1 d2 d1 d0].
 }
 
 

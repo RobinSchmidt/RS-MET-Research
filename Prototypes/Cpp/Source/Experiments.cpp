@@ -910,8 +910,9 @@ bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M,
 {
   std::vector<T> xu = rsUpSample(  x,  M, hu);
   std::vector<T> xd = rsDownSample(xu, M, hd, (hd.size()+1)/2);
+  rsRemoveRange(xd, x.size(), xd.size()-1);                       // Remove trailing zeros
   //rsPlotVectors(x, xd);
-  return rsIsCloseTo(xu, x, tol);
+  return rsIsCloseTo(xd, x, tol);
 
 
   // Notes:
@@ -928,8 +929,9 @@ bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M,
   //   case. What if the length of h is even? Does the formula still make sense?
   //
   // - Maybe we need to shorten xd? It seems like in our test case, the decimated result xd is 2 
-  //   samples longer than the original x. It has two additional samples. Maybe in general, the 
-  //   amount of additional samples is M? Or maybe the length of hd also matters? 
+  //   samples longer than the original x. It has two additional samples of value zero, so it's the
+  //   original with a bit of zero-padding at the end. Maybe in general, the amount of additional 
+  //   samples is M? Or maybe the length of hd also matters? 
   //
   // - More test cases are needed with different values for M and different lengths for hu and hd.
   //   Maybe try also asymmetric and/or even length kernels.
@@ -1592,7 +1594,7 @@ bool testUpDownSampleFilters()
   // Maybe write a function for that which we can call like:
   // ok &= testUpDownSample(2, u, d, tol)
   Vec x = rsRandomIntVector(20, +1, +9, 0);
-  ok &= testUpDownSampleRoundTrip(x, M, u, d, 1.e-13);
+  ok &= testUpDownSampleRoundTrip(x, M, u, d, 0.0);
   // This still fails! See comment in testUpDownSampleRoundTrip() for an idea why this might be.
 
   return ok;

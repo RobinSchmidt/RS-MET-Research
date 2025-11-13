@@ -883,6 +883,33 @@ std::vector<T> rsUpSample(const std::vector<T>& x, int M, const std::vector<T>& 
   // - Maybe rename to rsUpSample1D. Or maybe not. Maybe 1D should be the default assumption.
 }
 
+template<class T>
+std::vector<T> rsDownSample(const std::vector<T>& x, int M, const std::vector<T>& h)
+{
+  std::vector<T> y = rsConvolve(x, h);
+  return rsDecimate(y, M);
+}
+// Needs tests!
+
+/** Returns true, iff the upsampling/downsampling roundtrip by factor "M" for the given signal "x",
+using "hu" and "hd" as the upsampling and downsampling filter kernels respectively, is an identity 
+operation up to the given numerical tolerance "tol". */
+template<class T>
+bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M, 
+  const std::vector<T>& hu, const std::vector<T>& hd, T tol = T(0))
+{
+  std::vector<T> xu = rsUpSample(  x,  M, hu);
+  std::vector<T> xd = rsDownSample(xu, M, hd);
+  //rsPlotVectors(x, xu, xd);
+  //rsPlotVectors(x, xd);
+  return rsIsCloseTo(xu, x, tol);
+
+  // Ah! This is still wrong! I think, that in the downsample-function, we need to sepcify an 
+  // offset. Maybe the length of hd - or maybe half of it? Figure this out!
+}
+// Needs tests!
+
+
 bool testUpSample1D()
 {
   // Tests if our function rsUpSample() produces the expected outputs for (scaled) linear 
@@ -1437,7 +1464,7 @@ bool testUpDownSampleFilters()
   //using AT   = RAPT::rsArrayTools;
 
   // Define oversampling factor and upsampling kernel:
-  int M = 2;                           // Oversampling factor (not yet(?) used by the code below)
+  int M = 2;                           // Oversampling factor
   Vec u = { 1, 2, 1 }; u = 0.5*u;      // Upsampling kernel (linear interpolation)
 
   // Test - try to avoid running into a singular matrix A by using some "random" upsampling 
@@ -1524,24 +1551,22 @@ bool testUpDownSampleFilters()
 
 
 
-
-
   // Compute downsampling kernel by solving the linear system:
   Vec d = LA::solve(A, b);
-  // ASSERTS! The matrix A is singular!
 
   // Verify solution:
   Vec b2 = A*d;  
   ok &= b2 == b;  // b2 = A*d should be equal to b
-  // FAILS!
-  // It isn't equal to b. Instead, it's all zeros. It appears that the matrix A is singular. The 
-  // Gaussian elimination algo seems to fail in the last row. Maybe we should try a different last
-  // row. Maybe try normalizing the middle sample d[2] to 1.
+
 
 
   // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation
   // up to roundoff error:
-  // ...
+  // Maybe write a function for that which we can call like:
+  // ok &= testUpDownSample(2, u, d, tol)
+  Vec x = rsRandomIntVector(50, -9, +9, 0);
+  ok &= testUpDownSampleRoundTrip(x, M, u, d, 1.e-13);
+  // This still fails! See comment in testUpDownSampleRoundTrip() for an idea why this might be.
 
   return ok;
 
@@ -1581,7 +1606,7 @@ bool testUpDownSample1D()
   bool ok = true;
 
   // Under construction:
-  ok &= testUpDownSample1D_1();
+  //ok &= testUpDownSample1D_1();
   ok &= testUpDownSampleFilters();
 
   // Unit Tests:

@@ -883,12 +883,12 @@ std::vector<T> rsUpSample(const std::vector<T>& x, int M, const std::vector<T>& 
   // - Maybe rename to rsUpSample1D. Or maybe not. Maybe 1D should be the default assumption.
 }
 
-/** Downsamples the signal x by the factor M. We first convolve x it with the anti-aliasing filter
+/** Downsamples the signal x by the factor M. We first convolve x with the anti-aliasing filter
 kernel h and then decimate the result. You can also set up an offset into filtered signal from 
 which we start the resampling. This makes sense because usually, the filter kernel h may need some 
-warm-up time and introduce some delay. For a symmetric kernel h with an odd length L, it may make
+warm-up time and introduce some delay. For a symmetric kernel h with an odd length L, it may make 
 sense to shift by (L+1)/2 such that the middle sample of the filter kernel is interpreted as origin
-of our (sampled) time axis. */
+of our (sampled) time axis. This is the typical case - at least for what I currently do. */
 template<class T>
 std::vector<T> rsDownSample(const std::vector<T>& x, int M, const std::vector<T>& h, 
   size_t shift = 0)
@@ -897,22 +897,22 @@ std::vector<T> rsDownSample(const std::vector<T>& x, int M, const std::vector<T>
   rsShiftLeft(y, shift);
   return rsDecimate(y, M);
 }
-// Needs more tests!
+// Needs more tests! What about "atypical" cases?
 
-/** UNDER CONSTRUCTION
-
-Returns true, iff the upsampling/downsampling roundtrip by factor "M" for the given signal "x",
+/** Returns true, iff the upsampling/downsampling roundtrip by factor "M" for the given signal "x",
 using "hu" as the anti-imaging filter kernel for upsampling and "hd" as the anti-aliasing filter 
 kernel for downsampling, is an identity operation up to the given numerical tolerance "tol". */
 template<class T>
 bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M, 
   const std::vector<T>& hu, const std::vector<T>& hd, T tol = T(0))
 {
-  std::vector<T> xu = rsUpSample(  x,  M, hu);
-  std::vector<T> xd = rsDownSample(xu, M, hd, (hd.size()+1)/2);
-  rsRemoveRange(xd, x.size(), xd.size()-1);                       // Remove trailing zeros
-  //rsPlotVectors(x, xd);
-  return rsIsCloseTo(xd, x, tol);
+  using Vec = std::vector<T>;
+  size_t shift = (hd.size()+1) / 2;          // Compute warm-up length in downsampling kernel
+  Vec xu = rsUpSample(  x,  M, hu);          // Upsample x by M with hu as anti-imaging filter
+  Vec xd = rsDownSample(xu, M, hd, shift);   // Downsample with hd as anti-aliasing filter
+  rsRemoveRange(xd, x.size(), xd.size()-1);  // Remove trailing zeros
+  //rsPlotVectors(x, xd);                    // Plot original and downsampled - for debugging
+  return rsIsCloseTo(xd, x, tol);            // Compare original and downsampled signals
 
 
   // Notes:
@@ -931,7 +931,7 @@ bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M,
   // - Maybe we need to shorten xd? It seems like in our test case, the decimated result xd is 2 
   //   samples longer than the original x. It has two additional samples of value zero, so it's the
   //   original with a bit of zero-padding at the end. Maybe in general, the amount of additional 
-  //   samples is M? Or maybe the length of hd also matters? 
+  //   samples is M? Or maybe the length of hd also matters? ...done
   //
   // - More test cases are needed with different values for M and different lengths for hu and hd.
   //   Maybe try also asymmetric and/or even length kernels.
@@ -1576,8 +1576,8 @@ bool testUpDownSampleFilters()
   Vec b({0, 1, 0, d2, 0});
   // OK - this also seems to work.
 
-
-
+  // ToDo: Try using d[4] = -d[0] -> d[0] - d[4] = 0 instead of d[3] = -d[1] -> d[1] - d[3] = 0. I
+  // think that this should give the same result.
 
 
   // Compute downsampling kernel by solving the linear system:
@@ -1587,15 +1587,11 @@ bool testUpDownSampleFilters()
   Vec b2 = A*d;  
   ok &= b2 == b;  // b2 = A*d should be equal to b
 
-
-
   // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation
   // up to roundoff error:
-  // Maybe write a function for that which we can call like:
-  // ok &= testUpDownSample(2, u, d, tol)
   Vec x = rsRandomIntVector(20, +1, +9, 0);
   ok &= testUpDownSampleRoundTrip(x, M, u, d, 0.0);
-  // This still fails! See comment in testUpDownSampleRoundTrip() for an idea why this might be.
+
 
   return ok;
 

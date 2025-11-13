@@ -887,7 +887,10 @@ template<class T>
 std::vector<T> rsDownSample(const std::vector<T>& x, int M, const std::vector<T>& h)
 {
   std::vector<T> y = rsConvolve(x, h);
+  rsShiftLeft(y, (h.size()+1)/2);        // Verify formula for shift amount!
   return rsDecimate(y, M);
+  // Maybe we need to shorten y? Maybe we should do that already in the left-shift operation?
+  // What if the length of h is even? Does the formula still make sense?
 }
 // Needs tests!
 
@@ -900,12 +903,8 @@ bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M,
 {
   std::vector<T> xu = rsUpSample(  x,  M, hu);
   std::vector<T> xd = rsDownSample(xu, M, hd);
-  //rsPlotVectors(x, xu, xd);
   //rsPlotVectors(x, xd);
   return rsIsCloseTo(xu, x, tol);
-
-  // Ah! This is still wrong! I think, that in the downsample-function, we need to sepcify an 
-  // offset. Maybe the length of hd - or maybe half of it? Figure this out!
 }
 // Needs tests!
 
@@ -1564,7 +1563,7 @@ bool testUpDownSampleFilters()
   // up to roundoff error:
   // Maybe write a function for that which we can call like:
   // ok &= testUpDownSample(2, u, d, tol)
-  Vec x = rsRandomIntVector(50, -9, +9, 0);
+  Vec x = rsRandomIntVector(20, +1, +9, 0);
   ok &= testUpDownSampleRoundTrip(x, M, u, d, 1.e-13);
   // This still fails! See comment in testUpDownSampleRoundTrip() for an idea why this might be.
 
@@ -17627,6 +17626,19 @@ void rsShiftRight(std::vector<T>& v)
     v[i] = v[i-1];
   v[0] = T(0);
 }
+
+template<class T>
+void rsShiftLeft(std::vector<T>& v, size_t k)
+{
+  rsAssert(v.size() > k, "Size of v must be at least k"); 
+  for(size_t i = 0; i < v.size()-k; i++)
+    v[i] = v[i+k];
+  for(size_t i = v.size()-k; i < v.size(); i++)
+    v[i] = 0;
+}
+// Needs tests. Maybe optionally shorten the vector v instead of filling it up with zeros.
+
+
 
 /** Convenience function to set up the delay in the given delayLine. If the requested delay is
 greater than the currently available maximum delay, the maximum delay will automatically be

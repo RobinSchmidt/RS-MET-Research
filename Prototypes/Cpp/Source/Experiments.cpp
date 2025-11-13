@@ -1006,7 +1006,7 @@ bool testUpDownSample1D_1()
   //  This should give us a 1-parametric family of filter kernels. Maybe use d0 as parameter. 
   //  Substitute d2 = -d1/2 into (1): d0 + 2*(d1 - d1/2) = 1 and solve for d1:
   //  d1 = 1 - d0. Let's try it:
-  Real d0 = 0.625;     // interesting values: 1, 0.75, 0.6875, 2/3, 0.625, 0.5
+  Real d0 = 0.625;                // Interesting values: 1, 0.75, 0.6875, 2/3, 0.625, 0.5
   Real d1 = 1 - d0;
   Real d2 = -d1 / 2;
   h = Vec({d2, d1, d0, d1, d2});  // Rename to d
@@ -1481,16 +1481,31 @@ bool testUpDownSampleFilters()
   // be proportional to the sum of lines 1..3.
 
   // Try using the symmetry requirements d1 == d3, d0 == d4 - this also gives a singular matrix:
-  Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
-                 0  , u[2], u[1], u[0],  0  ,       // Eq. 2
-                 0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
-                 0  ,  1  ,  0  , -1  ,  0  ,       // d1 - d3 = 0
-                 1  ,  0  ,  0  ,  0  , -1    });   // d0 - d4 = 0
-  Vec b({0, 1, 0, 0, 0});
+  //Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+  //               0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+  //               0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+  //               0  ,  1  ,  0  , -1  ,  0  ,       // d1 - d3 = 0
+  //               1  ,  0  ,  0  ,  0  , -1    });   // d0 - d4 = 0
+  //Vec b({0, 1, 0, 0, 0});
   // What the hell is going on? are the first 3 lines already linearly dependent? But no - that 
   // can't be the case because among them, line 1 is the only one with a nonzero 1st entry, line 2
   // the only one with a nonzero middle entry and line 3 the only one with a nonzero last entry so
   // there is no way to obtain one of the three as a linear combination of the two others.
+
+  // Let's try to directly prescribe values for d[1] and d[3]. This should parallel the experiment
+  // testUpDownSample1D_1() above where we prescribed the middle sample. But there, the notation 
+  // was different - the middle sample was called d0 there, here we call it d2 (ToDo: make that 
+  // consistent). When we assign d1 = d3 = 0.25, for example, we get a middle sample of 0.75 here.
+  // This corresponds to the case where we assigned d0 = 0.75 in the experiment above.
+  Real d1 = 0.25;
+  Real d3 = 0.25;
+  Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+                 0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+                 0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+                 0  ,  1  ,  0  ,  0  ,  0  ,       // d[1] = d1
+                 0  ,  0  ,  0  ,  1  ,  0    });   // d[3] = d3
+  Vec b({0, 1, 0, d1, d3});
+  // Yes! This seems to work!
 
 
 
@@ -1549,6 +1564,7 @@ bool testUpDownSample1D()
   bool ok = true;
 
   // Under construction:
+  ok &= testUpDownSample1D_1();
   ok &= testUpDownSampleFilters();
 
   // Unit Tests:

@@ -1568,6 +1568,7 @@ bool testUpDownSampleFilters()
 
   // Try assignig the middle sample d2 directly (to 0.75, say) and impose symmetry d[1] = d[3]:
   Real d2 = 0.75;
+  //d2 = 1.0 / sqrt(2.0);
   Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
                  0  , u[2], u[1], u[0],  0  ,       // Eq. 2
                  0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
@@ -1592,6 +1593,16 @@ bool testUpDownSampleFilters()
   Vec x = rsRandomIntVector(20, +1, +9, 0);
   ok &= testUpDownSampleRoundTrip(x, M, u, d, 0.0);
 
+  // Create the combined up/down kernel:
+  Vec ud = rsConvolve(u, d);
+
+  // Plot all 3 kernels:
+  rsPlotVectors(u, d, ud);
+
+  // ToDo: Plot magnitude responses of all 3 kernels in one plot. For this, we need to zero-pad u
+  // and d to the length of ud, then put all 3 into a matrix and then use code similar to in the
+  // experiment testUpDownSample1D_1(). Maybe make a helper function rsToMatrix(v1, v2, v3, ...)
+  // where v1,v2,v3,... etc. are vectors of possibly different length.
 
   return ok;
 
@@ -1600,6 +1611,10 @@ bool testUpDownSampleFilters()
   //
   // - I think, the length L of the downsampling kernel d is generally L = N + 2*(N-1) when N is 
   //   the length of the upsampling kernel u. But I'm not sure about that. -> Verify!
+  // 
+  // - It seems like when using d2 = 1/sqrt(2), the impulse response of d looks exactly like a 
+  //   triangle? Verify! ...but when using that value, we need a nonzero tolerance for the float
+  //   comparison in testUpDownSampleRoundTrip().
   //
   //
   // ToDo:

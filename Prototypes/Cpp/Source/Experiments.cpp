@@ -883,6 +883,12 @@ std::vector<T> rsUpSample(const std::vector<T>& x, int M, const std::vector<T>& 
   // - Maybe rename to rsUpSample1D. Or maybe not. Maybe 1D should be the default assumption.
 }
 
+/** Downsamples the signal x by the factor M. We first convolve x it with the anti-aliasing filter
+kernel h and then decimate the result. You can also set up an offset into filtered signal from 
+which we start the resampling. This makes sense because usually, the filter kernel h may need some 
+warm-up time and introduce some delay. For a symmetric kernel h with an odd length L, it may make
+sense to shift by (L+1)/2 such that the middle sample of the filter kernel is interpreted as origin
+of our (sampled) time axis. */
 template<class T>
 std::vector<T> rsDownSample(const std::vector<T>& x, int M, const std::vector<T>& h, 
   size_t shift = 0)
@@ -891,11 +897,13 @@ std::vector<T> rsDownSample(const std::vector<T>& x, int M, const std::vector<T>
   rsShiftLeft(y, shift);
   return rsDecimate(y, M);
 }
-// Needs tests!
+// Needs more tests!
 
-/** Returns true, iff the upsampling/downsampling roundtrip by factor "M" for the given signal "x",
-using "hu" and "hd" as the upsampling and downsampling filter kernels respectively, is an identity 
-operation up to the given numerical tolerance "tol". */
+/** UNDER CONSTRUCTION
+
+Returns true, iff the upsampling/downsampling roundtrip by factor "M" for the given signal "x",
+using "hu" as the anti-imaging filter kernel for upsampling and "hd" as the anti-aliasing filter 
+kernel for downsampling, is an identity operation up to the given numerical tolerance "tol". */
 template<class T>
 bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M, 
   const std::vector<T>& hu, const std::vector<T>& hd, T tol = T(0))
@@ -905,16 +913,28 @@ bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M,
   //rsPlotVectors(x, xd);
   return rsIsCloseTo(xu, x, tol);
 
+
+  // Notes:
+  //
+  // - For our test case with M = 2, it seems to almost work. It's just that the decimated signal 
+  //   xd has two additional zero samples at the end compared to the original x.
+  //
+  //
   // ToDo:
   //
-  // - Verify and document formula for shift amount! What if the length of h is even? Does the 
-  //   formula still make sense?
+  // - Verify and document formula for shift amount! I sort of guessed it. The rationale is that we
+  //   we usually will have a symmetric kernel hd with an odd length and we want to skip forward to
+  //   its middle sample. Does that make sense in general? It seems to work in our particular test 
+  //   case. What if the length of h is even? Does the formula still make sense?
   //
-  // - Maybe we need to shorten y? It seems like in our test case, the decimated result is 2 
-  //   samples two long. It has two additional samples. Maybe in general, the amount of additional
-  //   samples is M? Or maybe the length of hd also matters? 
+  // - Maybe we need to shorten xd? It seems like in our test case, the decimated result xd is 2 
+  //   samples longer than the original x. It has two additional samples. Maybe in general, the 
+  //   amount of additional samples is M? Or maybe the length of hd also matters? 
+  //
+  // - More test cases are needed with different values for M and different lengths for hu and hd.
+  //   Maybe try also asymmetric and/or even length kernels.
 }
-// Needs tests!
+// Needs more tests!
 
 
 bool testUpSample1D()

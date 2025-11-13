@@ -1052,6 +1052,8 @@ bool testUpDownSample1D_1()
     h  = Vec({d2, d1, d0, d1, d2});
     kernels.setRow(i, h);
   }
+  // The response with d = 0.75 has a zero at the oversampled Nyquist limit (good!) but it features
+  // a little bit of a bumpsomewhere below the non-oversampled Nyquist limit.
 
   // Create the kernel that represents the upsampler, i.e. the linear interpolator, in the 
   // oversampled domain. The mental image is that upsampling consists of zero-stuffing and then 
@@ -1497,15 +1499,30 @@ bool testUpDownSampleFilters()
   // was different - the middle sample was called d0 there, here we call it d2 (ToDo: make that 
   // consistent). When we assign d1 = d3 = 0.25, for example, we get a middle sample of 0.75 here.
   // This corresponds to the case where we assigned d0 = 0.75 in the experiment above.
-  Real d1 = 0.25;
-  Real d3 = 0.25;
+  //Real d1 = 0.25;
+  //Real d3 = 0.25;
+  //Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+  //               0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+  //               0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+  //               0  ,  1  ,  0  ,  0  ,  0  ,       // d[1] = d1
+  //               0  ,  0  ,  0  ,  1  ,  0    });   // d[3] = d3
+  //Vec b({0, 1, 0, d1, d3});
+  // Yes! This seems to work!
+
+
+  // Try assignig the middle sample d2 directly (to 0.75, say) and impose symmetry d[1] = d[3]:
+  Real d2 = 0.75;
   Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
                  0  , u[2], u[1], u[0],  0  ,       // Eq. 2
                  0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
-                 0  ,  1  ,  0  ,  0  ,  0  ,       // d[1] = d1
-                 0  ,  0  ,  0  ,  1  ,  0    });   // d[3] = d3
-  Vec b({0, 1, 0, d1, d3});
-  // Yes! This seems to work!
+                 0  ,  0  ,  1  ,  0  ,  0  ,       // d[2] = d2
+                 0  ,  1  ,  0  , -1  ,  0    });   // d[3] = -d[1] -> d[1] - d[3] = 0
+  Vec b({0, 1, 0, d2, 0});
+  // OK - this also seems to work.
+
+
+
+
 
 
 

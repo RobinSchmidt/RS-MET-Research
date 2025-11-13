@@ -884,13 +884,12 @@ std::vector<T> rsUpSample(const std::vector<T>& x, int M, const std::vector<T>& 
 }
 
 template<class T>
-std::vector<T> rsDownSample(const std::vector<T>& x, int M, const std::vector<T>& h)
+std::vector<T> rsDownSample(const std::vector<T>& x, int M, const std::vector<T>& h, 
+  size_t shift = 0)
 {
   std::vector<T> y = rsConvolve(x, h);
-  rsShiftLeft(y, (h.size()+1)/2);        // Verify formula for shift amount!
+  rsShiftLeft(y, shift);
   return rsDecimate(y, M);
-  // Maybe we need to shorten y? Maybe we should do that already in the left-shift operation?
-  // What if the length of h is even? Does the formula still make sense?
 }
 // Needs tests!
 
@@ -902,9 +901,18 @@ bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M,
   const std::vector<T>& hu, const std::vector<T>& hd, T tol = T(0))
 {
   std::vector<T> xu = rsUpSample(  x,  M, hu);
-  std::vector<T> xd = rsDownSample(xu, M, hd);
+  std::vector<T> xd = rsDownSample(xu, M, hd, (hd.size()+1)/2);
   //rsPlotVectors(x, xd);
   return rsIsCloseTo(xu, x, tol);
+
+  // ToDo:
+  //
+  // - Verify and document formula for shift amount! What if the length of h is even? Does the 
+  //   formula still make sense?
+  //
+  // - Maybe we need to shorten y? It seems like in our test case, the decimated result is 2 
+  //   samples two long. It has two additional samples. Maybe in general, the amount of additional
+  //   samples is M? Or maybe the length of hd also matters? 
 }
 // Needs tests!
 

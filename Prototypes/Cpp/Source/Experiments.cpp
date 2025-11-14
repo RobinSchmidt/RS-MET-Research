@@ -1577,16 +1577,19 @@ bool testUpDownSampleFilters()
   Vec b({0, 1, 0, d2, 0});
   // OK - this also seems to work.
 
-  // ToDo: Try using d[4] = -d[0] -> d[0] - d[4] = 0 instead of d[3] = -d[1] -> d[1] - d[3] = 0. I
-  // think that this should give the same result.
-
+  // ToDo: 
+  // -Try using d[4] = -d[0] -> d[0] - d[4] = 0 instead of d[3] = -d[1] -> d[1] - d[3] = 0. I
+  //  think that this should give the same result.
+  // -Try using a condition that requires a straight triangular shape. I think, this can be done be
+  //  requiring the numeric derivatives d[1]-d[0] and d[2]-d[1] to match, so we would have:
+  //  d[1] - d[0] = d[2] - d[1]  ->  2*d[1] - d[0] - d[2] = 0  ->  d[0] - 2*d[1] + d[2] = 0
 
   // Compute downsampling kernel by solving the linear system:
   Vec d = LA::solve(A, b);
 
   // Verify solution:
-  Vec b2 = A*d;  
-  ok &= b2 == b;  // b2 = A*d should be equal to b
+  Vec br = A*d;  
+  ok &= br == b;  // br = A*d should be equal to b (maybe we need a tolerance here?)
 
   // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation
   // up to roundoff error:
@@ -1636,6 +1639,29 @@ bool testUpDownSampleFilters()
   // - When we use something like u = { 1, -1, 3 }; instead of u = {1, 2, 1} * 0.5, we get a 
   //   regular matrix A with the symmetry constraints. OK - good to know - but that u is, of 
   //   course, totally wrong as upsampling kernel.
+  //
+  // - Instead of commenting out the various attempts to set up the linear system, do things like:
+  //   Mat A1 = ...; Vec b1 = ...;    Mat A2 = ...; Vec b2 = ...; and then at the bottom, select
+  //   one of the systems by setting e.g. A = A2, b = b2; or something like that. This lets us 
+  //   easily switch between the various attempts without having to deal with large commented out
+  //   code sections.
+  //
+  // - Maybe instead of directly assigning a matrix A and right hand side vector b, write a class
+  //   like rsLinearEquationSystem with an API that provides functions like: addEquation(), 
+  //   solveDirectly(), solveIteratively(), solveLeastSquares(), solveMinNorm(), etc. The 
+  //   addEquation() function should probably take a number for the right hand side and a vector
+  //   of pairs of coefficients and variable indices. The class could have functions like 
+  //   getNumEquations(), getNumUnknowns() or getNumVariables(). The latter could scan through the
+  //   equations to figure out the highest variable index that occurs in any of the equations. The
+  //   solve functions would then assemble the matrix and rhs vector and invoke the actual solvers.
+  //
+  // - Maybe we could then also write a similar class rsQuadraticEquationSystem in whose 
+  //   addEquation() method, we would add vectors of triples of: coefficient c, var index 1 i, 
+  //   var index 2 j. Each such triple would represent a term of the from c * x_i * x_j. Maybe
+  //   we should assume the right hand sides to be zero and absorb them into the left hand side by
+  //   adopting the convention that x0 = 1. Not sure, though. This should be consisten with the way 
+  //   it is handled in rsLinearEquationSystem. This class could then perhaps be used to jointly
+  //   design the two filter kernels u and d.
 }
 
 

@@ -1511,12 +1511,12 @@ bool testUpDownSampleFilters()
   //    d0 -    d1 +    d2 -    d3 +    d4 = 0    Eq. 5:  Zero gain at Nyquist (verify!)
   int L = 5;                           // Length of downsampling kernel
   
-  //Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
-  //               0  , u[2], u[1], u[0],  0  ,       // Eq. 2
-  //               0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
-  //               1  ,  1  ,  1  ,  1  ,  1  ,       // Eq. 4
-  //               1  , -1  ,  1  , -1  ,  1    });   // Eq. 5
-  //Vec b({0, 1, 0, 1, 0});
+  //Mat A1(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+  //                0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+  //                0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+  //                1  ,  1  ,  1  ,  1  ,  1  ,       // Eq. 4
+  //                1  , -1  ,  1  , -1  ,  1    });   // Eq. 5
+  //Vec b1({0, 1, 0, 1, 0});
   // Oh! I think, the 2nd to last row is linearly dependent of the first 3. If we just sum the 
   // first 3 rows, we get a constant row! I guess, that means the unit gain at DC condition of 
   // Eq. 4 is automatically satisfied when Eq. 1,2,3 are satisfied?
@@ -1529,22 +1529,22 @@ bool testUpDownSampleFilters()
  
   // This set of requirements (unit gain at DC, center coeff equal to 1) also leads to a singular 
   // matrix A:
-  //Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,
-  //               0  , u[2], u[1], u[0],  0  ,
-  //               0  ,  0  ,  0  , u[2], u[1],
-  //               1  ,  1  ,  1  ,  1  ,  1  ,     
-  //               0  ,  0  ,  1  ,  0  ,  0    });  // Normalize middle sample d[2] to 1.
-  //Vec b({0, 1, 0, 1, 1});
+  //Mat A2(L, L, { u[1], u[0],  0  ,  0  ,  0  ,
+  //                0  , u[2], u[1], u[0],  0  ,
+  //                0  ,  0  ,  0  , u[2], u[1],
+  //                1  ,  1  ,  1  ,  1  ,  1  ,     
+  //                0  ,  0  ,  1  ,  0  ,  0    });  // Normalize middle sample d[2] to 1.
+  //Vec b2({0, 1, 0, 1, 1});
   // I think, the culprit is already line 4 (starting counting at 1 as we do in math). It seems to
   // be proportional to the sum of lines 1..3.
 
   // Try using the symmetry requirements d1 == d3, d0 == d4 - this also gives a singular matrix:
-  //Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
-  //               0  , u[2], u[1], u[0],  0  ,       // Eq. 2
-  //               0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
-  //               0  ,  1  ,  0  , -1  ,  0  ,       // d1 - d3 = 0
-  //               1  ,  0  ,  0  ,  0  , -1    });   // d0 - d4 = 0
-  //Vec b({0, 1, 0, 0, 0});
+  //Mat A3(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+  //                0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+  //                0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+  //                0  ,  1  ,  0  , -1  ,  0  ,       // d1 - d3 = 0
+  //                1  ,  0  ,  0  ,  0  , -1    });   // d0 - d4 = 0
+  //Vec b3({0, 1, 0, 0, 0});
   // What the hell is going on? are the first 3 lines already linearly dependent? But no - that 
   // can't be the case because among them, line 1 is the only one with a nonzero 1st entry, line 2
   // the only one with a nonzero middle entry and line 3 the only one with a nonzero last entry so
@@ -1557,32 +1557,36 @@ bool testUpDownSampleFilters()
   // This corresponds to the case where we assigned d0 = 0.75 in the experiment above.
   //Real d1 = 0.25;
   //Real d3 = 0.25;
-  //Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
-  //               0  , u[2], u[1], u[0],  0  ,       // Eq. 2
-  //               0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
-  //               0  ,  1  ,  0  ,  0  ,  0  ,       // d[1] = d1
-  //               0  ,  0  ,  0  ,  1  ,  0    });   // d[3] = d3
-  //Vec b({0, 1, 0, d1, d3});
+  //Mat A4(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+  //                0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+  //                0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+  //                0  ,  1  ,  0  ,  0  ,  0  ,       // d[1] = d1
+  //                0  ,  0  ,  0  ,  1  ,  0    });   // d[3] = d3
+  //Vec b4({0, 1, 0, d1, d3});
   // Yes! This seems to work!
 
 
-  // Try assignig the middle sample d2 directly (to 0.75, say) and impose symmetry d[1] = d[3]:
+  // Assign the middle sample d2 directly (to 0.75, say) and impose symmetry d[1] = d[3]:
   Real d2 = 0.75;
   //d2 = 1.0 / sqrt(2.0);
-  Mat A(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
-                 0  , u[2], u[1], u[0],  0  ,       // Eq. 2
-                 0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
-                 0  ,  0  ,  1  ,  0  ,  0  ,       // d[2] = d2
-                 0  ,  1  ,  0  , -1  ,  0    });   // d[3] = -d[1] -> d[1] - d[3] = 0
-  Vec b({0, 1, 0, d2, 0});
+  Mat A5(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+                  0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+                  0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+                  0  ,  0  ,  1  ,  0  ,  0  ,       // d[2] = d2
+                  0  ,  1  ,  0  , -1  ,  0    });   // d[3] = -d[1] -> d[1] - d[3] = 0
+  Vec b5({0, 1, 0, d2, 0});
   // OK - this also seems to work.
 
   // ToDo: 
   // -Try using d[4] = -d[0] -> d[0] - d[4] = 0 instead of d[3] = -d[1] -> d[1] - d[3] = 0. I
   //  think that this should give the same result.
-  // -Try using a condition that requires a straight triangular shape. I think, this can be done be
+  // -Try using a condition that requires a straight triangular shape. I think, this can be done by
   //  requiring the numeric derivatives d[1]-d[0] and d[2]-d[1] to match, so we would have:
   //  d[1] - d[0] = d[2] - d[1]  ->  2*d[1] - d[0] - d[2] = 0  ->  d[0] - 2*d[1] + d[2] = 0
+
+  // Select one combination of matrix and right hand side to use:
+  Mat A = A5;
+  Vec b = b5;
 
   // Compute downsampling kernel by solving the linear system:
   Vec d = LA::solve(A, b);
@@ -1606,6 +1610,28 @@ bool testUpDownSampleFilters()
   // and d to the length of ud, then put all 3 into a matrix and then use code similar to in the
   // experiment testUpDownSample1D_1(). Maybe make a helper function rsToMatrix(v1, v2, v3, ...)
   // where v1,v2,v3,... etc. are vectors of possibly different length.
+
+
+
+  // Experimental:
+
+  // From the up/downsampling kernels u,d for M=2, derive kernels for M=4 by convolving the kernels
+  // with themselves:
+  Vec U = rsConvolve(u, u);
+  Vec D = rsConvolve(d, d);
+  ok &= testUpDownSampleRoundTrip(x, 4, U, D, 0.0);
+  // FAILS!
+  // Maybe I have an error in my rationale? Maybe the required kernels for M=4 cannot be produced
+  // by convolving the kernels for M=2? The resulting upsampling kernel does indeed not look like
+  // I expected. I expexcted to see [1 2 3 4 3 2 1] / 4, i.e. the linear interpolation kernel for
+  // directly upsampling by M=4. But maybe that expectation is also wrong? Or maybe the computation
+  // of the "shift" amount in testUpDownSampleRoundTrip() is still wrong? Figure this out and fix 
+  // it!
+
+  // Plot the kernels for oversampling with M=4:
+  Vec UD = rsConvolve(U, D);
+  rsPlotVectors(U, D, UD);
+
 
   return ok;
 
@@ -1662,6 +1688,10 @@ bool testUpDownSampleFilters()
   //   adopting the convention that x0 = 1. Not sure, though. This should be consisten with the way 
   //   it is handled in rsLinearEquationSystem. This class could then perhaps be used to jointly
   //   design the two filter kernels u and d.
+  //
+  // - Try creating up- and downsampling kernels for an oversampling factor of M = 4 by
+  //   convolving u with itself and d with itself. Test the kernels with 
+  //   testUpDownSampleRoundTrip()
 }
 
 

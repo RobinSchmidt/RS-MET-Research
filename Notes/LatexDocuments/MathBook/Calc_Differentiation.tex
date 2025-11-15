@@ -672,15 +672,8 @@ The derivative, as presented here, is an idea that applies to real functions $f:
 \subsubsection{Alternative Definitions}
 
 % ToDo: Rename this to "Pseudoderivatives". They actually don't always work the same way. I think,
-% the backward difference should be fine, though. But the central one is definitely problematic. 
-% See:
-% Do You REALLY Understand Derivative? | Symmetric Derivative and Generalized Pseudoderivative
-% https://www.youtube.com/watch?v=oIhdrMh3UJw
-%
-% I think, these alternative definitions are equivalent to the standard definition only in the case 
-% of a differentiable (and therefore also continuous) function. In the case of some "mean" 
-% functions, the usual derivative will detect this by breaking down (due to a non-existent limit) 
-% but, for example, the central difference may continue to work just fine.
+% the backward difference should be fine, though. But the central one is definitely problematic. See
+% comment there
 
 
 \paragraph{Backward Difference}
@@ -702,6 +695,18 @@ But that doesn't actually make any difference because we didn't say anything abo
 %  equal (and the function is continuous at that point). 
 % -Explain cases where this is not the case and what the second best thing is ("continuously
 %  extendable" or something?).
+% -Maybe do NOT change the notation from f'(x_0) to f'(x) here
+% -Mention that the original definition could be called a forward difference (assuming h > 0)
+
+\paragraph{Undirected Difference}
+We could also define the derivative in a way that is not (at least seemingly) opinionated in any way about from which side we approach the point at which we want to differentiate, which is typically denoted as $x_0$ in this variant of the definition:
+\begin{equation}
+ f'(x_0) = \lim_{x \rightarrow x_0} \frac{f(x) - f(x_0)}{x - x_0}
+\end{equation}
+I call it "undirected" here just to have some word for it but I made up that word myself and I haven't seen it anywhere else, so it's probably not standard.
+
+% See Leupold pg 345, Bärwolff pg 95
+
 
 \paragraph{Central Difference} 
 We could also use a central difference definition:
@@ -714,6 +719,17 @@ We could also use a central difference definition:
 % because this is indeed the most intuitive way to define a derivative at a corner. It would
 % satisfy the reflection law of optics and it is the value that the Fourier series converges
 % to at the step discontinuity of the derivative
+
+% See:
+% Do You REALLY Understand Derivative? | Symmetric Derivative and Generalized Pseudoderivative
+% https://www.youtube.com/watch?v=oIhdrMh3UJw
+%
+% I think, these alternative definitions are equivalent to the standard definition only in the case 
+% of a differentiable (and therefore also continuous) function. In the case of some "mean" 
+% functions, the usual derivative will detect this by breaking down (due to a non-existent limit) 
+% but, for example, the central difference may continue to work just fine.
+
+
 
 
 \paragraph{Quantum Derivatives}
@@ -749,6 +765,7 @@ which gives us the same result as the original definition in (\ref{Eq:Derivative
 
 % This is NOT differentiation.
 % https://www.youtube.com/watch?v=h6pgvzoGNfA
+% -About quantum derivatives
 
 % The algebra of derivatives. And what they don't tell you. #SoME4
 % https://www.youtube.com/watch?v=xdwuyXrObSA

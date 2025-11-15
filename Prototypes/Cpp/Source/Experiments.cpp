@@ -1564,8 +1564,6 @@ bool testUpDownSampleFilters()
                   0  ,  1  ,  0  ,  0  ,  0  ,       // d[1] = d1
                   0  ,  0  ,  0  ,  1  ,  0    });   // d[3] = d3
   Vec b4({0, 1, 0, d1, d3});
-  // Yes! This seems to work!
-
 
   // Assign the middle sample d2 directly (to 0.75, say) and impose symmetry d[1] = d[3]:
   Real d2 = 0.75;
@@ -1576,18 +1574,32 @@ bool testUpDownSampleFilters()
                   0  ,  0  ,  1  ,  0  ,  0  ,       // d[2] = d2
                   0  ,  1  ,  0  , -1  ,  0    });   // d[3] = -d[1] -> d[1] - d[3] = 0
   Vec b5({0, 1, 0, d2, 0});
-  // OK - this also seems to work.
+
+  // Like A5,b5 but imposes the symmetry using d[4] = -d[0] -> d[0] - d[4] = 0 instead of 
+  // d[3] = -d[1] -> d[1] - d[3] = 0. I think that this should give the same result as A5,b5 
+  // (verify that!):
+  Mat A6(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+                  0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+                  0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+                  0  ,  0  ,  1  ,  0  ,  0  ,       // d[2] = d2
+                  1  ,  0  ,  0  ,  0  , -1    });   // d[4] = -d[0] -> d[0] - d[4] = 0
+  Vec b6({0, 1, 0, d2, 0});
+
+
+
 
   // ToDo: 
-  // -Try using d[4] = -d[0] -> d[0] - d[4] = 0 instead of d[3] = -d[1] -> d[1] - d[3] = 0. I
-  //  think that this should give the same result.
+  // 
   // -Try using a condition that requires a straight triangular shape. I think, this can be done by
   //  requiring the numeric derivatives d[1]-d[0] and d[2]-d[1] to match, so we would have:
   //  d[1] - d[0] = d[2] - d[1]  ->  2*d[1] - d[0] - d[2] = 0  ->  d[0] - 2*d[1] + d[2] = 0
 
+
+
+
   // Select one combination of matrix and right hand side to use:
-  Mat A = A4; Vec b = b4;
-  // 1...3 do not work because their matrices A1...A3 are singular. 4...5 do work.
+  Mat A = A6; Vec b = b6;
+  // 1...3 do not work because their matrices A1...A3 are singular. 4...6 do work.
 
   // Compute downsampling kernel by solving the linear system:
   Vec d = LA::solve(A, b);

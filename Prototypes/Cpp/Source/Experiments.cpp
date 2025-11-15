@@ -909,7 +909,10 @@ bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M,
   const std::vector<T>& hu, const std::vector<T>& hd, T tol = T(0))
 {
   using Vec = std::vector<T>;
-  size_t shift = (hd.size()+1) / 2;          // Compute warm-up length in downsampling kernel
+
+  //size_t shift = (hd.size()+1) / 2;          // Compute warm-up length in downsampling kernel
+  size_t shift = hu.size()/2 + hd.size()/2;
+
   Vec xu = rsUpSample(  x,  M, hu);          // Upsample x by M with hu as anti-imaging filter
   Vec xd = rsDownSample(xu, M, hd, shift);   // Downsample with hd as anti-aliasing filter
   rsRemoveRange(xd, x.size(), xd.size()-1);  // Remove trailing zeros
@@ -1655,6 +1658,7 @@ bool testUpDownSampleFilters()
   // convolved result has the correct subsequence. It seems like we could fix it with a different
   // amount of shift. It currently uses shift = 7 which gives wrong results but it looks like 
   // shift = 9 would actually work! So try to figure out the correct formula for the shift amount!
+  // Maybe the length of hu plays also a role? Maybe its Nu/2 + Nd/2. That seems to work! Yay!
   // 
   // Try upsampling a unit impulse (maybe centered at n = 10) twice
 

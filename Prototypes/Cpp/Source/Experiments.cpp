@@ -1633,12 +1633,10 @@ bool testUpDownSampleFilters()
   // experiments above):
 
   // From the up/downsampling kernels u,d for M=2, derive kernels for M=4 by convolving the kernels
-  // with themselves:
-  //Vec U = rsConvolve(u, u);
-  //Vec D = rsConvolve(d, d);
+  // with dilated (by M = 2) versions of themselves:
   Vec U = rsConvolve(u, rsZeroStuff(u, 2));
   Vec D = rsConvolve(d, rsZeroStuff(d, 2));
-  ok &= testUpDownSampleRoundTrip(x, 4, U, D, 1.e-10);  // FAILS!
+  ok &= testUpDownSampleRoundTrip(x, 4, U, D, 0.0);
   // Maybe I have an error in my rationale? Maybe the required kernels for M=4 cannot be produced
   // by convolving the kernels for M=2? The resulting upsampling kernel does indeed not look like
   // I expected. I expected to see [1 2 3 4 3 2 1] / 4, i.e. the linear interpolation kernel for
@@ -1728,8 +1726,56 @@ bool testUpDownSampleFilters()
   //   testUpDownSampleRoundTrip()
 }
 
+bool testUpDownSampleFilterDilation()
+{
+  // We demonstrate how to produce up- and downsampling kernels for composite upsampling factors M
+  // from the smaller kernels of the constituent upsampling factors. ...TBC...
+
+  bool ok = true;
+
+  // For convenience:
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using Mat  = RAPT::rsMatrix<Real>;
+  using LA   = RAPT::rsLinearAlgebraNew;
+
+  // Define oversampling factor and upsampling kernel:
+  int M = 2;                           // Oversampling factor
+  int L = 5;                           // Length of downsampling kernel
+  Vec u2 = { 1, 2, 1 }; u2 = 0.5*u2;   // Upsampling kernel (linear interpolation)
 
 
+  // Produce the downsampling kernel d from u and the conditions that assign the middle sample d2
+  // directly (to 0.75, say) and impose symmetry d[1] = d[3]:
+  Real c = 0.75;
+  //c = 1.0 / sqrt(2.0);
+  Mat A(L, L, { u2[1], u2[0],  0   ,  0   ,   0  ,       // Eq. 1
+                 0  ,  u2[2], u2[1], u2[0],  0   ,       // Eq. 2
+                 0  ,   0   ,  0   , u2[2], u2[1],       // Eq. 3
+                 0  ,   0   ,  1   ,  0   ,   0  ,       // d[2] = c
+                 0  ,   1   ,  0   , -1   ,   0    });   // d[3] = -d[1] -> d[1] - d[3] = 0
+  Vec b({0, 1, 0, c, 0});
+
+  // Compute downsampling kernel by solving the linear system:
+  Vec d2 = LA::solve(A, b);
+
+  // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation
+  // up to roundoff error:
+  Vec x = rsRandomIntVector(20, +1, +9, 0);
+  ok &= testUpDownSampleRoundTrip(x, M, u2, d2, 0.0);
+
+  // From the up/downsampling kernels u,d for M=2, derive kernels for M=4 by convolving the kernels
+  // with dilated (by M = 2) versions of themselves:
+  Vec u4 = rsConvolve(u2, rsZeroStuff(u2, 2));
+  Vec d4 = rsConvolve(d2, rsZeroStuff(d2, 2));
+  ok &= testUpDownSampleRoundTrip(x, 4, u4, d4, 0.0);
+
+  // Plot the kernels for oversampling with M=4:
+  Vec ud4 = rsConvolve(u4, d4);
+  rsPlotVectors(u4, d4, ud4);
+
+  return ok;
+}
 
 bool testUpDownSample1D()
 {
@@ -1737,13 +1783,15 @@ bool testUpDownSample1D()
 
   // Under construction:
   //ok &= testUpDownSample1D_1();
-  ok &= testUpDownSampleFilters();
+  //ok &= testUpDownSampleFilters();
+  ok &= testUpDownSampleFilterDilation();
 
   // Unit Tests:
   ok &= testUpSample1D();
   ok &= testUpDownSample1D_1();
   ok &= testUpDownSample1D_2();
   ok &= testUpDownSampleFilters();
+  ok &= testUpDownSampleFilterDilation();
 
   return ok;
 }

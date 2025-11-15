@@ -1628,9 +1628,9 @@ bool testUpDownSampleFilters()
   // where v1,v2,v3,... etc. are vectors of possibly different length.
 
 
-
+  /*
   // Experimental (maybe put this into a separate function - it's not really related to the 
-  // experiments above):
+  // experiments above ...done):
 
   // From the up/downsampling kernels u,d for M=2, derive kernels for M=4 by convolving the kernels
   // with dilated (by M = 2) versions of themselves:
@@ -1663,6 +1663,7 @@ bool testUpDownSampleFilters()
   // Plot the kernels for oversampling with M=4:
   Vec UD = rsConvolve(U, D);
   rsPlotVectors(U, D, UD);
+  */
 
 
   return ok;
@@ -1739,30 +1740,27 @@ bool testUpDownSampleFilterDilation()
   using Mat  = RAPT::rsMatrix<Real>;
   using LA   = RAPT::rsLinearAlgebraNew;
 
-  // Define oversampling factor and upsampling kernel:
-  int M = 2;                           // Oversampling factor
-  int L = 5;                           // Length of downsampling kernel
-  Vec u2 = { 1, 2, 1 }; u2 = 0.5*u2;   // Upsampling kernel (linear interpolation)
 
+  // Create upsampling kernel for 2x upsampling by linear interpolation:
+  Vec u2 = { 1, 2, 1 }; 
+  u2 = 0.5 * u2;   
 
-  // Produce the downsampling kernel d from u and the conditions that assign the middle sample d2
-  // directly (to 0.75, say) and impose symmetry d[1] = d[3]:
+  // Produce the downsampling kernel d2  for 2x downsampling from u2 and the conditions that 
+  // assign the middle sample d2[2] directly (to 0.75, say) and impose symmetry d[1] = d[3]:
   Real c = 0.75;
   //c = 1.0 / sqrt(2.0);
-  Mat A(L, L, { u2[1], u2[0],  0   ,  0   ,   0  ,       // Eq. 1
+  Mat A(5, 5, { u2[1], u2[0],  0   ,  0   ,   0  ,       // Eq. 1
                  0  ,  u2[2], u2[1], u2[0],  0   ,       // Eq. 2
                  0  ,   0   ,  0   , u2[2], u2[1],       // Eq. 3
                  0  ,   0   ,  1   ,  0   ,   0  ,       // d[2] = c
                  0  ,   1   ,  0   , -1   ,   0    });   // d[3] = -d[1] -> d[1] - d[3] = 0
   Vec b({0, 1, 0, c, 0});
-
-  // Compute downsampling kernel by solving the linear system:
   Vec d2 = LA::solve(A, b);
 
   // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation
   // up to roundoff error:
   Vec x = rsRandomIntVector(20, +1, +9, 0);
-  ok &= testUpDownSampleRoundTrip(x, M, u2, d2, 0.0);
+  ok &= testUpDownSampleRoundTrip(x, 2, u2, d2, 0.0);
 
   // From the up/downsampling kernels u,d for M=2, derive kernels for M=4 by convolving the kernels
   // with dilated (by M = 2) versions of themselves:
@@ -1775,6 +1773,27 @@ bool testUpDownSampleFilterDilation()
   rsPlotVectors(u4, d4, ud4);
 
   return ok;
+
+  // ToDo:
+  // 
+  // - Explain the rationale for the dilate-convolve algorithm. 
+  //
+  // - Create an upsampling kernel u3 (by direct assignment) for 3x oversampling and a 
+  //   corresponding downsampling kernel d3 by solving the appropriate linear system. Then use the
+  //   dilate-convolve algorithm to produce up/downsampling kernels for 6x oversampling. Try it 
+  //   both ways: 
+  // 
+  //     Vec u23 = rsConvolve(u2, rsZeroStuff(u3, 2));
+  //     Vec d23 = rsConvolve(d2, rsZeroStuff(d3, 2));
+  //
+  //  and:
+  // 
+  //     Vec u32 = rsConvolve(u3, rsZeroStuff(u2, 3));
+  //     Vec d32 = rsConvolve(d3, rsZeroStuff(d2, 3));
+  //
+  //  I think...verify, if these algos are correct!
+  //
+  //
 }
 
 bool testUpDownSample1D()

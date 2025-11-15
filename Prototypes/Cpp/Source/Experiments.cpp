@@ -899,7 +899,9 @@ std::vector<T> rsDownSample(const std::vector<T>& x, int M, const std::vector<T>
 }
 // Needs more tests! What about "atypical" cases?
 
-/** Returns true, iff the upsampling/downsampling roundtrip by factor "M" for the given signal "x",
+/** Experimental. Needs more tests and may still be buggy.
+
+Returns true, iff the upsampling/downsampling roundtrip by factor "M" for the given signal "x",
 using "hu" as the anti-imaging filter kernel for upsampling and "hd" as the anti-aliasing filter 
 kernel for downsampling, is an identity operation up to the given numerical tolerance "tol". */
 template<class T>
@@ -1619,14 +1621,17 @@ bool testUpDownSampleFilters()
   // with themselves:
   Vec U = rsConvolve(u, u);
   Vec D = rsConvolve(d, d);
-  ok &= testUpDownSampleRoundTrip(x, 4, U, D, 0.0);
-  // FAILS!
+  //ok &= testUpDownSampleRoundTrip(x, 4, U, D, 0.0);  // FAILS!
   // Maybe I have an error in my rationale? Maybe the required kernels for M=4 cannot be produced
   // by convolving the kernels for M=2? The resulting upsampling kernel does indeed not look like
-  // I expected. I expexcted to see [1 2 3 4 3 2 1] / 4, i.e. the linear interpolation kernel for
+  // I expected. I expected to see [1 2 3 4 3 2 1] / 4, i.e. the linear interpolation kernel for
   // directly upsampling by M=4. But maybe that expectation is also wrong? Or maybe the computation
   // of the "shift" amount in testUpDownSampleRoundTrip() is still wrong? Figure this out and fix 
-  // it!
+  // it! ...Nope: in rsDownSample() when it is called in testUpDownSampleRoundTrip(), the convolved
+  // upsampled signal does not seem to contain the original sequence x as a subsequence, so no 
+  // matter what amount of shift is used, we cannot extract the original sequence from it. So it 
+  // seems that it was too naive to assume that we can produce kernels for higher oversampling 
+  // amounts simply by convolving kernels for the lower amounts. 
 
   // Plot the kernels for oversampling with M=4:
   Vec UD = rsConvolve(U, D);

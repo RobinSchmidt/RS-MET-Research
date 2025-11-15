@@ -679,13 +679,13 @@ The derivative, as presented here, is an idea that applies to real functions $f:
 \paragraph{Backward Difference}
 In (\ref{Eq:Derivative}), we have defined the derivative as:
 \begin{equation}
- f'(x) = \lim_{h \rightarrow 0} \frac{f(x + h) - f(x)}{h}
+ f'(x_0) = \lim_{h \rightarrow 0} \frac{f(x_0 + h) - f(x_0)}{h}
 \end{equation}
-but I have changed the notation here to use $x$ instead of $x_0$ which, as said, doesn't matter because $x$ or $x_0$ are only dummy variables in this context. We could have also used the definition using a "backward difference":
+If we assume $h > 0$, the expression $f(x_0 + h) - f(x_0)$ could be called a \emph{forward difference} because the location $x_0 + h$ lies to the right of $x_0$, i.e. in the forward direction along the $x$-axis. We could have also used the definition using a \emph{backward difference}:
 \begin{equation}
- f'(x) = \lim_{h \rightarrow 0} \frac{f(x) - f(x-h)}{h}
+ f'(x_0) = \lim_{h \rightarrow 0} \frac{f(x_0) - f(x_0-h)}{h}
 \end{equation}
-But that doesn't actually make any difference because we didn't say anything about how $h$ should approach zero. It could approach it from above or from below and the limit is implicitly required to exist in both cases and has to have the same value - recall that that's how a (two-sided) limit was defined. But if some variable $h$ approaches $0$ from below, then $-h$ approaches zero from above. If we replace every occurrence of $h$ by $-h$ in either of the two definitions and do a couple of simple algebraic transformations, we'll arrive at the respective other definition, so we see that both definitions do indeed say the same thing.
+But that doesn't actually make any difference because we don't really need say anything about how $h$ should approach zero. That is to say: We don't really need to assume $h > 0$. The little offset $h$ could approach zero from above (i.e. $h > 0$) or from below (i.e. $h < 0$) and the limit is implicitly required to exist in both cases and has to have the same value - recall that that's how a (two-sided) limit was defined. But if some variable $h$ approaches $0$ from below, then $-h$ approaches zero from above. If we replace every occurrence of $h$ by $-h$ in either of the two definitions and do a couple of simple algebraic transformations, we'll arrive at the respective other definition, so we see that both definitions do indeed say the same thing.
 % (f(x+h)-f(x))/h = (f(x-h)-f(x))/(-h) = (f(x)-f(x-h))/h
 
 % ToDo: 
@@ -699,21 +699,23 @@ But that doesn't actually make any difference because we didn't say anything abo
 % -Mention that the original definition could be called a forward difference (assuming h > 0)
 
 \paragraph{Undirected Difference}
-We could also define the derivative in a way that is not (at least seemingly) opinionated in any way about from which side we approach the point at which we want to differentiate, which is typically denoted as $x_0$ in this variant of the definition:
+We could also define the derivative in a way that is not (at least seemingly) opinionated in any way about from which side we approach the point $x_0$ at which we want to differentiate:
 \begin{equation}
  f'(x_0) = \lim_{x \rightarrow x_0} \frac{f(x) - f(x_0)}{x - x_0}
 \end{equation}
-I call it "undirected" here just to have some word for it but I made up that word myself and I haven't seen it anywhere else, so it's probably not standard.
+I call it \emph{undirected difference} here just to have some word for it but I made up that word myself and I haven't seen it anywhere else, so it's probably not standard.
+
+% Maybe we could also call it awkward difference ;-) 
 
 % See Leupold pg 345, Bärwolff pg 95
 
 
 \paragraph{Central Difference} 
-We could also use a central difference definition:
+We could also try to use a central difference definition:
 \begin{equation}
- f'(x) = \lim_{h \rightarrow 0} \frac{f(x+h) - f(x-h)}{2 h}
+ f'(x_0) = \lim_{h \rightarrow 0} \frac{f(x_0+h) - f(x_0-h)}{2 h}
 \end{equation}
-...TBC...
+But such a definition comes with some caveats. It is indeed equivalent to the forward and backward difference definition, if the function $f$ happens to be differentiable at $x_0$. But if $f$ is not differentiable at $x_0$, it may happen that the limit in the definition using a central difference still exists. So, in contrast to the other definitions above, this definition here may fail to detect non-differentiability of $f$ while the others do "detect" it by way of nonexistence of the required limit. Verify!...TBC...
 % I think, a definition via a central difference could work also for corners. It would
 % naturally produce the average of forward and backward difference at a corner. This is nice
 % because this is indeed the most intuitive way to define a derivative at a corner. It would

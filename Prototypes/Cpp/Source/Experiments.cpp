@@ -1502,23 +1502,22 @@ bool testUpDownSampleFilters()
   // kernel:
   //u = Vec({ 1, -1, 3 });
 
+  int L = 5;                           // Length of downsampling kernel
+
 
   // Create coefficient matrix and right hand side of the following system of equations:
   // 
   // u1*d0 + u0*d1                         = 0    Eq. 1:  r1 = 0
   //         u2*d1 + u1*d2 + u0*d3         = 1    Eq. 2:  r3 = 1
   //                         u2*d3 + u1*d4 = 0    Eq. 3:  r5 = 0
-  // 
   //    d0 +    d1 +    d2 +    d3 +    d4 = 1    Eq. 4:  Unit gain at DC
   //    d0 -    d1 +    d2 -    d3 +    d4 = 0    Eq. 5:  Zero gain at Nyquist (verify!)
-  int L = 5;                           // Length of downsampling kernel
-  
-  //Mat A1(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
-  //                0  , u[2], u[1], u[0],  0  ,       // Eq. 2
-  //                0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
-  //                1  ,  1  ,  1  ,  1  ,  1  ,       // Eq. 4
-  //                1  , -1  ,  1  , -1  ,  1    });   // Eq. 5
-  //Vec b1({0, 1, 0, 1, 0});
+  Mat A1(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+                  0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+                  0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+                  1  ,  1  ,  1  ,  1  ,  1  ,       // Eq. 4
+                  1  , -1  ,  1  , -1  ,  1    });   // Eq. 5
+  Vec b1({0, 1, 0, 1, 0});
   // Oh! I think, the 2nd to last row is linearly dependent of the first 3. If we just sum the 
   // first 3 rows, we get a constant row! I guess, that means the unit gain at DC condition of 
   // Eq. 4 is automatically satisfied when Eq. 1,2,3 are satisfied?
@@ -1531,22 +1530,22 @@ bool testUpDownSampleFilters()
  
   // This set of requirements (unit gain at DC, center coeff equal to 1) also leads to a singular 
   // matrix A:
-  //Mat A2(L, L, { u[1], u[0],  0  ,  0  ,  0  ,
-  //                0  , u[2], u[1], u[0],  0  ,
-  //                0  ,  0  ,  0  , u[2], u[1],
-  //                1  ,  1  ,  1  ,  1  ,  1  ,     
-  //                0  ,  0  ,  1  ,  0  ,  0    });  // Normalize middle sample d[2] to 1.
-  //Vec b2({0, 1, 0, 1, 1});
+  Mat A2(L, L, { u[1], u[0],  0  ,  0  ,  0  ,
+                  0  , u[2], u[1], u[0],  0  ,
+                  0  ,  0  ,  0  , u[2], u[1],
+                  1  ,  1  ,  1  ,  1  ,  1  ,     
+                  0  ,  0  ,  1  ,  0  ,  0    });  // Normalize middle sample d[2] to 1.
+  Vec b2({0, 1, 0, 1, 1});
   // I think, the culprit is already line 4 (starting counting at 1 as we do in math). It seems to
   // be proportional to the sum of lines 1..3.
 
   // Try using the symmetry requirements d1 == d3, d0 == d4 - this also gives a singular matrix:
-  //Mat A3(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
-  //                0  , u[2], u[1], u[0],  0  ,       // Eq. 2
-  //                0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
-  //                0  ,  1  ,  0  , -1  ,  0  ,       // d1 - d3 = 0
-  //                1  ,  0  ,  0  ,  0  , -1    });   // d0 - d4 = 0
-  //Vec b3({0, 1, 0, 0, 0});
+  Mat A3(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+                  0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+                  0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+                  0  ,  1  ,  0  , -1  ,  0  ,       // d1 - d3 = 0
+                  1  ,  0  ,  0  ,  0  , -1    });   // d0 - d4 = 0
+  Vec b3({0, 1, 0, 0, 0});
   // What the hell is going on? are the first 3 lines already linearly dependent? But no - that 
   // can't be the case because among them, line 1 is the only one with a nonzero 1st entry, line 2
   // the only one with a nonzero middle entry and line 3 the only one with a nonzero last entry so
@@ -1557,14 +1556,14 @@ bool testUpDownSampleFilters()
   // was different - the middle sample was called d0 there, here we call it d2 (ToDo: make that 
   // consistent). When we assign d1 = d3 = 0.25, for example, we get a middle sample of 0.75 here.
   // This corresponds to the case where we assigned d0 = 0.75 in the experiment above.
-  //Real d1 = 0.25;
-  //Real d3 = 0.25;
-  //Mat A4(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
-  //                0  , u[2], u[1], u[0],  0  ,       // Eq. 2
-  //                0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
-  //                0  ,  1  ,  0  ,  0  ,  0  ,       // d[1] = d1
-  //                0  ,  0  ,  0  ,  1  ,  0    });   // d[3] = d3
-  //Vec b4({0, 1, 0, d1, d3});
+  Real d1 = 0.25;
+  Real d3 = 0.25;
+  Mat A4(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+                  0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+                  0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+                  0  ,  1  ,  0  ,  0  ,  0  ,       // d[1] = d1
+                  0  ,  0  ,  0  ,  1  ,  0    });   // d[3] = d3
+  Vec b4({0, 1, 0, d1, d3});
   // Yes! This seems to work!
 
 

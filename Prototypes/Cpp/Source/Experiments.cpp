@@ -1586,8 +1586,8 @@ bool testUpDownSampleFilters()
   //  d[1] - d[0] = d[2] - d[1]  ->  2*d[1] - d[0] - d[2] = 0  ->  d[0] - 2*d[1] + d[2] = 0
 
   // Select one combination of matrix and right hand side to use:
-  Mat A = A5;
-  Vec b = b5;
+  Mat A = A4; Vec b = b4;
+  // 1...3 do not work because their matrices A1...A3 are singular. 4...5 do work.
 
   // Compute downsampling kernel by solving the linear system:
   Vec d = LA::solve(A, b);

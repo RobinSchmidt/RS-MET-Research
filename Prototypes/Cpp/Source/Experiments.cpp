@@ -1626,13 +1626,16 @@ bool testUpDownSampleFilters()
 
 
 
-  // Experimental:
+  // Experimental (maybe put this into a separate function - it's not really related to the 
+  // experiments above):
 
   // From the up/downsampling kernels u,d for M=2, derive kernels for M=4 by convolving the kernels
   // with themselves:
-  Vec U = rsConvolve(u, u);
-  Vec D = rsConvolve(d, d);
-  //ok &= testUpDownSampleRoundTrip(x, 4, U, D, 0.0);  // FAILS!
+  //Vec U = rsConvolve(u, u);
+  //Vec D = rsConvolve(d, d);
+  Vec U = rsConvolve(u, rsZeroStuff(u, 2));
+  Vec D = rsConvolve(d, rsZeroStuff(d, 2));
+  ok &= testUpDownSampleRoundTrip(x, 4, U, D, 1.e-10);  // FAILS!
   // Maybe I have an error in my rationale? Maybe the required kernels for M=4 cannot be produced
   // by convolving the kernels for M=2? The resulting upsampling kernel does indeed not look like
   // I expected. I expected to see [1 2 3 4 3 2 1] / 4, i.e. the linear interpolation kernel for
@@ -1642,7 +1645,18 @@ bool testUpDownSampleFilters()
   // upsampled signal does not seem to contain the original sequence x as a subsequence, so no 
   // matter what amount of shift is used, we cannot extract the original sequence from it. So it 
   // seems that it was too naive to assume that we can produce kernels for higher oversampling 
-  // amounts simply by convolving kernels for the lower amounts. 
+  // amounts simply by convolving kernels for the lower amounts. ToDo: Think about it in terms of
+  // oversampling by 2 and then by 2 again and then downsampling by 2 and then by 2 again. What 
+  // would that mean in terms of filter kernels? Maybe we need to dilate one of the kernels (by 
+  // zero stuffing) before doing the convolution? Like U = conv(u, zeroStuff(u, 2)) or something 
+  // like that? ...OK - I tried it - it also doesn't work. Ah! But the upsampling kernel now indeed
+  // looks right, i.e. it is indeed [1 2 3 4 3 2 1] / 4. So maybe now only the downsampling kernel
+  // is still wrong? Oh! When looking at the arrays in rsDownSample(), we do see indeed that the
+  // convolved result has the correct subsequence. It seems like we could fix it with a different
+  // amount of shift. It currently uses shift = 7 which gives wrong results but it looks like 
+  // shift = 9 would actually work! So try to figure out the correct formula for the shift amount!
+  // 
+  // Try upsampling a unit impulse (maybe centered at n = 10) twice
 
   // Plot the kernels for oversampling with M=4:
   Vec UD = rsConvolve(U, D);

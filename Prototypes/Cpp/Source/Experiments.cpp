@@ -1477,8 +1477,12 @@ bool testUpDownSample1D_2()
 
 bool testUpDownSampleFilters()
 {
-  // Under construction. It doesn't work yet. I still have to figure out, what requirements we need
-  // to use in order to get a non-singular matrix.
+  // Under construction. 
+
+  // ToDo: Rename to testUpDownSampleFiltersAsym2x
+  // The "Asym" stands for: the upsampling kernel could possibly by asymmetric (although it 
+  // currently actually is symmetric - but the equations we use here would allow it to be 
+  // asymmetric as well, I think). The 2x stands for: we consider the case of 2x oversampling
 
   // We try to generate the downsampling filter kernel d = d[n] from a given upsampling kernel 
   // u = u[n] systematically by posing the problem as linear system of equations and solving it.
@@ -1501,12 +1505,21 @@ bool testUpDownSampleFilters()
   int M = 2;                           // Oversampling factor
   Vec u = { 1, 2, 1 }; u = 0.5*u;      // Upsampling kernel (linear interpolation)
 
-  // Test - try to avoid running into a singular matrix A by using some "random" upsampling 
+  // Test: Try to avoid running into a singular matrix A by using some "random" upsampling 
   // kernel:
   //u = Vec({ 1, -1, 3 });
 
   int L = 5;                           // Length of downsampling kernel
 
+
+  // Below are couple of different ideas for what additional constraints we could use. From the
+  // "lossless roundtrip" requirement, we get only 3 equations but for a (potentially asymmetric)
+  // downsampling kernel, we have 5 coeffs so we need 2 equations more. I have some different ideas
+  // for what we could use for the additional equations/constraints. The different ideas are 
+  // embodied by using a bunch of different matrices A and right hand side vectors b indexed as 
+  // A1,A2,... b1,b2,... and somewhere below, we then choose one of the ideas by letting, for 
+  // example A = A4; b = b4; It's worth to note that not all of the different matrices work. Some 
+  // turned out to be singular. The first that actually works is indeed the pair A4,b4.
 
   // Create coefficient matrix and right hand side of the following system of equations:
   // 
@@ -1610,6 +1623,8 @@ bool testUpDownSampleFilters()
   // Verify solution:
   Vec br = A*d;  
   ok &= br == b;  // br = A*d should be equal to b (maybe we need a tolerance here?)
+  // We will need a tolerance here if we use some not-so-nice numbers - for example by using
+  // d2 = 1/sqrt(2) in A5,b5
 
   // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation
   // up to roundoff error:
@@ -1626,44 +1641,6 @@ bool testUpDownSampleFilters()
   // and d to the length of ud, then put all 3 into a matrix and then use code similar to in the
   // experiment testUpDownSample1D_1(). Maybe make a helper function rsToMatrix(v1, v2, v3, ...)
   // where v1,v2,v3,... etc. are vectors of possibly different length.
-
-
-  /*
-  // Experimental (maybe put this into a separate function - it's not really related to the 
-  // experiments above ...done):
-
-  // From the up/downsampling kernels u,d for M=2, derive kernels for M=4 by convolving the kernels
-  // with dilated (by M = 2) versions of themselves:
-  Vec U = rsConvolve(u, rsZeroStuff(u, 2));
-  Vec D = rsConvolve(d, rsZeroStuff(d, 2));
-  ok &= testUpDownSampleRoundTrip(x, 4, U, D, 0.0);
-  // Maybe I have an error in my rationale? Maybe the required kernels for M=4 cannot be produced
-  // by convolving the kernels for M=2? The resulting upsampling kernel does indeed not look like
-  // I expected. I expected to see [1 2 3 4 3 2 1] / 4, i.e. the linear interpolation kernel for
-  // directly upsampling by M=4. But maybe that expectation is also wrong? Or maybe the computation
-  // of the "shift" amount in testUpDownSampleRoundTrip() is still wrong? Figure this out and fix 
-  // it! ...Nope: in rsDownSample() when it is called in testUpDownSampleRoundTrip(), the convolved
-  // upsampled signal does not seem to contain the original sequence x as a subsequence, so no 
-  // matter what amount of shift is used, we cannot extract the original sequence from it. So it 
-  // seems that it was too naive to assume that we can produce kernels for higher oversampling 
-  // amounts simply by convolving kernels for the lower amounts. ToDo: Think about it in terms of
-  // oversampling by 2 and then by 2 again and then downsampling by 2 and then by 2 again. What 
-  // would that mean in terms of filter kernels? Maybe we need to dilate one of the kernels (by 
-  // zero stuffing) before doing the convolution? Like U = conv(u, zeroStuff(u, 2)) or something 
-  // like that? ...OK - I tried it - it also doesn't work. Ah! But the upsampling kernel now indeed
-  // looks right, i.e. it is indeed [1 2 3 4 3 2 1] / 4. So maybe now only the downsampling kernel
-  // is still wrong? Oh! When looking at the arrays in rsDownSample(), we do see indeed that the
-  // convolved result has the correct subsequence. It seems like we could fix it with a different
-  // amount of shift. It currently uses shift = 7 which gives wrong results but it looks like 
-  // shift = 9 would actually work! So try to figure out the correct formula for the shift amount!
-  // Maybe the length of hu plays also a role? Maybe its Nu/2 + Nd/2. That seems to work! Yay!
-  // 
-  // Try upsampling a unit impulse (maybe centered at n = 10) twice
-
-  // Plot the kernels for oversampling with M=4:
-  Vec UD = rsConvolve(U, D);
-  rsPlotVectors(U, D, UD);
-  */
 
 
   return ok;
@@ -1757,10 +1734,12 @@ bool testUpDownSampleFilterDilation()
   Vec b({0, 1, 0, c, 0});
   Vec d2 = LA::solve(A, b);
 
-  // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation
-  // up to roundoff error:
+  // Verify that upsampling with kernel u2 then downsampling with kernel d2 is an identity 
+  // operation up to roundoff error:
   Vec x = rsRandomIntVector(20, +1, +9, 0);
   ok &= testUpDownSampleRoundTrip(x, 2, u2, d2, 0.0);
+  // This is actually redundant with the tests in testUpDownSampleFilters() so maybe remove it 
+  // here. But we still need x for the other tests down below.
 
   // From the up/downsampling kernels u,d for M=2, derive kernels for M=4 by convolving the kernels
   // with dilated (by M = 2) versions of themselves:
@@ -1776,7 +1755,9 @@ bool testUpDownSampleFilterDilation()
 
   // ToDo:
   // 
-  // - Explain the rationale for the dilate-convolve algorithm. 
+  // - Explain the rationale for the dilate-convolve algorithm. The idea is to consider what 
+  //   happens to the resulting filter kernel if we carry out two upsampling (or downsampling) 
+  //   steps in succession (...I think).
   //
   // - Create an upsampling kernel u3 (by direct assignment) for 3x oversampling and a 
   //   corresponding downsampling kernel d3 by solving the appropriate linear system. Then use the
@@ -1786,14 +1767,15 @@ bool testUpDownSampleFilterDilation()
   //     Vec u23 = rsConvolve(u2, rsZeroStuff(u3, 2));
   //     Vec d23 = rsConvolve(d2, rsZeroStuff(d3, 2));
   //
-  //  and:
+  //   and:
   // 
   //     Vec u32 = rsConvolve(u3, rsZeroStuff(u2, 3));
   //     Vec d32 = rsConvolve(d3, rsZeroStuff(d2, 3));
   //
-  //  I think...verify, if these algos are correct!
+  //   I think...verify, if these algos are correct!
   //
-  //
+  // - Try upsampling a unit impulse (maybe centered at n = 10) twice and then also once with the 
+  //   combined kernel
 }
 
 bool testUpDownSample1D()

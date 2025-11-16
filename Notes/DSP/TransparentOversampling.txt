@@ -107,7 +107,10 @@ which can be simplified to:
   4:  2*d0 + 2*d1 + d2 = 1
   5:  2*d0 - 2*d1 + d2 = 0
 
-Wait - no! We don't have 5 unknowns! We have only 3, namely d0,d1,d2. 
+Wait - no! We don't have 5 unknowns! We have only 3, namely d0,d1,d2. But wouldn't that mean that 
+our 3 "lossless roundtrip" conditions already fix our 3 coeffs? But experience has shown that we do
+indeed have one free parameter to choose in this case. Maybe the first 3 equations are linearly 
+dependent (and consistent)?
 
 
 

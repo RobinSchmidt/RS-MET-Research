@@ -5,7 +5,7 @@ d for downsampling such that an upsample -> downsample roundtrip is an identity 
 setting is as follows: We get an input signal x[n] and we want to oversample it by a factor M. We 
 first produce a signal y[m] by zero stuffing the original input signal. We will have y[m=n*M] = x[n]
 and for all other values m that are not a multiple of M, y[m] is zero. To this y signal, we apply 
-the upsampling filter which we represent by its impulse respone u[m] to obtain z[m]. z[m] shall be 
+the upsampling filter which we represent by its impulse respone u[m] to obtain z[m]. z[m] shall be a
 smoothed version of y[m]. The filter u[m] serves as anti-imaging lowpass. Then, we apply to z[m] the
 downsampling filter represented by its impulse response (aka kernel) d[m] to obtain w[m]. What we 
 want is:
@@ -90,9 +90,6 @@ equations rather than 3. This gives us one degree of freedom just like in the ca
 again treat the center value d[2] of the downsampling kernel d as our free parameter. So, we replace
 Eq. 3 by: d2 = some value. Interesting values for d2 are 3/4 and 5/7
 
-
-
-  
 ----------------------------------------------------------------------------------------------------  
 Let's take the case with a symmetric upsampling kernel u = [u0 u1 u2 u1 u0] of length 5 as it would 
 arise, for example, when linearly upsampling by a factor of M = 3 or upsampling via a cubic 
@@ -100,20 +97,23 @@ interpolator by a factor of M = 2 (verify!). I think, we may need a length 7 dec
 d = [d0 d1 d2 d3 d2 d1 d0] and get a length 5+7-1 = 11 resulting filter 
 r = [r0 r1 r2 r3 r4 r5 r4 r3 r2 r1 r0]. The matrix-vector equation looks like:
 
-
   u0  0   0   0   0   0   0          d0       r0
   u1  u0  0   0   0   0   0          d1       r1
-  u2  u1  u0  0   0   0   0     *    d2  =    r2    = 0
+  u2  u1  u0  0   0   0   0     *    d2  =    r2  <--- = 0   Eq. 1
   u1  u2  u1  u0  0   0   0          d3       r3
   u0  u1  u2  u1  u0  0   0          d2       r4
-  0   u0  u1  u2  u1  u0  0          d1       r5    = 1
+  0   u0  u1  u2  u1  u0  0          d1       r5  <--- = 1   Eq. 2
   0   0   u0  u1  u2  u1  u0         d0       r4
   0   0   0   u0  u1  u2  u1                  r3
-  0   0   0   0   u0  u1  u2                  r2    = 0
+  0   0   0   0   u0  u1  u2                  r2  <--- = 0   Eq. 3
   0   0   0   0   0   u0  u1                  r1
   0   0   0   0   0   0   u0                  r0
 
+Let's extract the 3 equations:
 
+  u2*d0 + u1*d1 + u0*d2                                 = 0
+          u0*d1 + u1*d2 + u2*d3 + u1*d2 + u0*d1         = 1
+                                  u0*d2 + u1*d1 + u2*d0 = 0
 
 
 ...TBC...

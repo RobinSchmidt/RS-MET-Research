@@ -1698,11 +1698,25 @@ bool testUpDownSampleFiltersAsym2x()
   //   adopting the convention that x0 = 1. Not sure, though. This should be consisten with the way 
   //   it is handled in rsLinearEquationSystem. This class could then perhaps be used to jointly
   //   design the two filter kernels u and d.
-  //
-  // - Try creating up- and downsampling kernels for an oversampling factor of M = 4 by
-  //   convolving u with itself and d with itself. Test the kernels with 
-  //   testUpDownSampleRoundTrip()
 }
+
+
+bool testUpDownSampleFiltersSym2x()
+{
+  // Under construction
+
+  // In this experiment, we consider the case where the downsampling kernel d that we want to 
+  // derive from the upsamling kernel u is symmetric by construction. In the experiment above, we
+  // had to provide for the symmetry by means of constraint equations. We had 5 unknowns and had to
+  // produce 5 equations of which 3 were already fixed by the perfect roundtrip requirement. Here,
+  // we only have 3 unknowns in the first place. ...TBC...
+
+  bool ok = true;
+
+
+  return ok;
+}
+
 
 bool testUpDownSampleFilterDilation()
 {
@@ -1787,14 +1801,16 @@ bool testUpDownSample1D()
 
   // Under construction:
   //ok &= testUpDownSample1D_1();
-  ok &= testUpDownSampleFiltersAsym2x();
-  ok &= testUpDownSampleFilterDilation();
+  //ok &= testUpDownSampleFiltersAsym2x();
+  ok &= testUpDownSampleFiltersSym2x();
+  //ok &= testUpDownSampleFilterDilation();
 
   // Unit Tests:
   ok &= testUpSample1D();
   ok &= testUpDownSample1D_1();
   ok &= testUpDownSample1D_2();
   ok &= testUpDownSampleFiltersAsym2x();
+  ok &= testUpDownSampleFiltersSym2x();
   ok &= testUpDownSampleFilterDilation();
 
   return ok;

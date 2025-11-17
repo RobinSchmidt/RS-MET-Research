@@ -100,6 +100,22 @@ interpolator by a factor of M = 2 (verify!). I think, we may need a length 7 dec
 d = [d0 d1 d2 d3 d2 d1 d0] and get a length 5+7-1 = 11 resulting filter 
 r = [r0 r1 r2 r3 r4 r5 r4 r3 r2 r1 r0]. The matrix-vector equation looks like:
 
+
+  u0  0   0   0   0   0   0          d0       r0
+  u1  u0  0   0   0   0   0          d1       r1
+  u2  u1  u0  0   0   0   0     *    d2  =    r2    = 0
+  u1  u2  u1  u0  0   0   0          d3       r3
+  u0  u1  u2  u1  u0  0   0          d2       r4
+  0   u0  u1  u2  u1  u0  0          d1       r5    = 1
+  0   0   u0  u1  u2  u1  u0         d0       r4
+  0   0   0   u0  u1  u2  u1                  r3
+  0   0   0   0   u0  u1  u2                  r2    = 0
+  0   0   0   0   0   u0  u1                  r1
+  0   0   0   0   0   0   u0                  r0
+
+
+
+
 ...TBC...
 
 

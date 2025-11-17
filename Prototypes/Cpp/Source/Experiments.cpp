@@ -1483,7 +1483,10 @@ bool testUpDownSampleFiltersAsym2x()
 
   // The "Asym" stands for: the upsampling kernel could possibly by asymmetric (although it 
   // currently actually is symmetric - but the equations we use here would allow it to be 
-  // asymmetric as well, I think). The 2x stands for: we consider the case of 2x oversampling
+  // asymmetric as well, I think). The 2x stands for: we consider the case of 2x oversampling. 
+  // Maybe we should also include a "Lin" standing for: The upsampler is linear interpolation. We
+  // may later want to generalize this to other upsampling filters like cubic (Langrange, Hermite, 
+  // B-Spline), quintic, etc. windowed sinc, binomial, ...
 
   // We try to generate the downsampling filter kernel d = d[n] from a given upsampling kernel 
   // u = u[n] systematically by posing the problem as linear system of equations and solving it.
@@ -1500,7 +1503,6 @@ bool testUpDownSampleFiltersAsym2x()
   using Vec  = std::vector<Real>;
   using Mat  = RAPT::rsMatrix<Real>;
   using LA   = RAPT::rsLinearAlgebraNew;
-  //using AT   = RAPT::rsArrayTools;
 
   // Define oversampling factor and upsampling kernel:
   int M = 2;                           // Oversampling factor
@@ -1791,8 +1793,29 @@ bool testUpDownSampleFiltersSym2x()
   //   more numerically accurate?). The case of the potentially asymmetrical kernels is more of
   //   theoretical interest. It's more general and therefore potentially more powerful but in 
   //   practice, we do not really need that kind of generality because we actually do want our 
-  //   kernels to be symmetric.
+  //   kernels to be symmetric anyway.
 }
+
+bool testUpDownSampleFiltersSym3x()
+{
+  bool ok = true;
+
+  // For convenience:
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using Mat  = RAPT::rsMatrix<Real>;
+  using LA   = RAPT::rsLinearAlgebraNew;
+
+  // Define oversampling factor and upsampling kernel:
+  int  M = 3;                                 // Oversampling factor
+  Vec  u = { 1, 2, 3, 2, 1 }; u = (1./3)*u;   // Upsampling kernel (linear interpolation)
+  Real tol = 1.e-13;                          // Tolerance for numerical comparisons
+
+
+  return ok;
+}
+
+
 
 
 bool testUpDownSampleFilterDilation()
@@ -1877,9 +1900,8 @@ bool testUpDownSample1D()
   bool ok = true;
 
   // Under construction:
-  //ok &= testUpDownSample1D_1();
-  //ok &= testUpDownSampleFiltersAsym2x();
-  ok &= testUpDownSampleFiltersSym2x();
+  //ok &= testUpDownSampleFiltersSym2x();
+  ok &= testUpDownSampleFiltersSym3x();
   //ok &= testUpDownSampleFilterDilation();
 
   // Unit Tests:
@@ -1888,9 +1910,17 @@ bool testUpDownSample1D()
   ok &= testUpDownSample1D_2();
   ok &= testUpDownSampleFiltersAsym2x();
   ok &= testUpDownSampleFiltersSym2x();
+  ok &= testUpDownSampleFiltersSym3x();
   ok &= testUpDownSampleFilterDilation();
 
   return ok;
+
+
+  // Some potentially relevant resources:
+  //
+  // https://www.staff.ncl.ac.uk/oliver.hinton/eee305/Chapter9.pdf
+  // https://course.ece.cmu.edu/~ece792/handouts/LO_Chap_Multirate.pdf  Sec. 3.4 pg. 158 ff
+  // https://users.abo.fi/htoivone/courses/sbappl/asp_chapter2.pdf
 }
 
 

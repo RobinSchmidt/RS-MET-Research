@@ -1601,35 +1601,38 @@ bool testUpDownSampleFiltersAsym2x()
                   1  ,  0  ,  0  ,  0  , -1    });   // d[4] = -d[0] -> d[0] - d[4] = 0
   Vec b6({0, 1, 0, d2, 0});
 
-
-
-
-  // ToDo: 
-  // 
-  // -Try using a condition that requires a straight triangular shape. I think, this can be done by
-  //  requiring the numeric derivatives d[1]-d[0] and d[2]-d[1] to match, so we would have:
-  //  d[1] - d[0] = d[2] - d[1]  ->  2*d[1] - d[0] - d[2] = 0  ->  d[0] - 2*d[1] + d[2] = 0
-
-
-
+  // Use a condition that requires a straight triangular shape. I think, this can be done by
+  // requiring the numeric derivatives d[1]-d[0] and d[2]-d[1] to match, so we would have:
+  // d[1] - d[0] = d[2] - d[1]  ->  2*d[1] - d[0] - d[2] = 0  ->  d[0] - 2*d[1] + d[2] = 0
+  Mat A7(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
+                  0  , u[2], u[1], u[0],  0  ,       // Eq. 2
+                  0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
+                  1  , -2  ,  1  ,  0  ,  0  ,       // d[0] - 2*d[1] + d[2] = 0
+                  0  ,  1  ,  0  , -1  ,  0    });   // d[3] = -d[1] -> d[1] - d[3] = 0
+  Vec b7({0, 1, 0, 0, 0});
+  // Results in d2 = 0.71428571428571430. So, it's not 1/sqrt(2) after all. It could be 5/7. See:
+  // https://www.wolframalpha.com/input?i=0.71428571428571... Maybe compute the value symbolically
+  // with SageMath.
 
   // Select one combination of matrix and right hand side to use:
-  Mat A = A6; Vec b = b6;
-  // 1...3 do not work because their matrices A1...A3 are singular. 4...6 do work.
+  Mat A = A7; Vec b = b7;
+  // 1...3 do not work because their matrices A1...A3 are singular. 4...7 do work.
 
   // Compute downsampling kernel by solving the linear system:
   Vec d = LA::solve(A, b);
 
   // Verify solution:
-  Vec br = A*d;  
-  ok &= br == b;  // br = A*d should be equal to b (maybe we need a tolerance here?)
+  Real tol = 1.e-13;
+  Vec br = A*d;
+  ok &= rsIsCloseTo(br, b, tol);
+  //ok &= br == b;  // br = A*d should be equal to b (maybe we need a tolerance here?)
   // We will need a tolerance here if we use some not-so-nice numbers - for example by using
   // d2 = 1/sqrt(2) in A5,b5
 
   // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation
   // up to roundoff error:
   Vec x = rsRandomIntVector(20, +1, +9, 0);
-  ok &= testUpDownSampleRoundTrip(x, M, u, d, 0.0);
+  ok &= testUpDownSampleRoundTrip(x, M, u, d, tol);
 
   // Create the combined up/down kernel:
   Vec ud = rsConvolve(u, d);

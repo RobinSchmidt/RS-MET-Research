@@ -1701,7 +1701,6 @@ bool testUpDownSampleFiltersAsym2x()
   //   design the two filter kernels u and d.
 }
 
-
 bool testUpDownSampleFiltersSym2x()
 {
   // In this experiment, we consider the case where the downsampling kernel d that we want to 
@@ -1790,7 +1789,9 @@ bool testUpDownSampleFiltersSym2x()
   // - In practice, it makes more sense to impose the symmetry by construction because that leads
   //   to smaller systems of equations which are easier to solve computationally (and possibly also
   //   more numerically accurate?). The case of the potentially asymmetrical kernels is more of
-  //   theoretical interest.
+  //   theoretical interest. It's more general and therefore potentially more powerful but in 
+  //   practice, we do not really need that kind of generality because we actually do want our 
+  //   kernels to be symmetric.
 }
 
 

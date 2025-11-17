@@ -96,6 +96,11 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 % -Explains Russel's paradox in terms of a barber: the barber shaves everyone who doesen't shave
 %  themselves. Does the barber shave himself?
 
+% Der Streit der Mathematiker (Kurze Geschichte der Mathematik 4)
+% https://www.youtube.com/watch?v=BSJRyo-A0Rw
+% -Explains Russel's paradox by a nice example at 1:27:36. It's about a book that is a catalog of all
+%  books that are non self-referential. Does the catalog itself belong into the catalog?
+
 \paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway - why would anyone assume that a set could contain itself? That clearly immediately triggers an infinite regress\footnote{In itself, infinite regress might not be an insurmountable problem, though. In an implementation, we may actually be able to do it in terms of a graph where nodes represent sets and edges represent the is-element relation. It's no problem for a graph to have a node that has an edge to itself.}. Maybe we should disallow such situations. We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that are cyclic, i.e. loop back on themselves. Of these, $x \in x$ is just the simplest one but the more complicated ones do also seem weird. Away with them!
 
 % I think, in terms of graph theory, we allow only (directed) acyclic graphs - verify!

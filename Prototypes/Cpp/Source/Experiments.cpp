@@ -1297,7 +1297,8 @@ bool testUpDownSample1D_1()
   //   could force an IIR filter to have zero crossings at multiples of M by designing it in terms
   //   of modal filters that produce sine waves (with phase zero) at (normalized) frequencies that 
   //   happen to be multiples of 1/M (I think). GitHub Copilot also suggested to look at comb 
-  //   filters.
+  //   filters. Or maybe start with a given halfband IIR filter and put it in series with an FIR 
+  //   filter that produces the right zero crossings.Maybe a comb filter could be used for that?
   //   
   // 
   // -[DONE] Rename a0,a1,a2,... to d0,d1,d2, etc. and h to d. The d stands for downsampling kernel

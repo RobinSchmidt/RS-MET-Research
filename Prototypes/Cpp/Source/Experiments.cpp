@@ -1510,7 +1510,7 @@ bool testUpDownSampleFiltersAsym2x()
   //u = Vec({ 1, -1, 3 });
 
   int L = 5;                           // Length of downsampling kernel
-
+  Real tol = 1.e-13;                   // Tolerance for numerical comparisons
 
   // Below are couple of different ideas for what additional constraints we could use. From the
   // "lossless roundtrip" requirement, we get only 3 equations but for a (potentially asymmetric)
@@ -1583,7 +1583,6 @@ bool testUpDownSampleFiltersAsym2x()
 
   // Assign the middle sample d2 directly (to 0.75, say) and impose symmetry d[1] = d[3]:
   Real d2 = 0.75;
-  //d2 = 1.0 / sqrt(2.0);
   Mat A5(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
                   0  , u[2], u[1], u[0],  0  ,       // Eq. 2
                   0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
@@ -1601,18 +1600,19 @@ bool testUpDownSampleFiltersAsym2x()
                   1  ,  0  ,  0  ,  0  , -1    });   // d[4] = -d[0] -> d[0] - d[4] = 0
   Vec b6({0, 1, 0, d2, 0});
 
-  // Use a condition that requires a straight triangular shape. I think, this can be done by
-  // requiring the numeric derivatives d[1]-d[0] and d[2]-d[1] to match, so we would have:
-  // d[1] - d[0] = d[2] - d[1]  ->  2*d[1] - d[0] - d[2] = 0  ->  d[0] - 2*d[1] + d[2] = 0
+  // Use a condition that requires a straight triangular shape. This can be done by requiring the
+  // numeric derivatives d[1]-d[0] and d[2]-d[1] to match, so we would have:
+  // d[1] - d[0] = d[2] - d[1]    ->    d[0] - 2*d[1] + d[2] = 0
   Mat A7(L, L, { u[1], u[0],  0  ,  0  ,  0  ,       // Eq. 1
                   0  , u[2], u[1], u[0],  0  ,       // Eq. 2
                   0  ,  0  ,  0  , u[2], u[1],       // Eq. 3
                   1  , -2  ,  1  ,  0  ,  0  ,       // d[0] - 2*d[1] + d[2] = 0
                   0  ,  1  ,  0  , -1  ,  0    });   // d[3] = -d[1] -> d[1] - d[3] = 0
   Vec b7({0, 1, 0, 0, 0});
-  // Results in d2 = 0.71428571428571430. So, it's not 1/sqrt(2) after all. It could be 5/7. See:
+  // Results in d2 = 0.71428571428571430. The exact value might be 5/7. See:
   // https://www.wolframalpha.com/input?i=0.71428571428571... Maybe compute the value symbolically
-  // with SageMath.
+  // with SageMath. I think, the resulting downsampling kernel is:
+  // d = [-1 2 5 2 -1] / 7
 
   // Select one combination of matrix and right hand side to use:
   Mat A = A7; Vec b = b7;
@@ -1622,12 +1622,8 @@ bool testUpDownSampleFiltersAsym2x()
   Vec d = LA::solve(A, b);
 
   // Verify solution:
-  Real tol = 1.e-13;
   Vec br = A*d;
   ok &= rsIsCloseTo(br, b, tol);
-  //ok &= br == b;  // br = A*d should be equal to b (maybe we need a tolerance here?)
-  // We will need a tolerance here if we use some not-so-nice numbers - for example by using
-  // d2 = 1/sqrt(2) in A5,b5
 
   // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation
   // up to roundoff error:
@@ -1645,7 +1641,6 @@ bool testUpDownSampleFiltersAsym2x()
   // experiment testUpDownSample1D_1(). Maybe make a helper function rsToMatrix(v1, v2, v3, ...)
   // where v1,v2,v3,... etc. are vectors of possibly different length.
 
-
   return ok;
 
 
@@ -1654,9 +1649,11 @@ bool testUpDownSampleFiltersAsym2x()
   // - I think, the length L of the downsampling kernel d is generally L = N + 2*(N-1) when N is 
   //   the length of the upsampling kernel u. But I'm not sure about that. -> Verify!
   // 
-  // - It seems like when using d2 = 1/sqrt(2), the impulse response of d looks exactly like a 
-  //   triangle? Verify! ...but when using that value, we need a nonzero tolerance for the float
-  //   comparison in testUpDownSampleRoundTrip().
+  // - It seems like when using d2 = 5/7, the impulse response of d looks exactly like a triangle. 
+  //   But when using that value, we need a nonzero tolerance for the float comparison in 
+  //   testUpDownSampleRoundTrip() and in the comparison between b and br. When using 
+  //   d2 = 0.75 = 3/4, we can use exact comparisons. Maybe try approximating 5/7 with a fraction
+  //   that has a denominator that is a power of two.
   //
   //
   // ToDo:

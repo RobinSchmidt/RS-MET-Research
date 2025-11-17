@@ -65,21 +65,9 @@ Other ideas for conditions to satisfy:
   
   
 ----------------------------------------------------------------------------------------------------  
-Let's take the symmetric case and denote the impulse responses in a way such that the middle sample 
-gets index zero such that u = [u1 u0 u1], d = [d2 d1 d0 d1 d2], r = [r3 r2 r1 r0 r1 r2 r3]. In this 
-case, the matrix-vector equation looks like:
-
-  u1  0   0   0  0     d2     r3
-  u0  u1  0   0  0     d1     r2  <--- = 0
-  u1  u0  u1  0  0  *  d0  =  r1
-  u1  u0  u1  0  0     d1     r0  <--- = 1
-  u1  u0  u1  0  0     d2     r1
-  0   u1  u0  0  0            r2  <--- = 0
-  0   0   u1  0  0            r3
-    
-...Or maybe it's better to use the notation: d = [d0 d1 d2 d1 d0], etc.? I think, that may be better 
-because it would be consistent with the notation used for the general (possibly asymmetric) case. 
-OK - with this notation, the system would look like:
+Let's take the case where we impose symmetry on the downsampling kernel by construction by defining 
+d = [d0 d1 d2 d1 d0], etc.. We also assume that the upsampling kernel u is symmetric such that 
+u[2] = u[0]. With this, the 5x5 system would look like this:
 
   u0  0   0   0  0     d0     r0
   u1  u0  0   0  0     d1     r1  <--- = 0   Eq. 1
@@ -97,20 +85,9 @@ Let's extract the relevant equations:
   2:  u0*d0 + u1*d1 + u0*d2 = 1
   3:  u0*d1 + u1*d2         = 0
 
-Since we have 5 unknowns, we need 2 more equations. Let's use:
-
-  4:  d0 + d1 + d2 + d1 + d0 = 1    (unit gain at DC)
-  5:  d0 - d1 + d2 - d1 + d0 = 0    (zero gain at fs - verify!)
-
-which can be simplified to:
-
-  4:  2*d0 + 2*d1 + d2 = 1
-  5:  2*d0 - 2*d1 + d2 = 0
-
-Wait - no! We don't have 5 unknowns! We have only 3, namely d0,d1,d2. But wouldn't that mean that 
-our 3 "lossless roundtrip" conditions already fix our 3 coeffs? But experience has shown that we do
-indeed have one free parameter to choose in this case. Maybe the first 3 equations are linearly 
-dependent (and consistent)?
+But wouldn't that mean that our 3 "lossless roundtrip" conditions already fix our 3 coeffs? But 
+experience has shown that we do indeed have one free parameter to choose in this case. Maybe the 
+first 3 equations are linearly dependent (and consistent)? Figure this out!
 
 
 

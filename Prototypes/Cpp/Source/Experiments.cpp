@@ -1476,11 +1476,10 @@ bool testUpDownSample1D_2()
   //  MiscMathNotes.txt in the private repo.
 }
 
-bool testUpDownSampleFilters()
+bool testUpDownSampleFiltersAsym2x()
 {
   // Under construction. 
 
-  // ToDo: Rename to testUpDownSampleFiltersAsym2x
   // The "Asym" stands for: the upsampling kernel could possibly by asymmetric (although it 
   // currently actually is symmetric - but the equations we use here would allow it to be 
   // asymmetric as well, I think). The 2x stands for: we consider the case of 2x oversampling
@@ -1759,6 +1758,9 @@ bool testUpDownSampleFilterDilation()
   // - Explain the rationale for the dilate-convolve algorithm. The idea is to consider what 
   //   happens to the resulting filter kernel if we carry out two upsampling (or downsampling) 
   //   steps in succession (...I think).
+  // 
+  // - Verify that upsampling by factor 2 two times gives the same result as upsampling by factor 
+  //   4 once.
   //
   // - Create an upsampling kernel u3 (by direct assignment) for 3x oversampling and a 
   //   corresponding downsampling kernel d3 by solving the appropriate linear system. Then use the
@@ -1785,14 +1787,14 @@ bool testUpDownSample1D()
 
   // Under construction:
   //ok &= testUpDownSample1D_1();
-  //ok &= testUpDownSampleFilters();
+  ok &= testUpDownSampleFiltersAsym2x();
   ok &= testUpDownSampleFilterDilation();
 
   // Unit Tests:
   ok &= testUpSample1D();
   ok &= testUpDownSample1D_1();
   ok &= testUpDownSample1D_2();
-  ok &= testUpDownSampleFilters();
+  ok &= testUpDownSampleFiltersAsym2x();
   ok &= testUpDownSampleFilterDilation();
 
   return ok;

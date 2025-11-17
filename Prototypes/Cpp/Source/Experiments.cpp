@@ -834,6 +834,7 @@ void testComplexGaussBlurIIR()
   //  see it better)
 }
 
+
 /** Zero stuffs the signal x by the factor M, i.e. produces a new signal y in which between any 
 pair of values in x, M-1 zeros will be interspersed. This operation can be viewed as the first step
 in upsampling a signal by the factor M. The second step would then be to filter the result of the 
@@ -1703,13 +1704,15 @@ bool testUpDownSampleFiltersAsym2x()
 
 bool testUpDownSampleFiltersSym2x()
 {
-  // Under construction. Does not work yet.
-
   // In this experiment, we consider the case where the downsampling kernel d that we want to 
   // derive from the upsamling kernel u is symmetric by construction. In the experiment above, we
-  // had to provide for the symmetry by means of constraint equations. We had 5 unknowns and had to
+  // had to impose the symmetry by means of constraint equations. We had 5 unknowns and had to
   // produce 5 equations of which 3 were already fixed by the perfect roundtrip requirement. Here,
-  // we only have 3 unknowns in the first place. ...TBC...
+  // we only have 3 unknowns in the first place. It turns out the the perfect roundtrip conditions
+  // fix only 2 degrees of freedom if we assume the upsampling kernel u to be symmetric. That means
+  // we have the freedom to choose one degree of freedom just like in the saymmetric case. This is
+  // as it should be because the situation is fundamentally the same. It's just that here, we 
+  // impose symmetry by construction whereas in the other case, we imposed it by a constraint.
 
   bool ok = true;
 
@@ -1720,28 +1723,46 @@ bool testUpDownSampleFiltersSym2x()
   using LA   = RAPT::rsLinearAlgebraNew;
 
   // Define oversampling factor and upsampling kernel:
-  int M = 2;                            // Oversampling factor
-  Vec u = { 1, 2, 1 }; u = 0.5*u;       // Upsampling kernel (linear interpolation)
+  int  M   = 2;                          // Oversampling factor
+  Vec  u   = { 1, 2, 1 }; u = 0.5*u;     // Upsampling kernel (linear interpolation)
+  Real tol = 1.e-13;                     // Tolerance for numerical comparisons
 
+  // Using the original 3 equations that result from the perfect roundtrip conditions will produce
+  // a singular matrix when u is symmetric (which is indeed the case). When u[2] = u[0] then Eq. 3
+  // is the same as Eq. 1. So, the following system does not work:
+  Mat A1(3, 3, { u[1], u[0]     ,  0  ,  // Eq. 1:  u1*d0 + u0*d1         = 0
+                  0  , u[0]+u[2], u[1],  // Eq. 2:  u2*d1 + u1*d2 + u0*d1 = 1
+                 u[1], u[2]     ,  0});  // Eq. 3:  u0*d1 + u1*d2         = 0
+  Vec b1({0, 1, 0});
 
-  Real tol = 1.e-13;                    // Tolerance for numerical comparisons
+  // Let's replace Eq. 3 by a condition that fixes the value d[2].
+  //Real d2 = 0.75;                      // d2 = 3/4 avoids roundoff errors in reconstruction
+  Real d2 = 5.0 / 7.0;                   // d2 = 5/7 leads to perfect triangular shape
+  Mat A2(3, 3, { u[1], u[0]     ,  0  ,  // Eq. 1:  u1*d0 + u0*d1         = 0
+                  0  , u[0]+u[2], u[1],  // Eq. 2:  u2*d1 + u1*d2 + u0*d1 = 1
+                  0  ,  0       ,  1});  // Eq. 3:  Fixes d2 to desired value
+  Vec b2({0, 1, d2});
 
-  Mat A(3, 3, { u[1], u[0]     ,  0  ,  // Eq. 1:  u1*d0 + u0*d1         = 0
-                 0  , u[0]+u[2], u[1],  // Eq. 2:  u2*d1 + u1*d2 + u0*d1 = 1
-                u[1], u[2]     ,  0});  // Eq. 3:  u0*d1 + u1*d2         = 0
-  Vec b({0, 1, 0});
-  // We actually use u[2] here even though in the text file we assume u[2] = u[0] and use u[0] in
-  // Eq. 2. I think, using really u[2] would mean that we do not assume u to be symmetric but we
-  // would still assume d to be symmetric?
-  // Ah! the system is linearly dependent! Eq. 3 is the same as Eq. 1 because u[2] = u[0]
+  // Select one combination of matrix and right hand side to use:
+  Mat A = A2; Vec b = b2;
+  // A1,b1 does not work because A1 is singular. A2,b2 does work.
 
-
-  // Compute downsampling kernel by solving the linear system:
-  Vec d = LA::solve(A, b);
+  // Compute the left wing of the downsampling kernel by solving the 3x3 linear system:
+  Vec dL = LA::solve(A, b);
 
   // Verify solution:
-  Vec br = A*d;
+  Vec br = A*dL;
   ok &= rsIsCloseTo(br, b, tol);
+
+  // Create the full downsampling kernel by duplicating the left wing, removing the last sample, 
+  // reflecting it and then concatenating it with the left wing. The removal is because only the 
+  // left wing contains the middle value. We don't want the middle value to be duplicated:
+  Vec dR = dL;                           // dR will become the right wing of d.
+  dR.resize(dR.size()-1);
+  rsReverse(dR);
+  Vec d = rsConcatenate(dL, dR);
+  // Maybe factor that out into a function:  d = rsSymmetrize(dL);  but maybe the resizing should
+  // be optional defaulting to false. We could have boolean parameter named removeDuplicateCenter.
 
   // Verify that upsampling with kernel u then downsampling with kernel d is an identity operation
   // up to roundoff error:
@@ -1754,10 +1775,22 @@ bool testUpDownSampleFiltersSym2x()
   // Plot all 3 kernels:
   rsPlotVectors(u, d, ud);
 
-
-
-
   return ok;
+
+
+  // Observations:
+  //
+  // - We get the same results as in the experiment with the potentially asymmetric kernels where
+  //   we imposed the symmetry by a constraint rather than by construction. This is totally what
+  //   was expected.
+  // 
+  //
+  // Notes:
+  //
+  // - In practice, it makes more sense to impose the symmetry by construction because that leads
+  //   to smaller systems of equations which are easier to solve computationally (and possibly also
+  //   more numerically accurate?). The case of the potentially asymmetrical kernels is more of
+  //   theoretical interest.
 }
 
 

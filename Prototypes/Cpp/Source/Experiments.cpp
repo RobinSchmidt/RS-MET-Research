@@ -1720,19 +1720,21 @@ bool testUpDownSampleFiltersSym2x()
   using LA   = RAPT::rsLinearAlgebraNew;
 
   // Define oversampling factor and upsampling kernel:
-  int M = 2;                           // Oversampling factor
-  Vec u = { 1, 2, 1 }; u = 0.5*u;      // Upsampling kernel (linear interpolation)
+  int M = 2;                            // Oversampling factor
+  Vec u = { 1, 2, 1 }; u = 0.5*u;       // Upsampling kernel (linear interpolation)
 
 
-  Real tol = 1.e-13;                   // Tolerance for numerical comparisons
+  Real tol = 1.e-13;                    // Tolerance for numerical comparisons
 
-  Mat A(3, 3, { u[1], u[0],  0  ,       // Eq. 1:  u1*d0 + u0*d1         = 0
-                u[0], u[1], u[2],       // Eq. 2:  u0*d0 + u1*d1 + u2*d2 = 1
-                 0  , u[0], u[1]  });   // Eq. 3:  u0*d1 + u1*d2         = 0
+  Mat A(3, 3, { u[1], u[0]     ,  0  ,  // Eq. 1:  u1*d0 + u0*d1         = 0
+                 0  , u[0]+u[2], u[1],  // Eq. 2:  u2*d1 + u1*d2 + u0*d1 = 1
+                u[1], u[2]     ,  0});  // Eq. 3:  u0*d1 + u1*d2         = 0
   Vec b({0, 1, 0});
   // We actually use u[2] here even though in the text file we assume u[2] = u[0] and use u[0] in
   // Eq. 2. I think, using really u[2] would mean that we do not assume u to be symmetric but we
   // would still assume d to be symmetric?
+  // Ah! the system is linearly dependent! Eq. 3 is the same as Eq. 1 because u[2] = u[0]
+
 
   // Compute downsampling kernel by solving the linear system:
   Vec d = LA::solve(A, b);

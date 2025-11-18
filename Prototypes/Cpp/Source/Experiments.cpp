@@ -1914,8 +1914,8 @@ bool testUpDownSampleFiltersSym3x()
   // - Plot magnitude responses of u, d, ud.
   //
   // - Try to make it build when using Real = rsFraction<int> rather than double. We still get 
-  //   "unresolved external symbol" linker errors related to LA::solve() and I think, also related
-  //   to rsPlotVectors()
+  //   "unresolved external symbol" linker errors related to rsPlotVectors(). We can use it when we
+  //   comment out the plotting command, though.
 }
 
 

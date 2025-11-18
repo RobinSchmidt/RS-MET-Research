@@ -20,7 +20,8 @@ freedom to optimize our filters u[m],d[m] to some criteria.
 
 ...TBC...
 
-----------------------------------------------------------------------------------------------------  
+----------------------------------------------------------------------------------------------------
+
 As a first example, let's consider the case where an upsampling kernel u of length 3 is given and we
 want to produce a fitting downsampling kernel d. For example, when upsamling by a factor of 2 using 
 linear interpolation, we would indeed get a kernel of length 3 which would look like 
@@ -72,14 +73,8 @@ Other ideas for conditions to satisfy:
 -Symmetry around the midpoint like d3 = d1, d4 = d0? 
 -Maybe we can also impose requirements of r such as: r1 + r2 + r3 + r4 + r5 + r6 = 1, etc.?
   
-  
-  
-  
-  
-  
-  
-  
-----------------------------------------------------------------------------------------------------  
+----------------------------------------------------------------------------------------------------
+
 Let's take the case where we impose symmetry on the downsampling kernel by construction by defining 
 d = [d0 d1 d2 d1 d0], etc.. With this, the 5x5 system would look like this:
 
@@ -116,7 +111,8 @@ Nyquist freq and minimizes roundoff errors due to having a power of 2 in the den
 produces a perfectly triangular shape in the time domain, so it basically looks quite similar to the
 upsampling kernel (which is also triangular because it's linear interpolation).
 
-----------------------------------------------------------------------------------------------------  
+----------------------------------------------------------------------------------------------------
+
 Let's take the case with a symmetric upsampling kernel u = [u0 u1 u2 u1 u0] of length 5 as it would 
 arise, for example, when linearly upsampling by a factor of M = 3 or upsampling via a cubic 
 interpolator by a factor of M = 2 (verify!). I think, we may need a length 7 decimator (verify!)
@@ -126,7 +122,7 @@ looks like:
 
   u0  0   0   0   0   0   0          d0       r0
   u1  u0  0   0   0   0   0          d1       r1
-  u2  u1  u0  0   0   0   0     *    d2  =    r2  <--- = 0    Eq. 1
+  u2  u1  u0  0   0   0   0     *    d2   =   r2  <--- = 0    Eq. 1
   u1  u2  u1  u0  0   0   0          d3       r3
   u0  u1  u2  u1  u0  0   0          d2       r4
   0   u0  u1  u2  u1  u0  0          d1       r5  <--- = 1    Eq. 2
@@ -143,14 +139,15 @@ Let's extract the 3 equations:
                                   u0*d2 + u1*d1 + u2*d0 = 0   Eq. 3
 
 We can again see that Eq. 3 is the same as Eq. 1 (just compare them term-wise reading Eq. 3 
-backwards to see it) because we imposed symmetry by construction. So we effectively only 2 equations
-for our 4 unknowns d0..d3. Let's write equations 1,2 down in a form where we collect the coeffs in 
-front of the unknowns, i.e. combine the two term u0*d1 and u0*d1 into 2*u0*d1 in Eq. 2, for example:
+backwards to see it) because we imposed symmetry by construction. So we effectively have only 2 
+equations for our 4 unknowns d0..d3. Let's write equations 1,2 down in a form where we collect the 
+coeffs in front of the unknowns, i.e. combine the two term u0*d1 and u0*d1 into 2*u0*d1 in Eq. 2, 
+for example:
 
   u2*d0 +   u1*d1 +   u0*d2          = 0   Eq. 1
           2*u0*d1 + 2*u1*d2 + u2*d3  = 1   Eq. 2  
 
-These are our two equations that we get from the roundtrip constraint. But we have 4 unknown such 
+These are our two equations that we get from the roundtrip constraint. But we have 4 unknowns such 
 that we now have 2 degrees of freedom that we can tweak to optimize the downsampling kernel in some 
 way. Maybe let's again fix the middle sample (this time, it's d3) to some value p (which we will now 
 call p1) and lets additionally fix its immediate neighbor d2 to a second parameter which we will 
@@ -166,13 +163,31 @@ that the shape ramps up at a constant slope. this leads to:
   d1 - d0 = d2 - d1  ->  d0 - 2*d1 + d2 = 0
   d2 - d1 = d3 - d2  ->  d1 - 2*d2 + d3 = 0
 
-...TBC...
+----------------------------------------------------------------------------------------------------
+
+Let's now consider a case where we upsample by a factor of M = 2 and use for upsampling a kernel of
+length 5 such that u = [u0 u1 u2 u1 u0] just as before. Therefore, the matrix-vector equation that
+represents our convolution also looks like before. But the difference lies in which samples in the
+r-vector we require to be zero. We need:
+
+  u0  0   0   0   0   0   0          d0       r0
+  u1  u0  0   0   0   0   0          d1       r1  <--- = 0    Eq. 1
+  u2  u1  u0  0   0   0   0     *    d2   =   r2 
+  u1  u2  u1  u0  0   0   0          d3       r3  <--- = 0    Eq. 2
+  u0  u1  u2  u1  u0  0   0          d2       r4
+  0   u0  u1  u2  u1  u0  0          d1       r5  <--- = 1    Eq. 3
+  0   0   u0  u1  u2  u1  u0         d0       r4
+  0   0   0   u0  u1  u2  u1                  r3  <--- = 0    Eq. 2 again
+  0   0   0   0   u0  u1  u2                  r2
+  0   0   0   0   0   u0  u1                  r1  <--- = 0    Eq. 1 again
+  0   0   0   0   0   0   u0                  r0
 
 
 
 
 
 ----------------------------------------------------------------------------------------------------
+
 ToDo: 
 
 - Derive formulas/algorithms to produce a downsampling kernel d for a given upsampling kernel u (or

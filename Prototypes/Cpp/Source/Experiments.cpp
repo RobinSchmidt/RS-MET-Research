@@ -1843,7 +1843,34 @@ bool testUpDownSampleFiltersSym3x()
   Vec br = A*dL;
   ok &= rsIsCloseTo(br, b, tol);
 
+  // Create the full downsampling kernel:
+  Vec dR = dL;
+  dR.resize(dR.size()-1);
+  rsReverse(dR);
+  Vec d = rsConcatenate(dL, dR);
+
+  // Verify roundtrip:
+  Vec x = rsRandomIntVector(20, +1, +9, 0);
+  ok &= testUpDownSampleRoundTrip(x, M, u, d, tol);
+
+  // Create the combined up/down kernel:
+  Vec ud = rsConvolve(u, d);
+
+  // Plot all 3 kernels:
+  rsPlotVectors(u, d, ud);
+
   return ok;
+
+
+
+  // Notes:
+  //
+  // - There is some code duplication in the different experiments. In particular, the "Verify 
+  //   solution", "Create the full..." ..etc. stuff. Maybe that can be factored out to get rid of 
+  //   the duplication. Maybe functions verifyRoundtrip(), plotKernels() - or maybe a single 
+  //   function verifyOversampleKernels(bool plot = false) or something could be used. Maybe it 
+  //   should expect two left wings. That would mean that we should only produce the left winf of
+  //   the u-kernel here, too.
 }
 
 

@@ -18,11 +18,26 @@ time being, these values can be whatever they want to be. We will later use thes
 freedom to optimize our filters u[m],d[m] to some criteria.
 
 
-
-
-
 ...TBC...
 
+----------------------------------------------------------------------------------------------------  
+As a first example, let's consider the case where an upsampling kernel u of length 3 is given and we
+want to produce a fitting downsampling kernel d. For example, when upsamling by a factor of 2 using 
+linear interpolation, we would indeed get a kernel of length 3 which would look like 
+u = [1 2 1] / 2. It turns out that our d will have to be of length 5. 
+
+...Why? What's the general formula? I think, it's because we need to shift the kernel u into the 
+matrix rows until it disappears and the number of columns of the resulting matrix is our length for 
+d?  I think, we need to produce a circulant matrix from u such that we can express the convolution 
+of u and d as a matrix-vector product with an unknown vector d. The convolution result will become 
+our right hand side vector r. Our prefect reconstruction constraints will become requirements on 
+certain entries of this rhs vector r, namely: the middle sample must be one and we need to see zeros 
+at all samples that are a distance of n*M, where n is an integer, away from the middle (verify!). 
+All the other entries of the rhs vector are not yet determined by our perfect reconstruction 
+constraints. They will be our degrees of freedom that we can use to optimize the frequency response 
+of the decimation kernel d.
+
+...
 
 Let's denote r[m] the filter resulting from the convolution of u[m] and d[m]. For a 3rd order filter 
 u and a 5th order filter d, we can express the convolution as the following matrix-vector equation:
@@ -106,7 +121,8 @@ Let's take the case with a symmetric upsampling kernel u = [u0 u1 u2 u1 u0] of l
 arise, for example, when linearly upsampling by a factor of M = 3 or upsampling via a cubic 
 interpolator by a factor of M = 2 (verify!). I think, we may need a length 7 decimator (verify!)
 d = [d0 d1 d2 d3 d2 d1 d0] and get a length 5+7-1 = 11 resulting filter 
-r = [r0 r1 r2 r3 r4 r5 r4 r3 r2 r1 r0]. The matrix-vector equation looks like:
+r = [r0 r1 r2 r3 r4 r5 r4 r3 r2 r1 r0]. The matrix-vector equation for the convolution of u and d 
+looks like:
 
   u0  0   0   0   0   0   0          d0       r0
   u1  u0  0   0   0   0   0          d1       r1

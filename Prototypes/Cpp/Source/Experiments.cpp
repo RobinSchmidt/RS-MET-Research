@@ -1823,18 +1823,48 @@ bool testUpDownSampleFiltersSym3x()
   // response.
 
   // Ad hoc values:
-  Real p1 = 0.75;
-  Real p2 = 0.50;
+  Real p1, p2;
+  //p1 = 3./4; p2 = 2./4;
+  //p1 = 2./3; p2 = 1./3;
+  p1 = 3./6; p2 = 2./6;
 
+  // Establish matrix A and right and side vector b by using the precribed values p1,p2 for d3,d2
+  // resepctively:
   Mat A1(4, 4, { u[2],   u[1],   u[0],  0  ,
                   0  , 2*u[0], 2*u[1], u[2],
                   0  ,   0  ,    0   ,  1  ,
                   0  ,   0  ,    1   ,  0    });
   Vec b1({0, 1, p1, p2});
 
+  // Require the numeric derivatives to be equal:  d1 - d0 = d2 - d1 = d3 - d2. This gives two 
+  // equations which should give us a  perfect triangular kernel.
+  // d1 - d0 = d2 - d1   ->   d0 - 2*d1 + d2 = 0
+  // d2 - d1 = d3 - d2   ->   d1 - 2*d2 + d3 = 0
+  Mat A2(4, 4, { u[2],   u[1],   u[0],  0  ,
+                  0  , 2*u[0], 2*u[1], u[2],
+                  1  ,  -2  ,    1   ,  0  ,
+                  0  ,   1  ,   -2   ,  1    });
+  Vec b2({0, 1, 0, 0});
+  // Leads to:
+  // 
+  //   d0 = -0.15384615384615383  = -2/13
+  //   d1 =  0.076923076923076927 =  1/13
+  //   d2 =  0.30769230769230765  =  4/13
+  //   d3 =  0.53846153846153844  =  7/13
+  //
+  // The numbers have been identified by Wolfram Alpha by entering them, removin one or two final
+  // digits (because they may have been rounded up and my therefore be wrong) and appending 3 dots
+  // i.e. entering 0.5384615384615384...  The dots are intepreted by Alpha as "this continues 
+  // periodically" and it figures out the period and converts it to a fraction. I guess, we coul 
+  // also recover these fractions using the implementation of conversion to continued fractions 
+  // where could stop the algorithm if the fractional part falls below some threshold (which 
+  // should be related to the machine epsilon). They could perhaps also be found by using 
+  // Real = rsFraction<int>. Maybe try this!
+
+
 
   // Select one combination of matrix and right hand side to use:
-  Mat A = A1; Vec b = b1;
+  Mat A = A2; Vec b = b2;
 
   // Compute the left wing of the downsampling kernel by solving the 3x3 linear system:
   Vec dL = LA::solve(A, b);
@@ -1862,7 +1892,13 @@ bool testUpDownSampleFiltersSym3x()
   return ok;
 
 
-
+  // Observations:
+  //
+  // - When using p1 = 3/4, p2 = 1/2, the downsampling kernel undershoots the zero line a lot. We
+  //   get d1 = -0.625 and d0 = 0.25. I don't know if that undershoot is a good or a bad thing, 
+  //   though. 
+  //
+  //
   // Notes:
   //
   // - There is some code duplication in the different experiments. In particular, the "Verify 
@@ -1871,6 +1907,15 @@ bool testUpDownSampleFiltersSym3x()
   //   function verifyOversampleKernels(bool plot = false) or something could be used. Maybe it 
   //   should expect two left wings. That would mean that we should only produce the left winf of
   //   the u-kernel here, too.
+  //
+  //
+  // ToDo:
+  //
+  // - Find better values for p1,p2. Maybe use conditions that require the numeric derivatives to 
+  //   be equal:  d1 - d0 = d2 - d1 = d3 - d2. This gives two equations which should give us a 
+  //   perfect triangular kernel.
+  //
+  // - Plot magnitude responses of u, d, ud.
 }
 
 

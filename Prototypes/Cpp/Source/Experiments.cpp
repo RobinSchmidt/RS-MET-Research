@@ -1811,6 +1811,37 @@ bool testUpDownSampleFiltersSym3x()
   Vec  u = { 1, 2, 3, 2, 1 }; u = (1./3)*u;   // Upsampling kernel (linear interpolation)
   Real tol = 1.e-13;                          // Tolerance for numerical comparisons
 
+  // In the file RS-MET-Research/Notes/DSP/TransparentOversampling.txt, I derived the following
+  // system of equations:
+  // 
+  // u2*d0 +   u1*d1 +   u0*d2          = 0
+  //         2*u0*d1 + 2*u1*d2 + u2*d3  = 1
+  //                                d3  = p1
+  //                        d2          = p2
+  //
+  // With some freely tweakable parameters p1,p2 which we can use to optimize the frequency 
+  // response.
+
+  // Ad hoc values:
+  Real p1 = 0.75;
+  Real p2 = 0.50;
+
+  Mat A1(4, 4, { u[2],   u[1],   u[0],  0  ,
+                  0  , 2*u[0], 2*u[1], u[2],
+                  0  ,   0  ,    0   ,  1  ,
+                  0  ,   0  ,    1   ,  0    });
+  Vec b1({0, 1, p1, p2});
+
+
+  // Select one combination of matrix and right hand side to use:
+  Mat A = A1; Vec b = b1;
+
+  // Compute the left wing of the downsampling kernel by solving the 3x3 linear system:
+  Vec dL = LA::solve(A, b);
+
+  // Verify solution:
+  Vec br = A*dL;
+  ok &= rsIsCloseTo(br, b, tol);
 
   return ok;
 }

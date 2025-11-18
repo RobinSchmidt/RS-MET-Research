@@ -144,8 +144,24 @@ Let's extract the 3 equations:
 
 We can again see that Eq. 3 is the same as Eq. 1 (just compare them term-wise reading Eq. 3 
 backwards to see it) because we imposed symmetry by construction. So we effectively only 2 equations
-for our 4 unknowns d0..d3 such that we now have 2 degrees of freedom that we can tweak to optimize 
-the downsampling kernel in some way. ...TBC...
+for our 4 unknowns d0..d3. Let's write equations 1,2 down in a form where we collect the coeffs in 
+front of the unknowns, i.e. combine the two term u0*d1 and u0*d1 into 2*u0*d1 in Eq. 2, for example:
+
+  u2*d0 +   u1*d1 +   u0*d2          = 0   Eq. 1
+          2*u0*d1 + 2*u1*d2 + u2*d3  = 1   Eq. 2  
+
+These are our two equations that we get from the roundtrip constraint. But we have 4 unknown such 
+that we now have 2 degrees of freedom that we can tweak to optimize the downsampling kernel in some 
+way. Maybe let's again fix the middle sample (this time, it's d3) to some value p (which we will now 
+call p1) and lets additionally fix its immediate neighbor d2 to a second parameter which we will 
+call p2:
+
+  d3 = p1    Eq. 4
+  d2 = p2    Eq. 5
+  
+  
+
+...TBC...
 
 
 

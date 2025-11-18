@@ -88,7 +88,18 @@ But if we assume a symmetric upsampling kernel u, we would have u2 = u0 and Eq. 
 same as Eq. 1. So, the system is actually linearly dependent and we have effectively only 2 
 equations rather than 3. This gives us one degree of freedom just like in the case above. We can 
 again treat the center value d[2] of the downsampling kernel d as our free parameter. So, we replace
-Eq. 3 by: d2 = some value. Interesting values for d2 are 3/4 and 5/7
+Eq. 3 by: 
+
+  d2 = p                        Eq. 4 
+
+for some freely assignable parameter p that can be optimized according to producing the most 
+desirable impulse response. What counts as "most desirable" in this context should probably viewed 
+from a frequency response perspective. Interesting values for p are 3/4 and 5/7. 
+
+ToDo: Explain why these values are interesting. I think, 3/4 produces a notch at the oversampled
+Nyquist freq and minimizes roundoff errors due to having a power of 2 in the denominator and 5/7 
+produces a perfectly triangular shape in the time domain, so it basically looks quite similar to the
+upsampling kernel (which is also triangular because it's linear interpolation).
 
 ----------------------------------------------------------------------------------------------------  
 Let's take the case with a symmetric upsampling kernel u = [u0 u1 u2 u1 u0] of length 5 as it would 
@@ -99,24 +110,29 @@ r = [r0 r1 r2 r3 r4 r5 r4 r3 r2 r1 r0]. The matrix-vector equation looks like:
 
   u0  0   0   0   0   0   0          d0       r0
   u1  u0  0   0   0   0   0          d1       r1
-  u2  u1  u0  0   0   0   0     *    d2  =    r2  <--- = 0   Eq. 1
+  u2  u1  u0  0   0   0   0     *    d2  =    r2  <--- = 0    Eq. 1
   u1  u2  u1  u0  0   0   0          d3       r3
   u0  u1  u2  u1  u0  0   0          d2       r4
-  0   u0  u1  u2  u1  u0  0          d1       r5  <--- = 1   Eq. 2
+  0   u0  u1  u2  u1  u0  0          d1       r5  <--- = 1    Eq. 2
   0   0   u0  u1  u2  u1  u0         d0       r4
   0   0   0   u0  u1  u2  u1                  r3
-  0   0   0   0   u0  u1  u2                  r2  <--- = 0   Eq. 3
+  0   0   0   0   u0  u1  u2                  r2  <--- = 0    Eq. 3
   0   0   0   0   0   u0  u1                  r1
   0   0   0   0   0   0   u0                  r0
 
 Let's extract the 3 equations:
 
-  u2*d0 + u1*d1 + u0*d2                                 = 0
-          u0*d1 + u1*d2 + u2*d3 + u1*d2 + u0*d1         = 1
-                                  u0*d2 + u1*d1 + u2*d0 = 0
+  u2*d0 + u1*d1 + u0*d2                                 = 0   Eq. 1
+          u0*d1 + u1*d2 + u2*d3 + u1*d2 + u0*d1         = 1   Eq. 2
+                                  u0*d2 + u1*d1 + u2*d0 = 0   Eq. 3
+
+We can again see that Eq. 3 is the same as Eq. 1 (just compare them term-wise reading Eq. 3 
+backwards to see it) because we imposed symmetry by construction. So we effectively only 2 equations
+for our 4 unknowns d0..d3 such that we now have 2 degrees of freedom that we can tweak to optimize 
+the downsampling kernel in some way. ...TBC...
 
 
-...TBC...
+
 
 
 ----------------------------------------------------------------------------------------------------
@@ -124,6 +140,23 @@ ToDo:
 
 - Derive formulas/algorithms to produce a downsampling kernel d for a given upsampling kernel u (or
   vice versa)
+  
+- The general algorithm will probably have to formulated in terms of a constrained optimization 
+  problem where the constraints are derived from the perfect roundtrip requirements and the 
+  objective for the (numrical?) optimization should be the frequency response of the downsampling 
+  kernel d. In this algorithm, we would treat the upsapling kernel as given. Maybe we can, in the 
+  general case, produce it as a windowed sinc kernel.
+
+- After having u and d in hand, where u was pre-assigned and d was found by the numerical 
+  constrained optimization, we could take that pair as a starting point to drive u and d towards 
+  each other such that we can use the same kernel for up- and downsampling. That would save memory 
+  for the coeffs. I think, this would lead to a quadratic optimization problem rather than a linear 
+  one because the products like u0*d2, u1*d1, u2*d0, etc. would become products of the form b0*b2,
+  b1*b1, b2*b0, etc. when we call the coeffs of our common up/down kernel b[k].
+  
+- Maybe an optimized implementation could use SIMD processing to run upsampling and downsampling in 
+  parallel. That might introduce one sample of additional delay into the roundtrip.
+  
 
 See also in RS-MET-Research/Prototypes/Cpp/Source/Main.cpp:
 

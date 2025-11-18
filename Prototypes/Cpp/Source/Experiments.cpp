@@ -1802,13 +1802,20 @@ bool testUpDownSampleFiltersSym3x()
 
   // For convenience:
   using Real = double;
+  //using Real = rsFraction<int>;
   using Vec  = std::vector<Real>;
   using Mat  = RAPT::rsMatrix<Real>;
   using LA   = RAPT::rsLinearAlgebraNew;
 
   // Define oversampling factor and upsampling kernel:
   int  M = 3;                                 // Oversampling factor
-  Vec  u = { 1, 2, 3, 2, 1 }; u = (1./3)*u;   // Upsampling kernel (linear interpolation)
+  Vec  u = { 1, 2, 3, 2, 1 }; 
+  
+  //u = (1./3)*u;   // Upsampling kernel (linear interpolation)
+  //u = u / Real(3);
+  u = u / 3;
+
+
   Real tol = 1.e-13;                          // Tolerance for numerical comparisons
 
   // In the file RS-MET-Research/Notes/DSP/TransparentOversampling.txt, I derived the following
@@ -1859,7 +1866,14 @@ bool testUpDownSampleFiltersSym3x()
   // also recover these fractions using the implementation of conversion to continued fractions 
   // where could stop the algorithm if the fractional part falls below some threshold (which 
   // should be related to the machine epsilon). They could perhaps also be found by using 
-  // Real = rsFraction<int>. Maybe try this!
+  // Real = rsFraction<int>. Whe I try this, the u = (1./3)*u; assignement doesn't compile. Try
+  // rewriting it as u = u/3; and implement the division operator with a vector as 1st argument
+  // appropriately! Or maybe use the /= operaror, i.e. write u /= 3; But in this case, the other 
+  // operand will be an int whereas the vector will be a vector of fractions. Maybe implement it as
+  // a partial specialization where the right operand is an int but the vector element type is
+  // templatized. ...ok - done - but now the   x = rsRandomIntVector(20, +1, +9, 0);  down below
+  // doesn't compile. Maybe try using some fixed vector like
+  // x = Vec({2,2,6,3,4,6,3,9,5,2,4,7,3,7,3,6});
 
 
 

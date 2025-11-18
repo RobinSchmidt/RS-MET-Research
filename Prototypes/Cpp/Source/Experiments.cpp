@@ -1802,20 +1802,14 @@ bool testUpDownSampleFiltersSym3x()
 
   // For convenience:
   using Real = double;
-  //using Real = rsFraction<int>;
+  //using Real = rsFraction<int>;             // ...would be nice to use but gives linker errors
   using Vec  = std::vector<Real>;
   using Mat  = RAPT::rsMatrix<Real>;
   using LA   = RAPT::rsLinearAlgebraNew;
 
   // Define oversampling factor and upsampling kernel:
   int  M = 3;                                 // Oversampling factor
-  Vec  u = { 1, 2, 3, 2, 1 }; 
-  
-  //u = (1./3)*u;   // Upsampling kernel (linear interpolation)
-  //u = u / Real(3);
-  u = u / 3;
-
-
+  Vec  u = { 1, 2, 3, 2, 1 }; u = u/3;        // Upsampling kernel (linear interpolation)
   Real tol = 1.e-13;                          // Tolerance for numerical comparisons
 
   // In the file RS-MET-Research/Notes/DSP/TransparentOversampling.txt, I derived the following
@@ -1862,19 +1856,10 @@ bool testUpDownSampleFiltersSym3x()
   // The numbers have been identified by Wolfram Alpha by entering them, removin one or two final
   // digits (because they may have been rounded up and my therefore be wrong) and appending 3 dots
   // i.e. entering 0.5384615384615384...  The dots are intepreted by Alpha as "this continues 
-  // periodically" and it figures out the period and converts it to a fraction. I guess, we coul 
+  // periodically" and it figures out the period and converts it to a fraction. I guess, we could 
   // also recover these fractions using the implementation of conversion to continued fractions 
   // where could stop the algorithm if the fractional part falls below some threshold (which 
-  // should be related to the machine epsilon). They could perhaps also be found by using 
-  // Real = rsFraction<int>. Whe I try this, the u = (1./3)*u; assignement doesn't compile. Try
-  // rewriting it as u = u/3; and implement the division operator with a vector as 1st argument
-  // appropriately! Or maybe use the /= operaror, i.e. write u /= 3; But in this case, the other 
-  // operand will be an int whereas the vector will be a vector of fractions. Maybe implement it as
-  // a partial specialization where the right operand is an int but the vector element type is
-  // templatized. ...ok - done - but now the   x = rsRandomIntVector(20, +1, +9, 0);  down below
-  // doesn't compile. Maybe try using some fixed vector like
-  // x = Vec({2,2,6,3,4,6,3,9,5,2,4,7,3,7,3,6});
-
+  // should be related to the machine epsilon). 
 
 
   // Select one combination of matrix and right hand side to use:
@@ -1894,7 +1879,8 @@ bool testUpDownSampleFiltersSym3x()
   Vec d = rsConcatenate(dL, dR);
 
   // Verify roundtrip:
-  Vec x = rsRandomIntVector(20, +1, +9, 0);
+  //Vec x = rsRandomIntVector(20, +1, +9, 0);       // Doesn't compile with Real = rsFraction<int>.
+  Vec x({5,2,6,3,4,6,3,9,5,2,4,7,3,7,8,3,6,1,5});   // ..so let's use this instead.
   ok &= testUpDownSampleRoundTrip(x, M, u, d, tol);
 
   // Create the combined up/down kernel:
@@ -1919,17 +1905,17 @@ bool testUpDownSampleFiltersSym3x()
   //   solution", "Create the full..." ..etc. stuff. Maybe that can be factored out to get rid of 
   //   the duplication. Maybe functions verifyRoundtrip(), plotKernels() - or maybe a single 
   //   function verifyOversampleKernels(bool plot = false) or something could be used. Maybe it 
-  //   should expect two left wings. That would mean that we should only produce the left winf of
+  //   should expect two left wings. That would mean that we should only produce the left wing of
   //   the u-kernel here, too.
   //
   //
   // ToDo:
   //
-  // - Find better values for p1,p2. Maybe use conditions that require the numeric derivatives to 
-  //   be equal:  d1 - d0 = d2 - d1 = d3 - d2. This gives two equations which should give us a 
-  //   perfect triangular kernel.
-  //
   // - Plot magnitude responses of u, d, ud.
+  //
+  // - Try to make it build when using Real = rsFraction<int> rather than double. We still get 
+  //   "unresolved external symbol" linker errors related to LA::solve() and I think, also related
+  //   to rsPlotVectors()
 }
 
 

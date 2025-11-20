@@ -917,7 +917,7 @@ bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M,
   Vec xu = rsUpSample(  x,  M, hu);          // Upsample x by M with hu as anti-imaging filter
   Vec xd = rsDownSample(xu, M, hd, shift);   // Downsample with hd as anti-aliasing filter
   rsRemoveRange(xd, x.size(), xd.size()-1);  // Remove trailing zeros
-  rsPlotVectors(x, xd);                    // Plot original and downsampled - for debugging
+  //rsPlotVectors(x, xd);                    // Plot original and downsampled - for debugging
   return rsIsCloseTo(xd, x, tol);            // Compare original and downsampled signals
 
 
@@ -1987,11 +1987,12 @@ bool testOverSample_M2_L5()
   ok &= testUpDownSampleRoundTrip(x, M, u, d, tol);
   // FAILS! Ah! I think, this is because we use an upsampling kernel that doesn't interpolate the 
   // sample values. The conditions that the center-sample of the downsampling kernel must be 1 and
-  // that it must have zero-crossings at multiples of M-1 is only correct when the upsampling 
-  // kernel interpolates, i.e. the upsampled signal passes through the original data points 
-  // exactly. So we really need to produce a proper interpolating upsampling kernel first. But 
-  // maybe the system can be generalized to arbitrary (potentially non-interpolating) upsampling 
-  // kernels. This could be an interesting direction for further research.
+  // that it must have zero-crossings at distances from the center of multiples of M-1 is only 
+  // correct when the upsampling kernel interpolates, i.e. the upsampled signal passes through the 
+  // original data points exactly. So we really need to produce a proper interpolating upsampling 
+  // kernel first. But maybe the system can be generalized to arbitrary (potentially 
+  // non-interpolating) upsampling kernels. This could be an interesting direction for further 
+  // research.
 
   // Create the combined up/down kernel:
   Vec ud = rsConvolve(u, d);

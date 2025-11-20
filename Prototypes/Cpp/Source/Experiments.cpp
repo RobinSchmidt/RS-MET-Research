@@ -1924,6 +1924,41 @@ bool testOverSample_M3_L5()
   //   to make that work.
 }
 
+/** Generates a filter kernel that can be used for sinc interpolation ...TBC...
+
+  L: Length of the kernel
+  M: Upsampling factor (determines positions of zero crossings)
+
+*/
+template<class T>
+std::vector<T> rsSincInterpolateKernel(int L, int M)
+{
+  rsAssert(rsIsOdd(L), "Only odd lengths are supported in rsSincOverSampleKernel");
+
+  std::vector<T> h(L);    // Filter kernel (aka impulse response)
+  int c = L/2;            // Center sample
+
+  h[c] = 1;
+  for(int i = 1; i <= c; i++)
+  {
+    T v = RAPT::rsNormalizedSinc(T(i) / T(M));  // VERIFY!
+    h[c+i] = v;
+    h[c-i] = v;
+  }
+
+  // ...
+
+  rsPlotVectors(h);       // For debug
+
+  return h;
+
+  // ToDo:
+  //
+  // - Maybe optionally normalize the result such that the sum of all values except the middle one
+  //   gives M-1. I think, this is the condition to achieve unit DC gain in the oversampled domain.
+}
+
+
 bool testOverSample_M2_L5()
 {
   bool ok = true;
@@ -1934,6 +1969,8 @@ bool testOverSample_M2_L5()
   using Mat  = RAPT::rsMatrix<Real>;
   using LA   = RAPT::rsLinearAlgebraNew;
 
+  Vec test = rsSincInterpolateKernel<Real>(201, 10);
+
   // Define oversampling factor and upsampling kernel:
   int  M = 2;                                 // Oversampling factor
   //Vec  u = { 1, 2, 3, 2, 1 }; u = u/3;        // Upsampling kernel
@@ -1943,6 +1980,8 @@ bool testOverSample_M2_L5()
   // I think, using u = u/3 doesn't make sense here. I think, we need to normalize the kernel u in
   // such a way to have the sum of the values be equal to the oversampling factor M, so here we 
   // would want the sum to be equal to 2. Or wait - no - that seems to be wrong!
+
+  //u = rsSincOverSampleKernel(5, M);
 
   // The equations result from the prefect roduntrip contraints:
   // 
@@ -2007,12 +2046,16 @@ bool testOverSample_M2_L5()
   // - Use a different upsampling kernel u. Derive it from cubic Lagrange interpolation. At the 
   //   moment we just use the same kernel as in the M=3, L=5 case but that doesn't really make 
   //   sense here. I guess, it won't even properly interpolate. But I also think, for the algorithm
-  //   here, that should not matter - excpt maybe when our wrong kernel somehow makes the system
+  //   here, that should not matter - except maybe when our wrong kernel somehow makes the system
   //   of equations singular. 
   //
   // - Maybe try also a kernel based on binomial coeffs, i.e. u = [1 4 6 4 1] / 16 or maybe
   //   u = [1 4 6 4 1] / 8. It also won't interpolate (I think), but it might be a nice Gaussian
   //   lowpass filter.
+  //
+  // - Maybe use (windowed) sinc interpolation. Maybe write a function rsSincKernel(int L, int M) 
+  //   to generate it. Maybe use a window based on binomial coeffs. It has a nice Gaussian shape. 
+  //   Or maybe use a true Gaussian window
 }
 
 

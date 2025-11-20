@@ -1514,6 +1514,9 @@ bool testUpDownSampleFiltersAsym2x()
 
   int L = 5;                           // Length of downsampling kernel
   Real tol = 1.e-13;                   // Tolerance for numerical comparisons
+  // ToDo: rename L to Ld (for downsample) and use the convention that L is used for the length of
+  // the upsampling kernel u. Or maybe just get rid of it entirely and write 5s directly into the
+  // matrix constructors
 
   // Below are couple of different ideas for what additional constraints we could use. From the
   // "lossless roundtrip" requirement, we get only 3 equations but for a (potentially asymmetric)
@@ -1798,6 +1801,12 @@ bool testUpDownSampleFiltersSym2x()
 
 bool testUpDownSampleFiltersSym3x()
 {
+  // Maybe rename to testUpDownSampleFilters_M3_L5 or just testUpDownSample_M3_L5 or
+  // testOverSample_M3_L5
+  // The "Sym" should be the default assumption that goes without saying - only in the asymmetric
+  // case, we explicity state it. _M3_L5 stands for M = 3 (oversampling factor) and L = 5 
+  // (upsampling kernel length)
+
   bool ok = true;
 
   // For convenience:

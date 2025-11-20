@@ -197,7 +197,7 @@ only two rhs values, namely r2,r5. For convenience, let's again extract the rele
 
 ----------------------------------------------------------------------------------------------------
 
-Let's now look at the L = 7, M = 2 case....
+Let's now look at the L = 9, M = 2 case....
 
 
 ----------------------------------------------------------------------------------------------------
@@ -237,7 +237,25 @@ There are some implemetations of very small special cases of the general scheme 
 derive here.
 
 
+----------------------------------------------------------------------------------------------------
 
 Resources:
 
+Constrained optimization:
+
+with SciPy:
+https://docs.scipy.org/doc/scipy/reference/optimize.html
+https://docs.scipy.org/doc/scipy/tutorial/optimize.html#constrained-minimization
+https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html
+https://stackoverflow.com/questions/18767657/how-do-i-use-a-minimization-function-in-scipy-with-constraints
+
+with Octave:
+https://docs.octave.org/v8.4.0/Optimization.html
+https://docs.octave.org/v8.4.0/Nonlinear-Programming.html
+https://docs.octave.org/latest/Minimizers.html
+
+
+Up/Downsampling:
+
 https://www2.seas.gwu.edu/~ayoussef/papers/ImageDownUpSampling-CISST99.pdf
+

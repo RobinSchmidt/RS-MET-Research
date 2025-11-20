@@ -1924,14 +1924,16 @@ bool testOverSample_M3_L5()
   //   to make that work.
 }
 
-/** Generates a filter kernel that can be used for sinc interpolation ...TBC...
+/** UNDER CONSTRUCTION. Does not yet work!
+
+Generates a filter kernel that can be used for sinc interpolation ...TBC...
 
   L: Length of the kernel
   M: Upsampling factor (determines positions of zero crossings)
 
 */
 template<class T>
-std::vector<T> rsSincInterpolateKernel(int L, int M)
+std::vector<T> rsSincUpSampleKernel(int L, int M)
 {
   rsAssert(rsIsOdd(L), "Only odd lengths are supported in rsSincOverSampleKernel");
 
@@ -1941,14 +1943,45 @@ std::vector<T> rsSincInterpolateKernel(int L, int M)
   h[c] = 1;
   for(int i = 1; i <= c; i++)
   {
-    T v = RAPT::rsNormalizedSinc(T(i) / T(M));  // VERIFY!
+    //T v = RAPT::rsNormalizedSinc(T(i) / T(M));  // VERIFY!
+    T v = RAPT::rsNormalizedSinc(T(2*i) / T(M));  // VERIFY!
+
     h[c+i] = v;
     h[c-i] = v;
   }
 
-  // ...
+  /*
+  // Normalize to unit DC gain:
+  T sum(0);
+  for(int i = 1; i <= c; i++)
+    sum += 2*h[c+i];
+  T scaler = T(M-1) / sum;      // Explain this!
+  for(int i = 1; i <= c; i++)
+  {
+    h[c+i] *= scaler;
+    h[c-i] *= scaler;
+  }
+  */
+  // ToDo: Make this optional. Actually, it may make sense to factor it out into a function. Maybe
+  // it should be called rsNormalizeUpsampleKernel
+  // The reason is that we may want to do this kind of normalization after applying a window
+  // But the plot looks wrong! Maybe simple uniform scaling is not the right approach. Maybe we 
+  // need to shift instead - or apply a window, i.e. scale non-uniformly. But how? That seems to be
+  // a not so simple task. Maybe make an ansatz of using a linear combination of 1 and 1-x^2 where
+  // x = (c+i)/(c) and try figure out the correct mixing coeff. Maybe that leads to an equation 
+  // that can be solved? Or maybe use the simpler ansatz of a linear combination of 1 and 1-x.
 
-  rsPlotVectors(h);       // For debug
+  /*
+  // For test/debug:
+  sum = 0;
+  for(int i = 0; i < L; i++)
+    sum += h[i];
+  */
+  // The sum should now be equal to M up to roundoff error. Maybe wrap this test into a function
+  // rsIsExactInterpolator. This function should check that the middle sample is 1, that 
+  // zero-crossings occur at the right places and that the total sum is equal to M
+
+  rsStemPlot(h);          // For debug
 
   return h;
 
@@ -1956,6 +1989,18 @@ std::vector<T> rsSincInterpolateKernel(int L, int M)
   //
   // - Maybe optionally normalize the result such that the sum of all values except the middle one
   //   gives M-1. I think, this is the condition to achieve unit DC gain in the oversampled domain.
+  //
+  // - Try to give it some parameter of type T such that the compile can infer the type from it and
+  //   we don't have to call it like rsSincUpSampleKernel<Real>(L, M). But what could that 
+  //   parameter be such that it makes sense and is useful? Maybe the number M could be of type T
+  //   rather than an integer?
+  //
+  // - I think, we may need to compress it along the time axis by a factor of 0.5. Currently, when
+  //   calling it with rsSincUpSampleKernel<Real>(201, 10); we get a sample of 1 at 100 and zero 
+  //   crossings at 90,110, 80,120, 70,130, ... But that does not correspond to an upsampling 
+  //   factor of 10 but rather 20, I think. Hmm...using v = RAPT::rsNormalizedSinc(T(2*i) / T(M));
+  //   look good - but that formula looks really bad for M=2. We get zeros everywhere except in the
+  //   middle - this is clearly wrong!
 }
 
 
@@ -1969,7 +2014,14 @@ bool testOverSample_M2_L5()
   using Mat  = RAPT::rsMatrix<Real>;
   using LA   = RAPT::rsLinearAlgebraNew;
 
-  Vec test = rsSincInterpolateKernel<Real>(201, 10);
+  // Temporary throw-away code to test the production of the sinc upsampling kernels:
+  Vec test; 
+  test = rsSincUpSampleKernel<Real>(201, 10);
+  test = rsSincUpSampleKernel<Real>(  7,  2);
+  test = rsSincUpSampleKernel<Real>(  5,  2);
+  test = rsSincUpSampleKernel<Real>(  3,  2);
+
+
 
   // Define oversampling factor and upsampling kernel:
   int  M = 2;                                 // Oversampling factor
@@ -1981,7 +2033,8 @@ bool testOverSample_M2_L5()
   // such a way to have the sum of the values be equal to the oversampling factor M, so here we 
   // would want the sum to be equal to 2. Or wait - no - that seems to be wrong!
 
-  //u = rsSincOverSampleKernel(5, M);
+  // Later, we may wan to use this:
+  //u = rsSincUpSampleKernel<Real>(5, M); 
 
   // The equations result from the prefect roduntrip contraints:
   // 

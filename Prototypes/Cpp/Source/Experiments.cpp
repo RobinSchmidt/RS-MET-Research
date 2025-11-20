@@ -1978,7 +1978,7 @@ std::vector<T> rsSincUpSampleKernel(int L, int M)
     sum += h[i];
   */
   // The sum should now be equal to M up to roundoff error. Maybe wrap this test into a function
-  // rsIsExactInterpolator. This function should check that the middle sample is 1, that 
+  // rsIsInterpolatingUpsampler. This function should check that the middle sample is 1, that 
   // zero-crossings occur at the right places and that the total sum is equal to M
 
   rsStemPlot(h);          // For debug
@@ -2000,7 +2000,31 @@ std::vector<T> rsSincUpSampleKernel(int L, int M)
   //   crossings at 90,110, 80,120, 70,130, ... But that does not correspond to an upsampling 
   //   factor of 10 but rather 20, I think. Hmm...using v = RAPT::rsNormalizedSinc(T(2*i) / T(M));
   //   look good - but that formula looks really bad for M=2. We get zeros everywhere except in the
-  //   middle - this is clearly wrong!
+  //   middle - this is clearly wrong! Or is it? Maybe that is what we should expect? It may be 
+  //   plausible. Maybe it means that sinc interpolation makes sense only for higher upsampling 
+  //   factors? And maybe those factors need to be even?
+}
+
+bool testSincUpSampler()
+{
+  bool ok = true;
+
+  // For convenience:
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+  Vec h; 
+  h = rsSincUpSampleKernel<Real>(201, 10);
+  h = rsSincUpSampleKernel<Real>(  7,  2);
+  h = rsSincUpSampleKernel<Real>(  5,  2);
+  h = rsSincUpSampleKernel<Real>(  3,  2);
+
+  // ToDo: Have a function like rsIsKernelInterpolating(h, M) that actually uses the given kernel h
+  // to upsample some random signal by M and then checks, if the samples produced at the 
+  // oversampled indices m = n*M are equal to the original signal samples at n. Use that function 
+  // here for unit tests. Move the test up in the file.
+
+  return ok;
 }
 
 
@@ -2013,15 +2037,6 @@ bool testOverSample_M2_L5()
   using Vec  = std::vector<Real>;
   using Mat  = RAPT::rsMatrix<Real>;
   using LA   = RAPT::rsLinearAlgebraNew;
-
-  // Temporary throw-away code to test the production of the sinc upsampling kernels:
-  Vec test; 
-  test = rsSincUpSampleKernel<Real>(201, 10);
-  test = rsSincUpSampleKernel<Real>(  7,  2);
-  test = rsSincUpSampleKernel<Real>(  5,  2);
-  test = rsSincUpSampleKernel<Real>(  3,  2);
-
-
 
   // Define oversampling factor and upsampling kernel:
   int  M = 2;                                 // Oversampling factor
@@ -2042,7 +2057,7 @@ bool testOverSample_M2_L5()
   // u1*d0 +   u2*d1 +   u1*d2 + u0*d3  =  0      Eq. 2
   //         2*u0*d1 + 2*u1*d2 + u2*d3  =  1      Eq. 3
 
-  // Assign value to the tewakable parameter p:
+  // Assign value to the tweakable parameter p:
   Real p;
   //p = 3./4;
   p = 1.0;
@@ -2199,6 +2214,7 @@ bool testUpDownSample1D()
   // Under construction:
   //ok &= testOverSample_M2_L3();
   //ok &= testOverSample_M3_L5();
+  ok &= testSincUpSampler();
   ok &= testOverSample_M2_L5();
   //ok &= testUpDownSampleFilterDilation();
 
@@ -2210,6 +2226,7 @@ bool testUpDownSample1D()
   ok &= testOverSample_M2_L3();
   ok &= testOverSample_M3_L5();
   ok &= testOverSample_M2_L5();
+  ok &= testSincUpSampler();
   ok &= testUpDownSampleFilterDilation();
 
   return ok;

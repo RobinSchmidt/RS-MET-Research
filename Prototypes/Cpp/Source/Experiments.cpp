@@ -917,7 +917,7 @@ bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M,
   Vec xu = rsUpSample(  x,  M, hu);          // Upsample x by M with hu as anti-imaging filter
   Vec xd = rsDownSample(xu, M, hd, shift);   // Downsample with hd as anti-aliasing filter
   rsRemoveRange(xd, x.size(), xd.size()-1);  // Remove trailing zeros
-  //rsPlotVectors(x, xd);                    // Plot original and downsampled - for debugging
+  rsPlotVectors(x, xd);                    // Plot original and downsampled - for debugging
   return rsIsCloseTo(xd, x, tol);            // Compare original and downsampled signals
 
 
@@ -1935,9 +1935,14 @@ bool testOverSample_M2_L5()
   using LA   = RAPT::rsLinearAlgebraNew;
 
   // Define oversampling factor and upsampling kernel:
-  int  M = 3;                                 // Oversampling factor
-  Vec  u = { 1, 2, 3, 2, 1 }; u = u/3;        // Upsampling kernel
+  int  M = 2;                                 // Oversampling factor
+  //Vec  u = { 1, 2, 3, 2, 1 }; u = u/3;        // Upsampling kernel
+  Vec  u = { 1, 4, 6, 4, 1 }; u = u/4;        // Upsampling kernel
   Real tol = 1.e-13;                          // Tolerance for numerical comparisons
+
+  // I think, using u = u/3 doesn't make sense here. I think, we need to normalize the kernel u in
+  // such a way to have the sum of the values be equal to the oversampling factor M, so here we 
+  // would want the sum to be equal to 2. Or wait - no - that seems to be wrong!
 
   // The equations result from the prefect roduntrip contraints:
   // 
@@ -1947,7 +1952,8 @@ bool testOverSample_M2_L5()
 
   // Assign value to the tewakable parameter p:
   Real p;
-  p = 3./4;
+  //p = 3./4;
+  p = 1.0;
 
   // Establish matrix A and right and side vector b:
   Mat A1(4, 4, { u[1],   u[0],    0  ,  0  ,
@@ -1955,6 +1961,9 @@ bool testOverSample_M2_L5()
                   0  , 2*u[0], 2*u[1], u[0],
                   0  ,    0  ,    0  ,  1    });
   Vec b1({0, 0, 1, p});
+
+  // ToDo:
+  // Try to enforce a DC gain of 1 via: d0 + d1 + d2 + d3 = 1
 
   // Select one combination of matrix and right hand side to use:
   Mat A = A1; Vec b = b1;
@@ -1976,6 +1985,13 @@ bool testOverSample_M2_L5()
   //Vec x = rsRandomIntVector(20, +1, +9, 0);       // Doesn't compile with Real = rsFraction<int>.
   Vec x({5,2,6,3,4,6,3,9,5,2,4,7,3,7,8,3,6,1,5});   // ..so let's use this instead.
   ok &= testUpDownSampleRoundTrip(x, M, u, d, tol);
+  // FAILS! Ah! I think, this is because we use an upsampling kernel that doesn't interpolate the 
+  // sample values. The conditions that the center-sample of the downsampling kernel must be 1 and
+  // that it must have zero-crossings at multiples of M-1 is only correct when the upsampling 
+  // kernel interpolates, i.e. the upsampled signal passes through the original data points 
+  // exactly. So we really need to produce a proper interpolating upsampling kernel first. But 
+  // maybe the system can be generalized to arbitrary (potentially non-interpolating) upsampling 
+  // kernels. This could be an interesting direction for further research.
 
   // Create the combined up/down kernel:
   Vec ud = rsConvolve(u, d);

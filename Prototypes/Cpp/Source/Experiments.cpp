@@ -1801,11 +1801,7 @@ bool testOverSample_M2_L3()
 
 bool testOverSample_M3_L5()
 {
-  // Maybe rename to testUpDownSampleFilters_M3_L5 or just testUpDownSample_M3_L5 or
-  // testOverSample_M3_L5
-  // The "Sym" should be the default assumption that goes without saying - only in the asymmetric
-  // case, we explicity state it. _M3_L5 stands for M = 3 (oversampling factor) and L = 5 
-  // (upsampling kernel length)
+  // _M3_L5 stands for M = 3 (oversampling factor) and L = 5 (upsampling kernel length)
 
   bool ok = true;
 
@@ -1924,7 +1920,82 @@ bool testOverSample_M3_L5()
   //
   // - Try to make it build when using Real = rsFraction<int> rather than double. We still get 
   //   "unresolved external symbol" linker errors related to rsPlotVectors(). We can use it when we
-  //   comment out the plotting command, though.
+  //   comment out the plotting command, though. See comment in the rsPlotVectors() for an idea how
+  //   to make that work.
+}
+
+bool testOverSample_M2_L5()
+{
+  bool ok = true;
+
+  // For convenience:
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using Mat  = RAPT::rsMatrix<Real>;
+  using LA   = RAPT::rsLinearAlgebraNew;
+
+  // Define oversampling factor and upsampling kernel:
+  int  M = 3;                                 // Oversampling factor
+  Vec  u = { 1, 2, 3, 2, 1 }; u = u/3;        // Upsampling kernel
+  Real tol = 1.e-13;                          // Tolerance for numerical comparisons
+
+  // The equations result from the prefect roduntrip contraints:
+  // 
+  // u1*d0 +   u0*d1                    =  0      Eq. 1
+  // u1*d0 +   u2*d1 +   u1*d2 + u0*d3  =  0      Eq. 2
+  //         2*u0*d1 + 2*u1*d2 + u2*d3  =  1      Eq. 3
+
+  // Assign value to the tewakable parameter p:
+  Real p;
+  p = 3./4;
+
+  // Establish matrix A and right and side vector b:
+  Mat A1(4, 4, { u[1],   u[0],    0  ,  0  ,
+                 u[1],   u[2],   u[1], u[0],
+                  0  , 2*u[0], 2*u[1], u[0],
+                  0  ,    0  ,    0  ,  1    });
+  Vec b1({0, 0, 1, p});
+
+  // Select one combination of matrix and right hand side to use:
+  Mat A = A1; Vec b = b1;
+
+  // Compute the left wing of the downsampling kernel by solving the 3x3 linear system:
+  Vec dL = LA::solve(A, b);
+
+  // Verify solution:
+  Vec br = A*dL;
+  ok &= rsIsCloseTo(br, b, tol);
+
+  // Create the full downsampling kernel:
+  Vec dR = dL;
+  dR.resize(dR.size()-1);
+  rsReverse(dR);
+  Vec d = rsConcatenate(dL, dR);
+
+  // Verify roundtrip:
+  //Vec x = rsRandomIntVector(20, +1, +9, 0);       // Doesn't compile with Real = rsFraction<int>.
+  Vec x({5,2,6,3,4,6,3,9,5,2,4,7,3,7,8,3,6,1,5});   // ..so let's use this instead.
+  ok &= testUpDownSampleRoundTrip(x, M, u, d, tol);
+
+  // Create the combined up/down kernel:
+  Vec ud = rsConvolve(u, d);
+
+  // Plot all 3 kernels:
+  rsPlotVectors(u, d, ud);
+
+  return ok;
+
+  // ToDo:
+  //
+  // - Use a different upsampling kernel u. Derive it from cubic Lagrange interpolation. At the 
+  //   moment we just use the same kernel as in the M=3, L=5 case but that doesn't really make 
+  //   sense here. I guess, it won't even properly interpolate. But I also think, for the algorithm
+  //   here, that should not matter - excpt maybe when our wrong kernel somehow makes the system
+  //   of equations singular. 
+  //
+  // - Maybe try also a kernel based on binomial coeffs, i.e. u = [1 4 6 4 1] / 16 or maybe
+  //   u = [1 4 6 4 1] / 8. It also won't interpolate (I think), but it might be a nice Gaussian
+  //   lowpass filter.
 }
 
 
@@ -2014,7 +2085,8 @@ bool testUpDownSample1D()
 
   // Under construction:
   //ok &= testOverSample_M2_L3();
-  ok &= testOverSample_M3_L5();
+  //ok &= testOverSample_M3_L5();
+  ok &= testOverSample_M2_L5();
   //ok &= testUpDownSampleFilterDilation();
 
   // Unit Tests:
@@ -2024,6 +2096,7 @@ bool testUpDownSample1D()
   ok &= testOverSampleAsym_M2_L3();
   ok &= testOverSample_M2_L3();
   ok &= testOverSample_M3_L5();
+  ok &= testOverSample_M2_L5();
   ok &= testUpDownSampleFilterDilation();
 
   return ok;

@@ -183,14 +183,17 @@ difference lies in which samples in the r-vector we require to be zero. We need:
   0   0   0   0   0   0   u0                  r0
 
 This time, the prefect roundtrip constraints already give us 3 equations because we need to 
-prescribe values for r1,r3,r3 whereas in the previous case (with M = 3, L = 5), we got equations for
+prescribe values for r1,r3,r5 whereas in the previous case (with M = 3, L = 5), we got equations for
 only two rhs values, namely r2,r5. For convenience, let's again extract the relevant equations:
 
   u1*d0 +   u0*d1                    =  0      Eq. 1
   u1*d0 +   u2*d1 +   u1*d2 + u0*d3  =  0      Eq. 2
           2*u0*d1 + 2*u1*d2 + u2*d3  =  1      Eq. 3
 		  
-  
+Such that now, we again only have one free parameter to tweak. Let's introduce a parameter p and set
+d3 to it and call that our 4th equation:
+
+  d3 = p                                       Eq.4         
   
   ...
 

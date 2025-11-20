@@ -1477,7 +1477,7 @@ bool testUpDownSample1D_2()
   //  MiscMathNotes.txt in the private repo.
 }
 
-bool testUpDownSampleFiltersAsym2x()
+bool testOverSampleAsym_M2_L3()
 {
   // Under construction. 
 
@@ -1706,7 +1706,7 @@ bool testUpDownSampleFiltersAsym2x()
   //   design the two filter kernels u and d.
 }
 
-bool testUpDownSampleFiltersSym2x()
+bool testOverSample_M2_L3()
 {
   // In this experiment, we consider the case where the downsampling kernel d that we want to 
   // derive from the upsamling kernel u is symmetric by construction. In the experiment above, we
@@ -1799,7 +1799,7 @@ bool testUpDownSampleFiltersSym2x()
   //   kernels to be symmetric anyway.
 }
 
-bool testUpDownSampleFiltersSym3x()
+bool testOverSample_M3_L5()
 {
   // Maybe rename to testUpDownSampleFilters_M3_L5 or just testUpDownSample_M3_L5 or
   // testOverSample_M3_L5
@@ -2013,17 +2013,17 @@ bool testUpDownSample1D()
   bool ok = true;
 
   // Under construction:
-  //ok &= testUpDownSampleFiltersSym2x();
-  ok &= testUpDownSampleFiltersSym3x();
+  //ok &= testOverSample_M2_L3();
+  ok &= testOverSample_M3_L5();
   //ok &= testUpDownSampleFilterDilation();
 
   // Unit Tests:
   ok &= testUpSample1D();
   ok &= testUpDownSample1D_1();
   ok &= testUpDownSample1D_2();
-  ok &= testUpDownSampleFiltersAsym2x();
-  ok &= testUpDownSampleFiltersSym2x();
-  ok &= testUpDownSampleFiltersSym3x();
+  ok &= testOverSampleAsym_M2_L3();
+  ok &= testOverSample_M2_L3();
+  ok &= testOverSample_M3_L5();
   ok &= testUpDownSampleFilterDilation();
 
   return ok;

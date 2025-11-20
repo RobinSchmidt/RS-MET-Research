@@ -593,9 +593,20 @@ Be careful to not confuse the inverse function $f^{-1}$ with the reciprocal of $
 
 % This is a noteworthy difference from the other rules that we have seen so far. 
 
-% Well - actaully the chain rule could also be said to relate different evaluation points. in (f(g(x)))' = f'(g(x)) * g'(x) we eavlaue g' at x and f' at g(x)
+
+
+% Well - actaully the chain rule could also be said to relate different evaluation points. in (f(g(x)))' = f'(g(x)) * g'(x) we evaluate g' at x and f' at g(x)
 
 %In the right hand side, we have to evaluate $f'(f^{-1}(x))$. This may be a bit confusing
+
+% I think, we need to require that  f'(f^{-1}(y)) != 0 because otherwise, the formula would have 
+% a division by zero. I think, that means that the original function must have a non-vanishing slope
+% at that point. This makes sense because only functions that have a slope that is either > 0 everywhere
+% or < 0 everywhere are invertible in the first place. The function f must be strictly monotonic, I think.
+
+% https://de.wikipedia.org/wiki/Umkehrregel
+
+% https://www.youtube.com/watch?v=WSdutWVNoTg  Ein Student wollte Wikipedias Umkehrregel beweisen...
 
 %That means we first must find
 
@@ -732,7 +743,11 @@ In a way, this seems to be more "natural" and "fair" than the (seemingly) one-si
 % but, for example, the central difference may continue to work just fine.
 
 
-
+% Ein Student wollte Wikipedias Umkehrregel beweisen...
+% https://www.youtube.com/watch?v=WSdutWVNoTg
+% -Has yet another alternative definition of the derivative: Let d > 0. f is differentiable in x if
+%  real constants A,C exist such that for all h in (-d,d): |f(x+h) - f(x) - A h| <= C h^2
+% -He calls it q-derivative (why? there is no q anywhere in the formula)
 
 \paragraph{Quantum Derivatives}
 Common to the definitions of the derivative above is that they involved an initially finite, nonzero step size parameter $h$ and letting that step size $h$ approach zero. If one removes the limiting process, one arrives at the finite difference calculus which is also called $h$-calculus. An alternative definition that you won't usually find in general math textbooks is this:

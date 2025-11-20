@@ -945,6 +945,150 @@ bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M,
 // Needs more tests!
 
 
+
+/** UNDER CONSTRUCTION. Does not yet work!
+
+Generates a filter kernel that can be used for sinc interpolation ...TBC...
+
+  L: Length of the kernel
+  M: Upsampling factor (determines positions of zero crossings)
+
+*/
+template<class T>
+std::vector<T> rsSincUpSampleKernel(int L, int M)
+{
+  rsAssert(rsIsOdd(L), "Only odd lengths are supported in rsSincOverSampleKernel");
+
+  std::vector<T> h(L);    // Filter kernel (aka impulse response)
+  int c = L/2;            // Center sample
+
+  h[c] = 1;
+  for(int i = 1; i <= c; i++)
+  {
+    //T v = RAPT::rsNormalizedSinc(T(i) / T(M));  // VERIFY!
+    T v = RAPT::rsNormalizedSinc(T(2*i) / T(M));  // VERIFY!
+
+    h[c+i] = v;
+    h[c-i] = v;
+  }
+
+  /*
+  // Normalize to unit DC gain:
+  T sum(0);
+  for(int i = 1; i <= c; i++)
+    sum += 2*h[c+i];
+  T scaler = T(M-1) / sum;      // Explain this!
+  for(int i = 1; i <= c; i++)
+  {
+    h[c+i] *= scaler;
+    h[c-i] *= scaler;
+  }
+  */
+  // ToDo: Make this optional. Actually, it may make sense to factor it out into a function. Maybe
+  // it should be called rsNormalizeUpsampleKernel
+  // The reason is that we may want to do this kind of normalization after applying a window
+  // But the plot looks wrong! Maybe simple uniform scaling is not the right approach. Maybe we 
+  // need to shift instead - or apply a window, i.e. scale non-uniformly. But how? That seems to be
+  // a not so simple task. Maybe make an ansatz of using a linear combination of 1 and 1-x^2 where
+  // x = (c+i)/(c) and try figure out the correct mixing coeff. Maybe that leads to an equation 
+  // that can be solved? Or maybe use the simpler ansatz of a linear combination of 1 and 1-x.
+
+  /*
+  // For test/debug:
+  sum = 0;
+  for(int i = 0; i < L; i++)
+    sum += h[i];
+  */
+  // The sum should now be equal to M up to roundoff error. Maybe wrap this test into a function
+  // rsIsInterpolatingUpsampler. This function should check that the middle sample is 1, that 
+  // zero-crossings occur at the right places and that the total sum is equal to M
+
+  //rsStemPlot(h);          // For debug
+
+  return h;
+
+  // ToDo:
+  //
+  // - Maybe optionally normalize the result such that the sum of all values except the middle one
+  //   gives M-1. I think, this is the condition to achieve unit DC gain in the oversampled domain.
+  //
+  // - Try to give it some parameter of type T such that the compile can infer the type from it and
+  //   we don't have to call it like rsSincUpSampleKernel<Real>(L, M). But what could that 
+  //   parameter be such that it makes sense and is useful? Maybe the number M could be of type T
+  //   rather than an integer?
+  //
+  // - I think, we may need to compress it along the time axis by a factor of 0.5. Currently, when
+  //   calling it with rsSincUpSampleKernel<Real>(201, 10); we get a sample of 1 at 100 and zero 
+  //   crossings at 90,110, 80,120, 70,130, ... But that does not correspond to an upsampling 
+  //   factor of 10 but rather 20, I think. Hmm...using v = RAPT::rsNormalizedSinc(T(2*i) / T(M));
+  //   look good - but that formula looks really bad for M=2. We get zeros everywhere except in the
+  //   middle - this is clearly wrong! Or is it? Maybe that is what we should expect? It may be 
+  //   plausible. Maybe it means that sinc interpolation makes sense only for higher upsampling 
+  //   factors? And maybe those factors need to be even?
+}
+
+template<class T>
+bool rsIsKernelInterpolating(const std::vector<T>& h, int M)
+{
+  bool ok = true;
+
+  using Vec = std::vector<T>;
+
+  // ToDo: Actually use the given kernel h to upsample some random signal by M and then check, if 
+  // the samples produced at the oversampled indices m = n*M are equal to the original signal 
+  // samples at n. 
+
+  int L = (int) h.size();     // Length of the kernel
+  int N = 5*L;                // Length of test signal
+
+  Vec x = rsRandomIntVector(N, +3, +9, 0);
+  Vec y = rsUpSample(x, M, h);
+
+  T tol = 1.e-12; // Preliminary. Maybe it should be a parameter or maybe it should be based on
+                  // epsilon and L. Maybe L*eps*c for some fixed c that should be found empirically
+
+  int shift = L/2;  // Verify! Could be off by 1? ...nah! Looks good!
+
+
+  for(int n = 0; n < N; n++)
+    ok &= rsIsCloseTo(y[M*n+shift], x[n], tol);
+
+
+  //rsPlotVectors(x, y); // This is not a good way to plot it!
+
+
+  return ok;
+
+  // ToDo:
+  //
+  // - Maybe make a plot where the upsampled signal is plotted with lines and the original signal
+  //   values are added as markers
+}
+
+
+bool testSincUpSampler()
+{
+  bool ok = true;
+
+  // For convenience:
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+  Vec h; 
+  h = rsSincUpSampleKernel<Real>(201, 10); ok &= rsIsKernelInterpolating(h, 10);
+  h = rsSincUpSampleKernel<Real>(  7,  2); ok &= rsIsKernelInterpolating(h,  2);
+  h = rsSincUpSampleKernel<Real>(  5,  2); ok &= rsIsKernelInterpolating(h,  2);
+  h = rsSincUpSampleKernel<Real>(  3,  2); ok &= rsIsKernelInterpolating(h,  2);
+
+
+
+  return ok;
+}
+
+
+
+
+
 bool testUpSample1D()
 {
   // Tests if our function rsUpSample() produces the expected outputs for (scaled) linear 
@@ -1924,108 +2068,6 @@ bool testOverSample_M3_L5()
   //   to make that work.
 }
 
-/** UNDER CONSTRUCTION. Does not yet work!
-
-Generates a filter kernel that can be used for sinc interpolation ...TBC...
-
-  L: Length of the kernel
-  M: Upsampling factor (determines positions of zero crossings)
-
-*/
-template<class T>
-std::vector<T> rsSincUpSampleKernel(int L, int M)
-{
-  rsAssert(rsIsOdd(L), "Only odd lengths are supported in rsSincOverSampleKernel");
-
-  std::vector<T> h(L);    // Filter kernel (aka impulse response)
-  int c = L/2;            // Center sample
-
-  h[c] = 1;
-  for(int i = 1; i <= c; i++)
-  {
-    //T v = RAPT::rsNormalizedSinc(T(i) / T(M));  // VERIFY!
-    T v = RAPT::rsNormalizedSinc(T(2*i) / T(M));  // VERIFY!
-
-    h[c+i] = v;
-    h[c-i] = v;
-  }
-
-  /*
-  // Normalize to unit DC gain:
-  T sum(0);
-  for(int i = 1; i <= c; i++)
-    sum += 2*h[c+i];
-  T scaler = T(M-1) / sum;      // Explain this!
-  for(int i = 1; i <= c; i++)
-  {
-    h[c+i] *= scaler;
-    h[c-i] *= scaler;
-  }
-  */
-  // ToDo: Make this optional. Actually, it may make sense to factor it out into a function. Maybe
-  // it should be called rsNormalizeUpsampleKernel
-  // The reason is that we may want to do this kind of normalization after applying a window
-  // But the plot looks wrong! Maybe simple uniform scaling is not the right approach. Maybe we 
-  // need to shift instead - or apply a window, i.e. scale non-uniformly. But how? That seems to be
-  // a not so simple task. Maybe make an ansatz of using a linear combination of 1 and 1-x^2 where
-  // x = (c+i)/(c) and try figure out the correct mixing coeff. Maybe that leads to an equation 
-  // that can be solved? Or maybe use the simpler ansatz of a linear combination of 1 and 1-x.
-
-  /*
-  // For test/debug:
-  sum = 0;
-  for(int i = 0; i < L; i++)
-    sum += h[i];
-  */
-  // The sum should now be equal to M up to roundoff error. Maybe wrap this test into a function
-  // rsIsInterpolatingUpsampler. This function should check that the middle sample is 1, that 
-  // zero-crossings occur at the right places and that the total sum is equal to M
-
-  rsStemPlot(h);          // For debug
-
-  return h;
-
-  // ToDo:
-  //
-  // - Maybe optionally normalize the result such that the sum of all values except the middle one
-  //   gives M-1. I think, this is the condition to achieve unit DC gain in the oversampled domain.
-  //
-  // - Try to give it some parameter of type T such that the compile can infer the type from it and
-  //   we don't have to call it like rsSincUpSampleKernel<Real>(L, M). But what could that 
-  //   parameter be such that it makes sense and is useful? Maybe the number M could be of type T
-  //   rather than an integer?
-  //
-  // - I think, we may need to compress it along the time axis by a factor of 0.5. Currently, when
-  //   calling it with rsSincUpSampleKernel<Real>(201, 10); we get a sample of 1 at 100 and zero 
-  //   crossings at 90,110, 80,120, 70,130, ... But that does not correspond to an upsampling 
-  //   factor of 10 but rather 20, I think. Hmm...using v = RAPT::rsNormalizedSinc(T(2*i) / T(M));
-  //   look good - but that formula looks really bad for M=2. We get zeros everywhere except in the
-  //   middle - this is clearly wrong! Or is it? Maybe that is what we should expect? It may be 
-  //   plausible. Maybe it means that sinc interpolation makes sense only for higher upsampling 
-  //   factors? And maybe those factors need to be even?
-}
-
-bool testSincUpSampler()
-{
-  bool ok = true;
-
-  // For convenience:
-  using Real = double;
-  using Vec  = std::vector<Real>;
-
-  Vec h; 
-  h = rsSincUpSampleKernel<Real>(201, 10);
-  h = rsSincUpSampleKernel<Real>(  7,  2);
-  h = rsSincUpSampleKernel<Real>(  5,  2);
-  h = rsSincUpSampleKernel<Real>(  3,  2);
-
-  // ToDo: Have a function like rsIsKernelInterpolating(h, M) that actually uses the given kernel h
-  // to upsample some random signal by M and then checks, if the samples produced at the 
-  // oversampled indices m = n*M are equal to the original signal samples at n. Use that function 
-  // here for unit tests. Move the test up in the file.
-
-  return ok;
-}
 
 
 bool testOverSample_M2_L5()
@@ -2212,13 +2254,15 @@ bool testUpDownSample1D()
   bool ok = true;
 
   // Under construction:
+   ok &= testSincUpSampler();
   //ok &= testOverSample_M2_L3();
   //ok &= testOverSample_M3_L5();
-  ok &= testSincUpSampler();
-  ok &= testOverSample_M2_L5();
+  //ok &= testSincUpSampler();
+  //ok &= testOverSample_M2_L5();
   //ok &= testUpDownSampleFilterDilation();
 
   // Unit Tests:
+  ok &= testSincUpSampler();
   ok &= testUpSample1D();
   ok &= testUpDownSample1D_1();
   ok &= testUpDownSample1D_2();

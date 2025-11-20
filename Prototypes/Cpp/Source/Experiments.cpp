@@ -1942,7 +1942,6 @@ bool testUpDownSampleFilterDilation()
   // Produce the downsampling kernel d2  for 2x downsampling from u2 and the conditions that 
   // assign the middle sample d2[2] directly (to 0.75, say) and impose symmetry d[1] = d[3]:
   Real c = 0.75;
-  //c = 1.0 / sqrt(2.0);
   Mat A(5, 5, { u2[1], u2[0],  0   ,  0   ,   0  ,       // Eq. 1
                  0  ,  u2[2], u2[1], u2[0],  0   ,       // Eq. 2
                  0  ,   0   ,  0   , u2[2], u2[1],       // Eq. 3
@@ -1950,6 +1949,8 @@ bool testUpDownSampleFilterDilation()
                  0  ,   1   ,  0   , -1   ,   0    });   // d[3] = -d[1] -> d[1] - d[3] = 0
   Vec b({0, 1, 0, c, 0});
   Vec d2 = LA::solve(A, b);
+  // ToDo: Maybe get rid of that computation and instead directly assign d2. We already have code
+  // in the epxeriments above that does these computations.
 
   // Verify that upsampling with kernel u2 then downsampling with kernel d2 is an identity 
   // operation up to roundoff error:

@@ -31,7 +31,7 @@ u = [1 2 1] / 2. It turns out that our d will have to be of length 5.
 matrix rows until it disappears and the number of columns of the resulting matrix is our length for 
 d?  I think, we need to produce a circulant matrix from u such that we can express the convolution 
 of u and d as a matrix-vector product with an unknown vector d. The convolution result will become 
-our right hand side vector r. Our prefect reconstruction constraints will become requirements on 
+our right hand side vector r. Our perfect reconstruction constraints will become requirements on 
 certain entries of this rhs vector r, namely: the middle sample must be one and we need to see zeros 
 at all samples that are a distance of n*M, where n is an integer, away from the middle (verify!). 
 All the other entries of the rhs vector are not yet determined by our perfect reconstruction 
@@ -113,8 +113,8 @@ upsampling kernel (which is also triangular because it's linear interpolation).
 
 ----------------------------------------------------------------------------------------------------
 
-Let's take the case with a symmetric upsampling kernel u = [u0 u1 u2 u1 u0] of length 5 as it would 
-arise, for example, when linearly upsampling by a factor of M = 3 or upsampling via a cubic 
+Let's take the case with a symmetric upsampling kernel u = [u0 u1 u2 u1 u0] of length L = 5 as it 
+would arise, for example, when linearly upsampling by a factor of M = 3 or upsampling via a cubic 
 interpolator by a factor of M = 2 (verify!). I think, we may need a length 7 decimator (verify!)
 d = [d0 d1 d2 d3 d2 d1 d0] and get a length 5+7-1 = 11 resulting filter 
 r = [r0 r1 r2 r3 r4 r5 r4 r3 r2 r1 r0]. The matrix-vector equation for the convolution of u and d 
@@ -158,7 +158,7 @@ call p2:
   
 As an alternative to directly prescribing values to d3,d2, we could require that the kernel has a 
 triangular shape by requiring the numerical derivatives d1-d0, d2-d1, d3-d2 to be all equal such 
-that the shape ramps up at a constant slope. this leads to:
+that the shape ramps up at a constant slope. This leads to:
 
   d1 - d0 = d2 - d1  ->  d0 - 2*d1 + d2 = 0
   d2 - d1 = d3 - d2  ->  d1 - 2*d2 + d3 = 0
@@ -166,9 +166,9 @@ that the shape ramps up at a constant slope. this leads to:
 ----------------------------------------------------------------------------------------------------
 
 Let's now consider a case where we upsample by a factor of M = 2 and use for upsampling a kernel of
-length 5 such that u = [u0 u1 u2 u1 u0] just as before. Therefore, the matrix-vector equation that
-represents our convolution also looks like before. But the difference lies in which samples in the
-r-vector we require to be zero. We need:
+length L = 5 such that u = [u0 u1 u2 u1 u0] just as before. Therefore, the matrix-vector equation 
+that represents our convolution also looks exactly like in the case immediately above. But the 
+difference lies in which samples in the r-vector we require to be zero. We need:
 
   u0  0   0   0   0   0   0          d0       r0
   u1  u0  0   0   0   0   0          d1       r1  <--- = 0    Eq. 1
@@ -182,8 +182,17 @@ r-vector we require to be zero. We need:
   0   0   0   0   0   u0  u1                  r1  <--- = 0    Eq. 1 again
   0   0   0   0   0   0   u0                  r0
 
+This time, the prefect roundtrip constraints already give us 3 equations because we need to 
+prescribe values for r1,r3,r3 whereas in the previous case (with M = 3, L = 5), we got equations for
+only two rhs values, namely r2,r5. For convenience, let's again extract the relevant equations:
+
+  u1*d1 + u0*d2 = 0
+  ...
 
 
+----------------------------------------------------------------------------------------------------
+
+Let's now look at the L = 7, M = 2 case....
 
 
 ----------------------------------------------------------------------------------------------------
@@ -197,7 +206,8 @@ ToDo:
   problem where the constraints are derived from the perfect roundtrip requirements and the 
   objective for the (numrical?) optimization should be the frequency response of the downsampling 
   kernel d. In this algorithm, we would treat the upsapling kernel as given. Maybe we can, in the 
-  general case, produce it as a windowed sinc kernel.
+  general case, produce it as a windowed sinc kernel or maybe by some sort of optimzed FIR design 
+  routine.  
 
 - After having u and d in hand, where u was pre-assigned and d was found by the numerical 
   constrained optimization, we could take that pair as a starting point to drive u and d towards 
@@ -206,6 +216,9 @@ ToDo:
   one because the products like u0*d2, u1*d1, u2*d0, etc. would become products of the form b0*b2,
   b1*b1, b2*b0, etc. when we call the coeffs of our common up/down kernel b[k].
   
+- As another possibility, maybe try to jointly optimize the kernels u and d but allow them to differ
+  from each other. It would again be a quadratic optimization problem, I think.
+
 - Maybe an optimized implementation could use SIMD processing to run upsampling and downsampling in 
   parallel. That might introduce one sample of additional delay into the roundtrip.
   

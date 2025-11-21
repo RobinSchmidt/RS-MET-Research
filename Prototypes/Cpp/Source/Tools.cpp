@@ -129,6 +129,13 @@ public:
   }
   // Needs tests
 
+  size_t getNumTerms() const { return terms.size(); }
+
+
+  /** Compares this ordinal with rhs for equality. */
+  bool operator==(const rsOrdinal& rhs) const;
+
+
 
 
 
@@ -149,7 +156,7 @@ protected:
 
     Term()
     {
-      coeff = 0;
+      coeff    = 0;
       exponent = new rsOrdinal;
     }
 
@@ -179,7 +186,18 @@ protected:
     // Verify!
 
 
+    bool operator==(const Term& r) const
+    {
+      return *exponent == *(r.exponent) && coeff == r.coeff;
+    }
+    // Verify!
 
+
+    bool operator!=(const Term& r) const
+    {
+      return !(*this == r);
+    }
+    // Verify!
 
 
     // ToDo: copy/clone, assignment, etc. - we need deep copies
@@ -195,6 +213,22 @@ protected:
   std::vector<Term> terms;
 
 };
+
+
+template<class Nat>
+bool rsOrdinal<Nat>::operator==(const rsOrdinal& r) const
+{
+  if(getNumTerms() != r.getNumTerms())
+    return false;
+
+  // Term-wise comparison:
+  for(size_t i = 0; i < getNumTerms(); i++)
+    if(terms[i] != r.terms[i])
+      return false;
+  
+  return true;
+}
+
 
 // Notes:
 //
@@ -226,7 +260,10 @@ protected:
 // See:
 //
 // https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form
+//   "To compare two ordinals written in Cantor normal form, first compare b1, then c1, then b2, 
+//    then  c2, and so on"
 // https://de.wikipedia.org/wiki/Cantorsche_Normalform
+
 
 //=================================================================================================
 // Differential geometry stuff:

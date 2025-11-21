@@ -54,20 +54,21 @@ rsMatrix<T> rsSqrtNewton(const rsMatrix<T>& A)
 
 //=================================================================================================
 
-/** Under construction.
+/** Under construction. Just a stub at the moment.
 
-A class to represent ordinal numbers. The template parameter Nat is used for the underlying natural
-number type. We represent an ordinal A in Cantor's normal form as follows:
+    A class to represent ordinal numbers. The template parameter Nat is used for the underlying 
+natural number type and it could be something like uint64_t. We represent an ordinal A in Cantor's 
+normal form as follows:
 
   A = w^A1 * a1  +  w^A2 * a2  +  w^A3 * a3  +  ...  +  w^AN * aN
    
 where a1,a2,a3,... are natural numbers, A1,A2,A3,... are ordinal numbers and w stands for "omega" 
-which is the least infinite ordinal and represents the ordinality of the natural numbers (see 
+which is the lowest infinite ordinal and represents the ordinality of the natural numbers (see 
 ABoST, pg 197). The exponents A1,A2,... are usually denoted with greek letters as alpha_1, alpha_2,
 etc. in the literature but because of ASCII limitations, we use capital letters for ordinals and 
 lowercase letters for naturals here. Note how this definition is recursive: The ordinal A on the 
 left hand side is defined in terms of ordinals A1,A2,... on the right hand side. Such a recursive 
-definition may seem weird but it is actually very similar like the recursive data structure for 
+definition may seem weird but it is actually very similar to the recursive data structure for 
 rsSetNaive where we defined a set to consist of elements which are themselves sets. The 
 implementation also mixes in ideas from RAPT::rsSparsePolynomial. Note also that the powers of w 
 are right-mulitplied by their respective (natural) coefficients. This is not merely a notational 
@@ -82,7 +83,7 @@ rather than "greatest" and "smallest" here because ordinals designate a rank rat
 
 References:
 
-  - ABoST:  A Book of Set Theory (Charles Pinter)    */
+  - ABoST:  A Book of Set Theory (Charles C. Pinter)    */
 
 template<class Nat>
 class rsOrdinal
@@ -123,9 +124,9 @@ public:
   // Needs review/verification and tests.
 
   // ToDo: 
-  // Operators: ==, <, <=, +, *, ^ (pow)
+  // Operators: ==, <, <=, +, *, ^ (pow), -
   // Inquiry: 
-  //   -isZero, isOne, isNatural or isFinite
+  //   -isZero, isOne, isNatural or isFinite, isLimitOrdinal, isInitialOrdinal, isEpsilonNumber,
   //   -isCardinal - should check if there's only one term an it's coeff is 1
   //   -isEquipotent - should check, if 1st term matches (I think)
   //   -max/min
@@ -193,10 +194,33 @@ protected:
 
 };
 
-// -The implementation should combine aspects from rsSparsePolynomial and rsSet
-// -For the Nat type, we should be abe to use uint, rsBigInt and maybe at some point also 
-//  rsNeumannNumber
-
+// Notes:
+//
+// - The implementation of the < operator (and perhaps <= and ==) is really the key here because 
+//   that's the main thing that we expect ordinals to do: order things in the sense of making them
+//   comparable for which comes first. 
+// 
+// - We also want them to behave like (natural) numbers in the sense that we want to add, multiply
+//   and exponentiate them. 
+// 
+// - When we have implementations of ==, <, <=, +, *, ^ (and perhaps also -), we should verify if 
+//   their properties are indeed as the book ABoST claims. If not, we probably have a bug - either 
+//   conceptually (in the mental model) or in the implementation.
+// 
+// - For the Nat type, we should be abe to use uint, rsBigInt and maybe at some point also 
+//   rsNeumannNumber. But to make the latter work, the class rsNeumannNumber needs to have actual 
+//   members and also implement the required operators for arithemetic and comparsions 
+//   appropriately. At the moment, the class is merely a collection of (static) functions operating 
+//   on raw sets). From a conceptual point of view, it is a bit dissatisfying to use an integer
+//   data type with a finite range for the natural numbers although it is likely to be fine to do 
+//   so in practice for a proof of concept.
+//
+// - Maybe later implement cardinal numbers as a subclass of ordinal numbers that imposes some 
+//   constraints about the form and re-implement +,*,^,-. I think the constraint is that cardinal
+//   numbers only have one term. ...and perhaps that must hold recursively for the exponent of the
+//   term, its exponent, etc. Maybe zero terms is also ok as edge case - but not 2,3,...
+// 
+// 
 // See:
 //
 // https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form

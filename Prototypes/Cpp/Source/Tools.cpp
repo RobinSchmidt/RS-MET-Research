@@ -169,6 +169,7 @@ protected:
 
   class Term
   {
+
   public:
 
     /** Standard constructor. Can init the ordinal to a natural number n, i.e. a finite ordinal. By
@@ -190,9 +191,8 @@ protected:
     /** Move constructor.  */
     Term(Term&& A) : exponent(std::move(A.exponent)) 
     {
-      coeff    = A.coeff;
-      //exponent = A.exponent;
-      A.exponent = nullptr;   // We have snatched away ownership from A.
+      coeff = A.coeff;
+      A.exponent = nullptr;                // We have snatched away ownership from A.
     }
     
     /** Copy assignment operator. */
@@ -208,11 +208,11 @@ protected:
     Term& operator=(Term&& A)
     {
       exponent = std::move(A.exponent);
-      A.exponent = nullptr; 
+      A.exponent = nullptr;                // We have snatched away ownership from A.
       return *this;
     }
 
-
+    /** Destructor. */
     ~Term()
     {
       delete exponent;

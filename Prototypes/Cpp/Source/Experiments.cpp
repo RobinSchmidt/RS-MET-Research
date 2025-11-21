@@ -14877,15 +14877,16 @@ void testOrdinals()
 
   // Create the ordinal 1 and verify its expected properties:
   Ord o1(1);  // This constructor should create an ordinal from a natural number
-  //ok &= !o1.isZero();
-  //ok &=  o1.isOne();
-  //ok &=  o1.isFinite();
-  //ok &= !o1.isOmega();
+  ok &= !o1.isZero();
+  ok &=  o1.isOne();
+  ok &=  o1.isFinite();
+  ok &= !o1.isOmega();
   // This causes memory corruption! Already the creation of o1 is problematic. I think, this is 
   // because we have not yet implemented copy/move assign/construct. We need the implementations
   // of the copy functions to create deep copies of the vectors of pointers to terms. I think, the
   // inner class Term itself needs to implement copy/assign. Maybe the outer class Ordinal can then
   // get away with the default implementations that the compiler generates.
+  // Seems to be fixed
 
   rsAssert(ok);
 }

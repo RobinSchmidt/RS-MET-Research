@@ -1072,22 +1072,23 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
   T sv = rsSum(v);
   sh /= desiredSum;
   sv /= desiredSum;
-  // ...
+  T k = rsLinToLin(T(1), sv, sh, T(0), T(1));  // Verify!
+
 
 
   // Form the linear combination of h and v:
-  // ....
+  Vec u = k*h + (1-k)*v;
+
+  // Verify result for debugging:
+  T su = rsSum(u);                 // Should be equal to desiredSum
+  rsPlotVectors(h, w, v, u);
 
 
 
-  rsPlotVectors(h, w, v);
+  //Vec hc = h;  // Preliminary - Corrected kernel
 
 
-
-  Vec hc = h;  // Preliminary - Corrected kernel
-
-
-  return hc;
+  return u;
 
   // ToDo: 
   // 

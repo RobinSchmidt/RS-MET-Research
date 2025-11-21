@@ -965,8 +965,9 @@ std::vector<T> rsSincUpSampleKernel(int L, int M)
   h[c] = 1;
   for(int i = 1; i <= c; i++)
   {
-    //T v = RAPT::rsNormalizedSinc(T(i) / T(M));  // VERIFY!
-    T v = RAPT::rsNormalizedSinc(T(2*i) / T(M));  // VERIFY!
+    T v = RAPT::rsNormalizedSinc(T(i) / T(M));  // VERIFY!
+
+    //T v = RAPT::rsNormalizedSinc(T(2*i) / T(M));  // VERIFY!
 
     h[c+i] = v;
     h[c-i] = v;
@@ -1027,6 +1028,12 @@ std::vector<T> rsSincUpSampleKernel(int L, int M)
   //   factors? And maybe those factors need to be even?
 }
 
+
+/** Verifies that the given filter kernel h satisfies the interpolation condition which means that
+the upsampled signal should pass through the original sample values. We test this by actually 
+upsampling a test signal (consisting of random values) using the given kernel an check that the
+upsampled signal at sample indices [M*n + L/2] matches the sample values of the original signal at
+indices n. */
 template<class T>
 bool rsIsKernelInterpolating(const std::vector<T>& h, int M)
 {
@@ -1034,27 +1041,22 @@ bool rsIsKernelInterpolating(const std::vector<T>& h, int M)
 
   using Vec = std::vector<T>;
 
-  // ToDo: Actually use the given kernel h to upsample some random signal by M and then check, if 
-  // the samples produced at the oversampled indices m = n*M are equal to the original signal 
-  // samples at n. 
+  // Create upsampled signal:
+  int L = (int) h.size();                   // Length of the kernel
+  int N = 4*L;                              // Length of test signal
+  Vec x = rsRandomIntVector(N, +3, +9, 0);  // Create random test signal
+  Vec y = rsUpSample(x, M, h);              // Upsample it by M using h
 
-  int L = (int) h.size();     // Length of the kernel
-  int N = 5*L;                // Length of test signal
-
-  Vec x = rsRandomIntVector(N, +3, +9, 0);
-  Vec y = rsUpSample(x, M, h);
-
+  // Verify interpolation condition:
   T tol = 1.e-12; // Preliminary. Maybe it should be a parameter or maybe it should be based on
                   // epsilon and L. Maybe L*eps*c for some fixed c that should be found empirically
-
-  int shift = L/2;  // Verify! Could be off by 1? ...nah! Looks good!
-
-
+  int shift = L/2;
   for(int n = 0; n < N; n++)
     ok &= rsIsCloseTo(y[M*n+shift], x[n], tol);
 
 
   //rsPlotVectors(x, y); // This is not a good way to plot it!
+  rsPlotVectors(y);
 
 
   return ok;
@@ -1074,13 +1076,46 @@ bool testSincUpSampler()
   using Real = double;
   using Vec  = std::vector<Real>;
 
-  Vec h; 
-  h = rsSincUpSampleKernel<Real>(201, 10); ok &= rsIsKernelInterpolating(h, 10);
-  h = rsSincUpSampleKernel<Real>(  7,  2); ok &= rsIsKernelInterpolating(h,  2);
-  h = rsSincUpSampleKernel<Real>(  5,  2); ok &= rsIsKernelInterpolating(h,  2);
-  h = rsSincUpSampleKernel<Real>(  3,  2); ok &= rsIsKernelInterpolating(h,  2);
+  auto doTest = [](int L, int M) 
+  {
+    Vec  h   = rsSincUpSampleKernel<Real>(L, M);
+    Real sum = rsSum(h);
+    Real tol = 1.e-12;                     // Preliminary - maybe use c*L*eps for some constant c
+
+    rsStemPlot(h);
+
+    bool ok = true;
+    ok &= rsIsKernelInterpolating(h,  M);
 
 
+    //ok &= rsIsCloseTo(sum, Real(M), tol);  // I think, this is the unit gain at DC condition
+    // ...Of course, it still fails because we do not yet have implemented any means to ensure that
+    // and the raw sinc kernel does not deliver that naturally. Without any further ado, the sum 
+    // should be in the right ballpark but not exactly M. To make it pass, we really need to apply 
+    // a non-uniform scaling/tapering to h. See comments in rsSincUpSampleKernel() for ideas how to
+    // do that. But these are refinements for later. Or maybe a simple scaling will be good enough?
+    // But we cannot scale the center coeff - it really needs to be one or else we break the 
+    // interpolation property.
+
+
+    return ok;
+  };
+
+  // Oversample by M = 2 with different kernel lengths L:
+  ok &= doTest(21,  2);
+  ok &= doTest( 7,  2);
+  ok &= doTest( 5,  2);
+  ok &= doTest( 3,  2);
+  ok &= doTest( 1,  2);
+
+  // Oversample with kernels of length L = 41 by different factors M:
+  ok &= doTest(41,   3);
+  ok &= doTest(41,   4);
+  ok &= doTest(41,   5);
+
+  // Use some longer kernels and bigger factors:
+  ok &= doTest(201, 10);
+  ok &= doTest(513, 16);
 
   return ok;
 }

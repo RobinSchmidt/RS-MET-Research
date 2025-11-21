@@ -1173,15 +1173,17 @@ bool testSincUpSampler()
   };
 
   // Temporary:
-  //ok &= doTest( 3,  2);
-  //ok &= doTest(201, 10);
+  ok &= doTest( 1,  2);  
+  // FAILS! ToDo: Fix this edge case! The line k = rsLinToLin(T(1), sv, sh, T(0), T(1)); 
+  // in rsCorrectKernelSum() produces an inf value
+
 
   // Oversample by M = 2 with different kernel lengths L:
   ok &= doTest(21,  2);
   ok &= doTest( 7,  2);
   ok &= doTest( 5,  2);
   ok &= doTest( 3,  2);
-  //ok &= doTest( 1,  2);  // FAILS! ToDo: Fix this edge case!
+  //ok &= doTest( 1,  2);  // FAILS!
 
   // Oversample with kernels of length L = 41 by different factors M:
   ok &= doTest(41,   3);

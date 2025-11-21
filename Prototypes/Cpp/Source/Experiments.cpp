@@ -1037,6 +1037,32 @@ std::vector<T> rsSincUpSampleKernel(int L, int M)
   //   factors? And maybe those factors need to be even?
 }
 
+/** A function that can be used to tweak a given kernel h such that its sum is equal to 1. 
+
+...TBC...
+
+*/
+template<class T>
+std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
+{
+  using Vec = std::vector<T>;
+
+  Vec c = h;  // Preliminary - Corrected kernel
+
+
+  return c;
+
+  // ToDo: 
+  // 
+  //
+  // - Create a windowed version wh of the kernel h using a triangular or quadratic window.
+  //
+  // - Compute the total sum of the original kernel h and the windowed version wh.
+  //
+  // - From the two sums, figure out appropriate weights for weighted sum of the original and
+  //   the windowed version of the kernel such that the total sum equals the desiredSum
+}
+
 
 /** Verifies that the given filter kernel h satisfies the interpolation condition which means that
 the upsampled signal should pass through the original sample values. We test this by actually 
@@ -1090,6 +1116,10 @@ bool testSincUpSampler()
     Vec  h   = rsSincUpSampleKernel<Real>(L, M);
     Real sum = rsSum(h);
     Real tol = 1.e-12;                     // Preliminary - maybe use c*L*eps for some constant c
+
+
+    h = rsCorrectKernelSum(h, Real(M));    // Under construction
+
 
     rsStemPlot(h);
 

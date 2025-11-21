@@ -103,14 +103,12 @@ public:
   // This still causes memory corruptions when n > 0. We do not yet have proper implementations of
   // deep copying.
 
+  // Make a factory function that creates omega
 
   //-----------------------------------------------------------------------------------------------
   // \name Setup
 
-  void copyDataFrom(const rsOrdinal& x)
-  {
-    terms = x.terms;
-  }
+  void copyDataFrom(const rsOrdinal& x) { terms = x.terms; }
 
 
   //-----------------------------------------------------------------------------------------------
@@ -152,9 +150,11 @@ public:
   /** Compares this ordinal with rhs for equality. */
   bool operator==(const rsOrdinal& rhs) const;
 
+  /** Compares this ordinal with rhs for inequality. */
+  bool operator!=(const rsOrdinal& rhs) const { return !(*this == rhs); }
 
 
-
+  bool operator<(const rsOrdinal& rhs) const;
 
 
   // ToDo: 
@@ -268,6 +268,24 @@ protected:
     }
     // Verify!
 
+        
+    bool operator<(const Term& r) const
+    {
+      if(*(this->exponent) < *(r.exponent))
+        return true;
+      if(*(r.exponent) < *(this->exponent))
+        return false;
+      if(this->coeff < r.coeff)
+        return true;
+      if(r.coeff < this->coeff)
+        return false;
+
+
+      return false;
+      // I think, this should happen only when both operands are equal. Make a unit test for this!
+      // Maybe add an assertion
+    }
+
 
     // ToDo: copy/clone, assignment, etc. - we need deep copies
 
@@ -297,6 +315,42 @@ bool rsOrdinal<Nat>::operator==(const rsOrdinal& r) const
   
   return true;
 }
+
+template<class Nat>
+bool rsOrdinal<Nat>::operator<(const rsOrdinal& r) const
+{
+  // Under construction
+
+  // Catch edge cases where one of the operands is zero:
+  if(this->isZero() && !r.isZero())
+    return true;
+  if(!this->isZero() && r.isZero())
+    return false;
+  // Maybe we don't actually need this. I think, it can be absorbed in the test below that compares
+  // the sizes. 
+
+  // Now we know, that the terms arrays of both operands are non-empty, so we compare term-wise:
+  size_t N = rsMin(terms.size(), r.terms.size());
+  for(size_t i = 0; i < N; i++)
+  {
+    if(terms[i] < r.terms[i])
+      return true;
+    if(r.terms[i] < terms[i])
+      return false;
+  }
+
+  // If we end up here, either both operands are the same, or one of them has more terms. In this
+  // case, the one with the more terms is higher:
+  if(terms.size() < r.terms.size())
+    return true;
+  if(r.terms.size() < terms.size())
+    return false;
+
+  // If we reach this, both operands should be equal, I think:
+  return false;
+}
+// Needs more tests!
+
 
 
 // Notes:

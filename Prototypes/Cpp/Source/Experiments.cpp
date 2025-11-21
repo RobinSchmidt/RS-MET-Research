@@ -14876,19 +14876,29 @@ void testOrdinals()
   ok &= !o0.isOmega();
 
   // Create the ordinal 1 and verify its expected properties:
-  Ord o1(1);  // This constructor should create an ordinal from a natural number
+  Ord o1(1);                    // Constructs an ordinal from a natural number
   ok &= !o1.isZero();
   ok &=  o1.isOne();
   ok &=  o1.isFinite();
   ok &= !o1.isOmega();
-  // This causes memory corruption! Already the creation of o1 is problematic. I think, this is 
-  // because we have not yet implemented copy/move assign/construct. We need the implementations
-  // of the copy functions to create deep copies of the vectors of pointers to terms. I think, the
-  // inner class Term itself needs to implement copy/assign. Maybe the outer class Ordinal can then
-  // get away with the default implementations that the compiler generates.
-  // Seems to be fixed
+
+  // Test the comparison operator:
+  ok &= o0 != o1;
+  //ok &= o0 <= o1;
+  ok &=   o0 <  o1;
+  ok &= !(o1 <  o0);
+  ok &= !(o1 <  o1);
+  ok &= !(o0 <  o0);
 
   rsAssert(ok);
+
+
+  // ToDo:
+  //
+  // - Create some more natural numbers as ordinals such as 2,3 and use them also for testing the <
+  //   operator.
+  //
+  // - Produce the ordinal omega and test the comparisons with that.
 }
 
 

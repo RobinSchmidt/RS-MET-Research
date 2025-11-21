@@ -193,6 +193,13 @@ protected:
     bool isFinite() const { return exponent->isZero(); }
     // Verify!
 
+    /*
+    bool hasSameExponentAs(const Term& r) const
+    {
+
+    }
+    */
+
 
     bool operator==(const Term& r) const
     {
@@ -202,7 +209,8 @@ protected:
     // If both are null, we consider them the same. If one is null and the other isn't, we consider
     // them different. If both are non-null we actually compare their contents, i.e. dereference. 
     // Maybe the comparison for the exponents can be factored out into a function:
-    // this->hasSameExponentAs(r) which encapsulates the required logic.
+    // this->hasSameExponentAs(r) which encapsulates the required logic. But wait: I think, the 
+    // exponent is never supposed to be null anyway. 
 
 
     bool operator!=(const Term& r) const

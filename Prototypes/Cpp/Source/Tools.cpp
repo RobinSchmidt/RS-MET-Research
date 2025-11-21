@@ -171,19 +171,45 @@ protected:
   {
   public:
 
+    /** Standard constructor. Can init the ordinal to a natural number n, i.e. a finite ordinal. By
+    default, it inits to zero. */
     Term(Nat n = 0)
     {
       coeff    = n;
       exponent = new rsOrdinal;
     }
 
-      
     /** Copy constructor.  */
     Term(const Term& A)
     {
       coeff    = A.coeff;
       exponent = new rsOrdinal;
       exponent->copyDataFrom(*(A.exponent));
+    }
+
+    /** Move constructor.  */
+    Term(Term&& A) : exponent(std::move(A.exponent)) 
+    {
+      coeff    = A.coeff;
+      //exponent = A.exponent;
+      A.exponent = nullptr;   // We have snatched away ownership from A.
+    }
+    
+    /** Copy assignment operator. */
+    Term& operator=(const Term& A)
+    {
+      coeff    = A.coeff;
+      exponent = new rsOrdinal;
+      exponent->copyDataFrom(*(A.exponent));
+      return *this;
+    }
+
+    /** Move assignment operator. */
+    Term& operator=(Term&& A)
+    {
+      exponent = std::move(A.exponent);
+      A.exponent = nullptr; 
+      return *this;
     }
 
 

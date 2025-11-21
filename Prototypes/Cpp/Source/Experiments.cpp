@@ -14783,6 +14783,16 @@ void testOrdinals()
 {
   // Stub
 
+  using Nat = uint64_t;
+  using Ord = rsOrdinal<Nat>;
+
+  bool ok = true;
+
+  Ord o0;
+  ok &=  o0.isZero();
+  ok &= !o0.isOne();
+
+
   int dummy = 0;
 }
 

@@ -67,14 +67,70 @@ class rsOrdinal
 
 public:
 
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+  bool isZero() const { return terms.empty(); }
+
+  bool isOne() const
+  {
+    //return terms.size() == 1 && terms[0].coeff == 1 && terms[0].exponent->isZero();
+
+    return terms.size() == 1 && terms[0].isOne();
+  }
+
+
+
   // ToDo: 
   // Operators: ==, <, <=, +, *, ^ (pow)
   // Inquiry: 
-  //   -isZero, isOne
+  //   -isZero, isOne, isNatural or isFinite
   //   -isCardinal - should check if there's only one term an it's coeff is 1
   //   -isEquipotent - should check, if 1st term matches (I think)
+  //   -max/min
 
 protected:
+
+  class Term
+  {
+  public:
+
+    Term()
+    {
+      coeff = 0;
+      exponent = new rsOrdinal;
+    }
+
+    ~Term()
+    {
+      delete exponent;
+    }
+
+
+      
+    bool isZero() const 
+    { 
+      return coeff == Nat(0);
+    }
+   
+    bool isOne() const
+    {
+      return coeff == Nat(1) && exponent->isZero();
+    }
+
+
+
+    // ToDo: copy/clone, assignment, etc. - we need deep copies
+
+  protected:
+
+    rsOrdinal* exponent = nullptr;
+    Nat coeff = 0;
+
+  };
+
+
+  std::vector<Term> terms;
 
 };
 

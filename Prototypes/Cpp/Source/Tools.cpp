@@ -57,15 +57,43 @@ rsMatrix<T> rsSqrtNewton(const rsMatrix<T>& A)
 /** Under construction.
 
 A class to represent ordinal numbers. The template parameter Nat is used for the underlying natural
-number type. 
+number type. We represent an ordinal A in Cantor's normal form as follows:
 
-...TBC... */
+  A = w^A1 * a1  +  w^A2 * a2  +  w^A3 * a3  +  ...  +  w^AN * aN
+   
+where a1,a2,a3,... are natural numbers, A1,A2,A3,... are ordinal numbers and w stands for "omega" 
+which is the least infinite ordinal and represents the ordinality of the natural numbers (see 
+ABoST, pg 197). The exponents A1,A2,... are usually denoted with greek letters as alpha_1, alpha_2,
+etc. in the literature but because of ASCII limitations, we use capital letters for ordinals and 
+lowercase letters for naturals here. Note how this definition is recursive: The ordinal A on the 
+left hand side is defined in terms of ordinals A1,A2,... on the right hand side. Such a recursive 
+definition may seem weird but it is actually very similar like the recursive data structure for 
+rsSetNaive where we defined a set to consist of elements which are themselves sets. The 
+implementation also mixes in ideas from RAPT::rsSparsePolynomial. Note also that the powers of w 
+are right-mulitplied by their respective (natural) coefficients. This is not merely a notational 
+convention. It actually matters because ordinal multiplication is not commutative. Neither is 
+ordinal addition, so the ordering of the terms from A1,a1 to AN,aN also matters. The terms are 
+ordered in such a way that A1 > A2 > A3 > ... > AN, i.e. in descending (aka antilexicographic) 
+order from the highest to lowest exponent. Note my careful choice of words "highest" and "lowest"
+rather than "greatest" and "smallest" here because ordinals designate a rank rather than a size. 
+
+...TBC...
+
+
+References:
+
+  - ABoST:  A Book of Set Theory (Charles Pinter)    */
 
 template<class Nat>
 class rsOrdinal
 {
 
 public:
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Lifetime
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
@@ -77,9 +105,22 @@ public:
     //return terms.size() == 1 && terms[0].coeff == 1 && terms[0].exponent->isZero();
 
     return terms.size() == 1 && terms[0].isOne();
+
+    // Needs review and tests. 
+   
+    // Could perhaps also be implemented as:
+    //return terms.size() == 1 && terms[0].getCoeff() == Nat(1) && terms[0].getExponent().isZero();
   }
 
 
+  bool isOmega() const
+  {
+    //return terms.size() == 1 && terms[0].getCoeff() == Nat(1) && terms[0].getExponent()->isOne(); 
+
+    // Maybe do it like:
+    return terms.size() == 1 && terms[0].isOmega(); 
+  }
+  // Needs review/verification and tests.
 
   // ToDo: 
   // Operators: ==, <, <=, +, *, ^ (pow)
@@ -107,16 +148,34 @@ protected:
     }
 
 
-      
+    Nat getCoeff() const { return coeff; }
+
+    const rsOrdinal* getExponent() const { return exponent;  }
+    // Maybe rename to getExponentPtr() 
+
+       
     bool isZero() const 
     { 
       return coeff == Nat(0);
+      // Maybe also check that exponent == nullptr. But no - that would be wrong. We actually do 
+      // create a valid exponent in the constructor. But maybe we should check that the exponent
+      // is zero by using exponent->isZero(). I think, conceptually, whenever the coeff is zero but
+      // the exponent is nonzero, this would mathematically still represent zero but it would be 
+      // non-canonical representation of it. Maybe we should assert that the exponent is zero in 
+      // the case of a zero coeff.
     }
    
     bool isOne() const
     {
       return coeff == Nat(1) && exponent->isZero();
     }
+
+    bool isOmega() const
+    {
+      return coeff== Nat(1) && exponent->isOne(); 
+    }
+
+
 
 
 
@@ -138,6 +197,10 @@ protected:
 // -For the Nat type, we should be abe to use uint, rsBigInt and maybe at some point also 
 //  rsNeumannNumber
 
+// See:
+//
+// https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form
+// https://de.wikipedia.org/wiki/Cantorsche_Normalform
 
 //=================================================================================================
 // Differential geometry stuff:

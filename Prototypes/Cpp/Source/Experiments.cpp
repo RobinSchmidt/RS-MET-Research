@@ -14783,14 +14783,15 @@ void testOrdinals()
 {
   // Stub
 
-  using Nat = uint64_t;
-  using Ord = rsOrdinal<Nat>;
+  using Nat = uint64_t;         // Type for natural numbers
+  using Ord = rsOrdinal<Nat>;   // Type for ordinal numbers
 
   bool ok = true;
 
   Ord o0;
   ok &=  o0.isZero();
   ok &= !o0.isOne();
+  ok &= !o0.isOmega();
 
 
   int dummy = 0;

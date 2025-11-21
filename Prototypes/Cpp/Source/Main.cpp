@@ -199,6 +199,10 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testDefaultArguments();
 
 
+  // ToDo:
+  // -Check for memory leaks!
+
+
 
   return 0;
 }

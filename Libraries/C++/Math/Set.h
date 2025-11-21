@@ -21,7 +21,7 @@ structure with sets all the way down. For technical reasons, the elements must b
 to elements which complicates the internal implementation but client code does not really need to 
 think about this. The implementation is similar to how would one implement a tree in C++ with nodes 
 where each node has an array of pointers to child nodes. Here, each set A holds an array of pointers 
-to sets. These pointees a0,a1,a2,... are the elements of the set A = {a0,a1,a3,...}.
+to sets. These pointees a0,a1,a2,... are the elements of the set A = { a0,a1,a3,... }.
 
 One may think about using std::set but what should the template parameter be? If you try to use 
 std::set<std::set>, it doesn't compile because now the inner set also needs a template parameter.
@@ -82,11 +82,15 @@ public:
 
 
 
-  // ToDo: 
-  // -removeElement(size_t i);
+  // ToDo:
   // -removeElement(const rsSetNaive& a); - this can actually be implemented as set-difference
   //  with the singleton { a }. Not that this would be very practical - but from a theoretical
-  //  perspective, it might be an important observation
+  //  perspective, it might be an important observation because it means that we could, in 
+  //  principle, implement element removal using only set theoretical operations. Can the 
+  //  difference somehow be implemented uisng only union, intersection and perhaps complement? But
+  //  the complement will always need a notion of what the "universal set" is supposed to be, I 
+  //  think - so maybe we can't really express the set difference in such a way - at least not 
+  //  without somehow introducing some sort of (default?) universal set.
 
 
   //-----------------------------------------------------------------------------------------------
@@ -228,6 +232,7 @@ public:
   /** Given two sets A and B, this function produces the pair P = { A, B } of the two. Being able 
   to create such a pair is one of the Zermelo-Fraenkel axioms. */
   static rsSetNaive pair(const rsSetNaive& A, const rsSetNaive& B);
+  // Maybe call it doubleton in order to not cause confusion with ordered pairs, i.e. 2-tuples.
 
   /** Given two sets A,B, this function creates a set that may be used to represent the ordered 
   pair (A, B). The normal pair() function could not distinguish between { A, B } and { B, A } and a 

@@ -139,7 +139,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testMimoTransferMatrix();
   //testMimoFilters();           // just a stub - not much in there yet, mostly comments
   //testStateSpaceFilters();
-  testWaveGuides();              // Under construction - maybe move this near the PDE stuff
+  //testWaveGuides();              // Under construction - maybe move this near the PDE stuff
 
 
   // Math:

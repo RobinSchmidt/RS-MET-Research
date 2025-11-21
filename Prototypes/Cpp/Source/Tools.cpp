@@ -95,6 +95,14 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Lifetime
 
+  rsOrdinal(Nat n = 0)
+  {
+    if(n > 0)
+      terms.emplace_back(Term(n));
+  }
+  // This still causes memory corruptions when n > 0. We do not yet have proper implementations of
+  // deep copying.
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
@@ -154,9 +162,9 @@ protected:
   {
   public:
 
-    Term()
+    Term(Nat n = 0)
     {
-      coeff    = 0;
+      coeff    = n;
       exponent = new rsOrdinal;
     }
 
@@ -190,7 +198,11 @@ protected:
     {
       return *exponent == *(r.exponent) && coeff == r.coeff;
     }
-    // Verify!
+    // Verify! I think, we should dereference the exponent only when both pointers are nonzero.
+    // If both are null, we consider them the same. If one is null and the other isn't, we consider
+    // them different. If both are non-null we actually compare their contents, i.e. dereference. 
+    // Maybe the comparison for the exponents can be factored out into a function:
+    // this->hasSameExponentAs(r) which encapsulates the required logic.
 
 
     bool operator!=(const Term& r) const

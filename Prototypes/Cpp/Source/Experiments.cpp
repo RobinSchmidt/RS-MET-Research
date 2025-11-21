@@ -14788,13 +14788,19 @@ void testOrdinals()
 
   bool ok = true;
 
+  // Create the ordinal 0 and verify its expected properties:
   Ord o0;
   ok &=  o0.isZero();
+  ok &=  o0.isFinite();
   ok &= !o0.isOne();
   ok &= !o0.isOmega();
 
+  // Create the ordinal 1 and verify its expected properties:
+  //Ord o1(1);  // This constructor should create an ordinal from a natural number
 
-  int dummy = 0;
+
+
+  rsAssert(ok);
 }
 
 

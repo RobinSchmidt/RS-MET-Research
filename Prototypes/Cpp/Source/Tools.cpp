@@ -123,6 +123,16 @@ public:
   }
   // Needs review/verification and tests.
 
+  bool isFinite() const
+  {
+    return isZero() || (terms.size() == 1 && terms[0].isFinite()); 
+  }
+  // Needs tests
+
+
+
+
+
   // ToDo: 
   // Operators: ==, <, <=, +, *, ^ (pow), -
   // Inquiry: 
@@ -155,26 +165,18 @@ protected:
     // Maybe rename to getExponentPtr() 
 
        
-    bool isZero() const 
-    { 
-      return coeff == Nat(0);
-      // Maybe also check that exponent == nullptr. But no - that would be wrong. We actually do 
-      // create a valid exponent in the constructor. But maybe we should check that the exponent
-      // is zero by using exponent->isZero(). I think, conceptually, whenever the coeff is zero but
-      // the exponent is nonzero, this would mathematically still represent zero but it would be 
-      // non-canonical representation of it. Maybe we should assert that the exponent is zero in 
-      // the case of a zero coeff.
-    }
-   
-    bool isOne() const
-    {
-      return coeff == Nat(1) && exponent->isZero();
-    }
+    bool isZero() const { return coeff == Nat(0) && exponent->isZero(); }
+    // I think, conceptually, whenever the coeff is zero but the exponent is nonzero, this would 
+    // mathematically still represent zero but it would be non-canonical representation of it. 
+    // Maybe we should assert that the exponent is zero in the case of a zero coeff?
 
-    bool isOmega() const
-    {
-      return coeff== Nat(1) && exponent->isOne(); 
-    }
+   
+    bool isOne()    const { return coeff == Nat(1) && exponent->isZero(); }
+
+    bool isOmega()  const { return coeff == Nat(1) && exponent->isOne();  }
+
+    bool isFinite() const { return exponent->isZero(); }
+    // Verify!
 
 
 
@@ -185,7 +187,7 @@ protected:
   protected:
 
     rsOrdinal* exponent = nullptr;
-    Nat coeff = 0;
+    Nat        coeff    = Nat(0);
 
   };
 

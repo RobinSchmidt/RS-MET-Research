@@ -26,8 +26,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //plotComplexGauss1D();
   //testComplexGaussBlurIIR();
 
+
   // Resampling:
-  testUpDownSample1D();                // up- and downsampling with lossless roundtrip
+  //testUpDownSample1D();                // up- and downsampling with lossless roundtrip
   //testUpDownSample2D();              // stub, lossless up/downsampling for images
 
 
@@ -107,6 +108,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testNeumannIntegers();
   //testNeumannRationals();
   //testPairingFunctions();
+  testOrdinals();
 
   //testGeneralizedCollatz();
   //testPowerCommutator();

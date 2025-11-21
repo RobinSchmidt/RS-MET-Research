@@ -993,6 +993,15 @@ std::vector<T> rsSincUpSampleKernel(int L, int M)
   // a not so simple task. Maybe make an ansatz of using a linear combination of 1 and 1-x^2 where
   // x = (c+i)/(c) and try figure out the correct mixing coeff. Maybe that leads to an equation 
   // that can be solved? Or maybe use the simpler ansatz of a linear combination of 1 and 1-x.
+  // I think, to figure out the right linear combination, we could do the following: let a[n] and 
+  // b[n] be two different kernels. They can be anything but here we will take a[n] to be our raw 
+  // sinc kernel and b[n] a windowed sinc kernel. Let sa be the sum of all values in a and sb the 
+  // sum of all values in b. Assume sa > 1 and sb < 1. I think, what we need to to is to transform
+  // the interval sb..sa to the interval 0..1 vua na affine transform and we get our linear 
+  // intrepolation coeff by transforming 1 using the exact same affine trafo. Then just form the 
+  // weighted sum of a and b using the found coeff as weight. I think this sjould work because of
+  // linearity of summation. If we don't have sa > 1 and sb < 1, it may still work but the coeff 
+  // may not be in 0..1 as it usually is in interpolation settings.
 
   /*
   // For test/debug:
@@ -14684,8 +14693,6 @@ void szudzikSingleToPair(int z, int* x, int* y)
   }
 }
 
-
-
 void testPairingFunctions()
 {
   // We test different pairing functions, i.e. functions that reversibly map a pair of indices to a 
@@ -14771,6 +14778,15 @@ void testPairingFunctions()
   // https://drhagen.com/blog/superior-pairing-function/
   // https://drhagen.com/blog/multidimensional-pairing-functions/
 }
+
+void testOrdinals()
+{
+  // Stub
+
+  int dummy = 0;
+}
+
+
 
 
 void testGeneralizedCollatz()

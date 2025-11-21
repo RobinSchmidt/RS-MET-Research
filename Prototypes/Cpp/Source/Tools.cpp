@@ -10,7 +10,10 @@
 //   AutoDiff, HyperComplex (Quaternions etc. goes there), VectorFields (Polya)potential stuff 
 //   goes there, SpecialFunctions (Riemann-Zeta stuff goes there)
 //
-// - Rename this file to MiscStuff.cpp
+// - Rename this file to MiscStuff.cpp or ScratchPad.cpp
+
+
+
 
 
 // UNDER CONSTRUCTION - works but needs optimizations (some of which are very low hanging fruits)
@@ -48,6 +51,37 @@ rsMatrix<T> rsSqrtNewton(const rsMatrix<T>& A)
   //  may need to modify that into X^T * X - A = 0. See:
   //  https://en.wikipedia.org/wiki/Newton%27s_method#Multidimensional_formulations
 }
+
+//=================================================================================================
+
+/** Under construction.
+
+A class to represent ordinal numbers. The template parameter Nat is used for the underlying natural
+number type. 
+
+...TBC... */
+
+template<class Nat>
+class rsOrdinal
+{
+
+public:
+
+  // ToDo: 
+  // Operators: ==, <, <=, +, *, ^ (pow)
+  // Inquiry: 
+  //   -isZero, isOne
+  //   -isCardinal - should check if there's only one term an it's coeff is 1
+  //   -isEquipotent - should check, if 1st term matches (I think)
+
+protected:
+
+};
+
+// -The implementation should combine aspects from rsSparsePolynomial and rsSet
+// -For the Nat type, we should be abe to use uint, rsBigInt and maybe at some point also 
+//  rsNeumannNumber
+
 
 //=================================================================================================
 // Differential geometry stuff:

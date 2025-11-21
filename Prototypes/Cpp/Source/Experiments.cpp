@@ -1047,10 +1047,47 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
 {
   using Vec = std::vector<T>;
 
-  Vec c = h;  // Preliminary - Corrected kernel
+  int L = (int) h.size();
+  int c = L/2;
+
+  // Check some assumptions:
+  rsAssert(rsIsOdd(L));
+  rsAssert(h[c] == T(1));
+
+  // Create a window:
+  Vec w(L);
+  for(int k = 0; k <= c; k++)
+  {
+    T x = T(k) / T(c+1);
+    T y = 1 - x*x;
+    w[c+k] = y;
+    w[c-k] = y;
+  }
+
+  // Apply the window to h:
+  Vec v = w * h;
+
+  // Compute the weights for h and v:
+  T sh = rsSum(h);
+  T sv = rsSum(v);
+  sh /= desiredSum;
+  sv /= desiredSum;
+  // ...
 
 
-  return c;
+  // Form the linear combination of h and v:
+  // ....
+
+
+
+  rsPlotVectors(h, w, v);
+
+
+
+  Vec hc = h;  // Preliminary - Corrected kernel
+
+
+  return hc;
 
   // ToDo: 
   // 
@@ -1139,6 +1176,10 @@ bool testSincUpSampler()
 
     return ok;
   };
+
+  // Temporary:
+  ok &= doTest( 3,  2);
+  //ok &= doTest(201, 10);
 
   // Oversample by M = 2 with different kernel lengths L:
   ok &= doTest(21,  2);

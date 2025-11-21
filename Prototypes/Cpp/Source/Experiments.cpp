@@ -1048,7 +1048,7 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
   using Vec = std::vector<T>;
 
   int L = (int) h.size();
-  int c = L/2;
+  int c = L/2;             // Maybe rename to L2 or C
 
   // Check some assumptions:
   rsAssert(rsIsOdd(L));
@@ -1066,6 +1066,8 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
 
   // Apply the window to h:
   Vec v = w * h;
+  // Maybe re-use w. But maybe such optimizations should be deferred to a production version which
+  // should operate on pre-allocated buffers anyway.
 
   // Compute the weights for h and v:
   T sh = rsSum(h);
@@ -1073,19 +1075,15 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
   sh /= desiredSum;
   sv /= desiredSum;
   T k = rsLinToLin(T(1), sv, sh, T(0), T(1));  // Verify!
+  // Maybe get rid of the divisions by desiredSum and use
+  // k = rsLinToLin(desiredSum, sv, sh, T(0), desiredSum);
 
-
-
-  // Form the linear combination of h and v:
+  // Form the linear combination u of h and v:
   Vec u = k*h + (1-k)*v;
 
   // Verify result for debugging:
   T su = rsSum(u);                 // Should be equal to desiredSum
   rsPlotVectors(h, w, v, u);
-
-
-
-  //Vec hc = h;  // Preliminary - Corrected kernel
 
 
   return u;
@@ -1099,6 +1097,9 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
   //
   // - From the two sums, figure out appropriate weights for weighted sum of the original and
   //   the windowed version of the kernel such that the total sum equals the desiredSum
+  //
+  // - Make it more flexible by factoring out a function that takes an arbitrary window as 2nd
+  //   input. Here, we generate a parabolic window ourselves.
 }
 
 
@@ -1179,8 +1180,8 @@ bool testSincUpSampler()
   };
 
   // Temporary:
-  ok &= doTest( 3,  2);
-  //ok &= doTest(201, 10);
+  //ok &= doTest( 3,  2);
+  ok &= doTest(201, 10);
 
   // Oversample by M = 2 with different kernel lengths L:
   ok &= doTest(21,  2);

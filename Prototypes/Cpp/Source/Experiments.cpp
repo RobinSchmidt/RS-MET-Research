@@ -1048,11 +1048,13 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
   using Vec = std::vector<T>;
 
   int L = (int) h.size();
-  int C = L/2;             // Maybe rename to L2 or C
+  int C = L/2;
 
   // Check some assumptions:
   rsAssert(rsIsOdd(L));
   rsAssert(h[C] == T(1));
+  if(L <= 1)
+    return h;  // Edge case that would lead to division by zero
 
   // Create a parabolic window:
   Vec w(L);
@@ -1084,7 +1086,9 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
   // [1 2 1] / 2 and desiredSum = 2. That would be the linear interpolation kernel for M = 2.
   // Maybe we should check, if sh is close to the desired sum somehwere early in the function, 
   // even before doing all the many computations. But we need to figure out an appropriate 
-  // threshold. Maybe some mulitple of epsilon
+  // threshold. Maybe some multiple of epsilon. Hmm..OK - I have preliminarily included an early
+  // return when L <= 1. I'm not sure, if that's the best way to deal with it, though. Maybe there
+  // could be cases where the kernel is longer but still lead to problems. More tests are needed.
 
 
   // Form the linear combination u of h and v:
@@ -1180,9 +1184,10 @@ bool testSincUpSampler()
   };
 
   // Temporary:
-  ok &= doTest( 1,  2);  
+  //ok &= doTest( 1,  2);  
   // FAILS! ToDo: Fix this edge case! The line k = rsLinToLin(T(1), sv, sh, T(0), T(1)); 
-  // in rsCorrectKernelSum() produces an inf value
+  // in rsCorrectKernelSum() produces an inf value..Hmm - OK - I have added a fix but I'm not sure
+  // if it's the beste possible way to handle it.
 
 
   // Oversample by M = 2 with different kernel lengths L:
@@ -1190,7 +1195,7 @@ bool testSincUpSampler()
   ok &= doTest( 7,  2);
   ok &= doTest( 5,  2);
   ok &= doTest( 3,  2);
-  //ok &= doTest( 1,  2);  // FAILS!
+  ok &= doTest( 1,  2);
 
   // Oversample with kernels of length L = 41 by different factors M:
   ok &= doTest(41,   3);
@@ -14871,7 +14876,7 @@ void testOrdinals()
   ok &= !o0.isOmega();
 
   // Create the ordinal 1 and verify its expected properties:
-  //Ord o1(1);  // This constructor should create an ordinal from a natural number
+  Ord o1(1);  // This constructor should create an ordinal from a natural number
   //ok &= !o1.isZero();
   //ok &=  o1.isOne();
   //ok &=  o1.isFinite();

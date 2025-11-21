@@ -105,6 +105,15 @@ public:
 
 
   //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  void copyDataFrom(const rsOrdinal& x)
+  {
+    terms = x.terms;
+  }
+
+
+  //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
   bool isZero() const { return terms.empty(); }
@@ -168,10 +177,24 @@ protected:
       exponent = new rsOrdinal;
     }
 
+      
+    /** Copy constructor.  */
+    Term(const Term& A)
+    {
+      coeff    = A.coeff;
+      exponent = new rsOrdinal;
+      exponent->copyDataFrom(*(A.exponent));
+    }
+
+
     ~Term()
     {
       delete exponent;
+      exponent = nullptr;
     }
+
+    // ToDo: move constructor, move assignment, copy assignment. Then make sure to test them all.
+
 
 
     Nat getCoeff() const { return coeff; }

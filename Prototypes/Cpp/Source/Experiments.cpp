@@ -1076,9 +1076,13 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
   sh /= desiredSum;
   sv /= desiredSum;
   T k = rsLinToLin(T(1), sv, sh, T(0), T(1));
-  //// Maybe get rid of the divisions by desiredSum and use
-  //// k = rsLinToLin(desiredSum, sv, sh, T(0), desiredSum);
-  //// But that seems to be wrong
+  rsAssert(rsIsFiniteNumber(k));
+  // Maybe get rid of the divisions by desiredSum and use
+  // k = rsLinToLin(desiredSum, sv, sh, T(0), desiredSum); But that seems to be wrong.
+  // When sh == sv == 1, we get k = inf. That may happen in an edge case when L = 1. Could it 
+  // perhaps also happen when h is already perfect? Maybe try it with the L = 3 kernel
+  // [1 2 1] / 2 and desiredSum = 2. That would be the linear interpolation kernel for M = 2.
+
 
   // Form the linear combination u of h and v:
   Vec u = k*h + (1-k)*v;

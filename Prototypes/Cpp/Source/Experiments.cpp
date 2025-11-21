@@ -1082,6 +1082,9 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
   // When sh == sv == 1, we get k = inf. That may happen in an edge case when L = 1. Could it 
   // perhaps also happen when h is already perfect? Maybe try it with the L = 3 kernel
   // [1 2 1] / 2 and desiredSum = 2. That would be the linear interpolation kernel for M = 2.
+  // Maybe we should check, if sh is close to the desired sum somehwere early in the function, 
+  // even before doing all the many computations. But we need to figure out an appropriate 
+  // threshold. Maybe some mulitple of epsilon
 
 
   // Form the linear combination u of h and v:

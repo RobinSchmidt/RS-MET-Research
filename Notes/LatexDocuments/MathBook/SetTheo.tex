@@ -15,6 +15,23 @@ Set theory serves a couple of purposes in mathematics. It may serve as the found
 %  and the reals. The smallest uncountable ordinal omega_1 is also important
 % 
 
+
+% Cardinals: one, two, three, four, ......, infinity?
+% Ordinals:  first, second, third, fourth, ...., last?
+%
+% Counting (i.e. measuring "size") vs ranking (i.e. designating "position")
+%
+% In the finite case, we can use the same kind of numbers, namely natural numbers, to do both.
+% The distinction between these two fundamentally different functions of numbers becomes very 
+% important in the infinite case. Counting and ranking behave quite differently in the infinite 
+% case. Ranking is generally more complicated. There is such a thing as "the first place after 
+% infinity" but there is no such thing as "one more than infinity" - this is still just infinity.
+% Adding one to "counting infinity" changes nothing but adding one to "ranking infinity" does 
+% indeed designate a different rank, namely one position higher. This difference is captured in the
+% differences between cardinal and ordinal arithmetic (addition in this case). In the finite case
+% "counting arithmetic" and "ranking arithmetic" are the same thing. In the infinite case, they are
+% not.
+
 %===================================================================================================
 \section{Naive and Axiomatic Set Theory}
 
@@ -248,7 +265,7 @@ This axiom says that for any given predicate $\varphi(x)$ and any given set $A$,
 \end{equation}
 The formula $\varphi$ specifies which elements we should pick from $A$. The axiom is also known as axiom (schema) of separation or axiom (schema) of restricted comprehension. If we compare it with the principle of unrestricted comprehension, we note that here, we can only select the objects from a given set $A$ whereas in unrestricted comprehension, there was some imagined underlying universe of "all things" to which the formula $\varphi$ could be applied. Now we restrict ourselves to apply it only to the elements of some given set $A$ that we already have in hand. Notation wise, we will abbreviate the set $S = \{ x : x \in A \wedge \varphi(x) \}$ as $S = \{ x \in A :  \varphi(x) \}$. ...TODO: use variable naming consistent with the axioms above
 
-% aka restricted comprehension
+% aka restricted comprehension - could also be called filtering axiom or axiom of subset formation
 
 % https://en.wikipedia.org/wiki/Axiom_schema_of_specification
 
@@ -318,6 +335,16 @@ The Zermelo-Fraenkel (ZF) axioms listed so far are the backbone of modern set th
 % https://de.wikipedia.org/wiki/Neumann-Bernays-G%C3%B6del-Mengenlehre
 % https://en.wikipedia.org/wiki/Kripke%E2%80%93Platek_set_theory_with_urelements
 
+\subsubsection{Higher Level Construction Steps}
+The axioms give us some ways to create new sets from already existing sets by way of just postulating that these are valid ways to create new sets. Using just these construction steps as primitive operations, we can construct some important higher order construction steps. The most important ones of these are the following: It was already mentioned that the axiom of pairing allows us also to construct singleton sets as a special case. The ability to create singletons, i.e. to wrap a given set into another pair of curly braces, will become important in the definition of natural numbers where will need it, together with the axiom of union, to define the successor function. In an earlier chapter (see page \pageref{Sec:KuratowskiPair}), we have also seen that this pairing allows us to construct sets that we can interpret as \emph{ordered pairs} or 2-tuples. Such 2-tuples are the basis to construct the set product $A \times B$ of two sets $A$ and $B$. This product is just defined as the set of possible ordered pairs $(a,b)$ where $a \in A$ and $b \in B$. Starting form this set product, we can invoke the axiom of specification to filter out pairs that satisfy a particular condition that is of interest to us. When we do this, we create a subset of $A \times B$ which defines a \emph{relation} between $A$ and $B$. Some particular relations are of special interest. One of those are \emph{functions}. We the ability to construct functions, we can also construct the set of all possible functions from a set $A$ to a set $B$ which we denote by $B^A$. Another important type of relations are \emph{order} relations which, together with tuple-formation, allow us to construct ordered sets. Yet another important type of relations are \emph{equivalence} relations which, in turn, allow us to construct \emph{equivalence classes} and \emph{quotient sets} where the latter is the set of all equivalence classes. This construction step will be important in constructing the integers from the naturals and the rationals from the integers. As we can see, from these few axiomatically postulated primitive construction steps, we can create quite an arsenal of higher level construction steps which we can use to build all sorts of mathematical objects.
+
+% and by iterating this, we can create arbitrary $n$-tuples
+
+% pair/doubleton, singleton, ordered pair (Kuratowski), set-products A x B, relations, functions,
+% set-exponentiaion A^B, orders, equivalences, equivalence classes / quotient sets.
+
+% orders, functions and equivalence relations are formed by using the set product together with
+% the axiom of specification
 
 
 \subsubsection{Other Axioms and Systems}
@@ -610,8 +637,36 @@ In an informal sense, we can say that bijections partition the class of all sets
 %  that respects the original order of already comparable elements
 
 
-\subsubsection{Lexicographic Order}
-Consider the set product $C = A \times B$ of two sets $A$ and $B$ where we have a strict order relation $<_A$ defined on $A$ and an order relation $<_B$ defined on $B$. We can now define an order relation $<_C$ on $C$ as follows: ...TBC...
+
+
+
+\subsubsection{Concatenating Orders and the Ordinal Sum}
+%\subsubsection{Ordinal Sum}
+Consider two disjoint totally ordered sets $A$ and $B$ and form their union $C = A \cup B$. ...TBC...
+
+% https://www.youtube.com/watch?v=UxhFy4deLQA  at 30:50
+
+% See also ABoST, pg 169 - ordinal sum
+
+% Google AI overview for "ordinal sum"
+%Ordinal sum is the addition of two well-ordered sets, where one set is placed entirely before the other to form a new, larger ordered set. For example, the ordinal sum of the set of natural numbers \(\{0,1,2,...\}\) and the set of three elements \(\{a,b,c\}\) would result in the ordered set \(\{0,1,2,...,a,b,c\}\). This operation is associative but not commutative, meaning the order of addition matters: \(3+\omega =\omega \), but \(\omega +3>\omega \)
+
+% https://mathworld.wolfram.com/OrdinalAddition.html
+
+
+\subsubsection{Lexicographical Order and the Ordinal Product}
+%\subsubsection{Lexicographic Order}
+Consider the set product $C = A \times B$ of two totally ordered sets $A$ and $B$ where we have a strict order relation $<_A$ defined on $A$ and another one $<_B$ defined on $B$. We can now define an order relation $<_C$ on $C$. For clarity, I will now drop the subscript and will assume that it clear that when we compare elements form $A$, we mean $<_A$ so I'll just write $<$. We define $<$ for $C$ as follows: Let $c_1 = (a_1, b_1)$ and $c_2 = (a_2, b_2)$ be two elements of $C$. We will say that $c_1 < c_2$ if $a_1 < a_2$ and we will say that $c_2 < c_1$ if $a_2 < a_1$. In the case of equality of the first component, i.e. $a_1 = a_2$, we take the second component into account: If $b_1 < b_2$ then $c_1 < c_2$ and if $b_2 < b_1$ then $c_2 < c_1$. If we also have $b_1 = b_2$ in addition to $a_1 = a_2$ then we conclude that $c_1 = c_2$. We call such an order defined on the product set $C$ that was derived from the orders of the components a lexicographic order. We first compare the first component. Only if they happen to be equal, we compare the second component. In these comparisons, we use the respective orders defined on $A$ and $B$. The pair $(C,<_C)$ is also called the ordinal product of $(A,<_A)$ and $(B,<_B)$ VEERIFY!...TBC...mention also antilexicographic order
+
+% Check if we really need to require totla orders or if the defition also applies to posets. If so, state it in terms of posets because that's more general
+
+% Google AI overview for "ordinal product"
+%Ordinal product of ordered sets Definition: Given two ordered sets (posets) \(A\) and \(B\), their ordinal product is a new poset denoted \(A\otimes B\).Elements: The elements of \(A\otimes B\) are the pairs \((x,y)\), where \(x\) is from \(A\) and \(y\) is from \(B\).Ordering: The order relation \(\le _{\otimes }\) is defined as follows: \((x,y)\le _{\otimes }(x^{\prime },y^{\prime })\) if and only if (\(x<x^{\prime }\)) or (\(x=x^{\prime }\) and \(y\le y^{\prime }\)).Analogy: This ordering is similar to a lexicographical order, where the first component (\(x\)) is compared first, and if they are equal, the second component (\(y\)) is compared
+
+% https://mathworld.wolfram.com/OrdinalMultiplication.html
+
+
+% https://mathworld.wolfram.com/OrdinalExponentiation.html
 
 
 \subsubsection{Well Ordered Sets} A well ordered set is a set with a total order defined on it and the additional property that every non-empty subset has a least element with respect to the given order. The natural numbers $\mathbb{N}$ with our usual $\leq$ relation are such a well ordered set. 
@@ -707,6 +762,9 @@ Consider the set product $C = A \times B$ of two sets $A$ and $B$ where we have 
 % https://en.wikipedia.org/wiki/Burali-Forti_paradox
 % -constructing "the set of all ordinal numbers" leads to a contradiction
 
+
+
+
 \subsubsection{The Well Ordering Theorem} 
 The well ordering theorem states that any set $A$ can be well ordered. Now that seems to be a bold statement! Why should this be true? The proof of the theorem is very indirect and not constructive, i.e. it doesn't show you \emph{how} to well-order any given set. It's not easy to construct a well ordering for the reals, for example. The standard ordering doesn't work because not every subset of the reals has a least element. Just take the interval $(0,1]$ for example - it has no least element according to the standard order. Also, didn't we say at some point, that the complex numbers cannot be ordered? But this apparent contradiction can be resolved: What that statement means is that the complex numbers cannot be ordered in such a way to get an \emph{ordered field}. An ordered field is a formal term that requires an order relation that interacts in a certain nice way with the arithmetic operations. Of course, you can invent an order for the complex numbers, for example: Order according to real part and in case of equality, order according to the imaginary part. But such an ordering will not respect some features that we expect from an order on an ordered field. TODO: state what it means to be an ordered field.
 
@@ -782,6 +840,7 @@ In set theory, sets are the fundamental objects from which everything else is bu
 % https://www.youtube.com/watch?v=KTUVdXI2vng
 
 % https://en.wikipedia.org/wiki/Second-order_arithmetic
+
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Construction of the Number System}
@@ -1389,6 +1448,9 @@ The formal set theoretical definition of an ordinal number is simple: A set $\al
 % additionally need the axiom of infinity?
 
 
+% Unendlich plus eins - Was sind Ordinalzahlen?
+% https://www.youtube.com/watch?v=UxhFy4deLQA
+% -
 
 
 \paragraph{Cantor Normal Form}

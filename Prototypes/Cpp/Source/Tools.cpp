@@ -76,7 +76,12 @@ convention. It actually matters because ordinal multiplication is not commutativ
 ordinal addition, so the ordering of the terms from A1,a1 to AN,aN also matters. The terms are 
 ordered in such a way that A1 > A2 > A3 > ... > AN, i.e. in descending order from the highest to 
 lowest exponent. Note my careful choice of words "highest" and "lowest" rather than "greatest" and
-"smallest" here because ordinals designate a rank rather than a size. 
+"smallest" here because ordinals designate a rank rather than a size. One could perhaps also use
+"last" and "first" which might be even better. The natural numbers are a subset of the ordinals. 
+They are also called the finite ordinals. They are represented here as those ordinals which have 
+only a single term whose exponent is zero. That means a natural number n in this form look like 
+N = w^0 * n where by capital N, we merely mean a "type cast" from natural lowercase n to the 
+ordinal capital N. They mean the same number, just in different data types.
 
 ...TBC...
 
@@ -95,22 +100,20 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Lifetime
 
+  /** Standard constructor. Accepts an optional natural number n that can be used to create the 
+  finite ordinal that represents n. By default, n is zero so it can also be used to 
+  default-construct the ordinal number zero. */
   rsOrdinal(Nat n = 0)
   {
     if(n > 0)
       terms.emplace_back(Term(n));
   }
-  // This still causes memory corruptions when n > 0. We do not yet have proper implementations of
-  // deep copying.
-
-  // Make a factory function that creates omega
 
   /** Factory function to produce the ordinal number omega, i.e. the lest infinite ordinal. */
   static rsOrdinal omega()
   {
-    //rsOrdinal<Nat> one(1);
-    rsOrdinal<Nat> w(1);         // w = w^0 * 1
-    w.terms[0].setExponent(1);   // w = w^1 * 1
+    rsOrdinal<Nat> w(1);         // Creates  w = w^0 * 1
+    w.terms[0].setExponent(1);   // Sets     w = w^1 * 1
     return w;
   }
 
@@ -123,41 +126,36 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
-  bool isZero() const { return terms.empty(); }
-
-  bool isOne() const
-  {
-    //return terms.size() == 1 && terms[0].coeff == 1 && terms[0].exponent->isZero();
-
-    return terms.size() == 1 && terms[0].isOne();
-
-    // Needs review and tests. 
-   
-    // Could perhaps also be implemented as:
-    //return terms.size() == 1 && terms[0].getCoeff() == Nat(1) && terms[0].getExponent().isZero();
-  }
-
-  bool isOmega() const
-  {
-    //return terms.size() == 1 && terms[0].getCoeff() == Nat(1) && terms[0].getExponent()->isOne(); 
-
-    // Maybe do it like:
-    return terms.size() == 1 && terms[0].isOmega(); 
-  }
-  // Needs review/verification and tests.
-
-  bool isFinite() const
-  {
-    return isZero() || (terms.size() == 1 && terms[0].isFinite()); 
-  }
+  bool isZero()   const { return terms.empty();                                           }
+  bool isOne()    const { return terms.size() == 1 && terms[0].isOne();                   }
+  bool isOmega()  const { return terms.size() == 1 && terms[0].isOmega();                 }
+  bool isFinite() const { return isZero() || (terms.size() == 1 && terms[0].isFinite());  }
   // Needs tests
+
+  //bool isInitial() const {}
+  // Initial ordinals have the property that their w^0 term is zero, i.e. the coeff of w^0 is
+  // zero. The first few initial ordinals are 0,w,w*2,w*3,... Ordnals like 1,2,w+1,w+2,w*2+1,...
+  // are not initial ordinals. Non-initial ordinals have an immediate predecessor, initial ordinals
+  // have no predecessor. To check, if an ordinal is initial, we have to look at its last term. If
+  // it happens to be a finite term _and_ has a coeff of zero, then the ordinal is initial, I 
+  // think.
+
+  // bool isLimit() const;
+  // I think, limit ordinals are all the infinite initial ordinals so basically all initial 
+  // ordinals except zero (verify!)
+
+  // bool hasPredecessor() const { return !isInitial(); }
+
 
   size_t getNumTerms() const { return terms.size(); }
 
   // ToDo:
-  //   -isLimitOrdinal, isInitialOrdinal, isEpsilonNumber,
-  //   -isCardinal - should check if there's only one term an it's coeff is 1
+  //   -isLimitOrdinal, isInitialOrdinal, isEpsilonNumber, isIrreducible() - ABoST p.178,201
+  //   -isCardinal - should check if there's only one term an it's coeff is 1 (verify!)
   //   -isEquipotent - should check, if 1st term matches (I think)
+  //    ...wait! no - I think, the ordinals we can produce in this way are all still countable so
+  //    we do not even reach aleph_1
+  //   -getMagnitude(), p.201: magnitude is the maximum exponent
   //   -max/min
 
 
@@ -181,8 +179,15 @@ public:
   bool operator>=(const rsOrdinal& r) const { return r <= *this;                  }
   // Verify these
 
+
+  rsOrdinal operator+(const rsOrdinal& r) const;
+
+
   // ToDo: 
-  // Operators: +, *, ^ (pow), -
+  // Operators: +, *, ^ (pow), -, ++ (successor), -- (predecessor)
+  // The successor should check, if the last term is a natural number, if yes, increase it's coeff
+  // by one, if not, append a new last term of one. The predecssor function is defined only for
+  // non-initial ordinals
 
 
 protected:
@@ -260,7 +265,10 @@ protected:
 
     Nat getCoeff() const { return coeff; }
 
-    const rsOrdinal* getExponent() const { return exponent;  }
+    const rsOrdinal* getExponentPtr() const 
+    { 
+      return exponent;  
+    }
     // Maybe rename to getExponentPtr(), implement a getExponent() function that returns an actual
     // object of rsOrdinal. That means, it should create and return a deep copy of our exponent.
 
@@ -325,6 +333,7 @@ protected:
     bool operator>=(const Term& r) const { return r <= *this;                  }
 
 
+
   protected:
 
     rsOrdinal* exponent = nullptr;
@@ -386,6 +395,33 @@ bool rsOrdinal<Nat>::operator<(const rsOrdinal& r) const
   return false;
 }
 // Needs more tests!
+
+template<class Nat>
+rsOrdinal<Nat> rsOrdinal<Nat>::operator+(const rsOrdinal& r) const
+{
+  rsError("Not yet implemented"); // Maybe define a function rsMarkAsStub();
+
+  return r;  // Preliminary
+
+  // https://www.youtube.com/watch?v=UxhFy4deLQA  at 30:00 or ABoST, p 191
+  //
+  // a + 0     = a                    for b = 0 
+  // a + (b+1) = (a+b) + 1            for ordinals b with predessor
+  // a + b     = sup(a+c : c < b)     for limit ordinals b
+  //
+  // Use functions like successor, predecessor, isLimit, etc. and implement it recursively like in
+  // the definition above.. ABoST, p.199 has also relevant formulas: if A < B then 
+  // w^A * a  +  w^B * b  =  w^B * b. For example w^1 * 3  +  w^2 * 5 = w^2 * 5. I think, this rule
+  // could perhaps be called absorption rule? If the left operand has a lower (highest) power than
+  // the right operand, then it does nothing. It just gets absorbed. I think, we could do something
+  // like if(getMagnitude() < r.getMagnitude()) return r;  and only if that branch doesn't trigger,
+  // we need to do something more complicated and actually loop through both arrays of terms and 
+  // sort of "zip" them into the result. We should enter a loop and always take off the largest 
+  // (by magnitude/exponent) term from both remaining stacks and add it to the result. If we find a
+  // situation where the topmost terms of both stacks happen to be of the same magnitude, we need
+  // to put a term into the result in which we add the coeffs of both. 
+  //
+}
 
 
 // Notes:

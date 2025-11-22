@@ -1053,8 +1053,17 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
   // Check some assumptions:
   rsAssert(rsIsOdd(L));
   rsAssert(h[C] == T(1));
-  if(L <= 1)
-    return h;  // Edge case that would lead to division by zero
+  if(L == 0)
+    return Vec();   // Should not happen. 0 is even, so we'll hit the assert anyway
+
+  // Edge case that would lead to division by zero in the computations below:
+  if(L == 1)
+  {
+    Vec u(1);
+    u[0] = desiredSum;
+    return u;
+    //return h;
+  }
 
   // Create a parabolic window:
   Vec w(L);
@@ -1184,7 +1193,7 @@ bool testSincUpSampler()
   };
 
   // Temporary:
-  //ok &= doTest( 1,  2);  
+  ok &= doTest( 1,  2);  
   // FAILS! ToDo: Fix this edge case! The line k = rsLinToLin(T(1), sv, sh, T(0), T(1)); 
   // in rsCorrectKernelSum() produces an inf value..Hmm - OK - I have added a fix but I'm not sure
   // if it's the beste possible way to handle it.
@@ -2378,7 +2387,7 @@ bool testUpDownSample1D()
   bool ok = true;
 
   // Under construction:
-   ok &= testSincUpSampler();
+  ok &= testSincUpSampler();
   //ok &= testOverSample_M2_L3();
   //ok &= testOverSample_M3_L5();
   //ok &= testSincUpSampler();
@@ -14889,8 +14898,14 @@ void testOrdinals()
   ok &=  o2.isFinite();
   ok &= !o2.isOmega();
 
-  // Create the ordinal w, i.e. "omega", the first infinite ordinal:
+  // Create and the ordinal w, i.e. "omega", the first infinite ordinal and check some of its 
+  // properties:
   Ord w = Ord::omega();
+  ok &= !w.isZero();
+  ok &= !w.isOne();
+  ok &= !w.isFinite();
+  ok &=  w.isOmega();
+
 
 
 
@@ -14911,6 +14926,14 @@ void testOrdinals()
   ok &=  (o2 == o2_1);
   ok &=  (o2 == o2_2);
 
+  // ToDo:
+  // Ord _w_p_1 = w + 1;
+  // Ord _1_p_w = 1 + w;
+  // ok &= _1_p_w == w;
+  // ok &= _w_p_1 != w;
+  // ok &= _w_p_1  > w;
+  // ...
+
   rsAssert(ok);
 
 
@@ -14920,6 +14943,18 @@ void testOrdinals()
   //   operator.
   //
   // - Produce the ordinal omega and test the comparisons with that.
+  //
+  // - Test formulas: ABoST, p.196: n + w = w, n * w = w, n^w = w for finite n. I think, w can be 
+  //   replaced by any infinite ordinal (see p.200: n + b = b). 
+  //   p.198: c = w^A1*a1 + ...  ->  c < w^(A1+1),  p.199: n*w^b = w^b
+  //
+  // - Do exmples from the exercises p.201
+
+
+  // See also:
+  // 
+  // https://www.math.tugraz.at/~ganster/lv_grundlagen_mathematik_ss_2016/02_ordinalzahlen.pdf
+  // https://www.aleph1.info/Resource?method=get&obj=Pdf&name=mengenlehre1.pdf&pagestart=313&pageend=336
 }
 
 

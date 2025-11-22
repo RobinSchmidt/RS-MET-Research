@@ -37,9 +37,11 @@ Sometimes, we may want to model situations in which the order of entries actuall
 % 
 
 %\paragraph{$\star$}
+\label{Sec:KuratowskiPair}
 \medskip
 $\star$ If you really want to be puristic and build \emph{everything} from sets, you need to use sets to model tuples, too. You could just pack the tuple members into another set with another object that serves as index, so $(a,b,c)$ would become $\{\{a,1\},\{b,2\},\{c,3\}\}$ and $(c,a,b)$ would become $\{\{c,1\},\{a,2\},\{c,3\}\}$. These sets of sets would indeed be uniquely identified purely by their elements regardless of order because the correct order could be reconstructed due to the second element in the inner sets which serve as tags. While this definition, proposed by Hausdorff, is intuitive, it has a problem: We would need to require that our set of indices is disjoint from all the sets that make up the tuple's coordinates. Otherwise, we could not distinguish between $(1,2)$ and $(2,1)$, for example. There are other ways to model tuples purely via sets that avoid this problem but are less intuitive. The currently accepted definition is due to Kuratowski and defines the ordered pair $(a,b) = \{ \{a\}, \{a,b\} \}$. Yet another possible way to construct ordered pairs from sets is due to Wiener and defines $(a,b) = \{ \{\{a\},\emptyset\}, \{\{b\}\} \}$. Mostly, we don't care about these technical details and just accept that it is possible to define ordered pairs purely in terms of sets. In terms of computer programming, we treat the pair construction like a library function that we just use without caring about its implementation. If it matters, we'll use Kuratowski's definition - but it won't matter until we'll get into the nitty gritty of axiomatic set theory which we'll do only much later in the book. Nobody really thinks about tuples this way anyway. For set-theorists who work at the very foundations of mathematics, the point of this is to convince themselves once and for all that it is possible to express tuples via sets and from then on, use the higher level tuple notation - just like scientists and engineers do. 
 
+% Maybe move this description into the chapter about axiomatic set theory and only mention it here.
 
 
 %For the time being, we just accept that ordered pair construction is possible. 

@@ -14889,6 +14889,11 @@ void testOrdinals()
   ok &=  o2.isFinite();
   ok &= !o2.isOmega();
 
+  // Create the ordinal w, i.e. "omega", the first infinite ordinal:
+  Ord w = Ord::omega();
+
+
+
   Ord o2_1(o2);     // Copy construction
   Ord o2_2 = o2;    // Copy assignment
   // ToDo: Do this with a more complicated ordinal - maybe omega

@@ -105,6 +105,15 @@ public:
 
   // Make a factory function that creates omega
 
+  /** Factory function to produce the ordinal number omega, i.e. the lest infinite ordinal. */
+  static rsOrdinal omega()
+  {
+    //rsOrdinal<Nat> one(1);
+    rsOrdinal<Nat> w(1);         // w = w^0 * 1
+    w.terms[0].setExponent(1);   // w = w^1 * 1
+    return w;
+  }
+
   //-----------------------------------------------------------------------------------------------
   // \name Setup
 
@@ -235,6 +244,19 @@ protected:
     // ToDo: Test them all.
 
 
+    /** Sets the exponent opf this term to the given ordinal number. */
+    void setExponent(rsOrdinal<Nat> newExponent)
+    {
+      this->exponent->copyDataFrom(newExponent);
+    }
+
+    /** Sets the exponent opf this term to the given natural number. */
+    void setExponent(Nat newExponent)
+    {
+      setExponent(rsOrdinal<Nat>(newExponent));
+    }
+
+
 
     Nat getCoeff() const { return coeff; }
 
@@ -262,6 +284,9 @@ protected:
 
     }
     */
+
+
+
 
 
     bool operator==(const Term& r) const

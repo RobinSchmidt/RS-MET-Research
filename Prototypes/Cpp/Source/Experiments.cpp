@@ -14889,14 +14889,22 @@ void testOrdinals()
   ok &=  o2.isFinite();
   ok &= !o2.isOmega();
 
+  Ord o2_1(o2);     // Copy construction
+  Ord o2_2 = o2;    // Copy assignment
+  // ToDo: Do this with a more complicated ordinal - maybe omega
+
 
   // Test the comparison operator:
   ok &= o0 != o1;
-  //ok &= o0 <= o1;
-  ok &=   o0 <  o1;
+  ok &=  (o0 <  o1);
+  ok &=  (o0 <  o2);
+  ok &=  (o1 <  o2);
   ok &= !(o1 <  o0);
   ok &= !(o1 <  o1);
   ok &= !(o0 <  o0);
+  ok &=  (o0 <= o1);
+  ok &=  (o2 == o2_1);
+  ok &=  (o2 == o2_2);
 
   rsAssert(ok);
 

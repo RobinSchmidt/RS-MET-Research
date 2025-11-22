@@ -166,10 +166,10 @@ public:
   //bool operator!=(const rsOrdinal& rhs) const { return !(*this == rhs); }
 
   // Boilerplate for the related/derived operators:
-  bool operator!=(const Term& r) const { return !(*this == r);               }
-  bool operator<=(const Term& r) const { return (*this < r) || (*this == r); }
-  bool operator> (const Term& r) const { return r <  *this;                  }
-  bool operator>=(const Term& r) const { return r <= *this;                  }
+  bool operator!=(const rsOrdinal& r) const { return !(*this == r);               }
+  bool operator<=(const rsOrdinal& r) const { return (*this < r) || (*this == r); }
+  bool operator> (const rsOrdinal& r) const { return r <  *this;                  }
+  bool operator>=(const rsOrdinal& r) const { return r <= *this;                  }
   // Verify these
 
   // ToDo: 

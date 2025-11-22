@@ -74,9 +74,9 @@ implementation also mixes in ideas from RAPT::rsSparsePolynomial. Note also that
 are right-mulitplied by their respective (natural) coefficients. This is not merely a notational 
 convention. It actually matters because ordinal multiplication is not commutative. Neither is 
 ordinal addition, so the ordering of the terms from A1,a1 to AN,aN also matters. The terms are 
-ordered in such a way that A1 > A2 > A3 > ... > AN, i.e. in descending (aka antilexicographic) 
-order from the highest to lowest exponent. Note my careful choice of words "highest" and "lowest"
-rather than "greatest" and "smallest" here because ordinals designate a rank rather than a size. 
+ordered in such a way that A1 > A2 > A3 > ... > AN, i.e. in descending order from the highest to 
+lowest exponent. Note my careful choice of words "highest" and "lowest" rather than "greatest" and
+"smallest" here because ordinals designate a rank rather than a size. 
 
 ...TBC...
 
@@ -128,7 +128,6 @@ public:
     //return terms.size() == 1 && terms[0].getCoeff() == Nat(1) && terms[0].getExponent().isZero();
   }
 
-
   bool isOmega() const
   {
     //return terms.size() == 1 && terms[0].getCoeff() == Nat(1) && terms[0].getExponent()->isOne(); 
@@ -146,27 +145,41 @@ public:
 
   size_t getNumTerms() const { return terms.size(); }
 
-
-  /** Compares this ordinal with rhs for equality. */
-  bool operator==(const rsOrdinal& rhs) const;
-
-  /** Compares this ordinal with rhs for inequality. */
-  bool operator!=(const rsOrdinal& rhs) const { return !(*this == rhs); }
-
-
-  bool operator<(const rsOrdinal& rhs) const;
-
-
-  // ToDo: 
-  // Operators: ==, <, <=, +, *, ^ (pow), -
-  // Inquiry: 
-  //   -isZero, isOne, isNatural or isFinite, isLimitOrdinal, isInitialOrdinal, isEpsilonNumber,
+  // ToDo:
+  //   -isLimitOrdinal, isInitialOrdinal, isEpsilonNumber,
   //   -isCardinal - should check if there's only one term an it's coeff is 1
   //   -isEquipotent - should check, if 1st term matches (I think)
   //   -max/min
 
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Operators
+
+  /** Compares this ordinal with rhs for equality. */
+  bool operator==(const rsOrdinal& rhs) const;
+
+  /** Compares this ordinal with rhs (right hand side) for if this ordinal (i.e. the left hand 
+  side) is less than the rhs. */
+  bool operator<(const rsOrdinal& rhs) const;
+
+  /** Compares this ordinal with rhs for inequality. */
+  //bool operator!=(const rsOrdinal& rhs) const { return !(*this == rhs); }
+
+  // Boilerplate for the related/derived operators:
+  bool operator!=(const Term& r) const { return !(*this == r);               }
+  bool operator<=(const Term& r) const { return (*this < r) || (*this == r); }
+  bool operator> (const Term& r) const { return r <  *this;                  }
+  bool operator>=(const Term& r) const { return r <= *this;                  }
+  // Verify these
+
+  // ToDo: 
+  // Operators: +, *, ^ (pow), -
+
+
 protected:
 
+  /** Internal class to represent one of the terms in the normal for, i.e. an expression of the 
+  form  w^A * a  with ordinal exponent A and natural coefficient a. */
   class Term
   {
 
@@ -219,14 +232,15 @@ protected:
       exponent = nullptr;
     }
 
-    // ToDo: move constructor, move assignment, copy assignment. Then make sure to test them all.
+    // ToDo: Test them all.
 
 
 
     Nat getCoeff() const { return coeff; }
 
     const rsOrdinal* getExponent() const { return exponent;  }
-    // Maybe rename to getExponentPtr() 
+    // Maybe rename to getExponentPtr(), implement a getExponent() function that returns an actual
+    // object of rsOrdinal. That means, it should create and return a deep copy of our exponent.
 
        
     bool isZero() const { return coeff == Nat(0) && exponent->isZero(); }
@@ -261,14 +275,6 @@ protected:
     // this->hasSameExponentAs(r) which encapsulates the required logic. But wait: I think, the 
     // exponent is never supposed to be null anyway. 
 
-
-    bool operator!=(const Term& r) const
-    {
-      return !(*this == r);
-    }
-    // Verify!
-
-        
     bool operator<(const Term& r) const
     {
       if(*(this->exponent) < *(r.exponent))
@@ -286,8 +292,13 @@ protected:
       // Maybe add an assertion
     }
 
+    
+    // Verify these:
+    bool operator!=(const Term& r) const { return !(*this == r);               }
+    bool operator<=(const Term& r) const { return (*this < r) || (*this == r); }
+    bool operator> (const Term& r) const { return r <  *this;                  }
+    bool operator>=(const Term& r) const { return r <= *this;                  }
 
-    // ToDo: copy/clone, assignment, etc. - we need deep copies
 
   protected:
 
@@ -352,7 +363,6 @@ bool rsOrdinal<Nat>::operator<(const rsOrdinal& r) const
 // Needs more tests!
 
 
-
 // Notes:
 //
 // - The implementation of the < operator (and perhaps <= and ==) is really the key here because 
@@ -386,6 +396,9 @@ bool rsOrdinal<Nat>::operator<(const rsOrdinal& r) const
 //   "To compare two ordinals written in Cantor normal form, first compare b1, then c1, then b2, 
 //    then  c2, and so on"
 // https://de.wikipedia.org/wiki/Cantorsche_Normalform
+//
+// https://de.wikipedia.org/wiki/Transfinite_Arithmetik
+// https://de.wikipedia.org/wiki/Ordinalzahl
 
 
 //=================================================================================================

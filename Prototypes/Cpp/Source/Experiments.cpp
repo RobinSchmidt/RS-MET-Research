@@ -14882,6 +14882,14 @@ void testOrdinals()
   ok &=  o1.isFinite();
   ok &= !o1.isOmega();
 
+  // Create the ordinal 2:
+  Ord o2(2);
+  ok &= !o2.isZero();
+  ok &= !o2.isOne();
+  ok &=  o2.isFinite();
+  ok &= !o2.isOmega();
+
+
   // Test the comparison operator:
   ok &= o0 != o1;
   //ok &= o0 <= o1;

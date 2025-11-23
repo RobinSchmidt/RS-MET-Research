@@ -14906,8 +14906,13 @@ void testOrdinals()
   ok &= !w.isFinite();
   ok &=  w.isOmega();
 
-
-
+  // Test magnitude (i.e. max. exponent) extraction. Natural numbers have magnitude 0, mutiples of
+  // omega have magnitude 1, etc:
+  Ord m;
+  m = o0.getMagnitude(); ok &= m == o0;
+  m = o1.getMagnitude(); ok &= m == o0;
+  m = o2.getMagnitude(); ok &= m == o0;
+  m =  w.getMagnitude(); ok &= m == o1;
 
   Ord o2_1(o2);     // Copy construction
   Ord o2_2 = o2;    // Copy assignment

@@ -37,7 +37,7 @@ But what exactly do I mean by "easy to evaluate"? If anything is allowed, then i
  \Biggr)^{1/n}
  }
 \end{equation}
-is due to C.P. Willans and I will not explain here why it works because that's not my point here [TODO: insert reference to an explanation]. My point is that it certainly qualifies as an explicit formula but it is practically useless. The first thing we note is that the outer sum goes up to $2^n$ which already puts the cost of the evaluation of the formula as function of $n$ into the category of algorithms with exponential time complexity. If you don't know what that means, let me just tell you that it means: "too inefficient for practical use except (maybe) for very small inputs". And that is true even if we overly optimistically assume the thing inside the sum to be in the realm of constant complexity - which it certainly isn't. 
+is due to C.P. Willans and I will not explain here why it works because that's not my point here [TODO: insert reference to an explanation]. My point is that it certainly qualifies as an explicit formula but it is practically useless. The first thing we note is that the outer sum goes up to $2^n$ which already puts the cost of the evaluation of the formula as function of $n$ into the category of algorithms with at least exponential time complexity. If you don't know what that means, let me just tell you that it means: "too inefficient for practical use except (maybe) for very small inputs". And that is true even if we overly optimistically assume the thing inside the sum to be in the realm of constant complexity - which it certainly isn't. 
 
 % Willan's formula:
 % https://en.wikipedia.org/wiki/Formula_for_primes
@@ -57,8 +57,11 @@ is due to C.P. Willans and I will not explain here why it works because that's n
 % https://www.youtube.com/watch?v=Cnr-Jvn8B74
 % 6:30: Wilson's theorem: n is prime  iff  (n-1)! = -1 (mod n)
 
+% An Exact Formula for the Primes: Willans' Formula
+% https://www.youtube.com/watch?v=j5s0h42GfvM
+
 \paragraph{The Sieve of Erathostenes}
-A much more practical way to produce primes is to precompute a list of primes, store it somewhere and read the $n$th entry from this list whenever the $n$th prime is needed. One algorithm to produce such a list is the sieve of Erathostenes. The algorithm works as follows: We start with a list of all numbers up to some upper limit $m$. The first prime in this list is $2$. We pick $2$ and mark all multiples of it (except $2$ itself) as non-prime. They can't be prime because they are multiples of $2$. Then we scan the list for the first number that is not yet marked as non-prime. That would be $3$. Then again we  mark all proper multiples of $3$ as non-prime. Repeat: the next is $5$. And so on. When we are done, all numbers in our list that are not marked as non-prime are primes. We can actually stop when we reach $\sqrt{m}$ because ...TBC...
+A much more practical way to produce primes is to precompute a list of primes, store it somewhere and read the $n$th entry from this list whenever the $n$th prime is needed. One algorithm to produce such a list is the sieve of Erathostenes. The algorithm works as follows: We start with a list of all numbers up to some upper limit $m$. The first prime in this list is $2$. We pick $2$ and mark all multiples of it (except $2$ itself) as non-prime. They can't be prime because they are multiples of $2$. Then we scan the list for the first number that is not yet marked as non-prime. That would be $3$. Then again we mark all proper multiples of $3$ as non-prime. Repeat: the next is $5$. And so on. When we are done, all numbers in our list that are not marked as non-prime are primes. We can actually stop when we reach $\sqrt{m}$ because ...TBC...
 
 % ToDo: talk about the algorithmic complexity - I think what we actually want in number theory is to find efficient formulas or algorithms to produce prime numbers or to decide whether or not a given number is prime
 

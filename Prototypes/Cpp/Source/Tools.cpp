@@ -112,10 +112,12 @@ public:
   /** Factory function to produce the ordinal number omega, i.e. the lest infinite ordinal. */
   static rsOrdinal omega()
   {
-    rsOrdinal<Nat> w(1);         // Creates  w = w^0 * 1
+    rsOrdinal<Nat> w(1);         // Creates  w = w^0 * 1   do we need the <Nat>?
     w.terms[0].setExponent(1);   // Sets     w = w^1 * 1
     return w;
   }
+
+  // Maybe also create factory functions for creating one and zero
 
   //-----------------------------------------------------------------------------------------------
   // \name Setup
@@ -146,6 +148,17 @@ public:
 
   // bool hasPredecessor() const { return !isInitial(); }
 
+
+  rsOrdinal getMagnitude() const
+  {
+    if(isZero())
+      return rsOrdinal(0);
+    return terms[0].getExponent();
+  }
+  // Maybe rename to getLeadingExponent() or something. Reserach what the standard term for this 
+  // ism Magnitude is from ABoST, p.201 but it's not quite clear if that is a standard term or 
+  // just something made up for that particular exercise. getMaxExponent(), getHighestExponent()
+  // are other alternative names
 
   size_t getNumTerms() const { return terms.size(); }
 
@@ -265,10 +278,16 @@ protected:
 
     Nat getCoeff() const { return coeff; }
 
-    const rsOrdinal* getExponentPtr() const 
+    rsOrdinal getExponent() const 
     { 
-      return exponent;  
+      return *exponent;   // Should return a copy. Verify that!
     }
+
+
+    //const rsOrdinal* getExponentPtr() const 
+    //{ 
+    //  return exponent;  
+    //}
     // Maybe rename to getExponentPtr(), implement a getExponent() function that returns an actual
     // object of rsOrdinal. That means, it should create and return a deep copy of our exponent.
 
@@ -450,6 +469,14 @@ rsOrdinal<Nat> rsOrdinal<Nat>::operator+(const rsOrdinal& r) const
 //   numbers only have one term. ...and perhaps that must hold recursively for the exponent of the
 //   term, its exponent, etc. Maybe zero terms is also ok as edge case - but not 2,3,...
 // 
+// - I think, this class can only represent ordinals that less then epsilon_0 or e_0, See:
+//   https://en.wikipedia.org/wiki/Ordinal_number#Some_%22large%22_countable_ordinals
+//   e_0 is the smallest ordinal A that satisfies w^A = A. It is the limit or fixed point of power
+//   towers of w. In an infinite power tower, the exponent is the same as the whole tower.
+//   See also:
+//   https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form
+//   "It is the smallest ordinal that does not have a finite arithmetical expression in terms of w"
+//   
 // 
 // See:
 //

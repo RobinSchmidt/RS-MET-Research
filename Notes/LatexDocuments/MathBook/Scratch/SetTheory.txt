@@ -171,17 +171,52 @@ https://www.youtube.com/watch?v=hj9hPx23vz0&list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9K
 
 
 ====================================================================================================
+
+The set theoretical interpretation of ordinal addition is as follows. If A and B are ordinal 
+numbers, (i.e. sets with the right structure - transitive, ordered by element relation, etc.) then 
+the ordinal sum is interpreted as the disjoint union of these two sets. C = A \squarecup B =
+A x 0 \cup B x 1 = A x {} \cup B x {{}} and the order relation on this set C is defined as: All 
+elements that came from A come before the elements that came from B. We can determine this from the
+second component, so what we do here is antilexicographical ordering, I think. Let's denote A x 0 as
+A_0 and B x 1 as B_1 and A_0 = { a1, a2, a3,  }_0, B_1 = { b1, b2, b3,  }_1 and let's denote 
+C = { c1_0, c2_0, c3_0, ..., c1_1, c2_1, c2_1, ... }. We use the tags/subscripts 0,1 to indicate, 
+if the element came from the left or right operand of the union, i.e. wheteher it was crossed with 0 
+or with 1. An alternative notation could be to use A and B as subscripts. The notation could be 
+generalized to D = A \squarecup B \squarecup C = A x 0 \cup B x 1 \cup C x 2 with 
+D = { d1_0,d2_0,..., d1_1,d2_1,..., d1_2,d2_2,...}
+
+- 1 + w = w.  { 0 }_0 + { 0,1,2,3,... }_1 = { 0_0,   0_1, 1_1, 2_1, 3_1 }
+  The order isomorphism between 1+w and w can be seen from the lists above. 
+  
+- w + 1 != w. { 0,1,2,3,... }_0 + { 0 }_1 = {  0_1, 1_1, 2_1, 3_1, ...,  0_0 }
+  As can be seen, the ordinal sum has a last element in this case, so it can't be isomorphic to w.
+  
+ToDo: 
+
+- Show that w + 1 + w = (w+1) + w = w + (w+1) = w + w =: w*2. Give the required order isomorphism 
+  between the formal results of evaluating  (w+1) + w  and  w + (w+1)  and  w+w.
+  
+  w+1 = { 0_0, 1_0, 2_0, 3_,...,  0_1 }
+  1+w = ....
+
+
+
+
+
+
+
+
 Ich glaube, es ist:
 
   |w|   = N_0 = w
   |w+n| = N_0 = w    für natürliches n 
 
-und der Grund, warum kardinale Addition und Multiplikations wieder Ordinalzahlen produziert, sind die
+und der Grund, warum kardinale Addition und Multiplikation wieder Kardinalzahlen produziert, sind die
 "Betragsstriche" am Schluß:
 
   k*l = |k x l|
 
-am Ende wird alles wieder zu einer Ordinalzahl gemacht. Die Struktur der Menge k x l geht dabei 
+am Ende wird alles wieder zu einer Karrdinalzahl gemacht. Die Struktur der Menge k x l geht dabei 
 verloren.
 
 

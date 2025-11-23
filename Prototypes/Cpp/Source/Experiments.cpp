@@ -14960,6 +14960,8 @@ void testOrdinals()
   // 
   // https://www.math.tugraz.at/~ganster/lv_grundlagen_mathematik_ss_2016/02_ordinalzahlen.pdf
   // https://www.aleph1.info/Resource?method=get&obj=Pdf&name=mengenlehre1.pdf&pagestart=313&pageend=336
+  // https://www.math.uni-bonn.de/ag/logik/teaching/2012WS/Set%20theory/oa.pdf
+  // https://arxiv.org/abs/1501.05747  Intermediate arithmetic operations on ordinal numbers
 }
 
 

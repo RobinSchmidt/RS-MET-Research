@@ -224,17 +224,47 @@ the ordinal addition operation that is defined between any pairs of posets. In A
 with a circle around it (p. 171). The ord() function is denoted by a circle with a backslash in it.
 Let's compute a couple of simple sums of ordinals:
 
+Eq. 1:
 1 + w = ord( 1 (+) w )
       = ord(   { 0 }  (+)  { 0,1,2,3,...} )
 	  = ord( { (0,0),        (0,1),(1,1),(2,1),(3,1), ...}  )
 	  =      {   0,            1  ,  2  ,  3  ,  4  , ... }
 	  = w
 
+Eq. 2:
 w + 1 = ord( w (+) 1 )
       = ord( { 0,1,2,3,...}  (+)  { 0 } )
-      = ord( { (0,1),(1,1),(2,1),(3,1), ..., (0,0) }
+      = ord( { (0,0),(1,0),(2,0),(3,0), ..., (0,1) } )
 	  =      {   0,    1  ,  2  ,  3  , ...,   w   }
 	  = w+1
+
+Eq. 3:
+w + w = ord( w (+) w )
+      = ord( { 0,1,2,3,...}  (+)  { 0,1,2,3,...} )
+	  = ord( { (0,0),(1,0),(2,0),(3,0), ..., (0,1),(1,1),(2,1),(3,1), ...} )
+      =      {   0,    1  ,  2  ,  3  , ...,   w  , w+1 , w+2 , w+3 , ...} )
+	  = w+w 
+	  = w*2 
+	  = w2
+
+Eq. 4:
+(1 + w) + w = w + w     by Eq. 1  (replace (1+w) by w)
+            = w2        by Eq. 3
+
+Eq. 5:
+1 + (w + w) = ord( 1 (+) w2 )
+            = ord(   { 0 }  (+)  { 0,1,2,3, ..., w,w+1,w+2,w+3,... } )
+			= ord( { (0,0), (0,1),(1,1),(2,1),(3,1),...,(w,1),(w+1,1),(w+2,1),(w+3,1), ... } )
+			=      {   0  ,   1  ,  2  ,  3  ,  4  ,...,  w  ,  w+1  ,  w+2  ,  w+3  , ... }
+            = w2        by pattern match with Eq. 3 (look at the middle line)
+
+Eq. 6
+w + (1 + w) = w + w     by Eq. 1  (replace (1+w) by w)
+
+Eq. 7:
+(w + 1) + w = 
+
+
 
 See:
 

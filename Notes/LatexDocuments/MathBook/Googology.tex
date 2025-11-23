@@ -152,4 +152,19 @@ https://en.wikipedia.org/wiki/Large_numbers
 
 https://googology.fandom.com/wiki/List_of_googolisms
 
+
+How about defining a sort of "bifactorial" bf(m,n) as follows:
+
+bf(m,n) = m if n <= 1
+        = n in m <= 1
+        = m*bf(m-1,n) * n*bf(m,n-1)   otherwise
+
+it should reduce to the normal factorial of m, if n = 1, I think. We can also generalize this to a
+trifactorial:
+
+tf(l,m,n) = l*tf(l-1,m,n) * m*tf(l,m-1,n) * n*tf(l,m,n-1)
+
+with the base cases also obviosuly generalized. How fats would that grow? Probably not very fast for
+Googology
+
 \end{comment}

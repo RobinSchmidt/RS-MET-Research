@@ -128,6 +128,23 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
+  size_t getNumTerms() const { return terms.size(); }
+
+  rsOrdinal getMaxExponent() const
+  {
+    if(isZero())
+      return rsOrdinal(0);
+    return terms[0].getExponent();
+  }
+  // Maybe rename to getLeadingExponent() or something. Reserach what the standard term for this 
+  // ism Magnitude is from ABoST, p.201 but it's not quite clear if that is a standard term or 
+  // just something made up for that particular exercise. getMaxExponent(), getHighestExponent()
+  // are other alternative names
+
+  Nat getFinitePart() const;
+
+
+
   bool isZero()         const { return terms.empty();                                           }
   bool isOne()          const { return terms.size() == 1 && terms[0].isOne();                   }
   bool isOmega()        const { return terms.size() == 1 && terms[0].isOmega();                 }
@@ -178,18 +195,7 @@ public:
   // bool hasPredecessor() const { return !isInitial(); }
 
 
-  rsOrdinal getMagnitude() const
-  {
-    if(isZero())
-      return rsOrdinal(0);
-    return terms[0].getExponent();
-  }
-  // Maybe rename to getLeadingExponent() or something. Reserach what the standard term for this 
-  // ism Magnitude is from ABoST, p.201 but it's not quite clear if that is a standard term or 
-  // just something made up for that particular exercise. getMaxExponent(), getHighestExponent()
-  // are other alternative names
 
-  size_t getNumTerms() const { return terms.size(); }
 
   // ToDo:
   //   -isLimitOrdinal, isInitialOrdinal, isEpsilonNumber, isIrreducible() - ABoST p.178,201
@@ -393,6 +399,23 @@ protected:
   std::vector<Term> terms;
 
 };
+
+template<class Nat>
+Nat rsOrdinal<Nat>::getFinitePart() const
+{
+  if(isZero())
+    return Nat(0);
+
+  Term t = terms.back();
+  if(!t.isFinite())
+    return Nat(0);
+
+  if(t.isZero())    // I think, this should never occurr bcs we don't store zero terms -> verify!
+    return Nat(0);
+
+  return t.getCoeff();
+}
+
 
 
 template<class Nat>

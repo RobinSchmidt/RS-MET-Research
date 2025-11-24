@@ -14883,6 +14883,7 @@ void testOrdinals()
   ok &= !o0.isOne();
   ok &=  o0.isFinite();
   ok &= !o0.isOmega();
+  ok &=  o0.getFinitePart() == 0;
 
   // Create the ordinal 1 and verify its expected properties:
   Ord o1(1);                    // Constructs an ordinal from a natural number
@@ -14890,6 +14891,7 @@ void testOrdinals()
   ok &=  o1.isOne();
   ok &=  o1.isFinite();
   ok &= !o1.isOmega();
+  ok &=  o1.getFinitePart() == 1;
 
   // Create the ordinal 2:
   Ord o2(2);
@@ -14897,6 +14899,7 @@ void testOrdinals()
   ok &= !o2.isOne();
   ok &=  o2.isFinite();
   ok &= !o2.isOmega();
+  ok &=  o2.getFinitePart() == 2;
 
   // Create and the ordinal w, i.e. "omega", the first infinite ordinal and check some of its 
   // properties:
@@ -14905,14 +14908,15 @@ void testOrdinals()
   ok &= !w.isOne();
   ok &= !w.isFinite();
   ok &=  w.isOmega();
+  ok &=  w.getFinitePart() == 0;
 
   // Test magnitude (i.e. max. exponent) extraction. Natural numbers have magnitude 0, mutiples of
   // omega have magnitude 1, etc:
   Ord m;
-  m = o0.getMagnitude(); ok &= m == o0;
-  m = o1.getMagnitude(); ok &= m == o0;
-  m = o2.getMagnitude(); ok &= m == o0;
-  m =  w.getMagnitude(); ok &= m == o1;
+  m = o0.getMaxExponent(); ok &= m == o0;
+  m = o1.getMaxExponent(); ok &= m == o0;
+  m = o2.getMaxExponent(); ok &= m == o0;
+  m =  w.getMaxExponent(); ok &= m == o1;
 
   Ord o2_1(o2);     // Copy construction
   Ord o2_2 = o2;    // Copy assignment

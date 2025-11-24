@@ -561,6 +561,9 @@ rsOrdinal<Nat> rsOrdinal<Nat>::addFast(const rsOrdinal<Nat>& a, const rsOrdinal<
       c.terms[n].incrementCoeff(tR.getCoeff());
       rsRemove(c.terms, n+1);
       //break; // May be ok to break here - verify that!
+      // I think, it doesn't really matter if we break or not because if we don't, we will take
+      // the last branch which only breaks in the very next iteration. It may be slightly more
+      // efficient to break, though because then we save one call to tL.getExponent()
     }
     else
       break;
@@ -574,7 +577,8 @@ rsOrdinal<Nat> rsOrdinal<Nat>::addFast(const rsOrdinal<Nat>& a, const rsOrdinal<
   // the loop because that is constant during the loop. ..ok - done. maybe it can be further 
   // optimized by consolidating the two comparisons < and == into a single "spaceship" comparison,
   // i.e. one that returns -1, 0 or +1 depending on whetehr the left operand is less, equal or 
-  // greater than the right
+  // greater than the right. Maybe we could also work with pointers or references to the exponents
+  // rather than copies.
 }
 // Needs tests!
 

@@ -14926,12 +14926,15 @@ void testOrdinals()
   m = o2.getMaxExponent(); ok &= m == o0;
   m =  w.getMaxExponent(); ok &= m == o1;
 
-  Ord o2_1(o2);     // Copy construction
-  Ord o2_2 = o2;    // Copy assignment
+  Ord o2_1(o2);                 ok &= (o2 == o2_1);   // Copy construction
+  Ord o2_2 = o2;                ok &= (o2 == o2_2);   // Copy assignment
+  Ord o2_3 = o1.getSuccessor(); ok &= (o2 == o2_3);   // Produce 2 as successor of 1
+  Ord o1_1 = o0.getSuccessor(); ok &= (o1 == o1_1);   // Produce 1 as successor of 0
+
   // ToDo: Do this with a more complicated ordinal - maybe omega
 
 
-  // Test the comparison operator:
+  // Test the other comparison operators:
   ok &= o0 != o1;
   ok &=  (o0 <  o1);
   ok &=  (o0 <  o2);
@@ -14940,8 +14943,7 @@ void testOrdinals()
   ok &= !(o1 <  o1);
   ok &= !(o0 <  o0);
   ok &=  (o0 <= o1);
-  ok &=  (o2 == o2_1);
-  ok &=  (o2 == o2_2);
+
 
   // ToDo:
   // Ord _w_p_1 = w + 1;

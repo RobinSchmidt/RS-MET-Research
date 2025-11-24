@@ -578,11 +578,13 @@ public:
   /** Given a set x representing a natural number according to the von Neumann construction, this 
   function creates its successor. */
   static rsSetNaive successor(const rsSetNaive& x);
+  // Maybe rename to succ or inc (for increment)
 
   /** Given a set x representing a natural number strictly greater than zero, this function creates 
   its predecessor. If you feed in zero by mistake, it will trigger rsError and return the empty 
   set. */
   static rsSetNaive predecessor(const rsSetNaive& x);
+  // Maybe rename to pred or dec (for decrement)
 
   /** Computes the sum of x and y. Using s() as the successor function, it is defined as:
 

@@ -124,6 +124,8 @@ public:
 
   void copyDataFrom(const rsOrdinal& x) { terms = x.terms; }
 
+  void increment();
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
@@ -138,6 +140,9 @@ public:
 
   Nat getFinitePart() const;
 
+  rsOrdinal getSuccessor() const;
+
+  rsOrdinal getPredecessor() const;
 
 
   bool isZero()      const { return terms.empty();                                          }
@@ -177,8 +182,23 @@ public:
   //   -isEquipotent - should check, if 1st term matches (I think)
   //    ...wait! no - I think, the ordinals we can produce in this way are all still countable so
   //    we do not even reach aleph_1
-  //   -getMagnitude(), p.201: magnitude is the maximum exponent
   //   -max/min
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Functions on ordinals
+
+  //static rsOrdinal<Nat> minimum(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+  //static rsOrdinal<Nat> maximum(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+
+  static rsOrdinal<Nat> addNaive(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+  //static rsOrdinal<Nat> addFast( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+
+  //static rsOrdinal<Nat> mulNaive(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+  //static rsOrdinal<Nat> mulFast( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+
+  //static rsOrdinal<Nat> powNaive(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+  //static rsOrdinal<Nat> powFast( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
 
 
   //-----------------------------------------------------------------------------------------------
@@ -282,6 +302,10 @@ protected:
     {
       setExponent(rsOrdinal<Nat>(newExponent));
     }
+
+    void incrementCoeff() { coeff = coeff + Nat(1); }
+
+    // ToDo: setCoeff
 
 
 
@@ -399,6 +423,41 @@ rsOrdinal<Nat> rsOrdinal<Nat>::getMaxExponent() const
 }
 
 template<class Nat>
+void rsOrdinal<Nat>::increment()
+{
+  if(isZero() || !isFinite())
+    terms.push_back(Term(Nat(1)));
+  else
+    terms.back().incrementCoeff();
+}
+
+template<class Nat>
+rsOrdinal<Nat> rsOrdinal<Nat>::getSuccessor() const
+{
+  rsOrdinal s(*this); 
+  s.increment();
+  return s;
+}
+// Needs tests with w, w+1, w+2, ...
+
+
+
+
+
+/*
+template<class Nat>
+rsOrdinal<Nat> rsOrdinal<Nat>::addNaive(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b)
+{
+
+
+
+
+}
+*/
+
+
+
+template<class Nat>
 bool rsOrdinal<Nat>::operator==(const rsOrdinal& r) const
 {
   if(getNumTerms() != r.getNumTerms())
@@ -457,7 +516,7 @@ rsOrdinal<Nat> rsOrdinal<Nat>::operator+(const rsOrdinal& b) const
   // https://www.youtube.com/watch?v=UxhFy4deLQA  at 30:00 or ABoST, p 191
   //
   // a + 0     = a                    for b = 0 
-  // a + (b+1) = (a+b) + 1            for ordinals b with predessor
+  // a + (b+1) = (a+b) + 1            for ordinals b with predecessor
   // a + b     = sup(a+c : c < b)     for limit ordinals b
   //
   // Use functions like successor, predecessor, isLimit, etc. and implement it recursively like in

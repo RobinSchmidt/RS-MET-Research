@@ -126,6 +126,8 @@ public:
 
   void increment();
 
+  void decrement();
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
@@ -303,6 +305,15 @@ protected:
       setExponent(rsOrdinal<Nat>(newExponent));
     }
 
+        
+    
+    void decrementCoeff() 
+    { 
+      rsAssert(coeff > Nat(0));
+      coeff = coeff - Nat(1); 
+    }
+
+
     void incrementCoeff() { coeff = coeff + Nat(1); }
 
     // ToDo: setCoeff
@@ -432,6 +443,29 @@ void rsOrdinal<Nat>::increment()
 }
 
 template<class Nat>
+void rsOrdinal<Nat>::decrement()
+{
+  if(hasPredecessor())
+    terms.back().decrementCoeff();
+  else
+    rsError("rsOrdinal::decrement() called on ordinal without predecessor");
+
+  /*
+  if(terms.empty())
+  {
+    rsError("rsOrdinal::decrement() called on zero");
+    return;
+  }
+
+  Term& t = terms.back();
+  if(t.isFinite() && !t.isZero())
+    t.decrementCoeff();
+  else
+    rsError("rsOrdinal::decrement() called on ordinal without predecessor");
+  */
+}
+
+template<class Nat>
 rsOrdinal<Nat> rsOrdinal<Nat>::getSuccessor() const
 {
   rsOrdinal s(*this); 
@@ -441,7 +475,17 @@ rsOrdinal<Nat> rsOrdinal<Nat>::getSuccessor() const
 // Needs tests with w, w+1, w+2, ...
 
 
+template<class Nat>
+rsOrdinal<Nat> rsOrdinal<Nat>::getPredecessor() const
+{
+  rsAssert(hasPredecessor(), "getPredecessor() called on ordinal without predecessor.");
+  // ToDo: Maybe return some special value in this case. Maybe invent a convention to represent 
+  // some sort of NaN value
 
+  rsOrdinal s(*this);
+  s.decrement();
+  return s;
+}
 
 
 /*

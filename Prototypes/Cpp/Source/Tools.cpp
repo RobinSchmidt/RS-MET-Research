@@ -194,7 +194,7 @@ public:
   //static rsOrdinal<Nat> maximum(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
 
   static rsOrdinal<Nat> addNaive(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
-  //static rsOrdinal<Nat> addFast( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+  static rsOrdinal<Nat> addFast( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
 
   //static rsOrdinal<Nat> mulNaive(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
   //static rsOrdinal<Nat> mulFast( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
@@ -312,9 +312,11 @@ protected:
       rsAssert(coeff > Nat(0));
       coeff = coeff - Nat(1); 
     }
+    // ToDo: Have also an optional parameter amount. The assertion should change to
+    // rsAssert(coeff >= amount);
 
 
-    void incrementCoeff() { coeff = coeff + Nat(1); }
+    void incrementCoeff(Nat amount = Nat(1)) { coeff = coeff + amount; }
 
     // ToDo: setCoeff
 
@@ -537,8 +539,43 @@ rsOrdinal<Nat> rsOrdinal<Nat>::addNaive(const rsOrdinal<Nat>& a, const rsOrdinal
 
 }
 
+template<class Nat>
+rsOrdinal<Nat> rsOrdinal<Nat>::addFast(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b)
+{
+  if(b.isZero())
+    return a;
 
+  rsOrdinal c;
+  c.terms = rsConcatenate(a.terms, b.terms);
+  const Term& tR = b.terms.front();
+  rsOrdinal eR = tR.getExponent();
+  int n = (int) a.getNumTerms()-1;
+  while(n >= 0)
+  {
+    const Term& tL = c.terms[n];
+    rsOrdinal eL = tL.getExponent();
+    if(eL > eR)
+      rsRemove(c.terms, n);
+    else if(eL == eR)
+    {
+      c.terms[n].incrementCoeff(tR.getCoeff());
+      //break; // May be ok to break here - verify that!
+    }
+    else
+      break;
+    n--;
+  }
 
+  return c;
+
+  // This can be optimized. The getExponent() function calls create deep copies, so it makes sense
+  // to consolidate the multiple calls into one. The extraction for tR can even be dragged out of 
+  // the loop because that is constant during the loop. ..ok - done. maybe it can be further 
+  // optimized by consolidating the two comparisons < and == into a single "spaceship" comparison,
+  // i.e. one that returns -1, 0 or +1 depending on whetehr the left operand is less, equal or 
+  // greater than the right
+}
+// Needs tests!
 
 template<class Nat>
 bool rsOrdinal<Nat>::operator==(const rsOrdinal& r) const
@@ -592,7 +629,8 @@ bool rsOrdinal<Nat>::operator<(const rsOrdinal& r) const
 template<class Nat>
 rsOrdinal<Nat> rsOrdinal<Nat>::operator+(const rsOrdinal& b) const
 {
-  return addNaive(*this, b);
+  //return addNaive(*this, b);
+  return addFast(*this, b);
 
   //rsError("Not yet implemented"); // Maybe define a function rsMarkAsStub();
 

@@ -14942,6 +14942,9 @@ void testOrdinals()
   ok &=  (o0 <= o1);
 
 
+  // Test ordinal addition:
+
+
   // ToDo:
   // Ord _w_p_1 = w + 1;
   // Ord _1_p_w = 1 + w;

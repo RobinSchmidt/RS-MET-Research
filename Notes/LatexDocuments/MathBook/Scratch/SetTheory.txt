@@ -269,9 +269,51 @@ Eq. 7:
 			=      {   0  ,  1  ,  2  ,  3  ,...,  w  ,  w+1 , w+2 , w+3 , w+4 ,... }
 			= w2        by pattern match with Eq. 3 (middle line)
 
-From Eq. 6 and Eq. 7 we conclude that  w + (1 + w) = (w + 1) + w. It is generally true that ordinal
-addition is associative.
+Maybe also consider (w + w) + 1 and w + (w + 1). I guess that we get in both cases w2 + 1 as result?
 
+I think, in general, if we add two ordinals A + B and A has lower magnitude than B, then the result
+will just be B. A gets completely absorbed. (see ABoST, p.201).
+
+From Eq. 6 and Eq. 7 we conclude that  w + (1 + w) = (w + 1) + w. It is generally true that ordinal
+addition is associative. Let's try to use these observations from above to form an addition 
+algorithm for two general ordinals A and B. We wanto to compute A + B where A,B are given in Cantor
+normal form as follows:
+
+  A = w^A1 * a1  +  w^A2 * a2  +  w^A3 * a3  +  ...  +  w^AN * aN
+  B = w^B1 * b1  +  w^B2 * b2  +  w^B3 * b3  +  ...  +  w^BM * bM
+  
+For exmple, let N = M = 3 such that
+ 
+  A + B = w^A1 * a1  +  w^A2 * a2  +  w^A3 * a3  +  w^B1 * b1  +  w^B2 * b2  +  w^B3 * b3 
+  
+Because of the associativity of ordinal addition, we can evaluate it from the inside out. We would 
+first evaluate the innermost + like so:
+
+  A + B = w^A1 * a1  +  w^A2 * a2  +  (w^A3 * a3  +  w^B1 * b1)  +  w^B2 * b2  +  w^B3 * b3 
+  
+There are 3 cases that can happen:
+
+  (1) w^A3 * a3  has lower  magnitude than  w^B1 * b1
+  (2) w^A3 * a3  has same   magnitude as    w^B1 * b1  
+  (3) w^A3 * a3  has higher magnitude than  w^B1 * b1
+  
+In case (1), the result of the addition is just w^B1 * b1. In case (2), we have A3 = B1 =: C and the
+result is w^C * (a3 + b1). In case (3), there basically is nothing to simplify. The whole expression
+of the sum just remains as is. In cases (2) and (3), we are actually done with the full addition 
+after this step. Only in case (1), we need to continue. After we have executed the absorption of
+w^A3 * a3, we have this expression left:
+
+  A + B = w^A1 * a1  +  (w^A2 * a2  +  w^B1 * b1)  +  w^B2 * b2  +  w^B3 * b3 
+
+where I already placed parenthese to indicate what we want to consider next.
+
+So the algorithm should proceed ad follows:
+Concatenate both term arrays. Call R the rightmost remaining term in A. As long as w^B1 * b1 has 
+larger magnitude than R, absorb that R term, i.e. delete it. When we encounter a situation where 
+w^B1 * b1 has the same magnitude as R, combine the coeff of R with b1. When we encounter a situation
+where w^B1 * b1 has smaller magnitude than R, we are done with the whole addition. I think, we can 
+also consider it done after we did the combination of the coeffs in the 2nd case because after doing 
+that, we are guaranteed to encounter case 3 in the next step, I think.
 
 See:
 

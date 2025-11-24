@@ -480,24 +480,63 @@ rsOrdinal<Nat> rsOrdinal<Nat>::getPredecessor() const
 {
   rsAssert(hasPredecessor(), "getPredecessor() called on ordinal without predecessor.");
   // ToDo: Maybe return some special value in this case. Maybe invent a convention to represent 
-  // some sort of NaN value
+  // some sort of NaN value. Maybe we could use a terms array with one entry that has a coeff of 
+  // zero (and maybe an exponent of zero as well). In a valid representation, we never use coeffs
+  // of zero. To represent zero itself, the terms array is empty. 
 
   rsOrdinal s(*this);
   s.decrement();
   return s;
 }
 
-
-/*
 template<class Nat>
 rsOrdinal<Nat> rsOrdinal<Nat>::addNaive(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b)
 {
+  if(b.isZero())
+    return a;
 
+  if(b.hasPredecessor())
+    return (addNaive(a, b.getPredecessor())).getSuccessor();
 
+  rsError("Not yet implemented");
+  return rsOrdinal(0);
+  // This case is more complicated. I'm net yet sure how to implement it.
 
+  // https://www.youtube.com/watch?v=UxhFy4deLQA  at 30:00 or ABoST, p 191
+  //
+  // a + 0     = a                    for b = 0 
+  // a + (b+1) = (a+b) + 1            for ordinals b with predecessor
+  // a + b     = sup(a+c : c < b)     for limit ordinals b
+  //
+  // Use functions like successor, predecessor, isLimit, etc. and implement it recursively like in
+  // the definition above.. ABoST, p.199 has also relevant formulas: if A < B then 
+  // w^A * a  +  w^B * b  =  w^B * b. For example w^1 * 3  +  w^2 * 5 = w^2 * 5. I think, this rule
+  // could perhaps be called absorption rule? If the left operand has a lower (highest) power than
+  // the right operand, then it does nothing. It just gets absorbed. I think, we could do something
+  // like if(getMagnitude() < r.getMagnitude()) return r;  and only if that branch doesn't trigger,
+  // we need to do something more complicated and actually loop through both arrays of terms and 
+  // sort of "zip" them into the result. We should enter a loop and always take off the largest 
+  // (by magnitude/exponent) term from both remaining stacks and add it to the result. If we find a
+  // situation where the topmost terms of both stacks happen to be of the same magnitude, we need
+  // to put a term into the result in which we add the coeffs of both. 
+  //
+  // Maybe implement two addition algorithms - a naive one based directly on the definition and a
+  // more efficient one based on some variation of convolution of the terms arrays of both 
+  // operands. They can be realized as static member functions addNaive(A, B), addFast(A, B) and
+  // then sperately tested. When both work fine, the + operator can call the fast version. The 
+  // naive version would use functions like hasPredecessor() or isLimit() (which are just 
+  // negations of one another) and for ordinals that do have a predecessor, we should have a 
+  // function getPredecessor() (which raises an error when called on a limit ordinal). Then, the
+  // implementation could look like:
+  //
+  // if(b.isZero)
+  //   return *this;
+  // if(b.hasPredecessor())
+  //   return (*this + b.getPredecessor()).getSuccessor();
+  // // ...this last case may be a bit more complicated
 
 }
-*/
+
 
 
 
@@ -553,42 +592,13 @@ bool rsOrdinal<Nat>::operator<(const rsOrdinal& r) const
 template<class Nat>
 rsOrdinal<Nat> rsOrdinal<Nat>::operator+(const rsOrdinal& b) const
 {
-  rsError("Not yet implemented"); // Maybe define a function rsMarkAsStub();
+  return addNaive(*this, b);
 
-  return r;  // Preliminary
+  //rsError("Not yet implemented"); // Maybe define a function rsMarkAsStub();
 
-  // https://www.youtube.com/watch?v=UxhFy4deLQA  at 30:00 or ABoST, p 191
-  //
-  // a + 0     = a                    for b = 0 
-  // a + (b+1) = (a+b) + 1            for ordinals b with predecessor
-  // a + b     = sup(a+c : c < b)     for limit ordinals b
-  //
-  // Use functions like successor, predecessor, isLimit, etc. and implement it recursively like in
-  // the definition above.. ABoST, p.199 has also relevant formulas: if A < B then 
-  // w^A * a  +  w^B * b  =  w^B * b. For example w^1 * 3  +  w^2 * 5 = w^2 * 5. I think, this rule
-  // could perhaps be called absorption rule? If the left operand has a lower (highest) power than
-  // the right operand, then it does nothing. It just gets absorbed. I think, we could do something
-  // like if(getMagnitude() < r.getMagnitude()) return r;  and only if that branch doesn't trigger,
-  // we need to do something more complicated and actually loop through both arrays of terms and 
-  // sort of "zip" them into the result. We should enter a loop and always take off the largest 
-  // (by magnitude/exponent) term from both remaining stacks and add it to the result. If we find a
-  // situation where the topmost terms of both stacks happen to be of the same magnitude, we need
-  // to put a term into the result in which we add the coeffs of both. 
-  //
-  // Maybe implement two addition algorithms - a naive one based directly on the definition and a
-  // more efficient one based on some variation of convolution of the terms arrays of both 
-  // operands. They can be realized as static member functions addNaive(A, B), addFast(A, B) and
-  // then sperately tested. When both work fine, the + operator can call the fast version. The 
-  // naive version would use functions like hasPredecessor() or isLimit() (which are just 
-  // negations of one another) and for ordinals that do have a predecessor, we should have a 
-  // function getPredecessor() (which raises an error when called on a limit ordinal). Then, the
-  // implementation could look like:
-  //
-  // if(b.isZero)
-  //   return *this;
-  // if(b.hasPredecessor())
-  //   return (*this + b.getPredecessor()).getSuccessor();
-  // // ...this last case may be a bit more complicated
+  //return r;  // Preliminary
+
+
 }
 
 

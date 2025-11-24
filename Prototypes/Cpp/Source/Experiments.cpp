@@ -14943,6 +14943,10 @@ void testOrdinals()
 
 
   // Test ordinal addition:
+  Ord r;
+  Ord o3(3);
+  r = o1 + o2;
+  ok &= r == o3;
 
 
   // ToDo:

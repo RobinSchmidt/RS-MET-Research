@@ -559,6 +559,7 @@ rsOrdinal<Nat> rsOrdinal<Nat>::addFast(const rsOrdinal<Nat>& a, const rsOrdinal<
     else if(eL == eR)
     {
       c.terms[n].incrementCoeff(tR.getCoeff());
+      rsRemove(c.terms, n+1);
       //break; // May be ok to break here - verify that!
     }
     else

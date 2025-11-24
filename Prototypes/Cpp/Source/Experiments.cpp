@@ -1058,16 +1058,7 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
 
   // Edge case that would lead to division by zero in the computations below:
   if(L == 1)
-  {
-    //Vec u(1);
-    //u[0] = desiredSum;
-    //return u;
-    // No - this is wrong! We never touch the "middle" sample because it must be 1 to satisfy
-    // the interpolation condition.
-
     return h;
-    // This is better!
-  }
 
   // Create a parabolic window:
   Vec w(L);
@@ -1113,6 +1104,14 @@ std::vector<T> rsCorrectKernelSum(const std::vector<T>& h, T desiredSum)
 
   return u;
 
+
+  // Notes:
+  //
+  // - In the edge case where the length L is 1, it would be wrong to produce a kernel whose only
+  //   sample value is equal to the desired sum because we are not supposed to never touch the 
+  //   "middle" sample because it must be 1 to satisfy the interpolation condition.
+  //
+  // 
   // ToDo: 
   //
   // - Make it more flexible by factoring out a function that takes an arbitrary window as 2nd
@@ -1167,7 +1166,7 @@ bool testSincUpSampler()
 
   auto doTest = [](int L, int M) 
   {
-    Real tol = 1.e-12;                     // Preliminary - maybe use c*L*eps for some constant c
+    Real tol = 1.e-12;                 // Preliminary - maybe use c*L*eps for some constant c
 
     // Create a sinc kernel corrected to give a sum of M:
     Vec h = rsSincUpSampleKernel<Real>(L, M);
@@ -1185,32 +1184,9 @@ bool testSincUpSampler()
       // that must be 1 to satisfy the interpolation condition. 
     }
 
-    // Plot the generated kernel for debugging:
-    //rsStemPlot(h);
-
-
-    //ok &= rsIsCloseTo(sum, Real(M), tol);  // I think, this is the unit gain at DC condition
-    // ...Of course, it still fails because we do not yet have implemented any means to ensure that
-    // and the raw sinc kernel does not deliver that naturally. Without any further ado, the sum 
-    // should be in the right ballpark but not exactly M. To make it pass, we really need to apply 
-    // a non-uniform scaling/tapering to h. See comments in rsSincUpSampleKernel() for ideas how to
-    // do that. But these are refinements for later. Or maybe a simple scaling will be good enough?
-    // But we cannot scale the center coeff - it really needs to be one or else we break the 
-    // interpolation property.
-
-
+    //rsStemPlot(h);                   // Plot the generated kernel for debugging
     return ok;
   };
-
-  // Temporary:
-  //ok &= doTest( 1,  2);  
-  // FAILS! ToDo: Fix this edge case! The line k = rsLinToLin(T(1), sv, sh, T(0), T(1)); 
-  // in rsCorrectKernelSum() produces an inf value..Hmm - OK - I have added a fix but I'm not sure
-  // if it's the beste possible way to handle it.
-  // For a kernel of length 1, we cannot simulatneously fix the "middle" sample to 1 and the sum to
-  // M because there really is only one sample in the kernel anyway.
-  // ...ok - fixed
-
 
   // Oversample by M = 2 with different kernel lengths L:
   ok &= doTest(21,  2);
@@ -1230,10 +1206,6 @@ bool testSincUpSampler()
 
   return ok;
 }
-
-
-
-
 
 bool testUpSample1D()
 {

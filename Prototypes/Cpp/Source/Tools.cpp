@@ -128,23 +128,52 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
-  bool isZero()   const { return terms.empty();                                           }
-  bool isOne()    const { return terms.size() == 1 && terms[0].isOne();                   }
-  bool isOmega()  const { return terms.size() == 1 && terms[0].isOmega();                 }
-  bool isFinite() const { return isZero() || (terms.size() == 1 && terms[0].isFinite());  }
+  bool isZero()         const { return terms.empty();                                           }
+  bool isOne()          const { return terms.size() == 1 && terms[0].isOne();                   }
+  bool isOmega()        const { return terms.size() == 1 && terms[0].isOmega();                 }
+  bool isFinite()       const { return isZero() || (terms.size() == 1 && terms[0].isFinite());  }
   // Needs tests
 
-  //bool isInitial() const {}
+  bool isSuccessor() const 
+  { 
+    if(isZero())
+      return false;
+
+    return terms.back().isFinite();
+    // Maybe we should do && !terms.back().isZero(); but I don't think that's necessary because I 
+    // think we do not store terms if they are zero anyway. The behavior we want is that 
+    // isSuccessor() returns true iff this ordinal has a nonzero finite part. Maybe we should have 
+    // a function getFinitePart() that returns a Nat and use that here and do:
+    // 
+    //   return getFinitePart() != 0;
+    //
+    // I think, that would be the most readable implementation
+  }
+
+
+  //bool isInitial()      const { return !isSuccessor(); }
+  // Oh - no - that's wrong! Initial ordinals are the cardinals
+
+  bool isLimit() const
+  {
+    return !isZero() && !isSuccessor();
+  }
+
+  bool hasPredecessor() const { return !isSuccessor(); }
+
+ 
+  // bool isInitial() const 
   // Initial ordinals have the property that their w^0 term is zero, i.e. the coeff of w^0 is
   // zero. The first few initial ordinals are 0,w,w*2,w*3,... Ordnals like 1,2,w+1,w+2,w*2+1,...
   // are not initial ordinals. Non-initial ordinals have an immediate predecessor, initial ordinals
   // have no predecessor. To check, if an ordinal is initial, we have to look at its last term. If
   // it happens to be a finite term _and_ has a coeff of zero, then the ordinal is initial, I 
-  // think.
+  // think. But in the implementation, we do not store terms with coeff zero
 
   // bool isLimit() const;
   // I think, limit ordinals are all the infinite initial ordinals so basically all initial 
-  // ordinals except zero (verify!)
+  // ordinals except zero (verify!). Ah - no - I don't think that's true. The initial ordinals are
+  // the cardinals.
 
   // bool hasPredecessor() const { return !isInitial(); }
 

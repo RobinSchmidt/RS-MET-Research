@@ -416,7 +416,7 @@ bool rsOrdinal<Nat>::operator<(const rsOrdinal& r) const
 // Needs more tests!
 
 template<class Nat>
-rsOrdinal<Nat> rsOrdinal<Nat>::operator+(const rsOrdinal& r) const
+rsOrdinal<Nat> rsOrdinal<Nat>::operator+(const rsOrdinal& b) const
 {
   rsError("Not yet implemented"); // Maybe define a function rsMarkAsStub();
 
@@ -440,6 +440,20 @@ rsOrdinal<Nat> rsOrdinal<Nat>::operator+(const rsOrdinal& r) const
   // situation where the topmost terms of both stacks happen to be of the same magnitude, we need
   // to put a term into the result in which we add the coeffs of both. 
   //
+  // Maybe implement two addition algorithms - a naive one based directly on the definition and a
+  // more efficient one based on some variation of convolution of the terms arrays of both 
+  // operands. They can be realized as static member functions addNaive(A, B), addFast(A, B) and
+  // then sperately tested. When both work fine, the + operator can call the fast version. The 
+  // naive version would use functions like hasPredecessor() or isLimit() (which are just 
+  // negations of one another) and for ordinals that do have a predecessor, we should have a 
+  // function getPredecessor() (which raises an error when called on a limit ordinal). Then, the
+  // implementation could look like:
+  //
+  // if(b.isZero)
+  //   return *this;
+  // if(b.hasPredecessor())
+  //   return (*this + b.getPredecessor()).getSuccessor();
+  // // ...this last case may be a bit more complicated
 }
 
 

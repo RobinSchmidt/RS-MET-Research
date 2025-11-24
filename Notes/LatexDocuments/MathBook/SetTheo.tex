@@ -591,6 +591,12 @@ Order theory is the part of set theory that is concerned with \emph{order relati
 
 % https://en.wikipedia.org/wiki/Completeness_(order_theory)
 
+
+% Maybe make this section about "Order Types" only and tal about partial, total and well orders and about
+% distinguished elements (min, max, sup, inf, least, greatest, etc.). traet the isomorphisms as sub-point 
+% in "Operations" on ordered sets. Basically, an isomorphism is a map from one ordered set to another, so 
+% it counts as an operation.
+
 \subsection{Order Isomorphisms and Order Types}
 An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is a bijective function $f: A \rightarrow B$ that preserves the ordering of the elements. That means, the bijection $f$ must satisfy: $x <_A y \Leftrightarrow f(x) <_B f(y)$ for all $x,y \in A$. In words: $x$ is less then $y$ in $A$ if and only if $f(x)$ is less than $f(y)$ in $B$. As an example, take $A=\{1,2,3,4\}$ with the natural order $1 <_A 2 <_A 3 <_A 4$ and the set $B=\{one,two,three,four\}$ with the lexicographical order $four <_B one <_B three <_B two$. We can indeed find an order isomorphism $f$ between the two posets, namely the map: $f: 1-four, 2-one, 3-three, 4-two$. It's worth to point out that finding an order isomorphism between two posets is "more difficult" than just finding any old bijection between the underlying sets. An order isomorphism has stricter requirements to qualify as such. Order isomorphisms have to respect the additional poset structures of their domain and codomain. If such an order isomorphism can be found between two posets, then these two posets are said to be \emph{order isomorphic} and they belong to the same \emph{order type}.
 
@@ -600,6 +606,12 @@ In an informal sense, we can say that bijections partition the class of all sets
 % cardinality = size type
 % ordinallity = order type
 % ordinal numbers are more complicated than cardinal numbers - that's why it's appropriate to introduce cardinals first. Introducing ordinals first would be a bit like introducing the rationals before the naturals
+
+% https://mathworld.wolfram.com/OrderType.html
+
+% I think, ordinal numbers do _not_ provide an exhaustive ctatlog of all order types (i.e. one member per
+% order type) but only for all the well orderings. Orders like those of the intgeres, rationals, etc. are 
+% _not_ isomorphic to any ordinal number. Verify!
 
 %there may be sets between ...TBC...
 
@@ -657,9 +669,11 @@ In an informal sense, we can say that bijections partition the class of all sets
 
 
 
+\subsection{Operations on Ordered Sets}
 
 
-\subsubsection{Concatenating Orders and the Ordinal Sum}
+\subsubsection{Concatenated Orders}
+%\subsubsection{Concatenating Orders and the Ordinal Sum}
 %\subsubsection{Ordinal Sum}
 Consider two disjoint totally ordered sets $A$ and $B$ and form their union $C = A \cup B$. ...TBC...
 
@@ -673,7 +687,8 @@ Consider two disjoint totally ordered sets $A$ and $B$ and form their union $C =
 % https://mathworld.wolfram.com/OrdinalAddition.html
 
 % see ABoST, p87 for (anti)lexicogrpahical order and p.170 for ordinal product
-\subsubsection{Lexicographical Order and the Ordinal Product}
+\subsubsection{Lexicographical Orders}
+%\subsubsection{Lexicographical Order and the Ordinal Product}
 %\subsubsection{Lexicographic Order}
 Consider the set product $C = A \times B$ of two totally ordered sets $A$ and $B$ where we have a strict order relation $<_A$ defined on $A$ and another one $<_B$ defined on $B$. ...TBC...
 
@@ -681,6 +696,19 @@ Consider the set product $C = A \times B$ of two totally ordered sets $A$ and $B
 
 % Check if we really need to require total orders or if the defition also applies to posets. If so, state it in terms of posets because that's more general. ABoST says (p.87) that (anti)lexicographic ordering
 % applies also to posets but for the ordinal product (p.169, Def. 9.6), it requires well ordered sets
+
+% I think, for the concatenation and lexcograpühical otrdering themenselves, we do not really need total
+% orders or even well orders. They can be defined for partilal orders as well. It's just that the order of
+% the resulting set will then by the type of order of the least specific operand. If both operands are
+% well-ordered, the result will also be. If one if the operands is a total order and the other is a only 
+% partial order, the result will be only partially ordered, etc. BUT: to perform the additional step of 
+% ismorphically mapping the result onto an ordinal number, we need both operands to be well ordered such
+% that the result will also be well ordered because only in this case, we can find an order isomorphism to
+% an ordinal numbers. Maybe make susubs for: order concatenation (+), lexicographical order (*) here and
+% subsubs for ordinal sums + and ordinal products * in the section about ordinal numbers
+
+% I think, if we would define the disjoint union of A,B as  (0 x A) \cup (1 x B) rather than 
+% (A x 0) \cup (B x 1) theh we could use lexicographical rather than antilexicographical ordering
 
 % Explain that this notion of lexicographical order is actually a bit different from the order in a dictionary because in a dcitionary, the words are allowed to have different lengths where as here, all "words" (i.e. 2-tuples) have the same "length", namely 2. I think, antilexicographical order is not the reverse of lexicogrpahic (as one might think) but rather lexicographic by looking at the 2nd component first, i.e. reading the "words" backwards. ...verify!
 
@@ -692,7 +720,14 @@ Consider the set product $C = A \times B$ of two totally ordered sets $A$ and $B
 % https://mathworld.wolfram.com/OrdinalExponentiation.html
 
 
-\subsubsection{Well Ordered Sets} A well ordered set is a set with a total order defined on it and the additional property that every non-empty subset has a least element with respect to the given order. The natural numbers $\mathbb{N}$ with our usual $\leq$ relation are such a well ordered set. 
+
+\subsubsection{Initial Segments} ...TBC...
+
+
+\subsubsection{Cuts} ...TBC...
+
+
+\subsection{Well Ordered Sets} A well ordered set is a set with a total order defined on it and the additional property that every non-empty subset has a least element with respect to the given order. The natural numbers $\mathbb{N}$ with our usual $\leq$ relation are such a well ordered set. 
 
 %Recall that given a set and an order relation $\leq$ on it, we can always define the corresponding strict order relation $<$ via $a < b \Leftrightarrow (a \leq b) \wedge \neg (a = b)$ and we can also turn this around to get $\leq$ back via $a \leq b \Leftrightarrow (a < b) \vee (a = b)$.
 
@@ -806,6 +841,9 @@ OK - with that potential cause of confusion out of the way - what does the theor
 % https://en.wikipedia.org/wiki/Ordered_field
 % https://en.wikipedia.org/wiki/Well-ordering_theorem
 % https://math.stackexchange.com/questions/6501/is-there-a-known-well-ordering-of-the-reals
+
+
+
 
 
 \subsection{Transfinite Processes}
@@ -1476,6 +1514,7 @@ The formal set theoretical definition of an ordinal number is simple: A set $\al
 % -
 
 
+
 \paragraph{Cantor Normal Form}
 Every ordinal number $\alpha$ can be written in the form:
 \begin{equation}
@@ -1492,6 +1531,20 @@ where $k$ is a natural number, the $c_i$ are also natural numbers and the $\beta
 
 % https://www.youtube.com/watch?v=0XneC6Iz9N0
 % eps_0 = tetrate(w,w)
+
+% Just like the von Neumann natural numbers can be used as prototypes for finite sets,
+% each ordinal number can serve as a prototype for a specific well ordered set. This works because 
+% for any well ordered set, there exists a unique ordinal number that is order isomorphic to it. 
+
+
+\paragraph{Addition}
+
+\paragraph{Multiplication}
+
+\paragraph{Exponentiation}
+
+
+
 
 \subsubsection{Cardinals as Special Ordinals}
 We have formerly introduced the cardinal numbers without reference to ordinal numbers. We explained their properties and what we can do with them but we actually didn't really define what they \emph{are}. It turns out that they can seen as a specific subset of the ordinal numbers.
@@ -1560,6 +1613,10 @@ The outputs of the $\card$ function are specific ordinal numbers. We are now int
 %   version. Whenever one of the numbers is an ordinal, we mean the ordinal version. I mean, we
 %   also overload the +, \cdot, etc that way so it seems consistent to also overload the <,=,...
 %   
+
+
+
+
 
 
 

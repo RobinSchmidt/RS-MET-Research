@@ -130,14 +130,9 @@ public:
 
   size_t getNumTerms() const { return terms.size(); }
 
-  rsOrdinal getMaxExponent() const
-  {
-    if(isZero())
-      return rsOrdinal(0);
-    return terms[0].getExponent();
-  }
+  rsOrdinal getMaxExponent() const;
   // Maybe rename to getLeadingExponent() or something. Reserach what the standard term for this 
-  // ism Magnitude is from ABoST, p.201 but it's not quite clear if that is a standard term or 
+  // is. Magnitude is from ABoST, p.201 but it's not quite clear if that is a standard term or 
   // just something made up for that particular exercise. getMaxExponent(), getHighestExponent()
   // are other alternative names
 
@@ -145,36 +140,15 @@ public:
 
 
 
-  bool isZero()         const { return terms.empty();                                           }
-  bool isOne()          const { return terms.size() == 1 && terms[0].isOne();                   }
-  bool isOmega()        const { return terms.size() == 1 && terms[0].isOmega();                 }
-  bool isFinite()       const { return isZero() || (terms.size() == 1 && terms[0].isFinite());  }
-  // Needs tests
-
-  bool isSuccessor() const 
-  { 
-    if(isZero())
-      return false;
-
-    return terms.back().isFinite();
-    // Maybe we should do && !terms.back().isZero(); but I don't think that's necessary because I 
-    // think we do not store terms if they are zero anyway. The behavior we want is that 
-    // isSuccessor() returns true iff this ordinal has a nonzero finite part. Maybe we should have 
-    // a function getFinitePart() that returns a Nat and use that here and do:
-    // 
-    //   return getFinitePart() != 0;
-    //
-    // I think, that would be the most readable implementation
-  }
-
+  bool isZero()      const { return terms.empty();                                          }
+  bool isOne()       const { return terms.size() == 1 && terms[0].isOne();                  }
+  bool isOmega()     const { return terms.size() == 1 && terms[0].isOmega();                }
+  bool isFinite()    const { return isZero() || (terms.size() == 1 && terms[0].isFinite()); }
+  bool isSuccessor() const { return getFinitePart() != 0;                                   }
+  bool isLimit()     const { return !isZero() && !isSuccessor();                            }
 
   //bool isInitial()      const { return !isSuccessor(); }
   // Oh - no - that's wrong! Initial ordinals are the cardinals
-
-  bool isLimit() const
-  {
-    return !isZero() && !isSuccessor();
-  }
 
   bool hasPredecessor() const { return !isSuccessor(); }
 
@@ -416,7 +390,13 @@ Nat rsOrdinal<Nat>::getFinitePart() const
   return t.getCoeff();
 }
 
-
+template<class Nat>
+rsOrdinal<Nat> rsOrdinal<Nat>::getMaxExponent() const
+{
+  if(isZero())
+    return rsOrdinal(0);
+  return terms[0].getExponent();
+}
 
 template<class Nat>
 bool rsOrdinal<Nat>::operator==(const rsOrdinal& r) const

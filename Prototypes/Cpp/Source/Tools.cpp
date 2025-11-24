@@ -157,7 +157,7 @@ public:
   //bool isInitial()      const { return !isSuccessor(); }
   // Oh - no - that's wrong! Initial ordinals are the cardinals
 
-  bool hasPredecessor() const { return !isSuccessor(); }
+  bool hasPredecessor() const { return isSuccessor(); }
 
  
   // bool isInitial() const 

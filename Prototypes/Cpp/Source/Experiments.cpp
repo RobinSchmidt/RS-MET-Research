@@ -14877,6 +14877,14 @@ void testOrdinals()
 
   bool ok = true;
 
+  //// Debug:
+  //Ord o(2);
+  //ok &= o.getFinitePart() == 2;
+  //ok &= o.isSuccessor();
+  //ok &= o.hasPredecessor();
+  //Ord p = o.getPredecessor();
+
+
   // Create the ordinal 0 and verify its expected properties:
   Ord o0;
   ok &=  o0.isZero();
@@ -14926,14 +14934,13 @@ void testOrdinals()
   m = o2.getMaxExponent(); ok &= m == o0;
   m =  w.getMaxExponent(); ok &= m == o1;
 
+
   Ord o2_1(o2);                   ok &= (o2 == o2_1);   // Copy construction
   Ord o2_2 = o2;                  ok &= (o2 == o2_2);   // Copy assignment
   Ord o2_3 = o1.getSuccessor();   ok &= (o2 == o2_3);   // Produce 2 as successor of 1
   Ord o1_1 = o0.getSuccessor();   ok &= (o1 == o1_1);   // Produce 1 as successor of 0
+  Ord o1_2 = o2.getPredecessor(); ok &= (o1 == o1_2);   // Produce 1 as predecessor of 2
 
-
-  //Ord o1_2 = o2.getPredecessor(); ok &= (o1 == o1_2);   // Produce 1 as predecessor of 2
-  // FAILS! Triggers assert!
 
 
   // ToDo: Do this with a more complicated ordinal - maybe omega

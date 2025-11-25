@@ -320,7 +320,24 @@ is equal, we have to combine (i.e. add) the coeff of R with b1 and then stop and
 See:
 
 https://en.wikipedia.org/wiki/Ordinal_arithmetic#Addition
-ABoST, p. 169 ff
+ABoST, p. 169-172, 190-195, 199-201
+
+p. 171:
+a+(b+c) = (a+b)+c        Associativity of addition
+a*(b*c) = (a*b)*c        Associativity of multiplication
+a*(b+c) = a*b + b*c      Left-distributivity of multiplication over addition
+
+p.172:
+a+b     != b+a           NO commutativity of addition
+a*b     != b*a           NO commutativity of multiplication
+(a+b)*c != a*c + b*c     NO right-distributivity of multiplication over addition
+
+p.191:
+
+Ordinal Addition:
+a + 0  = a
+a + succ(b) = succ(a+b)      if succ b is the successor of b
+a + b = sup({a+c :  c < b})  if b is limit ordinal
 
 
 

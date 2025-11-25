@@ -332,12 +332,21 @@ a+b     != b+a           NO commutativity of addition
 a*b     != b*a           NO commutativity of multiplication
 (a+b)*c != a*c + b*c     NO right-distributivity of multiplication over addition
 
-p.191:
-
-Ordinal Addition:
+p.191 - Ordinal Addition:
 a + 0  = a
 a + succ(b) = succ(a+b)      if succ b is the successor of b
-a + b = sup({a+c :  c < b})  if b is limit ordinal
+a + b = sup({a+c : c < b})   if b is limit ordinal
+
+p.192 - Ordinal Multiplication:
+a * 0 = 0
+a * succ(b) = a*b + a        if succ b is the successor of b
+a * b = sup({a*c : c < b})   if b is limit ordinal
+
+193 - Ordinal Exponentiation:
+0^b = 0
+a^0 = 1
+a^succ(b) = (a^b)*a          if succ b is the successor of b
+a^b = sup({a^c : c < b})     if b is limit ordinal
 
 
 

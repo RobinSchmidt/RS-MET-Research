@@ -194,7 +194,12 @@ public:
   //static rsOrdinal<Nat> maximum(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
 
   static rsOrdinal<Nat> addNaive(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+
   static rsOrdinal<Nat> addFast( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+  // Maybe rename the "addFast" to just "add" and similarly for the mul and pow operations. I'm
+  // not even sure if it makes sense to have these naive implementations. The addNaive 
+  // implementation is incomplete and I have currently no idea how to complete it in a way that
+  // still counts as "naive"
 
   //static rsOrdinal<Nat> mulNaive(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
   //static rsOrdinal<Nat> mulFast( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
@@ -554,15 +559,15 @@ rsOrdinal<Nat> rsOrdinal<Nat>::addFast(const rsOrdinal<Nat>& a, const rsOrdinal<
   {
     const Term& tL = c.terms[n];
     rsOrdinal eL = tL.getExponent();
-    if(eL > eR)
+    if(eL < eR)
       rsRemove(c.terms, n);
     else if(eL == eR)
     {
       c.terms[n].incrementCoeff(tR.getCoeff());
       rsRemove(c.terms, n+1);
-      //break; // May be ok to break here - verify that!
+      break; // May be ok to break here - verify that!
       // I think, it doesn't really matter if we break or not because if we don't, we will take
-      // the last branch which only breaks in the very next iteration. It may be slightly more
+      // the last branch in the very next iteration which only breaks. It may be slightly more
       // efficient to break, though because then we save one call to tL.getExponent()
     }
     else
@@ -634,22 +639,17 @@ bool rsOrdinal<Nat>::operator<(const rsOrdinal& r) const
 template<class Nat>
 rsOrdinal<Nat> rsOrdinal<Nat>::operator+(const rsOrdinal& b) const
 {
-  //return addNaive(*this, b);
+  //return addNaive(*this, b);  
+  // Implementation of the "naive" algorithm is incomplete and I'm not sure if it will ever be 
+  // completed because I have no idea how to implement this "sup" operation in any way other than
+  // we do it in the "fast" algorithm. Maybe the "fast" way is really the only sensible way to do
+  // it?
+
   return addFast(*this, b);
-
-  //rsError("Not yet implemented"); // Maybe define a function rsMarkAsStub();
-
-  //return r;  // Preliminary
-
-
 }
 
 
 // Notes:
-//
-// - The implementation of the < operator (and perhaps <= and ==) is really the key here because 
-//   that's the main thing that we expect ordinals to do: order things in the sense of making them
-//   comparable for which comes first. 
 // 
 // - We also want them to behave like (natural) numbers in the sense that we want to add, multiply
 //   and exponentiate them. 

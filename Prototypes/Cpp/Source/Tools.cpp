@@ -195,17 +195,17 @@ public:
 
   static rsOrdinal<Nat> addNaive(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
 
-  static rsOrdinal<Nat> addFast( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+  static rsOrdinal<Nat> add( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
   // Maybe rename the "addFast" to just "add" and similarly for the mul and pow operations. I'm
   // not even sure if it makes sense to have these naive implementations. The addNaive 
   // implementation is incomplete and I have currently no idea how to complete it in a way that
   // still counts as "naive"
 
   //static rsOrdinal<Nat> mulNaive(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
-  //static rsOrdinal<Nat> mulFast( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+  //static rsOrdinal<Nat> mul( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
 
   //static rsOrdinal<Nat> powNaive(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
-  //static rsOrdinal<Nat> powFast( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
+  //static rsOrdinal<Nat> pow( const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b);
 
 
   //-----------------------------------------------------------------------------------------------
@@ -312,13 +312,13 @@ protected:
 
         
     
-    void decrementCoeff() 
+    void decrementCoeff(Nat amount = Nat(1)) 
     { 
-      rsAssert(coeff > Nat(0));
-      coeff = coeff - Nat(1); 
+      rsAssert(coeff >= amount);
+      coeff = coeff - amount; 
     }
     // ToDo: Have also an optional parameter amount. The assertion should change to
-    // rsAssert(coeff >= amount);
+    // rsAssert(coeff >= amount); ...done
 
 
     void incrementCoeff(Nat amount = Nat(1)) { coeff = coeff + amount; }
@@ -456,20 +456,6 @@ void rsOrdinal<Nat>::decrement()
     terms.back().decrementCoeff();
   else
     rsError("rsOrdinal::decrement() called on ordinal without predecessor");
-
-  /*
-  if(terms.empty())
-  {
-    rsError("rsOrdinal::decrement() called on zero");
-    return;
-  }
-
-  Term& t = terms.back();
-  if(t.isFinite() && !t.isZero())
-    t.decrementCoeff();
-  else
-    rsError("rsOrdinal::decrement() called on ordinal without predecessor");
-  */
 }
 
 template<class Nat>
@@ -545,7 +531,7 @@ rsOrdinal<Nat> rsOrdinal<Nat>::addNaive(const rsOrdinal<Nat>& a, const rsOrdinal
 }
 
 template<class Nat>
-rsOrdinal<Nat> rsOrdinal<Nat>::addFast(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b)
+rsOrdinal<Nat> rsOrdinal<Nat>::add(const rsOrdinal<Nat>& a, const rsOrdinal<Nat>& b)
 {
   if(b.isZero())
     return a;
@@ -645,7 +631,7 @@ rsOrdinal<Nat> rsOrdinal<Nat>::operator+(const rsOrdinal& b) const
   // we do it in the "fast" algorithm. Maybe the "fast" way is really the only sensible way to do
   // it?
 
-  return addFast(*this, b);
+  return add(*this, b);
 }
 
 

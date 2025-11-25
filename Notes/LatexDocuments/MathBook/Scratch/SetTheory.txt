@@ -323,30 +323,61 @@ https://en.wikipedia.org/wiki/Ordinal_arithmetic#Addition
 ABoST, p. 169-172, 190-195, 199-201
 
 p. 171:
-a+(b+c) = (a+b)+c        Associativity of addition
-a*(b*c) = (a*b)*c        Associativity of multiplication
-a*(b+c) = a*b + b*c      Left-distributivity of multiplication over addition
+A+(B+C) = (A+B)+C        Associativity of addition
+A*(B*C) = (A*B)*C        Associativity of multiplication
+A*(B+C) = A*B + B*C      Left-distributivity of multiplication over addition
 
 p.172:
-a+b     != b+a           NO commutativity of addition
-a*b     != b*a           NO commutativity of multiplication
-(a+b)*c != a*c + b*c     NO right-distributivity of multiplication over addition
+A+B     != B+A           NO commutativity of addition
+A*B     != B*A           NO commutativity of multiplication
+(A+B)*C != A*C + B*C     NO right-distributivity of multiplication over addition
 
 p.191 - Ordinal Addition:
-a + 0  = a
-a + succ(b) = succ(a+b)      if succ b is the successor of b
-a + b = sup({a+c : c < b})   if b is limit ordinal
+A + 0  = A
+A + succ(B) = succ(A+B)      if succ(B) is the successor of B
+A + B = sup({A+C : C < B})   if B is limit ordinal
 
 p.192 - Ordinal Multiplication:
-a * 0 = 0
-a * succ(b) = a*b + a        if succ b is the successor of b
-a * b = sup({a*c : c < b})   if b is limit ordinal
+A * 0 = 0
+A * succ(B) = A*B + A        if succ(B) is the successor of B
+A * B = sup({A*C : C < B})   if B is limit ordinal
 
-193 - Ordinal Exponentiation:
-0^b = 0
-a^0 = 1
-a^succ(b) = (a^b)*a          if succ b is the successor of b
-a^b = sup({a^c : c < b})     if b is limit ordinal
+p.193 - Ordinal Exponentiation:
+0^B = 0
+A^0 = 1
+A^succ(B) = (A^B)*A          if succ(B) is the successor of B
+A^B = sup({A^C : C < B})     if B is limit ordinal
+
+p.194-196 - Exponentiation Rules:
+A^B * A^C  =  A^(B+C)
+(A^B)^C    =  A^(B*C)
+(A*B)^C   !=  A^C * B^C     ex: (2*2)^w = 4^w = w,  2^w * 2^w = = w*w = w^2
+
+p.196:
+For any finite ordinal n:
+n + w = w
+n * w = w
+n ^ w = w
+
+If A is a limit ordinal and p,q are finite ordinals, then (A*p)^q = A^q * p
+
+p.197 - Normal Form:
+A = w^A1 * a1  +  w^A2 * a2  +  w^A3 * a3  +  ...  +  w^AN * aN
+
+p.199 - Arithmetic Rules for Normal Forms:
+If A < B then: w^A * a + w^B * b = w^B * b  Absorption rule (my word).
+If A = w^A1 * a1  +  w^A2 * a2  +  ...  +  w^AN * aN is the normal form of A and B != 0 then 
+A * w^B = w^(A1 + B). If b is finite, then A*b = w^A1 * a1 * b  +  w^A2 * a2  +  ...  +  w^AN * aN.
+So, right-multiplying an ordinal by a finite number affects only the highest order (i.e. leftmost) 
+term.
+
+
+
+
+
+
+
+
 
 
 

@@ -244,8 +244,8 @@ w + w = ord(       w         (+)        w        )
 	  = ord( { (0,0),(1,0),(2,0),(3,0), ..., (0,1),(1,1),(2,1),(3,1), ...} )
       =      {   0,    1  ,  2  ,  3  , ...,   w  , w+1 , w+2 , w+3 , ...} )
 	  = w+w 
-	  = w*2 
-	  = w2
+	  = w*2             by Eq. M2     (below)
+	  = w2              by definition (shorthand notation)
 
 Eq. A4:
 (1 + w) + w = w + w     by Eq. A1  (replace (1+w) by w)
@@ -260,7 +260,7 @@ Eq. A5:
 
 Eq. A6
 w + (1 + w) = w + w     by Eq. A1  (replace (1+w) by w)
-            = w2        by definition
+            = w2        by Eq. M2  (below)
 
 Eq. A7:
 (w + 1) + w = ord(       (w+1)          (+)         w        )
@@ -321,14 +321,25 @@ Let's now look at a couple of basic exmples of ordinal multiplication (see ABoST
 Eq. M1:
 2 * w = ord(    2     (*)          w      )
       = ord( { 0,1 }  (*)  { 0,1,2,3,...} )
-	  = ord( { (0,0),(1,0),(0,1),(1,1),(0,2),(1,2),(0,3),(1,3), ...}  )
-	  =      {   0,    1  ,  2  ,  3  ,  4  ,  5  ,  6  ,  7  , ...}
+	  = ord( { (0,0),(1,0),(0,1),(1,1),(0,2),(1,2),(0,3),(1,3),...}  )
+	  =      {   0,    1  ,  2  ,  3  ,  4  ,  5  ,  6  ,  7  ,...}
 	  = w
 
 Eq. M2:
 w * 2 = ord(       w         (*)     2    )
       = ord( { 0,1,2,3,...}  (*)  { 0,1 } )
+	  = ord( { (0,0),(1,0),(2,0),(3,0),...,(0,1),(1,1),(2,1),(3,1),...} )
+      =      {   0,    1  ,  2  ,  3  ,...,  w  , w+1 , w+2 , w+3 ,...} )
+      = w2              by definition (shorthand notation)
+      = w + w	        by Eq. A3
 
+
+
+ToDo:
+
+- Point out that the equality of w+w and w*2 is not a "by definition" thing. It is actually a thing 
+  that we can conclude from matching the patterns of the right hand sides (in line 3) of Eq. A3 and 
+  M2.
 
 
 
@@ -387,8 +398,6 @@ So, right-multiplying an ordinal by a finite number affects only the highest ord
 term.
 
 
-
-Ordinal Multiplication:
 
 
 

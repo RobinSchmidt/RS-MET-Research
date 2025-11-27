@@ -214,7 +214,7 @@ w+2   = { 0, 1, 2, 3, ..., w, w+1 }
 w+3   = { 0, 1, 2, 3, ..., w, w+1, w+2 }
      ...
 w+w   = { 0, 1, 2, 3, ..., w, w+1, w+2, ... } = w*2   
-w+w+1 = { 0, 1, 2, 3, ..., w, w+1, w+2, ..., w+w }    
+w+w+1 = { 0, 1, 2, 3, ..., w, w+1, w+2, ..., w+w+1 }    
 
 
 Lets by ord(A) denote the act of mapping the well-ordered set A to its ordinal number. That means 
@@ -227,8 +227,8 @@ Let's compute a couple of simple sums of ordinals:
 Eq. A1:  ("A" for "Add") 
 1 + w = ord(     1    (+)          w      )
       = ord(   { 0 }  (+)  { 0,1,2,3,...} )
-	  = ord( { (0,0),        (0,1),(1,1),(2,1),(3,1), ...}  )
-	  =      {   0,            1  ,  2  ,  3  ,  4  , ...}
+	  = ord( { (0,0),        (0,1),(1,1),(2,1),(3,1), ... }  )
+	  =      {   0,            1  ,  2  ,  3  ,  4  , ... }
 	  = w
 
 Eq. A2:
@@ -236,16 +236,18 @@ w + 1 = ord(       w         (+)    1   )
       = ord( { 0,1,2,3,...}  (+)  { 0 } )
       = ord( { (0,0),(1,0),(2,0),(3,0), ..., (0,1) } )
 	  =      {   0,    1  ,  2  ,  3  , ...,   w   }
-	  = w+1
+	  = w+1 
+	  > w
 
 Eq. A3:
 w + w = ord(       w         (+)        w        )
       = ord( { 0,1,2,3,...}  (+)  { 0,1,2,3,...} )
-	  = ord( { (0,0),(1,0),(2,0),(3,0), ..., (0,1),(1,1),(2,1),(3,1), ...} )
-      =      {   0,    1  ,  2  ,  3  , ...,   w  , w+1 , w+2 , w+3 , ...} )
+	  = ord( { (0,0),(1,0),(2,0),(3,0), ..., (0,1),(1,1),(2,1),(3,1), ... } )
+      =      {   0,    1  ,  2  ,  3  , ...,   w  , w+1 , w+2 , w+3 , ... } )
 	  = w+w 
 	  = w*2             by Eq. M2     (below)
 	  = w2              by definition (shorthand notation)
+	  > w
 
 Eq. A4:
 (1 + w) + w = w + w     by Eq. A1  (replace (1+w) by w)
@@ -256,7 +258,7 @@ Eq. A5:
             = ord( { 0 }  (+)  { 0,1,2,3, ..., w,w+1,w+2,w+3,... } )
 			= ord( { (0,0), (0,1),(1,1),(2,1),(3,1),...,(w,1),(w+1,1),(w+2,1),(w+3,1), ... } )
 			=      {   0  ,   1  ,  2  ,  3  ,  4  ,...,  w  ,  w+1  ,  w+2  ,  w+3  , ... }
-            = w2        by pattern match with Eq. 3 (look at the middle line)
+            = w2        by pattern match with Eq. A3 (look at the 4th lines in both Eqs)
 
 Eq. A6
 w + (1 + w) = w + w     by Eq. A1  (replace (1+w) by w)
@@ -318,29 +320,101 @@ is equal, we have to combine (i.e. add) the coeff of R with b1 and then stop and
 
 Let's now look at a couple of basic exmples of ordinal multiplication (see ABoST p.172):
 
+Non-Commutativity:
+
 Eq. M1:
 2 * w = ord(    2     (*)          w      )
       = ord( { 0,1 }  (*)  { 0,1,2,3,...} )
-	  = ord( { (0,0),(1,0),(0,1),(1,1),(0,2),(1,2),(0,3),(1,3),...}  )
-	  =      {   0,    1  ,  2  ,  3  ,  4  ,  5  ,  6  ,  7  ,...}
+	  = ord( { (0,0),(1,0), (0,1),(1,1), (0,2),(1,2), (0,3),(1,3),... }  )
+	  =      {   0,    1  ,   2  ,  3  ,   4  ,  5  ,   6  ,  7  ,... }
 	  = w
 
 Eq. M2:
 w * 2 = ord(       w         (*)     2    )
       = ord( { 0,1,2,3,...}  (*)  { 0,1 } )
-	  = ord( { (0,0),(1,0),(2,0),(3,0),...,(0,1),(1,1),(2,1),(3,1),...} )
-      =      {   0,    1  ,  2  ,  3  ,...,  w  , w+1 , w+2 , w+3 ,...} )
+	  = ord( { (0,0),(1,0),(2,0),(3,0),...,(0,1),(1,1),(2,1),(3,1),... } )
+      =      {   0,    1  ,  2  ,  3  ,...,  w  , w+1 , w+2 , w+3 ,... } )
       = w2              by definition (shorthand notation)
-      = w + w	        by Eq. A3
+      = w + w	        by Eq. A3. So: w*2 is _not_ the same as 2*w but it _is_ the same as w+w.
+
+Eq. M3:
+w * w = ord(    w     (*)          w      )
+      = ord( { 0,1,2,3,... }  (*)  { 0,1,2,3,... } )
+	  = ord( { (0,0),(1,0),(2,0),(3,0), ...,
+	           (0,1),(1,1),(2,1),(3,1), ...,
+			   (0,2),(1,2),(2,2),(3,2), ...,
+			   (0,3),(1,3),(2,3),(3,3), ...,
+			   ............................,
+	           ............................      } )
+      =      {	 0  ,  1  ,  2  ,  3  , ...,
+                 w  , w+1 , w+2 , w+3 , ...,
+                 w2 , w2+1, w2+2, w2+3, ...,
+                 w3 , w3+1, w3+2, w3+3, ...,
+			   ............................,
+	           ............................      } )				
+      = w^2			   
 
 
 
-ToDo:
+Associativity:
+
+(2*w)*w = ...
+
+2*(w*w) = ...
+
+(w*2)*2 = ...
+
+w*(2*2) = ...
+
+(w*2)*w = ...
+
+w*(2*w) = ...
+
+2*(w+1) = ...
+
+(w+1)*2 = ...
+
+
+Left-Distributivity:
+...
+
+
+Right-Nondistributivity:
+...
+
+
+
+
+
+
+
+
+ToDo/Notes:
 
 - Point out that the equality of w+w and w*2 is not a "by definition" thing. It is actually a thing 
-  that we can conclude from matching the patterns of the right hand sides (in line 3) of Eq. A3 and 
-  M2.
+  that we can conclude from matching the patterns of the right hand sides (in the respective 4th 
+  lines) of Eq. A3 and M2. That is actually kind of remarkable! We did not really construct ordinal 
+  multiplication to do that. It just falls out!
 
+- Show the calculations for: 2*(w+1), (w+1)*2, (1+1)*w = 2*w, 1*w + 1*w = w+w = w*2 = w*(1+1), 
+  (w+w)*w = ...,  w*w, (w*2)*2, w*(2*2), (2*w)*w, 2*(w*w), (w*2)*w, w*(2*w)
+
+- It looks like in ordinal multiplication, we have an absorption rule just like in addition: 
+  Whenever the left operant has lower magnitude, it just gets absorbed. That means A * B = B 
+  whenever mag(A) < mag(B)? Verify that!
+
+- Is there some sort of right pseudo right-distributivity where, when distributing a factor over 
+  terms in a sum, we must swap the side from which we multiply? Like 
+  (1+1)*w = w*1 + w*1 = w+w = w*2? ...wait - no - I think, that's wrong! Check with ABoST, p.172
+
+- We have 1+w = w and w+1 > 1, so ordinal addition is not commutative
+
+- I think, as soon as we have ordinal multiplication in place, implementating exponentiation is 
+  easy. I think, in an exponentiation C = A^B, we just need to multiply the exponent in leftmost 
+  term of A by B and all the smaller terms of A (i.e. those further to the right) make no 
+  contribution, i.e. get absorbed. But I'm not sure about that - so verify it!
+  https://proofwiki.org/wiki/Ordinal_Exponentiation_via_Cantor_Normal_Form/Limit_Exponents
+  https://proofwiki.org/wiki/Ordinal_Exponentiation_of_Terms
 
 
 See:
@@ -357,6 +431,7 @@ p.172:
 A+B     != B+A           NO commutativity of addition
 A*B     != B*A           NO commutativity of multiplication
 (A+B)*C != A*C + B*C     NO right-distributivity of multiplication over addition
+                         Ex: (1+1)*w = 2*w  !=  1*w + 1*w = w + w = w*(1+1) = w2
 
 p.191 - Ordinal Addition:
 A + 0  = A
@@ -417,6 +492,12 @@ https://arxiv.org/pdf/2508.13334
 
 https://share.google/aimode/7EvLdIi9GSnFVNBqI
 
+https://en.wikipedia.org/wiki/Ordinal_number
+
+https://mathworld.wolfram.com/OrdinalNumber.html
+https://mathworld.wolfram.com/OrdinalAddition.html
+https://mathworld.wolfram.com/OrdinalMultiplication.html
+https://mathworld.wolfram.com/OrdinalExponentiation.html
 
 
 
@@ -514,8 +595,8 @@ non-empty subset of B(n-1) and a (possibly empty) subset of P(n-2). To get the n
 that can be produced that way, we need to multiply the cardinalities of these sets. I think so, at 
 least. Verify! To initialize, we have: f(0) = f(1) = 1, F(0) = 1, F(1) = 2.
 
-Ah. It's actually simpler! The above is true though - but it's more easy to consider the recursion
-for the total number of sets at each b-day instead of the number of new born sets. The recursion is:
+Ah! It's actually simpler! The above is true though - but it's more easy to consider the recursion
+for the total number of sets at each B-day instead of the number of newborn sets. The recursion is:
 
    F(n) = 2^F(n-1)
 

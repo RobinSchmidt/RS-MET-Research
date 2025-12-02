@@ -666,6 +666,21 @@ rsOrdinal<Nat> rsOrdinal<Nat>::operator+(const rsOrdinal& b) const
 //   "It is the smallest ordinal that does not have a finite arithmetical expression in terms of w"
 //   
 // 
+// ToDo:
+// 
+// - Implement a class rsCardinal to represent cardinal numbers. It should have a single member
+//   variable of type rsOrdinal because every cardinal has a unique corresponding ordinal that 
+//   characterizes its position. See ABoST, p.156-159. The class of cardinal numbers is well 
+//   ordered. Cardinals can also be framed as being a subset of the ordinals but, I think, this
+//   embedding of the cardinals into the ordinals is not really what we are doing here. Instead,
+//   we define an order ismorphism between the ordinals and the cardinals. Aleph-null would 
+//   correspond to the ordinal 0, etc. But: how would we represent the finite cardinals in this
+//   framework? I mean, we do see things like an aleph with a subscript "alpha" where alpha is
+//   supposed to stand for an ordinal. Maybe the class should not be named rsCardinal but rather
+//   something like rsAlephCardinal or something. We are skipping all the finite cardinals and only
+//   look at the (infinite) aleph-numbers. ...not sure...
+// 
+// 
 // See:
 //
 // https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form

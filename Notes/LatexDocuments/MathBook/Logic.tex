@@ -29,7 +29,7 @@ Logical connectives are symbols that are used to create more complex logical exp
 \end{tabular}
 \medskip
 
-As said, the list is not exhaustive. There are 16 possible different functions $f: \mathbb{B}^2 \rightarrow \mathbb{B}$ and we have listed only the $6$ most commonly used ones of them. We do not need a symbol for all of them because we can construct the missing ones from those in the table. In fact, we don't even need all of the connectives given in the table. A set of connectives from which all possible Boolean functions can be constructed by a suitable formula is called a \emph{functionally complete} set of connectives. For example, the set $\{\neg, \wedge, \vee\}$ is functionally complete. It is actually even overcomplete already and we could make do with  $\{\neg, \wedge\}$ but having the $\vee$ available as well makes it more convenient to write down and read(!) logical formulas. As an extreme example, the singleton set $\{\nand\}$ containing only the nand function is also functionally complete. It's not fun to read or write logical formulas when only the nand operator is permitted - but it is possible to express every possible logical formula solely in terms of nand. This fact has some technological relevance in the realm of chip design.
+As said, the list is not exhaustive. There are 16 possible different functions $f: \mathbb{B}^2 \rightarrow \mathbb{B}$ and we have listed only the $6$ most commonly used ones of them (plus one unary function). We do not need a symbol for all of them because we can construct the missing ones from those in the table. In fact, we don't even need all of the connectives given in the table. A set of connectives from which all possible Boolean functions can be constructed by a suitable formula is called a \emph{functionally complete} set of connectives. For example, the set $\{\neg, \wedge, \vee\}$ is functionally complete. It is actually even overcomplete already and we could make do with  $\{\neg, \wedge\}$ but having the $\vee$ available as well makes it more convenient to write down and read(!) logical formulas. As an extreme example, the singleton set $\{\nand\}$ containing only the nand function is also functionally complete. It's not fun to read or write logical formulas when only the nand operator is permitted - but it is possible to express every possible logical formula solely in terms of nand. This fact has some technological relevance in the realm of chip design.
 
 ...TBC..TODO: give truth tables for all of them, explain relation between $\then$ and $\Rightarrow$ and $\mequiv$ and $\Leftrightarrow$. The double-stroke arrow symbols are used on the meta level whereas the single-stroke arrows are used on the object level or formula level. There are also $\vdash$ and $\vDash$ and also have meanings similar to $\then$ and $\Rightarrow$. Explain the subtle differences. Give other names for the connectives - there are a lot of akas
 
@@ -66,6 +66,14 @@ It turns out that some of the logical connectives obey certain rules of calculat
 % (p + q) * p = p
 % (p * q) + p = p
 % ....see ABoAA pg 9-10
+
+% The similarity of and/or and multiplication/addition is as follows: we can interpret 0 as F and
+% any positive value as T. Multiplying by 0 is the same as "and"ing with F. Adding a positive value
+% to anything results in a positive value. If we don't want to deal with values > 1 and want a 
+% unique representation of T, we can do our binary calculuations mod 2. Note that the mod operation
+% must then be done after each addition/or-operation. We canot just chain any number of additions 
+% and the do a single mod because then all the even sums would map to F but they they should map
+% to T as well.
 
 
 
@@ -325,6 +333,10 @@ In 2nd order logic, we can additionally quantify over predicates. For example, w
 % https://en.wikipedia.org/wiki/Modal_logic
 
 \subsection{Temporal Logic}
+
+% ToDo:
+% -Give truth tables for not, and, or for the 3 possible values True, False, Unknown
+
 % https://en.wikipedia.org/wiki/Temporal_logic
 
 \subsection{Three Valued Logic}
@@ -336,6 +348,10 @@ In 2nd order logic, we can additionally quantify over predicates. For example, w
 
 %\subsection{Probability Logic}
 
+
+%\subsection{Combinatory Logic}
+
+% https://en.wikipedia.org/wiki/Combinatory_logic
 
 \begin{comment}
 
@@ -363,12 +379,18 @@ https://en.wikipedia.org/wiki/Logical_consequence
 
 https://en.wikipedia.org/wiki/Modal_logic
 
+https://en.wikipedia.org/wiki/Combinatory_logic
+
 A hypothesis about the psychology of  following a proof and being convinced. I observed that on myself. With every step along the proof where some theorem is being applied, I feel a sense of uncertainty: Does the theorem really apply here? Is it really applied correctly? are all the edge cases covered? So - if one does that n times along the proof and at every step, you are only 90% sure, then at the end you'll only be (0.9)^n * 100 % certain, that everything being correct - and that might be a small number, if n is big, i.e. there are many steps. Of course, in an ideal world, you are 100% sure at every step....tbc...
 
 So, the bottom line is: a long proof (high n) with very complicated steps (steps with low confidence) often may leave you with a feeling of being unilluminated. Proofs are important for theory - but not so much from pedagogical point of view.
 
 How to unify logic & arithmetic
 https://www.youtube.com/watch?v=niqqm1DRTkE
+
+The soundness and completeness of logic
+https://www.youtube.com/watch?v=IjqaEdoOuBc
+
 
 Set Theory Part 1: Logic
 https://www.youtube.com/watch?v=kOm15NAOZIM

@@ -142,8 +142,8 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 \subsection{Systems of Axioms}
 Set theoretic systems of axioms are like the atomic building blocks that we can use for the construction of arbitrary sets. An axiom may either directly state that some kind of set exists or it may tell us, how we can build new sets from existing sets. The possible construction steps can then be applied recursively to build sets of arbitrary complexity. The initial freedom, chaos and anarchy of the unrestricted comprehension axiom which leads us to all these paradoxa will be gone. We will only have some well defined ways to build sets.
 
-\subsubsection{Zermelo, Fraenkel}
-The most common system of axioms that mathematicians use today is the one proposed by Zermelo and Fraenkel and it is abbreviated by ZF. It is usually augmented with the axiom of choice in which case it is abbreviated as ZFC. There are multiple equivalent ways to choose the set of axioms for ZF and some of them may be redundant in the sense that they contain axioms that are not strictly necessary, i.e. could be proved as theorems from some of the other axioms. If redundant axioms are present, then their purpose make the system more intuitive and convenient [VERIFY!].
+\subsubsection{Axioms of Zermelo and Fraenkel (ZF)}
+The most common system of axioms that mathematicians use today is the one proposed by Zermelo and Fraenkel and it is abbreviated by ZF. It is usually augmented with the axiom of choice in which case the whole axiomatic system is abbreviated as ZFC. There are multiple equivalent ways to choose the set of axioms for ZF and some of them may be redundant in the sense that they contain axioms that are not strictly necessary, i.e. could be proved as theorems from some of the other axioms. If redundant axioms are present, then their purpose make the system more intuitive and convenient [VERIFY!].
 
 %...TBC...
 
@@ -159,7 +159,16 @@ The most common system of axioms that mathematicians use today is the one propos
 % Set Theory Part 2: The axioms of ZFC
 % https://www.youtube.com/watch?v=m-Lv1Tf8D04&list=PLzr1oJDUNa9JInlHHH3xVH29Ovzw8YoM2&index=3
 
-\paragraph{Axiom of Empty Set}
+% ToDo: Maybe order them differently - in roughly descending order of obviousness:
+% 1: empty set, 2: extensionality, 3: pairing, 4: union, 5: power set, 6: specification/subset, 
+% 7: replacement, 8: regularity, 9: infinity
+% I think, 2 (extensionality) is not really an axiom but rather a definition. We _define_ two sets 
+% to be equal, if they have the same elements. i.e. sets a and B are equal if and only if every a in
+% A is also an element of B and every b in B is also an element of A. That's the _definition_ of 
+% what we mean when we say that two sets are equal.
+
+
+\paragraph{A1: Axiom of Empty Set}
 This axiom states that there is an empty set. We can write it formally as:
 \begin{equation}
 \exists x \forall y: \neg (y \in x)
@@ -171,7 +180,7 @@ This is actually one of the redundant axioms and not explicitly listed in the En
 % https://en.wikipedia.org/wiki/Axiom_of_empty_set
 % I think the way of deriving the axiom of the empty set from the axiom of specification is to just use an unsatisfiable formula or just use the formula that x is not in A - then we woul have the set of all things that are in A and are not in A which is, of course, the empty set
 
-\paragraph{Axiom of Extensionality}
+\paragraph{A2: Axiom of Extensionality}
 This axiom states that two sets are equal iff they contain the same elements. Formally, this means that
 \begin{equation}
 \forall x \forall y \forall w: 
@@ -183,7 +192,7 @@ From the axiom, it follows that the order of the elements in a set doesn't matte
 
 % https://en.wikipedia.org/wiki/Axiom_of_extensionality
 
-\paragraph{Axiom of Pairing}
+\paragraph{A3: Axiom of Pairing}
 This axiom states that whenever we have two sets $x$ and $y$, then there is a set $z$ whose elements are precisely $x$ and $y$. This set is given by $z = \{x, y\}$ and called the \emph{pair} of $x$ and $y$. We can write it formally as:
 \begin{equation}
 \forall x \forall y \exists z \forall w: (w \in z) \Leftrightarrow (w = x \vee w = y)
@@ -196,7 +205,7 @@ The pair is unique by virtue of the axiom of extensionality. The axiom of pairin
 
 % https://en.wikipedia.org/wiki/Axiom_of_pairing
 
-\paragraph{Axiom of Union}
+\paragraph{A4: Axiom of Union}
 The axiom states that for each set $x$ there is a set $y$ whose elements are precisely the elements of the elements of $x$. Formally, it can be written down as:
 \begin{equation}
 \forall x \exists y \forall w:
@@ -209,7 +218,7 @@ Here, $x$ plays the role of the input set over whose elements we want to form th
 % https://math-garden.com/unit/nst-unions/
 % https://en.wikipedia.org/wiki/Axiom_of_union#Relation_to_Intersection
 
-\paragraph{Axiom of Regularity}
+\paragraph{A5: Axiom of Regularity}
 This axiom states that every non-empty set $x$ contains an element that is disjoint from $x$. It is also known as the \emph{axiom of foundation}. ...TBC...
 
 % The axiom of regularity together with the axiom of pairing implies that no set is an element of itself, and that there is no infinite sequence (an) such that ai+1 is an element of ai for all i. 
@@ -232,7 +241,7 @@ This axiom states that every non-empty set $x$ contains an element that is disjo
 % -it is not needed to avoid contradictions
 % 
 
-\paragraph{Axiom of Power Set}
+\paragraph{A6: Axiom of Power Set}
 This axiom asserts that we can construct the set of all subsets of a given set $x$. If we denote this set of all subsets of $x$ as $y$, we can write the axiom as:
 \begin{equation}
 \forall x \exists y \forall w: (w \in y \Leftrightarrow w \subseteq x)
@@ -242,7 +251,7 @@ where we used the abbreviation $w \subseteq x$ for the formula $\forall u: (u \i
 % https://en.wikipedia.org/wiki/Axiom_of_power_set
 
 
-\paragraph{Axiom of Infinity}
+\paragraph{A7: Axiom of Infinity}
 The axiom of infinity asserts that there exists a set $I$ such that: (1) $I$ contains the empty set: $\emptyset \in I$ and (2) for every element $x \in I$, there exists another element $y \in I$ that is equal to $y = x \cup \{ x\}$. This so defined set $y$ is called the \emph{successor} of $x$. This axiom is formally expressed as:
 \begin{equation}
 \exists I: ( \emptyset\in I \wedge \forall x: (x \in I \Rightarrow (x \cup \{x\}) \in I ))
@@ -258,7 +267,7 @@ Now this axiom may appear a little strange. While for the others, most readers w
 % https://en.wikipedia.org/wiki/Finitism
 % https://en.wikipedia.org/wiki/Primitive_recursive_arithmetic
 
-\paragraph{Axiom Schema of Specification}
+\paragraph{A8: Axiom Schema of Specification}
 This axiom says that for any given predicate $\varphi(x)$ and any given set $A$, we can create the subset $S$ of $A$ that contains only those elements from $A$ which satisfy the predicate $\varphi$. This axiom lets us filter out elements from a given set $A$ by means of a formula of predicate logic. It's called an \emph{axiom schema} because it formally represents an infinite number of axioms - one for each imaginable formula $\varphi$. It can be formally stated as:
 \begin{equation}
 \forall A \exists S \forall x: (x \in S \Leftrightarrow (x \in A \wedge \varphi(x)) )
@@ -278,11 +287,12 @@ The formula $\varphi$ specifies which elements we should pick from $A$. The axio
 
 % the predicate can only depend on the object itself, not on what other objects are present in the set. it's context independent. An example for a context dependent predicate for a set of numbers could be "larger than the average" - such things are not possible. But it could perpahse depend on a fixed other set like: x from A belongs to B if its (not) in C - that would form the intersection of A and C
 
-\paragraph{Axiom Schema of Replacement} The axiom schema of replacement says that the image of a set under any definable mapping is again a set. [...TBC...explain what "mapping" means in this context. It's a formal term. The formal statement of this axiom is complicated]
+\paragraph{A9: Axiom Schema of Replacement} The axiom schema of replacement says that the image of a set under any definable mapping is again a set. [...TBC...explain what "mapping" means in this context. It's a formal term. The formal statement of this axiom is complicated]
 
 % https://en.wikipedia.org/wiki/Axiom_schema_of_replacement
 % https://en.wikipedia.org/wiki/Functional_predicate
 
+% Maybe make that a paragraph A10: Axiom of Choice and rename the subsubsection: ZFC: Zermelo, Fraenkel, Choice
 \subsubsection{The Axiom of Choice}
 The Zermelo-Fraenkel (ZF) axioms listed so far are the backbone of modern set theory. There is one axiom that is often used together with the ZF axioms - the axiom of choice. When we add it to the ZF axioms, we call the resulting axiom system ZFC. The axiom of choice states that for every set of nonempty sets $x = \{ x_1, x_2, x_3, \ldots \}$, we can define a family of choice functions $f_i$ such that each $f_i$ picks an element from each of the sets $x_i$ and we can pour all these chosen elements into a new set. This sounds like a quite unremarkable observation. Probably many more people will nod along with this one rather than with the axiom of infinity. Nevertheless, it's the choice axiom that has a rather special status...TBC...
 
@@ -335,8 +345,9 @@ The Zermelo-Fraenkel (ZF) axioms listed so far are the backbone of modern set th
 % https://de.wikipedia.org/wiki/Neumann-Bernays-G%C3%B6del-Mengenlehre
 % https://en.wikipedia.org/wiki/Kripke%E2%80%93Platek_set_theory_with_urelements
 
-\subsubsection{Higher Level Construction Steps}
-The axioms give us some ways to create new sets from already existing sets by way of just postulating that these are valid ways to create new sets. Using just these construction steps as primitive operations, we can combine them in certain ways to give use some important higher level construction steps. The most important ones of these are the following: It was already mentioned that the axiom of pairing allows us also to construct singleton sets as a special case. The ability to create singletons, i.e. to wrap a given set into another pair of curly braces, will become important in the definition of natural numbers where will need it, together with the axiom of union, to define the successor function. In an earlier chapter (see page \pageref{Sec:KuratowskiPair}), we have also seen that this pairing allows us to construct sets that we can interpret as \emph{ordered pairs} or 2-tuples. Such 2-tuples are the basis to construct the set product $A \times B$ of two sets $A$ and $B$. This product is just defined as the set of all possible ordered pairs $(a,b)$ where $a \in A$ and $b \in B$. Starting form this set product, we can invoke the axiom of specification to filter out pairs that satisfy a particular condition that is of interest to us. When we do this, we create a subset of $A \times B$ which defines a \emph{relation} between $A$ and $B$. Some particular relations are of special interest. One of those are \emph{functions}. With the ability to construct functions, we can also construct the set of all possible functions from a set $A$ to a set $B$ which we denote by $B^A$. Another important type of relations are \emph{order} relations which, together with tuple-formation, allow us to construct ordered sets\footnote{An ordered set is modeled as tuple $(A,<)$ with a set $A$ and a $<$ relation defined on it.}. Yet another important type of relations are \emph{equivalence} relations which, in turn, allow us to construct \emph{equivalence classes} and \emph{quotient sets} where the latter is the set of all equivalence classes. This construction step will be important in constructing the integers from the naturals and the rationals from the integers. The set product (i.e. tuple formation) together with forming a union can be used to construct the so called \emph{disjoint union} which will be important in the definition of ordinal sums. As we can see, from these few axiomatically postulated primitive construction steps, we can create quite an arsenal of higher level construction steps which we can use to build all sorts of mathematical objects.
+\subsubsection{Macro Construction Steps}
+%\subsubsection{Higher Level Construction Steps}
+The axioms give us some ways to create new sets from already existing sets by way of just postulating that these are valid ways to create new sets. Using just these construction steps as primitive operations, we can combine them in certain ways to assemble them into some important higher level construction steps to create sets with a certain structure. We assemble the micro-steps that are postulated as valid via the axioms into some sort of macro-steps, so to speak. The most important specimen of these macro steps are the following: It was already mentioned that the axiom of pairing allows us also to construct singleton sets as a special case. The ability to create singletons, i.e. to wrap a given set into another pair of curly braces, will become important in the definition of natural numbers where will need it, together with the axiom of union, to define the successor function. In an earlier chapter (see page \pageref{Sec:KuratowskiPair}), we have also seen that this pairing allows us to construct sets that we can interpret as \emph{ordered pairs} or 2-tuples. Such 2-tuples are the basis to construct the set product $A \times B$ of two sets $A$ and $B$. This product is just defined as the set of all possible ordered pairs $(a,b)$ where $a \in A$ and $b \in B$. Starting form this set product, we can invoke the axiom of specification to filter out pairs that satisfy a particular condition that is of interest to us. When we do this, we create a subset of $A \times B$ which defines a \emph{relation} between $A$ and $B$. Some particular relations are of special interest. One of those are \emph{functions}. With the ability to construct functions, we can also construct the set of all possible functions from a set $A$ to a set $B$ which we denote by $B^A$. Another important type of relations are \emph{order} relations which, together with tuple-formation, allow us to construct ordered sets\footnote{An ordered set is modeled as tuple $(A,<)$ with a set $A$ and a $<$ relation defined on it.}. Yet another important type of relations are \emph{equivalence} relations which, in turn, allow us to construct \emph{equivalence classes} and \emph{quotient sets} where the latter is the set of all equivalence classes. This construction step will be important in constructing the integers from the naturals and the rationals from the integers. The set product (i.e. tuple formation) together with forming a union can be used to construct the so called \emph{disjoint union} which will be important in the definition of ordinal sums. As we can see, from these few axiomatically postulated primitive construction steps, we can create quite an arsenal of higher level construction steps which we can use to build various sorts of sets that have a particular inner structure which makes them well suited to represent all kinds of mathematical objects that are of interest to us: numbers, tuples, functions, shapes, spaces, etc. - all the good stuff that we normally associate with math on an applied level.
 
 % By iterating the product, we can create arbitrary $n$-tuples
 % Using our mechanism to form equivalence classes, we can abstract away unimportant strutural 
@@ -603,8 +614,15 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 \medskip
 In an informal sense, we can say that bijections partition the class of all sets into equivalence classes which can be interpreted as being "size types". Whenever two sets can be bijectively mapped onto each other, they belong into the same equivalence class. These equivalence classes are characterized by their \emph{cardinal number} or cardinality, i.e. size type. Order isomorphisms partition these rather broad equivalence classes further into different order types. They capture a finer structure on the class of all sets. Sets can have the same size type but different order types\footnote{I think, it would be linguistically much nicer if one would either consistently talk either about "size types" and "order types" or about "cardinalities" and "ordinalities" - however, the latter term is not a thing and size type is rarely used either. So we are stuck with the terms "cardinality" and "order type" which does not really convey the analogy between the two concepts. VERIFY! ABoST actually uses the term "ordinality"} - but not the other way around. Formally, talking about equivalence and order "relations" is not quite right because the underlying collections are not necessarily sets but classes - but informally, it's a good intuition to think about cardinalities as classifying sets according to their size type and orders as classifying sets according to their order type - where the latter classification is a refinement of the former. VERIFY
 
+% ToDo: explain:  preorder, partial order, total order, well order, strict vs non-strict
+
+% https://en.wikipedia.org/wiki/Order_theory
+% https://en.wikipedia.org/wiki/Preorder
+% https://en.wikipedia.org/wiki/Partially_ordered_set
+
+
 % cardinality = size type
-% ordinallity = order type
+% ordinallity = order type (but applies only to well orders)
 % ordinal numbers are more complicated than cardinal numbers - that's why it's appropriate to introduce cardinals first. Introducing ordinals first would be a bit like introducing the rationals before the naturals
 
 % https://mathworld.wolfram.com/OrderType.html

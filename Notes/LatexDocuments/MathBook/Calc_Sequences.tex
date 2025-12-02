@@ -140,6 +140,24 @@ We already informally used statements like "converges faster". Now we'll make mo
 \subsubsection{Cauchy Sequences and Real Numbers}
 A concept related to convergence is that of Cauchy sequences. When saying that a sequence of numbers converges to some limit, there is usually an implicit assumption that the limit is also an element of the same set of numbers as the individual sequence elements. But that isn't always the case. Consider the following recursive definition of a sequence: $a_0 = 2, a_{n+1} = (a_n^2 + 2) / (2 a_n)$ for $n > 0$. It converges to the irrational number $\sqrt{2}$ but every element of the sequence is a rational number. We may therefore consider it as a sequence of rational numbers - but one that doesn't converge \emph{within} the rational numbers. To express the limit, we need to extend our number system to include $\sqrt{2}$. We could form the set $\mathbb{Q} \cup \sqrt{2}$ and say that our sequence converges within that set. However, we are of course interested in a more general extension - one that works for every imaginable sequence and not just that particular one. That's how we arrive at the set of real numbers $\mathbb{R}$. ...TBC...
 
+% ToDo: Explain that the definition of convergence of a sequence a_n to a limit a requires us to 
+% know the number a beforehand in order to apply the definition. What if we do not have any idea
+% what the limit a could possibly be? The answer is to look at tail segments of the sequence. If the
+% terms of the sequence get and then remain(!) arbitrarily close to each other, the further we go 
+% out, then the sequence is considered to be convergent. This idea is formally captured in the 
+% definition of a Cauchy sequence: ...
+
+% Point out that it is not enough for the neighboring terms to get arbitrarily close - nor is it 
+% enough that the terms within finite segments remain close. All terms in the tail end must remain
+% close to one another. Take as example the sequence a_n = \sin(\pi \sqrt{n}). It's a sinusoid with
+% ever decreasing frequency. Immediate neighbors as well as finite stretches tend to approach a
+% constant because the frequency approaches zero. Nevertheless, the sequence does not converge to
+% anything. The tail end will always eventually break out from any epsilon-hose (is that a term? In
+% German, Epsilon-Schlauch indeed is one)
+
+% https://www.desmos.com/calculator/2zwrtsuo1u
+
+
 % No - that's not what "adjoin" means - adjoining sqrt froms the set a + b sqrt(2) for a,b, in Q
 
 %https://www.youtube.com/watch?v=E-Tquvais4w

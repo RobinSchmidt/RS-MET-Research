@@ -180,7 +180,7 @@ elements that came from A come before the elements that came from B. We can dete
 second component, so what we do here is antilexicographical ordering, I think. Let's denote A x 0 as
 A_0 and B x 1 as B_1 and A_0 = { a1, a2, a3,  }_0, B_1 = { b1, b2, b3,  }_1 and let's denote 
 C = { c1_0, c2_0, c3_0, ..., c1_1, c2_1, c2_1, ... }. We use the tags/subscripts 0,1 to indicate, 
-if the element came from the left or right operand of the union, i.e. wheteher it was crossed with 0 
+if the element came from the left or right operand of the union, i.e. whether it was crossed with 0 
 or with 1. An alternative notation could be to use A and B as subscripts. The notation could be 
 generalized to D = A \squarecup B \squarecup C = A x 0 \cup B x 1 \cup C x 2 with 
 D = { d1_0,d2_0,..., d1_1,d2_1,..., d1_2,d2_2,...}
@@ -190,17 +190,9 @@ D = { d1_0,d2_0,..., d1_1,d2_1,..., d1_2,d2_2,...}
   
 - w + 1 != w. { 0,1,2,3,... }_0 + { 0 }_1 = {  0_1, 1_1, 2_1, 3_1, ...,  0_0 }
   As can be seen, the ordinal sum has a last element in this case, so it can't be isomorphic to w.
-  
-ToDo: 
-
-- Show that w + 1 + w = (w+1) + w = w + (w+1) = w + w =: w*2. Give the required order isomorphism 
-  between the formal results of evaluating  (w+1) + w  and  w + (w+1)  and  w+w.
-  
-  w+1 = { 0_0, 1_0, 2_0, 3_,...,  0_1 }
-  1+w = ....
 
 Or maybe let's not use the underscore/subscript notation and instead write the tuples out in full.
-We have:
+As basic ingredients to form the more complicated sums, we need:
 
 0     = { }
 1     = { 0 }
@@ -222,7 +214,11 @@ ord is the function that realizes the bijective map between the set A to the uni
 that is isomorphic to it. Let the normal + symbol denote the ordinal number addition and (+) denote
 the ordinal addition operation that is defined between any pairs of posets. In ABoST, it's a plus 
 with a circle around it (p. 171). The ord() function is denoted by a circle with a backslash in it.
-Let's compute a couple of simple sums of ordinals:
+Let's compute a couple of simple sums of ordinals. The required order isomorphism is always 
+indicated by the transition from the last line that contains the ord(..) function to the first line 
+that doesn't contain it (i.e. where it has been applied/evaluated). The elements in the two lines 
+that are mapped to one another by the isomorphism (i.e. the ord function) are written vertically 
+aligned:
 
 Eq. A1:  ("A" for "Add") 
 1 + w = ord(     1    (+)          w      )
@@ -245,7 +241,7 @@ w + w = ord(       w         (+)        w        )
 	  = ord( { (0,0),(1,0),(2,0),(3,0), ..., (0,1),(1,1),(2,1),(3,1), ... } )
       =      {   0,    1  ,  2  ,  3  , ...,   w  , w+1 , w+2 , w+3 , ... } )
 	  = w+w 
-	  = w*2             by Eq. M2     (below)
+	  = w*2             by Eq. M2     (below in the multiplication section)
 	  = w2              by definition (shorthand notation)
 	  > w
 
@@ -307,7 +303,7 @@ w^A3 * a3, we have this expression left:
 
   A + B = w^A1 * a1  +  (w^A2 * a2  +  w^B1 * b1)  +  w^B2 * b2  +  w^B3 * b3 
 
-where I already placed parenthese to indicate what we want to consider next.
+where I already placed parentheses to indicate what we want to consider next.
 
 So the algorithm should proceed as follows:
 
@@ -318,7 +314,7 @@ until we either encounter a situation where R has magnitude greater or equal to 
 strictly greater, we can now just stop and be done - there is nothing left to absorb/simplify. If it
 is equal, we have to combine (i.e. add) the coeff of R with b1 and then stop and are done.
 
-Let's now look at a couple of basic exmples of ordinal multiplication (see ABoST p.172):
+Let's now look at a couple of basic examples of ordinal multiplication (see ABoST p.172):
 
 Non-Commutativity:
 
@@ -338,7 +334,7 @@ w * 2 = ord(       w         (*)     2    )
       = w + w	        by Eq. A3. So: w*2 is _not_ the same as 2*w but it _is_ the same as w+w.
 
 Eq. M3:
-w * w = ord(    w     (*)          w      )
+w * w = ord(         w        (*)          w       )
       = ord( { 0,1,2,3,... }  (*)  { 0,1,2,3,... } )
 	  = ord( { (0,0),(1,0),(2,0),(3,0), ...,
 	           (0,1),(1,1),(2,1),(3,1), ...,
@@ -384,8 +380,23 @@ Right-Nondistributivity:
 
 
 
+To evaluate/simplify a sum of two ordinal numbers, we used the associative law to evaluate it from 
+the inside out. I think, to evaluate a product of two ordinal numbers, we can use the rule of 
+left-distributivity together with a rule how to evaluate products where the left operand is in 
+normal form and the right operand is a single term. We then possibly also need the associativity 
+rule for addition. For exmple, let again N = M = 3 such that
+ 
+  A * B = (w^A1 * a1  +  w^A2 * a2  +  w^A3 * a3)  *  (w^B1 * b1  +  w^B2 * b2  +  w^B3 * b3) 
+  
+By left-distributivity, we can turn this into:
 
+  A * B =    (w^A1 * a1  +  w^A2 * a2  +  w^A3 * a3)  *  (w^B1 * b1)   
+           + (w^A1 * a1  +  w^A2 * a2  +  w^A3 * a3)  *  (w^B2 * b2)     
+           + (w^A1 * a1  +  w^A2 * a2  +  w^A3 * a3)  *  (w^B3 * b3)   
 
+Now we either need a rule to evaluate the product of a normal form with a single term in order to 
+simplify each line. Is there such a rule? Or maybe we can simplify each line by some sort of pseudo
+right-distributivity law that I mention below (of which I'm not sure, if it's correct).
 
 
 
@@ -466,11 +477,15 @@ p.197 - Normal Form:
 A = w^A1 * a1  +  w^A2 * a2  +  w^A3 * a3  +  ...  +  w^AN * aN
 
 p.199 - Arithmetic Rules for Normal Forms:
-If A < B then: w^A * a + w^B * b = w^B * b  Absorption rule (my word).
-If A = w^A1 * a1  +  w^A2 * a2  +  ...  +  w^AN * aN is the normal form of A and B != 0 then 
-A * w^B = w^(A1 + B). If b is finite, then A*b = w^A1 * a1 * b  +  w^A2 * a2  +  ...  +  w^AN * aN.
-So, right-multiplying an ordinal by a finite number affects only the highest order (i.e. leftmost) 
-term.
+Let  A = w^A1 * a1  +  w^A2 * a2  +  ...  +  w^AN * aN  
+and  B = w^B1 * b1  +  w^B2 * b2  +  ...  +  w^BM * bM
+be two ordinal numbers given in Cantor normal form. Then:
+
+(1) If A  < B  then:  w^A * a + w^B * b = w^B * b   "Additive absorption rule"? (my word).
+(2) If B != 0  then:  A * w^B = w^(A1 + B).   "Multiplicative absorption rule"?
+(3) If b is a finite ordinal and A is as above, then:  
+    A*b = w^A1 * a1 * b  +  w^A2 * a2  +  ...  +  w^AN * aN.  So, right-multiplying an ordinal by a 
+	finite number affects only the highest order (i.e. leftmost) term.
 
 
 

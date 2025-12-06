@@ -206,6 +206,10 @@ The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element
 % -ToDo: explain, how associativity can be leveraged to optimize computations of products of
 %  multiple matrix factors. For example, computing (A*B)*C would be less efficient than computing
 %  A*(B*C) when A,B are full blown MxM matrices and C is just a M-vector, i.e. a Mx1 matrix.
+% -To see that matrix multilication is not commutative, observe that the entries of the result are
+%  formed by taking scalar products of the _rows_ of the left operand with the _columns_ of the
+%  right operand. If you swap the operands, you would be taking very different scalar products and
+%  there's really no reason to assume that they would give the same results.
 
 
 %---------------------------------------------------------------------------------------------------

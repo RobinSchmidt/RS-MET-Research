@@ -98,7 +98,7 @@ That would mean to sum over all primes less than or equal to $n$. If the index r
 \paragraph{$\star$ Iterated Binary Operations}
 The sum and product notation are the most common examples for an idea in math known as \emph{iterated binary operations}. The general idea is to take a binary operation and turn it into an operation that can take any number of arguments. Other examples include the set theoretical intersections and unions of arbitrary many sets. ...TBC...ToDo: explain requirements on the binary operation (I think, it needs to be associative and commutative), give more examples, give the notations, explain relations to fold aka reduce in functional programming
 
-% If it's associative, it doesn't make a difference if we left-fold or right-fold (aka reduce). If it's also commutative, we can reorder the arguments in any way we like. If the operation has a neutral element, we can define the empty iterated operation to be that element (an iteration over just one element is always that element itself). We may even be abel to define countably infinite numbers of iterations if a suitable idea of convergence is available.
+% If it's associative, it doesn't make a difference if we left-fold or right-fold (aka reduce). If it's also commutative, we can reorder the arguments in any way we like. If the operation has a neutral element, we can define the empty iterated operation to be that element (an iteration over just one element is always that element itself). We may even be able to define countably infinite numbers of iterations if a suitable idea of convergence is available.
 
 % https://en.wikipedia.org/wiki/Fold_(higher-order_function)
 
@@ -108,9 +108,23 @@ The sum and product notation are the most common examples for an idea in math kn
 %   tensor products, direct sums of vector spaces, etc.
 % - I think, the binary operator needs to be associative and maybe also commutative to arrive at
 %   a unique definition. Otherwise, one may have to introduce conventions about the evaluation
-%   order.
-% - In this discussion, some profesor seems to be using a curved arrow to indicate a chaining
+%   order (like left-to-right or right-to-left).
+% - In this discussion, some professor seems to be using a curved arrow to indicate a chaining
 %   order:  https://math.stackexchange.com/questions/1391874/matrix-product-notation
+
+% Is it generally true that the (left) distributive law a * (b + c) = a*b + a*b implies
+% a * (b + c + d + ...) = a*b + a*c + a*d + ...? If so, how can that be proven or at least be
+% understood? I tend to assume that to be true but on closer look, I'm not so sure anymore why that
+% would be justified. Similarly, does the associative law a + (b + c) = (a + b) + c imply that for
+% a chain of arbitrary many operations, we can apply them in any order, i.e. place the parentheses
+% in any way? What about commutativity? Does a + b = b + a mean that in an arbitrary sum, we can 
+% permute the operands in any way? Or maybe that holds only when associativity also holds? Are there
+% actually any operations that are commutative but non-associative? Is such a thing even possible?
+% Maybe exponentiation? We have a^(b^c) != (a^b)^c but, I think, we have 
+% a^(b^c) = a^(b*c) = (a^c)^b, so maybe we should call it "right-commutative"? The complication is
+% that commutativity only involves 2 operands whereas associativity involves 3. Maybe that's why we
+% typically learn commutativity first? It's simpler - even though associativity is even more
+% important (i.e. more common and without it, a lot more of our nice algebraic rules break down).
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Factorials and Binomial Coefficients}

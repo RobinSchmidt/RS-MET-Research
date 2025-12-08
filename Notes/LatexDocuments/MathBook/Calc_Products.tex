@@ -227,7 +227,7 @@ then $p(x)$ and $q(x)$ will have the same roots as $f(x)$. If we first form the 
  p(x) = \prod_{r \in R} (x - r)  \qquad \text{or} \qquad
  q(x) = \prod_{r \in R} (1 - \frac{x}{r})
 \end{equation}
-which may be even more convenient in some situations. Of course, if the product is infinite, we may have to worry about convergence and even if it is finite, it is not clear whether or not the product will match the function anywhere else. If the function $f(x)$ happens to be a polynomial, though, we can actually confidently say that when we include all of the roots of $f(x)$ into our product function $p(x)$, then $p(x)$ must actually indeed be equal to $f(x)$ up to a constant scale factor. The same is true for $q(x)$ but with a different scale factor [VERIFY!]. If we now remember that a power series expansion of a function can be regarded as a sort of "infinite polynomial", we may plausibly hope that we can express our function $f(x)$ with such an infinite product. In practice, the form of $q(x)$ tends to be easier to deal with. First, it has the desirable form of products where the factors are of the form $(1 + \ldots)$. I think, it also tends to be less prone to divergence away from the roots (VERIFY!). To turn one form into the other, one just needs to multiply a linear factor of the form $(x - r_k)$ with an appropriate constant, namely $-1 / r_k$. That could be problematic if one of the $r_k$ is zero, though. But that is a problem that can easily be solved by pulling these factors out of the product. ...TBC...
+which may be even more convenient in some situations. Of course, if the product is infinite, we may have to worry about convergence and even if it is finite, it is not clear whether or not the product will match the function anywhere else. If the function $f(x)$ happens to be a polynomial, though, we can actually confidently say that when we include all of the roots of $f(x)$ into our product function $p(x)$, then $p(x)$ must actually indeed be equal to $f(x)$ up to a constant scale factor. The same is true for $q(x)$ but with a different scale factor [VERIFY!]. If we now remember that a power series expansion of a function can be regarded as a sort of "infinite polynomial", we may plausibly hope that we can express our function $f(x)$ with such an infinite product. In practice, the form of $q(x)$ tends to be easier to deal with. First, it has the desirable form of products where the factors are of the form $(1 + h_k)$. I think, it also tends to be less prone to divergence away from the roots (VERIFY!). To turn one form into the other, one just needs to multiply a linear factor of the form $(x - r_k)$ with an appropriate constant, namely $-1 / r_k$. That could be problematic if one of the $r_k$ is zero, though. But that is a problem that can easily be solved by pulling these factors out of the product. ...TBC...
 
 % To tame the polynomial, we may want to multiply each factor of the form (x - r_k) by some number c
 %  that turns the factor into the form (1 - x/r_k)
@@ -262,7 +262,14 @@ A nice infinite product representation of the sine function was found by Euler a
                  \left(1 - \frac{x}{3 \pi}  \right)
           \ldots
 \end{equation}
-He "factored out" all the infinitely many roots of the sine function that occur at all the integer multiples of $\pi$. Each positive integer $k$ gives one factor of $(1 + \frac{x}{k \pi})$ and one of $(1 - \frac{x}{k \pi})$. These pairs of factors can be combined into a single $(1 - \frac{x^2}{k^2 \pi^2})$ factor. The $k=0$ case is treated separately to avoid division by zero. That's the single $x$ in the middle. Having found this product representation for the sine function had a couple of interesting spin off results.
+He "factored out" all the infinitely many roots of the sine function that occur at all the integer multiples of $\pi$. Each positive integer $k$ gives one factor of $(1 + \frac{x}{k \pi})$ and one of $(1 - \frac{x}{k \pi})$. These pairs of factors can be combined into a single $(1 - \frac{x^2}{k^2 \pi^2})$ factor. The $k=0$ case is treated separately to avoid division by zero. That's the single $x$ in the middle of the right hand side expression and the single $x$ in front of the product sign of the mid hand side\footnote{Who would not want to have an additional mid hand?} expression. Having found this product representation for the sine function had a couple of interesting spin off results.
+
+% Maybe mention that the single x factor could also be brought over to the left hand side such that
+% sin(x) / x = \prod ... Doing so would directly define a product representation of the sinc 
+% function which might be useful for evaluating a polynomial approximation of sinc. I think, I did
+% some numerical experiments with this idea somewhere.
+
+% % https://de.wikipedia.org/wiki/Basler_Problem#Eulers_erste_L%C3%B6sung
 
 \paragraph{The Basel Problem}
 Euler discovered this product formula in the course of solving the so called Basel problem. This is the problem of finding the value of the infinite sum $\sum_{k=1}^{\infty} \frac{1}{k^2}$. Euler found the value of this sum to be $\frac{\pi^2}{6}$ and his investigations led also to the definition of the famous Riemann zeta function. ...TBC.. ToDo: explain the connections
@@ -351,8 +358,11 @@ which is known as the \emph{Wallis product} representation of $\pi$. Due to its 
 % https://math.stackexchange.com/questions/502160/exponential-function-as-an-infinite-product
 
 
+
 % Explain connections to the Euler product, Basel problem, Riemann Zeta function
 % https://www.youtube.com/watch?v=u7BadbVwnl4
+
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Weierstrass Factorization Theorem}

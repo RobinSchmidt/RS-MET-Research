@@ -213,11 +213,11 @@ Lets by ord(A) denote the act of mapping the well-ordered set A to its ordinal n
 ord is the function that realizes the bijective map between the set A to the unique ordinal number 
 that is isomorphic to it. Let the normal + symbol denote the ordinal number addition and (+) denote
 the ordinal addition operation that is defined between any pairs of posets. In ABoST, it's a plus 
-with a circle around it (p. 171). The ord() function is denoted by a circle with a backslash in it.
-Let's compute a couple of simple sums of ordinals. The required order isomorphism is always 
+with a circle around it (p. 171). The ord() function is denoted there by a circle with a backslash 
+in it. Let's compute a couple of simple sums of ordinals. The required order isomorphism is always 
 indicated by the transition from the last line that contains the ord(..) function to the first line 
-that doesn't contain it (i.e. where it has been applied/evaluated). The elements in the two lines 
-that are mapped to one another by the isomorphism (i.e. the ord function) are written vertically 
+that doesn't contain it (i.e. where it has been applied/evaluated). The elements in these two lines 
+that are mapped to one another by the isomorphism (i.e. by the ord function) are written vertically 
 aligned:
 
 Eq. A1:  ("A" for "Add") 
@@ -272,10 +272,11 @@ Maybe also consider (w + w) + 1 and w + (w + 1). I guess that we get in both cas
 I think, in general, if we add two ordinals A + B and A has lower magnitude than B, then the result
 will just be B. A gets completely absorbed. (see ABoST, p.201).
 
-From Eq. A6 and Eq. A7 we conclude that  w + (1 + w) = (w + 1) + w. It is generally true that 
-ordinal addition is associative. Let's try to use these observations from above to form an addition 
-algorithm for two general ordinals A and B. We wanto to compute A + B where A,B are given in Cantor
-normal form as follows:
+From Eq A1 and A2 we have 1+w = w and w+1 > 1, so ordinal addition is not commutative. From Eq. A6 
+and Eq. A7 we conclude that  w + (1 + w) = (w + 1) + w. It is generally true that ordinal addition 
+is associative (TODO: insert reference). Let's try to use these observations from above to form an 
+addition algorithm for two general ordinals A and B. We wanto to compute A + B where A,B are given 
+in Cantor normal form as follows:
 
   A = w^A1 * a1  +  w^A2 * a2  +  w^A3 * a3  +  ...  +  w^AN * aN
   B = w^B1 * b1  +  w^B2 * b2  +  w^B3 * b3  +  ...  +  w^BM * bM
@@ -289,17 +290,17 @@ first evaluate the innermost + like so:
 
   A + B = w^A1 * a1  +  w^A2 * a2  +  (w^A3 * a3  +  w^B1 * b1)  +  w^B2 * b2  +  w^B3 * b3 
   
-There are 3 cases that can happen:
+When evaluating the inner parenthesis, there are 3 cases that can happen:
 
   (1) w^A3 * a3  has lower  magnitude than  w^B1 * b1
   (2) w^A3 * a3  has same   magnitude as    w^B1 * b1  
   (3) w^A3 * a3  has higher magnitude than  w^B1 * b1
   
-In case (1), the result of the addition is just w^B1 * b1. In case (2), we have A3 = B1 =: C and the
-result is w^C * (a3 + b1). In case (3), there basically is nothing to simplify. The whole expression
-of the sum just remains as is. In cases (2) and (3), we are actually done with the full addition 
-after this step. Only in case (1), we need to continue. After we have executed the absorption of
-w^A3 * a3, we have this expression left:
+In case (1), the result of the addition is just w^B1 * b1 via the absorption rule. In case (2), we 
+have A3 = B1 =: C and the result is w^C * (a3 + b1). In case (3), there basically is nothing to 
+simplify. The whole expression of the sum just remains as is. In cases (2) and (3), we are actually 
+done with the full addition after this step. Only in case (1), we need to continue. After we have 
+executed the absorption of w^A3 * a3, we have this expression left:
 
   A + B = w^A1 * a1  +  (w^A2 * a2  +  w^B1 * b1)  +  w^B2 * b2  +  w^B3 * b3 
 
@@ -310,7 +311,7 @@ So the algorithm should proceed as follows:
 Concatenate both term arrays. Call R the rightmost (remaining) term in A. Now we start eating up 
 (absorbing) terms that originated from A as follows: As long as w^B1 * b1 has larger magnitude than 
 R, absorb that R term, i.e. delete the current R from the resulting term array. Continue absorbing 
-until we either encounter a situation where R has magnitude greater or equal to w^B1 * b1. If it is 
+until we encounter a situation where R has magnitude greater or equal to w^B1 * b1. If it is 
 strictly greater, we can now just stop and be done - there is nothing left to absorb/simplify. If it
 is equal, we have to combine (i.e. add) the coeff of R with b1 and then stop and are done.
 
@@ -417,8 +418,6 @@ ToDo/Notes:
 - Is there some sort of right pseudo right-distributivity where, when distributing a factor over 
   terms in a sum, we must swap the side from which we multiply? Like 
   (1+1)*w = w*1 + w*1 = w+w = w*2? ...wait - no - I think, that's wrong! Check with ABoST, p.172
-
-- We have 1+w = w and w+1 > 1, so ordinal addition is not commutative
 
 - I think, as soon as we have ordinal multiplication in place, implementating exponentiation is 
   easy. I think, in an exponentiation C = A^B, we just need to multiply the exponent in leftmost 

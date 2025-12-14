@@ -12438,34 +12438,26 @@ void rsTestArithmeticProgressions()
   // Setup:
   int k    =   6;                  // The stepsize parameter
   int nMin =   0;                  // Start value for n.
-  int nMax = 200;                  // End value for n.
+  int nMax = 300;                  // End value for n.
 
   // Helper function to compute L(n,k):
   Vec buf;
   buf.reserve(10);                 // Buffer for numbers found so far in the current progression
-  auto getLength = [&](int n, int k) 
+  auto getLength = [&buf](int n, int k) 
   {
     buf.clear();
-    while(true)
-    {
-      for(size_t i = 0; i < buf.size(); i++)
-      {
+    while(true) {
+      for(size_t i = 0; i < buf.size(); i++) {
         int gcd = rsGcd(n, buf[i]);
-        if(gcd != 1)
-        {
-          return (int) buf.size();
-        }
-      }
+        if(gcd != 1) {
+          return (int) buf.size(); }}
       buf.push_back(n);
-      n += k;
-    }
+      n += k;  }
   };
-  // ToDo: Maybe do the buf.push_back after the for-loop. I think, then we can let i run from 0 to
-  // < buf.size() and use size_t. Then we need to retunrn buf.size() without the +1
-  // 
-  // Or maybe use a while(true) loop and instead of  done=true, break, use return directly
-  // ...done
 
+
+  // Fill arrays N = [nMin,nMin+1,nMin+2,...,nMax] and L = L(n,k) where n is from the N-array and k
+  // is our fixed parameter that is set up above:
   int numVals = nMax-nMin+1;       // Number of values
   Vec N(numVals);                  // Array of n-values
   Vec L(numVals);                  // Array of L(n) values. The function we are interested in.
@@ -12484,9 +12476,10 @@ void rsTestArithmeticProgressions()
   //
   // - With k = 2, we see a very regular pattern of length 6. With k = 3 the pattern length seems
   //   to be 9. With k = 4 the pattern length is again 6. With k = 1 the length is 2 and the 
-  //   maximum value is 3. With k = 7, it first looks that we have a pattern length of 10 but then
+  //   maximum value is 3. With k = 6, it first looks that we have a pattern length of 10 but then
   //   at n = 161, it looks like the pattern breaks (we see a pair of spikes of height 7 at 161 and 
-  //   163 and such a pair did not appear before)
+  //   163 and such a pair did not appear before). Or does it even have a pattern before? I just 
+  //   eyeballed it. Looking closer, I don't really think so anymore.
   //
   //
   // ToDo:

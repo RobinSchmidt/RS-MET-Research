@@ -95,6 +95,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSquarity();
   //testCompositeness();
   //testPrimeDecomposition();        // Decompose primes additively
+  rsTestArithmeticProgressions();    // Figure out lengths of arithemtic progressions
   //testFiniteField();
   //testFieldExtensions();
   //testRingExtensions();

@@ -12421,6 +12421,76 @@ void testCompositeness()
   // - Maybe plot differences i.e. things like f[n] - f[n-1]
 }
 
+void rsTestArithmeticProgressions()
+{
+  // We compute and plot the lengths of incommensurate arithmetic progressions. Consider an 
+  // arithmetic progression of the form n, n+k, n+2*k, n+3*k, ... where n is a given start value 
+  // and k is a given distance between successive terms. We are interested in finding the maximum 
+  // lengths L of stretches of incommensurate numbers as functions of n and k. That means all 
+  // numbers in such a segment must be mutually prime. We treat k as a fixed parameter and plot the
+  // length L as function of n. For example, L(13,2) = 6 because 13,15,17,19,21,23, which are 6 
+  // numbers, are all mutually prime but the next number in the arithmetic progression that starts 
+  // at 13 an has an increment of 2, which would be 25, shares the divisor 5 with 15 and because 15
+  // is also in this progression. ...TBC...
+
+  using Vec = std::vector<int>;
+
+  // Setup:
+  int k    =  2;
+  int nMin = 13;
+  int nMax = 13;
+
+  // Helper function:
+  Vec buf;
+  buf.reserve(10);  // Buffer for numbers found so far in the current progression
+  auto getLength = [&](int n, int k) 
+  {
+    buf.clear();
+    bool done = false;
+    while(!done)
+    { 
+      buf.push_back(n);
+      for(int i = 0; i < buf.size()-1; i++)
+      {
+        // The loop index i runs only up to be less than size()-1, i.e. ignores the very last entry
+        // in the buffer, because the very last entry is n, so we would compute gcd(n,n) which is 
+        // always != 1 (unless n == 1) beause gcd(n,n) == n. We therefore need to ignore the very 
+        // last element in buf.
+        if(rsGcd(n, buf[i]) != 1)
+        {
+          // If we find an element in the buffer that is not mutually prime with our current n, we
+          // can set the "done" flag to true and break out of the inner loop:
+          done = true;
+          break;
+        }
+      }
+      n += k;
+    }
+
+    return (int)buf.size() + 1;
+    //return 0;  // Preliminary
+  };
+  // ToDo: Maybe do the buf.push_back after the for-loop. I think, then we can let i run from 0 to
+  // < buf.size() and use size_t. Then we need to retunrn buf.size() without the +1
+
+  int numVals = nMax-nMin+1;  // Number of values
+  Vec N(numVals);             // Array of n-values
+  Vec L(numVals);
+  for(int i = 0; i < numVals; i++)
+  {
+    int n = nMin + i;
+    N[i]  = n;
+    L[i]  = getLength(n, k);
+  }
+ 
+
+
+
+
+  int dummy = 0;
+}
+
+
 
 // Maybe move to library
 template<class T>

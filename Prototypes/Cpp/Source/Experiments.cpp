@@ -12436,9 +12436,9 @@ void rsTestArithmeticProgressions()
   using Vec = std::vector<int>;
 
   // Setup:
-  int k    =  2;
-  int nMin = 13;
-  int nMax = 23;
+  int k    =   2;
+  int nMin =   0;
+  int nMax = 100;
 
   // Helper function:
   Vec buf;
@@ -12478,9 +12478,7 @@ void rsTestArithmeticProgressions()
   }
  
 
-
-
-
+  rsPlotVectorsXY(N, L);
   int dummy = 0;
 }
 

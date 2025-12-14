@@ -38,6 +38,33 @@ Flowing Water:
 
 
 
+Cymbal sound design:
+-"Exciter Stage": 
+ -Use a filtered impulse as exciter (maybe try filtered enveloped noise, too)
+-"Disperser-Stage":
+ -Set up a comb-filter like feedback delay loop
+ -Within the feedback loop, place various DSP elements:
+  -Allpass filters, (e.g. a chain of PhaseNudge by Airwindows, Video uses 2), Creates dispersion.
+  -Vibrato with lowpass noise as modulator (e.g. MVibrato by Melda). Creates the "wobbly" sound.
+  -Phase-distortion self-phasemod (Kilohearts Phase Distortion). Creates "bloom" and "swell". "It 
+   makes louder sounds brighter".
+  -Maybe for the phase-distortion try: Allpass filter with coeff modulated by (filtered) input, 
+   Delay with delaytime modulated by (filtered) input
+  -My ideas for additional stuff in the gfeedback loop: Waveshaping (maybe bitcrushing), 
+   pitch-shifting, frequency-shifting
+-"Resonator-Bank Stage":
+ -The output of the Disperser goes into the resonator bank which is...
+ -A bunch of parallel comb filters (e.g. 4 instances of MComb by Melda each of which has 4 combs). 
+  These combs can be tuned to desireable frequencies.
+ -Make sure that the undelayed signal (i.e. direct signal from the disperser) doesn't bleed through.
+  The video does this by some phase-cancellation trickery that he calls "dry nulling" but I think, I
+  can set up my comb filters directly to produce only the delayed signal at the output.
+ -The resonators may be individually EQed.
+-See: https://www.youtube.com/watch?v=netcpYINyBQ 
+ especially from 24:00 
+ 
+
+
 
 
 Background resources on sound synthesis:

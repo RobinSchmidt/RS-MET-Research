@@ -12436,13 +12436,13 @@ void rsTestArithmeticProgressions()
   using Vec = std::vector<int>;
 
   // Setup:
-  int k    =   2;
-  int nMin =   0;
-  int nMax = 100;
+  int k    =   4;                  // The stepsize parameter
+  int nMin =   0;                  // Start value for n.
+  int nMax = 200;                  // End value for n.
 
-  // Helper function:
+  // Helper function to compute L(n,k):
   Vec buf;
-  buf.reserve(10);  // Buffer for numbers found so far in the current progression
+  buf.reserve(10);                 // Buffer for numbers found so far in the current progression
   auto getLength = [&](int n, int k) 
   {
     buf.clear();
@@ -12459,17 +12459,16 @@ void rsTestArithmeticProgressions()
       buf.push_back(n);
       n += k;
     }
-
-
   };
   // ToDo: Maybe do the buf.push_back after the for-loop. I think, then we can let i run from 0 to
   // < buf.size() and use size_t. Then we need to retunrn buf.size() without the +1
   // 
   // Or maybe use a while(true) loop and instead of  done=true, break, use return directly
+  // ...done
 
-  int numVals = nMax-nMin+1;  // Number of values
-  Vec N(numVals);             // Array of n-values
-  Vec L(numVals);
+  int numVals = nMax-nMin+1;       // Number of values
+  Vec N(numVals);                  // Array of n-values
+  Vec L(numVals);                  // Array of L(n) values. The function we are interested in.
   for(int i = 0; i < numVals; i++)
   {
     int n = nMin + i;
@@ -12477,9 +12476,25 @@ void rsTestArithmeticProgressions()
     L[i]  = getLength(n, k);
   }
  
-
+  // Plot the results:
   rsPlotVectorsXY(N, L);
-  int dummy = 0;
+
+
+  // Observations:
+  //
+  // - With k = 2, we see a very regular pattern of length 6. With k = 3 the pattern length seems
+  //   to be 9. With k = 4 the pattern length is again 6.
+  //
+  //
+  // ToDo:
+  // 
+  // - Check some of the results manually and document them here by writing down the actual 
+  //   progressions.
+  //
+  // - Try to find an explanation why we should see periodic patterns at all. I find that 
+  //   surprising!
+  // 
+  // - Then try to find an explanation for the length and specific shape of the patterns.
 }
 
 

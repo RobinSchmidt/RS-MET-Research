@@ -12436,7 +12436,7 @@ void rsTestArithmeticProgressions()
   using Vec = std::vector<int>;
 
   // Setup:
-  int k    =   2;                  // The stepsize parameter
+  int k    =   6;                  // The stepsize parameter
   int nMin =   0;                  // Start value for n.
   int nMax = 200;                  // End value for n.
 
@@ -12483,16 +12483,23 @@ void rsTestArithmeticProgressions()
   // Observations:
   //
   // - With k = 2, we see a very regular pattern of length 6. With k = 3 the pattern length seems
-  //   to be 9. With k = 4 the pattern length is again 6.
+  //   to be 9. With k = 4 the pattern length is again 6. With k = 1 the length is 2 and the 
+  //   maximum value is 3. With k = 7, it first looks that we have a pattern length of 10 but then
+  //   at n = 161, it looks like the pattern breaks (we see a pair of spikes of height 7 at 161 and 
+  //   163 and such a pair did not appear before)
   //
   //
   // ToDo:
+  // 
+  // - Verify the correctness of the code!
   // 
   // - Check some of the results manually and document them here by writing down the actual 
   //   progressions.
   //
   // - Try to find an explanation why we should see periodic patterns at all. I find that 
-  //   surprising!
+  //   surprising! With k = 1, it's actually clear that we cannot have stretches of incommensurate
+  //   progressions longer than 2 because we hit all numbers n,n+1,n+2,n+3,n+4,... and if n is 
+  //   divisible by 2 then so will be n+2.
   // 
   // - Then try to find an explanation for the length and specific shape of the patterns.
 }

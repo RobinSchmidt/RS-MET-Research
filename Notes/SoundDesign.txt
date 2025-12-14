@@ -50,8 +50,9 @@ Cymbal sound design:
    makes louder sounds brighter".
   -Maybe for the phase-distortion try: Allpass filter with coeff modulated by (filtered) input, 
    Delay with delaytime modulated by (filtered) input
-  -My ideas for additional stuff in the gfeedback loop: Waveshaping (maybe bitcrushing), 
-   pitch-shifting, frequency-shifting
+  -My ideas for additional stuff in the gfeedback loop: Waveshaping (maybe (soft) bitcrushing,
+   sinusoidal/multifold could perhaps replace the phase distortion), pitch-shifting, 
+   frequency-shifting
 -"Resonator-Bank Stage":
  -The output of the Disperser goes into the resonator bank which is...
  -A bunch of parallel comb filters (e.g. 4 instances of MComb by Melda each of which has 4 combs). 

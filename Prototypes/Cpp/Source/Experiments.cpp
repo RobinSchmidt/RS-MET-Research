@@ -12436,7 +12436,7 @@ void rsTestArithmeticProgressions()
   using Vec = std::vector<int>;
 
   // Setup:
-  int k    =   6;                  // The stepsize parameter
+  int k    =  12;                  // The stepsize parameter
   int nMin =   0;                  // Start value for n.
   int nMax = 300;                  // End value for n.
 

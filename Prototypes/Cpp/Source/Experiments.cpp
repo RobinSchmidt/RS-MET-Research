@@ -12016,7 +12016,7 @@ void testGcdLcm()
 
   /*
 
-  // Move this code into an extra function:
+  // Move this code into a separate function:
 
   // Let a = gcd(x,y), b = lcm(x,y). Can we reconstruct x,y from a,b (up to symmetry, i.e. swapping
   // x and y)? To be able to do so, we need that the function (x,y) -> (gcd(x,y),lcm(x,y)) is 

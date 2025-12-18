@@ -37,6 +37,12 @@ Flowing Water:
  -random filter blips, maybe
 
 
+Noises:
+-Use brickwall filtered noise. The brickwall filters produce ringing souch that it may sound very
+ tonal despite being noisy when looking at the spectrum. For example, tune a highpass to 220 Hz and
+ a lowpass to 880 Hz. Maybe produce a notch at 440 Hz. Or maybe use several parallel bandpasses. Or
+ use steep bandreject filters. The "walls" should be tuned to musically relevant frequencies.
+
 
 Cymbal sound design:
 -"Exciter Stage": 

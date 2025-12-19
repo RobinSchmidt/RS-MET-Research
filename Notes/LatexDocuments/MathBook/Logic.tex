@@ -353,17 +353,17 @@ In 2nd order logic, we can additionally quantify over predicates. For example, w
 
 % Maybe it could also be interesting to consider a 4-valued logical system that treats truth and
 % falsehood as one aspect and knowledge or ignorance as another "orthogonal" aspect. We could work
-% with values T,F for true,false and with values K,U for known,unknown. That we would have 4 cases:
+% with values T,F for true,false and with values K,U for known,unknown. Then we would have 4 cases:
 % KT: known and true, KF: known and false, UT: unknown and true, UF: unknown and false. Then we 
-% would make combined truth-knowledge tables like so (for "and")
+% would make combined truth-knowledge tables like so:
 %
-%         AND                  OR
+%        AND                  OR
 %
-%      KT  KF  UT  UF
-%  KT  KT  KF  UT  UF
-%  KF  KF  KF  KF  KF
-%  UT  UT  KF  UT  UF
-%  UF  UF  KF  UF  UF
+%     KT KF UT UF          KT KF UT UF        ...verify these! I really had to think a bit to
+%  KT KT KF UT UF       KT KT KT KT KT        fill these out. That may be a strong hint that
+%  KF KF KF KF KF       KF KT KF UT UF        mechansing reasoning with such a system may be a
+%  UT UT KF UT UF       UT KT UT UT UT        worthwhile thing to do.
+%  UF UF KF UF UF       UF KT UF UT UF
 %
 % Maybe we could have two types of negation operators. The regular one operates on the T,F values
 % as before and the the new one operates on the K,U values. Although, to realistically model
@@ -372,7 +372,15 @@ In 2nd order logic, we can additionally quantify over predicates. For example, w
 % forget set K and U both to false. Flipping the knowledge state isn't really thing. There is no 
 % process that makes us forget what we know and simultaneously lets us learn what we don't know.
 % This difference could perhaps be the thing that makes such a system interesting.
-
+%
+% 4-valued logic could be seen as a refinement of 3-valued logic where the U value from 3-valued 
+% logic is further subdivided into UT and UF. To map a 4-valued value to a 3-valued value we would
+% do: KT -> T, KF -> F, UT -> U, UF -> U. Going from 3 to 4 values would basically restore the 
+% property that we always have knowledge about the truth or falsehood of the facts/propositions 
+% themselves and it would use the K,U distinction not to model lack of  knowledge about the facts
+% themselves (as we do with the U value in 3-valued logic) but rather to model a higher level
+% knowledge (meta knowledge) about the presence or absence of knowledge about the facts.
+%
 % Maybe we could even go to higher levels with this scheme to model our knowledge about knowledge.
 % Like KKT would mean: we know that we know that it's true, etc.
 

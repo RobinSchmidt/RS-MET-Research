@@ -1,4 +1,4 @@
-Rave Hoover sound fo Roland Alpha Juno:
+Rave Hoover sound of Roland Alpha Juno:
 
 Seems like it is based on what they call a PWM-Saw which actually seems to be a sawtooth wave that 
 is chopped (amplitude modulated) by a unipolar pulse-wave. ...maybe...mayby try to build a patch in 
@@ -71,6 +71,23 @@ Cymbal sound design:
  especially from 24:00 
  
 
+Single-Cycle Waveforms:
+-Fractalize waveforms:
+ -Take a mother waveform and produce various decimated versions of it (by 2,4,8, etc.) and mix them
+  (approriately pitch-shifted) with the original - the 4-fold decimated wave plays 2 octaves higher,
+  etc. Mabye allow alternating phases between the octaves. I think, using a square wave with 
+  alternating phases for the octaves and amplitudes of 1/n where n is the decimation factor, should
+  produce magnitudes like a saw. This can be seen from observing that a saw can be constructed from
+  a square and an (inverted) saw one octave higher (with half the amplitude). The same decomposition
+  can then be applied to the higher saw as well, and so on. I think, it's equivalent to taking the 
+  spectrum of a saw, then stepping through all even harmonics and inverting their phases, then 
+  stepping through all harmonics that are multiples of 4 and inverting their phases back again, then
+  stepping through the multiples of 8 and inverting again, etc.
+
+WaveTables:
+-Start with a sawtooth wave, randomize the phases and for each subsequent version of the waveform,
+ randomize them slightly more. Or maybe take two sets of randomized phases and make a 
+ phase-interpolation between the two settings over the wavetable. It's a "phase-morph"
 
 
 

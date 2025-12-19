@@ -348,6 +348,35 @@ In 2nd order logic, we can additionally quantify over predicates. For example, w
 \subsection{Three Valued Logic}
 % https://en.wikipedia.org/wiki/Many-valued_logic
 
+% 3-valued logic uses 3 values: T,F,U for true,false,unknown. It uses 3x3 truth tables to define
+% the logical operators "and" and "or"
+
+% Maybe it could also be interesting to consider a 4-valued logical system that treats truth and
+% falsehood as one aspect and knowledge or ignorance as another "orthogonal" aspect. We could work
+% with values T,F for true,false and with values K,U for known,unknown. That we would have 4 cases:
+% KT: known and true, KF: known and false, UT: unknown and true, UF: unknown and false. Then we 
+% would make combined truth-knowledge tables like so (for "and")
+%
+%         AND                  OR
+%
+%      KT  KF  UT  UF
+%  KT  KT  KF  UT  UF
+%  KF  KF  KF  KF  KF
+%  UT  UT  KF  UT  UF
+%  UF  UF  KF  UF  UF
+%
+% Maybe we could have two types of negation operators. The regular one operates on the T,F values
+% as before and the the new one operates on the K,U values. Although, to realistically model
+% knowledge, this operator would not really model any real process. With knowledge, it would make
+% more sense to have unary operators "learn" and "forget" where "learn" sets K and U both to K and
+% forget set K and U both to false. Flipping the knowledge state isn't really thing. There is no 
+% process that makes us forget what we know and simultaneously lets us learn what we don't know.
+% This difference could perhaps be the thing that makes such a system interesting.
+
+% Maybe we could even go to higher levels with this scheme to model our knowledge about knowledge.
+% Like KKT would mean: we know that we know that it's true, etc.
+
+
 \subsection{Fuzzy Logic}
 % https://en.wikipedia.org/wiki/Fuzzy_logic
 

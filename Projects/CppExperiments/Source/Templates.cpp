@@ -1,24 +1,30 @@
 
+// This file contains a couple of demonstrations for using templates in order to compute (discrete)
+// mathematical functions (such as factorials, binomial coefficients, greatest common divisors) at 
+// compile time as well as demos for usage of variadic templates to implement functions that may 
+// accept an arbitrary number of arguments.
+
+
 //-------------------------------------------------------------------------------------------------
-// Printing several lines via a variadic template - variant 1:
+// Print several lines via a variadic template - variant 1:
 
 template <typename T>
 void printLines1(T line)
 {
   // This version gets instantiated when there is only a single template parameter. It serves as 
-  // recursion anchor.
+  // recursion anchor (aka base case).
   std::cout << line << "\n";
 }
 
 template<typename First,typename ... Rest>
 void printLines1(First first,Rest ... rest)
 {
-  printLines1(first);      // print first line
-  printLines1(rest...);    // recursive instantiation
+  printLines1(first);      // Print first line
+  printLines1(rest...);    // Recursive instantiation
 }
 
 //-------------------------------------------------------------------------------------------------
-// Printing several lines via a variadic template - variant 2:
+// Print several lines via a variadic template - variant 2:
 
 void printLines2()
 {
@@ -29,24 +35,24 @@ void printLines2()
 template<typename First,typename ... Rest>
 void printLines2(First first,Rest ... rest)
 {
-  std::cout << first << "\n";  // print first line
-  printLines2(rest...);        // recursive instantiation
+  std::cout << first << "\n";  // Print first line
+  printLines2(rest...);        // Recursive instantiation
 }
 
 //-------------------------------------------------------------------------------------------------
-// Computing factorials:
+// Compute factorials at compile time:
 
 template<int n> 
 struct factorial 
 { 
-  static const int value = n * factorial<n-1>::value; // general case: n > 0
+  static const int value = n * factorial<n-1>::value; // General case: n > 0
   //enum { value = n * factorial<n-1>::value };       // ...enums work also
 }; 
 
 template<>
 struct factorial<0> 
 { 
-  static const int value = 1;  // base case: n == 0
+  static const int value = 1;  // Base case: n == 0
   //enum { value = 1 }; 
 };
 // why enums? would an int also work? ..i guess static const int would work
@@ -63,7 +69,7 @@ void testFactorial()
 }
 
 //-------------------------------------------------------------------------------------------------
-// Computing binomial coefficients:
+// Compute binomial coefficients at compile time:
 
 template<int n, int k> 
 struct binomial
@@ -151,18 +157,18 @@ void testBinomialCoeffs()
 
 
 //-------------------------------------------------------------------------------------------------
-// Computing greatest common divisors:
+// Compute greatest common divisors at compile time:
 
 template<int a, int b> 
 struct gcd
 { 
-  static const int value = gcd<b, a%b>::value; // general case: b > 0
+  static const int value = gcd<b, a%b>::value;  // General case: b > 0
 }; 
 
 template<int a> 
 struct gcd<a, 0>
 { 
-  static const int value = a;  // base case: b == 0
+  static const int value = a;                   // Base case: b == 0
 }; 
 
 void testGcd()
@@ -200,7 +206,8 @@ void testGcd()
 */
 
 //-------------------------------------------------------------------------------------------------
-// Computing means:
+// Compute means of an arbitrary number of arguments. The means are computed at runtime but the
+// computation functions are templatized in order to accept an arbitrary number of arguments.
 
 template<class T>
 int numArgs(T a1)
@@ -234,7 +241,39 @@ T mean(T first, Rest ... rest)
   return s / n;
 }
 
+template<class T>
+T powerSum(T p, T x)
+{
+  return pow(x, p);
+}
 
+template<class T, class ... Rest>
+T powerSum(T p, T first, Rest ... rest)
+{
+  return pow(first, p) + powerSum(p, rest...);
+}
+
+template<class T, class ... Rest>
+T generalizedMean(T p, T first, Rest ... rest)
+{
+  T s = powerSum(p, first, rest...);     // Sum of the powers
+  T n = (T)numArgs(first, rest...);      // Number of arguments
+  T m = s / n;                           // Mean of the powers
+  return pow(m, T(1)/p);                 // Generalized mean
+
+  // ToDo:
+  //
+  // - Treat the special case of p = 0 separately. In that case, we need to compute the geometric
+  //   mean, i.e. the p-th root (i.e. the (1/p)-th power) of the product of the arguments.
+  //
+  // - Add tests for this function. Make sure to cover the p = 0 case in these tests. Cover also
+  //   at least p = 1, p = 2, p = -1. Maybe a couple of more as well.
+  //
+  // - Maybe move (or copy) these implementations into the RAPT library. Maybe create a new file 
+  //   AggregationFunctions.h (or just Aggregation.h) in the Math/Functions folder. Then look into
+  //   class rsArrayTools for inspiration for what other aggregation functions we could possibly 
+  //   need and maybe implement some of those. 
+}
 
 
 void testMean()
@@ -244,7 +283,7 @@ void testMean()
   int a1 = numArgs(1.0);               ok &= a1 == 1;
   int a2 = numArgs(1.0, 2.0);          ok &= a2 == 2;
   int a3 = numArgs(1.0, 2.0, 3.0);     ok &= a3 == 3;
-  int a4 = numArgs(1.0, 2.f, 5, 3.0);  ok &= a4 == 4;
+  int a4 = numArgs(1.0, 2.f, 5, 3.0);  ok &= a4 == 4;  // Try it with different types for the args.
   printLines1(a1, a2, a3, a4);         // Should produce 1,2,3,4
 
   float s1 = sum(2.f);                 ok &= s1 == 2.f;
@@ -252,14 +291,23 @@ void testMean()
   float s3 = sum(2.f, 3.f, 1.f);       ok &= s3 == 6.f;
   printLines1(s1, s2, s3);             // Should produce 1,5,6
 
-  float m1 = mean(2.f);                 ok &= m1 == 2.f;
-  float m2 = mean(2.f, 4.f);            ok &= m2 == 3.f;
-  float m3 = mean(2.f, 4.f, 6.f);       ok &= m3 == 4.f;
+  float m1 = mean(2.f);                ok &= m1 == 2.f;
+  float m2 = mean(2.f, 4.f);           ok &= m2 == 3.f;
+  float m3 = mean(2.f, 4.f, 6.f);      ok &= m3 == 4.f;
   printLines1(m1, m2, m3);            // Should produce 2,3,4
+
+  float p1 = powerSum(2.f, 2.f);      ok &= p1 == 4.f;        //  4 = 2^2
+  float p2 = powerSum(2.f, 2.f, 3.f); ok &= p2 == 13.f;       // 13 = 2^2 + 3^2
+  printLines1(p1, p2);
+
 
   // ToDo:
   //
-  // - Implement generalized mean
+  // - Implement generalized mean.
+  //
+  // - Try this code in compiler explorer to verify that it compiles down to what we would manually
+  //   write to compute a mean of n values. We would just add them all up and divide by the number 
+  //   of values.
 }
 
 

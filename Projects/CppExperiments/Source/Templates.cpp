@@ -444,31 +444,31 @@ template<class T, class ... Rest>
 void setArrayValues(T* arr, int n, T val)
 {
   arr[0] = val;
-  int dummy = 0;
 }
 
 template<class T, class ... Rest>
 void setArrayValues(T* arr, int n, T val, Rest ... rest)
 {
-  //if(n == 0)    // Runtime check not needed because the base case above is called
-  //  return;     // when n = 1
-
   arr[0] = val;
-  setArrayValues(&arr[1], n-1, rest...);  // Compiler error!
-  int dummy = 0;
+  setArrayValues(&arr[1], n-1, rest...);
 }
 
 template<class T, int N, class ... Rest>
 std::array<T, N> toArray(T first, Rest ... rest)
 {
   std::array<T, N> a;
-
-
   setArrayValues(&a[0], N, first, rest...);
-
-  // ToDo: Fill the array with the values first, rest...
-
   return a;
+}
+
+// Not sure if this compiles everywhere. I currently get no errors in MSVC but this may be because
+// the template is not instantiated. The MS compiler seems to produce template related error 
+// messages only when one tries to actually instantiate it. I think, other compilers may produce 
+// always an error regardless of trying to instantiate (verify!).
+template<class T, class ... Rest>
+auto toArray2(T first, Rest ... rest)
+{
+  return toArray<T, numArgs(first, rest...)>(first, rest...);
 }
 
 void testMiscTemplates()
@@ -476,7 +476,33 @@ void testMiscTemplates()
   auto a3 = toArray<float, 3>(1.f, 2.f, 3.f);
   auto a4 = toArray<float, 4>(1.f, 2.f, 3.f, 4.f);
 
+  // Unfortunately, this doesn't work:
+  //auto a32 = toArray2(1.f, 2.f, 3.f);
+  // Compile errors:
+  // 'toArray': no matching overloaded function found
+  // 'a32': variable cannot have the type 'void'
+  // Maybe try to make the numArgs function constexpr
+
   int dummy = 0;
+
+  // ToDo:
+  //
+  // - Try to make it possible to call it like:  auto a3 = toArray(1.f, 2.f, 3.f);
+  //   i.e. without specifying the length at the call site. It should somehow be possible to let
+  //   the compiler figure this out using the numArgs() function. I just don't know how, yet. 
+  // 
+  // - When this works, implement a function to compute the median of the arguments. It should
+  //   convert its argument pack into a std::array, sort it, then return the middle value in case
+  //   of an odd length or the mean of the two middle values in case of an even length.
+  // 
+  // - It's bad that filling the array involves a recursive function call for each element. But 
+  //   recursion is the only way we can walk through the argument pack, I think. Try to figure out
+  //   if there is a better way.
+  //
+  // - Try using the setArrayValues function in isolation. It could perhaps be useful occasionally
+  //   when we want to set several successive array values with a convenient single line of code 
+  //   rather than having to write a bunch of assignments. Although, the recursion makes it 
+  //   inefficient, so if this is used anywhere, it should not be in production code.
 }
 
 

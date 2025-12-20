@@ -233,12 +233,34 @@ T sum(T first, Rest ... rest)
   return first + sum(rest...);
 }
 
+template<class T>
+T product(T x)
+{
+  return x;
+}
+
+template<class T, class ... Rest>
+T product(T first, Rest ... rest)
+{
+  return first * product(rest...);
+}
+
+/** Computes the arithmetic mean of the arguments. */
 template<class T, class ... Rest>
 T mean(T first, Rest ... rest)
 {
   T s = sum(first, rest...);
   T n = (T)numArgs(first, rest...);
   return s / n;
+}
+
+/** Computes the geometric mean of the arguments. */
+template<class T, class ... Rest>
+T geoMean(T first, Rest ... rest)
+{
+  T p = product(first, rest...);
+  T n = (T)numArgs(first, rest...);
+  return pow(p, T(1)/T(n));
 }
 
 template<class T>

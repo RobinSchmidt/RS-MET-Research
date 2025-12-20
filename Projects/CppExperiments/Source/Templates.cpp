@@ -252,7 +252,6 @@ T mean(T first, Rest ... rest)
   T s = sum(first, rest...);
   T n = (T)numArgs(first, rest...);
   return s * (T(1)/n);               // No division! Reciprocal is computed at compile time!
-  //return s / n;                    // This would be a division at runtime!
 }
 
 /** Computes the geometric mean of the arguments. */
@@ -301,9 +300,6 @@ T generalizedMean(T p, T first, Rest ... rest)
   //
   //
   // ToDo:
-  //
-  // - Add tests for this function. Make sure to cover the p = 0 case in these tests. Cover also
-  //   at least p = 1, p = 2, p = -1. Maybe a couple of more as well.
   //
   // - Maybe move (or copy) these implementations into the RAPT library. Maybe create a new file 
   //   AggregationFunctions.h (or just Aggregation.h) in the Math/Functions folder. Then look into
@@ -366,22 +362,8 @@ void testMean()
   gm1 = generalizedMean3(p, x1, x2, x3);
   gm2 = generalizedMean( p, x1, x2, x3);
   ok &= gm1 == gm2;
-  // The test fails! Apparently, we need a tolerance for floating point roundoff errors. But why?
-  // Shouldn't the template code compile down to the exact same code? Or may the operation order be
-  // different? If so, figure out and document why. Figure out, if one of the two functions is more
-  // accurate and which one (and why). Ah! In generalizedMean() I use an actualy division whereas 
-  // in generalizedMean3() I use a multiplication by the reciprocal. Maybe that's the reason! Try 
-  // swicthing to multiplication in generalizedMean(). Make sure to use multiplication everywhere.
-  // It's more efficient because the reciprocal will be computed at compile time.
-  // Done! Yes! The test now passes and the code is even more efficient! Yay!
-
-
 
   // ToDo:
-  //
-  // - Implement tests for the generalized mean. Maybe to facilitate the tests, we could implement
-  //   a generalizedMean3() function for 3 arguments manually and then use that to produce the
-  //   target outputs
   //
   // - Try this code in compiler explorer to verify that it compiles down to what we would manually
   //   write to compute a mean of n values. We would just add them all up and divide by the number 

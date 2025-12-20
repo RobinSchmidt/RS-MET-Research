@@ -275,14 +275,41 @@ T powerSum(T p, T first, Rest ... rest)
   return pow(first, p) + powerSum(p, rest...);
 }
 
+/** Computes the generalized mean of the arguments with exponent (or power) p. For a bunch of values 
+x1,x2,x3,... the generalized mean gm_p(...) is defined as:
+
+  gm_p(x1,x2,x3,...) = p_th_root( (x1^p + x2^p + x3^p + ...) / N, p   )
+                     = pow(       (x1^p + x2^p + x3^p + ...) / N, 1/p )
+
+where gm_p is intended to mean "generalized mean" with power parameter p and N is the number of 
+values over which we take the mean. ...TBC...
+
+References:
+
+  https://en.wikipedia.org/wiki/Generalized_mean
+
+*/
+
 template<class T, class ... Rest>
-T generalizedMean(T p, T first, Rest ... rest)
+T generalizedMean(T p, T first, Rest ... rest)  // Maybe rename to generalMean
 {
   if(p == T(0))                          // Special case for p = 0
     return geoMean(first, rest...);      // ..we need to use the geometric mean in this case.
 
   if(p == T(1))                          // Special case for p = 1
     return mean(first, rest...);         // ..we choose to use the arithmetic mean in this case.
+
+
+  // ToDo:
+
+  //if(p == std::numeric_limits<T>::infinity())       // Special case for p = +inf
+  //  return max(first, rest...);
+
+  //if(p == -std::numeric_limits<T>::infinity())      // Special case for p = -inf
+  //  return min(first, rest...);
+
+
+
 
   // In the general case, we need to produce the (arithmetic) mean of the powers of the arguments 
   // (each argument is raised to the power of p) and then we must take the p-th root of this 
@@ -305,6 +332,14 @@ T generalizedMean(T p, T first, Rest ... rest)
   //   AggregationFunctions.h (or just Aggregation.h) in the Math/Functions folder. Then look into
   //   class rsArrayTools for inspiration for what other aggregation functions we could possibly 
   //   need and maybe implement some of those. 
+  //
+  // - Maybe also treat the special cases p = +inf and p = -inf. In these cases, we should produce
+  //   the maximum and minimum respectively. Maybe we should use std::numeric_limits to figure out
+  //   if p is -inf or +inf. But can we safely assume that p will always be a floating point type 
+  //   representing real numbers? Could it make sense to allow complex numbers for p? Maybe not but
+  //   it may probably make sense to allow complex values for the x1,x2,x3,... arguments. Maybe we 
+  //   should have two template types TPow and TVal instead of just one type T.
+
 }
 
 /** Computes the generalized mean of 3 numbers. This is meant for testing purposes. */

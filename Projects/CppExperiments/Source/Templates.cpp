@@ -279,12 +279,14 @@ template<class T, class ... Rest>
 T generalizedMean(T p, T first, Rest ... rest)
 {
   if(p == T(0))                          // Special case for p = 0
-    return geoMean(first, rest...);      // ..we need(!) the geometric mean in this case  
+    return geoMean(first, rest...);      // ..we need to use the geometric mean in this case.
 
   if(p == T(1))                          // Special case for p = 1
-    return mean(first, rest...);         // ..we use the arithmetic mean in this case 
+    return mean(first, rest...);         // ..we choose to use the arithmetic mean in this case.
 
-  // General case:
+  // In the general case, we need to produce the (arithmetic) mean of the powers of the arguments 
+  // (each argument is raised to the power of p) and then we must take the p-th root of this 
+  // mean-of-powers:
   T s = powerSum(p, first, rest...);     // Sum of the powers
   T n = (T)numArgs(first, rest...);      // Number of arguments
   T m = s / n;                           // Mean of the powers
@@ -293,9 +295,8 @@ T generalizedMean(T p, T first, Rest ... rest)
   // Notes:
   //
   // - The p = 0 case really _needs_ special treatment because the general code would produce a 
-  //   division by zero. For the p = 1 case, the special treatment is merely an optimization. The 
-  //   general code would also produce the correct result but is arguably much more expensive due 
-  //   to all the calls to pow().
+  //   division by zero. For the p = 1 case, special treatment is merely an optimization. The 
+  //   general code would also work correctly but is much more expensive due to the calls to pow().
   //
   //
   // ToDo:
@@ -309,6 +310,17 @@ T generalizedMean(T p, T first, Rest ... rest)
   //   need and maybe implement some of those. 
 }
 
+/** Computes the generalized mean of 3 numbers. This is meant for testing purposes. */
+template<class T>
+T generalizedMean3(T p, T x1, T x2, T x3)
+{
+  T r3 = T(1) / T(3);                           // Reciprocal of 3
+  if(p == T(0))
+    return pow(x1*x2*x3, r3);
+  T s = pow(x1, p) + pow(x2, p) + pow(x3, p);
+  T m = s * r3;
+  return pow(m, T(1)/p);
+}
 
 void testMean()
 {
@@ -334,14 +346,46 @@ void testMean()
   float p2 = powerSum(2.f, 2.f, 3.f); ok &= p2 == 13.f;       // 13 = 2^2 + 3^2
   printLines1(p1, p2);
 
+  // Test computing the generalized mean for various values of p:
+  float gm1, gm2;
+  float x1 = 2.f, x2 = 5.f, x3 = 1.f, p;
+  p = -1.f;
+  gm1 = generalizedMean3(p, x1, x2, x3);
+  gm2 = generalizedMean( p, x1, x2, x3);
+  ok &= gm1 == gm2;
+  p = 0.f;
+  gm1 = generalizedMean3(p, x1, x2, x3);
+  gm2 = generalizedMean( p, x1, x2, x3);
+  ok &= gm1 == gm2;
+  p = 1.f;
+  gm1 = generalizedMean3(p, x1, x2, x3);
+  gm2 = generalizedMean( p, x1, x2, x3);
+  ok &= gm1 == gm2;
+  p = 2.f;
+  gm1 = generalizedMean3(p, x1, x2, x3);
+  gm2 = generalizedMean( p, x1, x2, x3);
+  ok &= gm1 == gm2;
+  // The test fails! Apparently, we need a tolerance for floating point roundoff errors. But why?
+  // Shouldn't the template code compile down to the exact same code? Or may the operation order be
+  // different? If so, figure out and document why.
+
+
+
 
   // ToDo:
   //
-  // - Implement generalized mean.
+  // - Implement tests for the generalized mean. Maybe to facilitate the tests, we could implement
+  //   a generalizedMean3() function for 3 arguments manually and then use that to produce the
+  //   target outputs
   //
   // - Try this code in compiler explorer to verify that it compiles down to what we would manually
   //   write to compute a mean of n values. We would just add them all up and divide by the number 
   //   of values.
+  //
+  // - This topic (computing generalized means via variadic templates) would actually make for a 
+  //   nice blog post. It's non-trivial and realistic but not too complicated. Maybe try doing this
+  //   as a Jupyter notebook. I think, Jupyter supports using C++ as scripting language (not sure, 
+  //   though).
 }
 
 

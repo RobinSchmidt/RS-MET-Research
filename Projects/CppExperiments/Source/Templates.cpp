@@ -337,7 +337,7 @@ void testMean()
   float m1 = mean(2.f);                ok &= m1 == 2.f;
   float m2 = mean(2.f, 4.f);           ok &= m2 == 3.f;
   float m3 = mean(2.f, 4.f, 6.f);      ok &= m3 == 4.f;
-  printLines1(m1, m2, m3);            // Should produce 2,3,4
+  printLines1(m1, m2, m3);             // Should produce 2,3,4
 
   float p1 = powerSum(2.f, 2.f);      ok &= p1 == 4.f;        //  4 = 2^2
   float p2 = powerSum(2.f, 2.f, 3.f); ok &= p2 == 13.f;       // 13 = 2^2 + 3^2
@@ -346,18 +346,22 @@ void testMean()
   // Test computing the generalized mean for various values of p:
   float gm1, gm2;
   float x1 = 2.f, x2 = 5.f, x3 = 1.f, p;
+
   p = -1.f;
   gm1 = generalizedMean3(p, x1, x2, x3);
   gm2 = generalizedMean( p, x1, x2, x3);
   ok &= gm1 == gm2;
+
   p = 0.f;
   gm1 = generalizedMean3(p, x1, x2, x3);
   gm2 = generalizedMean( p, x1, x2, x3);
   ok &= gm1 == gm2;
+
   p = 1.f;
   gm1 = generalizedMean3(p, x1, x2, x3);
   gm2 = generalizedMean( p, x1, x2, x3);
   ok &= gm1 == gm2;
+
   p = 2.f;
   gm1 = generalizedMean3(p, x1, x2, x3);
   gm2 = generalizedMean( p, x1, x2, x3);

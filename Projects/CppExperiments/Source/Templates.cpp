@@ -367,7 +367,11 @@ void testMean()
   ok &= gm1 == gm2;
   // The test fails! Apparently, we need a tolerance for floating point roundoff errors. But why?
   // Shouldn't the template code compile down to the exact same code? Or may the operation order be
-  // different? If so, figure out and document why.
+  // different? If so, figure out and document why. Figure out, if one of the two functions is more
+  // accurate and which one (and why). Ah! In generalizedMean() I use an actualy division whereas 
+  // in generalizedMean3() I use a multiplication by the reciprocal. Maybe that's the reason! Try 
+  // swicthing to multiplication in generalizedMean(). Make sure to use multiplication everywhere.
+  // It's more efficient because the reciprocal is computed at compile time.
 
 
 
@@ -385,7 +389,9 @@ void testMean()
   // - This topic (computing generalized means via variadic templates) would actually make for a 
   //   nice blog post. It's non-trivial and realistic but not too complicated. Maybe try doing this
   //   as a Jupyter notebook. I think, Jupyter supports using C++ as scripting language (not sure, 
-  //   though).
+  //   though). Mention there also the observation that the results do not match exactly but only
+  //   up to roundoff error - and try to explain it and maybe find arguments pro and contra using
+  //   a variadic template based implementation. Maybe bring the topic up on KVR.
 }
 
 

@@ -441,12 +441,20 @@ auto toArray(T first, Rest ... rest)
 
 
 template<class T, class ... Rest>
+void setArrayValues(T* arr, int n, T val)
+{
+  arr[0] = val;
+  int dummy = 0;
+}
+
+template<class T, class ... Rest>
 void setArrayValues(T* arr, int n, T val, Rest ... rest)
 {
-  if(n == 0)
-    return;
+  //if(n == 0)    // Runtime check not needed because the base case above is called
+  //  return;     // when n = 1
+
   arr[0] = val;
-  //setArrayValues(arr+1, n-1, rest...);  // Compiler error!
+  setArrayValues(&arr[1], n-1, rest...);  // Compiler error!
   int dummy = 0;
 }
 
@@ -465,8 +473,8 @@ std::array<T, N> toArray(T first, Rest ... rest)
 
 void testMiscTemplates()
 {
-  auto a = toArray<float, 3>(1.f, 2.f, 3.f);
-
+  auto a3 = toArray<float, 3>(1.f, 2.f, 3.f);
+  auto a4 = toArray<float, 4>(1.f, 2.f, 3.f, 4.f);
 
   int dummy = 0;
 }

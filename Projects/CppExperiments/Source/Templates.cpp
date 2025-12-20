@@ -199,6 +199,35 @@ void testGcd()
 }
 */
 
+//-------------------------------------------------------------------------------------------------
+// Computing means:
+
+template<class T>
+int numArgs(T a1)
+{
+  return 1;
+}
+
+template<class T, class ... Rest>
+int numArgs(T first, Rest ... rest)
+{
+  return 1 + numArgs(rest...);
+}
+
+void testMean()
+{
+  bool ok = true;
+
+  int a1 = numArgs(1.0);               ok &= a1 == 1;
+  int a2 = numArgs(1.0, 2.0);          ok &= a2 == 2;
+  int a3 = numArgs(1.0, 2.0, 3.0);     ok &= a3 == 3;
+  int a4 = numArgs(1.0, 2.f, 5, 3.0);  ok &= a4 == 4;
+  printLines1(a1, a2, a3, a4);          // Should produce 1,2,3,4
+
+
+}
+
+
 
 
 

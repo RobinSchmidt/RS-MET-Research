@@ -73,17 +73,18 @@ public:
 
 int main()
 {
-  demoOptional();
+  //demoOptional();
   //demoObserver();
   //testReturnValueOptimization();
   //testFunctionShortcuts();
 
   //testMultiArray();
 
-  testFactorial();
-  testBinomialCoeffs();
-  testGcd();
-  testAllocationLogger();
+  //testFactorial();
+  //testBinomialCoeffs();
+  //testGcd();
+  //testAllocationLogger();
+  testMean();
 
   //int gcd_60_21 = gcd<60, 21>();
   //int gcd_60_48 = gcd<60, 48>();

@@ -251,7 +251,8 @@ T mean(T first, Rest ... rest)
 {
   T s = sum(first, rest...);
   T n = (T)numArgs(first, rest...);
-  return s / n;
+  return s * (T(1)/n);               // No division! Reciprocal is computed at compile time!
+  //return s / n;                    // This would be a division at runtime!
 }
 
 /** Computes the geometric mean of the arguments. */
@@ -289,7 +290,7 @@ T generalizedMean(T p, T first, Rest ... rest)
   // mean-of-powers:
   T s = powerSum(p, first, rest...);     // Sum of the powers
   T n = (T)numArgs(first, rest...);      // Number of arguments
-  T m = s / n;                           // Mean of the powers
+  T m = s * (T(1)/n);                    // Mean of the powers
   return pow(m, T(1)/p);                 // Generalized mean
 
   // Notes:
@@ -371,8 +372,8 @@ void testMean()
   // accurate and which one (and why). Ah! In generalizedMean() I use an actualy division whereas 
   // in generalizedMean3() I use a multiplication by the reciprocal. Maybe that's the reason! Try 
   // swicthing to multiplication in generalizedMean(). Make sure to use multiplication everywhere.
-  // It's more efficient because the reciprocal is computed at compile time.
-
+  // It's more efficient because the reciprocal will be computed at compile time.
+  // Done! Yes! The test now passes and the code is even more efficient! Yay!
 
 
 

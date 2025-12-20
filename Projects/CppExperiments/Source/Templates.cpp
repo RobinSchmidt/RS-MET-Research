@@ -289,7 +289,6 @@ References:
   https://en.wikipedia.org/wiki/Generalized_mean
 
 */
-
 template<class T, class ... Rest>
 T generalizedMean(T p, T first, Rest ... rest)  // Maybe rename to generalMean
 {
@@ -302,10 +301,12 @@ T generalizedMean(T p, T first, Rest ... rest)  // Maybe rename to generalMean
 
   // ToDo:
 
-  //if(p == std::numeric_limits<T>::infinity())       // Special case for p = +inf
+  // static const T inf = std::numeric_limits<T>::infinity();
+
+  //if(p == inf )                         // Special case for p = +inf
   //  return max(first, rest...);
 
-  //if(p == -std::numeric_limits<T>::infinity())      // Special case for p = -inf
+  //if(p == -inf )                        // Special case for p = -inf
   //  return min(first, rest...);
 
 
@@ -338,7 +339,10 @@ T generalizedMean(T p, T first, Rest ... rest)  // Maybe rename to generalMean
   //   if p is -inf or +inf. But can we safely assume that p will always be a floating point type 
   //   representing real numbers? Could it make sense to allow complex numbers for p? Maybe not but
   //   it may probably make sense to allow complex values for the x1,x2,x3,... arguments. Maybe we 
-  //   should have two template types TPow and TVal instead of just one type T.
+  //   should have two template types TPow and TVal instead of just one type T. But: when we allow
+  //   complex values inputs, then it's not clear what min and max is supposed to mean. So, maybe
+  //   for the time being, we should restrict ourselves to real-valued types T the power p and the
+  //   values x1,x2,...
 
 }
 
@@ -417,7 +421,55 @@ void testMean()
 }
 
 
+//-------------------------------------------------------------------------------------------------
+// Misc experimental stuff:
 
+/*
+template<class T, class ... Rest>
+//std::array<T, N> toArray(T first, Rest ... rest)
+auto toArray(T first, Rest ... rest)
+{
+  static const int N = numArgs(first, rest...);  
+  //auto N = numArgs(first, rest...);
+  std::array<T, N> a;
+
+  // ToDo: Fill the array with the values first, rest...
+
+  return a;
+}
+*/
+
+
+template<class T, class ... Rest>
+void setArrayValues(T* arr, int n, T val, Rest ... rest)
+{
+  if(n == 0)
+    return;
+  arr[0] = val;
+  //setArrayValues(arr+1, n-1, rest...);  // Compiler error!
+  int dummy = 0;
+}
+
+template<class T, int N, class ... Rest>
+std::array<T, N> toArray(T first, Rest ... rest)
+{
+  std::array<T, N> a;
+
+
+  setArrayValues(&a[0], N, first, rest...);
+
+  // ToDo: Fill the array with the values first, rest...
+
+  return a;
+}
+
+void testMiscTemplates()
+{
+  auto a = toArray<float, 3>(1.f, 2.f, 3.f);
+
+
+  int dummy = 0;
+}
 
 
 

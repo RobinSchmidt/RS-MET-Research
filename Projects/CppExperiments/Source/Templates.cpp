@@ -214,6 +214,29 @@ int numArgs(T first, Rest ... rest)
   return 1 + numArgs(rest...);
 }
 
+template<class T>
+T sum(T x)
+{
+  return x;
+}
+
+template<class T, class ... Rest>
+T sum(T first, Rest ... rest)
+{
+  return first + sum(rest...);
+}
+
+template<class T, class ... Rest>
+T mean(T first, Rest ... rest)
+{
+  T s = sum(first, rest...);
+  T n = (T)numArgs(first, rest...);
+  return s / n;
+}
+
+
+
+
 void testMean()
 {
   bool ok = true;
@@ -222,9 +245,21 @@ void testMean()
   int a2 = numArgs(1.0, 2.0);          ok &= a2 == 2;
   int a3 = numArgs(1.0, 2.0, 3.0);     ok &= a3 == 3;
   int a4 = numArgs(1.0, 2.f, 5, 3.0);  ok &= a4 == 4;
-  printLines1(a1, a2, a3, a4);          // Should produce 1,2,3,4
+  printLines1(a1, a2, a3, a4);         // Should produce 1,2,3,4
 
+  float s1 = sum(2.f);                 ok &= s1 == 2.f;
+  float s2 = sum(2.f, 3.f);            ok &= s2 == 5.f;
+  float s3 = sum(2.f, 3.f, 1.f);       ok &= s3 == 6.f;
+  printLines1(s1, s2, s3);             // Should produce 1,5,6
 
+  float m1 = mean(2.f);                 ok &= m1 == 2.f;
+  float m2 = mean(2.f, 4.f);            ok &= m2 == 3.f;
+  float m3 = mean(2.f, 4.f, 6.f);       ok &= m3 == 4.f;
+  printLines1(m1, m2, m3);            // Should produce 2,3,4
+
+  // ToDo:
+  //
+  // - Implement generalized mean
 }
 
 

@@ -260,7 +260,7 @@ T geoMean(T first, Rest ... rest)
 {
   T p = product(first, rest...);
   T n = (T)numArgs(first, rest...);
-  return pow(p, T(1)/T(n));
+  return pow(p, T(1)/n);
 }
 
 template<class T>
@@ -278,6 +278,9 @@ T powerSum(T p, T first, Rest ... rest)
 template<class T, class ... Rest>
 T generalizedMean(T p, T first, Rest ... rest)
 {
+  if(p == T(0))                          // Special case for p = 0
+    return geoMean(first, rest...);      // ..we need a geometric mean in this case  
+
   T s = powerSum(p, first, rest...);     // Sum of the powers
   T n = (T)numArgs(first, rest...);      // Number of arguments
   T m = s / n;                           // Mean of the powers
@@ -287,6 +290,7 @@ T generalizedMean(T p, T first, Rest ... rest)
   //
   // - Treat the special case of p = 0 separately. In that case, we need to compute the geometric
   //   mean, i.e. the p-th root (i.e. the (1/p)-th power) of the product of the arguments.
+  //   ...done!
   //
   // - Add tests for this function. Make sure to cover the p = 0 case in these tests. Cover also
   //   at least p = 1, p = 2, p = -1. Maybe a couple of more as well.

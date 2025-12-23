@@ -210,13 +210,13 @@ void testGcd()
 // computation functions are templatized in order to accept an arbitrary number of arguments.
 
 template<class T>
-int numArgs(T a1)
+constexpr int numArgs(T a1)
 {
   return 1;
 }
 
 template<class T, class ... Rest>
-int numArgs(T first, Rest ... rest)
+constexpr int numArgs(T first, Rest ... rest)
 {
   return 1 + numArgs(rest...);
 }
@@ -252,6 +252,7 @@ T mean(T first, Rest ... rest)
   T s = sum(first, rest...);
   T n = (T)numArgs(first, rest...);
   return s * (T(1)/n);               // No division! Reciprocal is computed at compile time!
+                                     // ...verify this in compiler explorer!
 }
 
 /** Computes the geometric mean of the arguments. */
@@ -261,6 +262,36 @@ T geoMean(T first, Rest ... rest)
   T p = product(first, rest...);
   T n = (T)numArgs(first, rest...);
   return pow(p, T(1)/n);
+}
+
+template<class T>
+T min(T x, T y)
+{
+  if(x <= y)
+    return x;
+  else
+    return y;
+}
+
+template<class T, class ... Rest>
+T min(T first, Rest ... rest)
+{
+  return min(first, min(rest...));
+}
+
+template<class T>
+T max(T x, T y)
+{
+  if(x >= y)
+    return x;
+  else
+    return y;
+}
+
+template<class T, class ... Rest>
+T max(T first, Rest ... rest)
+{
+  return max(first, max(rest...));
 }
 
 template<class T>
@@ -343,7 +374,9 @@ T generalizedMean(T p, T first, Rest ... rest)  // Maybe rename to generalMean
   //   complex values inputs, then it's not clear what min and max is supposed to mean. So, maybe
   //   for the time being, we should restrict ourselves to real-valued types T the power p and the
   //   values x1,x2,...
-
+  //
+  // - I think, the generalized mean is only well behaved with respect to sweeping p when all the
+  //   values x1,x2,... are nonnegative. Figure this out and document it.
 }
 
 /** Computes the generalized mean of 3 numbers. This is meant for testing purposes. */
@@ -381,6 +414,16 @@ void testMean()
   float p1 = powerSum(2.f, 2.f);      ok &= p1 == 4.f;        //  4 = 2^2
   float p2 = powerSum(2.f, 2.f, 3.f); ok &= p2 == 13.f;       // 13 = 2^2 + 3^2
   printLines1(p1, p2);
+
+  // Test min and max:
+  m1 = min(1.f, 3.f);            ok &= m1 == 1.f;
+  m1 = min(2.f, 1.f, 3.f);       ok &= m1 == 1.f;
+  m1 = min(4.f, 2.f, 1.f, 3.f);  ok &= m1 == 1.f;
+  m1 = max(1.f, 3.f);            ok &= m1 == 3.f;
+  m1 = max(2.f, 1.f, 3.f);       ok &= m1 == 3.f;
+  m1 = max(4.f, 2.f, 1.f, 3.f);  ok &= m1 == 4.f;
+
+
 
   // Test computing the generalized mean for various values of p:
   float gm1, gm2;
@@ -424,22 +467,6 @@ void testMean()
 //-------------------------------------------------------------------------------------------------
 // Misc experimental stuff:
 
-/*
-template<class T, class ... Rest>
-//std::array<T, N> toArray(T first, Rest ... rest)
-auto toArray(T first, Rest ... rest)
-{
-  static const int N = numArgs(first, rest...);  
-  //auto N = numArgs(first, rest...);
-  std::array<T, N> a;
-
-  // ToDo: Fill the array with the values first, rest...
-
-  return a;
-}
-*/
-
-
 template<class T, class ... Rest>
 void setArrayValues(T* arr, int n, T val)
 {
@@ -453,6 +480,8 @@ void setArrayValues(T* arr, int n, T val, Rest ... rest)
   setArrayValues(&arr[1], n-1, rest...);
 }
 
+/** This function takes a bunch of arguments and puts them into a std::array and returns that 
+array. ...TBC... */
 template<class T, int N, class ... Rest>
 std::array<T, N> toArray(T first, Rest ... rest)
 {
@@ -468,7 +497,10 @@ std::array<T, N> toArray(T first, Rest ... rest)
 template<class T, class ... Rest>
 auto toArray2(T first, Rest ... rest)
 {
-  return toArray<T, numArgs(first, rest...)>(first, rest...);
+  //static constexpr int N = numArgs(first, rest...);
+  // Error: expression did not evaluate to a constant
+
+  return toArray<T, numArgs(first, rest...)>(first, rest...); 
 }
 
 void testMiscTemplates()
@@ -476,7 +508,7 @@ void testMiscTemplates()
   auto a3 = toArray<float, 3>(1.f, 2.f, 3.f);
   auto a4 = toArray<float, 4>(1.f, 2.f, 3.f, 4.f);
 
-  // Unfortunately, this doesn't work:
+  // Doesn't compile:
   //auto a32 = toArray2(1.f, 2.f, 3.f);
   // Compile errors:
   // 'toArray': no matching overloaded function found

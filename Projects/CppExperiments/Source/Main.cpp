@@ -84,7 +84,7 @@ int main()
   //testBinomialCoeffs();
   //testGcd();
   //testAllocationLogger();
-  //testMean();
+  testMean();
   testMiscTemplates();
 
   //int gcd_60_21 = gcd<60, 21>();

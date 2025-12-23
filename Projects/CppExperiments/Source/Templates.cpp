@@ -323,22 +323,19 @@ References:
 template<class T, class ... Rest>
 T generalizedMean(T p, T first, Rest ... rest)  // Maybe rename to generalMean
 {
+  static const T inf = std::numeric_limits<T>::infinity();
+
   if(p == T(0))                          // Special case for p = 0
     return geoMean(first, rest...);      // ..we need to use the geometric mean in this case.
 
   if(p == T(1))                          // Special case for p = 1
     return mean(first, rest...);         // ..we choose to use the arithmetic mean in this case.
 
+  if(p == inf )                         // Special case for p = +inf
+    return max(first, rest...);
 
-  // ToDo:
-
-  // static const T inf = std::numeric_limits<T>::infinity();
-
-  //if(p == inf )                         // Special case for p = +inf
-  //  return max(first, rest...);
-
-  //if(p == -inf )                        // Special case for p = -inf
-  //  return min(first, rest...);
+  if(p == -inf )                        // Special case for p = -inf
+    return min(first, rest...);
 
 
 
@@ -450,6 +447,12 @@ void testMean()
   ok &= gm1 == gm2;
 
   // ToDo:
+  // 
+  // - Reuse variables for the results. Maybe use generic y1,y2,... or just a single y. Maybe get 
+  //   rid of the printing commands.
+  // 
+  // - Test generalized mean with p = +inf and p = -inf. It should compute the max and min 
+  //   respectively.
   //
   // - Try this code in compiler explorer to verify that it compiles down to what we would manually
   //   write to compute a mean of n values. We would just add them all up and divide by the number 

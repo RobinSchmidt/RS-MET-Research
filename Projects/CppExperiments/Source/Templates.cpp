@@ -313,7 +313,13 @@ x1,x2,x3,... the generalized mean gm_p(...) is defined as:
                      = pow(       (x1^p + x2^p + x3^p + ...) / N, 1/p )
 
 where gm_p is intended to mean "generalized mean" with power parameter p and N is the number of 
-values over which we take the mean. ...TBC...
+values over which we take the mean. For p = 1, it reduces to the usual arithmetic mean, for p = -1,
+we get the harmonic mean for p = 2, we get the quadratic mean. For p = 0, the formula as given 
+above is not applicable because pow(..., 1/p) contains a division by zero. However, it turns out 
+that in this special case, the geometric mean is the appropriate choice because this is the value 
+to which the expression converges when we let p approach 0. When p approach minus or plus infinity,
+the epxression approaches the minimum or the maximum of the values respectively. These limiting 
+cases are treated correctly by special cases hanling.
 
 References:
 
@@ -331,14 +337,11 @@ T generalizedMean(T p, T first, Rest ... rest)  // Maybe rename to generalMean
   if(p == T(1))                          // Special case for p = 1
     return mean(first, rest...);         // ..we choose to use the arithmetic mean in this case.
 
-  if(p == inf )                         // Special case for p = +inf
-    return max(first, rest...);
+  if(p == inf)                           // Special case for p = +inf
+    return max(first, rest...);          // ..the "mean" is the maximum in this case.
 
-  if(p == -inf )                        // Special case for p = -inf
-    return min(first, rest...);
-
-
-
+  if(p == -inf)                          // Special case for p = -inf
+    return min(first, rest...);          // ..the "mean" is the minimum in this case.
 
   // In the general case, we need to produce the (arithmetic) mean of the powers of the arguments 
   // (each argument is raised to the power of p) and then we must take the p-th root of this 
@@ -370,10 +373,12 @@ T generalizedMean(T p, T first, Rest ... rest)  // Maybe rename to generalMean
   //   should have two template types TPow and TVal instead of just one type T. But: when we allow
   //   complex values inputs, then it's not clear what min and max is supposed to mean. So, maybe
   //   for the time being, we should restrict ourselves to real-valued types T the power p and the
-  //   values x1,x2,...
+  //   values x1,x2,... Maybe the x values even need to be positive or at least non-negative?
   //
   // - I think, the generalized mean is only well behaved with respect to sweeping p when all the
   //   values x1,x2,... are nonnegative. Figure this out and document it.
+  //
+  // - Maybe treat the quadratic and harmonic mean also as special cases for optimization purposes.
 }
 
 /** Computes the generalized mean of 3 numbers. This is meant for testing purposes. */

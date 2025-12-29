@@ -12430,8 +12430,13 @@ void rsTestArithmeticProgressions()
   // numbers in such a segment must be mutually prime. We treat k as a fixed parameter and plot the
   // length L as function of n. For example, L(13,2) = 4 because 13,15,17,19, which are 4 numbers, 
   // are all mutually prime but the next number in the arithmetic progression that starts 
-  // at 13 an has an increment of 2, which would be 21, shares the divisor 3 with 15 and because 15
-  // is also in this progression. ...TBC...
+  // at 13 and has an increment of 2, which would be 21, shares the divisor 3 with 15 and because 
+  // 15 is also in this progression. 
+  // 
+  // The goal is to find long stretches of mutually prime numbers that are close to each other 
+  // because these could be useful to use as delay line lengths in a feedback delay network.
+  // 
+  // ...TBC...
 
   using Vec = std::vector<int>;
 

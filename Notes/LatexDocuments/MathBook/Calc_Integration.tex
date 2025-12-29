@@ -361,6 +361,21 @@ By the way, there is also a notion of a so called $\Sigma$-algebra in computer s
 
 
 
+% Integration to Infinity - Why Most People Get It Wrong
+% https://www.youtube.com/watch?v=DJ_uxBvGiZo
+% -Considers the intetral of x/(1+x^2) over the whole real line. As an improper Riemann integral,
+%  it has no unique value - the value depends on the exact way we exhaust the real number line.
+%  for example, by integrating from -R to +R and taking the limit as r gos to inf, we get zero
+%  but integrating from -R to +2R and taking the limit, we get ln(2). He then considers a
+%  change of variables transformation and applied Lebesgue integration which gives the unique answer
+%  that the function is not Lesbesgue integrable. This seems to somehow contradict the former 
+%  statement that the Lebesgue integral has a wider application domain than the Riemann integral.
+%  For improper integrals, it seems to behave differently. It doesn't make an unintegrable function
+%  integrable. ..instead...it shows more clearly and directly that it is unintegrable...or something?
+% -Gist: Lebesgue integration is stable under a change of variables
+% -The channel has more interesting videos about integration:
+%  https://www.youtube.com/@dr2bayes/videos
+
 
 \paragraph{Definition: Measure} Given a set $A$ and a $\sigma$-algebra $\Sigma$ on $A$, a measure $\mu$ on $A$ is a function $\mu: \Sigma \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$, which we may also write as $\mu: \Sigma \rightarrow [0, \infty]$, such that: (1) $\mu$ is non-negative: $\forall X: \mu(X) \geq 0$, (2) $\mu$ assigns zero to the empty set: $\mu(\emptyset) = 0$, (3) $\mu$ is countably additive aka $\sigma$-additive:
 \begin{equation}

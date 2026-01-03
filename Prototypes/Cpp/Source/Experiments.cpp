@@ -10843,6 +10843,47 @@ void testRationalTrigonometry()
 }
 
 
+void testRationalOscillator()
+{
+  using Integer  = rsInt64;
+  using Fraction = rsFraction<Integer>;
+  using Vector   = rsVector2D<Fraction>;
+
+
+  int dummy = 0;
+
+
+  // ToDo:
+  //
+  // - Try using rsComplex instead of rsVector
+  // 
+  // - Try implementing an oscillator based on a phasor of complex rationals. We need to find 
+  //   rational points z = a + b i on the unit circle to use as multiplier in each step. For 
+  //   example z = 0.8 + 0.6 i would work. I think, we can construct rational points on the unit
+  //   circle by taking Pythagorean triples (a,b,c) with a^2 + b^2 = c^2 and then use 
+  //   z = (a/c) + (b/c) i. In the math book (partially in the comments), I describe a way to 
+  //   systematically produce all Pythagorean triples. See also:
+  //   https://www.youtube.com/watch?v=M-9_rZfVQVE  at 6:20. There is a formula for primitive 
+  //   Pythagorean triples: take two integer parameters m,n with n > m >=1,
+  //   gcd(m,n) = 1, m + n = odd and take the triples (n^2 - m^2, 2 n m, n^2 + m^2).
+  //   A nice (non-primitive triple) is 4*(7,24,25) = (28,96,100). That mean, we could use 
+  //   z = 0.96 + 0.28 i. It's "nice" because it has an exact finite (and even short) decimal 
+  //   expansion (just like z = 0.8 + 0.6 i which is even nicer). Are there more such nice triples?
+  //   I don't think so but I'm not sure. I think, to figure it out, we need to look at the 
+  //   reciprocal of c. If it has finite decimal expansion, the triple is "nice" (in decimal). Are
+  //   there also triples that are nice in binary? I think, for that c should be a power of 2. For 
+  //   a nice expansion in decimal, c needs to have factors of 2 and 5 only. 5 has only a single
+  //   factor of 5 and 25 has 2 5s (and 100 has 2 5s and 2 2s). To figure out in which bases a 
+  //   triple is nice, we should look at the prime factorization of c. I think, to be nice in base 
+  //   b, it must only have factors thta are also factors of b (verify!).
+  //   See also: 
+  //   https://en.wikipedia.org/wiki/Pythagorean_triple
+  //   https://en.wikipedia.org/wiki/Formulas_for_generating_Pythagorean_triples
+  //   https://en.wikipedia.org/wiki/Pythagorean_triple#Geometry_of_Euclid's_formula
+
+}
+
+
 template<class T>
 T getNewtonStep(const RAPT::rsPolynomial<T>& p, T x)
 {

@@ -10810,6 +10810,8 @@ void testRationalTrigonometry()
   ok &= lhs == rhs;
 
 
+  rsAssert(ok);
+
   // Check Pythagoras' theorem (holds for right triangles):
   // ....
 
@@ -10823,13 +10825,21 @@ void testRationalTrigonometry()
 
 
   // ToDo: 
-  // -take 3 values as given say Q2,s1,Q3 and compute the other 3 - the classical cases of triangle
-  //  computations
-  // -do all computations also in classic trigonometry and investigate the numerical errors
-  // -plot spread as function of angle and angle as function of spread
-
-
-  rsAssert(ok);
+  // 
+  // - Take 3 values as given say Q2,s1,Q3 and compute the other 3 - the classical cases of 
+  //   triangle computations
+  // 
+  // - Do all computations also in classic trigonometry and investigate the numerical errors
+  // 
+  // - Plot spread as function of angle and angle as function of spread
+  // 
+  // - Implement a class rsRationalTrigonometry that is templatized on the scalar type and vector
+  //   type. These could be rsFraction<int>, rsVector3D<rsFraction<int>> for example
+  //
+  // 
+  // See:
+  //
+  // https://www.youtube.com/playlist?list=PLIljB45xT85AZjh2GUdwsMuAWTEHXCLb-
 }
 
 

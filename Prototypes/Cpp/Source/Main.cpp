@@ -84,7 +84,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testFejerSum();
   //testGreensFunction();  // stub
   //testComplexPolar();    // stub
-  //testRationalTrigonometry();
+  testRationalTrigonometry();
   //testLeveledNumber();   // stub
   //testCommutativeHyperOperations();
   //testNewtonFractal();       // move up to image processing, compare to stuff in main repo - may be redundant

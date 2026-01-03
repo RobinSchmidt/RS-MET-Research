@@ -339,8 +339,36 @@ This set defines a $k$-dimensional hyperplane in $\mathbb{R}^n$ where $k < n$. W
 % but I'm not sure about that.
 
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Lengths, Distances and Angles}
+
+% ToDo: disstance point-point, point-line, point-plane, point-hyperplane, hyperplane-hyperplane
+% I think, distance from a point to any hyperplane is just the length of the difference of the point
+% with the orthogonal projection of that point onto the given hyperplane. 
+
+% Give general formula for point-point distance: 
+%
+%   d(p, q) = |p-q| = sqrt{ (p_1-q_1)^2 + (p_2-q_2)^2 + ... (p_n - q_n)^2 }
+%   d^2(p,w) = |p-q|^2 = (p_1-q_1)^2 + (p_2-q_2)^2 + ... (p_n - q_n)^2 
+%
+% and angle:
+%
+%   a(p,q) = acos ( dot(p,q) / (|p| * |q|) )   (verify!)
+%
+% These should be givne in preparattion for definining quadrance and spread in the rationla 
+% trigonometry section below so the reader can directly compare them. Quadrance is just:
+
+%   quad(p,q) = (p_1-q_1)^2 + (p_2-q_2)^2 + ... (p_n - q_n)^2 and spread is 
+%   spread(p,q) = (dot(p,q))^2 / (quad(p,0) * quad(q,0))
+%
+% ...I think - veriyf. Maybe it makes sense to define quadrance for a single vector as just its
+% length squared.
 
 
+
+\subsection{Rational Trigonometry}
+
+% In rational trigonometry, we don't use the usual Euclidean distance and angles. Instead, we use the so called \emph{quadrance}, which is just the distance squared, and instead of angles, we use the so called \emph{spread} which is just the cosine of the angle. What this buy us is that we can totally avoid the need for irrational numbers as long as our coordinates are rational. Recall that to compute a distance between two points, we use a square root, which will in general produce an irrational number, even when the coordinates are rational. Just by getting rid of the square root, we avoid stepping out of the realm of the rationals. Likewise, the angle between two vectors is given by the arc cosine of their dot product normalized by the product of their lengths. By removing the acos function, we can also stay withing the rational realm. ..wait - I think, that's not entirely correct - we also need to replace the length-based normalization by quadrance-based normalization - and that probably meand that in the numerator, we have to use the square of the dot product. ...verify that!
 
 
 

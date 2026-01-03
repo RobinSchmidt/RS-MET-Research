@@ -10860,15 +10860,23 @@ void testRationalOscillator()
   // ToDo: Create some more. The others won't have nice (i.e. finite and short) decimal expansions,
   // though.
 
+  Int N = 100;
+
+  Comp z(1, 0);
+  for(int i = 0; i < N; i++)
+  {
+    z = a1 * z;
+    int dummy = 0;
+  }
+
 
   int dummy = 0;
 
 
   // ToDo:
-  //
-  // - Try using rsComplex instead of rsVector
   // 
-  // - Try implementing an oscillator based on a phasor of complex rationals. We need to find 
+  // - [partially done]
+  //   Try implementing an oscillator based on a phasor of complex rationals. We need to find 
   //   rational points z = a + b i on the unit circle to use as multiplier in each step. For 
   //   example z = 0.8 + 0.6 i would work. I think, we can construct rational points on the unit
   //   circle by taking Pythagorean triples (a,b,c) with a^2 + b^2 = c^2 and then use 
@@ -10886,16 +10894,29 @@ void testRationalOscillator()
   //   a nice expansion in decimal, c needs to have factors of 2 and 5 only. 5 has only a single
   //   factor of 5 and 25 has 2 5s (and 100 has 2 5s and 2 2s). To figure out in which bases a 
   //   triple is nice, we should look at the prime factorization of c. I think, to be nice in base 
-  //   b, it must only have factors thta are also factors of b (verify!).
+  //   b, it must only have factors that are also factors of b (verify!).
   //   See also: 
   //   https://en.wikipedia.org/wiki/Pythagorean_triple
   //   https://en.wikipedia.org/wiki/Formulas_for_generating_Pythagorean_triples
   //   https://en.wikipedia.org/wiki/Pythagorean_triple#Geometry_of_Euclid's_formula
   //
-  // - Run the oscillator for some number of iterations an observe how long it takes until we
+  // - [partially done]
+  //   Run the oscillator for some number of iterations an observe how long it takes until we
   //   encounter integer overflow problems - or if it happens at all. Maybe we will return to the
   //   initial position without overflow? Maybe that will depend on what the initial position is?
-  //   Take 1 + 0 i as standard start position but try others as well.
+  //   Take 1 + 0 i as standard start position but try others as well. Is there any configuration
+  //   of multiplier and initial condition that works without eventually producing overflow? Try to
+  //   analyze theoretically, what the period length should be if there even is a period. I think,
+  //   maybe the rotation is periodic only when the angle of the multiplier is a rational multiple
+  //   of pi and the only points on the unit circle with that property are the 4 points on the 
+  //   axes which correspond to degenerate triangles when we look at it from the perspective of
+  //   Pythagorean triples?
+  //
+  // - Plot the real and imaginary part of the oscillation. To do this, we need to convert the
+  //   rationals to double.
+  //
+  // - Maybe relax the requirement of being on the unit circle and thereby allow the oscillator to
+  //   produce spiraling motion rather that just rotation.
 }
 
 

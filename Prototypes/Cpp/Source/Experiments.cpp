@@ -10845,9 +10845,20 @@ void testRationalTrigonometry()
 
 void testRationalOscillator()
 {
-  using Integer  = rsInt64;
-  using Fraction = rsFraction<Integer>;
-  using Vector   = rsVector2D<Fraction>;
+  // Under construction.
+  //
+  // We implement an oscillator baseed on a complex phasor where the real and imaginary part are
+  // exact rational numbers. ...TBC...
+
+  using Int  = rsInt64;
+  using Frac = rsFraction<Int>;
+  using Comp = rsComplex<Frac>;
+
+  // Some complex numbers that correspond to rational points on the unit circle:
+  Comp a1(Frac(8,   10), Frac(6,   10));  // 0.8  + 0.6  i  =  (4/5)  + (3/5)   i
+  Comp a2(Frac(96, 100), Frac(28, 100));  // 0.96 + 0.28 i  =  (7/25) + (24/25) i
+  // ToDo: Create some more. The others won't have nice (i.e. finite and short) decimal expansions,
+  // though.
 
 
   int dummy = 0;
@@ -10880,7 +10891,11 @@ void testRationalOscillator()
   //   https://en.wikipedia.org/wiki/Pythagorean_triple
   //   https://en.wikipedia.org/wiki/Formulas_for_generating_Pythagorean_triples
   //   https://en.wikipedia.org/wiki/Pythagorean_triple#Geometry_of_Euclid's_formula
-
+  //
+  // - Run the oscillator for some number of iterations an observe how long it takes until we
+  //   encounter integer overflow problems - or if it happens at all. Maybe we will return to the
+  //   initial position without overflow? Maybe that will depend on what the initial position is?
+  //   Take 1 + 0 i as standard start position but try others as well.
 }
 
 

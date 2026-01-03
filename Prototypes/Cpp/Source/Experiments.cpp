@@ -10895,10 +10895,6 @@ void testRationalOscillator()
   //   factor of 5 and 25 has 2 5s (and 100 has 2 5s and 2 2s). To figure out in which bases a 
   //   triple is nice, we should look at the prime factorization of c. I think, to be nice in base 
   //   b, it must only have factors that are also factors of b (verify!).
-  //   See also: 
-  //   https://en.wikipedia.org/wiki/Pythagorean_triple
-  //   https://en.wikipedia.org/wiki/Formulas_for_generating_Pythagorean_triples
-  //   https://en.wikipedia.org/wiki/Pythagorean_triple#Geometry_of_Euclid's_formula
   //
   // - [partially done]
   //   Run the oscillator for some number of iterations an observe how long it takes until we
@@ -10917,6 +10913,14 @@ void testRationalOscillator()
   //
   // - Maybe relax the requirement of being on the unit circle and thereby allow the oscillator to
   //   produce spiraling motion rather that just rotation.
+  //
+  //
+  //   See also: 
+  //   https://en.wikipedia.org/wiki/Pythagorean_triple
+  //   https://en.wikipedia.org/wiki/Formulas_for_generating_Pythagorean_triples
+  //   https://en.wikipedia.org/wiki/Pythagorean_triple#Geometry_of_Euclid's_formula
+  //   https://ericrowland.github.io/investigations/pythagoreantriples.html
+  //   https://ericrowland.github.io/investigations/tripleslist-long.html
 }
 
 

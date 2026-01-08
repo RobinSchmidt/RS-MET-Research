@@ -12027,7 +12027,8 @@ void testDivisors()
 /** Computes the Euler totient function of the given natural number n. It is defined as the number
 of integers between 1 and n (inclusive) which are coprime to n. It's commonly denoted by the 
 lowercase greek letter phi as phi(n) and therefore also called Euler's phi function. It is a 
-multiplicative functions, i.e. it satisfies phi(m*n) = phi(m) * phi(n). 
+multiplicative functions, i.e. it satisfies phi(m*n) = phi(m) * phi(n). It gives the number of 
+primitive n-th roots of unity in the complex plane.
 
 References:
 
@@ -12041,8 +12042,10 @@ References:
 template<class T>
 T rsEulerTotient(T n)
 {
-  RAPT::rsAssert(n >= 1, "rsEulerTotient: Edge cases are not yet implemented.");
-  T count = 0;
+  //RAPT::rsAssert(n >= 1, "rsEulerTotient: Edge cases are not yet implemented.");
+
+  n = rsAbs(n);                      // We define phi(-n) = phi(n)
+  T count = 0;                       // ..and phi(0) = 0
   for(T k = 1; k <= n; k++)
   {
     if(RAPT::rsGcd(n, k) == 1)
@@ -12053,18 +12056,26 @@ T rsEulerTotient(T n)
   // ToDo:
   //
   // - Figure out if there is a more efficient way to implement it. Maybe based on a precomputed 
-  //   table of prime numbers? If so, maybe implement the more efficient algorithm also.
+  //   table of prime numbers? If so, maybe implement the more efficient algorithm also. See:
+  //   https://en.wikipedia.org/wiki/Euler%27s_totient_function#Euler's_product_formula
+  // 
+  // - Maybe we can use multiplicativity to devise a recursive algorithm. We could do trial 
+  //   division by k until we find k to be a factor of n and then do: 
+  //   return rsEulterTotient(k) * rsEulerTotient(n/k);. ...and maybe optimize it to avoid the 
+  //   second division in the call (we presumably already did the same division in our trial 
+  //   division). Maybe try that and then do benchmarks for some larger numbers.
   //
   // - What about n = 0 and negative n? Maybe it would make sense to define phi(0) = 0 and 
-  //   phi(-n) = phi(n)? Figure this out and implement it!
+  //   phi(-n) = phi(n)? Figure this out and implement it! Wolfram Mathworld says: "...the Wolfram 
+  //   Language defines EulerPhi[0] equal to 0 for consistency with its FactorInteger[0] command." 
 }
 
 void testEulerTotient()
 {
-  //using Int = int;
-
   bool ok = true;
 
+  /*
+  ok &= rsEulerTotient(0) == 0;
   ok &= rsEulerTotient(1) == 1;
   ok &= rsEulerTotient(2) == 1;
   ok &= rsEulerTotient(3) == 2;
@@ -12075,6 +12086,22 @@ void testEulerTotient()
   ok &= rsEulerTotient(8) == 4;
   ok &= rsEulerTotient(9) == 6;
   // ToDo: Test some more cases - maybe up to n = 20 or something like that. 
+  */
+
+
+  // Create a vector with the first 70 values of the Euler totient function phi(n). The values are 
+  // taken from here https://oeis.org/A000010 with a zero prepended for our phi(0) = 0 convention:
+  std::vector<int> phi({0,1,1,2,2,4,2,6,4,6,4,10,4,12,6,8,8,16,6,18,8,12,10,22,8,20,12,18,12,28,8,
+    30,16,20,16,24,12,36,18,24,16,40,12,42,20,24,22,46,16,42,20,32,24,52,18,40,24,36,28,58,16,60,
+    30,36,32,48,20,66,32,44});
+
+  // Verify that our function produces the expected values:
+  for(int n = 0; n < (int) phi.size(); n++)
+  {
+    ok &= rsEulerTotient( n) == phi[n];
+    ok &= rsEulerTotient(-n) == phi[n];
+  }
+  
 
   RAPT::rsAssert(ok);
 

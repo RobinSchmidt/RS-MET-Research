@@ -12024,7 +12024,20 @@ void testDivisors()
   RAPT::rsAssert(ok);
 }
 
+/** Computes the Euler totient function of the given natural number n. It is defined as the number
+of integers between 1 and n (inclusive) which are coprime to n. It's commonly denoted by the 
+lowercase greek letter phi as phi(n) and therefore also called Euler's phi function. It is a 
+multiplicative functions, i.e. it satisfies phi(m*n) = phi(m) * phi(n). 
 
+References:
+
+  - https://en.wikipedia.org/wiki/Euler%27s_totient_function
+  
+  - https://mathworld.wolfram.com/TotientFunction.html
+
+  - https://oeis.org/A000010
+
+*/
 template<class T>
 T rsEulerTotient(T n)
 {
@@ -12036,11 +12049,19 @@ T rsEulerTotient(T n)
       count++;
   }
   return count;
+
+  // ToDo:
+  //
+  // - Figure out if there is a more efficient way to implement it. Maybe based on a precomputed 
+  //   table of prime numbers? If so, maybe implement the more efficient algorithm also.
+  //
+  // - What about n = 0 and negative n? Maybe it would make sense to define phi(0) = 0 and 
+  //   phi(-n) = phi(n)? Figure this out and implement it!
 }
 
 void testEulerTotient()
 {
-  using Int = int;
+  //using Int = int;
 
   bool ok = true;
 
@@ -12049,10 +12070,13 @@ void testEulerTotient()
   ok &= rsEulerTotient(3) == 2;
   ok &= rsEulerTotient(4) == 2;
   ok &= rsEulerTotient(5) == 4;
-  // ToDo: Test some more cases - maybe up to n = 20 or something like that
+  ok &= rsEulerTotient(6) == 2;
+  ok &= rsEulerTotient(7) == 6;
+  ok &= rsEulerTotient(8) == 4;
+  ok &= rsEulerTotient(9) == 6;
+  // ToDo: Test some more cases - maybe up to n = 20 or something like that. 
 
   RAPT::rsAssert(ok);
-
 
   // The sequence of values of the Euler totient function is:
   // 

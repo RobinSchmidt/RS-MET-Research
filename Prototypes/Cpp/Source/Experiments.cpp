@@ -12028,7 +12028,11 @@ void testDivisors()
 of integers between 1 and n (inclusive) which are coprime to n. It's commonly denoted by the 
 lowercase greek letter phi as phi(n) and therefore also called Euler's phi function. It is a 
 multiplicative functions, i.e. it satisfies phi(m*n) = phi(m) * phi(n). It gives the number of 
-primitive n-th roots of unity in the complex plane.
+primitive n-th roots of unity in the complex plane. The function is usually only defined for 
+positive integers but we extend the definition here to all integers by defining phi(0) = 0 and
+phi(-n) = phi(n). ToDo: Explain rationale behind this definition (see comments for some thoughts).
+Document what types for T are allowed (I think, signed or unsigned integer types - for unsigned 
+types, the rsAbs function should be the identity).
 
 References:
 
@@ -12042,8 +12046,6 @@ References:
 template<class T>
 T rsEulerTotient(T n)
 {
-  //RAPT::rsAssert(n >= 1, "rsEulerTotient: Edge cases are not yet implemented.");
-
   n = rsAbs(n);                      // We define phi(-n) = phi(n)
   T count = 0;                       // ..and phi(0) = 0
   for(T k = 1; k <= n; k++)
@@ -12063,31 +12065,35 @@ T rsEulerTotient(T n)
   //   division by k until we find k to be a factor of n and then do: 
   //   return rsEulterTotient(k) * rsEulerTotient(n/k);. ...and maybe optimize it to avoid the 
   //   second division in the call (we presumably already did the same division in our trial 
-  //   division). Maybe try that and then do benchmarks for some larger numbers.
+  //   division). Maybe try that and then do benchmarks for some larger numbers. Try to analyze
+  //   the complexity theoretically. For this, we need to figure out the complexity of rsGcd. 
+  //   Then the totient's complexity, as implemented here, is then n times that. I think, to 
+  //   define the worst case complexity of the bivariate gcd function, we should assume that both
+  //   inputs are as big as possible, i.e. consider the case rsGcd(n,n). Now that special value 
+  //   would of course be trivially n so we may actually look at something like gcd(n,n-1) - but 
+  //   the complexity estimate should not be concerned with such details. Analyze then also the 
+  //   complexity of the recursive implementation theoretically and practically (i.e. with 
+  //   benchmarks).
   //
   // - What about n = 0 and negative n? Maybe it would make sense to define phi(0) = 0 and 
   //   phi(-n) = phi(n)? Figure this out and implement it! Wolfram Mathworld says: "...the Wolfram 
   //   Language defines EulerPhi[0] equal to 0 for consistency with its FactorInteger[0] command." 
+  //   Maybe another and more mathematical argument for definiing phi(0) = 0 could be that
+  //   phi(n) counts the number of integers k with 1 <= k <= n that are coprime to n. For n = 0,
+  //   there are no such integers k, so phi(0) = 0 seems to make sense. (Verify that claim! It was
+  //   AI generated. What is the GCD of an integer and zero anyway?). Symmetrizing the function for
+  //   the negative integers makes sense because negative numbers factor in the same way as the 
+  //   positive ones with the only exception of the sign. I think, in ring theory, the negative
+  //   counterparts are "associated" with their positive siblings and they have the same 
+  //   factorization up to ordering and multiplying by units, if I remember correcty. Look that up
+  //   in the math book. There, I wrote something about this. And if they have the same 
+  //   factorization (up to some minor details), their coprimality properties should also be the 
+  //   same.
 }
 
 void testEulerTotient()
 {
   bool ok = true;
-
-  /*
-  ok &= rsEulerTotient(0) == 0;
-  ok &= rsEulerTotient(1) == 1;
-  ok &= rsEulerTotient(2) == 1;
-  ok &= rsEulerTotient(3) == 2;
-  ok &= rsEulerTotient(4) == 2;
-  ok &= rsEulerTotient(5) == 4;
-  ok &= rsEulerTotient(6) == 2;
-  ok &= rsEulerTotient(7) == 6;
-  ok &= rsEulerTotient(8) == 4;
-  ok &= rsEulerTotient(9) == 6;
-  // ToDo: Test some more cases - maybe up to n = 20 or something like that. 
-  */
-
 
   // Create a vector with the first 70 values of the Euler totient function phi(n). The values are 
   // taken from here https://oeis.org/A000010 with a zero prepended for our phi(0) = 0 convention:
@@ -12101,17 +12107,8 @@ void testEulerTotient()
     ok &= rsEulerTotient( n) == phi[n];
     ok &= rsEulerTotient(-n) == phi[n];
   }
-  
 
   RAPT::rsAssert(ok);
-
-  // The sequence of values of the Euler totient function is:
-  // 
-  // 1,1,2,2,4,2,6,4,6,4,10,4,12,6,8,8,16,6,18,8,12,10,22,8,20,12,18,12,28,8,30,16,20,16,24,12,36,
-  // 18,24,16,40,12,42,20,24,22,46,16,42,20,32,24,52,18,40,24,36,28,58,16,60,30,36,32,48,20,66,...
-  // 
-  // See:
-  // https://oeis.org/A000010
 }
 
 

@@ -10885,7 +10885,7 @@ void testRationalOscillator()
   //   https://www.youtube.com/watch?v=M-9_rZfVQVE  at 6:20. There is a formula for primitive 
   //   Pythagorean triples: take two integer parameters m,n with n > m >=1,
   //   gcd(m,n) = 1, m + n = odd and take the triples (n^2 - m^2, 2 n m, n^2 + m^2).
-  //   A nice (non-primitive triple) is 4*(7,24,25) = (28,96,100). That mean, we could use 
+  //   A nice (non-primitive triple) is 4*(7,24,25) = (28,96,100). That means, we could use 
   //   z = 0.96 + 0.28 i. It's "nice" because it has an exact finite (and even short) decimal 
   //   expansion (just like z = 0.8 + 0.6 i which is even nicer). Are there more such nice triples?
   //   I don't think so but I'm not sure. I think, to figure it out, we need to look at the 
@@ -10921,6 +10921,7 @@ void testRationalOscillator()
   //   https://en.wikipedia.org/wiki/Pythagorean_triple#Geometry_of_Euclid's_formula
   //   https://ericrowland.github.io/investigations/pythagoreantriples.html
   //   https://ericrowland.github.io/investigations/tripleslist-long.html
+  //   https://www.youtube.com/watch?v=QJYmyhnaaek  All possible pythagorean triples, visualized
 }
 
 
@@ -11978,6 +11979,10 @@ std::vector<T> rsFindDivisors(T n)
   //   divisors of a number. If so, maybe implement it. Maybe something based on its prime 
   //   factorization? That would involve creating a prime-table upfront, so it pay off only if we 
   //   want to compute the divisors of many numbers in a loop.
+  //
+  // - Implment a function that doesn't return a std::vector of divisors but rather just the number
+  //   of divisors. It could naively be implemented as: return (T) (rsFindDivisors(n)).size(); but
+  //   that would be rather inefficient, so it's advisable to implement it differently.
 }
 
 void testDivisors()
@@ -12018,6 +12023,46 @@ void testDivisors()
 
   RAPT::rsAssert(ok);
 }
+
+
+template<class T>
+T rsEulerTotient(T n)
+{
+  RAPT::rsAssert(n >= 1, "rsEulerTotient: Edge cases are not yet implemented.");
+  T count = 0;
+  for(T k = 1; k <= n; k++)
+  {
+    if(RAPT::rsGcd(n, k) == 1)
+      count++;
+  }
+  return count;
+}
+
+void testEulerTotient()
+{
+  using Int = int;
+
+  bool ok = true;
+
+  ok &= rsEulerTotient(1) == 1;
+  ok &= rsEulerTotient(2) == 1;
+  ok &= rsEulerTotient(3) == 2;
+  ok &= rsEulerTotient(4) == 2;
+  ok &= rsEulerTotient(5) == 4;
+  // ToDo: Test some more cases - maybe up to n = 20 or something like that
+
+  RAPT::rsAssert(ok);
+
+
+  // The sequence of values of the Euler totient function is:
+  // 
+  // 1,1,2,2,4,2,6,4,6,4,10,4,12,6,8,8,16,6,18,8,12,10,22,8,20,12,18,12,28,8,30,16,20,16,24,12,36,
+  // 18,24,16,40,12,42,20,24,22,46,16,42,20,32,24,52,18,40,24,36,28,58,16,60,30,36,32,48,20,66,...
+  // 
+  // See:
+  // https://oeis.org/A000010
+}
+
 
 void testGcdLcm()
 {

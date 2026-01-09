@@ -12095,7 +12095,8 @@ T rsEulerTotient(T n)
   //   same.
 }
 
-/** UNDER CONSTRUCTION. Does not yet work.
+/** Under Construction. Does not yet work.
+
 Another implementation of the Euler totient function based on recursion. ...TBC... */
 template<class T>
 T rsEulerTotient2(T n)
@@ -12111,8 +12112,16 @@ T rsEulerTotient2(T n)
     T r = n - k*q;                                    // Remainder
     if(r == 0)                                        // When r == 0, k is a factor of n
     {
-      if(rsGcd(q,k) == 1)
-        return rsEulerTotient(q) * rsEulerTotient(k); // Use multiplicativity in recursion
+      // Speculative guess:
+      //T g = rsGcd(q, k);
+      //return g * rsEulerTotient2(q) * rsEulerTotient2(k);
+      
+      // Old:
+      //if(rsGcd(q,k) == 1)
+      //  return rsEulerTotient2(q) * rsEulerTotient2(k); // Use multiplicativity in recursion
+
+      // Older:
+      return rsEulerTotient2(q) * rsEulerTotient2(k); 
     }
   }
   rsError("We should never get here");
@@ -12129,7 +12138,15 @@ T rsEulerTotient2(T n)
   //   conditionality on coprimality). Sooo...in that case, I'm not sure anymore if such a 
   //   recursive algorithm still makes sense. Maybe we need to branch further, i.e. inside the
   //   if(r == 0), we need another if(rsGcd(q,k) == 1) return rsEulerTotient(q) * rsEulerTotient(k)
-  //   else....do something else (but what?). ...Aha! it seems that we do not need an else branch.
+  //   else....do something else (but what?). At the moment, we don't have an else branch and end 
+  //   up in an infinite recursion, I think.
+  //
+  // - Maybe try returning rsGcd(q,k) * rsEulerTotient2(q) * rsEulerTotient2(k). It's just a wild 
+  //   guess...but maybe we can figure out a rule for what the result is in case of non-coprime
+  //   factors. 
+  //
+  // - Try to let then loop run only up to k = n-1, i.e. use k < n instead of k <= n in the 
+  //   condition. If we end up at the bottom of the function, return n-1
 }
 
 
@@ -12151,14 +12168,13 @@ void testEulerTotient()
     ok &= rsEulerTotient(-n) == phi[n];
 
     // Test the alternative implementation:
-    ok &= rsEulerTotient2( n) == phi[n];
-    ok &= rsEulerTotient2(-n) == phi[n];
+    //ok &= rsEulerTotient2( n) == phi[n];
+    //ok &= rsEulerTotient2(-n) == phi[n];
 
+    // For debug:
     //int t1 = rsEulerTotient( n);
-    //int t2 = rsEulerTotient2(n);  // Should be the same as t1
+    //int t2 = rsEulerTotient2(n);  // Runs into infinite recursion
     //int dummy = 0;
-    // Fails for n = 4,8,9,12,16,20,24,25,27,28,32,... See comment in rsEulerTotient2() for why 
-    // this happens.
   }
 
   RAPT::rsAssert(ok);

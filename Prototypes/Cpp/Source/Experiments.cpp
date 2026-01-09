@@ -12096,22 +12096,40 @@ T rsEulerTotient(T n)
 }
 
 /** UNDER CONSTRUCTION. Does not yet work.
-Another implementation of the Euler totient function. ...TBC... */
+Another implementation of the Euler totient function based on recursion. ...TBC... */
 template<class T>
 T rsEulerTotient2(T n)
 {
   n = rsAbs(n);
   if(n == 0)
-    return 0;
+    return T(0);
   if(n <= 2)
-    return 1;
+    return T(1);
   for(T k = 2; k <= n; k++)
   {
-    T q = n / k;                                    // Quotient
-    T r = n - k*q;                                  // Remainder
-    if(r == 0)                                      // When r == 0, k is a factor of n
-      return rsEulerTotient(q) * rsEulerTotient(k); // Use multiplicativity in recursion
+    T q = n / k;                                      // Quotient
+    T r = n - k*q;                                    // Remainder
+    if(r == 0)                                        // When r == 0, k is a factor of n
+    {
+      if(rsGcd(q,k) == 1)
+        return rsEulerTotient(q) * rsEulerTotient(k); // Use multiplicativity in recursion
+    }
   }
+  rsError("We should never get here");
+  return T(0);
+
+  // Notes:
+  //
+  // - I think, it doesn't work, because the relation phi(m*n) = phi(m) * phi(n) holds only when
+  //   m and n are coprime. This is indeed the definition for multiplicativity, see:
+  //   https://en.wikipedia.org/wiki/Euler%27s_totient_function#Phi_is_a_multiplicative_function
+  //   https://en.wikipedia.org/wiki/Multiplicative_function
+  //   When the relation holds even when m and n a re not comprime, the function is called
+  //   "completely multiplicative". I assumed that to be the case (I wasn't aware, of the 
+  //   conditionality on coprimality). Sooo...in that case, I'm not sure anymore if such a 
+  //   recursive algorithm still makes sense. Maybe we need to branch further, i.e. inside the
+  //   if(r == 0), we need another if(rsGcd(q,k) == 1) return rsEulerTotient(q) * rsEulerTotient(k)
+  //   else....do something else (but what?). ...Aha! it seems that we do not need an else branch.
 }
 
 
@@ -12132,11 +12150,15 @@ void testEulerTotient()
     ok &= rsEulerTotient( n) == phi[n];
     ok &= rsEulerTotient(-n) == phi[n];
 
-    // Test the alterntaive implementation:
-    int t1 = rsEulerTotient( n);
-    int t2 = rsEulerTotient2(n);
-    int dummy = 0;
-    // Fails for n = 4,8,9,12,16,20,24,25,27,28,32,...
+    // Test the alternative implementation:
+    ok &= rsEulerTotient2( n) == phi[n];
+    ok &= rsEulerTotient2(-n) == phi[n];
+
+    //int t1 = rsEulerTotient( n);
+    //int t2 = rsEulerTotient2(n);  // Should be the same as t1
+    //int dummy = 0;
+    // Fails for n = 4,8,9,12,16,20,24,25,27,28,32,... See comment in rsEulerTotient2() for why 
+    // this happens.
   }
 
   RAPT::rsAssert(ok);

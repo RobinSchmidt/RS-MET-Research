@@ -12107,9 +12107,9 @@ T rsEulerTotient2(T n)
     return T(1);
   for(T k = 2; k < n; k++)
   {
-    T q = n / k;                                      // Quotient
-    T r = n - k*q;                                    // Remainder
-    if(r == 0)                                        // When r == 0, k is a factor of n
+    T q = n / k;               // Quotient
+    T r = n - k*q;             // Remainder
+    if(r == 0)                 // When r == 0, k is a factor of n
     {
       // Speculative guess:
       T g = rsGcd(q, k);
@@ -12123,7 +12123,6 @@ T rsEulerTotient2(T n)
       //return rsEulerTotient2(q) * rsEulerTotient2(k); 
     }
   }
-  //rsError("We should never get here");
   return n-1;
 
   // Notes:
@@ -12176,6 +12175,10 @@ void testEulerTotient()
     int dummy = 0;
     // rsEulerTotient2 fails for n = 9,18,25,27,36,45,49,50,54,54,63. So, something is still wrong
     // but quite often, we get the correct result so maybe with a minor tweak we can make it work?
+    // When it fails, the wrong t2 is a multiple of the correct t1. Maybe multiplying the result of
+    // the recursive calls with the gcd is wrong...or wrong in certain circumstances. Maybe when n 
+    // is a square number? Or maybe if it contains a square number as factor? Maybe the formual 
+    // works only for square-free numbers? Maybe we need a special case treatment for q == k?
   }
 
   RAPT::rsAssert(ok);

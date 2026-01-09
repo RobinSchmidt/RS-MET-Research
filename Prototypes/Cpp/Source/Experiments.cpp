@@ -12027,7 +12027,7 @@ void testDivisors()
 /** Computes the Euler totient function of the given natural number n. It is defined as the number
 of integers between 1 and n (inclusive) which are coprime to n. It's commonly denoted by the 
 lowercase greek letter phi as phi(n) and therefore also called Euler's phi function. It is a 
-multiplicative functions, i.e. it satisfies phi(m*n) = phi(m) * phi(n). It gives the number of 
+multiplicative function, i.e. it satisfies phi(m*n) = phi(m) * phi(n). It gives the number of 
 primitive n-th roots of unity in the complex plane. The function is usually only defined for 
 positive integers but we extend the definition here to all integers by defining phi(0) = 0 and
 phi(-n) = phi(n). ToDo: Explain rationale behind this definition (see comments for some thoughts).
@@ -12075,6 +12075,10 @@ T rsEulerTotient(T n)
   //   complexity of the recursive implementation theoretically and practically (i.e. with 
   //   benchmarks).
   //
+  // - Do we really need to run the loop from 1 to n? Maybe it could be enough to run it only up
+  //   to sqrt(n) for similar reasons as in the sieve of Erathostenes? If this turns out to be 
+  //   false, document why.
+  // 
   // - What about n = 0 and negative n? Maybe it would make sense to define phi(0) = 0 and 
   //   phi(-n) = phi(n)? Figure this out and implement it! Wolfram Mathworld says: "...the Wolfram 
   //   Language defines EulerPhi[0] equal to 0 for consistency with its FactorInteger[0] command." 
@@ -12091,6 +12095,26 @@ T rsEulerTotient(T n)
   //   same.
 }
 
+/** UNDER CONSTRUCTION. Does not yet work.
+Another implementation of the Euler totient function. ...TBC... */
+template<class T>
+T rsEulerTotient2(T n)
+{
+  n = rsAbs(n);
+  if(n == 0)
+    return 0;
+  if(n <= 2)
+    return 1;
+  for(T k = 2; k <= n; k++)
+  {
+    T q = n / k;                                    // Quotient
+    T r = n - k*q;                                  // Remainder
+    if(r == 0)                                      // When r == 0, k is a factor of n
+      return rsEulerTotient(q) * rsEulerTotient(k); // Use multiplicativity in recursion
+  }
+}
+
+
 void testEulerTotient()
 {
   bool ok = true;
@@ -12104,8 +12128,15 @@ void testEulerTotient()
   // Verify that our function produces the expected values:
   for(int n = 0; n < (int) phi.size(); n++)
   {
+    // Test the 1st implementation for positive and negative arguments:
     ok &= rsEulerTotient( n) == phi[n];
     ok &= rsEulerTotient(-n) == phi[n];
+
+    // Test the alterntaive implementation:
+    int t1 = rsEulerTotient( n);
+    int t2 = rsEulerTotient2(n);
+    int dummy = 0;
+    // Fails for n = 4,8,9,12,16,20,24,25,27,28,32,...
   }
 
   RAPT::rsAssert(ok);

@@ -12096,7 +12096,6 @@ T rsEulerTotient(T n)
 }
 
 /** Under Construction. Does not yet work.
-
 Another implementation of the Euler totient function based on recursion. ...TBC... */
 template<class T>
 T rsEulerTotient2(T n)
@@ -12106,26 +12105,26 @@ T rsEulerTotient2(T n)
     return T(0);
   if(n <= 2)
     return T(1);
-  for(T k = 2; k <= n; k++)
+  for(T k = 2; k < n; k++)
   {
     T q = n / k;                                      // Quotient
     T r = n - k*q;                                    // Remainder
     if(r == 0)                                        // When r == 0, k is a factor of n
     {
       // Speculative guess:
-      //T g = rsGcd(q, k);
-      //return g * rsEulerTotient2(q) * rsEulerTotient2(k);
+      T g = rsGcd(q, k);
+      return g * rsEulerTotient2(q) * rsEulerTotient2(k);
       
       // Old:
       //if(rsGcd(q,k) == 1)
       //  return rsEulerTotient2(q) * rsEulerTotient2(k); // Use multiplicativity in recursion
 
       // Older:
-      return rsEulerTotient2(q) * rsEulerTotient2(k); 
+      //return rsEulerTotient2(q) * rsEulerTotient2(k); 
     }
   }
-  rsError("We should never get here");
-  return T(0);
+  //rsError("We should never get here");
+  return n-1;
 
   // Notes:
   //
@@ -12172,9 +12171,11 @@ void testEulerTotient()
     //ok &= rsEulerTotient2(-n) == phi[n];
 
     // For debug:
-    //int t1 = rsEulerTotient( n);
-    //int t2 = rsEulerTotient2(n);  // Runs into infinite recursion
-    //int dummy = 0;
+    int t1 = rsEulerTotient( n);
+    int t2 = rsEulerTotient2(n);
+    int dummy = 0;
+    // rsEulerTotient2 fails for n = 9,18,25,27,36,45,49,50,54,54,63. So, something is still wrong
+    // but quite often, we get the correct result so maybe with a minor tweak we can make it work?
   }
 
   RAPT::rsAssert(ok);

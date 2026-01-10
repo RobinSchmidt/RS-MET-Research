@@ -12109,7 +12109,15 @@ which applies only when m and n are coprime. That's the general definition of a 
 function in number theory: It generally requires the two factors to be coprime. If such a product
 relation holds even if the factors are not coprime, a function would be called "completely" or
 "totally" multiplicative. But the totient is not totally multliplicative, just multiplicative, so 
-we need a more complicated formula in general. */
+we need a more complicated formula in general. 
+
+References:
+  
+  - https://en.wikipedia.org/wiki/Euler%27s_totient_function#Phi_is_a_multiplicative_function
+
+  - https://en.wikipedia.org/wiki/Multiplicative_function
+
+*/
 template<class T>
 T rsEulerTotient2(T n)
 {
@@ -12125,30 +12133,28 @@ T rsEulerTotient2(T n)
     if(r == 0)                 // When r == 0, k is a factor of n
     {
       T d = rsGcd(q, k);
-      T t = rsEulerTotient2(d);
-      return (rsEulerTotient2(q) * rsEulerTotient2(k) * d) / t;
-      // The formula is taken from here:
-      // https://en.wikipedia.org/wiki/Euler%27s_totient_function#Other_formulae
-      // ToDo: Figure out if we can put a condition on evaluating the totient a 3rd time when
-      // we divide d by phi(d). Maybe that phi(d) will be 1 most of the time? Maybe it will only be
-      // something else if q == k? Or maybe we can just check if d == 1 and only if it is, we need
-      // to compute t (otherwise, t = 1).
-      // 
-      // 
-      // By the way: It's really important to first compute the product
-      // phi(q) * phi(k) * d and then divide the whole product by t rather than computing a scaler
-      // s = d/t beforehand because in general, d is not necessarily divisible by t. At least, 
-      // that's what I assume after having tried it this way and getting wrong results. (verify!)
+      if(d != 1)
+      {
+        // Use more general formula (requiring 3 recursive calls) in cases where k,q are not
+        // coprime:
+        T t = rsEulerTotient2(d);
+        return (rsEulerTotient2(q) * rsEulerTotient2(k) * d) / t;
+      }
+      else
+      {
+        // Use simpler formula (requiring 2 recursive calls) when k,q are coprime:
+        return rsEulerTotient2(q) * rsEulerTotient2(k);
+      }
     }
   }
   return n-1;
 
   // Notes:
-  //
-  // - I think, it doesn't work, because the relation phi(m*n) = phi(m) * phi(n) holds only when
-  //   m and n are coprime. This is indeed the definition for multiplicativity, see:
-  //   https://en.wikipedia.org/wiki/Euler%27s_totient_function#Phi_is_a_multiplicative_function
-  //   https://en.wikipedia.org/wiki/Multiplicative_function
+  // 
+  // - In the general case, it's really important to first compute the product  phi(q) * phi(k) * d
+  //   and then divide the whole product by t rather than computing a scaler s = d/t beforehand 
+  //   because in general, d is not necessarily divisible by t. At least, that's what I assume 
+  //   after having tried it this way and getting wrong results. (Verify!)
   // 
   // - Maybe it could be more efficient to let the loop over k run downward from n-1 to 2 because 
   //   that way we would divide more often by bigger numbers and thereby reduce the sizes of the 

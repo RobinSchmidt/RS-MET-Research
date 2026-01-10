@@ -12112,8 +12112,25 @@ T rsEulerTotient2(T n)
     if(r == 0)                 // When r == 0, k is a factor of n
     {
       // Speculative guess:
-      T g = rsGcd(q, k);
-      return g * rsEulerTotient2(q) * rsEulerTotient2(k);
+      //T g = rsGcd(q, k);
+      //return g * rsEulerTotient2(q) * rsEulerTotient2(k);
+
+      T d = rsGcd(q, k);
+      T t = rsEulerTotient2(d);
+      return (rsEulerTotient2(q) * rsEulerTotient2(k) * d) / t;
+      // The formula is taken from here:
+      // https://en.wikipedia.org/wiki/Euler%27s_totient_function#Other_formulae
+      // ToDo: Figure out if we can put a condition on evaluating the totient a 3rd time when
+      // we divide d by phi(d). Maybe that phi(d) will be 1 most of the time? Maybe it will only be
+      // something else if q == k? By the way: It's really important to first compute the product
+      // phi(q) * phi(k) * d and then divide the whole product by t rather than computing a scaler
+      // s = d/t beforehand because in general, d is not necessarily divisible by t. At least, 
+      // that's what I assume after having tried it this way and getting wrong results. (verify!)
+
+
+      //T s = d / t;
+      //return s * rsEulerTotient2(q) * rsEulerTotient2(k);
+
       
       // Old:
       //if(rsGcd(q,k) == 1)
@@ -12142,9 +12159,19 @@ T rsEulerTotient2(T n)
   // - Maybe try returning rsGcd(q,k) * rsEulerTotient2(q) * rsEulerTotient2(k). It's just a wild 
   //   guess...but maybe we can figure out a rule for what the result is in case of non-coprime
   //   factors. 
+  // 
+  // - Aha! Here: https://en.wikipedia.org/wiki/Euler%27s_totient_function#Other_formulae
+  //   
   //
   // - Try to let then loop run only up to k = n-1, i.e. use k < n instead of k <= n in the 
   //   condition. If we end up at the bottom of the function, return n-1
+  //
+  // - Maybe it could be more efficient to let the loop over k run downward from n-1 to 2 because 
+  //   that way we would divide more often by bigger numbers and thereby reduce the sizes of the 
+  //   arguments in the recursive calls faster. ...or maybe we wouldn't because we always have two
+  //   recursive calls - one with q and one with k. The q would get smaller faster but that would 
+  //   be counterbalanced by larger k - so in the end, it may not really matter if the loop runs up
+  //   or down. But maybe try it and benchmark it anyway (and document the results).
 }
 
 
@@ -12157,6 +12184,25 @@ void testEulerTotient()
   std::vector<int> phi({0,1,1,2,2,4,2,6,4,6,4,10,4,12,6,8,8,16,6,18,8,12,10,22,8,20,12,18,12,28,8,
     30,16,20,16,24,12,36,18,24,16,40,12,42,20,24,22,46,16,42,20,32,24,52,18,40,24,36,28,58,16,60,
     30,36,32,48,20,66,32,44});
+
+  // For debugging - these are the values of n for which rsEulerTotient2 returns the wrong result:
+  int t;
+  t = rsEulerTotient2( 9);
+  t = rsEulerTotient2(18);
+  t = rsEulerTotient2(25);
+  t = rsEulerTotient2(27);
+  t = rsEulerTotient2(36);
+  t = rsEulerTotient2(45);
+  t = rsEulerTotient2(49);
+  t = rsEulerTotient2(50);
+  t = rsEulerTotient2(54);
+  t = rsEulerTotient2(63);
+
+  // Some tests:
+  t = rsEulerTotient(121);   // 110
+  // It seems that the totient of a prime p squared (here 11^2) is always equal to p^2 - p.
+
+
 
   // Verify that our function produces the expected values:
   for(int n = 0; n < (int) phi.size(); n++)
@@ -12179,6 +12225,7 @@ void testEulerTotient()
     // the recursive calls with the gcd is wrong...or wrong in certain circumstances. Maybe when n 
     // is a square number? Or maybe if it contains a square number as factor? Maybe the formual 
     // works only for square-free numbers? Maybe we need a special case treatment for q == k?
+    // ..OK - that seems to be fixed!
   }
 
   RAPT::rsAssert(ok);

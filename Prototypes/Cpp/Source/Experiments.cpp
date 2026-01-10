@@ -12142,8 +12142,7 @@ T rsEulerTotient2(T n)
       {
         // Use more general formula (requiring 3 recursive calls) in cases where k,q are not
         // coprime:
-        T t = rsEulerTotient2(d);
-        return (rsEulerTotient2(q) * rsEulerTotient2(k) * d) / t;
+        return (rsEulerTotient2(q) * rsEulerTotient2(k) * d) / rsEulerTotient2(d);
       }
       else
       {
@@ -12157,9 +12156,9 @@ T rsEulerTotient2(T n)
   // Notes:
   // 
   // - In the general case, it's really important to first compute the product  phi(q) * phi(k) * d
-  //   and then divide the whole product by t rather than computing a scaler s = d/t beforehand 
-  //   because in general, d is not necessarily divisible by t. At least, that's what I assume 
-  //   after having tried it this way and getting wrong results. (Verify!)
+  //   and then divide the whole product by t = phi(d) rather than computing a scaler s = d/t 
+  //   beforehand because in general, d is not necessarily divisible by t. At least, that's what I 
+  //   assume after having tried it this way and getting wrong results. (Verify!)
   // 
   // - Maybe it could be more efficient to let the loop over k run downward from n-1 to 2 because 
   //   that way we would divide more often by bigger numbers and thereby reduce the sizes of the 
@@ -12193,6 +12192,13 @@ void testEulerTotient()
   }
 
   RAPT::rsAssert(ok);
+
+  // ToDo:
+  //
+  // - Benchmark the two implementations. Maybe for each number n, run both of them a couple of 
+  //   times and use the minimum. Maybe the efficiency as function of n could be a bit erratic 
+  //   depending on the divisible features of the number n in question. Maybe for highly composite 
+  //   numbers, the recursive implementation could be better? ...just guessing
 }
 
 

@@ -12109,7 +12109,12 @@ which applies only when m and n are coprime. That's the general definition of a 
 function in number theory: It generally requires the two factors to be coprime. If such a product
 relation holds even if the factors are not coprime, a function would be called "completely" or
 "totally" multiplicative. But the totient is not totally multliplicative, just multiplicative, so 
-we need a more complicated formula in general. 
+we need a more complicated formula in general. The function loops through all numbers k starting 
+from 2 and going up to n-1 to try to find a factor k of the argument n by trial division. If it 
+finds such a factor k, it factors n into k and n/k and applies the recursive rule. If it doesn't 
+succeed to find any such factor k, the result is just n-1 because all k less than n are then 
+necessarily coprime to n. ...WAIT! Is that actually true? All we can say is actually that n is not
+divisible by any of the k < n...VERIFY THAT!
 
 References:
   

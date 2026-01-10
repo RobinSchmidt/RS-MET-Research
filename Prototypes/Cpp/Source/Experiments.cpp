@@ -12095,8 +12095,21 @@ T rsEulerTotient(T n)
   //   same.
 }
 
-/** Under Construction. Does not yet work.
-Another implementation of the Euler totient function based on recursion. ...TBC... */
+/** Another implementation of the Euler totient function based on recursion. It uses the product 
+relation:
+
+  phi(m*n) = (phi(m) * phi(n) * d) / phi(d)     where    d = gcd(m,n)
+
+to express the totient of the product m*n in terms of the totients of m and n. This formula 
+generalizes the multiplicativity rule:
+
+  phi(m*n) = phi(m) * phi(n)      if  gcd(m,n) = 1, i.e. m,n are coprime
+
+which applies only when m and n are coprime. That's the general definition of a multiplicative 
+function in number theory: It generally requires the two factors to be coprime. If such a product
+relation holds even if the factors are not coprime, a function would be called "completely" or
+"totally" multiplicative. But the totient is not totally multliplicative, just multiplicative, so 
+we need a more complicated formula in general. */
 template<class T>
 T rsEulerTotient2(T n)
 {
@@ -12111,10 +12124,6 @@ T rsEulerTotient2(T n)
     T r = n - k*q;             // Remainder
     if(r == 0)                 // When r == 0, k is a factor of n
     {
-      // Speculative guess:
-      //T g = rsGcd(q, k);
-      //return g * rsEulerTotient2(q) * rsEulerTotient2(k);
-
       T d = rsGcd(q, k);
       T t = rsEulerTotient2(d);
       return (rsEulerTotient2(q) * rsEulerTotient2(k) * d) / t;
@@ -12122,22 +12131,14 @@ T rsEulerTotient2(T n)
       // https://en.wikipedia.org/wiki/Euler%27s_totient_function#Other_formulae
       // ToDo: Figure out if we can put a condition on evaluating the totient a 3rd time when
       // we divide d by phi(d). Maybe that phi(d) will be 1 most of the time? Maybe it will only be
-      // something else if q == k? By the way: It's really important to first compute the product
+      // something else if q == k? Or maybe we can just check if d == 1 and only if it is, we need
+      // to compute t (otherwise, t = 1).
+      // 
+      // 
+      // By the way: It's really important to first compute the product
       // phi(q) * phi(k) * d and then divide the whole product by t rather than computing a scaler
       // s = d/t beforehand because in general, d is not necessarily divisible by t. At least, 
       // that's what I assume after having tried it this way and getting wrong results. (verify!)
-
-
-      //T s = d / t;
-      //return s * rsEulerTotient2(q) * rsEulerTotient2(k);
-
-      
-      // Old:
-      //if(rsGcd(q,k) == 1)
-      //  return rsEulerTotient2(q) * rsEulerTotient2(k); // Use multiplicativity in recursion
-
-      // Older:
-      //return rsEulerTotient2(q) * rsEulerTotient2(k); 
     }
   }
   return n-1;
@@ -12148,24 +12149,7 @@ T rsEulerTotient2(T n)
   //   m and n are coprime. This is indeed the definition for multiplicativity, see:
   //   https://en.wikipedia.org/wiki/Euler%27s_totient_function#Phi_is_a_multiplicative_function
   //   https://en.wikipedia.org/wiki/Multiplicative_function
-  //   When the relation holds even when m and n a re not comprime, the function is called
-  //   "completely multiplicative". I assumed that to be the case (I wasn't aware, of the 
-  //   conditionality on coprimality). Sooo...in that case, I'm not sure anymore if such a 
-  //   recursive algorithm still makes sense. Maybe we need to branch further, i.e. inside the
-  //   if(r == 0), we need another if(rsGcd(q,k) == 1) return rsEulerTotient(q) * rsEulerTotient(k)
-  //   else....do something else (but what?). At the moment, we don't have an else branch and end 
-  //   up in an infinite recursion, I think.
-  //
-  // - Maybe try returning rsGcd(q,k) * rsEulerTotient2(q) * rsEulerTotient2(k). It's just a wild 
-  //   guess...but maybe we can figure out a rule for what the result is in case of non-coprime
-  //   factors. 
   // 
-  // - Aha! Here: https://en.wikipedia.org/wiki/Euler%27s_totient_function#Other_formulae
-  //   
-  //
-  // - Try to let then loop run only up to k = n-1, i.e. use k < n instead of k <= n in the 
-  //   condition. If we end up at the bottom of the function, return n-1
-  //
   // - Maybe it could be more efficient to let the loop over k run downward from n-1 to 2 because 
   //   that way we would divide more often by bigger numbers and thereby reduce the sizes of the 
   //   arguments in the recursive calls faster. ...or maybe we wouldn't because we always have two
@@ -12185,47 +12169,16 @@ void testEulerTotient()
     30,16,20,16,24,12,36,18,24,16,40,12,42,20,24,22,46,16,42,20,32,24,52,18,40,24,36,28,58,16,60,
     30,36,32,48,20,66,32,44});
 
-  // For debugging - these are the values of n for which rsEulerTotient2 returns the wrong result:
-  int t;
-  t = rsEulerTotient2( 9);
-  t = rsEulerTotient2(18);
-  t = rsEulerTotient2(25);
-  t = rsEulerTotient2(27);
-  t = rsEulerTotient2(36);
-  t = rsEulerTotient2(45);
-  t = rsEulerTotient2(49);
-  t = rsEulerTotient2(50);
-  t = rsEulerTotient2(54);
-  t = rsEulerTotient2(63);
-
-  // Some tests:
-  t = rsEulerTotient(121);   // 110
-  // It seems that the totient of a prime p squared (here 11^2) is always equal to p^2 - p.
-
-
-
-  // Verify that our function produces the expected values:
+  // Verify that our different implementations of the totient function produce the expected values:
   for(int n = 0; n < (int) phi.size(); n++)
   {
     // Test the 1st implementation for positive and negative arguments:
     ok &= rsEulerTotient( n) == phi[n];
     ok &= rsEulerTotient(-n) == phi[n];
 
-    // Test the alternative implementation:
-    //ok &= rsEulerTotient2( n) == phi[n];
-    //ok &= rsEulerTotient2(-n) == phi[n];
-
-    // For debug:
-    int t1 = rsEulerTotient( n);
-    int t2 = rsEulerTotient2(n);
-    int dummy = 0;
-    // rsEulerTotient2 fails for n = 9,18,25,27,36,45,49,50,54,54,63. So, something is still wrong
-    // but quite often, we get the correct result so maybe with a minor tweak we can make it work?
-    // When it fails, the wrong t2 is a multiple of the correct t1. Maybe multiplying the result of
-    // the recursive calls with the gcd is wrong...or wrong in certain circumstances. Maybe when n 
-    // is a square number? Or maybe if it contains a square number as factor? Maybe the formual 
-    // works only for square-free numbers? Maybe we need a special case treatment for q == k?
-    // ..OK - that seems to be fixed!
+    // Test the alternative (recursive) implementation:
+    ok &= rsEulerTotient2( n) == phi[n];
+    ok &= rsEulerTotient2(-n) == phi[n];
   }
 
   RAPT::rsAssert(ok);

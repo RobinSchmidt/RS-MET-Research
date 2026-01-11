@@ -12111,10 +12111,10 @@ relation holds even if the factors are not coprime, a function would be called "
 "totally" multiplicative. But the totient is not totally multliplicative, just multiplicative, so 
 we need a more complicated formula in general. The function loops through all numbers k starting 
 from 2 and going up to n-1 to try to find a factor k of the argument n by trial division. If it 
-finds such a factor k, it factors n into k and n/k and applies the recursive rule. If it doesn't 
-succeed to find any such factor k, the result is just n-1 because all k less than n are then 
-necessarily coprime to n. ...WAIT! Is that actually true? All we can say is actually that n is not
-divisible by any of the k < n...VERIFY THAT!
+finds such a factor k, it factors n into k and q = n/k and applies the recursive rule. If it 
+doesn't succeed to find any such factor k, the result is just n-1 because all k less than n are 
+then necessarily coprime to n. ...WAIT! Is that actually true? All we can say is actually that n is
+not divisible by any of the k < n...VERIFY THAT!
 
 References:
   
@@ -12126,12 +12126,15 @@ References:
 template<class T>
 T rsEulerTotient2(T n)
 {
-  n = rsAbs(n);
-  if(n == 0)
-    return T(0);
-  if(n <= 2)
-    return T(1);
-  for(T k = 2; k < n; k++)
+  n = rsAbs(n);                // Symmetrize function to handle negative arguments
+
+  if(n == 0)  
+    return T(0);               // Defining phi(0) = 0 makes sense.
+
+  if(n <= 2)  
+    return T(1);               // phi(1) = phi(2) = 1. Base cases for the recursion.
+
+  for(T k = 2; k < n; k++)     // Trial division loop
   {
     T q = n / k;               // Quotient
     T r = n - k*q;             // Remainder
@@ -12151,14 +12154,15 @@ T rsEulerTotient2(T n)
       }
     }
   }
-  return n-1;
+  return n-1;                  // No factors were found
 
   // Notes:
   // 
   // - In the general case, it's really important to first compute the product  phi(q) * phi(k) * d
   //   and then divide the whole product by t = phi(d) rather than computing a scaler s = d/t 
-  //   beforehand because in general, d is not necessarily divisible by t. At least, that's what I 
-  //   assume after having tried it this way and getting wrong results. (Verify!)
+  //   beforehand and the returning  s * phi(q) * phi(k)  because in general, d is not necessarily
+  //   divisible by t. At least, that's what I assume after having tried it this way and getting 
+  //   wrong results. (Verify!)
   // 
   // - Maybe it could be more efficient to let the loop over k run downward from n-1 to 2 because 
   //   that way we would divide more often by bigger numbers and thereby reduce the sizes of the 
@@ -12205,8 +12209,8 @@ void testEulerTotient()
 void testGcdLcm()
 {
   // We experimentally test some properties of the greatest common divisor (gcd) and least common
-  // multiple (lcm) function. ...TBC...
-
+  // multiple (lcm) function. We are mainly interested in distributive laws between gcd, lcm and
+  // multiplication. ...TBC...
 
   bool ok = true;
 
@@ -12216,6 +12220,8 @@ void testGcdLcm()
   // Range of values for a,b,c to check the properties for:
   UInt  nMin =   1;
   UInt  nMax = 100;
+  // With N = nMax - nMin, the complexity of the triple loop below is O(N^3) so be careful with 
+  // these numbers.
 
   //nMin = 10, nMax = 15;  // Test - for faster evaluation
 
@@ -12297,7 +12303,7 @@ void testGcdLcm()
   // injective (up to swapping x,y). But is it? Let's try to figure it out experimentally for 
   // values of x,y between nMin and nMax.
   //
-  // Nope! Apparently, it doesn't work.
+  // ...done. Result: Nope! Apparently, it doesn't work.
 
   nMin = 2, nMax = 20;  // Preliminary - get rid later!
 
@@ -12370,7 +12376,8 @@ void testGcdLcm()
   //
   // - Move the functions rsIsDistributive(), etc. that we have used to check the generalized 
   //   matrix operations into a file that we include here (like Tools.cpp) such that they become
-  //   available here. Then use them here. That may reduce the inner loop body to four lines.
+  //   available here. Then use them here. That may reduce the 3-liners in the inner loop body to
+  //   1-liners.
   
   // - Maybe also add something like rsIsIdempotent. This means that if we give it the same operand
   //   for both arguments, it returns that same number. But idempotence may make more sense for a 
@@ -12378,13 +12385,16 @@ void testGcdLcm()
   //   in linear algebra as an idempotent operator, we consider the subspace that we project onto 
   //   as baked into the operator rather than as a second operand such that the projection operator
   //   becomes unary, i.e. takes only one vector as input. It feels a bit like currying.
+  // 
+  // - Test associativity of gcd and lcm. I think, they are both associative. Test also the 
+  //   commutativity.
   //
   // - Maybe introduce infix operators for gcd and lcm to write down the distributivity laws in a 
   //   nice way. Maybe use v for gcd and ^ for lcm. They should look like downward and upward 
   //   arrows to suggest "divide down"/"multiply up". Then we can write:
   //
   //     a ^ (b v c) = (a ^ b) v (a ^ c)     lcm distributes over gcd
-  //     a v (b ^ c) = (a v b) ^ (a v c)     gcd dsitributes over lcm
+  //     a v (b ^ c) = (a v b) ^ (a v c)     gcd distributes over lcm
   //
   //   A comment here says that the wedge/vee notation is used in lattice theory:
   //   https://math.stackexchange.com/questions/853779/notation-for-the-least-common-multiple-and-greatest-common-divisor

@@ -12173,6 +12173,39 @@ T rsEulerTotient2(T n)
 }
 
 
+template<class T>
+T rsEulerTotient3(T n, const std::vector<T>& primeTable)
+{ 
+  //rsAssert(primeTable.back() >= n);  // Ensure that the able is large enough.
+
+  using Fraction = rsFraction<T>;
+
+  Fraction P(1, 1);          // Multiplicative accumulator for the product. Init to 1.
+
+  int i = 0;
+  while(true)
+  {
+    T p = primeTable[i];
+
+    if(n % p == 0)           // Means: if p divides n
+    {
+      Fraction f = Fraction(1, 1) - Fraction(1, p);
+      P *= f;
+    }
+
+    if(p >= n)
+      break;
+
+    i++;
+  }
+
+  P *= rsFraction(n, 1);     // Maybe we can use n/1 to init P instead of init to 1?
+
+  rsAssert(P.isInteger());   // P should now be an integer, i.e. the denominator should be 1
+  return P.getNumerator();
+}
+
+
 /** An implementation of the Euler totient function based on the product formula:
 
   phi(n) = n * prod_{p | n} (1 - 1/p)
@@ -12181,16 +12214,23 @@ where p is a prime number. That means, the product runs over all primes p that d
 needs to pass a const ref to a table of prime numbers at least up to (and including) n. 
 ...TBC... */
 template<class T>
-T rsEulerTotient3(T n, const rsPrimeFactorTable<T>& primeTable)
+T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
 {
   //rsAssert(primeTable.getMaxPrime() >= n);  // Ensure that the able is large enough.
+
+  // Retrieve the table of primes
+  const std::vector<T>& primes = primeTable.getPrimeTable();
+  return rsEulerTotient3(n, primes);
+
+
 
   using Fraction = rsFraction<T>;
 
   Fraction P(1, 1);  // Multiplicative accumulator for the product. Init to 1.
 
-  // Retrieve the table of primes
-  const std::vector<T>& primes = primeTable.getPrimeTable();
+
+
+
 
   int i = 0;
   while(true)
@@ -12267,7 +12307,7 @@ void testEulerTotient()
     ok &= rsEulerTotient2(-n) == phi[n];
 
     // Test the implementation based on the product formula:
-    ok &= rsEulerTotient3( n, tbl) == phi[n];
+    ok &= rsEulerTotient4( n, tbl) == phi[n];
     int dummy = 0;
   }
 

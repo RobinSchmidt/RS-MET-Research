@@ -12324,10 +12324,31 @@ T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
   //   product ...we'll see...
 }
 
+/** Unit test for rsMakeUnique()  */
+bool testMakeUnique()
+{
+  bool ok = true;
+
+  using Vec = std::vector<int>;
+
+  Vec x({1,1,1,2,2,3,3,3,4,5,6,6,7,7,7,8,9,9});
+  Vec y, m;
+
+  rsMakeUnique(x, y, m);
+  ok &= y == Vec({1,2,3,4,5,6,7,8,9});
+  ok &= m == Vec({3,2,3,1,1,2,3,1,2});
+
+  return ok;
+}
+
+
+
 
 void testEulerTotient()
 {
   bool ok = true;
+
+  ok &= testMakeUnique();
 
   // Create a vector with the first 70 values of the Euler totient function phi(n). The values are 
   // taken from here https://oeis.org/A000010 with a zero prepended for our phi(0) = 0 convention:

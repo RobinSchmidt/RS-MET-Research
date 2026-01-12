@@ -12297,15 +12297,12 @@ bool testMakeUnique()
   // - Move the function rsMakeUnique() and this unit test somewhere else.
 }
 
-
-/** UNDER CONSTRUCTION. DOES NOT YET WORK!!!
-
-Another implementation based on the product formula but it uses a table of precomputed prime
+/** Another implementation based on the product formula but it uses a table of precomputed prime
 factorizations of all numbers up to (and including) n. ...TBC... */
 template<class T>
 T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
 {
-  //rsAssert(primeTable.getMaximum() >= n);  // Ensure that the able is large enough.
+  //rsAssert(primeTable.getMaximum() >= n);  // Ensure that the table is large enough.
 
   n = rsAbs(n);                // Symmetrize function to handle negative arguments
   if(n == 0)  
@@ -12316,21 +12313,19 @@ T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
   // Compute the unique(!) prime factors of n:
   const std::vector<T>& factors = primeTable.getFactors(n);
   std::vector<T> uniqueFactors; 
-  std::vector<int> dummy;
+  std::vector<int> dummy;        // Dummy array for the multiplicities.
   rsMakeUnique(factors, uniqueFactors, dummy);
 
   using Frac = rsFraction<T>;
-  Frac P(n, 1);                // Multiplicative accumulator for the product. Init to n.
+  Frac P(n, 1);                  // Multiplicative accumulator for the product. Init to n.
   for(size_t i = 0; i < uniqueFactors.size(); i++)
   {
     T p = uniqueFactors[i];
     Frac f = Frac(1, 1) - Frac(1, p);
     P *= f;
   }
-  //P *= rsFraction(n, 1);     // Maybe we can use n/1 to init P instead of init to 1?
-  rsAssert(P.isInteger());     // P should now be an integer, i.e. the denominator should be 1
+  rsAssert(P.isInteger());       // P should now be an integer, i.e. the denominator should be 1
   return P.getNumerator();
-
 
   // ToDo: 
   // 
@@ -12338,11 +12333,6 @@ T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
   //   primeTable.getUniqueFactors(n). Maybe the class should store the unique factors and their 
   //   multiplicities anyway.
 }
-
-
-
-
-
 
 void testEulerTotient()
 {

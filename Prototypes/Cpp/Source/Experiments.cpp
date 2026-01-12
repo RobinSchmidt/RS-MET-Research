@@ -12306,7 +12306,9 @@ void testEulerTotient()
     ok &= rsEulerTotient2( n) == phi[n];
     ok &= rsEulerTotient2(-n) == phi[n];
 
-    // Test the implementation based on the product formula:
+    // Test the implementations based on the product formula:
+    ok &= rsEulerTotient3( n, tbl.getPrimeTable()) == phi[n];
+
     ok &= rsEulerTotient4( n, tbl) == phi[n];
     int dummy = 0;
   }

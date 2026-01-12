@@ -12172,94 +12172,82 @@ T rsEulerTotient2(T n)
   //   or down. But maybe try it and benchmark it anyway (and document the results).
 }
 
-
-template<class T>
-T rsEulerTotient3(T n, const std::vector<T>& primeTable)
-{ 
-  //rsAssert(primeTable.back() >= n);  // Ensure that the able is large enough.
-
-  using Fraction = rsFraction<T>;
-
-  Fraction P(1, 1);          // Multiplicative accumulator for the product. Init to 1.
-
-  int i = 0;
-  while(true)
-  {
-    T p = primeTable[i];
-
-    if(n % p == 0)           // Means: if p divides n
-    {
-      Fraction f = Fraction(1, 1) - Fraction(1, p);
-      P *= f;
-    }
-
-    if(p >= n)
-      break;
-
-    i++;
-  }
-
-  P *= rsFraction(n, 1);     // Maybe we can use n/1 to init P instead of init to 1?
-
-  rsAssert(P.isInteger());   // P should now be an integer, i.e. the denominator should be 1
-  return P.getNumerator();
-}
-
-
 /** An implementation of the Euler totient function based on the product formula:
 
   phi(n) = n * prod_{p | n} (1 - 1/p)
 
 where p is a prime number. That means, the product runs over all primes p that divide n. The caller
-needs to pass a const ref to a table of prime numbers at least up to (and including) n. 
-...TBC... */
+needs to pass a const ref to a table of prime numbers at least up to the first prime that is 
+greater than or equal to n. For example, if n = 20, the prime table should contain primes at least 
+up to and including 23. ...verify!  ...TBC... */
 template<class T>
-T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
-{
-  //rsAssert(primeTable.getMaxPrime() >= n);  // Ensure that the able is large enough.
-
-  // Retrieve the table of primes
-  const std::vector<T>& primes = primeTable.getPrimeTable();
-  return rsEulerTotient3(n, primes);
-
-
-
-  using Fraction = rsFraction<T>;
-
-  Fraction P(1, 1);  // Multiplicative accumulator for the product. Init to 1.
-
-
-
-
-
+T rsEulerTotient3(T n, const std::vector<T>& primeTable)
+{ 
+  rsAssert(primeTable.back() >= n, "Prime table too small in rsEulerTotient3().");
+  using Frac = rsFraction<T>;
+  n = rsAbs(n);
+  Frac P(1, 1);                // Multiplicative accumulator for the product. Init to 1.
   int i = 0;
   while(true)
   {
-    T p = primes[i];
-
-    if(n % p == 0)       // Means: if p divides n
+    T p = primeTable[i];
+    if(n % p == 0)             // Means: if p divides n
     {
-      Fraction f = Fraction(1, 1) - Fraction(1, p);
+      Frac f = Frac(1, 1) - Frac(1, p);
       P *= f;
     }
-
     if(p >= n)
       break;
-
     i++;
   }
+  P *= rsFraction(n, 1);       // Maybe we can use n/1 to init P instead of init to 1?
+  rsAssert(P.isInteger());     // P should now be an integer, i.e. the denominator should be 1
+  return P.getNumerator();
+}
 
+
+/** UNDER CONSTRUCTION. DOES NOT YET WORK!!!
+
+Another implementation based on the product formula but it uses a table of precomputed prime
+factorizations of all numbers up to (and including) n. ...TBC... */
+template<class T>
+T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
+{
+  //rsAssert(primeTable.getMaximum() >= n);  // Ensure that the able is large enough.
+
+  n = rsAbs(n);                // Symmetrize function to handle negative arguments
+  if(n == 0)  
+    return T(0);
+  if(n <= 2)  
+    return T(1); 
+
+  using Frac = rsFraction<T>;
+    
+  const std::vector<T>& factors = primeTable.getFactors(n);
+
+  Frac P(1, 1);  // Multiplicative accumulator for the product. Init to 1.
+
+  for(size_t i = 0; i < factors.size(); i++)
+  {
+    T p = factors[i];
+    Frac f = Frac(1, 1) - Frac(1, p);
+    P *= f;
+  }
   P *= rsFraction(n, 1);    // Maybe we can use n/1 to init P instead of init to 1?
-
   rsAssert(P.isInteger());  // P should now be an integer, i.e. the denominator should be 1
-
   return P.getNumerator();
 
 
-  //return 0;  // Preliminary to satisfy compiler
-
-
   // ToDo: 
+  // 
+  // - It does not work yet because I made a false assumption about how the "factors" array is 
+  //   constructed. I thought, it contains all the prime factors of n once but it actually contains
+  //   them as often as the exponent in the prime factorization of n dictates. But in the product 
+  //   formula for the totient, each prime factor (that divides n) is used only once and not 
+  //   multiple times according to its exponent (which is what the code above does). To make it 
+  //   work, we need to remove duplicates from the factors array or add some code that ensures on 
+  //   the fly that each factor is used only once. ...I think. Maybe we can implement a member 
+  //   function primeTable.getUniqueFactors() or something like that.
   //
   // - Actually, the class rsPrimeFactorTable does a lot more than we need here. It is not merely
   //   a table of primes but rather a table that stores the prime factrorizations of all numbers 
@@ -12284,13 +12272,11 @@ void testEulerTotient()
     30,36,32,48,20,66,32,44});
 
 
-
+  // Create prime factorization table that is used in some implementations:
   //int nMax = (int)phi.size() - 1;
   //int nMax = (int)phi.size();          // Or maybe we need size + 1?
-
   int nMax = 2 * (int)phi.size();        
   // This is overly large - but I don't know a tight right limit yet.
-
   using Table = rsPrimeFactorTable<int>;
   Table tbl(nMax);  // Has factorizations of all numbers up to nMax
 
@@ -12308,8 +12294,12 @@ void testEulerTotient()
 
     // Test the implementations based on the product formula:
     ok &= rsEulerTotient3( n, tbl.getPrimeTable()) == phi[n];
+    ok &= rsEulerTotient3(-n, tbl.getPrimeTable()) == phi[n];
 
-    ok &= rsEulerTotient4( n, tbl) == phi[n];
+    //ok &= rsEulerTotient4( n, tbl) == phi[n];  // Does not yet work
+    //ok &= rsEulerTotient4(-n, tbl) == phi[n]; 
+
+
     int dummy = 0;
   }
 
@@ -12317,7 +12307,7 @@ void testEulerTotient()
 
   // ToDo:
   //
-  // - Benchmark the two implementations. Maybe for each number n, run both of them a couple of 
+  // - Benchmark the various implementations. Maybe for each number n, run both of them a couple of
   //   times and use the minimum. Maybe the efficiency as function of n could be a bit erratic 
   //   depending on the divisible features of the number n in question. Maybe for highly composite 
   //   numbers, the recursive implementation could be better? ...just guessing

@@ -12173,6 +12173,26 @@ T rsEulerTotient2(T n)
 }
 
 
+/** An implementation of the Euler totient function based on the product formula:
+
+  phi(n) = n * prod_{p | n} (1 - 1/p)
+
+where p is a prime number. That means, the product runs over all primes p that divide n. The caller
+needs to pass a const ref to a table of prime numbers at least up to (and including) n. 
+...TBC... */
+template<class T>
+T rsEulerTotient3(T n, const rsPrimeFactorTable<T>& primeTable)
+{
+  using Fraction = rsFraction<T>;
+
+  Fraction P(1, 1);  // Multiplicative accumulator for the product. Init to 1.
+
+
+
+  return 0;  // Preliminary to satisfy compiler
+}
+
+
 void testEulerTotient()
 {
   bool ok = true;
@@ -12182,6 +12202,13 @@ void testEulerTotient()
   std::vector<int> phi({0,1,1,2,2,4,2,6,4,6,4,10,4,12,6,8,8,16,6,18,8,12,10,22,8,20,12,18,12,28,8,
     30,16,20,16,24,12,36,18,24,16,40,12,42,20,24,22,46,16,42,20,32,24,52,18,40,24,36,28,58,16,60,
     30,36,32,48,20,66,32,44});
+
+
+
+  int nMax = (int)phi.size() - 1;
+  using Table = rsPrimeFactorTable<int>;
+  Table tbl(nMax);  // Has factorizations of all numbers up to nMax
+
 
   // Verify that our different implementations of the totient function produce the expected values:
   for(int n = 0; n < (int) phi.size(); n++)
@@ -12193,6 +12220,10 @@ void testEulerTotient()
     // Test the alternative (recursive) implementation:
     ok &= rsEulerTotient2( n) == phi[n];
     ok &= rsEulerTotient2(-n) == phi[n];
+
+    // Test the implementation based on the product formula:
+    //ok &= rsEulerTotient3( n, tbl) == phi[n];
+    int dummy = 0;
   }
 
   RAPT::rsAssert(ok);
@@ -12203,6 +12234,10 @@ void testEulerTotient()
   //   times and use the minimum. Maybe the efficiency as function of n could be a bit erratic 
   //   depending on the divisible features of the number n in question. Maybe for highly composite 
   //   numbers, the recursive implementation could be better? ...just guessing
+  //
+  // - Implement a 3rd version of the function based on the formula 
+  //   phi(n) = n * prod_{p | n} (1 - 1/p). This is a product that runs over all primes p that 
+  //   divide n. Maybe the function should take a table of primes as argument
 }
 
 

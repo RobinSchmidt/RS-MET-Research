@@ -12313,55 +12313,30 @@ T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
   if(n <= 2)  
     return T(1); 
 
-  using Frac = rsFraction<T>;
-  
-  // Maybe factor this out into primeTable.getUniqueFactors(n);
+  // Compute the unique(!) prime factors of n:
   const std::vector<T>& factors = primeTable.getFactors(n);
-  std::vector<T> uniqueFactors, multiplicities;
-  rsMakeUnique(factors, uniqueFactors, multiplicities);
+  std::vector<T> uniqueFactors; 
+  std::vector<int> dummy;
+  rsMakeUnique(factors, uniqueFactors, dummy);
 
-  Frac P(1, 1);  // Multiplicative accumulator for the product. Init to 1.
+  using Frac = rsFraction<T>;
+  Frac P(n, 1);                // Multiplicative accumulator for the product. Init to n.
   for(size_t i = 0; i < uniqueFactors.size(); i++)
   {
     T p = uniqueFactors[i];
     Frac f = Frac(1, 1) - Frac(1, p);
     P *= f;
   }
-  P *= rsFraction(n, 1);    // Maybe we can use n/1 to init P instead of init to 1?
-  rsAssert(P.isInteger());  // P should now be an integer, i.e. the denominator should be 1
+  //P *= rsFraction(n, 1);     // Maybe we can use n/1 to init P instead of init to 1?
+  rsAssert(P.isInteger());     // P should now be an integer, i.e. the denominator should be 1
   return P.getNumerator();
 
 
   // ToDo: 
   // 
-  // - DONE!
-  //   It does not work yet because I made a false assumption about how the "factors" array is 
-  //   constructed. I thought, it contains all the prime factors of n once but it actually contains
-  //   them as often as the exponent in the prime factorization of n dictates. But in the product 
-  //   formula for the totient, each prime factor (that divides n) is used only once and not 
-  //   multiple times according to its exponent (which is what the code above does). To make it 
-  //   work, we need to remove duplicates from the factors array or add some code that ensures on 
-  //   the fly that each factor is used only once. ...I think. Maybe we can implement a member 
-  //   function primeTable.getUniqueFactors() or something like that because may such a function 
-  //   may be useful in other contexts as well. Or maybe it could produce the factorization ín a 
-  //   format std::vector<std::pair<T>> where the 1st element of the pair is the prime factor and 
-  //   the 2nd is the exponent. Maybe create a general function that takes as input a vector with
-  //   elements that may occur multiple times and returns as output a vector of pairs with unique
-  //   elements an their multiplicities (or maybe two vectors - one with the unique elements, one
-  //   with the integer multiplicities). Such a function could be useful in other contexts as well,
-  //   for example when dealing with polynomial roots. Maybe assume that input array is sorted, 
-  //   i.e. if it contains equal elements, they are adjacent. I think, that would reduce the 
-  //   complexity from O(N^2) to O(N) (verify!). It doesn't really matter, if the array is sorted
-  //   ascendingly or descendingly. ...OK ..done -> use it!
-  //
-  // - Obsolete!
-  //   Actually, the class rsPrimeFactorTable does a lot more than we need here. It is not merely
-  //   a table of primes but rather a table that stores the prime factrorizations of all numbers 
-  //   up to some maximum. So, maybe let the caller pass a simple std::vector of prime numbers. Or
-  //   Maybe a C-style array along with the length. But maybe by using the pre-computed prime 
-  //   factorization of n, we can implement an even faster algorithm. I think, the primes that 
-  //   divide n, i.e. the numbers p for which p|n, are precisely the primes that we need in our 
-  //   product ...we'll see...
+  // - Maybe factor out the production of an array of unique prime factors into a function 
+  //   primeTable.getUniqueFactors(n). Maybe the class should store the unique factors and their 
+  //   multiplicities anyway.
 }
 
 
@@ -12418,10 +12393,6 @@ void testEulerTotient()
   //   times and use the minimum. Maybe the efficiency as function of n could be a bit erratic 
   //   depending on the divisible features of the number n in question. Maybe for highly composite 
   //   numbers, the recursive implementation could be better? ...just guessing
-  //
-  // - Implement a 3rd version of the function based on the formula 
-  //   phi(n) = n * prod_{p | n} (1 - 1/p). This is a product that runs over all primes p that 
-  //   divide n. Maybe the function should take a table of primes as argument
 }
 
 

@@ -12186,7 +12186,7 @@ T rsEulerTotient3(T n, const std::vector<T>& primeTable)
   rsAssert(primeTable.back() >= n, "Prime table too small in rsEulerTotient3().");
   using Frac = rsFraction<T>;
   n = rsAbs(n);
-  Frac P(1, 1);                // Multiplicative accumulator for the product. Init to 1.
+  Frac P(n, 1);                // Multiplicative accumulator for the product. Init to n.
   int i = 0;
   while(true)
   {
@@ -12200,9 +12200,13 @@ T rsEulerTotient3(T n, const std::vector<T>& primeTable)
       break;
     i++;
   }
-  P *= rsFraction(n, 1);       // Maybe we can use n/1 to init P instead of init to 1?
   rsAssert(P.isInteger());     // P should now be an integer, i.e. the denominator should be 1
   return P.getNumerator();
+
+  // ToDo:
+  //
+  // - Implement unit tests that pass prime tables that are just barely large enough to work here, 
+  //   i.e. without any margin or reserves.
 }
 
 
@@ -12247,7 +12251,10 @@ T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
   //   multiple times according to its exponent (which is what the code above does). To make it 
   //   work, we need to remove duplicates from the factors array or add some code that ensures on 
   //   the fly that each factor is used only once. ...I think. Maybe we can implement a member 
-  //   function primeTable.getUniqueFactors() or something like that.
+  //   function primeTable.getUniqueFactors() or something like that because may such a function 
+  //   may be useful in other contexts as well. Or maybe it could produce the factorization ín a 
+  //   format std::vector<std::pair<T>> where the 1st element of the pair is the prime factor and 
+  //   the 2nd is the exponent.
   //
   // - Actually, the class rsPrimeFactorTable does a lot more than we need here. It is not merely
   //   a table of primes but rather a table that stores the prime factrorizations of all numbers 
@@ -12256,8 +12263,6 @@ T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
   //   factorization of n, we can implement an even faster algorithm. I think, the primes that 
   //   divide n, i.e. the numbers p for which p|n, are precisely the primes that we need in our 
   //   product ...we'll see...
-  //
-  // - Handle n <= 0 cases. It seems the n = 0 case is already handled correctly
 }
 
 
@@ -12276,7 +12281,7 @@ void testEulerTotient()
   //int nMax = (int)phi.size() - 1;
   //int nMax = (int)phi.size();          // Or maybe we need size + 1?
   int nMax = 2 * (int)phi.size();        
-  // This is overly large - but I don't know a tight right limit yet.
+  // This is overly large but I don't know a formula for correct tight limit yet.
   using Table = rsPrimeFactorTable<int>;
   Table tbl(nMax);  // Has factorizations of all numbers up to nMax
 
@@ -12298,7 +12303,6 @@ void testEulerTotient()
 
     //ok &= rsEulerTotient4( n, tbl) == phi[n];  // Does not yet work
     //ok &= rsEulerTotient4(-n, tbl) == phi[n]; 
-
 
     int dummy = 0;
   }

@@ -7077,7 +7077,11 @@ bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)
 
 //=================================================================================================
 
-/** A class that tabulates the prime factorizations of all numbers up to some given upper limit. */
+/** A class that tabulates the prime factorizations of all numbers up to some given upper limit. 
+
+ToDo: Add documentation!
+
+*/
 
 template<class T>  // T should be an integer type (may be unsigned)
 class rsPrimeFactorTable
@@ -7091,20 +7095,21 @@ public:
   /** Returns the number of prime factors of the given n. By convention, it will return 1 when n is
   zero or one. */
   T getNumFactors(T n) const { return (T) factors[n].size(); }
-  // ToDo: Figure out if this convention makes sense. Maybe returning zero makes more sense.
+  // ToDo: Figure out if this convention makes sense. Maybe returning zero makes more sense?
 
   T getNthPrime(T n) const { return primes[n]; }  // verify!
 
 
   bool isPrime(T n) const { return getNumFactors(n) == 1; }
 
+  /** Returns the precomputed prime factorization of the given number n. The factors will be sorted
+  from small to large and may occur with multiplicity according to their exponent. For example, 
+  60 = 2^2 * 3 * 5, so this function will return the array [2,2,3,5] when called with n = 60.  */
   const std::vector<T>& getFactors(T n) const { return factors[n]; }
-  // Are these the distinct factors? I don't think so. I think for n = 60, it would return
-  // [2,2,3,5] -> verify and document!
 
-
-    
-  /** Returns a const reference to our table of primes. */
+  /** Returns a const reference to our table of primes. This table is generated as a byproduct of
+  computing the prime factorizations anyway, so we may as well expose it to the client code even 
+  though this is not the main objective of this class. */
   const std::vector<T>& getPrimeTable() const { return primes; }
 
 
@@ -7118,10 +7123,12 @@ protected:
   std::vector<std::vector<T>> factors; 
 
   // ToDo:
+  // 
   // -Maybe split buildTable into initTable() and increaseTableSize(T) or growTable(T). The idea is
   //  that client code may later discover that it needs a table larger than it originally thought 
   //  and we want to be able to increase the size dynamically, without re-computing all previously 
   //  calculated values.
+  // 
   // -To optimize memory access, maybe later use class rsTableau (which is not yet finished) for 
   //  storing the factors. It should use contiguous memory and pre-allocate enough. -> figure out, 
   //  how much is enough, i.e. find a formula for an approximation (upper bound) for the cumulative
@@ -7129,7 +7136,7 @@ protected:
   //  logarithm because the base-2 log of a number n is an upper bound for the number of prime 
   //  factors in n. The integral of log(x) is x*(log(x)-1), so the required size grows slightly 
   //  superlinearly, i.e. as x*log(x) - kind of similar to how the number of primes grows slightly
-  //  sublinearly as x/log(x)
+  //  sublinearly as x/log(x). Verify!
 
 };
 

@@ -12250,7 +12250,9 @@ void rsMakeUnique(const std::vector<T>& x, std::vector<T>& y, std::vector<int>& 
   // - Maybe implement a variant of this function that does not assume that the input vector is 
   //   sorted. I think, this function here has complexity O(N) and one that would not assume a
   //   sorted input will have complexity of O(N^2) where N is the number of elements in x. 
-  //   ...verify that!
+  //   ...verify that! Maybe reflect this in the function names by renaming this function here
+  //   rsMakeUniqueSorted(). The simpler name rsMakeUnique() should be given to the more general 
+  //   function with less assumptions.
   //
   // - Maybe implement a version that works for floating point numbers (real and complex) and 
   //   incorporates a tolerance instead of doing exact equality comparisons. This will be important 
@@ -12259,7 +12261,35 @@ void rsMakeUnique(const std::vector<T>& x, std::vector<T>& y, std::vector<int>& 
   //   RS-MET/Libraries/RobsJuceModules/rapt/Basics/BasicFunctions.h
 }
 
+/** Unit test for rsMakeUnique(). */
+bool testMakeUnique()
+{
+  bool ok = true;
 
+  using Vec = std::vector<int>;
+
+  Vec x({1,1,1,2,2,3,3,3,4,5,6,6,7,7,7,8,9,9});
+  Vec y, m;
+
+  rsMakeUnique(x, y, m);
+
+  ok &= y == Vec({1,2,3,4,5,6,7,8,9});
+  ok &= m == Vec({3,2,3,1,1,2,3,1,2});
+
+  return ok;
+
+  // ToDo:
+  //
+  // - Implement more test cases. Maybe some with non-empty y,m vectors to see if they are cleared
+  //   correctly etc. Maybe We could also have a function rsNumUniqueElements() that just counts 
+  //   how many unique elements an array has and use that to reserve space in y,m before calling 
+  //   rsMakeUnique() to avoid excessive reallocations.
+  // 
+  // - When implementing a function rsMakeUnique() for non-sorted arrays, this unit test here can 
+  //   be extended to test them both.
+  //
+  // - Move the function rsMakeUnique() and this unit test somewhere else.
+}
 
 
 /** UNDER CONSTRUCTION. DOES NOT YET WORK!!!
@@ -12324,22 +12354,7 @@ T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
   //   product ...we'll see...
 }
 
-/** Unit test for rsMakeUnique()  */
-bool testMakeUnique()
-{
-  bool ok = true;
 
-  using Vec = std::vector<int>;
-
-  Vec x({1,1,1,2,2,3,3,3,4,5,6,6,7,7,7,8,9,9});
-  Vec y, m;
-
-  rsMakeUnique(x, y, m);
-  ok &= y == Vec({1,2,3,4,5,6,7,8,9});
-  ok &= m == Vec({3,2,3,1,1,2,3,1,2});
-
-  return ok;
-}
 
 
 

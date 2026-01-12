@@ -12334,7 +12334,8 @@ T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
 
   // ToDo: 
   // 
-  // - It does not work yet because I made a false assumption about how the "factors" array is 
+  // - DONE!
+  //   It does not work yet because I made a false assumption about how the "factors" array is 
   //   constructed. I thought, it contains all the prime factors of n once but it actually contains
   //   them as often as the exponent in the prime factorization of n dictates. But in the product 
   //   formula for the totient, each prime factor (that divides n) is used only once and not 
@@ -12353,7 +12354,8 @@ T rsEulerTotient4(T n, const rsPrimeFactorTable<T>& primeTable)
   //   complexity from O(N^2) to O(N) (verify!). It doesn't really matter, if the array is sorted
   //   ascendingly or descendingly. ...OK ..done -> use it!
   //
-  // - Actually, the class rsPrimeFactorTable does a lot more than we need here. It is not merely
+  // - Obsolete!
+  //   Actually, the class rsPrimeFactorTable does a lot more than we need here. It is not merely
   //   a table of primes but rather a table that stores the prime factrorizations of all numbers 
   //   up to some maximum. So, maybe let the caller pass a simple std::vector of prime numbers. Or
   //   Maybe a C-style array along with the length. But maybe by using the pre-computed prime 
@@ -12389,25 +12391,23 @@ void testEulerTotient()
   Table tbl(nMax);  // Has factorizations of all numbers up to nMax
 
 
-  // Verify that our different implementations of the totient function produce the expected values:
+  // Verify that our different implementations of the totient function produce the expected values
+  // for positive and negative arguments:
   for(int n = 0; n < (int) phi.size(); n++)
   {
-    // Test the 1st implementation for positive and negative arguments:
+    // Test the implementation based on naive trial division:
     ok &= rsEulerTotient( n) == phi[n];
     ok &= rsEulerTotient(-n) == phi[n];
 
-    // Test the alternative (recursive) implementation:
+    // Test the recursive implementation:
     ok &= rsEulerTotient2( n) == phi[n];
     ok &= rsEulerTotient2(-n) == phi[n];
 
     // Test the implementations based on the product formula:
     ok &= rsEulerTotient3( n, tbl.getPrimeTable()) == phi[n];
     ok &= rsEulerTotient3(-n, tbl.getPrimeTable()) == phi[n];
-
-    ok &= rsEulerTotient4( n, tbl) == phi[n];  // Does not yet work
-    //ok &= rsEulerTotient4(-n, tbl) == phi[n]; 
-
-    int dummy = 0;
+    ok &= rsEulerTotient4( n, tbl) == phi[n];
+    ok &= rsEulerTotient4(-n, tbl) == phi[n]; 
   }
 
   RAPT::rsAssert(ok);

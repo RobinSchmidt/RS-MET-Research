@@ -4412,7 +4412,7 @@ Example - tableau with 4 rows:
   9 0
 
 The actual data is stored in a contiguous block of memory and we also store the start indices and 
-lengths of each row...tbc...  */
+lengths of each row...TBC...  */
 
 template<class T>
 class rsTableau : public rsTableauView<T>
@@ -4454,8 +4454,11 @@ protected:
   std::vector<T>   data;
   std::vector<int> lengths;
   std::vector<int> starts;
-  // optimize for less allocations: use one vector ls for lengths and starts and use 
-  // pLengths = &ls[0] and pStarts = &ls[numRows]...or something
+  // Optimize for less allocations: use one vector ls for lengths and starts and use 
+  // pLengths = &ls[0] and pStarts = &ls[numRows]...or something. Or maybe use a vector of 
+  // std::pair<int, int> where the 1st element i of each pair (i,j) is the start index and the 2nd
+  // element j is the length of the i-th row. But that will also require changes to rsTableauView,
+  // so maybe it's not a good idea
 
 
 };
@@ -7093,14 +7096,23 @@ public:
 
 
   /** Returns the number of prime factors of the given n. By convention, it will return 1 when n is
-  zero or one. */
+  zero or one. Each factor will be counted with its exponent as a multiplicity. For example, the 
+  number  60 = 2^2 * 3 * 5 = 2 * 2 * 3 * 5  has 4 factors because the factor 2 counts twice because
+  it has an exponent of 2. */
   T getNumFactors(T n) const { return (T) factors[n].size(); }
-  // ToDo: Figure out if this convention makes sense. Maybe returning zero makes more sense?
+  // ToDo: Figure out if this convention for 0 and 1 makes sense. Maybe returning zero makes more 
+  // sense?
 
+  /** Returns the n-th prime. Even though it is not the main job of this class to implement a table 
+  of primes, we must produce one as a by-product of computing the factorizations anyway, so we 
+  might as well expose it to cleint code for additional value. */
   T getNthPrime(T n) const { return primes[n]; }  // verify!
 
-
+  /** Returns true, iff the given number n is a prime number. */
   bool isPrime(T n) const { return getNumFactors(n) == 1; }
+  // ToDo: Maybe add warnings that the number n must always be <= the maxNumber that was passed to
+  // the constructor. If it's out of range, we will have access violations! Maybe add assertions
+  // like rsAssert(isValidIndex(n)) before using n to index into the array.
 
   /** Returns the precomputed prime factorization of the given number n. The factors will be sorted
   from small to large and may occur with multiplicity according to their exponent. For example, 
@@ -7130,13 +7142,13 @@ protected:
   //  calculated values.
   // 
   // -To optimize memory access, maybe later use class rsTableau (which is not yet finished) for 
-  //  storing the factors. It should use contiguous memory and pre-allocate enough. -> figure out, 
-  //  how much is enough, i.e. find a formula for an approximation (upper bound) for the cumulative
-  //  count of prime factors. A crude upper bound could perhaps be the integral of the base-2 
-  //  logarithm because the base-2 log of a number n is an upper bound for the number of prime 
-  //  factors in n. The integral of log(x) is x*(log(x)-1), so the required size grows slightly 
-  //  superlinearly, i.e. as x*log(x) - kind of similar to how the number of primes grows slightly
-  //  sublinearly as x/log(x). Verify!
+  //  storing the factors. It should use contiguous memory (we currently use a discontiguous vector
+  //  of vectors) and pre-allocate enough. -> figure out, how much is enough, i.e. find a formula 
+  //  for an approximation (upper bound) for the cumulative count of prime factors. A crude upper 
+  //  bound could perhaps be the integral of the base-2 logarithm because the base-2 log of a 
+  //  number n is an upper bound for the number of prime factors in n. The integral of log(x) is 
+  //  x*(log(x)-1), so the required size grows slightly  superlinearly, i.e. as x*log(x) - kind of 
+  //  similar to how the number of primes grows slightly sublinearly as x/log(x). Verify!
 
 };
 
@@ -7225,6 +7237,12 @@ void rsPrimeFactorTable<T>::buildTable(T N)
   // of the time and even save the rsIntSqrt. Maybe do all that together with using rsTableau when
   // a production version of this code is needed and keep the implementation here as prototype for
   // comparisons in unit tests.
+  //
+  // Maybe instead of repeating the prime factors in the factors array as often as their exponent 
+  // dictates, store the unique prime factors along with their multiplicities - maybe as two 
+  // separate arrays, one for the unique factors, one for the multiplicities. I think, this may be 
+  // the format in which we most often will want this information anyway. ...but I'm not sure about
+  // that. Maybe then we should have functions like getUniqueFactors(), getExponents()
 
   int dummy = 0;
 }

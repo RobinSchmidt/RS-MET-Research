@@ -12183,13 +12183,53 @@ needs to pass a const ref to a table of prime numbers at least up to (and includ
 template<class T>
 T rsEulerTotient3(T n, const rsPrimeFactorTable<T>& primeTable)
 {
+  //rsAssert(primeTable.getMaxPrime() >= n);  // Ensure that the able is large enough.
+
   using Fraction = rsFraction<T>;
 
   Fraction P(1, 1);  // Multiplicative accumulator for the product. Init to 1.
 
+  // Retrieve the table of primes
+  const std::vector<T>& primes = primeTable.getPrimeTable();
+
+  int i = 0;
+  while(true)
+  {
+    T p = primes[i];
+
+    if(n % p == 0)       // Means: if p divides n
+    {
+      Fraction f = Fraction(1, 1) - Fraction(1, p);
+      P *= f;
+    }
+
+    if(p >= n)
+      break;
+
+    i++;
+  }
+
+  P *= rsFraction(n, 1);    // Maybe we can use n/1 to init P instead of init to 1?
+
+  rsAssert(P.isInteger());  // P should now be an integer, i.e. the denominator should be 1
+
+  return P.getNumerator();
 
 
-  return 0;  // Preliminary to satisfy compiler
+  //return 0;  // Preliminary to satisfy compiler
+
+
+  // ToDo: 
+  //
+  // - Actually, the class rsPrimeFactorTable does a lot more than we need here. It is not merely
+  //   a table of primes but rather a table that stores the prime factrorizations of all numbers 
+  //   up to some maximum. So, maybe let the caller pass a simple std::vector of prime numbers. Or
+  //   Maybe a C-style array along with the length. But maybe by using the pre-computed prime 
+  //   factorization of n, we can implement an even faster algorithm. I think, the primes that 
+  //   divide n, i.e. the numbers p for which p|n, are precisely the primes that we need in our 
+  //   product ...we'll see...
+  //
+  // - Handle n <= 0 cases. It seems the n = 0 case is already handled correctly
 }
 
 
@@ -12205,7 +12245,12 @@ void testEulerTotient()
 
 
 
-  int nMax = (int)phi.size() - 1;
+  //int nMax = (int)phi.size() - 1;
+  //int nMax = (int)phi.size();          // Or maybe we need size + 1?
+
+  int nMax = 2 * (int)phi.size();        
+  // This is overly large - but I don't know a tight right limit yet.
+
   using Table = rsPrimeFactorTable<int>;
   Table tbl(nMax);  // Has factorizations of all numbers up to nMax
 
@@ -12222,7 +12267,7 @@ void testEulerTotient()
     ok &= rsEulerTotient2(-n) == phi[n];
 
     // Test the implementation based on the product formula:
-    //ok &= rsEulerTotient3( n, tbl) == phi[n];
+    ok &= rsEulerTotient3( n, tbl) == phi[n];
     int dummy = 0;
   }
 

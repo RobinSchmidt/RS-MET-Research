@@ -7103,6 +7103,10 @@ public:
   // [2,2,3,5] -> verify and document!
 
 
+    
+  /** Returns a const reference to our table of primes. */
+  const std::vector<T>& getPrimeTable() const { return primes; }
+
 
 
 protected:

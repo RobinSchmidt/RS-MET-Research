@@ -16,11 +16,28 @@ namely polynomials of degrees 1..4. ...TBC...
 
 */
 
-template<class TCoef, class TArg>   // Maybe rename TArg to TRoot ...or maybe not
+//template<class TCoef, class TArg>   // Maybe rename TArg to TRoot ...or maybe not
 class rsPolynomialRootFinder
 {
 
 public:
+
+
+
+   
+  /** Converges to a root near "initialGuess" via the Laguerre algorithm. ...TBC...  */
+  template<class TCoef, class TArg>
+  static TArg convergeLaguerre(const TCoef *a, int degree, TArg initialGuess = TArg(0, 0));
+  // Taken from RAPT::rsPolynomial::convergeToRootViaLaguerre and adapted. ToDo:
+  // Maybe add parameters for tolerance (of type TTol) and maximum number of iteration (of type
+  // (unsigned) int). Look upt how boost does it and be consistent with it! Also, check if boost
+  // prefers to use degree or length parameters. The length is always degree+1. That could be 
+  // dangerous, if the client assumes to pass a length because this may lead to acces violations.
+  // The other way around is less dangerous. If the user assumes to pass a degree and we falsely 
+  // interpret it as length, we will only potentially produce wrong results but will not cause an
+  // access violation - so maybe it's better to do it this way. It would also be more consistent
+  // with functions from rsArrayTools.
+
 
 
 protected:
@@ -28,13 +45,55 @@ protected:
 
 };
 
+
+template<class TCoef, class TArg>
+TArg rsPolynomialRootFinder::convergeLaguerre(
+  const TCoef *a, int degree, TArg initialGuess)
+{
+  return initialGuess;  // Preliminary
+
+  // ToDo:
+  // 
+  // - Add parameters for tolerance and max_iter
+  //
+  // - Copy over code from  rsPolynomial<T>::convergeToRootViaLaguerre
+}
+
+
+
+
+
+
+
 // ToDo:
+// 
+// - Maybe do not let the class have template parameters, instead let the functions themselves
+//   have these template params. Mabye it then makes more sense to not implement them as static
+//   member functions of a class but rather as free functions in a namespace. Look up how boost
+//   root finders do it and maybe follow the same pattern. See:
+//   https://www.boost.org/doc/libs/1_64_0/libs/math/doc/html/rooting.html
+//   These root finding algorithms are free functions in the namespace boost::math::tools.
+// 
+// - Maybe try to use C++20 concepts to put constraints on the template parameters TCoef, TArg.
+//   For many algorithms, the concepts should express that TCoef is a real number type and TArg
+//   should be either a real or the corresponding complex number type. In general TArg should 
+//   often be the algebraic closure of TCoef. There may be different situation, though - for 
+//   example TCoeff being scalars and TArg matrices. But I don't think, we'll have to deal with 
+//   these cases in the context of roots finding
 //
 // - We want to factor out anything that has to do with polynomial root finding from the class
 //   rsPolynomial in the RAPT library. This includes all the stuff in the "Roots (Low Level)" 
 //   section. Somewhere in the experiments or prototypes, there must also already be some code 
 //   where I attempted to implement the formulas for cubic (and maybe even quartic?) roots. That
-//   stuff should also go into this class.
+//   stuff should also go into this class. As long as this class is not mature enough to integrate
+//   into RAPT, let's just keep the class rsPolynomial as is and duplicate the root finding code 
+//   here. It can be deleted later when this class is finished.
+// 
+// - The low-level API should operate on pre-allocated arrays so it can be used in real-time. We 
+//   should perhaps also provide some means to limit the amount of computations with parameters 
+//   like maxNumIterations, etc. The goal is to make the class realtime-safe. That means: No 
+//   operations that can take an unbounded amount of time to complete. We may provie a more 
+//   convenience oriented high level API on top of that.
 //
 // - The private repo has a textfile Documents/MathNotes/CubicAndQuarticEquations.txt where I have
 //   noted some formulas, derivations, links about the closed form formulas. Look that up for help
@@ -49,7 +108,11 @@ protected:
 //   of coeffs and roots. It should also work well together with boost::polynomial:
 //   https://www.boost.org/doc/libs/1_64_0/libs/math/doc/html/math_toolkit/roots/polynomials.html
 //   Maybe we should have a convenience class that works directly with boost::polynomial and a raw
-//   number crunching class that works on raw arrays. 
+//   number crunching class that works on raw arrays. The webpage does not show the full 
+//   implementation. To study that, see the file here in this repo:
+//   RS-MET-Research/Libraries/C++/JuceModules/rs_boost/boost/math/tools/polynomial.hpp
+//   It has a  std::vector<T> m_data;  and it stores the coeffs in ascending order just like
+//   rsPolynomial does. 
 // 
 // - For the roots, it should be convenient to use TArg = std::complex<TCoef> when TCoef is float 
 //   or double or long double but it should also be possible to use selfmade complex number classes
@@ -99,6 +162,15 @@ protected:
 //   complex numbers. We may need to think about extension fields in this context. In general, the
 //   roots (i.e. TArg) will be an extension field of TCoef. For example, the complex numbers are an
 //   extension field of the real numbers.
+//
+// - Maybe it could make sense to have different classes of root finders for the various possible
+//   scenarios. For example: rsPolyRootFinderReal, rsPolyRootFinderComplex, 
+//   rsPolyRootFinderInteger, rsPolyRootFinderRational, rsPolyRootFinderFinite, ....
+//
+// Other links that may or may not be useful:
+//
+// https://gitlab.liris.cnrs.fr/abatel/cornac/-/blob/54e870dc1dc7a9a06b2713f451c31ab95f562d06/cornac/utils/external/boost/math/tools/polynomial.hpp
+
 
 
 

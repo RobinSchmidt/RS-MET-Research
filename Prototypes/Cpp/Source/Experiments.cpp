@@ -17518,16 +17518,39 @@ bool testPolynomialRootFinder()
 {
   bool ok = true;
 
-  using TCoef = double;
-  using TRoot = std::complex<double>;
-  using Poly  = RAPT::rsPolynomial<TCoef>;
-  using PRF   = rsPolynomialRootFinder<TCoef, TRoot>;
+  //using TCoef = double;
+  //using TRoot = std::complex<double>;
+  //using Poly  = RAPT::rsPolynomial<TCoef>;
 
-  PRF prf;
+  using Real    = double;
+  using Complex = std::complex<Real>;
+  using VecR    = std::vector<Real>;
+  using VecC    = std::vector<Complex>;
+  using PRF     = rsPolynomialRootFinder;
+
+  //using PRF   = rsPolynomialRootFinder<TCoef, TRoot>;
+  //PRF prf;
+
+  Complex i(0, 1);   // Imaginary unit
+  VecR aR;           // Vector of real polynomial coefficients
+  Complex rC;        // Complex root
+
+  aR = { -15, 5, -15, 5 }; // p(x) = 5 * (x-i) * (x+i) * (x-3) = 5 x^3 - 15 x^2 + 5 x - 15
+  rC = 0.3 + 1.2*i;        // Guess. Should converge to the root at z = i.
+
+  rC = PRF::convergeLaguerre(&aR[0], (int)aR.size()+1, rC); // The size()+1 thing is really bad!
+
 
 
 
   return ok;
+
+  // ToDo:
+  //
+  // - Try rsPolynomialRootFinder::convergeLaguerre() with real and with complex coeffs. Use as 
+  //   example polynomials
+  //   p(x) = 7 * (x-2) * (x-3) * (x-5)
+  //   p(x) = 5 * (x-i) * (x+i) * (x-3) = 5 x^3 - 15 x^2 + 5 x - 15
 }
 
 

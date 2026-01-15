@@ -17518,10 +17518,6 @@ bool testPolynomialRootFinder()
 {
   bool ok = true;
 
-  //using TCoef = double;
-  //using TRoot = std::complex<double>;
-  //using Poly  = RAPT::rsPolynomial<TCoef>;
-
   using Real    = double;
   using Complex = std::complex<Real>;
   using VecR    = std::vector<Real>;
@@ -17531,14 +17527,19 @@ bool testPolynomialRootFinder()
   //using PRF   = rsPolynomialRootFinder<TCoef, TRoot>;
   //PRF prf;
 
-  Complex i(0, 1);   // Imaginary unit
-  VecR aR;           // Vector of real polynomial coefficients
-  Complex rC;        // Complex root
+  Complex i(0, 1);      // Imaginary unit
+  Real tol   = 1.e-13;  // Numerical tolerance
+  int maxIts = 100;     // Maximum number of iterations
 
+  VecR aR;              // Vector of real polynomial coefficients
+  Complex rC;           // Complex root
+
+
+  // Try converging to a root via the Laguerre algorithm:
   aR = { -15, 5, -15, 5 }; // p(x) = 5 * (x-i) * (x+i) * (x-3) = 5 x^3 - 15 x^2 + 5 x - 15
   rC = 0.3 + 1.2*i;        // Guess. Should converge to the root at z = i.
 
-  rC = PRF::convergeLaguerre(&aR[0], (int)aR.size()+1, rC); // The size()+1 thing is really bad!
+  rC = PRF::convergeLaguerre(&aR[0], (int)aR.size()+1, rC, tol, maxIts); // The size()+1 thing is really bad!
 
 
 

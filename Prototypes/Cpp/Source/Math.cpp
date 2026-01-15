@@ -26,8 +26,9 @@ public:
 
    
   /** Converges to a root near "initialGuess" via the Laguerre algorithm. ...TBC...  */
-  template<class TCoef, class TArg>
-  static TArg convergeLaguerre(const TCoef *a, int degree, TArg initialGuess = TArg(0, 0));
+  template<class TCoef, class TArg, class TTol>
+  static TArg convergeLaguerre(const TCoef *a, int degree, TArg initialGuess, TTol tol, 
+    int maxNumIterations);
   // Taken from RAPT::rsPolynomial::convergeToRootViaLaguerre and adapted. ToDo:
   // Maybe add parameters for tolerance (of type TTol) and maximum number of iteration (of type
   // (unsigned) int). Look upt how boost does it and be consistent with it! Also, check if boost
@@ -46,17 +47,57 @@ protected:
 };
 
 
-template<class TCoef, class TArg>
+template<class TCoef, class TArg, class TTol>
 TArg rsPolynomialRootFinder::convergeLaguerre(
-  const TCoef *a, int degree, TArg initialGuess)
+  const TCoef *a, int degree, TArg initialGuess, TTol tol, int maxNumIterations)
 {
+  using namespace std;  // Preliminary
+
+  //int deg = degree;
+
+  // evaluateWithTwoDerivativesAndError(
+  // const std::complex<R>* a, int degree, std::complex<R> z, std::complex<R>* P)
+
+  TArg P[3];
+
+  // Helper function (copied from evaluateWithTwoDerivativesAndError)
+  auto evalP = [&](TArg z)
+  {
+    TCoef zeroR = rsZeroValue(real(a[0]));      // Real zero - maybe use rsReal(a[0])
+    TArg  zeroC = rsZeroValue(a[0]);            // Complex zero
+
+    P[0] = a[degree];                           // P(z)
+    P[1] = zeroC;                               // P'(z)
+    P[2] = zeroC;                               // P''(z)
+
+    TTol err = rsAbs(P[0]);                     // Estimated roundoff error in evaluation
+    TCoef zA = rsAbs(z);                        // Absolute value of z
+
+    for(int j = degree-1; j >= 0; j--) 
+    {
+      P[2] = z * P[2] + P[1];
+      P[1] = z * P[1] + P[0];
+      P[0] = z * P[0] + a[j];
+      err  = abs(P[0]) + zA*err;
+    }
+
+    P[2] *= rsIntValue(2, zeroR);               // P[2] *= 2
+    return err;
+  };
+
+
+
   return initialGuess;  // Preliminary
 
   // ToDo:
-  // 
-  // - Add parameters for tolerance and max_iter
   //
-  // - Copy over code from  rsPolynomial<T>::convergeToRootViaLaguerre
+  // - Copy over code from  rsPolynomial<T>::convergeToRootViaLaguerre()
+  //   We first need to implement a function like
+  //   rsPolynomial<T>::evaluateWithTwoDerivativesAndError()
+  //   It should return something that we can compare against a tolerance type TTol, maybe the type
+  //   should be called TErr in this context for error type. Maybe we should implement it as 
+  //   internal helper function with a lambda function definition. We may not want to expose that
+  //   function to the outside world.
 }
 
 

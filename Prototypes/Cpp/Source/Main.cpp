@@ -92,12 +92,12 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPrimeFactorTable();
   //testPrimesAndMore();
   //testDivisors();
-  testEulerTotient();
+  //testEulerTotient();
   //testGcdLcm();                    // stub
   //testSquarity();
   //testCompositeness();
   //testPrimeDecomposition();        // Decompose primes additively
-  rsTestArithmeticProgressions();    // Figure out lengths of arithemtic progressions
+  //rsTestArithmeticProgressions();    // Figure out lengths of arithemtic progressions
   //testFiniteField();
   //testFieldExtensions();
   //testRingExtensions();
@@ -133,6 +133,8 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   //testAttractors();  // move into a section for physics/models
 
+
+  testPolynomialRootFinder();        // stub
   //testLiftedPolynomial();
   //testFactoredPolynomial();
   //testPolynomialRootCorrespondence1();

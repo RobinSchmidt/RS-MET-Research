@@ -12248,7 +12248,7 @@ void rsMakeUnique(const std::vector<T>& x, std::vector<T>& y, std::vector<int>& 
   //   operates on C-style arrays. Maybe the m array could then be made optional and default to a 
   //   nullptr. In the code, we would write into the m array only if it's non-null. A caller may 
   //   not always be interested in the multiplicities, so it may be nice to be able to avoid the
-  //   requirement to allocate memory for it.
+  //   requirement to allocate memory for it at the call site.
   // 
   // - Try to implement it in such a way that it can be used in place such that the y-array may 
   //   point to the same memory location as the x-array.
@@ -17511,6 +17511,22 @@ void testAttractors()
 {
   //testAttractorDenTSUCS2();
   testAttractorChaoticRotor();
+}
+
+
+bool testPolynomialRootFinder()
+{
+  bool ok = true;
+
+  using TCoef = double;
+  using TRoot = std::complex<double>;
+  using PRF   = rsPolynomialRootFinder<TCoef, TRoot>;
+
+  PRF prf;
+
+
+
+  return ok;
 }
 
 

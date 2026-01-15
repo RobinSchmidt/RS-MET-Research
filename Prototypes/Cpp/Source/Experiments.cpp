@@ -17520,6 +17520,7 @@ bool testPolynomialRootFinder()
 
   using TCoef = double;
   using TRoot = std::complex<double>;
+  using Poly  = RAPT::rsPolynomial<TCoef>;
   using PRF   = rsPolynomialRootFinder<TCoef, TRoot>;
 
   PRF prf;

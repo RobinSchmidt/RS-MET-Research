@@ -21166,7 +21166,7 @@ void testCatalanNumbers()
   {
     return pow(4.0, n) / (sqrt(PI) * pow(n, 1.5));
   };
-  // Verify the formula! The approximation seems the be not very good, but that might be OK 
+  // Verify the formula! The approximation seems to be not very good, but that might be OK 
   // because we are actually looking at rather small values of n.
 
 
@@ -21205,6 +21205,20 @@ void testCatalanNumbers()
   // https://oeis.org/A000108
 }
 
+
+void testSmoothStep()
+{
+  // Under construction - stub
+
+  // ToDo: 
+  // 
+  // - Implement the general formula for an n-th order smoothstep given here:
+  //   https://en.wikipedia.org/wiki/Smoothstep#Variations
+  //   Here is a javascript implementation:
+  //   https://en.wikipedia.org/wiki/Smoothstep#Generalization_to_higher-order_equations
+  //
+  // - Implement also https://en.wikipedia.org/wiki/Smoothstep#Inverse_Smoothstep
+}
 
 void testSmoothCrossFade()
 {
@@ -21405,9 +21419,6 @@ void testSmoothMax()
   // crossfade between x and y where the crossfade parameter c is a smooth 1D function of x-y of 
   // sigmoid type that smoothly ramps up from 0 to 1.
   // ...TBC...
-
-
-
 }
 
 

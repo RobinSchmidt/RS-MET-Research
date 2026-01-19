@@ -56,7 +56,7 @@ Cymbal sound design:
    makes louder sounds brighter".
   -Maybe for the phase-distortion try: Allpass filter with coeff modulated by (filtered) input, 
    Delay with delaytime modulated by (filtered) input
-  -My ideas for additional stuff in the gfeedback loop: Waveshaping (maybe (soft) bitcrushing,
+  -My ideas for additional stuff in the feedback loop: Waveshaping (maybe (soft) bitcrushing,
    sinusoidal/multifold could perhaps replace the phase distortion), pitch-shifting, 
    frequency-shifting
 -"Resonator-Bank Stage":

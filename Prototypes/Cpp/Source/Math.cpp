@@ -53,14 +53,25 @@ TArg rsPolynomialRootFinder::convergeLaguerre(
 {
   using namespace std;  // Preliminary
 
-  //int deg = degree;
+  const TTol eps = tol;  // Get rid - use tol dorectly!
 
-  // evaluateWithTwoDerivativesAndError(
-  // const std::complex<R>* a, int degree, std::complex<R> z, std::complex<R>* P)
+  static const int numFractions      = 8;   // number of fractions minus 1 (for breaking limit cycles)
+  static const int itsBeforeFracStep = 10;  // number of iterations after which a fractional step
+                                            // is taken (to break limit cycles)
 
-  TArg P[3];
+  // fractions for taking fractional update steps to break a limit cycles:
+  static TCoef fractions[numFractions+1] =
+    { TCoef(0.0),  TCoef(0.5),  TCoef(0.25), TCoef(0.75), TCoef(0.13), 
+      TCoef(0.38), TCoef(0.62), TCoef(0.88), TCoef(1.0) };
+  // Do they intend the numbers to be multiples of 0.125 but rounded to two decimal digits?
+  // Like 0.0, 0.5, 0.25, 0.75, 0.125, 0.375, 0.625, 0.875, 1.0? But why would they round so 
+  // crudely? ...why the +1? For convenience?
 
-  // Helper function (copied from evaluateWithTwoDerivativesAndError)
+  TArg P[3];  // Holds P, P', P''
+
+
+  // Helper function:
+  // (copied from rsPolynomial<T>::evaluateWithTwoDerivativesAndError())
   auto evalP = [&](TArg z)
   {
     TCoef zeroR = rsZeroValue(real(a[0]));      // Real zero - maybe use rsReal(a[0])
@@ -84,6 +95,8 @@ TArg rsPolynomialRootFinder::convergeLaguerre(
     P[2] *= rsIntValue(2, zeroR);               // P[2] *= 2
     return err;
   };
+
+
 
 
 

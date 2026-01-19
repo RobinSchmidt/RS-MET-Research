@@ -134,7 +134,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testAttractors();  // move into a section for physics/models
 
 
-  testPolynomialRootFinder();        // stub
+//  testPolynomialRootFinder();        // stub
   //testLiftedPolynomial();
   //testFactoredPolynomial();
   //testPolynomialRootCorrespondence1();
@@ -158,9 +158,10 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testChebychevEconomization();    // stub
   //testGeneratingFunction();
   //testCatalanNumbers();
-  //testSmoothCrossFade();
-  //testSmoothCrossFade2();
-  //testSmoothMax();                   // stub
+  testSmoothStep();                  // Stub
+  testSmoothCrossFade();
+  testSmoothCrossFade2();
+  testSmoothMax();                   // stub
   //testNewtonOptimizer1D();
   //testFourierTrafo2D();
   //testKroneckerTrafo2D();

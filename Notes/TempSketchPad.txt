@@ -1,0 +1,90 @@
+This file contains temporary draft notes. It's just a totally messy sketchpad!
+
+
+
+
+----------------------------------------------------------------------------------------------------
+Engrowler/Growlifier
+
+
+
+----------------------------------------------------------------------------------------------------
+Anti-Aliasing Techniques:
+
+Catalog of anti-aliasing techniques. Format: Name, Description, Applications, Pro, Con
+
+- Oversampling. Pro: Universally applicable. Easy to implement. Con: Computationally expensive
+
+- Additive Synthesis: Pro: High level of control. Con: Very expensive computationally. Limited
+  area of application (synthesis of sinusoidal spectra). Using Chebychev polynomials, the idea can
+  be partially extended to waveshaping.
+ 
+- BLIT/BLEP/BLAMP (Bandlimited Impulse Train, Step, Ramp): Pro: Reasobly efficient. Con: Applicable
+  only to synthesis of waveforms with discontinuities (in the wave itself or one of its 
+  derivatives and to the jumps in hard-sync)
+
+- ADAA (Anti Derivative Anti-Aliasing): Applicable to waveshapers
+
+- DSF (Discrete Summation Formulas):
+
+- Lowpass filtering before downsampling. Applicable to waveform playback at higher speed.
+
+- Mip-Mapping: Store various different precomputed versions of the signal which are progressively 
+  more heavily lowpass filtered. These so called mip-maps can either be decimated according to their
+  individual bandwidths or not. This is basically a precomputed/offline variant of the "lowpassing 
+  before downsampling" technique  ...TBC...
+  
+- Magnitude Matching: Applicable to either anti-alias or decramp filter magnitude responses. Which
+  of the two it is depends on what you consider as the baseline reference. Impulse invariant 
+  designs have indeed aliased frequency responses such that calling it an anti-aliasing technique
+  is somewhat appropriate (although the term is being bent a bit to include frequency response
+  aliasing), bilinear transform based once show frequency warping.
+  
+- Parameter range limitation or reduction of parameters that control spectral brightness by the 
+  fundamental frequency in various syntesis methods like FM, PD, etc. Pro: Easy to implement. Very
+  efficient. Con: It's not proper anti-aliasing but actually just cheating. However, decreasing the
+  brightness for higher notes can actually be natural and musical.
+
+- Highpass filtering: Can get rid of aliasing components belwo the fundamental which tend to be 
+  especially annoying.
+
+- Quantizing oscillator frequencies to those which have an integer number of samples in one cycle.
+  Perhaps combined with internal resampling. Does not really get rid of the aliasing components but
+  strategically places them on top of the already existing harmonic, making their impact far less
+  objectionable. They only alter the amplitudes but do not introduce new frequency components.
+  
+- Advanced interpolation techniques like (windowed) sinc interpolation
+  
+- Often combinations are used. For example, mip-mapping together with mild oversampling (e.g. 2x) or
+  ADAA with moderate oversampling.
+
+
+ToDo: Start KVR thread "Catalog of anti-aliasing techniques for digital audio"
+
+---------------------------------------------------------------------------------------------------- 
+
+ResoVerb or TuneVerb or ModalVerb:
+
+- A reverb based on allpasses based on my parallel-comb-bank-allpass filter
+
+- The resonances of the allpass can be adjusted to be musical notes such that we treat the "metallic
+  resonances" as a desirable feature, not as a flaw.
+  
+- Maybe for each note we could tune 2 or 3 modal filters to slightly above and below in order to get
+  sinusoidal undulations of amplitude. The frequency of these undulations, i.e. the frequency 
+  difference between center freq and outer freqs may be different for each mode such that higher 
+  modes modulate faster and qe get a complex overall modulation pattern.
+  
+- Maybe a similar idea can be applied to the comb filters in an FDN. Tune them to musical notes. 
+  Maybe it can also be applied to old school serial allpasses / parallel combs structures, i.e. 
+  Schroeder/Moorer reverbs.
+ 
+---------------------------------------------------------------------------------------------------- 
+ 
+https://ultra.audio/   Nice GUI!
+
+
+https://github.com/pure-data/externals-howto
+
+This Will Change The Way You Think About Arranging Music
+https://www.youtube.com/watch?v=nfLMVhheS2g  

@@ -347,6 +347,37 @@ bool testKalmanFilter()
   //
 }
 
+
+void testPitchDithering()
+{
+  // Under construction
+
+
+  // ToDo:
+  //
+  // - Implement the pitch-dithering or pitch-jittering idea that I describe here:
+  //   https://www.kvraudio.com/forum/viewtopic.php?p=9189004#p9189004
+  //
+  // - The idea is as follows: when creating periodic waveforms (like a sawtooth) digitally, we get
+  //   aliasing but when the cycle length is an integer number of samples, the frequencies of the 
+  //   aliasing products fall onto the harmonics that are already there. When mixing, the change 
+  //   the spectral amplitudes a bit but do not introduce obnoxious new frequencies. So, it would 
+  //   be nice, if we could quantize the produced pitches to integer cycle lengths. But this will 
+  //   lead to mistuning of the frequency. The idea is now to produce cycles of different integer
+  //   lengths in a probabiliytic way such that the _average_ cycle length comes out as desired. 
+  //   For example, to produce an average cycle length of 100.3 samples, one could produce cycles
+  //   or length 100 with probability p = 0.7 and cycles of elngth 101 with probability p = 0.3.
+  //
+  // - One potential problem with this approach could be that frequencies that happen to have 
+  //   integer cycle lengths would be unaffected and sound "cleaner" than others. For example,
+  //   100.5 would sound most dirty while 100.0 would sound completely clean. this could be avoided
+  //   by letting the length 100.0 cycle probabilistically use lengths 99, 100 and 101 (with 
+  //   average 100.0). Maybe in general, we should use some sort of probability distribution 
+  //   (perhaps non-uniform, maybe low order Irwin-Hall) that spans a few lengths like maybe 
+  //   97...103 when the center is 100.0. For 100.3, it would span 97.3...103.3
+}
+
+
 //-------------------------------------------------------------------------------------------------
 
 void testGaussBlurFIR()

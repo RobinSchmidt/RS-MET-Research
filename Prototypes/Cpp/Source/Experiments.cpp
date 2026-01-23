@@ -15888,10 +15888,15 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T>& p, const rsPolynomial<T>& q
   return S;
 
   // ToDo:
-  // -Write unit tests
-  // -Document why the loop limits are what they are.
-  // -Explain a little bit about what this matrix is good for in the doxygen docstring.
-  // -Maybe move to RAPT
+  // 
+  // - Write unit tests
+  // 
+  // - Document why the loop limits are what they are (why does i go up to < n and j up to <= m 
+  //   etc.).
+  // 
+  // - Explain a little bit about what this matrix is good for in the doxygen docstring.
+  // 
+  // - Maybe move to RAPT
 }
 
 /** A modified Sylvester matrix where we swap the roles of rows and columns to avoid the need for
@@ -16114,7 +16119,6 @@ rsMatrix<T> rsBezoutMatrix(const rsPolynomial<T>& f, const rsPolynomial<T>& g)
 
 void testBezoutMatrix()
 {
-
   // UNDER CONSTRUCTION
   //
   // https://en.wikipedia.org/wiki/B%C3%A9zout_matrix
@@ -16149,7 +16153,7 @@ void testBezoutMatrix()
   // condition for B to be the Bezout matrix of f and g. Probably not - but it's certainly a 
   // condition that we should check in a unit test. It's given on the wikipedia page. The name
   // isBezoutMatrix is a bit misleading because it suggests that it's a sufficient condition. Try 
-  // to find a better name.
+  // to find a better name - like satisfiesBezoutCriterionFor...
 
 
   bool ok = true;

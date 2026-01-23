@@ -118,7 +118,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPowerCommutator();
   //testParticleSystem();
   //testWeightedAverages();
-  //testSylvesterMatrix();
+  testSylvesterMatrix();
   //testBezoutMatrix();
   //testMatrixMulAdapter();              // stub
   //testGeneralizedMatrixOperations();   // Generalize matrix add/mul to arbitrary shaped matrices

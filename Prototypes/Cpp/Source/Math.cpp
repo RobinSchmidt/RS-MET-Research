@@ -53,7 +53,7 @@ TArg rsPolynomialRootFinder::convergeLaguerre(
 {
   using namespace std;  // Preliminary
 
-  const TTol eps = tol;  // Get rid - use tol dorectly!
+  const TTol eps = tol;  // Get rid - use tol directly!
 
   static const int numFractions      = 8;   // number of fractions minus 1 (for breaking limit cycles)
   static const int itsBeforeFracStep = 10;  // number of iterations after which a fractional step

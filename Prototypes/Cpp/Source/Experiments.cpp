@@ -393,17 +393,13 @@ void testPitchDithering()
   auto meanLength = [](int L1, int numL1, int L2, int numL2) 
   {
     return Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
-  
   };
 
 
-  // Create and set up the pseudo random number generator for the probabilistic dithering:
+  // Create the probabilistically (i.e. randomly) pitch-dithered signal:
   rsNoiseGenerator<Real> prng;
   prng.setRange(0.0, 1.0);
   prng.setSeed(seed);
-
-  // Create the probabilistically pitch-dithered signal:
-  //int N = numSamples;                    // Shorthand - maybe get rid!
   Vec x1(numSamples);                    // The first signal that we generate
   Vec a1(numCycles);                     // Average length of all cycles produced so far
   int n = 0;                             // Sample number
@@ -440,29 +436,32 @@ void testPitchDithering()
     a2[i] = meanL;
   }
 
-  // The second deterministic algorithm is based on maintaining a length error in the open interval 
-  // (-1,+1) as state variable and depending on whether it's above or below zero, we produce a 
-  // short or a long cycle:
+  // The second deterministic algorithm is based on maintaining an accumulated length error in the
+  // open interval (-1,+1) as state variable and depending on whether it's above or below zero, we 
+  // produce a short or a long cycle (and update the error). In order to match the output of the 
+  // first deterministic algorithm above, we need some tolerance here. In production code, this may
+  // not be needed because there is no real reason to assume that any of the two results (with or 
+  // without tol) is "better" than the other. We just do it to get an exact match for the plots 
+  // here.
   Vec x3(numSamples);
   Vec a3(numCycles);
   Real err = Real(0);
-  Real tol = 1.e-12;
+  Real tol = 1.e-12;                     // May depend on numSamples. More may need higher tol.
   n = 0;
   numL1 = 0;
   numL2 = 0;
   for(int i = 0; i < numCycles; i++)
   {
-    //if(err <= 0.0)
-    //if(err < 0.0)
-    if(err <= tol)
+    //if(err <= 0.0)                     // This could be used in production
+    if(err <= tol)                       // Needed to exactly match first algorithm
     {
       addCycle(x3, L2, &n, &numL2);
-      err += (1.0 - f);                // Verify!
+      err += (1.0 - f);
     }
     else
     {
       addCycle(x3, L1, &n, &numL1);
-      err -= f;                        // Verify!
+      err -= f;
     }
     meanL = meanLength(L1, numL1, L2, numL2);
     a3[i] = meanL;
@@ -482,9 +481,19 @@ void testPitchDithering()
   int dummy = 0;
 
 
+  // Observations:
+  //
+  // - The average cycle length does indeed approach the desired period. 
+  // 
+  // - The two different deterministic algorithms do indeed produce the same result but only if we
+  //   use a numeric tolerance in the switching logic for the second algorithm, i.e. the one based
+  //   on error feedback.
+  // 
+  //
   // ToDo:
   // 
-  // - Implement a different deterministic algorithm that does not rely on computations with the
+  // - DONE.
+  //   Implement a different deterministic algorithm that does not rely on computations with the
   //   total number of cycles produced so far because such an algorithm could be problematic when
   //   we need to produce signals of indefinite length in a realtime context. Maybe we can keep 
   //   some sort of state variable that we continuously try to drive toward zero and which gets
@@ -492,8 +501,9 @@ void testPitchDithering()
   //   produce a long cycle and decrease it when we produce a short cycle. Probably, the amount of
   //   increase or decrease should depend on the fractional part f of the desired cycle length.
   //   Maybe the state variable should contain the accumulated error in length that we made so far.
-  //
-  // - Implement the pitch-dithering or pitch-jittering idea that I describe here:
+  // 
+  // - DONE
+  //   Implement the pitch-dithering or pitch-jittering idea that I describe here:
   //   https://www.kvraudio.com/forum/viewtopic.php?p=9189004#p9189004
   //
   // - The idea is as follows: when creating periodic waveforms (like a sawtooth) digitally, we get
@@ -512,22 +522,22 @@ void testPitchDithering()
   //   by letting the length 100.0 cycle probabilistically use lengths 99, 100 and 101 (with 
   //   average 100.0). Maybe in general, we should use some sort of probability distribution 
   //   (perhaps non-uniform, maybe low order Irwin-Hall) that spans a few lengths like maybe 
-  //   97...103 when the center is 100.0. For 100.3, it would span 97.3...103.3
+  //   97...103 when the center is 100.0. For 100.3, it would span 97.3...103.3. But it should be
+  //   a discrete probability distribution. Here, we use one that has only two possible values, so
+  //   we have for example p(100) = 0.7, p(101) = 0.3. Maybe we could have something like:
+  //   p(99) = 0.2, p(100) = 0.5, p(101) = 0.2, p(102) = 0.1. But how could we meaningfully compute
+  //   these values (I just made them up)? It may be desirable to have a 4-value binomial 
+  //   distribution [1,3,3,1]/8 if the period is on a half integer (like 100.5) and a 3 value 
+  //   binomial distribution [1,2,1]/4 if the period is exactly on an integer (like 100.0). But 
+  //   what do we do in between? Maybe linearly interpolate between [1,3,3,1]/8 and [1,2,1,0]/4 
+  //   as we go from 100.5 to 100.0?
   // 
-  // - Record the average cycle length of all cycles produced to far as function of the cycle 
-  //   number. It should converge to the desired cycle length. Verify that with a plot!
-  //   Done! Looks good. ToDo: Try different seeds and make various plots with the 
-  //   different seeds. Figure out the expected variance of the recorded average after a given
-  //   number of cycles., i.e. figure out how much the rightmost values in the different plots
-  //   spread around the desired period.
+  // - Try different seeds and make various plots with the different seeds. Figure out the expected
+  //   variance of the recorded average after a given number of cycles., i.e. figure out how much 
+  //   the rightmost values in the different plots spread around the desired period.
   //
-  // - Create a naive saw and a perfectly anti-aliased saw for comparison
-  //
-  // - Maybe rename L1 to shortLength and L2 to longLength and numL1 to numShort and numL2 to 
-  //   numLong
+  // - Create a naive saw and a perfectly anti-aliased saw for comparison.
   // 
-  // - Implement other algorithms for deterministic pitch dithering
-  //
   // 
   // See:
   // https://en.wikipedia.org/wiki/Dither#Algorithms

@@ -350,11 +350,11 @@ bool testKalmanFilter()
 
 /** Fills the buffer x of length N with one cycle of a sawtooth wave. */
 template<class T>
-void rsFillSawCycle(T* x, int N)
+void rsFillSawCycle(T* x, int N, T amp = T(1))
 {
   T s = T(2) / T(N-1);
   for(int n = 0; n < N; n++)
-    x[n] = -1 + s * T(n);
+    x[n] = amp * (-1 + s * T(n));
 }
 
 void testPitchDithering()
@@ -366,8 +366,10 @@ void testPitchDithering()
   using Real = double;
   using Vec  = std::vector<Real>;
 
-  int  numSamples = 40000;               // Number of samples to produce
-  Real period     =   100.3;             // Desired cycle length
+  int  sampleRate = 44100;               // Sample rate for the wave files
+  int  numSamples =  8200;               // Number of samples to produce
+  Real period     =   100.5;             // Desired cycle length
+  Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     3;               // Seed for PRNG
 
   // Compute the lengths of the two cycles and the fractional part of desired length:
@@ -378,30 +380,43 @@ void testPitchDithering()
   // Compute the number of cycles to produce:
   int numCycles = (int) (Real(numSamples) / period) - 1;
 
+  // Helper function to produce one cycle and update counters:
+  auto addCycle = [&amp](Vec& x, int length, int* start, int* counter) 
+  {
+    rsFillSawCycle(&x[*start], length, amp);
+    (*counter)++;
+    *start += length;
+  };
+
+
   // Create and set up the pseudo random number generator for the probabilistic dithering:
   rsNoiseGenerator<Real> prng;
   prng.setRange(0.0, 1.0);
   prng.setSeed(seed);
 
   // Create the probabilistically pitch-dithered signal:
-  int N = numSamples;                    // Shorthand - maybe get rid!
-  Vec x1(N);                             // The first signal that we generate
+  //int N = numSamples;                    // Shorthand - maybe get rid!
+  Vec x1(numSamples);                    // The first signal that we generate
   Vec a1(numCycles);                     // Average length of all cycles produced so far
   int n = 0;                             // Sample number
-  int numL1 = 0;                         // Number of cycles with L1
-  int numL2 = 0;                         // Number of cycles with L2
+  int numL1 = 0;                         // Counts number of cycles with L1
+  int numL2 = 0;                         // Counts number of cycles with L2
   for(int i = 0; i < numCycles; i++)
   {
     Real r = prng.getSample();           // Random number
     if(r <= f)
     {
-      rsFillSawCycle(&x1[n], L2);
+      //addCycle(x1, L2, &n, &numL2);
+
+      rsFillSawCycle(&x1[n], L2, amp);
       numL2++;
       n += L2;
     }
     else
     {
-      rsFillSawCycle(&x1[n], L1);
+      //addCycle(x1, L1, &n, &numL1);
+
+      rsFillSawCycle(&x1[n], L1, amp);
       numL1++;
       n += L1;
     }
@@ -416,7 +431,7 @@ void testPitchDithering()
   // cycle length of all the cycles that have been produced so far. If that average length is above 
   // the desired period, we next produce a short cycle and if it is below (or equal to) to the 
   // desired period, we next produce a long cycle:
-  Vec x2(N);
+  Vec x2(numSamples);
   Vec a2(numCycles);
   n = 0;
   numL1 = 0;
@@ -426,13 +441,13 @@ void testPitchDithering()
   {
     if(avgL <= period)
     {
-      rsFillSawCycle(&x2[n], L2);
+      rsFillSawCycle(&x2[n], L2, amp);
       numL2++;
       n += L2;
     }
     else
     {
-      rsFillSawCycle(&x2[n], L1);
+      rsFillSawCycle(&x2[n], L1, amp);
       numL1++;
       n += L1;
     }
@@ -440,15 +455,21 @@ void testPitchDithering()
     a2[i] = avgL;
   }
 
+  // Write produced signals to wave files:
+  //rosic::writeToMonoWaveFile("PitchDithered_Prob.wav", &x1[0], numSamples, sampleRate);
+  //rosic::writeToMonoWaveFile("PitchDithered_Det1.wav", &x2[0], numSamples, sampleRate);
 
   // Plot results:
   //rsPlotVectors(x1, x2);
-  rsPlotVectors(a2);
+  //rsPlotVectors(a2);
   rsPlotVectors(a1, a2);
   int dummy = 0;
 
 
   // ToDo:
+  // 
+  // - Factor out 2 little helper functions addShortCycle(x1, n, numShort), 
+  //   addLongCycle(x1, n, numLong) such that the if/else branches become one-liners.
   // 
   // - Implement a different deterministic algorithm that does not rely on computations with the
   //   total number of cycles produced so far because such an algorithm could be problematic when
@@ -487,7 +508,7 @@ void testPitchDithering()
   //   number of cycles., i.e. figure out how much the rightmost values in the different plots
   //   spread around the desired period.
   //
-  // - Create wave files to listen to.
+  // - Create a naive saw and a perfectly anti-aliased saw for comparison
   //
   // - Maybe rename L1 to shortLength and L2 to longLength and numL1 to numShort and numL2 to 
   //   numLong

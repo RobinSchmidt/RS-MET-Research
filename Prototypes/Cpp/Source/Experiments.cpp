@@ -368,7 +368,7 @@ void testPitchDithering()
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples =  8200;               // Number of samples to produce
-  Real period     =   100.5;             // Desired cycle length
+  Real period     =   100.3;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     3;               // Seed for PRNG
 
@@ -376,6 +376,7 @@ void testPitchDithering()
   int L1 = rsFloorInt(period);
   int L2 = L1 + 1;
   Real f = period - L1;
+  Real meanL = 0.5 * (L1 + L2);
 
   // Compute the number of cycles to produce:
   int numCycles = (int) (Real(numSamples) / period) - 1;
@@ -386,6 +387,13 @@ void testPitchDithering()
     rsFillSawCycle(&x[*start], length, amp);
     (*counter)++;
     *start += length;
+  };
+
+  // Helper function to compute average cycle length based on two cycle lengths and their counts:
+  auto meanLength = [](int L1, int numL1, int L2, int numL2) 
+  {
+    return Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
+  
   };
 
 
@@ -408,12 +416,9 @@ void testPitchDithering()
       addCycle(x1, L2, &n, &numL2);
     else
       addCycle(x1, L1, &n, &numL1);
-    a1[i] = Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
+    meanL = meanLength(L1, numL1, L2, numL2);
+    a1[i] = meanL;
   }
-
-  // Compute average cycle length. It should be close to the desired period:
-  Real avgL = Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
-
 
   // Implement the first deterministic algorithm. It works as follows: We keep track of the average
   // cycle length of all the cycles that have been produced so far. If that average length is above 
@@ -424,16 +429,47 @@ void testPitchDithering()
   n = 0;
   numL1 = 0;
   numL2 = 0;
-  avgL  = period; // Init as if the signal so far was perfect
+  meanL = period;                        // Init as if the signal so far was perfect
   for(int i = 0; i < numCycles; i++)
   {
-    if(avgL <= period)
+    if(meanL <= period)
       addCycle(x2, L2, &n, &numL2);
     else
       addCycle(x2, L1, &n, &numL1);
-    avgL = Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
-    a2[i] = avgL;
+    meanL = meanLength(L1, numL1, L2, numL2);
+    a2[i] = meanL;
   }
+
+  // The second deterministic algorithm is based on maintaining a length error in the open interval 
+  // (-1,+1) as state variable and depending on whether it's above or below zero, we produce a 
+  // short or a long cycle:
+  Vec x3(numSamples);
+  Vec a3(numCycles);
+  Real err = Real(0);
+  Real tol = 1.e-12;
+  n = 0;
+  numL1 = 0;
+  numL2 = 0;
+  for(int i = 0; i < numCycles; i++)
+  {
+    //if(err <= 0.0)
+    //if(err < 0.0)
+    if(err <= tol)
+    {
+      addCycle(x3, L2, &n, &numL2);
+      err += (1.0 - f);                // Verify!
+    }
+    else
+    {
+      addCycle(x3, L1, &n, &numL1);
+      err -= f;                        // Verify!
+    }
+    meanL = meanLength(L1, numL1, L2, numL2);
+    a3[i] = meanL;
+  }
+
+
+
 
   // Write produced signals to wave files:
   //rosic::writeToMonoWaveFile("PitchDithered_Prob.wav", &x1[0], numSamples, sampleRate);
@@ -441,15 +477,12 @@ void testPitchDithering()
 
   // Plot results:
   //rsPlotVectors(x1, x2);
-  //rsPlotVectors(a2);
-  rsPlotVectors(a1, a2);
+  rsPlotVectors(a2, a3);
+  //rsPlotVectors(a1, a2, a3);
   int dummy = 0;
 
 
   // ToDo:
-  // 
-  // - Factor out 2 little helper functions addShortCycle(x1, n, numShort), 
-  //   addLongCycle(x1, n, numLong) such that the if/else branches become one-liners.
   // 
   // - Implement a different deterministic algorithm that does not rely on computations with the
   //   total number of cycles produced so far because such an algorithm could be problematic when
@@ -494,6 +527,11 @@ void testPitchDithering()
   //   numLong
   // 
   // - Implement other algorithms for deterministic pitch dithering
+  //
+  // 
+  // See:
+  // https://en.wikipedia.org/wiki/Dither#Algorithms
+  // https://en.wikipedia.org/wiki/Error_diffusion#minimized_average_error
 }
 
 

@@ -405,21 +405,9 @@ void testPitchDithering()
   {
     Real r = prng.getSample();           // Random number
     if(r <= f)
-    {
-      //addCycle(x1, L2, &n, &numL2);
-
-      rsFillSawCycle(&x1[n], L2, amp);
-      numL2++;
-      n += L2;
-    }
+      addCycle(x1, L2, &n, &numL2);
     else
-    {
-      //addCycle(x1, L1, &n, &numL1);
-
-      rsFillSawCycle(&x1[n], L1, amp);
-      numL1++;
-      n += L1;
-    }
+      addCycle(x1, L1, &n, &numL1);
     a1[i] = Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
   }
 
@@ -440,17 +428,9 @@ void testPitchDithering()
   for(int i = 0; i < numCycles; i++)
   {
     if(avgL <= period)
-    {
-      rsFillSawCycle(&x2[n], L2, amp);
-      numL2++;
-      n += L2;
-    }
+      addCycle(x2, L2, &n, &numL2);
     else
-    {
-      rsFillSawCycle(&x2[n], L1, amp);
-      numL1++;
-      n += L1;
-    }
+      addCycle(x2, L1, &n, &numL1);
     avgL = Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
     a2[i] = avgL;
   }

@@ -410,11 +410,40 @@ void testPitchDithering()
   // Compute average cycle length. It should be close to the desired period:
   Real avgL = Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
 
+
+  // Implement the first deterministic algorithm. It works as follows: We keep track of the average
+  // cycle length of all the cycles that have been produced so far. If that average length is above 
+  // the desired period, we next produce a short cycle and if it is below (or equal to) to the 
+  // desired period, we next produce a long cycle:
+  Vec x2(N);
+  n = 0;
+  numL1 = 0;
+  numL2 = 0;
+  avgL  = period; // Init as if the signal so far was perfect
+  for(int i = 1; i <= numCycles; i++)
+  {
+    if(avgL <= period)
+    {
+      rsFillSawCycle(&x2[n], L2);
+      numL2++;
+      n += L2;
+    }
+    else
+    {
+      rsFillSawCycle(&x2[n], L1);
+      numL1++;
+      n += L1;
+    }
+    avgL = Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
+    int dummy = 0;
+  }
+
+
   // ToDo:
   // -Implement various algorithms for deterministic pitch dithering
 
 
-  rsPlotVectors(x1);
+  rsPlotVectors(x1, x2);
   int dummy = 0;
 
   // ToDo:
@@ -439,8 +468,14 @@ void testPitchDithering()
   //   average 100.0). Maybe in general, we should use some sort of probability distribution 
   //   (perhaps non-uniform, maybe low order Irwin-Hall) that spans a few lengths like maybe 
   //   97...103 when the center is 100.0. For 100.3, it would span 97.3...103.3
+  // 
+  // - Record the average cycle length of all cycles produced to far as function of the cycle 
+  //   number. It should converge to the desired cycle length. Verify that with a plot!
   //
   // - Create wave files to listen to.
+  //
+  // - Maybe rename L1 to shortLength and L2 to longLength and numL1 to numShort and numL2 to 
+  //   numLong
 }
 
 

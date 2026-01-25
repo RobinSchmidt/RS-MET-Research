@@ -352,24 +352,23 @@ bool testKalmanFilter()
 template<class T>
 void rsFillSawCycle(T* x, int N)
 {
-  T s = T(2) / T(N-1);          // Verify formula! Last sample x[N-1] should come out as 1
+  T s = T(2) / T(N-1);
   for(int n = 0; n < N; n++)
     x[n] = -1 + s * T(n);
 }
 
-
 void testPitchDithering()
 {
-  // Under construction
+  // In this experiment, we implement different pitch-dithering (or pitch-jittering) algorithms.
+  // ...TBC...
+
 
   using Real = double;
   using Vec  = std::vector<Real>;
 
-
-  int  numSamples = 40000;      // Number of samples to produce
-  Real period     =   100.3;    // Desired cycle length
-  int seed        =     3;      // Seed for PRNG
-
+  int  numSamples = 40000;               // Number of samples to produce
+  Real period     =   100.3;             // Desired cycle length
+  int  seed       =     3;               // Seed for PRNG
 
   // Compute the lengths of the two cycles and the fractional part of desired length:
   int L1 = rsFloorInt(period);
@@ -448,7 +447,17 @@ void testPitchDithering()
   rsPlotVectors(a1, a2);
   int dummy = 0;
 
+
   // ToDo:
+  // 
+  // - Implement a different deterministic algorithm that does not rely on computations with the
+  //   total number of cycles produced so far because such an algorithm could be problematic when
+  //   we need to produce signals of indefinite length in a realtime context. Maybe we can keep 
+  //   some sort of state variable that we continuously try to drive toward zero and which gets
+  //   updated after (or before) each produced cycle in such a way that we increase it when we 
+  //   produce a long cycle and decrease it when we produce a short cycle. Probably, the amount of
+  //   increase or decrease should depend on the fractional part f of the desired cycle length.
+  //   Maybe the state variable should contain the accumulated error in length that we made so far.
   //
   // - Implement the pitch-dithering or pitch-jittering idea that I describe here:
   //   https://www.kvraudio.com/forum/viewtopic.php?p=9189004#p9189004

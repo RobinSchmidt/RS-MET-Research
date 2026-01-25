@@ -359,19 +359,29 @@ void rsFillSawCycle(T* x, int N, T amp = T(1))
 
 void testPitchDithering()
 {
-  // In this experiment, we implement different pitch-dithering (or pitch-jittering) algorithms.
+  // In this experiment, we implement different pitch-dithering (or pitch-jittering) algorithms
   // that I describe here:
   // 
   //   https://www.kvraudio.com/forum/viewtopic.php?p=9189004#p9189004
   // 
-  // ...TBC...
+  // The idea is as follows: when creating periodic waveforms (like a sawtooth) digitally, we get
+  // aliasing but when the cycle length is an integer number of samples, the frequencies of the 
+  // aliasing products fall onto the harmonics that are already there. When mixing, the change 
+  // the spectral amplitudes a bit but do not introduce obnoxious new frequencies. So, it would 
+  // be nice, if we could quantize the produced pitches to integer cycle lengths. But this will 
+  // lead to mistuning of the frequency. The idea is now to produce cycles of different integer
+  // lengths in a probabilistic way such that the _average_ cycle length comes out as desired. 
+  // For example, to produce an average cycle length of 100.3 samples, one could produce cycles
+  // or length 100 with probability p = 0.7 and cycles of length 101 with probability p = 0.3.
+  // We implement different algorithms here to achieve the correct mean cycle length. Some are
+  // probabilistic (i.e. random), some are deterministic.
 
 
   using Real = double;
   using Vec  = std::vector<Real>;
 
   int  sampleRate = 44100;               // Sample rate for the wave files
-  int  numSamples =  8200;               // Number of samples to produce
+  int  numSamples = 88200;               // Number of samples to produce
   Real period     =   100.3;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     3;               // Seed for PRNG
@@ -399,7 +409,7 @@ void testPitchDithering()
     return Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
   };
 
-
+  // Algorithm 1:
   // Create the probabilistically (i.e. randomly) pitch-dithered signal:
   rsNoiseGenerator<Real> prng;
   prng.setRange(0.0, 1.0);
@@ -411,15 +421,16 @@ void testPitchDithering()
   int numL2 = 0;                         // Counts number of cycles with L2
   for(int i = 0; i < numCycles; i++)
   {
-    Real r = prng.getSample();           // Random number
-    if(r <= f)
-      addCycle(x1, L2, &n, &numL2);
+    Real r = prng.getSample();           // Random number in 0..1
+    if(r <= f) 
+      addCycle(x1, L2, &n, &numL2);      // Probability for that branch is f
     else
-      addCycle(x1, L1, &n, &numL1);
+      addCycle(x1, L1, &n, &numL1);      // Probability for that branch is 1-f
     meanL = meanLength(L1, numL1, L2, numL2);
     a1[i] = meanL;
   }
 
+  // Algorithm 2:
   // Implement the first deterministic algorithm. It works as follows: We keep track of the average
   // cycle length of all the cycles that have been produced so far. If that average length is above 
   // the desired period, we next produce a short cycle and if it is below (or equal to) to the 
@@ -440,6 +451,7 @@ void testPitchDithering()
     a2[i] = meanL;
   }
 
+  // Algorithm 3:
   // The second deterministic algorithm is based on maintaining an accumulated length error in the
   // open interval (-1,+1) as state variable and depending on whether it's above or below zero, we 
   // produce a short or a long cycle (and update the error). In order to match the output of the 
@@ -475,8 +487,8 @@ void testPitchDithering()
 
 
   // Write produced signals to wave files:
-  //rosic::writeToMonoWaveFile("PitchDithered_Prob.wav", &x1[0], numSamples, sampleRate);
-  //rosic::writeToMonoWaveFile("PitchDithered_Det1.wav", &x2[0], numSamples, sampleRate);
+  rosic::writeToMonoWaveFile("PitchDithered_Prob.wav", &x1[0], numSamples, sampleRate);
+  rosic::writeToMonoWaveFile("PitchDithered_Det1.wav", &x2[0], numSamples, sampleRate);
 
   // Plot results:
   //rsPlotVectors(x1, x2);
@@ -487,11 +499,24 @@ void testPitchDithering()
 
   // Observations:
   //
-  // - The average cycle length does indeed approach the desired period. 
+  // - The average cycle length does indeed approach the desired period. The idea works.
   // 
   // - The two different deterministic algorithms do indeed produce the same result but only if we
   //   use a numeric tolerance in the switching logic for the second algorithm, i.e. the one based
   //   on error feedback.
+  // 
+  // - The probabilistic algorithm sounds more dirty. There is a kind of noise in the signal. The
+  //   deterministic algorithm produces subharmonics when f is a rational number. (Verify! 
+  //   Elaborate! )
+  // 
+  // - With a desired cycle length of 50.3, the deterministic algorithm actually sounds rather 
+  //   similar to what aliasing sounds like, so it doesn't really seem to improve the situation.
+  //   The probabilistic algo still sounds noisy and dirty but subjectively preferable. It somehow
+  //   sounds "gritty". Maybe when building supersaws out of that, it may actually sound good?
+  //   Try it! Maybe create an oscillator class that lets the user adjust the amount of cycle 
+  //   dithering noise. Maybe with a regular oscillator, this effect can be replicated by using a 
+  //   little bit of random pitch modulation?
+  //   
   // 
   // 
   // Conclusions:
@@ -534,7 +559,25 @@ void testPitchDithering()
   //   variance of the recorded average after a given number of cycles., i.e. figure out how much 
   //   the rightmost values in the different plots spread around the desired period.
   //
-  // - Create a naive saw and a perfectly anti-aliased saw for comparison.
+  // - Create a naive saw and a perfectly anti-aliased saw (using additive synthesis) for 
+  //   comparison. Produce also a saw using BLEP synthesis. Maybe allow for oversampling. Test
+  //   higher pitches as well. I guess, the noise and artifacts get worse for higher pitches.
+  // 
+  // - Allow the desired period length to be time-varying to support pitch envelopes and vibrato.
+  //   For each cycle to be produced, read out the desired pitch/freq/period (if that data is 
+  //   available per sample, i.e. we have an sample-accurate LFO or env, compute and use an average
+  //   over the last cycle). Use that time varying period data together with the old error state 
+  //   variable (of algorithm 3) to update the error. I'm not yet sure what the formula or 
+  //   algorithm for that should be like, though.
+  // 
+  // - Implement a supersaw based on a bank of pitch-dithered oscillators. Allow also for other
+  //   waveforms - at least square and pulse waveforms should be supported. Maybe also some blend
+  //   between saw and pulse. Maybe in preparation to do that, factor out the code for the 
+  //   algorithms that produce the whole signal vector into free functions or maybe static member
+  //   functions of some class rsPitchDitherer or rsPitchDither or maybe rsPitchDitherProto (for
+  //   prototype).
+  // 
+  //
   // 
   // 
   // See:

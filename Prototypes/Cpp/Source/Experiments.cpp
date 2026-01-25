@@ -366,9 +366,9 @@ void testPitchDithering()
   using Vec  = std::vector<Real>;
 
 
-  int  numSamples = 5000;      // Number of samples to produce
-  Real period     =  100.3;    // Desired cycle length
-  int seed        =    0;      // Seed for PRNG
+  int  numSamples = 40000;      // Number of samples to produce
+  Real period     =   100.3;    // Desired cycle length
+  int seed        =     3;      // Seed for PRNG
 
 
   // Compute the lengths of the two cycles and the fractional part of desired length:
@@ -385,12 +385,13 @@ void testPitchDithering()
   prng.setSeed(seed);
 
   // Create the probabilistically pitch-dithered signal:
-  int N = numSamples;                    // Shorthand
+  int N = numSamples;                    // Shorthand - maybe get rid!
   Vec x1(N);                             // The first signal that we generate
+  Vec a1(numCycles);                     // Average length of all cycles produced so far
   int n = 0;                             // Sample number
   int numL1 = 0;                         // Number of cycles with L1
   int numL2 = 0;                         // Number of cycles with L2
-  for(int i = 1; i <= numCycles; i++)
+  for(int i = 0; i < numCycles; i++)
   {
     Real r = prng.getSample();           // Random number
     if(r <= f)
@@ -405,6 +406,7 @@ void testPitchDithering()
       numL1++;
       n += L1;
     }
+    a1[i] = Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
   }
 
   // Compute average cycle length. It should be close to the desired period:
@@ -416,11 +418,12 @@ void testPitchDithering()
   // the desired period, we next produce a short cycle and if it is below (or equal to) to the 
   // desired period, we next produce a long cycle:
   Vec x2(N);
+  Vec a2(numCycles);
   n = 0;
   numL1 = 0;
   numL2 = 0;
   avgL  = period; // Init as if the signal so far was perfect
-  for(int i = 1; i <= numCycles; i++)
+  for(int i = 0; i < numCycles; i++)
   {
     if(avgL <= period)
     {
@@ -435,15 +438,14 @@ void testPitchDithering()
       n += L1;
     }
     avgL = Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
-    int dummy = 0;
+    a2[i] = avgL;
   }
 
 
-  // ToDo:
-  // -Implement various algorithms for deterministic pitch dithering
-
-
-  rsPlotVectors(x1, x2);
+  // Plot results:
+  //rsPlotVectors(x1, x2);
+  rsPlotVectors(a2);
+  rsPlotVectors(a1, a2);
   int dummy = 0;
 
   // ToDo:
@@ -471,11 +473,17 @@ void testPitchDithering()
   // 
   // - Record the average cycle length of all cycles produced to far as function of the cycle 
   //   number. It should converge to the desired cycle length. Verify that with a plot!
+  //   Done! Looks good. ToDo: Try different seeds and make various plots with the 
+  //   different seeds. Figure out the expected variance of the recorded average after a given
+  //   number of cycles., i.e. figure out how much the rightmost values in the different plots
+  //   spread around the desired period.
   //
   // - Create wave files to listen to.
   //
   // - Maybe rename L1 to shortLength and L2 to longLength and numL1 to numShort and numL2 to 
   //   numLong
+  // 
+  // - Implement other algorithms for deterministic pitch dithering
 }
 
 

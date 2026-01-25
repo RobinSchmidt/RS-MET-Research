@@ -360,6 +360,10 @@ void rsFillSawCycle(T* x, int N, T amp = T(1))
 void testPitchDithering()
 {
   // In this experiment, we implement different pitch-dithering (or pitch-jittering) algorithms.
+  // that I describe here:
+  // 
+  //   https://www.kvraudio.com/forum/viewtopic.php?p=9189004#p9189004
+  // 
   // ...TBC...
 
 
@@ -489,22 +493,16 @@ void testPitchDithering()
   //   use a numeric tolerance in the switching logic for the second algorithm, i.e. the one based
   //   on error feedback.
   // 
+  // 
+  // Conclusions:
+  // 
+  //  - The error feedback algorithm may be the one that is suitable for a realtime implementation
+  //    because in such a context, we do not want to rely on computations that involve the total 
+  //    number of cycles produced so far because that number would grow without bound in a realtime
+  //    context. We don't want to run into overflow and precision loss problems.
+  // 
   //
   // ToDo:
-  // 
-  // - DONE.
-  //   Implement a different deterministic algorithm that does not rely on computations with the
-  //   total number of cycles produced so far because such an algorithm could be problematic when
-  //   we need to produce signals of indefinite length in a realtime context. Maybe we can keep 
-  //   some sort of state variable that we continuously try to drive toward zero and which gets
-  //   updated after (or before) each produced cycle in such a way that we increase it when we 
-  //   produce a long cycle and decrease it when we produce a short cycle. Probably, the amount of
-  //   increase or decrease should depend on the fractional part f of the desired cycle length.
-  //   Maybe the state variable should contain the accumulated error in length that we made so far.
-  // 
-  // - DONE
-  //   Implement the pitch-dithering or pitch-jittering idea that I describe here:
-  //   https://www.kvraudio.com/forum/viewtopic.php?p=9189004#p9189004
   //
   // - The idea is as follows: when creating periodic waveforms (like a sawtooth) digitally, we get
   //   aliasing but when the cycle length is an integer number of samples, the frequencies of the 

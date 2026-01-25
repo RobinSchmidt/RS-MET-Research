@@ -348,10 +348,74 @@ bool testKalmanFilter()
 }
 
 
+/** Fills the buffer x of length N with one cycle of a sawtooth wave. */
+template<class T>
+void rsFillSawCycle(T* x, int N)
+{
+  T s = T(2) / T(N-1);          // Verify formula! Last sample x[N-1] should come out as 1
+  for(int n = 0; n < N; n++)
+    x[n] = -1 + s * T(n);
+}
+
+
 void testPitchDithering()
 {
   // Under construction
 
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+
+  int  numSamples = 5000;      // Number of samples to produce
+  Real period     =  100.3;    // Desired cycle length
+  int seed        =    0;      // Seed for PRNG
+
+
+  // Compute the lengths of the two cycles and the fractional part of desired length:
+  int L1 = rsFloorInt(period);
+  int L2 = L1 + 1;
+  Real f = period - L1;
+
+  // Compute the number of cycles to produce:
+  int numCycles = (int) (Real(numSamples) / period) - 1;
+
+  // Create and set up the pseudo random number generator for the probabilistic dithering:
+  rsNoiseGenerator<Real> prng;
+  prng.setRange(0.0, 1.0);
+  prng.setSeed(seed);
+
+  // Create the probabilistically pitch-dithered signal:
+  int N = numSamples;                    // Shorthand
+  Vec x1(N);                             // The first signal that we generate
+  int n = 0;                             // Sample number
+  int numL1 = 0;                         // Number of cycles with L1
+  int numL2 = 0;                         // Number of cycles with L2
+  for(int i = 1; i <= numCycles; i++)
+  {
+    Real r = prng.getSample();           // Random number
+    if(r <= f)
+    {
+      rsFillSawCycle(&x1[n], L2);
+      numL2++;
+      n += L2;
+    }
+    else
+    {
+      rsFillSawCycle(&x1[n], L1);
+      numL1++;
+      n += L1;
+    }
+  }
+
+  // Compute average cycle length. It should be close to the desired period:
+  Real avgL = Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
+
+  // ToDo:
+  // -Implement various algorithms for deterministic pitch dithering
+
+
+  rsPlotVectors(x1);
+  int dummy = 0;
 
   // ToDo:
   //
@@ -375,6 +439,8 @@ void testPitchDithering()
   //   average 100.0). Maybe in general, we should use some sort of probability distribution 
   //   (perhaps non-uniform, maybe low order Irwin-Hall) that spans a few lengths like maybe 
   //   97...103 when the center is 100.0. For 100.3, it would span 97.3...103.3
+  //
+  // - Create wave files to listen to.
 }
 
 

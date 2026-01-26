@@ -490,14 +490,21 @@ void testPitchDithering()
     a3[i] = meanL;
   }
 
+  // Use the convenience class. This should produce the same result as x1:
+  Vec x4(numSamples);
+  PDP::fillRandomDitherSaw(x4, period, seed, amp);
+  bool ok = true;
+  ok &= x4 == x1;
 
 
+  rsAssert(ok);
 
   // Write produced signals to wave files:
   //rosic::writeToMonoWaveFile("PitchDithered_Prob.wav", &x1[0], numSamples, sampleRate);
   //rosic::writeToMonoWaveFile("PitchDithered_Det1.wav", &x2[0], numSamples, sampleRate);
 
   // Plot results:
+  //rsPlotVectors(x1, x4);
   //rsPlotVectors(x1, x2);
   //rsPlotVectors(a2, a3);
   rsPlotVectors(a1, a2, a3);
@@ -584,12 +591,83 @@ void testPitchDithering()
   //   functions of some class rsPitchDitherer or rsPitchDither or maybe rsPitchDitherProto (for
   //   prototype).
   // 
+  // - Implement a hybrid method between the probabilistic and the deterministic (error feedback 
+  //   based) algorithm. It should have the same general structure as the probabilistic algorithm
+  //   but it should also record the accumulated error (not necessarily restricted to -1..+1 
+  //   anymore) and it should adjust the probability that is used as function of the error. If
+  //   the error is negative, we should increase the probability to use a long cycle next and if 
+  //   it's positive increase the chance for a short cycle. It should have a "random" parameter and
+  //   if it is zero, the algo should reduce to the deterministic algo and if it is one, it should 
+  //   reduce to the probabilistic algo.
   //
   // 
   // 
   // See:
   // https://en.wikipedia.org/wiki/Dither#Algorithms
   // https://en.wikipedia.org/wiki/Error_diffusion#minimized_average_error
+}
+
+void testPitchDitherSuperSaw()
+{
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using PDP  = rsPitchDitherProto<Real>;
+
+  int  sampleRate =  44100;      // Sample rate for the wave files
+  int  numSamples = 200000;      // Number of samples to produce
+  int  seed       =      3;      // Seed for PRNG
+  Real midFreq    =    220.0;    // Center or middle frequency
+  Real amp        =      0.125;  // Amplitude of the saws
+  Real detune     =      0.3;    // Supersaw detune in 0..1
+  Real mix        =      1.0;    // Supersaw mix in 0..1
+  Real hpfCut     =      0.7;    // Highpass cutoff as fraction of osc freq
+
+
+  // Table with the frequency offsets when the center saw is taken to have frequency 1:
+  Vec freqOffsets({ 0, 160,  -160, 510, -515, 880, -900 });
+  freqOffsets = freqOffsets / 8192.0;
+
+
+  Vec freqRatios = detune * freqOffsets + 1.0;
+  int numSaws = (int) freqRatios.size();
+  Vec saw(numSamples), supSaw(numSamples);
+  for(int i = 0; i < numSaws; i++)
+  {
+    // Compute parameters for the i-th saw:
+    Real sawFreq   = midFreq * freqRatios[i];
+    Real sawPeriod = sampleRate / sawFreq;
+    Real sawAmp    = amp;
+    if(i != 0)
+      sawAmp *= mix;
+
+    // Produce i-th saw and accumulate into the super saw:
+    PDP::fillRandomDitherSaw(saw, sawPeriod, seed, sawAmp);
+    supSaw = supSaw + saw;
+    int dummy = 0;
+  }
+ 
+  // Apply highpass:
+  // ...
+   
+
+  // Write supersaw to wave file:
+  rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav", &supSaw[0], numSamples, sampleRate);
+
+  //rsPlotVectors(supSaw);
+  int dummy = 0;
+
+
+  // ToDo: 
+  //
+  // - Maybe ramp the detuning up over time
+  //
+  // - Produce saws with different pitches. Maybe start at 55 Hz and go up in octaves.
+  //
+  // - Maybe try to modify the transient manipulating the start phases of the various saws. But 
+  //   maybe that should be a feature that we don't need here in the experiment but should have it
+  //   in an oscillator inside a synth. Maybe call it "PhaseSpread". Or maybe "Transient" and let 
+  //   it behave in such a way that when it's at 100%, all saws start in phase and if it's at 0%
+  //   the start phases are spread out evenly
 }
 
 

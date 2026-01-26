@@ -496,7 +496,28 @@ template<class T>
 void rsPitchDitherProto<T>::fillRandomDitherSaw(
   std::vector<T>& x, T period, unsigned long seed, T amp)
 {
+  rsNoiseGenerator<T> prng;
+  prng.setRange(0.0, 1.0);
+  prng.setSeed(seed);
 
+  int numSamples = (int) x.size();
+  int numCycles  = (int) (T(numSamples) / period) - 1;
+  int L1         = rsFloorInt(period);
+  int L2         = L1 + 1;
+  T   f          = period - L1;
+  int n          = 0;                         // Sample number
+  int numL1      = 0;                         // Counts number of cycles with L1
+  int numL2      = 0;                         // Counts number of cycles with L2
+  for(int i = 0; i < numCycles; i++)
+  {
+    T r = prng.getSample();                   // Random number in 0..1
+    if(r <= f) 
+      fillSawCycle(x, &n, L2, amp, &numL2);   // Probability for that branch is f
+    else
+      fillSawCycle(x, &n, L1, amp, &numL1);   // Probability for that branch is 1-f
+  }
+
+  int dummy = 0;
 }
 
 

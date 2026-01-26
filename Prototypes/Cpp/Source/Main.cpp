@@ -13,7 +13,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   // Signal Processing:
   //testRandomVectors();               // Stub - Produce random vectors with user specified covariance matrix
   //testKalmanFilter();                // Under construction - doesn't work yet
-  testPitchDithering();                // Stub
+  //testPitchDithering();                // 
+  testPitchDitherSuperSaw();
 
 
   // Image processing:

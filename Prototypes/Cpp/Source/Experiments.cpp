@@ -403,10 +403,11 @@ void testPitchDithering()
   // Helper function to produce one cycle and update counters:
   auto addCycle = [&amp](Vec& x, int length, int* start, int* counter) 
   {
-    //rsFillSawCycle(&x[*start], length, amp);
-    PDP::fillSawCycle(&x[*start], length, amp);
-    (*counter)++;
-    *start += length;
+    PDP::fillSawCycle(x, start, length, amp, counter);  // Verify!
+ 
+    //PDP::fillSawCycle(&x[*start], length, amp);
+    //(*counter)++;
+    //*start += length;
   };
 
   // Helper function to compute average cycle length based on two cycle lengths and their counts:
@@ -493,13 +494,13 @@ void testPitchDithering()
 
 
   // Write produced signals to wave files:
-  rosic::writeToMonoWaveFile("PitchDithered_Prob.wav", &x1[0], numSamples, sampleRate);
-  rosic::writeToMonoWaveFile("PitchDithered_Det1.wav", &x2[0], numSamples, sampleRate);
+  //rosic::writeToMonoWaveFile("PitchDithered_Prob.wav", &x1[0], numSamples, sampleRate);
+  //rosic::writeToMonoWaveFile("PitchDithered_Det1.wav", &x2[0], numSamples, sampleRate);
 
   // Plot results:
   //rsPlotVectors(x1, x2);
-  rsPlotVectors(a2, a3);
-  //rsPlotVectors(a1, a2, a3);
+  //rsPlotVectors(a2, a3);
+  rsPlotVectors(a1, a2, a3);
   int dummy = 0;
 
 

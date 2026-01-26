@@ -459,6 +459,18 @@ public:
   /** Fills the buffer x of length N with one cycle of a sawtooth wave. */
   static void fillSawCycle(T* x, int N, T amp = T(1));
 
+
+  static void fillSawCycle(std::vector<T>& x, int* start, int length, 
+    T amp = T(1), int* counter = nullptr);
+  // Maybe put the counter last and make it optional - done
+
+
+  static void fillRandomDitherSaw(
+    std::vector<T>& x, T period, unsigned long seed = 0, T amp = T(1));
+
+
+
+
 };
 
 
@@ -469,4 +481,22 @@ void rsPitchDitherProto<T>::fillSawCycle(T* x, int N, T amp)
   for(int n = 0; n < N; n++)
     x[n] = amp * (-1 + s * T(n));
 }
+
+template<class T> 
+void rsPitchDitherProto<T>::fillSawCycle(
+  std::vector<T>& x, int* start, int length, T amp, int* counter)
+{  
+  fillSawCycle(&x[*start], length, amp); 
+  *start += length;
+  if(counter != nullptr)
+    (*counter)++;
+}
+
+template<class T> 
+void rsPitchDitherProto<T>::fillRandomDitherSaw(
+  std::vector<T>& x, T period, unsigned long seed, T amp)
+{
+
+}
+
 

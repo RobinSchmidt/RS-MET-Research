@@ -444,5 +444,29 @@ TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& y, const TVec& u)
   return x;
 }
 
+//=================================================================================================
 
+/** Under construction.
+
+*/
+
+template<class T> 
+class rsPitchDitherProto
+{
+
+public:
+
+  /** Fills the buffer x of length N with one cycle of a sawtooth wave. */
+  static void fillSawCycle(T* x, int N, T amp = T(1));
+
+};
+
+
+template<class T> 
+void rsPitchDitherProto<T>::fillSawCycle(T* x, int N, T amp)
+{
+  T s = T(2) / T(N-1);
+  for(int n = 0; n < N; n++)
+    x[n] = amp * (-1 + s * T(n));
+}
 

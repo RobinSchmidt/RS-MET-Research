@@ -349,13 +349,17 @@ bool testKalmanFilter()
 
 
 /** Fills the buffer x of length N with one cycle of a sawtooth wave. */
+/*
 template<class T>
 void rsFillSawCycle(T* x, int N, T amp = T(1))
 {
-  T s = T(2) / T(N-1);
-  for(int n = 0; n < N; n++)
-    x[n] = amp * (-1 + s * T(n));
+  rsPitchDitherProto<T>::fillSawCycle(x, N, amp);
+
+  //T s = T(2) / T(N-1);
+  //for(int n = 0; n < N; n++)
+  //  x[n] = amp * (-1 + s * T(n));
 }
+*/
 
 void testPitchDithering()
 {
@@ -379,6 +383,7 @@ void testPitchDithering()
 
   using Real = double;
   using Vec  = std::vector<Real>;
+  using PDP  = rsPitchDitherProto<Real>;
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples = 88200;               // Number of samples to produce
@@ -398,7 +403,8 @@ void testPitchDithering()
   // Helper function to produce one cycle and update counters:
   auto addCycle = [&amp](Vec& x, int length, int* start, int* counter) 
   {
-    rsFillSawCycle(&x[*start], length, amp);
+    //rsFillSawCycle(&x[*start], length, amp);
+    PDP::fillSawCycle(&x[*start], length, amp);
     (*counter)++;
     *start += length;
   };

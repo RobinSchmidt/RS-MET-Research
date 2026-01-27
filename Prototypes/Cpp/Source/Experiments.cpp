@@ -631,8 +631,8 @@ void testPitchDitherSuperSaw()
   Real midFreq    =    220.0;    // Center or middle frequency
   Real amp        =      0.125;  // Amplitude of the saws
   Real detune     =      0.3;    // Supersaw detune in 0..1
-  Real mix        =      0.0;    // Supersaw mix in 0..1
-  //Real hpfCut     =      0.7;    // Highpass cutoff as fraction of osc freq
+  Real mix        =      1.0;    // Supersaw mix in 0..1
+  Real hpfCut     =      0.7;    // Highpass cutoff as fraction of osc freq
 
 
   // Table with the frequency offsets when the center saw is taken to have frequency 1:
@@ -659,15 +659,23 @@ void testPitchDitherSuperSaw()
     //PDP::fillRandomDitherSaw(saw, sawPeriod, seed, sawAmp);   // Old - same seed for each
     PDP::fillRandomDitherSaw(saw, sawPeriod, seed+i, sawAmp);   // New - each has its own seed
     supSaw = supSaw + saw;
-    int dummy = 0;
   }
  
   // Apply highpass:
+  RAPT::rsStateVariableFilter<Real, Real> hpf;
+  Real omega = hpfCut * 2*PI*midFreq/sampleRate;
+  Real hpfQ  = 1.0 / sqrt(2.0);
+  hpf.setupHighpass(omega, hpfQ);
+  Vec supSawHp = filterResponse(hpf, numSamples, supSaw);
+  
   // ...
    
 
   // Write supersaw to wave file:
-  rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav", &supSaw[0], numSamples, sampleRate);
+  rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",   &supSaw[0],   numSamples, sampleRate);
+  rosic::writeToMonoWaveFile("PitchDitherSupSawHp.wav", &supSawHp[0], numSamples, sampleRate);
+
+
 
   //rsPlotVectors(supSaw);
   int dummy = 0;
@@ -699,6 +707,10 @@ void testPitchDitherSuperSaw()
   // - The difference between letting each saw use the same seed and having each saw use its own 
   //   seed is very subtle and may not matter much in practice. ...well, so far I tried only one
   //   specific setting - maybe more experiments should be done before drawing that conclusion.
+  // 
+  // - When mix = 1, freq = 220, detune = 0.3, it looks like the center saw is a little bit louder
+  //   than the outer saws. Investigate that! Its this just a random fluke or are we indeed doing
+  //   something wrong with computation of sawAmp?
   // 
   // 
   // Conclusions:

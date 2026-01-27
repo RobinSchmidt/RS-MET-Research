@@ -631,13 +631,16 @@ void testPitchDitherSuperSaw()
   Real midFreq    =    220.0;    // Center or middle frequency
   Real amp        =      0.125;  // Amplitude of the saws
   Real detune     =      0.3;    // Supersaw detune in 0..1
-  Real mix        =      1.0;    // Supersaw mix in 0..1
+  Real mix        =      0.0;    // Supersaw mix in 0..1
   //Real hpfCut     =      0.7;    // Highpass cutoff as fraction of osc freq
 
 
   // Table with the frequency offsets when the center saw is taken to have frequency 1:
   Vec freqOffsets({ 0, 160,  -160, 510, -515, 880, -900 });
   freqOffsets = freqOffsets / 8192.0;
+  // The numbers were taken from here:
+  // https://atosynth.blogspot.com/2026/01/a-closer-look-at-super-saw-code.html?m=1
+  // and are supposed to be those that were used in the Roland JP-8000 and JP-8080.
 
 
   Vec freqRatios = detune * freqOffsets + 1.0;
@@ -693,7 +696,9 @@ void testPitchDitherSuperSaw()
   // - Maybe detuning could benefit from some keytracking. I think, lower frequencies can be 
   //   detuned more strongly.
   // 
-  // - The difference between letting each saw use the same seed and
+  // - The difference between letting each saw use the same seed and having each saw use its own 
+  //   seed is very subtle and may not matter much in practice. ...well, so far I tried only one
+  //   specific setting - maybe more experiments should be done before drawing that conclusion.
   // 
   // 
   // Conclusions:
@@ -704,8 +709,10 @@ void testPitchDitherSuperSaw()
   // 
   // ToDo: 
   // 
-  // - T figure out why the center freq of the 14080 supersaw is off, try to render a single saw at
-  //   that frequency (maybe just set "mix" to zero for that). 
+  // - To figure out why the center freq of the 14080 supersaw is off, try to render a single saw 
+  //   at that frequency (maybe just set "mix" to zero for that). Done: It looks like the center 
+  //   frequency is now somewhere around 14350 Hz. The signal sounds like a weird crackly form of
+  //   noise.
   // 
   // - Compare the result to a naively rendered supersaw. Maybe use 2x oversampling as Roland did.
   //   Try also the deterministic dithering algorithm. Try also a perfectly anto-aliased saw. We 
@@ -732,6 +739,16 @@ void testPitchDitherSuperSaw()
   //   harmonics. Try feedforward and feedback configurations. Maybe also try to supress the even
   //   harmonics (with an adjustable amount) using another comb, to give the sound a more squareish
   //   character (i.e. more odd-harmonics focused)
+  //
+  // - Introduce a MixTaper paremeter that applies a triangular spectral envelope, i.e. makes the
+  //   outer frequencies quieter. Maybe try other shapes as well (bell, inverted bell, skewed etc.)
+  //
+  // - Maybe make it such that the mean frequency (weighted by amplitude or power - try both) comes
+  //   out exactly at the tuning frequency to counteract the fact that the detune amounts do not 
+  //   sum up to exactly zero. To do that, compute the weighted mean freq, then compute the 
+  //   difference to the tuning freq and subtract (or add?) that difference to all freqs. Maybe 
+  //   call it "pitch compensation". This may become especially important when we allow for skewed
+  //   spectral envelopes and or skewed frequency distributions.
 }
 
 

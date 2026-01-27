@@ -528,4 +528,51 @@ void rsPitchDitherProto<T>::fillDitherSaw(
 
 }
 
+//-------------------------------------------------------------------------------------------------
 
+/** Under construction.
+
+A realtime oscillator that produces pitch-dithered sawtooth waves.
+
+*/
+
+template<class TFlt, class TInt> 
+class rsPitchDitherSawOsc
+{
+
+public:
+
+  /** Sets the period, i.e. the desired length of one cycle of the waveform. This is a floating 
+  point value and it can be computed as  period = sampleRate / frequency  where frequency is the 
+  desired oscillator frequency. If the period length is L and that number is not an integer but 
+  has a fractional part of f, then the oscillator will produce cycles of length L1 = floor(L) and
+  L2 = L1 + 1 in such a way that over time, the average length of the cycles will come out as L. */
+  void setPeriod(TFlt newPeriod);
+  // ..TBC... ToDo: explain deterministic and probabilistic modes
+
+
+  inline TFlt getSample();
+
+
+protected:
+
+  TInt sampleCount =   0;
+  TInt floorLength = 100;    // Is the floor of the desired period (aka pitch cycle length).
+  TInt cycleLength = 100;    // Is either floorLength or floorLength + 1
+  TFlt fracLength  = 0.5;
+
+};
+
+
+template<class TFlt, class TInt>
+void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
+{
+  rsMarkAsStub();
+}
+
+template<class TFlt, class TInt>
+TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
+{
+  rsMarkAsStub();
+  return TFlt(0);   // Preliminary
+}

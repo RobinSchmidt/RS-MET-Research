@@ -625,14 +625,16 @@ void testPitchDitherSuperSaw()
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
 
+  // Setup:
   int  sampleRate =  44100;      // Sample rate for the wave files
   int  numSamples = 200000;      // Number of samples to produce
   int  seed       =      3;      // Seed for PRNG
-  Real midFreq    =    220.0;    // Center or middle frequency
+  Real midFreq    =    880.0;    // Center or middle frequency
   Real amp        =      0.125;  // Amplitude of the saws
   Real detune     =      0.3;    // Supersaw detune in 0..1
   Real mix        =      1.0;    // Supersaw mix in 0..1
-  Real hpfCut     =      0.7;    // Highpass cutoff as fraction of osc freq
+  Real hpfCut     =      1.0;    // Highpass cutoff as fraction of osc freq
+  Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
 
 
   // Table with the frequency offsets when the center saw is taken to have frequency 1:
@@ -651,9 +653,19 @@ void testPitchDitherSuperSaw()
     // Compute parameters for the i-th saw:
     Real sawFreq   = midFreq * freqRatios[i];
     Real sawPeriod = sampleRate / sawFreq;
-    Real sawAmp    = amp;
-    if(i != 0)
-      sawAmp *= mix;
+
+    //// Old:
+    //Real sawAmp    = amp;
+    //if(i != 0)
+    //  sawAmp *= mix;
+
+    // New:
+    Real sawAmp = 0;
+    if(i == 0)
+      sawAmp = amp;
+      //sawAmp = amp * 0.25;   // Test
+    else
+      sawAmp = amp * mix;
 
     // Produce i-th saw and accumulate into the super saw:
     //PDP::fillRandomDitherSaw(saw, sawPeriod, seed, sawAmp);   // Old - same seed for each
@@ -661,19 +673,20 @@ void testPitchDitherSuperSaw()
     supSaw = supSaw + saw;
   }
  
-  // Apply highpass:
+  // Apply highpass filter(s):
   RAPT::rsStateVariableFilter<Real, Real> hpf;
   Real omega = hpfCut * 2*PI*midFreq/sampleRate;
-  Real hpfQ  = 1.0 / sqrt(2.0);
+  //Real hpfQ  = 1.0 / sqrt(2.0);
+  //Real hpfQ = 1.0;
   hpf.setupHighpass(omega, hpfQ);
-  Vec supSawHp = filterResponse(hpf, numSamples, supSaw);
+  Vec supSawHp1 = filterResponse(hpf, numSamples, supSaw);
+  Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);
   
-  // ...
-   
 
-  // Write supersaw to wave file:
-  rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",   &supSaw[0],   numSamples, sampleRate);
-  rosic::writeToMonoWaveFile("PitchDitherSupSawHp.wav", &supSawHp[0], numSamples, sampleRate);
+  // Write supersaw signals to wave files:
+  rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw[0],    numSamples, sampleRate);
+  rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
+  rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
 
 
 
@@ -710,7 +723,13 @@ void testPitchDitherSuperSaw()
   // 
   // - When mix = 1, freq = 220, detune = 0.3, it looks like the center saw is a little bit louder
   //   than the outer saws. Investigate that! Its this just a random fluke or are we indeed doing
-  //   something wrong with computation of sawAmp?
+  //   something wrong with computation of sawAmp? When enlarging the spectral plot window in 
+  //   Audacity, the shown spectrum changes a lot when the spectral resolution is high (like 16k
+  //   or 32k). Apparently, Audacity doe not good job in resampling the spectrum to the pixel grid.
+  //   It seems like we need to reduce the amplitude of the center saw by 0.25 to make it look like
+  //   they have all the same amplitude. Maybe it is because the three middle saws are closer 
+  //   together and therefore seen as one by the spectral magnitude analyzer because it can't 
+  //   resolve the 3 middle saws? That seems plausible.
   // 
   // 
   // Conclusions:
@@ -761,6 +780,14 @@ void testPitchDitherSuperSaw()
   //   difference to the tuning freq and subtract (or add?) that difference to all freqs. Maybe 
   //   call it "pitch compensation". This may become especially important when we allow for skewed
   //   spectral envelopes and or skewed frequency distributions.
+  //
+  // - When tuning the cutoff and Q for the highpass, may tune it in such a way that we have a 
+  //   little resonance bump exactly at the fundamental. Maybe that could give the sound mor body
+  //   and make it a bit fatter. Maybe for that, the cutoff needs to be slightly above the midFreq
+  //   because the resonance bump tends to appear a bit below the cutoff frequency for low Q. Only
+  //   for very high Q, it approaches the cutoff.
+  //
+  // - Make a spectral plot here. The one from Audacity seems to produce artifacts.
 }
 
 

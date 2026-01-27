@@ -19,8 +19,8 @@ Catalog of anti-aliasing techniques. Format: Name, Description, Applications, Pr
   area of application (synthesis of sinusoidal spectra). Using Chebychev polynomials, the idea can
   be partially extended to waveshaping.
  
-- BLIT/BLEP/BLAMP (Bandlimited Impulse Train, Step, Ramp): Pro: Reasobly efficient. Con: Applicable
-  only to synthesis of waveforms with discontinuities (in the wave itself or one of its 
+- BLIT/BLEP/BLAMP (Bandlimited Impulse Train, Step, Ramp): Pro: Reasonably efficient. Con: 
+  Applicable only to synthesis of waveforms with discontinuities (in the wave itself or one of its 
   derivatives and to the jumps in hard-sync)
 
 - ADAA (Anti Derivative Anti-Aliasing): Applicable to waveshapers
@@ -45,18 +45,29 @@ Catalog of anti-aliasing techniques. Format: Name, Description, Applications, Pr
   efficient. Con: It's not proper anti-aliasing but actually just cheating. However, decreasing the
   brightness for higher notes can actually be natural and musical.
 
-- Highpass filtering: Can get rid of aliasing components belwo the fundamental which tend to be 
-  especially annoying.
+- Highpass filtering: Can get rid of aliasing components below the fundamental which tend to be 
+  especially annoying. It's also more in the "cheating" territory using psychoacoustic masking 
+  effects for the higher alias frequencies.
 
 - Quantizing oscillator frequencies to those which have an integer number of samples in one cycle.
   Perhaps combined with internal resampling. Does not really get rid of the aliasing components but
   strategically places them on top of the already existing harmonic, making their impact far less
   objectionable. They only alter the amplitudes but do not introduce new frequency components.
+  Pro: efficient, easy to implement, Con: very restrictive in what pitches are allowed.
   
-- Advanced interpolation techniques like (windowed) sinc interpolation
+- The "pitch quantization" method described above can be combined with (deterministic or 
+  probabilistic) dithering to get back to the full frequency range - at the expense of introducing
+  noise. This "pitch dithering" approach would pick two integer cycle lengths L1, L2 that straddle 
+  the desired cycle length L and make sure that the _average_ cycle length equals the desired cycle  
+  length by (probabilistically or determistically) alternating between cycles of lengths L1 and L2.
+  
+- Advanced interpolation techniques like (windowed) sinc interpolation. Theoretically, this ampounts
+  to perfect resampling, i.e. going back to the continuous time domain and then back to a new 
+  discrete time domain at a different sampling rate.
   
 - Often combinations are used. For example, mip-mapping together with mild oversampling (e.g. 2x) or
-  ADAA with moderate oversampling.
+  ADAA with moderate oversampling. Especially oversampling is often thrown in as secondary technique
+  on top of another one.
 
 
 ToDo: Start KVR thread "Catalog of anti-aliasing techniques for digital audio"

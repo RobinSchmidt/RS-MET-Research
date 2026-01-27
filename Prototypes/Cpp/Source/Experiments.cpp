@@ -600,6 +600,18 @@ void testPitchDithering()
   //   if it is zero, the algo should reduce to the deterministic algo and if it is one, it should 
   //   reduce to the probabilistic algo.
   //
+  // - Another hybrid method could be to do determinstic 2-cycles, 4-cycles, 8-cycles and if that 
+  //   doesn't get us (close enough) to the desired pitch, lengthen or shorten these m-cyles
+  //   probabilistically. I think, in an m-cycle, we could use increments of 1, 1+1/m, 1+2/m, 
+  //   1+3/m, etc. and after at most n cycles, we would run into a true periodicity. If we allow 
+  //   only powers of 2 for m, we should be able to restrict the aliasing to suboctaves. I think, 
+  //   it may be similar to oversampling by a factor of m without actually ovresampling and 
+  //   therefore getting aliaising - but controlling where the aliasing components fall.
+  // 
+  // - Maybe these techniques with th goal to control where the aliaising products fall could
+  //   be generally calles alias-shaping techniques as an umbrella term. Another specimen of those
+  //   could be to use an adaptive internal sample-rate (and then resample) and make sure that the 
+  //   internal sample rate fits well with the frequency to be produced.
   // 
   // 
   // See:
@@ -641,7 +653,8 @@ void testPitchDitherSuperSaw()
       sawAmp *= mix;
 
     // Produce i-th saw and accumulate into the super saw:
-    PDP::fillRandomDitherSaw(saw, sawPeriod, seed, sawAmp);
+    //PDP::fillRandomDitherSaw(saw, sawPeriod, seed, sawAmp);   // Old - same seed for each
+    PDP::fillRandomDitherSaw(saw, sawPeriod, seed+i, sawAmp);   // New - each has its own seed
     supSaw = supSaw + saw;
     int dummy = 0;
   }
@@ -680,6 +693,8 @@ void testPitchDitherSuperSaw()
   // - Maybe detuning could benefit from some keytracking. I think, lower frequencies can be 
   //   detuned more strongly.
   // 
+  // - The difference between letting each saw use the same seed and
+  // 
   // 
   // Conclusions:
   // 
@@ -689,8 +704,12 @@ void testPitchDitherSuperSaw()
   // 
   // ToDo: 
   // 
+  // - T figure out why the center freq of the 14080 supersaw is off, try to render a single saw at
+  //   that frequency (maybe just set "mix" to zero for that). 
+  // 
   // - Compare the result to a naively rendered supersaw. Maybe use 2x oversampling as Roland did.
-  //   Try also the deterministic dithering algorithm.
+  //   Try also the deterministic dithering algorithm. Try also a perfectly anto-aliased saw. We 
+  //   want to compare them all.
   //
   // - Maybe ramp the detuning up over time
   //
@@ -703,9 +722,16 @@ void testPitchDitherSuperSaw()
   //   the start phases are spread out evenly.
   //
   // - Maybe make it stereo by distributing the saws between the stereo channels. Maybe the panning
-  //   of the saws could even be time varying.
+  //   of the saws could even be time varying. Or maybe create supersaws with different start 
+  //   phases and different random seeds for left and right channel or maybe detune left and right
+  //   channel signal slightly
   //
-  // - Implemeent a pulse-wave osc based on the trick of subtracting two saws. 
+  // - Implement a pulse-wave osc based on the trick of subtracting two saws. 
+  //
+  // - Try using a comb filter on the output that supresses the frequencies in between the desired
+  //   harmonics. Try feedforward and feedback configurations. Maybe also try to supress the even
+  //   harmonics (with an adjustable amount) using another comb, to give the sound a more squareish
+  //   character (i.e. more odd-harmonics focused)
 }
 
 

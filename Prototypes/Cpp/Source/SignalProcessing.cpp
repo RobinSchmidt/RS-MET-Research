@@ -501,38 +501,21 @@ void rsPitchDitherProto<T>::fillRandomDitherSaw(
   prng.setRange(0.0, 1.0);
   prng.setSeed(seed);
 
-  int numSamples = (int) x.size();
-
-  //int numCycles  = (int) (T(numSamples) / period) - 1;  // Seems not to be safe! Produces access violation with saw-freq = 1760
-  //int numCycles  = (int) (T(numSamples) / period) - 2;  // Not safe either! violation with 3520 Hz
-  //int numCycles  = (int) (T(numSamples) / period) - 3;
-  //int numCycles  = (int) (T(numSamples) / period) - 10;
-  // ToDo: Figure out a proper formula for the number of cycles. Or maybe do not precompute the 
-  // number at all but instead check inside the loop, if the cycle would fit and if not, break out
-  // of the loop
-  // ..ok ..done
-
-
-  int L1         = rsFloorInt(period);
-  int L2         = L1 + 1;
-  T   f          = period - L1;
-  int n          = 0;                         // Sample number
-  //int numL1      = 0;                         // Counts number of cycles with L1
-  //int numL2      = 0;                         // Counts number of cycles with L2
-  //for(int i = 0; i < numCycles; i++)  // Old
+  int N  = (int) x.size();
+  int L1 = rsFloorInt(period);
+  int L2 = L1 + 1;
+  T   f  = period - L1;
+  int n  = 0;                          // Sample number
   while(true)
   {
-    if(n >= numSamples - L2)  // Verify! Maybe we need to subtract 1 from the RHS?
+    if(n >= N - L2)                    // Verify! Maybe we need to subtract 1 from the RHS?
       break;
-
-    T r = prng.getSample();                   // Random number in 0..1
+    T r = prng.getSample();            // Random number in 0..1
     if(r <= f) 
-      fillSawCycle(x, &n, L2, amp);           // Probability for that branch is f
+      fillSawCycle(x, &n, L2, amp);    // Probability for that branch is f
     else
-      fillSawCycle(x, &n, L1, amp);           // Probability for that branch is 1-f
+      fillSawCycle(x, &n, L1, amp);    // Probability for that branch is 1-f
   }
-
-  int dummy = 0;
 }
 
 

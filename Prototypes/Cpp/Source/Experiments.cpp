@@ -620,7 +620,7 @@ void testPitchDitherSuperSaw()
   Real amp        =      0.125;  // Amplitude of the saws
   Real detune     =      0.3;    // Supersaw detune in 0..1
   Real mix        =      1.0;    // Supersaw mix in 0..1
-  Real hpfCut     =      0.7;    // Highpass cutoff as fraction of osc freq
+  //Real hpfCut     =      0.7;    // Highpass cutoff as fraction of osc freq
 
 
   // Table with the frequency offsets when the center saw is taken to have frequency 1:
@@ -657,7 +657,40 @@ void testPitchDitherSuperSaw()
   int dummy = 0;
 
 
+  // Observations:
+  //
+  // - I applied a highpass filter in a sample editor. Predictably, it makes the signal sound a 
+  //   little bit thinner, even if it's set somewhere below the fundamental (like 30 Hz for a 55 Hz
+  //   supersaw). For a supersaw osc, the highpass should probably be optional. It's not really 
+  //   needed for anti-aliasing anyway, if we do the pitch-dithering - even without any 
+  //   oversampling. However, for very high frequencies (like 14080), a highpass tuned to something
+  //   like 10000 cleans the signal up nicely, so maybe we should use an (optional) highpass tuned
+  //   below the fundamental. Maybe there should be a parameter in % and 100% should mean: cutoff
+  //   at fundamental and 0% means: Cutoff at 0, i.e. turned off.
+  // 
+  // - Maybe the highpass could have a little bit of resonance. That could help to boost the 
+  //   fundamental to make the sound more full. Maybe use a 4th order highpass. Maybe use a linear
+  //   ladder highpass that can be switched between 6,12,18,24 dB/oct and can have some resonance.
+  // 
+  // - The sum of the freqOffsets is not 0 but -25 (before dividing by 8192). Does that mean that 
+  //   the perceived frequency woill go down a little bit?
+  // 
+  // - The wave at 14080 Hz looks more like it has its spectral peak somewhere near 14600 Hz
+  //
+  // - Maybe detuning could benefit from some keytracking. I think, lower frequencies can be 
+  //   detuned more strongly.
+  // 
+  // 
+  // Conclusions:
+  // 
+  // - Applying probabilistic pitch dithering does indeed seem to be a viable way to implement the
+  //   supersaw oscillator.
+  // 
+  // 
   // ToDo: 
+  // 
+  // - Compare the result to a naively rendered supersaw. Maybe use 2x oversampling as Roland did.
+  //   Try also the deterministic dithering algorithm.
   //
   // - Maybe ramp the detuning up over time
   //
@@ -667,7 +700,12 @@ void testPitchDitherSuperSaw()
   //   maybe that should be a feature that we don't need here in the experiment but should have it
   //   in an oscillator inside a synth. Maybe call it "PhaseSpread". Or maybe "Transient" and let 
   //   it behave in such a way that when it's at 100%, all saws start in phase and if it's at 0%
-  //   the start phases are spread out evenly
+  //   the start phases are spread out evenly.
+  //
+  // - Maybe make it stereo by distributing the saws between the stereo channels. Maybe the panning
+  //   of the saws could even be time varying.
+  //
+  // - Implemeent a pulse-wave osc based on the trick of subtracting two saws. 
 }
 
 

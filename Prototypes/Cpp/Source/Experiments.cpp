@@ -613,6 +613,11 @@ void testPitchDithering()
   //   could be to use an adaptive internal sample-rate (and then resample) and make sure that the 
   //   internal sample rate fits well with the frequency to be produced.
   // 
+  // - Maybe we could interpret randomly different cycle lengths in terms of probabilities of 
+  //   slip/slide events in a bowed string. A slip event would occur with some probability around
+  //   a certain time instant.
+  // 
+  // 
   // 
   // See:
   // https://en.wikipedia.org/wiki/Dither#Algorithms
@@ -624,6 +629,8 @@ void testPitchDitherSuperSaw()
   using Real = double;
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
+  using PDSO = rsPitchDitherSawOsc<Real, int>;
+  using SVF  = rsStateVariableFilter<Real, Real>;
 
   // Setup:
   int  sampleRate =  44100;      // Sample rate for the wave files
@@ -674,10 +681,8 @@ void testPitchDitherSuperSaw()
   }
  
   // Apply highpass filter(s):
-  RAPT::rsStateVariableFilter<Real, Real> hpf;
+  SVF hpf;
   Real omega = hpfCut * 2*PI*midFreq/sampleRate;
-  //Real hpfQ  = 1.0 / sqrt(2.0);
-  //Real hpfQ = 1.0;
   hpf.setupHighpass(omega, hpfQ);
   Vec supSawHp1 = filterResponse(hpf, numSamples, supSaw);
   Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);
@@ -688,7 +693,18 @@ void testPitchDitherSuperSaw()
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
 
-
+  // Now try to produce the same signal with 7 instances of the realtime osc to make sure, it 
+  // produces the same output:
+  PDSO osc[7];
+  for(int i = 0; i < 7; i++)
+  {
+    osc[i].setPeriod(sampleRate / (midFreq * (detune * freqOffsets[i] + 1.0)));
+    //osc[i].setAmplitude(amp * mix);
+  }
+  //osc[0].setAmplitude(amp);  // Overwrites value set up in the loop
+  // Or maybe it should not have an amplitude member. Adjusting amplitude can be done by the 
+  // caller.
+  // ....nore to do....
 
   //rsPlotVectors(supSaw);
   int dummy = 0;
@@ -788,6 +804,12 @@ void testPitchDitherSuperSaw()
   //   for very high Q, it approaches the cutoff.
   //
   // - Make a spectral plot here. The one from Audacity seems to produce artifacts.
+  //
+  // - Maybe the highpass parameters (cutoff scaler/ratio and Q) could benefit from keytracking.
+  //   Towards higher pitches, we could perhaps use a higher cutoff and/or higher Q. Rationale:
+  //   It gets more noisy towards higher pitches so a bit more filter resonance could impose more
+//     pitch on the noise and a higher cutoff would "clean up" the sound more.
+
 }
 
 

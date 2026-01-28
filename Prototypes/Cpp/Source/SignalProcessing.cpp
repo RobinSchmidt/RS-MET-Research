@@ -498,7 +498,7 @@ void rsPitchDitherProto<T>::fillRandomDitherSaw(
   std::vector<T>& x, T period, unsigned long seed, T amp)
 {
   rsNoiseGenerator<T> prng;
-  prng.setRange(0.0, 1.0);
+  prng.setRange(0.0, 1.0);             // Q: Is the interval open, closed or half-open?
   prng.setSeed(seed);
 
   int N  = (int) x.size();
@@ -510,12 +510,24 @@ void rsPitchDitherProto<T>::fillRandomDitherSaw(
   {
     if(n >= N - L2)                    // Verify! Maybe we need to subtract 1 from the RHS?
       break;
-    T r = prng.getSample();            // Random number in 0..1
+    T r = prng.getSample();            // Random number in [0..1) ..or is it [0..1]
     if(r <= f) 
       fillSawCycle(x, &n, L2, amp);    // Probability for that branch is f
     else
       fillSawCycle(x, &n, L1, amp);    // Probability for that branch is 1-f
   }
+
+  // Maybe it should use if(r < f) rather than if(r <= f) because then it would also work correctly
+  // when r = 0. In that case, we should alway use L1, i.e. always use the else-branch. With a
+  // conditional if(f < 0) this would be the case because r < 0 is impossible. With <= 0, it would
+  // still be possible to execute the if-branch, although the probability is theoretically zero if 
+  // r and f were real numbers with infinite precision rather than floating point numbers. So maybe
+  // it doesn't matter much but for the sake of theoretical correctness. Or wait - is that actually 
+  // correct? Or should we always use the if-branch in the r = 0 case? Figure that out and document
+  // it! Figure out if the prng produces values in the closed, half-open or open interval 0..1 and 
+  // in half-open case, which side is open. I think, it is probably left-closed and right-open, 
+  // i.e. [0..1) because when looking at underlying integer modular arithmetic, we produce values
+  // in the range 0...2^32-1, I think. So, the modulus 2^32 is never produced.
 }
 
 
@@ -556,6 +568,11 @@ public:
 
 protected:
 
+  inline void updateCycleLength();
+
+  inline TFlt getSawSample(TInt sampleIndex, TInt cycleLength);
+  // Maybe make this a static member function. It could be useful for other outside code.
+
   TInt sampleCount =   0;
   TInt floorLength = 100;    // Is the floor of the desired period (aka pitch cycle length).
   TInt cycleLength = 100;    // Is either floorLength or floorLength + 1
@@ -567,12 +584,45 @@ protected:
 template<class TFlt, class TInt>
 void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
 {
-  rsMarkAsStub();
+  //rsMarkAsStub();
+  floorLength = rsFloorInt(newPeriod);
+  fracLength  = newPeriod - floorLength;
 }
 
 template<class TFlt, class TInt>
 TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
 {
-  rsMarkAsStub();
-  return TFlt(0);   // Preliminary
+  //rsMarkAsStub();
+  //return TFlt(0);   // Preliminary
+
+  TFlt y = getSawSample(sampleCount, cycleLength);
+  sampleCount++;
+  if(sampleCount >= cycleLength)
+  {
+    updateCycleLength();
+    sampleCount = 0;
+  }
+  return y;
 }
+
+template<class TFlt, class TInt>
+void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
+{  
+  rsMarkAsStub();
+
+  cycleLength = floorLength;
+
+  // ToDo: Use PRNG to either add 1 to cycleLength or don't. Maybe this can be done in a branchless
+  // way?
+}
+
+template<class TFlt, class TInt>
+TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSawSample(TInt n, TInt N)
+{
+  TFlt s = TFlt(2) / TFlt(N-1);      // Maybe precompute this and store in a member
+  return (TFlt(-1) + s * TFlt(n));
+
+  // Maybe the sampleCount variable should also be of type TFlt to avoid per sample conversion
+  // from int to float
+}
+

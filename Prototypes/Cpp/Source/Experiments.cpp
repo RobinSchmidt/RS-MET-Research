@@ -812,7 +812,14 @@ void testPitchDitherSuperSaw()
   // - Maybe the highpass parameters (cutoff scaler/ratio and Q) could benefit from keytracking.
   //   Towards higher pitches, we could perhaps use a higher cutoff and/or higher Q. Rationale:
   //   It gets more noisy towards higher pitches so a bit more filter resonance could impose more
-//     pitch on the noise and a higher cutoff would "clean up" the sound more.
+  //   pitch on the noise and a higher cutoff would "clean up" the sound more.
+  //
+  // - Maybe try to implement some sort of phase repel algorithm that makes the pahses of the 
+  //   individual saws was to repel one another such that the saws really do not want to be at the
+  //   same phase.
+  //
+  // - Maybe have a numSaws parameter which can be 1,3,5,7 or maybe allow 1,2,3,4,5,6,7 where in 
+  //   the even case, we just skip the center saw.
 
 }
 

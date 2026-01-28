@@ -630,18 +630,35 @@ void testPitchDithering()
   //      101                                   0.25    0.5     0.5     0.5     0.25
   //      102                                                   0.25    0.5     0.5
   // 
-  //   The empty space is implicitly assumed to be zero. Here, we have used the [1,1]/2 and 
-  //   [1,2,1]/4 rows of the binomial distribution (i.e. a scaled Pascal's triangle). When the 
-  //   desired length L is an exact integer like 100.0, we use L-1 with p = 1/4, L with p = 1/2 and
-  //   L+1 with p = 1/4. When L is an exact half integer like 100.5, we use floor(L) with p = 1/2 
-  //   and floor(L) + 1 with p = 1/2 and floor(L) - 1 is not used at all, i.e. with p = 0. The same 
-  //   goes for floor(L) - 2, + 3 or any number and also for floor(L) + 2, +3, .... When L is in 
-  //   between and integer and a half integer, we linearly interpolate the probabilities from the 
-  //   nearest full and half integers. Maybe we can try different distributions at the half 
-  //   integers like 0.125,0.75,0.125. We should experiment with which setting the noisiness with
-  //   integer L sounds the same as that with half-integer L.
+  //   The empty space is implicitly assumed to be zero and the table continues with the pattern
+  //   Here, we have used the [1,1]/2 and [1,2,1]/4 rows of the binomial distribution (i.e. a 
+  //   scaled Pascal's triangle). When the desired length L is an exact integer like 100.0, we use 
+  //   L-1 with p = 1/4, L with p = 1/2 and L+1 with p = 1/4. When L is an exact half integer like 
+  //   100.5, we use floor(L) with p = 1/2 and floor(L) + 1 with p = 1/2 and floor(L) - 1 is not 
+  //   used at all, i.e. with p = 0. The same goes for floor(L) - 2, + 3 or any number and also for
+  //   floor(L) + 2, +3, .... When L is in between and integer and a half integer, we linearly 
+  //   interpolate the probabilities from the nearest full and half integers. 
   // 
-  // - 
+  // - Maybe we can try different distributions at the half integers like 0.125,0.75,0.125. We 
+  //   should experiment with which setting the noisiness with integer L sounds the same as that 
+  //   with half-integer L. Maybe we also should experiment with the interpolation algorithm. 
+  //   Linear is the first thing to try but it might not be the last. This will depend on how much
+  //   different the signals with L = X.25 and X.75 sound from those with X.0 and X.5, assuming 
+  //   that we have already achieved that X.0 and X.5 sound the same.
+  // 
+  // - The smallest cycle length of which we can meaningfully produce a saw is given by 2. In this 
+  //   case, we would just alternatingly produce -1 and +1. That implies that the smallest allowed
+  //   setting for a desired cycle length L is 3 because we need to produce cycles of length L-1 
+  //   with the above algorithm.
+  // 
+  // - Maybe if we really need to produce ultra high frequencies, we should oversample a littel 
+  //   bit to lengthen the desired cycle lengths when given in samples. I think, the cost of 
+  //   oversampling may grow only slowly because the (supposedly) most expensive calculations are 
+  //   made per cycle and not per sample. Using 2x oversampling would also be a nice fit when we 
+  //   combine such a pitch-dither osc with a mip-mapped table lookup osc because for these, we 
+  //   also need 2x. The linear ladder filter would not stricly need any oversampling but maybe it
+  //   helps a bit as well. And maybe we want to use a nonlinear version anyway.
+  // 
   // 
   // See:
   // https://en.wikipedia.org/wiki/Dither#Algorithms

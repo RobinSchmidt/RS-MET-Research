@@ -586,15 +586,19 @@ public:
 
 protected:
 
-
-
   inline TFlt getSawSample(TInt sampleIndex, TInt cycleLength);
-  // Maybe make this a static member function. It could be useful for other outside code.
+  // Maybe make this a static member function. It could be useful for other outside code. But maybe
+  // when we optimize later, this function should use some values that are precomputed by other 
+  // member functions, so maybe leave it as protected and non-static. Maybe rename to something 
+  // like readSawValue
+
 
   TInt sampleCount =   0;
   TInt floorLength = 100;    // Is the floor of the desired period (aka pitch cycle length).
   TInt cycleLength = 100;    // Is either floorLength or floorLength + 1
   TFlt fracLength  = 0.5;
+  // ToDo: For optimization purposes, maybe we should keep all members as type TFlt in order to 
+  // avoid int-to-float conversions in the per sample code. Maybe then call the type just T.
 
   rsNoiseGenerator<TFlt> prng;
 };
@@ -603,7 +607,6 @@ protected:
 template<class TFlt, class TInt>
 void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
 {
-  //rsMarkAsStub();
   floorLength = rsFloorInt(newPeriod);
   fracLength  = newPeriod - floorLength;
 
@@ -617,10 +620,6 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
 template<class TFlt, class TInt>
 TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
 {
-  //rsMarkAsStub();
-  //return TFlt(0);   // Preliminary
-
-
   TFlt y = getSawSample(sampleCount, cycleLength);
   sampleCount++;
   if(sampleCount >= cycleLength)
@@ -634,7 +633,6 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
 template<class TFlt, class TInt>
 void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
 {  
-  //rsMarkAsStub();
   cycleLength = floorLength;
   TFlt r = prng.getSample();
   if(r <= fracLength)          // Maybe use < instead of <=. See comment in rsPitchDitherProto

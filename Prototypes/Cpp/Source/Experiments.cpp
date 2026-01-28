@@ -643,16 +643,15 @@ void testPitchDitherSuperSaw()
   Real hpfCut     =      1.0;    // Highpass cutoff as fraction of osc freq
   Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
 
-
   // Table with the frequency offsets when the center saw is taken to have frequency 1:
   Vec freqOffsets({ 0, 160,  -160, 510, -515, 880, -900 });
   freqOffsets = freqOffsets / 8192.0;
+  Vec freqRatios = detune * freqOffsets + 1.0;
   // The numbers were taken from here:
   // https://atosynth.blogspot.com/2026/01/a-closer-look-at-super-saw-code.html?m=1
   // and are supposed to be those that were used in the Roland JP-8000 and JP-8080.
 
-
-  Vec freqRatios = detune * freqOffsets + 1.0;
+  // Produce the raw supersaw:
   int numSaws = (int) freqRatios.size();
   Vec saw(numSamples), supSaw(numSamples);
   for(int i = 0; i < numSaws; i++)
@@ -660,23 +659,14 @@ void testPitchDitherSuperSaw()
     // Compute parameters for the i-th saw:
     Real sawFreq   = midFreq * freqRatios[i];
     Real sawPeriod = sampleRate / sawFreq;
-
-    //// Old:
-    //Real sawAmp    = amp;
-    //if(i != 0)
-    //  sawAmp *= mix;
-
-    // New:
-    Real sawAmp = 0;
+    Real sawAmp;
     if(i == 0)
       sawAmp = amp;
-      //sawAmp = amp * 0.25;   // Test
     else
       sawAmp = amp * mix;
 
     // Produce i-th saw and accumulate into the super saw:
-    //PDP::fillRandomDitherSaw(saw, sawPeriod, seed, sawAmp);   // Old - same seed for each
-    PDP::fillRandomDitherSaw(saw, sawPeriod, seed+i, sawAmp);   // New - each has its own seed
+    PDP::fillRandomDitherSaw(saw, sawPeriod, seed+i, sawAmp);
     supSaw = supSaw + saw;
   }
  
@@ -687,12 +677,10 @@ void testPitchDitherSuperSaw()
   Vec supSawHp1 = filterResponse(hpf, numSamples, supSaw);
   Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);
   
-
   // Write supersaw signals to wave files:
   rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw[0],    numSamples, sampleRate);
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
-
 
   // Now try to produce the same signal with 7 instances of the realtime osc to make sure, it 
   // produces the same output:
@@ -703,7 +691,6 @@ void testPitchDitherSuperSaw()
     osc[i].setRandomSeed(seed+i);
     osc[i].updateCycleLength();
   }
-
   Vec supSaw2(numSamples);
   for(int n = 0; n < numSamples; n++)
   {
@@ -712,13 +699,14 @@ void testPitchDitherSuperSaw()
       y += amp * mix * osc[i].getSample();
     supSaw2[n] = y;
   }
-
   bool ok = true;
   //ok &= rsEquals(supSaw2, supSaw);
   // FAILS! Because the prototye does not correctly write the final cycles. We need to compare only
-  // an initial section that leaves out the last 2 or 3 cycles.
+  // an initial section that leaves out the last 2 or 3 cycles. Maybe write a function that we can
+  // call like ok &= rsEqualsUpTo(supSaw2, supSaw, numSamples/2) or something like that
   Vec err = supSaw2 - supSaw;
   rsPlotArrays(5000, &supSaw[0], &supSaw2[0]);  // It looks good
+  //rsPlotArrays(5000, &supSaw[0], &supSawHp1[0], &supSawHp2[0]);
   rsPlotVector(err);
 
 

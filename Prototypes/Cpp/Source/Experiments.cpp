@@ -552,22 +552,6 @@ void testPitchDithering()
   //   lengths in a probabiliytic way such that the _average_ cycle length comes out as desired. 
   //   For example, to produce an average cycle length of 100.3 samples, one could produce cycles
   //   or length 100 with probability p = 0.7 and cycles of elngth 101 with probability p = 0.3.
-  //
-  // - One potential problem with this approach could be that frequencies that happen to have 
-  //   integer cycle lengths would be unaffected and sound "cleaner" than others. For example,
-  //   100.5 would sound most dirty while 100.0 would sound completely clean. this could be avoided
-  //   by letting the length 100.0 cycle probabilistically use lengths 99, 100 and 101 (with 
-  //   average 100.0). Maybe in general, we should use some sort of probability distribution 
-  //   (perhaps non-uniform, maybe low order Irwin-Hall) that spans a few lengths like maybe 
-  //   97...103 when the center is 100.0. For 100.3, it would span 97.3...103.3. But it should be
-  //   a discrete probability distribution. Here, we use one that has only two possible values, so
-  //   we have for example p(100) = 0.7, p(101) = 0.3. Maybe we could have something like:
-  //   p(99) = 0.2, p(100) = 0.5, p(101) = 0.2, p(102) = 0.1. But how could we meaningfully compute
-  //   these values (I just made them up)? It may be desirable to have a 4-value binomial 
-  //   distribution [1,3,3,1]/8 if the period is on a half integer (like 100.5) and a 3 value 
-  //   binomial distribution [1,2,1]/4 if the period is exactly on an integer (like 100.0). But 
-  //   what do we do in between? Maybe linearly interpolate between [1,3,3,1]/8 and [1,2,1,0]/4 
-  //   as we go from 100.5 to 100.0?
   // 
   // - Try different seeds and make various plots with the different seeds. Figure out the expected
   //   variance of the recorded average after a given number of cycles., i.e. figure out how much 
@@ -617,7 +601,47 @@ void testPitchDithering()
   //   slip/slide events in a bowed string. A slip event would occur with some probability around
   //   a certain time instant.
   // 
+  // - One potential problem with this approach could be that frequencies that happen to have 
+  //   integer cycle lengths would be unaffected and sound "cleaner" than others. For example,
+  //   100.5 would sound most dirty while 100.0 would sound completely clean. this could be avoided
+  //   by letting the length 100.0 cycle probabilistically use lengths 99, 100 and 101 (with 
+  //   average 100.0). Maybe in general, we should use some sort of probability distribution 
+  //   (perhaps non-uniform, maybe low order Irwin-Hall) that spans a few lengths like maybe 
+  //   97...103 when the center is 100.0. For 100.3, it would span 97.3...103.3. But it should be
+  //   a discrete probability distribution. Here, we use one that has only two possible values, so
+  //   we have for example p(100) = 0.7, p(101) = 0.3. Maybe we could have something like:
+  //   p(99) = 0.2, p(100) = 0.5, p(101) = 0.2, p(102) = 0.1. But how could we meaningfully compute
+  //   these values (I just made them up)? It may be desirable to have a 4-value binomial 
+  //   distribution [1,3,3,1]/8 if the period is on a half integer (like 100.5) and a 3 value 
+  //   binomial distribution [1,2,1]/4 if the period is exactly on an integer (like 100.0). But 
+  //   what do we do in between? Maybe linearly interpolate between [1,3,3,1]/8 and [1,2,1,0]/4 
+  //   as we go from 100.5 to 100.0?
   // 
+  // - The table of probabilities could look like as follows. In the column headers, we have some
+  //   desired example cycle lengths. In the row headers, we have the integer cycle lengths that
+  //   are produced. The table entries are the probabilities with which the cycles of length given
+  //   by row header is produced when the desired length is as given by the column header:
+  // 
+  //         in:  98.0   98.5   99.0   99.5   100.0   100.5   101.0   101.5   102.0
+  //      out             
+  //       98      0.5    0.5    0.25
+  //       99      0.25   0.5    0.5    0.5     0.25   
+  //      100                    0.25   0.5     0.5     0.5     0.25
+  //      101                                   0.25    0.5     0.5     0.5     0.25
+  //      102                                                   0.25    0.5     0.5
+  // 
+  //   The empty space is implicitly assumed to be zero. Here, we have used the [1,1]/2 and 
+  //   [1,2,1]/4 rows of the binomial distribution (i.e. a scaled Pascal's triangle). When the 
+  //   desired length L is an exact integer like 100.0, we use L-1 with p = 1/4, L with p = 1/2 and
+  //   L+1 with p = 1/4. When L is an exact half integer like 100.5, we use floor(L) with p = 1/2 
+  //   and floor(L) + 1 with p = 1/2 and floor(L) - 1 is not used at all, i.e. with p = 0. The same 
+  //   goes for floor(L) - 2, + 3 or any number and also for floor(L) + 2, +3, .... When L is in 
+  //   between and integer and a half integer, we linearly interpolate the probabilities from the 
+  //   nearest full and half integers. Maybe we can try different distributions at the half 
+  //   integers like 0.125,0.75,0.125. We should experiment with which setting the noisiness with
+  //   integer L sounds the same as that with half-integer L.
+  // 
+  // - 
   // 
   // See:
   // https://en.wikipedia.org/wiki/Dither#Algorithms

@@ -656,3 +656,10 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::readSawValue(TInt n, TInt N)
   // from int to float. Maybe precompute s in updateCycleLength and store result in a member.
 }
 
+// ToDo:
+//
+// - Introduce a "mode" parameter that lets us switch between different algorithms to update the
+//   cycle length. The algorithms we want to provide are: current one, deterministic (based on 
+//   error feedback), another probabilistic one that uses L-1, L, L+1 with p = 0.25, 0.5, 0.25
+//   respectively to make frequencies at exact integers sound similarly noisified as those at the
+//   half integers.

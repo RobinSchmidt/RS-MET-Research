@@ -572,6 +572,9 @@ public:
     prng.setSeed(newSeed);
   }
 
+  //void setPhase(TFlt newPhase);
+  // Should set up the current phase, i.e. the sampleCount variable
+
 
   inline TFlt getSample();
 
@@ -586,11 +589,15 @@ public:
 
 protected:
 
-  inline TFlt getSawSample(TInt sampleIndex, TInt cycleLength);
+  inline TFlt readSawValue(TInt sampleIndex, TInt cycleLength);
   // Maybe make this a static member function. It could be useful for other outside code. But maybe
   // when we optimize later, this function should use some values that are precomputed by other 
   // member functions, so maybe leave it as protected and non-static. Maybe rename to something 
-  // like readSawValue
+  // like readSawValue..ok - done. Maybe make a function readPulseValue based on calling 
+  // readSawValue twice (with phase-shifted arguments, depending on the pulseWidth parameter) and 
+  // negating one of the saws. That means, we subtrac a phased-shifted version of the saw from the
+  // saw. Maybe we can scale the subtracted phase-shifted version. Thereby, we can smoothly morph 
+  // between supersaw and superpulse
 
 
   TInt sampleCount =   0;
@@ -620,7 +627,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
 template<class TFlt, class TInt>
 TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
 {
-  TFlt y = getSawSample(sampleCount, cycleLength);
+  TFlt y = readSawValue(sampleCount, cycleLength);
   sampleCount++;
   if(sampleCount >= cycleLength)
   {
@@ -640,7 +647,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
 }
 
 template<class TFlt, class TInt>
-TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSawSample(TInt n, TInt N)
+TFlt rsPitchDitherSawOsc<TFlt, TInt>::readSawValue(TInt n, TInt N)
 {
   TFlt s = TFlt(2) / TFlt(N-1);      // Maybe precompute this and store in a member
   return (TFlt(-1) + s * TFlt(n));

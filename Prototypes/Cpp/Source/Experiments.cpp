@@ -712,7 +712,12 @@ void testPitchDitherSuperSaw()
     supSaw2[n] = y;
   }
   rsPlotArrays(5000, &supSaw[0], &supSaw2[0]);
-  // The look almost the same but there are tiny differences!
+  // The look almost the same but there are tiny differences! I think, it's probably due to calling
+  // updateCycleLength too late or too early. In the prototype, we call it before producing the 
+  // very first cycle whereas in the realtime osc, we don't - we instead alway produce the first 
+  // cycle with the floorLength there. Maybe we should call updateCycleLength in reset() and call 
+  // reset() here in the loop where we also call setPeriod() and setRandomSeed(). Or maybe we 
+  // should call updateCyleLength() here
 
 
 

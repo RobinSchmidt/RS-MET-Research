@@ -624,6 +624,7 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
   //rsMarkAsStub();
   //return TFlt(0);   // Preliminary
 
+
   TFlt y = getSawSample(sampleCount, cycleLength);
   sampleCount++;
   if(sampleCount >= cycleLength)

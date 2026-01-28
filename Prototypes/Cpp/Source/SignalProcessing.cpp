@@ -565,6 +565,11 @@ public:
 
   inline TFlt getSample();
 
+  void reset()
+  {
+    sampleCount = 0;
+  }
+
 
 protected:
 
@@ -587,6 +592,12 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
   //rsMarkAsStub();
   floorLength = rsFloorInt(newPeriod);
   fracLength  = newPeriod - floorLength;
+
+  cycleLength = floorLength;
+  // Maybe do not set this up here. We may get better behavior when modulating the period when we
+  // defer this to getSample() which calls updateCycleLength(). When we don't set it here, we will
+  // delay the update until the last cycle with the old length has been finished. Maybe in this 
+  // case, we should init cycleLength to zero in reset()
 }
 
 template<class TFlt, class TInt>
@@ -608,8 +619,7 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
 template<class TFlt, class TInt>
 void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
 {  
-  rsMarkAsStub();
-
+  //rsMarkAsStub();
   cycleLength = floorLength;
 
   // ToDo: Use PRNG to either add 1 to cycleLength or don't. Maybe this can be done in a branchless
@@ -623,6 +633,6 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSawSample(TInt n, TInt N)
   return (TFlt(-1) + s * TFlt(n));
 
   // Maybe the sampleCount variable should also be of type TFlt to avoid per sample conversion
-  // from int to float
+  // from int to float. Maybe precompute s in updateCycleLength and store result in a member.
 }
 

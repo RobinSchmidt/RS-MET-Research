@@ -689,22 +689,28 @@ void testPitchDitherSuperSaw()
   
 
   // Write supersaw signals to wave files:
-  rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw[0],    numSamples, sampleRate);
-  rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
-  rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
+  //rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw[0],    numSamples, sampleRate);
+  //rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
+  //rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
+
 
   // Now try to produce the same signal with 7 instances of the realtime osc to make sure, it 
   // produces the same output:
   PDSO osc[7];
   for(int i = 0; i < 7; i++)
-  {
     osc[i].setPeriod(sampleRate / (midFreq * (detune * freqOffsets[i] + 1.0)));
-    //osc[i].setAmplitude(amp * mix);
+
+  Vec supSaw2(numSamples);
+  for(int n = 0; n < numSamples; n++)
+  {
+    Real y = amp * osc[0].getSample();
+    for(int i = 1; i < 7; i++)
+      y += amp * mix * osc[i].getSample();
+    supSaw2[n] = y;
   }
-  //osc[0].setAmplitude(amp);  // Overwrites value set up in the loop
-  // Or maybe it should not have an amplitude member. Adjusting amplitude can be done by the 
-  // caller.
-  // ....nore to do....
+  rsPlotArrays(5000, &supSaw[0], &supSaw2[0]);
+
+
 
   //rsPlotVectors(supSaw);
   int dummy = 0;

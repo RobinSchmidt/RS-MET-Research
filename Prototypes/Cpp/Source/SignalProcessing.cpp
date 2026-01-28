@@ -581,10 +581,12 @@ public:
     prng.reset();
   }
 
+  inline void updateCycleLength();
+
 
 protected:
 
-  inline void updateCycleLength();
+
 
   inline TFlt getSawSample(TInt sampleIndex, TInt cycleLength);
   // Maybe make this a static member function. It could be useful for other outside code.
@@ -594,13 +596,7 @@ protected:
   TInt cycleLength = 100;    // Is either floorLength or floorLength + 1
   TFlt fracLength  = 0.5;
 
-  //uint32_t seed = 0;
-
   rsNoiseGenerator<TFlt> prng;
-
-  //prng.setRange(0.0, 1.0);             // Q: Is the interval open, closed or half-open?
-  //prng.setSeed(seed);
-
 };
 
 
@@ -611,7 +607,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
   floorLength = rsFloorInt(newPeriod);
   fracLength  = newPeriod - floorLength;
 
-  cycleLength = floorLength;
+  //cycleLength = floorLength;
   // Maybe do not set this up here. We may get better behavior when modulating the period when we
   // defer this to getSample() which calls updateCycleLength(). When we don't set it here, we will
   // delay the update until the last cycle with the old length has been finished. Maybe in this 

@@ -689,9 +689,9 @@ void testPitchDitherSuperSaw()
   
 
   // Write supersaw signals to wave files:
-  //rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw[0],    numSamples, sampleRate);
-  //rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
-  //rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
+  rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw[0],    numSamples, sampleRate);
+  rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
+  rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
 
 
   // Now try to produce the same signal with 7 instances of the realtime osc to make sure, it 
@@ -701,6 +701,7 @@ void testPitchDitherSuperSaw()
   {
     osc[i].setPeriod(sampleRate / (midFreq * (detune * freqOffsets[i] + 1.0)));
     osc[i].setRandomSeed(seed+i);
+    osc[i].updateCycleLength();
   }
 
   Vec supSaw2(numSamples);
@@ -711,18 +712,18 @@ void testPitchDitherSuperSaw()
       y += amp * mix * osc[i].getSample();
     supSaw2[n] = y;
   }
-  rsPlotArrays(5000, &supSaw[0], &supSaw2[0]);
-  // The look almost the same but there are tiny differences! I think, it's probably due to calling
-  // updateCycleLength too late or too early. In the prototype, we call it before producing the 
-  // very first cycle whereas in the realtime osc, we don't - we instead alway produce the first 
-  // cycle with the floorLength there. Maybe we should call updateCycleLength in reset() and call 
-  // reset() here in the loop where we also call setPeriod() and setRandomSeed(). Or maybe we 
-  // should call updateCyleLength() here
+
+  bool ok = true;
+  //ok &= rsEquals(supSaw2, supSaw);
+  // FAILS! Because the prototye does not correctly write the final cycles. We need to compare only
+  // an initial section that leaves out the last 2 or 3 cycles.
+  Vec err = supSaw2 - supSaw;
+  rsPlotArrays(5000, &supSaw[0], &supSaw2[0]);  // It looks good
+  rsPlotVector(err);
 
 
+  rsAssert(ok);
 
-  //rsPlotVectors(supSaw);
-  int dummy = 0;
 
 
   // Observations:

@@ -698,7 +698,10 @@ void testPitchDitherSuperSaw()
   // produces the same output:
   PDSO osc[7];
   for(int i = 0; i < 7; i++)
+  {
     osc[i].setPeriod(sampleRate / (midFreq * (detune * freqOffsets[i] + 1.0)));
+    osc[i].setRandomSeed(seed+i);
+  }
 
   Vec supSaw2(numSamples);
   for(int n = 0; n < numSamples; n++)
@@ -709,6 +712,7 @@ void testPitchDitherSuperSaw()
     supSaw2[n] = y;
   }
   rsPlotArrays(5000, &supSaw[0], &supSaw2[0]);
+  // The look almost the same but there are tiny differences!
 
 
 

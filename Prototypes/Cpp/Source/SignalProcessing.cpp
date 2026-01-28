@@ -554,6 +554,11 @@ class rsPitchDitherSawOsc
 
 public:
 
+  rsPitchDitherSawOsc()
+  {
+    prng.setRange(0.0, 1.0);
+  }
+
   /** Sets the period, i.e. the desired length of one cycle of the waveform. This is a floating 
   point value and it can be computed as  period = sampleRate / frequency  where frequency is the 
   desired oscillator frequency. If the period length is L and that number is not an integer but 
@@ -562,12 +567,18 @@ public:
   void setPeriod(TFlt newPeriod);
   // ..TBC... ToDo: explain deterministic and probabilistic modes
 
+  void setRandomSeed(uint32_t newSeed)
+  {
+    prng.setSeed(newSeed);
+  }
+
 
   inline TFlt getSample();
 
   void reset()
   {
     sampleCount = 0;
+    prng.reset();
   }
 
 
@@ -583,6 +594,13 @@ protected:
   TInt cycleLength = 100;    // Is either floorLength or floorLength + 1
   TFlt fracLength  = 0.5;
 
+  //uint32_t seed = 0;
+
+  rsNoiseGenerator<TFlt> prng;
+
+  //prng.setRange(0.0, 1.0);             // Q: Is the interval open, closed or half-open?
+  //prng.setSeed(seed);
+
 };
 
 
@@ -597,7 +615,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
   // Maybe do not set this up here. We may get better behavior when modulating the period when we
   // defer this to getSample() which calls updateCycleLength(). When we don't set it here, we will
   // delay the update until the last cycle with the old length has been finished. Maybe in this 
-  // case, we should init cycleLength to zero in reset()
+  // case, we should init cycleLength to zero in reset() and maybe also here
 }
 
 template<class TFlt, class TInt>
@@ -621,9 +639,9 @@ void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
 {  
   //rsMarkAsStub();
   cycleLength = floorLength;
-
-  // ToDo: Use PRNG to either add 1 to cycleLength or don't. Maybe this can be done in a branchless
-  // way?
+  TFlt r = prng.getSample();
+  if(r <= fracLength)          // Maybe use < instead of <=. See comment in rsPitchDitherProto
+    cycleLength++;
 }
 
 template<class TFlt, class TInt>

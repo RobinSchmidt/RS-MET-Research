@@ -636,7 +636,7 @@ void testPitchDitherSuperSaw()
   int  sampleRate =  44100;      // Sample rate for the wave files
   int  numSamples = 200000;      // Number of samples to produce
   int  seed       =      3;      // Seed for PRNG
-  Real midFreq    =    880.0;    // Center or middle frequency
+  Real midFreq    =    100.0;    // Center or middle frequency for saw cluster
   Real amp        =      0.125;  // Amplitude of the saws
   Real detune     =      0.3;    // Supersaw detune in 0..1
   Real mix        =      1.0;    // Supersaw mix in 0..1
@@ -652,8 +652,8 @@ void testPitchDitherSuperSaw()
   // and are supposed to be those that were used in the Roland JP-8000 and JP-8080.
 
   // Produce the raw supersaw:
-  int numSaws = (int) freqRatios.size();
-  Vec saw(numSamples), supSaw(numSamples);
+  int numSaws = (int) freqRatios.size();        // This is 7, of course.
+  Vec saw(numSamples), supSaw(numSamples);      // Temp for one saw and accumulator for supersaw.
   for(int i = 0; i < numSaws; i++)
   {
     // Compute parameters for the i-th saw:
@@ -682,9 +682,10 @@ void testPitchDitherSuperSaw()
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
 
-  // Now try to produce the same signal with 7 instances of the realtime osc to make sure, it 
-  // produces the same output:
-  PDSO osc[7];
+  // Now try to produce the same signal with 7 instances of the realtime pitch dither oscillator 
+  // and verify that it produces the same output as our prototype implementation that was used 
+  // above:
+  PDSO osc[7];                             // We need 7 pitch dither osc objects. One for each saw.
   for(int i = 0; i < 7; i++)
   {
     osc[i].setPeriod(sampleRate / (midFreq * (detune * freqOffsets[i] + 1.0)));
@@ -694,7 +695,7 @@ void testPitchDitherSuperSaw()
   Vec supSaw2(numSamples);
   for(int n = 0; n < numSamples; n++)
   {
-    Real y = amp * osc[0].getSample();
+    Real y = amp * osc[0].getSample();     // Outside the loop because has different amp factor.
     for(int i = 1; i < 7; i++)
       y += amp * mix * osc[i].getSample();
     supSaw2[n] = y;
@@ -703,13 +704,12 @@ void testPitchDitherSuperSaw()
   //ok &= rsEquals(supSaw2, supSaw);
   // FAILS! Because the prototye does not correctly write the final cycles. We need to compare only
   // an initial section that leaves out the last 2 or 3 cycles. Maybe write a function that we can
-  // call like ok &= rsEqualsUpTo(supSaw2, supSaw, numSamples/2) or something like that
-  Vec err = supSaw2 - supSaw;
+  // call something like:
+  // ok &= rsEqualsUpTo(supSaw2, supSaw, numSamples/2);
   rsPlotArrays(5000, &supSaw[0], &supSaw2[0]);  // It looks good
   //rsPlotArrays(5000, &supSaw[0], &supSawHp1[0], &supSawHp2[0]);
-  rsPlotVector(err);
-
-
+  //Vec err = supSaw2 - supSaw;
+  //rsPlotVector(err);
   rsAssert(ok);
 
 
@@ -750,6 +750,9 @@ void testPitchDitherSuperSaw()
   //   they have all the same amplitude. Maybe it is because the three middle saws are closer 
   //   together and therefore seen as one by the spectral magnitude analyzer because it can't 
   //   resolve the 3 middle saws? That seems plausible.
+  // 
+  // - When freq = 5000, the fundamental seems to be at the right freq but the harmonics seem to 
+  //   be a bit cramped (higher harmonics are progressively off downward)
   // 
   // 
   // Conclusions:
@@ -817,9 +820,17 @@ void testPitchDitherSuperSaw()
   // - Maybe try to implement some sort of phase repel algorithm that makes the pahses of the 
   //   individual saws was to repel one another such that the saws really do not want to be at the
   //   same phase.
+  // 
+  // - Or maybe implement an algrithm that reduces the amplitude of a saw when it's getting to 
+  //   close in phase to the other saws. ...it's not quite clear what that means though, because 
+  //   there are 6 other saws and the phase distance to each may be very different.
   //
   // - Maybe have a numSaws parameter which can be 1,3,5,7 or maybe allow 1,2,3,4,5,6,7 where in 
   //   the even case, we just skip the center saw.
+  //
+  // - Uncomment the line:
+  //   ok &= rsEqualsUpTo(supSaw2, supSaw, numSamples/2);
+  //   To do so, we first need to implement the rsEqualsUpTo() function appropriately.
 
 }
 

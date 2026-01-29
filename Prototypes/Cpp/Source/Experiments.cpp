@@ -620,7 +620,11 @@ void testPitchDithering()
   // - The table of probabilities could look like as follows. In the column headers, we have some
   //   desired example cycle lengths. In the row headers, we have the integer cycle lengths that
   //   are produced. The table entries are the probabilities with which the cycles of length given
-  //   by row header is produced when the desired length is as given by the column header:
+  //   by row header is produced when the desired length is as given by the column header. For 
+  //   example, according to the middle column of the table, when the desired cycle length is 
+  //   100.0, we would produce cycles of length 100 with probability p = 0.5 and cycles of length 
+  //   99 and 101 each with p = 0.25. If the desired cycle length would be 100.5 (one column 
+  //   further right), we would produce cycles of length 100 and 101 each with p = 0.5:
   // 
   //         in:  98.0   98.5   99.0   99.5   100.0   100.5   101.0   101.5   102.0
   //      out             

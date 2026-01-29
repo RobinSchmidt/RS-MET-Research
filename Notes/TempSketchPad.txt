@@ -92,6 +92,77 @@ ResoVerb or TuneVerb or ModalVerb:
  
 ---------------------------------------------------------------------------------------------------- 
  
+About pitch dither probabilities:
+
+See comments in testPitchDithering() in Experiments.cpp
+
+- The table of probabilities could look like as follows. In the column headers, we have some
+  desired example cycle lengths. In the row headers, we have the integer cycle lengths that
+  are produced. The table entries are the probabilities with which the cycles of length given
+  by row header is produced when the desired length is as given by the column header. For 
+  example, according to the middle column of the table, when the desired cycle length is 
+  100.0, we would produce cycles of length 100 with probability p = 0.5 and cycles of length 
+  99 and 101 each with p = 0.25. If the desired cycle length would be 100.5 (one column 
+  further right), we would produce cycles of length 100 and 101 each with p = 0.5:
+ 
+        in:  98.0   98.5   99.0   99.5   100.0   100.5   101.0   101.5   102.0
+     out             
+      98      0.5    0.5    0.25
+      99      0.25   0.5    0.5    0.5     0.25   
+     100                    0.25   0.5     0.5     0.5     0.25
+     101                                   0.25    0.5     0.5     0.5     0.25
+     102                                                   0.25    0.5     0.5
+
+  The empty space is implicitly assumed to be zero and the table continues with the pattern
+  Here, we have used the [1,1]/2 and [1,2,1]/4 rows of the binomial distribution (i.e. a 
+  scaled Pascal's triangle). When the desired length L is an exact integer like 100.0, we use 
+  L-1 with p = 1/4, L with p = 1/2 and L+1 with p = 1/4. When L is an exact half integer like 
+  100.5, we use floor(L) with p = 1/2 and floor(L) + 1 with p = 1/2 and floor(L) - 1 is not 
+  used at all, i.e. with p = 0. The same goes for floor(L) - 2, + 3 or any number and also for
+  floor(L) + 2, +3, .... When L is in between and integer and a half integer, we linearly 
+  interpolate the probabilities from the nearest full and half integers. 
+
+
+A geometric interpretation of the table above could be as follows:
+
+
+             L-1      L      L+1
+  -----------------------------------------
+  |   98  |   99  |  100  |  101  |  102  |        Band of integer, each int occupies same length
+  -----------------------------------------  
+              -----------------
+              |       |       |                    Slider of length 2
+              -----------------
+                      |
+                     L.f = 100.5
+					
+The center of the slider gives the position of the desired cycle length which we denote by L.f such
+that L is the floor of the desired length and f is its fractional part. In the depicted situation 
+above, L.f would be 100.5. The center of the slider is exactly at the middle of the entry 100 in the
+band. The probabilities to produce cycles of length L-1, L and L+1 are given by the proportional 
+overlap of the slider with the cell of the respective number. Since the length of the slider is 2,
+the proportionality factor is 0.5. The slider overlaps fully (i.e. to 100% or 1) with the cell of 
+100, so the probability of 100 is given by 0.5*1 = 0.5. The slider also overlaps to 50% with the 
+cells of 99 and 101, so these cycle lengths will both be produced with probability 0.5*0.5 = 0.25. 
+We could also say that 25% of the slider overlap with 99, 50% of it overlap with 100 and another 25%
+of it overlaps with 101.
+					
+					
+By using P(99)=0.25, p(100)= 0.5, p(101)= 0.25 We have
+
+Let "mar(x)"  stand for mean absolute error, i.e. the expectation value of the absolute value of the
+error.
+
+  mar(L=100.5) = 0.5*|-0.5| + 0.5*|+0.5| = 0.5^2 + 0.5^2 = 0.25 + 0.25 = 0.5
+  mar(L=100.0) = 0.25*|-1| + 0.5*|0| + 0.25*|+1|         = 0.25 + 0.25 = 0.5
+
+Let "var(x)" be the variance of x, i.e. the expectation value of the square of the error. 
+ 
+ 
+---------------------------------------------------------------------------------------------------- 
+ 
+ 
+ 
 https://ultra.audio/   Nice GUI!
 
 

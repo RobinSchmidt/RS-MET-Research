@@ -91,6 +91,13 @@ WaveTables:
 
 
 
+Distortion:
+
+https://www.youtube.com/@physik-der-elektrogitarre
+https://www.youtube.com/watch?v=emjAmFhgjK0   T133 Verzerrer-2
+
+
+
 Background resources on sound synthesis:
 
 https://www.perfectcircuit.com/signal/east-coast-west-coast-synthesis

@@ -572,8 +572,26 @@ public:
     prng.setSeed(newSeed);
   }
 
+
+
   //void setPhase(TFlt newPhase);
   // Should set up the current phase, i.e. the sampleCount variable
+
+
+  enum class Mode
+  {
+    minVariance,      // Random cycle lengths with minimized variance
+    equalVariance,
+    equalDistance,
+    minError          // Deterministic algo based on error feedback
+  };
+
+  void setMode(Mode newMode)
+  {
+    mode = newMode;
+  }
+
+
 
 
   inline TFlt getSample();
@@ -604,6 +622,7 @@ protected:
   TInt floorLength = 100;    // Is the floor of the desired period (aka pitch cycle length).
   TInt cycleLength = 100;    // Is either floorLength or floorLength + 1
   TFlt fracLength  = 0.5;
+  Mode mode        = Mode::minVariance;
   // ToDo: For optimization purposes, maybe we should keep all members as type TFlt in order to 
   // avoid int-to-float conversions in the per sample code. Maybe then call the type just T.
 
@@ -639,11 +658,22 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
 
 template<class TFlt, class TInt>
 void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
-{  
-  cycleLength = floorLength;
-  TFlt r = prng.getSample();
-  if(r <= fracLength)          // Maybe use < instead of <=. See comment in rsPitchDitherProto
-    cycleLength++;
+{ 
+  switch(mode)
+  {
+  case Mode::minVariance:
+  {
+    cycleLength = floorLength;
+    TFlt r = prng.getSample();
+    if(r <= fracLength)          // Maybe use < instead of <=. See comment in rsPitchDitherProto 
+      cycleLength++;
+  } break;
+
+  // ToDo: Implement the other modes
+
+  default:
+    rsError("Unknown Mode");
+  }
 }
 
 template<class TFlt, class TInt>

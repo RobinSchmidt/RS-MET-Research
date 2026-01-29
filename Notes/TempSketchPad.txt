@@ -60,6 +60,8 @@ Catalog of anti-aliasing techniques. Format: Name, Description, Applications, Pr
   noise. This "pitch dithering" approach would pick two integer cycle lengths L1, L2 that straddle 
   the desired cycle length L and make sure that the _average_ cycle length equals the desired cycle  
   length by (probabilistically or determistically) alternating between cycles of lengths L1 and L2.
+
+- Non-unifor (re)sampling. See     https://www.researchgate.net/publication/237136907_IMPLEMENTATION_OF_NON-UNIFORM_SAMPLING_FOR_%27ALIAS-FREE_PROCESSING%27_IN_DIGITAL_CONTROL
   
 - Advanced interpolation techniques like (windowed) sinc interpolation. Theoretically, this ampounts
   to perfect resampling, i.e. going back to the continuous time domain and then back to a new 
@@ -150,13 +152,40 @@ of it overlaps with 101.
 					
 By using P(99)=0.25, p(100)= 0.5, p(101)= 0.25 We have
 
-Let "mar(x)"  stand for mean absolute error, i.e. the expectation value of the absolute value of the
+Let "mae(x)"  stand for mean absolute error, i.e. the expectation value of the absolute value of the
 error.
 
-  mar(L=100.5) = 0.5*|-0.5| + 0.5*|+0.5| = 0.5^2 + 0.5^2 = 0.25 + 0.25 = 0.5
-  mar(L=100.0) = 0.25*|-1| + 0.5*|0| + 0.25*|+1|         = 0.25 + 0.25 = 0.5
+  mae(L=100.5) = 0.5*|-0.5| + 0.5*|+0.5| = 0.5^2 + 0.5^2 = 0.25 + 0.25 = 0.5
+  mae(L=100.0) = 0.25*|-1| + 0.5*|0| + 0.25*|+1|         = 0.25 + 0.25 = 0.5
 
-Let "var(x)" be the variance of x, i.e. the expectation value of the square of the error. 
+So, the geometric approach above would produce the same expected absolute error, regardless of 
+whether we are at an integer or an half integer (ToDo: Explain whwy it should also work for 
+L.x = 100.3 for example).
+
+To implement thsi, I think, we would have to produce a random number r in 0..1 and have two 
+thresholds t1, t2 and do:
+
+  if(r < t1) 
+    produce length L-1 cycle
+  else if(r < t2)
+    produce length L cycle
+  else
+    produce length L+1 cycle
+
+Maybe <= is more appropriate than < in one or the other or both conditionals.
+
+I'm not quite sure if equalizing the "mae" is the right approach, though. Maybe the perceived noise
+loudness is proportional to the variance of the noise, i.e. the expectation value of the square of 
+the error. Let "var(x)" be the variance of x. Let's calculate the variances when we would use the
+probabilities from above:
+
+  var(L=100.5) = 0.5*(-0.5)^2 + 0.5*(+0.5)^2 = 0.5*0.25 + 0.5*0.25 = 0.125 + 0.125 = 0.25
+  var(L=100.0) = 0.25*(-1)^2 + 0.5*(0)^2 + 0.25*(+1)^2 = 0.25 + 0 + 0.25           = 0.5
+
+So with the probabilities above, we would have a higher noise variance at the integers than at the 
+half integers. ToDo: Try probabilities p(99) = p(101) = 0.125, p(100) = 0.75
+
+Then noralizing the var
  
  
 ---------------------------------------------------------------------------------------------------- 

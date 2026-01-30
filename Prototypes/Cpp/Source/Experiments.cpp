@@ -406,7 +406,7 @@ void testPitchDithering()
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples = 88200;               // Number of samples to produce
-  Real period     =   100.3;             // Desired cycle length
+  Real period     =   100.49;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     2;               // Seed for PRNG
 
@@ -531,9 +531,15 @@ void testPitchDithering()
   int numL3 = 0;
   Real p1, p2, p3;   // Probabilities for L1, L2, L3. p2,p3 only used for verification
   p2 = 0.5;          // p2 never changes
+  prng.reset();
   for(int i = 0; i < numCycles; i++)
   {
     Real r = prng.getSample();
+
+    // Maybe factor out into a function lengthsAndProbs1(f, &L1, &L2, &L3, &p1, &p2, &p3). The "1"
+    // is a provision for having multiple algorithms later (at least distance-normalized and 
+    // variance-normalized - maybe more - maybe includ also distanceMinimized. It would always 
+    // have p3 = 0)
     if(f < 0.5)
     {
       L1 = rsFloorInt(period) - 1;
@@ -547,13 +553,16 @@ void testPitchDithering()
       L1 = rsFloorInt(period);
       L2 = L1 + 1;
       L3 = L2 + 1;
-      p1 = 0.5 * (f - 0.5);
-      p3 = 0.5 - p1;
+      p3 = 0.5 * (f - 0.5);
+      p1 = 0.5 - p3;
     }
 
-    // Sanity check. Probabilities must add to 1:
-    Real sum = p1 + p2 + p3;
-    rsAssert(rsIsCloseTo(sum, 1.0, 1.e-13));
+    // Sanity checks. Probabilities must add to 1 and the mean of the lengths should be our desired
+    // period.
+    Real sum  = p1    + p2    + p3;
+    Real mean = p1*L1 + p2*L2 + p3*L3;                     // Theoretical long term mean
+    rsAssert(rsIsCloseTo(sum,  1.0,    1.e-13));            
+    rsAssert(rsIsCloseTo(mean, period, 1.e-13));
 
     // Produce cycle:
     if(r < p1)
@@ -564,8 +573,7 @@ void testPitchDithering()
       addCycle(x4, L2, &n, &numL2);
 
     // Bookkeeping for plotting:
-    meanL = meanLength3(L1, numL1, L2, numL2, L3, numL3);
-    a4[i] = meanL;
+    a4[i] = meanLength3(L1, numL1, L2, numL2, L3, numL3);  // Practical sample mean up to now
   }
   // ToDo: Verify if usage of < vs <= is correct everywhere. Test the lower branch using 
   // period = 100.7. With 100.3, we never enter it.
@@ -605,6 +613,7 @@ void testPitchDithering()
   //rsPlotArrays(plotLength, &x1[0], &x5[0]);
   //rsPlotVectors(a2, a3);
   //rsPlotVectors(a1, a2, a3);
+  rsPlotVectors(a1); 
   rsPlotVectors(a1, a4);           // Both probabilistic algos
   int dummy = 0;
 
@@ -617,6 +626,15 @@ void testPitchDithering()
   // - The two different deterministic algorithms do indeed produce the same result but only if we
   //   use a numeric tolerance in the switching logic for the second algorithm, i.e. the one based
   //   on error feedback.
+  // 
+  // - For an integer desired period like 100, algo 1 produces an exact 100 sample cycle for every
+  //   cycle as it should. Algo 4 produces cycles of lengths 99,100,101 as it should. The 
+  //   differences the two algorithms should be most stark for integer periods. This experiment 
+  //   seems to confirm this.
+  // 
+  // - I think, algo 1 and algo 4 should produce the exact same result when period is at a half 
+  //   integer like 100.5. But they produce mirror images of each other. Figure out why! Maybe that
+  //   is actually the result that we should expect? It seems weird to me though.
   // 
   // - The probabilistic algorithm sounds more dirty. There is a kind of noise in the signal. The
   //   deterministic algorithm produces subharmonics when f is a rational number. (Verify! 
@@ -763,7 +781,10 @@ void testPitchDithering()
   //   helps a bit as well. And maybe we want to use a nonlinear version anyway.
   // 
   // - Make a helper function reset() that sets n, numL1, numL2, numL3 back to zero and use that
-  //   before all the loops.
+  //   before all the loops. We should also call prng.reset() there.
+  // 
+  // - Maybe make unit tests with periods of 100.0, 100.1, 100.2, 100.3, 100.4, 100.5,...100.9.
+  //   It's especially important to include 100.0 and 100.5 because these are the edge cases.
   // 
   // 
   // See:

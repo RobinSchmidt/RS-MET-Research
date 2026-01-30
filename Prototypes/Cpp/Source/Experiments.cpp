@@ -406,7 +406,6 @@ void testPitchDithering()
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples = 88200;               // Number of samples to produce
-  //int  numSamples =  1000;               // Number of samples to produce
   Real period     =   100.3;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     2;               // Seed for PRNG
@@ -419,25 +418,20 @@ void testPitchDithering()
 
   // Compute the number of cycles to produce:
   //int numCycles = (int) (Real(numSamples) / period) - 1;    // May be too much!
-  int numCycles = (int) (Real(numSamples) / Real(L1+3)) - 1;
+  int numCycles = (int) (Real(numSamples) / Real(L1+3)) - 1;  // L1+2 may also work?
 
 
   // Helper function to produce one cycle and update counters:
   auto addCycle = [&amp](Vec& x, int length, int* start, int* counter) 
   {
-    PDP::fillSawCycle(x, start, length, amp, counter);  // Verify!
- 
-    //PDP::fillSawCycle(&x[*start], length, amp);
-    //(*counter)++;
-    //*start += length;
+    PDP::fillSawCycle(x, start, length, amp, counter);
   };
 
   // Helper function to compute average cycle length based on two cycle lengths and their counts:
-  auto meanLength = [](int L1, int numL1, int L2, int numL2) 
+  auto meanLength2 = [](int L1, int numL1, int L2, int numL2) 
   {
     return Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
   };
-  // rename to meanLength2 for consistency
 
   auto meanLength3 = [](int L1, int numL1, int L2, int numL2, int L3, int numL3) 
   {
@@ -462,7 +456,7 @@ void testPitchDithering()
       addCycle(x1, L2, &n, &numL2);      // Probability for that branch is f
     else
       addCycle(x1, L1, &n, &numL1);      // Probability for that branch is 1-f
-    meanL = meanLength(L1, numL1, L2, numL2);
+    meanL = meanLength2(L1, numL1, L2, numL2);
     a1[i] = meanL;
   }
 
@@ -483,7 +477,7 @@ void testPitchDithering()
       addCycle(x2, L2, &n, &numL2);
     else
       addCycle(x2, L1, &n, &numL1);
-    meanL = meanLength(L1, numL1, L2, numL2);
+    meanL = meanLength2(L1, numL1, L2, numL2);
     a2[i] = meanL;
   }
 
@@ -515,7 +509,7 @@ void testPitchDithering()
       addCycle(x3, L1, &n, &numL1);
       err -= f;
     }
-    meanL = meanLength(L1, numL1, L2, numL2);
+    meanL = meanLength2(L1, numL1, L2, numL2);
     a3[i] = meanL;
   }
 

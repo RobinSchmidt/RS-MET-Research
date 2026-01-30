@@ -185,7 +185,16 @@ probabilities from above:
 So with the probabilities above, we would have a higher noise variance at the integers than at the 
 half integers. ToDo: Try probabilities p(99) = p(101) = 0.125, p(100) = 0.75
 
-Then noralizing the var
+
+...Then normalizing the variance 
+
+Maybe use the 3 equations 
+
+  p1 + p2 + p3 = 1
+  p1*e1 + p2*e2 + p3*e3 = 0    
+  p1*e1^2 + p2*e2^2 + p3*e3^3 = const (= 0.5 I think)
+  
+where p1 is the probability for L-1 and e1 is the error that we make when using this length and so on
  
  
 ---------------------------------------------------------------------------------------------------- 

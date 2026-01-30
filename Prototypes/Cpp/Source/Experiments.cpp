@@ -409,7 +409,7 @@ void testPitchDithering()
   //int  numSamples =  1000;               // Number of samples to produce
   Real period     =   100.3;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
-  int  seed       =     3;               // Seed for PRNG
+  int  seed       =     2;               // Seed for PRNG
 
   // Compute the lengths of the two cycles and the fractional part of desired length:
   int L1 = rsFloorInt(period);
@@ -418,7 +418,9 @@ void testPitchDithering()
   Real meanL = 0.5 * (L1 + L2);
 
   // Compute the number of cycles to produce:
-  int numCycles = (int) (Real(numSamples) / period) - 1;
+  //int numCycles = (int) (Real(numSamples) / period) - 1;    // May be too much!
+  int numCycles = (int) (Real(numSamples) / Real(L1+3)) - 1;
+
 
   // Helper function to produce one cycle and update counters:
   auto addCycle = [&amp](Vec& x, int length, int* start, int* counter) 
@@ -435,6 +437,13 @@ void testPitchDithering()
   {
     return Real(numL1*L1 + numL2*L2) / Real(numL1 + numL2);
   };
+  // rename to meanLength2 for consistency
+
+  auto meanLength3 = [](int L1, int numL1, int L2, int numL2, int L3, int numL3) 
+  {
+    return Real(numL1*L1 + numL2*L2 + numL3*L3) / Real(numL1 + numL2 + numL3);
+  };
+
 
   // Algorithm 1:
   // Create the probabilistically (i.e. randomly) pitch-dithered signal:
@@ -449,7 +458,7 @@ void testPitchDithering()
   for(int i = 0; i < numCycles; i++)
   {
     Real r = prng.getSample();           // Random number in 0..1
-    if(r <= f) 
+    if(r <= f)                           // Maybe it should be if(r < f)
       addCycle(x1, L2, &n, &numL2);      // Probability for that branch is f
     else
       addCycle(x1, L1, &n, &numL1);      // Probability for that branch is 1-f
@@ -510,19 +519,87 @@ void testPitchDithering()
     a3[i] = meanL;
   }
 
+  // Algorithm 4:
+  // Another probabilistic algorithm that produces cycles of length L-1, L, L+1 when the desired
+  // cycle length is L.f, i.e. L = floor(desiredLength), f = fractionalPart(desiredLength) with 
+  // probabilities pS = p(short) = p(L-1), pM = p(medium) = p(L), pL = p(long) = p(L+1). These
+  // probabilities are computed in such a way as to achieve an equal expected deviation from
+  // the exact length L.f regardless of what f is. ...TBC...
+  Vec x4(numSamples); 
+  Vec a4(numCycles);
+  n     = 0;
+  L1    = 0; 
+  L2    = 0;
+  numL1 = 0;
+  numL2 = 0;
+  int L3    = 0;
+  int numL3 = 0;
+  for(int i = 0; i < numCycles; i++)
+  {
+    Real r = prng.getSample();
+    if(f < 0.5)
+    {
+      L1 = rsFloorInt(period) - 1;
+      L2 = L1 + 1;
+      L3 = L2 + 1;
+      Real p1  = 0.5 * (0.5 - f);
+      Real p2  = 0.5;
+      Real p3  = 0.5 - p1;                        // Verify!
+      Real sum = p1 + p2 + p3;                    // Should be equal to 1
+      rsAssert(rsIsCloseTo(sum, 1.0, 1.e-13));
+      Real t1 = p1;
+      Real t2 = p1 + 0.5;                         // Should be equal to 1 - p3, I think.
+      if(r < t1)
+        addCycle(x4, L1, &n, &numL1);
+      else if(r >= t2)
+        addCycle(x4, L3, &n, &numL3);
+      else
+        addCycle(x4, L2, &n, &numL2);
+    }
+    else  // f >= 0.5
+    {
+      L1 = rsFloorInt(period);
+      L2 = L1 + 1;
+      L3 = L2 + 1;
+      Real p1  = 0.5 * (f - 0.5);
+      Real p2  = 0.5;
+      Real p3  = 0.5 - p1;                        // Verify!
+      Real sum = p1 + p2 + p3;                    // Should be equal to 1
+      rsAssert(rsIsCloseTo(sum, 1.0, 1.e-13));
+      Real t1 = p1;
+      Real t2 = p1 + 0.5;                         // Should be equal to 1 - p3, I think.
+      if(r < t1)
+        addCycle(x4, L1, &n, &numL1);
+      else if(r >= t2)
+        addCycle(x4, L3, &n, &numL3);
+      else
+        addCycle(x4, L2, &n, &numL2);
+    }
+    meanL = meanLength3(L1, numL1, L2, numL2, L3, numL3);
+    a4[i] = meanL;
+  }
+  // ToDo: Verify if usage of < vs <= is correct everywhere. Consolidate the common code after
+  // the branch. Maybe re-order before - the L2 = L1 + 1; L3 = L2 + 1; statements can be done
+  // after computing p1. We also do not actually need to compute p2 and p3. Test the lower branch
+  // using period = 100.7. With 100.3, we never enter it
+
+  
+
+
+
 
   // Define a length for making comparison tests for signals generated with different versions of 
   // the code. We don't want to compare the whole length because the ends may differ due to 
   // technical details. We also use this for the plots because we don't want to plot excessively
   // long signals:
   int plotLength = 5000;
+  bool ok = true;
 
   // Use the convenience class. This should produce the same result as x1:
-  Vec x4(numSamples); // Maybe rename to x1_2
-  PDP::fillDitherSawMinVariance(x4, period, seed, amp);
-  bool ok = true;
-  ok &= rsIsCloseToUpTo(x4, x1, plotLength, tol);
-  //ok &= x4 == x1;
+  Vec x5(numSamples); 
+  PDP::fillDitherSawMinVariance(x5, period, seed, amp);
+
+  ok &= rsIsCloseToUpTo(x5, x1, plotLength, tol);
 
 
   rsAssert(ok);
@@ -537,15 +614,13 @@ void testPitchDithering()
   //rosic::writeToMonoWaveFile("PitchDithered_Det1.wav", &x2[0], numSamples, sampleRate);
 
   // Plot results:
-  rsPlotArrays(plotLength, &x1[0], &x2[0]);
-  rsPlotArrays(plotLength, &x1[0], &x4[0]);
-  //rsPlotVectors(x1, x4);
-  //rsPlotVectors(x1, x2);
-  // 
-  // 
+  //rsPlotArrays(plotLength, &x1[0], &x2[0]);
+  //rsPlotArrays(plotLength, &x1[0], &x5[0]);
   //rsPlotVectors(a2, a3);
-  rsPlotVectors(a1, a2, a3);
+  //rsPlotVectors(a1, a2, a3);
+  rsPlotVectors(a1, a4);           // Both probabilistic algos
   int dummy = 0;
+
 
 
   // Observations:
@@ -699,6 +774,9 @@ void testPitchDithering()
   //   combine such a pitch-dither osc with a mip-mapped table lookup osc because for these, we 
   //   also need 2x. The linear ladder filter would not stricly need any oversampling but maybe it
   //   helps a bit as well. And maybe we want to use a nonlinear version anyway.
+  // 
+  // - Make a helper function reset() that sets n, numL1, numL2, numL3 back to zero and use that
+  //   before all the loops.
   // 
   // 
   // See:

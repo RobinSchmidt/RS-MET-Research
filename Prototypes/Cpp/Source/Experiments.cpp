@@ -520,11 +520,12 @@ void testPitchDithering()
   }
 
   // Algorithm 4:
-  // Another probabilistic algorithm that produces cycles of length L-1, L, L+1 when the desired
-  // cycle length is L.f, i.e. L = floor(desiredLength), f = fractionalPart(desiredLength) with 
-  // probabilities pS = p(short) = p(L-1), pM = p(medium) = p(L), pL = p(long) = p(L+1). These
-  // probabilities are computed in such a way as to achieve an equal expected deviation from
-  // the exact length L.f regardless of what f is. ...TBC...
+  // Another probabilistic algorithm that produces cycles of length L-1, L, L+1 or L, L+1, L+2
+  // when the desired cycle length is L.f, i.e. L = floor(desiredLength), 
+  // f = fractionalPart(desiredLength) with probabilities pS = p(short) = p(L-1), 
+  // pM = p(medium) = p(L), pL = p(long) = p(L+1). These probabilities are computed in such a way
+  // as to achieve an equal expected deviation from the exact length L.f regardless of what f is. 
+  // ...TBC...
   Vec x4(numSamples); 
   Vec a4(numCycles);
   n     = 0;
@@ -534,8 +535,8 @@ void testPitchDithering()
   numL2 = 0;
   int L3    = 0;
   int numL3 = 0;
-  Real p1, p2, p3;   // Probabilities for L1, L2, L3
-  //Real thresh;       // Threshold for producing L2 rather than L1 -> is always p1 -> get rid!
+  Real p1, p2, p3;   // Probabilities for L1, L2, L3. p2,p3 only used for verification
+  p2 = 0.5;          // p2 never changes
   for(int i = 0; i < numCycles; i++)
   {
     Real r = prng.getSample();
@@ -544,46 +545,36 @@ void testPitchDithering()
       L1 = rsFloorInt(period) - 1;
       L2 = L1 + 1;
       L3 = L2 + 1;
-      p1  = 0.5 * (0.5 - f);
-      p2  = 0.5;
-      p3  = 0.5 - p1;                        // Verify!
-      Real sum = p1 + p2 + p3;                    // Should be equal to 1
-      rsAssert(rsIsCloseTo(sum, 1.0, 1.e-13));
-      //thresh = p1;
-      //Real t2 = p1 + 0.5;                         // Should be equal to 1 - p3, I think.
-      if(r < p1)
-        addCycle(x4, L1, &n, &numL1);
-      else if(r >= p1+0.5)
-        addCycle(x4, L3, &n, &numL3);
-      else
-        addCycle(x4, L2, &n, &numL2);
+      p1 = 0.5 * (0.5 - f);
+      p3 = 0.5 - p1;
     }
     else  // f >= 0.5
     {
       L1 = rsFloorInt(period);
       L2 = L1 + 1;
       L3 = L2 + 1;
-      p1  = 0.5 * (f - 0.5);
-      p2  = 0.5;
-      p3  = 0.5 - p1;                        // Verify!
-      Real sum = p1 + p2 + p3;                    // Should be equal to 1
-      rsAssert(rsIsCloseTo(sum, 1.0, 1.e-13));
-      //thresh = p1;
-      //Real t2 = p1 + 0.5;                         // Should be equal to 1 - p3, I think.
-      if(r < p1)
-        addCycle(x4, L1, &n, &numL1);
-      else if(r >= p1+0.5)
-        addCycle(x4, L3, &n, &numL3);
-      else
-        addCycle(x4, L2, &n, &numL2);
+      p1 = 0.5 * (f - 0.5);
+      p3 = 0.5 - p1;
     }
+
+    // Sanity check. Probabilities must add to 1:
+    Real sum = p1 + p2 + p3;
+    rsAssert(rsIsCloseTo(sum, 1.0, 1.e-13));
+
+    // Produce cycle:
+    if(r < p1)
+      addCycle(x4, L1, &n, &numL1);
+    else if(r >= p1 + 0.5)
+      addCycle(x4, L3, &n, &numL3);
+    else
+      addCycle(x4, L2, &n, &numL2);
+
+    // Bookkeeping for plotting:
     meanL = meanLength3(L1, numL1, L2, numL2, L3, numL3);
     a4[i] = meanL;
   }
-  // ToDo: Verify if usage of < vs <= is correct everywhere. Consolidate the common code after
-  // the branch. Maybe re-order before - the L2 = L1 + 1; L3 = L2 + 1; statements can be done
-  // after computing p1. We also do not actually need to compute p2 and p3. Test the lower branch
-  // using period = 100.7. With 100.3, we never enter it
+  // ToDo: Verify if usage of < vs <= is correct everywhere. Test the lower branch using 
+  // period = 100.7. With 100.3, we never enter it.
 
   
 

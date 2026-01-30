@@ -534,6 +534,8 @@ void testPitchDithering()
   numL2 = 0;
   int L3    = 0;
   int numL3 = 0;
+  Real p1, p2, p3;   // Probabilities for L1, L2, L3
+  //Real thresh;       // Threshold for producing L2 rather than L1 -> is always p1 -> get rid!
   for(int i = 0; i < numCycles; i++)
   {
     Real r = prng.getSample();
@@ -542,16 +544,16 @@ void testPitchDithering()
       L1 = rsFloorInt(period) - 1;
       L2 = L1 + 1;
       L3 = L2 + 1;
-      Real p1  = 0.5 * (0.5 - f);
-      Real p2  = 0.5;
-      Real p3  = 0.5 - p1;                        // Verify!
+      p1  = 0.5 * (0.5 - f);
+      p2  = 0.5;
+      p3  = 0.5 - p1;                        // Verify!
       Real sum = p1 + p2 + p3;                    // Should be equal to 1
       rsAssert(rsIsCloseTo(sum, 1.0, 1.e-13));
-      Real t1 = p1;
-      Real t2 = p1 + 0.5;                         // Should be equal to 1 - p3, I think.
-      if(r < t1)
+      //thresh = p1;
+      //Real t2 = p1 + 0.5;                         // Should be equal to 1 - p3, I think.
+      if(r < p1)
         addCycle(x4, L1, &n, &numL1);
-      else if(r >= t2)
+      else if(r >= p1+0.5)
         addCycle(x4, L3, &n, &numL3);
       else
         addCycle(x4, L2, &n, &numL2);
@@ -561,16 +563,16 @@ void testPitchDithering()
       L1 = rsFloorInt(period);
       L2 = L1 + 1;
       L3 = L2 + 1;
-      Real p1  = 0.5 * (f - 0.5);
-      Real p2  = 0.5;
-      Real p3  = 0.5 - p1;                        // Verify!
+      p1  = 0.5 * (f - 0.5);
+      p2  = 0.5;
+      p3  = 0.5 - p1;                        // Verify!
       Real sum = p1 + p2 + p3;                    // Should be equal to 1
       rsAssert(rsIsCloseTo(sum, 1.0, 1.e-13));
-      Real t1 = p1;
-      Real t2 = p1 + 0.5;                         // Should be equal to 1 - p3, I think.
-      if(r < t1)
+      //thresh = p1;
+      //Real t2 = p1 + 0.5;                         // Should be equal to 1 - p3, I think.
+      if(r < p1)
         addCycle(x4, L1, &n, &numL1);
-      else if(r >= t2)
+      else if(r >= p1+0.5)
         addCycle(x4, L3, &n, &numL3);
       else
         addCycle(x4, L2, &n, &numL2);

@@ -360,6 +360,7 @@ void rsFillSawCycle(T* x, int N, T amp = T(1))
   //  x[n] = amp * (-1 + s * T(n));
 }
 */
+// ...is now static member function of rsPitchDitherProto and can be deleted here.
 
 void testPitchDithering()
 {

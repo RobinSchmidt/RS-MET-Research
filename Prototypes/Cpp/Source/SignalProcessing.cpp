@@ -497,6 +497,8 @@ template<class T>
 void rsPitchDitherProto<T>::fillRandomDitherSaw(
   std::vector<T>& x, T period, unsigned long seed, T amp)
 {
+  // Rename to fillDitherSawRandom1 or fillDitherSawMinVariance
+
   rsNoiseGenerator<T> prng;
   prng.setRange(0.0, 1.0);             // Q: Is the interval open, closed or half-open?
   prng.setSeed(seed);
@@ -511,14 +513,15 @@ void rsPitchDitherProto<T>::fillRandomDitherSaw(
     if(n >= N - L2)                    // Verify! Maybe we need to subtract 1 from the RHS?
       break;
     T r = prng.getSample();            // Random number in [0..1) ..or is it [0..1]
-    if(r <= f) 
+    //if(r <= f)                       // Old
+    if(r < f)                          // New
       fillSawCycle(x, &n, L2, amp);    // Probability for that branch is f
     else
       fillSawCycle(x, &n, L1, amp);    // Probability for that branch is 1-f
   }
 
   // Maybe it should use if(r < f) rather than if(r <= f) because then it would also work correctly
-  // when r = 0. In that case, we should alway use L1, i.e. always use the else-branch. With a
+  // when r = 0. In that case, we should always use L1, i.e. always use the else-branch. With a
   // conditional if(f < 0) this would be the case because r < 0 is impossible. With <= 0, it would
   // still be possible to execute the if-branch, although the probability is theoretically zero if 
   // r and f were real numbers with infinite precision rather than floating point numbers. So maybe
@@ -528,6 +531,7 @@ void rsPitchDitherProto<T>::fillRandomDitherSaw(
   // in half-open case, which side is open. I think, it is probably left-closed and right-open, 
   // i.e. [0..1) because when looking at underlying integer modular arithmetic, we produce values
   // in the range 0...2^32-1, I think. So, the modulus 2^32 is never produced.
+  // OK - done. We use if(r < f) now. I think, that's the correct way to do it.
 }
 
 
@@ -535,7 +539,7 @@ template<class T>
 void rsPitchDitherProto<T>::fillDitherSaw(
   std::vector<T>& x, T period, unsigned long seed, T amp)
 {
-  // ToDo: Implement the deterministic dither algoritm
+  // ToDo: Implement the deterministic dither algorithm, rename to fillDitherSawMinError
 
 
 }

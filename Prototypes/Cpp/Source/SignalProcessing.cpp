@@ -465,7 +465,7 @@ public:
   // Maybe put the counter last and make it optional - done
 
 
-  static void fillRandomDitherSaw(
+  static void fillDitherSawMinVariance(
     std::vector<T>& x, T period, unsigned long seed = 0, T amp = T(1));
 
   static void fillDitherSaw(
@@ -494,11 +494,9 @@ void rsPitchDitherProto<T>::fillSawCycle(
 }
 
 template<class T> 
-void rsPitchDitherProto<T>::fillRandomDitherSaw(
+void rsPitchDitherProto<T>::fillDitherSawMinVariance(
   std::vector<T>& x, T period, unsigned long seed, T amp)
 {
-  // Rename to fillDitherSawRandom1 or fillDitherSawMinVariance
-
   rsNoiseGenerator<T> prng;
   prng.setRange(0.0, 1.0);             // Q: Is the interval open, closed or half-open?
   prng.setSeed(seed);
@@ -513,8 +511,8 @@ void rsPitchDitherProto<T>::fillRandomDitherSaw(
     if(n >= N - L2)                    // Verify! Maybe we need to subtract 1 from the RHS?
       break;
     T r = prng.getSample();            // Random number in [0..1) ..or is it [0..1]
-    //if(r <= f)                       // Old
-    if(r < f)                          // New
+    if(r <= f)                       // Old
+    //if(r < f)                          // New
       fillSawCycle(x, &n, L2, amp);    // Probability for that branch is f
     else
       fillSawCycle(x, &n, L1, amp);    // Probability for that branch is 1-f

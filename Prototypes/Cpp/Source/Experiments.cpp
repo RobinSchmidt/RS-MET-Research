@@ -386,7 +386,8 @@ void testPitchDithering()
   using PDP  = rsPitchDitherProto<Real>;
 
   int  sampleRate = 44100;               // Sample rate for the wave files
-  int  numSamples = 88200;               // Number of samples to produce
+  //int  numSamples = 88200;               // Number of samples to produce
+  int  numSamples =  1000;               // Number of samples to produce
   Real period     =   100.3;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     3;               // Seed for PRNG
@@ -492,20 +493,25 @@ void testPitchDithering()
 
   // Use the convenience class. This should produce the same result as x1:
   Vec x4(numSamples);
-  PDP::fillRandomDitherSaw(x4, period, seed, amp);
+  PDP::fillDitherSawMinVariance(x4, period, seed, amp);
   bool ok = true;
   ok &= x4 == x1;
 
 
   rsAssert(ok);
+  // This may fail when we have a too high value for numSamples because then we need a higher
+  // value for tol as well. To fix this, we need a function like rsEqualsUpTo(vec1, vec2, N)
+  // which compares only the first N values of both vectors. Maybe we could also have a function
+  // rsIsCloseToUpTo(...) which does the same but with a tolerance.
+  // Yea...we should do this also because at the ends, the signals differ.
 
   // Write produced signals to wave files:
   //rosic::writeToMonoWaveFile("PitchDithered_Prob.wav", &x1[0], numSamples, sampleRate);
   //rosic::writeToMonoWaveFile("PitchDithered_Det1.wav", &x2[0], numSamples, sampleRate);
 
   // Plot results:
-  //rsPlotVectors(x1, x4);
-  //rsPlotVectors(x1, x2);
+  rsPlotVectors(x1, x4);
+  rsPlotVectors(x1, x2);
   //rsPlotVectors(a2, a3);
   rsPlotVectors(a1, a2, a3);
   int dummy = 0;
@@ -711,7 +717,7 @@ void testPitchDitherSuperSaw()
       sawAmp = amp * mix;
 
     // Produce i-th saw and accumulate into the super saw:
-    PDP::fillRandomDitherSaw(saw, sawPeriod, seed+i, sawAmp);
+    PDP::fillDitherSawMinVariance(saw, sawPeriod, seed+i, sawAmp);
     supSaw = supSaw + saw;
   }
  

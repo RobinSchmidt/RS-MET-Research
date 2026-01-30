@@ -362,6 +362,24 @@ void rsFillSawCycle(T* x, int N, T amp = T(1))
 */
 // ...is now static member function of rsPitchDitherProto and can be deleted here.
 
+
+// Move to RAPT into file StandardContainerTools.h:
+/** Checks, if vectors x and y are close to one another (i.e. equal with a tolerance) up to the
+maximum index of N. This function is useful when we want to make comparisons where vectors are
+supposed to have equal initial sections but may diverge later for some reason. */
+template<class T>
+bool rsIsCloseToUpTo(const std::vector<T>& x, const std::vector<T>& y, size_t N, T tol)
+{
+  size_t L = rsMin(N, x.size(), y.size());
+  return RAPT::rsArrayTools::almostEqual(&x[0], &y[0], (int)L, tol);
+
+  // ToDo:
+  // Should we be worried about the size_t-to-int conversion? size_t has a greater range but 
+  // usually we are not dealing with vectors that huge. But still... But then we can't use
+  // rsArrayTools::almostEqual anymore unless we change its signature to use size_t, too.
+}
+
+
 void testPitchDithering()
 {
   // In this experiment, we implement different pitch-dithering (or pitch-jittering) algorithms
@@ -387,8 +405,8 @@ void testPitchDithering()
   using PDP  = rsPitchDitherProto<Real>;
 
   int  sampleRate = 44100;               // Sample rate for the wave files
-  //int  numSamples = 88200;               // Number of samples to produce
-  int  numSamples =  1000;               // Number of samples to produce
+  int  numSamples = 88200;               // Number of samples to produce
+  //int  numSamples =  1000;               // Number of samples to produce
   Real period     =   100.3;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     3;               // Seed for PRNG
@@ -492,11 +510,19 @@ void testPitchDithering()
     a3[i] = meanL;
   }
 
+
+  // Define a length for making comparison tests for signals generated with different versions of 
+  // the code. We don't want to compare the whole length because the ends may differ due to 
+  // technical details. We also use this for the plots because we don't want to plot excessively
+  // long signals:
+  int plotLength = 5000;
+
   // Use the convenience class. This should produce the same result as x1:
-  Vec x4(numSamples);
+  Vec x4(numSamples); // Maybe rename to x1_2
   PDP::fillDitherSawMinVariance(x4, period, seed, amp);
   bool ok = true;
-  ok &= x4 == x1;
+  ok &= rsIsCloseToUpTo(x4, x1, plotLength, tol);
+  //ok &= x4 == x1;
 
 
   rsAssert(ok);
@@ -511,8 +537,12 @@ void testPitchDithering()
   //rosic::writeToMonoWaveFile("PitchDithered_Det1.wav", &x2[0], numSamples, sampleRate);
 
   // Plot results:
-  rsPlotVectors(x1, x4);
-  rsPlotVectors(x1, x2);
+  rsPlotArrays(plotLength, &x1[0], &x2[0]);
+  rsPlotArrays(plotLength, &x1[0], &x4[0]);
+  //rsPlotVectors(x1, x4);
+  //rsPlotVectors(x1, x2);
+  // 
+  // 
   //rsPlotVectors(a2, a3);
   rsPlotVectors(a1, a2, a3);
   int dummy = 0;

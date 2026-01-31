@@ -406,20 +406,37 @@ void testPitchDithering()
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples = 88200;               // Number of samples to produce
-  Real period     =   100.49;             // Desired cycle length
+  Real period     =   100.3;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     2;               // Seed for PRNG
 
   // Compute the lengths of the two cycles and the fractional part of desired length:
   int L1 = rsFloorInt(period);
   int L2 = L1 + 1;
+  int L3 = L2 + 1;
   Real f = period - L1;
   Real meanL = 0.5 * (L1 + L2);
+
+  // Some more variables that are used in the algorithms:
+  int n;
+  int numL1, numL2, numL3;
 
   // Compute the number of cycles to produce:
   //int numCycles = (int) (Real(numSamples) / period) - 1;    // May be too much!
   int numCycles = (int) (Real(numSamples) / Real(L1+3)) - 1;  // L1+2 may also work?
 
+  // Create pseudo random number generator for the probabilistic algos:
+  rsNoiseGenerator<Real> prng;
+  prng.setRange(0.0, 1.0);
+  prng.setSeed(seed);
+
+  // Helper function to reset some state and counter variables:
+  auto reset = [&]() 
+  {
+    n = 0;
+    numL1 = numL2 = numL3 = 0;
+    prng.reset();
+  };
 
   // Helper function to produce one cycle and update counters:
   auto addCycle = [&amp](Vec& x, int length, int* start, int* counter) 
@@ -441,14 +458,13 @@ void testPitchDithering()
 
   // Algorithm 1:
   // Create the probabilistically (i.e. randomly) pitch-dithered signal:
-  rsNoiseGenerator<Real> prng;
-  prng.setRange(0.0, 1.0);
-  prng.setSeed(seed);
+
   Vec x1(numSamples);                    // The first signal that we generate
   Vec a1(numCycles);                     // Average length of all cycles produced so far
-  int n = 0;                             // Sample number
-  int numL1 = 0;                         // Counts number of cycles with L1
-  int numL2 = 0;                         // Counts number of cycles with L2
+  //n = 0;                                 // Sample number
+  //numL1 = 0;                             // Counts number of cycles with L1
+  //numL2 = 0;                             // Counts number of cycles with L2
+  reset();
   for(int i = 0; i < numCycles; i++)
   {
     Real r = prng.getSample();           // Random number in 0..1
@@ -467,9 +483,10 @@ void testPitchDithering()
   // desired period, we next produce a long cycle:
   Vec x2(numSamples);
   Vec a2(numCycles);
-  n = 0;
-  numL1 = 0;
-  numL2 = 0;
+  //n = 0;
+  //numL1 = 0;
+  //numL2 = 0;
+  reset();
   meanL = period;                        // Init as if the signal so far was perfect
   for(int i = 0; i < numCycles; i++)
   {
@@ -493,9 +510,10 @@ void testPitchDithering()
   Vec a3(numCycles);
   Real err = Real(0);
   Real tol = 1.e-12;                     // May depend on numSamples. More may need higher tol.
-  n = 0;
-  numL1 = 0;
-  numL2 = 0;
+  //n = 0;
+  //numL1 = 0;
+  //numL2 = 0;
+  reset();
   for(int i = 0; i < numCycles; i++)
   {
     //if(err <= 0.0)                     // This could be used in production
@@ -527,8 +545,8 @@ void testPitchDithering()
   L2    = 0;
   numL1 = 0;
   numL2 = 0;
-  int L3    = 0;
-  int numL3 = 0;
+  L3    = 0;
+  numL3 = 0;
   Real p1, p2, p3;   // Probabilities for L1, L2, L3. p2,p3 only used for verification
   p2 = 0.5;          // p2 never changes
   prng.reset();

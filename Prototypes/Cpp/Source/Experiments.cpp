@@ -415,7 +415,6 @@ void testPitchDithering()
   int L2 = L1 + 1;
   int L3 = L2 + 1;
   Real f = period - L1;                  // Fractional part of desired length
-  //Real meanL = 0.5 * (L1 + L2);  // Maybe het rid!
 
   // Some more variables that are used in the algorithms:
   int n;                    // Sample number
@@ -535,8 +534,6 @@ void testPitchDithering()
   reset();
   for(int i = 0; i < numCycles; i++)
   {
-    Real r = prng.getSample();
-
     // Maybe factor out into a function lengthsAndProbs1(f, &L1, &L2, &L3, &p1, &p2, &p3). The "1"
     // is a provision for having multiple algorithms later (at least distance-normalized and 
     // variance-normalized - maybe more - maybe includ also distanceMinimized. It would always 
@@ -551,12 +548,18 @@ void testPitchDithering()
     }
     else  // f >= 0.5
     {
-      L1 = rsFloorInt(period);
+      L1 = rsFloorInt(period);         // No -1 here!
       L2 = L1 + 1;
       L3 = L2 + 1;
       p3 = 0.5 * (f - 0.5);
       p1 = 0.5 - p3;
     }
+
+
+    // Maybe factor this out into a function 
+    // addCycle(x4, &n, L1, p1, L2, p2, L3, p3, &numL1, &numL2, &numL3)
+
+    Real r = prng.getSample();
 
     // Sanity checks. Probabilities must add to 1 and the mean of the lengths should be our desired
     // period.
@@ -572,6 +575,8 @@ void testPitchDithering()
       addCycle(x4, L3, &n, &numL3);
     else
       addCycle(x4, L2, &n, &numL2);
+
+
 
     // Bookkeeping for plotting:
     a4[i] = meanLength3(L1, numL1, L2, numL2, L3, numL3);  // Practical sample mean up to now

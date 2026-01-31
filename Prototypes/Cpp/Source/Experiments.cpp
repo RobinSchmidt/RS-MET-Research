@@ -414,8 +414,8 @@ void testPitchDithering()
   int L1 = rsFloorInt(period);
   int L2 = L1 + 1;
   int L3 = L2 + 1;
-  Real f = period - L1;
-  Real meanL = 0.5 * (L1 + L2);  // Maybe het rid!
+  Real f = period - L1;                  // Fractional part of desired length
+  //Real meanL = 0.5 * (L1 + L2);  // Maybe het rid!
 
   // Some more variables that are used in the algorithms:
   int n;                    // Sample number
@@ -468,8 +468,8 @@ void testPitchDithering()
       addCycle(x1, L2, &n, &numL2);      // Probability for that branch is f
     else
       addCycle(x1, L1, &n, &numL1);      // Probability for that branch is 1-f
-    meanL = meanLength2(L1, numL1, L2, numL2);
-    a1[i] = meanL;
+    //meanL = meanLength2(L1, numL1, L2, numL2);
+    a1[i] = meanLength2(L1, numL1, L2, numL2);
   }
 
   // Algorithm 2:
@@ -480,7 +480,7 @@ void testPitchDithering()
   Vec x2(numSamples);
   Vec a2(numCycles);
   reset();
-  meanL = period;                        // Init as if the signal so far was perfect
+  Real meanL = period;                   // Init as if the signal so far was perfect
   for(int i = 0; i < numCycles; i++)
   {
     if(meanL <= period)
@@ -517,8 +517,8 @@ void testPitchDithering()
       addCycle(x3, L1, &n, &numL1);
       err -= f;
     }
-    meanL = meanLength2(L1, numL1, L2, numL2);
-    a3[i] = meanL;
+    //meanL = meanLength2(L1, numL1, L2, numL2);
+    a3[i] = meanLength2(L1, numL1, L2, numL2);
   }
 
   // Algorithm 4:
@@ -530,7 +530,6 @@ void testPitchDithering()
   // ...TBC...
   Vec x4(numSamples); 
   Vec a4(numCycles);
-  //L1 = L2 = L3 = 0;    // May not be needed
   Real p1, p2, p3;     // Probabilities for L1, L2, L3. p2,p3 only used for verification
   p2 = 0.5;            // p2 never changes
   reset();
@@ -614,7 +613,7 @@ void testPitchDithering()
   //rsPlotArrays(plotLength, &x1[0], &x2[0]);
   //rsPlotArrays(plotLength, &x1[0], &x5[0]);
   //rsPlotVectors(a2, a3);
-  //rsPlotVectors(a1, a2, a3);
+  rsPlotVectors(a1, a2, a3);
   //rsPlotVectors(a1); 
   rsPlotVectors(a1, a4);           // Both probabilistic algos
   int dummy = 0;

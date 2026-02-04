@@ -576,8 +576,6 @@ void testPitchDithering()
     else
       addCycle(x4, L2, &n, &numL2);
 
-
-
     // Bookkeeping for plotting:
     a4[i] = meanLength3(L1, numL1, L2, numL2, L3, numL3);  // Practical sample mean up to now
   }
@@ -585,6 +583,12 @@ void testPitchDithering()
   // period = 100.7. With 100.3, we never enter it.
 
   
+
+  // Algorithm 5:
+  Vec x5(numSamples); 
+  Vec a5(numCycles);
+  reset();
+  // ...TBC...
 
 
 

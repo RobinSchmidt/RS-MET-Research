@@ -406,7 +406,7 @@ void testPitchDithering()
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples = 88200;               // Number of samples to produce
-  Real period     =   100.7;             // Desired cycle length
+  Real period     =   100.3;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     2;               // Seed for PRNG
 
@@ -531,7 +531,7 @@ void testPitchDithering()
     Real periodFrac  = period - periodFloor;
     if(periodFrac < 0.5)
     {
-      *L1 = rsFloorInt(period) - 1;     // Use: (int) periodFloor
+      *L1 = (int)periodFloor - 1;       // Use: (int) periodFloor
       *L2 = *L1 + 1;
       *L3 = *L2 + 1;
       *p1 = 0.5 * (0.5 - periodFrac);
@@ -539,7 +539,7 @@ void testPitchDithering()
     }
     else
     {
-      *L1 = rsFloorInt(period);         // No -1 here!
+      *L1 = (int)periodFloor;           // No -1 here!
       *L2 = *L1 + 1;
       *L3 = *L2 + 1;
       *p3 = 0.5 * (periodFrac - 0.5);
@@ -547,7 +547,10 @@ void testPitchDithering()
     }
   };
   // ToDo: implement similar function lengthsAndProbsEqVar that computes lengths and probabilities
-  // that equalize the variance (i.e. the mean squared distance)
+  // that equalize the variance (i.e. the mean squared distance) and maybe also 
+  // lengthsAndProbsMinDist (or MinVar - it minimizes both at the same time, I think)
+
+
 
 
 
@@ -565,29 +568,10 @@ void testPitchDithering()
   reset();
   for(int i = 0; i < numCycles; i++)
   {
-    // Maybe factor out into a function lengthsAndProbs1(period, &L1, &L2, &L3, &p1, &p2, &p3). The "1"
-    // is a provision for having multiple algorithms later (at least distance-normalized and 
-    // variance-normalized - maybe more - maybe include also distanceMinimized. It would always 
-    // have p3 = 0)
-    if(f < 0.5)
-    {
-      L1 = rsFloorInt(period) - 1;
-      L2 = L1 + 1;
-      L3 = L2 + 1;
-      p1 = 0.5 * (0.5 - f);
-      p3 = 0.5 - p1;
-    }
-    else  // f >= 0.5
-    {
-      L1 = rsFloorInt(period);         // No -1 here!
-      L2 = L1 + 1;
-      L3 = L2 + 1;
-      p3 = 0.5 * (f - 0.5);
-      p1 = 0.5 - p3;
-    }
-
-    // Should replace code above:
+    // Compute lengths and their probababilities:
     lengthsAndProbsEqDist(period, &L1, &p1, &L2, &p2, &L3, &p3);
+
+
 
 
 
@@ -655,7 +639,7 @@ void testPitchDithering()
   //rsPlotArrays(plotLength, &x1[0], &x2[0]);
   //rsPlotArrays(plotLength, &x1[0], &x5[0]);
   //rsPlotVectors(a2, a3);
-  rsPlotVectors(a1, a2, a3);
+  //rsPlotVectors(a1, a2, a3);
   //rsPlotVectors(a1); 
   rsPlotVectors(a1, a4);           // Both probabilistic algos
   int dummy = 0;

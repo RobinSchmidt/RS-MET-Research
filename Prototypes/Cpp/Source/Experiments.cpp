@@ -534,7 +534,7 @@ void testPitchDithering()
   reset();
   for(int i = 0; i < numCycles; i++)
   {
-    // Maybe factor out into a function lengthsAndProbs1(f, &L1, &L2, &L3, &p1, &p2, &p3). The "1"
+    // Maybe factor out into a function lengthsAndProbs1(period, &L1, &L2, &L3, &p1, &p2, &p3). The "1"
     // is a provision for having multiple algorithms later (at least distance-normalized and 
     // variance-normalized - maybe more - maybe includ also distanceMinimized. It would always 
     // have p3 = 0)
@@ -1005,6 +1005,11 @@ void testPitchDitherSuperSaw()
   // - Uncomment the line:
   //   ok &= rsEqualsUpTo(supSaw2, supSaw, numSamples/2);
   //   To do so, we first need to implement the rsEqualsUpTo() function appropriately.
+  //
+  // - Maybe implement a supersaw oscillator that generates separate supersaws for mid and side 
+  //   channel and allows different settings for those with regard to detune, mix, maybe 
+  //   filtering (simple 1st order LP/HP). Maybe it could be interesting anyway to split the
+  //   supersaw into low and high frequency ranges and have different detuning for both
 
 }
 

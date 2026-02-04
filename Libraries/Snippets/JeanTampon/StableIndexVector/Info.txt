@@ -1,0 +1,7 @@
+Code was taken from: https://github.com/johnBuffer/StableIndexVector
+
+This video:
+
+  https://www.youtube.com/watch?v=L4xOCvELWlU  The magic container
+
+explains what it does.

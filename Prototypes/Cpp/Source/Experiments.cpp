@@ -406,7 +406,7 @@ void testPitchDithering()
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples = 88200;               // Number of samples to produce
-  Real period     =   100.4;             // Desired cycle length
+  Real period     =   100.9;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     2;               // Seed for PRNG
 
@@ -596,16 +596,17 @@ void testPitchDithering()
     // 100.3        0.56       0.41
     // 100.4        0.54       0.34
     // 100.5        0.5        0.25
-    // 100.6        
-    // 100.7
-    // 100.75
-    // 100.8
-    // 100.9
+    // 100.6        0.54       0.34        
+    // 100.7        0.56       0.41
+    // 100.75       0.5625     0.4375
+    // 100.8        0.56       0.46
+    // 100.9        0.54       0.49
     //
     // ToDo: Move these computations out into a separate function that takes the period, the 3 
     // lengths L1,L2,L3 with their probabilities p1,p2,p3 and it should return mae and var. Maybe
-    // we could put mae and var into some sort of ErrorMeasures struct. Maybe it could also contain
-    // some other error measures as well. Maybe my expectation that the mae should always be the 
+    // we could put mae and var into some sort of CycleErrorMeasures struct. Maybe it could also 
+    // contain some other error measures as well. Maybe e1,e2,e3.
+    // Maybe my expectation that the mae should always be the 
     // same is wrong. Maybe I have made a mistake in the maths.
   };
   // ToDo: Verify if usage of < vs <= is correct. Use again 100.0, 100.3, 100.5, 100.7. Compute

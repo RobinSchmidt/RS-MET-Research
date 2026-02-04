@@ -446,9 +446,21 @@ TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& y, const TVec& u)
 
 //=================================================================================================
 
-/** Under construction.
+/** This class contains some prototypical implementations of the production of pitch-dithered 
+waveforms. By "pitch dithering" I mean a technique where the user wants to produce a periodic 
+waveform at some given non-integer period length P but we restrict ourselves to producing cycles of
+integer lengths.The dithering comes into play when we produce different integer lengths that 
+straddle the actually desired length. For example, if the desired period is P = i.f where i is the
+integer part of P and f is its fractional part, we could produce cycles of length i with 
+probability (1-f) and cycles of length i+1 with probability f. This would be the simplest case of a
+probabilistic pithc dithering algorithm. In this class we implement different algorithms to produce
+the integer lengths of the cycles to be produced and their probabilities of production. We also 
+implement various functions that can be used actually produce various waveforms such as saw, sine, 
+etc. using various probabilistic and deterministic pitch dithering algorithms. Additonally, we 
+implement some supporting functionality that an be used to statistically measure the quality of the
+algorithms.
 
-*/
+...TBC... Class is still under construction.  */
 
 template<class T> 
 class rsPitchDitherProto
@@ -456,13 +468,18 @@ class rsPitchDitherProto
 
 public:
 
+  //-----------------------------------------------------------------------------------------------
+  // \name Cycle production
+
   /** Fills the buffer x of length N with one cycle of a sawtooth wave. */
   static void fillSawCycle(T* x, int N, T amp = T(1));
 
-
+  /** Fills a section of a given "length" of the vector "x" with a saw cycle. The section starts
+  at the given "start" value...TBC...  */
   static void fillSawCycle(std::vector<T>& x, int* start, int length, 
     T amp = T(1), int* counter = nullptr);
   // Maybe put the counter last and make it optional - done
+  // Maybe take start by value and return the new start. 
 
 
   static void fillDitherSawMinVariance(
@@ -471,6 +488,20 @@ public:
   static void fillDitherSaw(
     std::vector<T>& x, T period, unsigned long seed = 0, T amp = T(1));
 
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Algorithm assessment
+
+  /** A struct to store various error measures. */
+  struct CycleErrorMeasures
+  {
+    T errShort, errMid, errLong;
+    T meanAbs, variance;
+  };
+
+  /** Computes the various error measures for a desired noninteger "period" length when we actually
+  produce integer period lengths L1,L2,L3 with probabilities p1,p2,p3 respectively. */
+  static CycleErrorMeasures getErrorMeasures(T period, int L1, T p1, int L2, T p2, int L3, T p3);
 
 };
 

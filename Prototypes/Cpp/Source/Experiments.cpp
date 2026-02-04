@@ -406,7 +406,7 @@ void testPitchDithering()
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples = 88200;               // Number of samples to produce
-  Real period     =   100.3;             // Desired cycle length
+  Real period     =   100.4;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     2;               // Seed for PRNG
 
@@ -586,7 +586,27 @@ void testPitchDithering()
     Real var = p1*e1*e1     + p2*e2*e2     + p3*e3*e3;      // Error variance
     int dummy = 0;
     // In algorithm 4, we expect that mae to be 0.5. But it isn't! For period = 100.3, we get
-    // mae = 0.56. Something is wrong!
+    // mae = 0.56. Something is wrong! We get the following values:
+    //
+    // period       mae        var
+    // 100.0        0.5        0.5
+    // 100.1        0.54       0.49
+    // 100.2        0.56       0.46
+    // 100.25       0.5625     0.4375
+    // 100.3        0.56       0.41
+    // 100.4        0.54       0.34
+    // 100.5        0.5        0.25
+    // 100.6        
+    // 100.7
+    // 100.75
+    // 100.8
+    // 100.9
+    //
+    // ToDo: Move these computations out into a separate function that takes the period, the 3 
+    // lengths L1,L2,L3 with their probabilities p1,p2,p3 and it should return mae and var. Maybe
+    // we could put mae and var into some sort of ErrorMeasures struct. Maybe it could also contain
+    // some other error measures as well. Maybe my expectation that the mae should always be the 
+    // same is wrong. Maybe I have made a mistake in the maths.
   };
   // ToDo: Verify if usage of < vs <= is correct. Use again 100.0, 100.3, 100.5, 100.7. Compute
   // mean absolute error and variance (mean squared error).

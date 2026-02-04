@@ -406,7 +406,7 @@ void testPitchDithering()
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples = 88200;               // Number of samples to produce
-  Real period     =   100.3;             // Desired cycle length
+  Real period     =   100.7;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     2;               // Seed for PRNG
 
@@ -520,6 +520,37 @@ void testPitchDithering()
     a3[i] = meanLength2(L1, numL1, L2, numL2);
   }
 
+
+
+  // Helper function to compute lengths and probabilities for an equalized mean distance (i.e. 
+  // equalized mean absolute error)
+  auto lengthsAndProbsEqDist = [](Real period, 
+    int* L1, Real* p1, int* L2, Real* p2, int* L3, Real* p3)
+  {
+    Real periodFloor = rsFloor(period);
+    Real periodFrac  = period - periodFloor;
+    if(periodFrac < 0.5)
+    {
+      *L1 = rsFloorInt(period) - 1;     // Use: (int) periodFloor
+      *L2 = *L1 + 1;
+      *L3 = *L2 + 1;
+      *p1 = 0.5 * (0.5 - periodFrac);
+      *p3 = 0.5 - *p1;
+    }
+    else
+    {
+      *L1 = rsFloorInt(period);         // No -1 here!
+      *L2 = *L1 + 1;
+      *L3 = *L2 + 1;
+      *p3 = 0.5 * (periodFrac - 0.5);
+      *p1 = 0.5 - *p3;
+    }
+  };
+  // ToDo: implement similar function lengthsAndProbsEqVar that computes lengths and probabilities
+  // that equalize the variance (i.e. the mean squared distance)
+
+
+
   // Algorithm 4:
   // Another probabilistic algorithm that produces cycles of length L-1, L, L+1 or L, L+1, L+2
   // when the desired cycle length is L.f, i.e. L = floor(desiredLength), 
@@ -536,7 +567,7 @@ void testPitchDithering()
   {
     // Maybe factor out into a function lengthsAndProbs1(period, &L1, &L2, &L3, &p1, &p2, &p3). The "1"
     // is a provision for having multiple algorithms later (at least distance-normalized and 
-    // variance-normalized - maybe more - maybe includ also distanceMinimized. It would always 
+    // variance-normalized - maybe more - maybe include also distanceMinimized. It would always 
     // have p3 = 0)
     if(f < 0.5)
     {
@@ -554,6 +585,10 @@ void testPitchDithering()
       p3 = 0.5 * (f - 0.5);
       p1 = 0.5 - p3;
     }
+
+    // Should replace code above:
+    lengthsAndProbsEqDist(period, &L1, &p1, &L2, &p2, &L3, &p3);
+
 
 
     // Maybe factor this out into a function 
@@ -585,9 +620,9 @@ void testPitchDithering()
   
 
   // Algorithm 5:
-  Vec x5(numSamples); 
-  Vec a5(numCycles);
-  reset();
+  //Vec x5(numSamples); 
+  //Vec a5(numCycles);
+  //reset();
   // ...TBC...
 
 
@@ -601,11 +636,9 @@ void testPitchDithering()
   bool ok = true;
 
   // Use the convenience class. This should produce the same result as x1:
-  Vec x5(numSamples); 
-  PDP::fillDitherSawMinVariance(x5, period, seed, amp);
-
-  ok &= rsIsCloseToUpTo(x5, x1, plotLength, tol);
-
+  Vec x1c(numSamples); 
+  PDP::fillDitherSawMinVariance(x1c, period, seed, amp);
+  ok &= rsIsCloseToUpTo(x1c, x1, plotLength, tol);
 
   rsAssert(ok);
   // This may fail when we have a too high value for numSamples because then we need a higher

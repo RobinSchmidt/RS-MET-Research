@@ -531,24 +531,24 @@ void testPitchDithering()
     Real periodFrac  = period - periodFloor;
     if(periodFrac < 0.5)
     {
-      *L1 = (int)periodFloor - 1;       // Use: (int) periodFloor
-      *L2 = *L1 + 1;
-      *L3 = *L2 + 1;
+      *L1 = (int)periodFloor - 1;
       *p1 = 0.5 * (0.5 - periodFrac);
       *p3 = 0.5 - *p1;
     }
     else
     {
-      *L1 = (int)periodFloor;           // No -1 here!
-      *L2 = *L1 + 1;
-      *L3 = *L2 + 1;
+      *L1 = (int)periodFloor;            // No -1 here
       *p3 = 0.5 * (periodFrac - 0.5);
       *p1 = 0.5 - *p3;
     }
+    *p2 = 0.5;                           // p2 is always 0.5
+    *L2 = *L1 + 1;
+    *L3 = *L2 + 1;
   };
   // ToDo: implement similar function lengthsAndProbsEqVar that computes lengths and probabilities
   // that equalize the variance (i.e. the mean squared distance) and maybe also 
   // lengthsAndProbsMinDist (or MinVar - it minimizes both at the same time, I think)
+
 
 
   // Helper function to add a cycle with a random length L. It could be either L1 or L2 or L3 with
@@ -576,8 +576,6 @@ void testPitchDithering()
     else
       addCycle(x, L2, start, numL2);
   };
-  // addCycle = [&amp](Vec& x, int length, int* start, int* counter) 
-  // addCycle(x4, L1, p1, L2, p2, L3, p3, &n, &numL1, &numL2, &numL3)
 
 
   // Algorithm 4:
@@ -590,36 +588,15 @@ void testPitchDithering()
   Vec x4(numSamples); 
   Vec a4(numCycles);
   Real p1, p2, p3;     // Probabilities for L1, L2, L3. p2,p3 only used for verification
-  p2 = 0.5;            // p2 never changes
+  //p2 = 0.5;            // p2 never changes
   reset();
   for(int i = 0; i < numCycles; i++)
   {
     // Compute lengths and their probababilities:
     lengthsAndProbsEqDist(period, &L1, &p1, &L2, &p2, &L3, &p3);
 
-
-
-
-
-    // Maybe factor this out into a function 
-    //addRandomCycle(x4, L1, p1, L2, p2, L3, p3, &n, &numL1, &numL2, &numL3);
-
-    Real r = prng.getSample();
-
-    // Sanity checks. Probabilities must add to 1 and the mean of the lengths should be our desired
-    // period.
-    Real sum  = p1    + p2    + p3;
-    Real mean = p1*L1 + p2*L2 + p3*L3;                     // Theoretical long term mean
-    rsAssert(rsIsCloseTo(sum,  1.0,    1.e-13));            
-    rsAssert(rsIsCloseTo(mean, period, 1.e-13));
-
     // Produce cycle:
-    if(r < p1)
-      addCycle(x4, L1, &n, &numL1);
-    else if(r >= p1 + 0.5)
-      addCycle(x4, L3, &n, &numL3);
-    else
-      addCycle(x4, L2, &n, &numL2);
+    addRandomCycle(x4, L1, p1, L2, p2, L3, p3, &n, &numL1, &numL2, &numL3);
 
     // Bookkeeping for plotting:
     a4[i] = meanLength3(L1, numL1, L2, numL2, L3, numL3);  // Practical sample mean up to now

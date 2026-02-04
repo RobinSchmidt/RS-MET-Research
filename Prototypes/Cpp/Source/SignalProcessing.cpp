@@ -495,8 +495,8 @@ public:
   /** A struct to store various error measures. */
   struct CycleErrorMeasures
   {
-    T errShort, errMid, errLong;
-    T meanAbs, variance;
+    T e1, e2, e3;
+    T mae, var;
   };
 
   /** Computes the various error measures for a desired noninteger "period" length when we actually
@@ -563,13 +563,26 @@ void rsPitchDitherProto<T>::fillDitherSawMinVariance(
   // OK - done. We use if(r < f) now. I think, that's the correct way to do it.
 }
 
-
 template<class T> 
 void rsPitchDitherProto<T>::fillDitherSaw(
   std::vector<T>& x, T period, unsigned long seed, T amp)
 {
   // ToDo: Implement the deterministic dither algorithm, rename to fillDitherSawMinError
 }
+
+template<class T>
+rsPitchDitherProto<T>::CycleErrorMeasures rsPitchDitherProto<T>::getErrorMeasures(
+  T period, int L1, T p1, int L2, T p2, int L3, T p3)
+{
+  CycleErrorMeasures r;                                      // Result
+  r.e1  = T(L1) - period;                                    // Error for cycle of length L1
+  r.e2  = T(L2) - period;                                    // Error for cycle of length L2
+  r.e3  = T(L3) - period;                                    // Error for cycle of length L3
+  r.mae = p1*rsAbs(r.e1) + p2*rsAbs(r.e2) + p3*rsAbs(r.e3);  // Mean absolute error
+  r.var = p1*r.e1*r.e1   + p2*r.e2*r.e2   + p3*r.e3*r.e3;    // Error variance
+  return r;
+}
+
 
 // ToDo:
 //

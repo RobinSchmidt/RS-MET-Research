@@ -522,7 +522,8 @@ void testPitchDithering()
 
 
   // Helper function to compute lengths and probabilities for an equalized mean distance (i.e. 
-  // equalized mean absolute error)
+  // equalized mean absolute error) where the equalization is with respect to the fractional part
+  // of the desired period P.
   auto lengthsAndProbsEqDist = [](Real period, 
     int* L1, Real* p1, int* L2, Real* p2, int* L3, Real* p3)
   {
@@ -544,12 +545,18 @@ void testPitchDithering()
     *L2 = *L1 + 1;
     *L3 = *L2 + 1;
   };
-  // ToDo: implement similar function lengthsAndProbsEqVar that computes lengths and probabilities
-  // that equalize the variance (i.e. the mean squared distance) and maybe also 
-  // lengthsAndProbsMinDist (or MinVar - it minimizes both at the same time, I think)
+  // ToDo: 
+  // 
+  // - Implement similar function lengthsAndProbsEqVar that computes lengths and probabilities
+  //   that equalize the variance (i.e. the mean squared distance) and maybe also 
+  //   lengthsAndProbsMinDist (or MinVar - it minimizes both at the same time, I think)
   //
-  // ToDo: Verify if usage of < vs <= is correct everywhere. Test both branches using for example
-  // period = 100.7 and 100.3. Test also the edge cases with 100.0 and 100.5.
+  // - Verify if usage of < vs <= is correct everywhere. Test both branches using for example
+  //   period = 100.7 and 100.3. Test also the edge cases with 100.0 and 100.5.
+  // 
+  // - Move into class rsPitchDitherProto.
+  //
+  // - Rename. It actually does _not_ lead to equal equalized mean absolute error. 
 
 
   // Helper function to add a cycle with a random length L. It could be either L1 or L2 or L3 with
@@ -605,9 +612,9 @@ void testPitchDithering()
     // ToDo: Move these computations out into a separate function that takes the period, the 3 
     // lengths L1,L2,L3 with their probabilities p1,p2,p3 and it should return mae and var. Maybe
     // we could put mae and var into some sort of CycleErrorMeasures struct. Maybe it could also 
-    // contain some other error measures as well. Maybe e1,e2,e3.
-    // Maybe my expectation that the mae should always be the 
-    // same is wrong. Maybe I have made a mistake in the maths.
+    // contain some other error measures as well. Maybe e1,e2,e3. Maybe my expectation that the mae
+    // should always be the same is wrong. Maybe I have made a mistake in the maths. Yes! I think 
+    // so!
   };
   // ToDo: Verify if usage of < vs <= is correct. Use again 100.0, 100.3, 100.5, 100.7. Compute
   // mean absolute error and variance (mean squared error).

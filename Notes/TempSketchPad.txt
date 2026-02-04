@@ -188,14 +188,47 @@ half integers. ToDo: Try probabilities p(99) = p(101) = 0.125, p(100) = 0.75
 
 ...Then normalizing the variance 
 
+
 Maybe use the 3 equations 
 
   p1 + p2 + p3 = 1
   p1*e1 + p2*e2 + p3*e3 = 0    
-  p1*e1^2 + p2*e2^2 + p3*e3^3 = const (= 0.5 I think)
+  p1*e1^2 + p2*e2^2 + p3*e3^2 = const (= 0.5 I think)
   
-where p1 is the probability for L-1 and e1 is the error that we make when using this length and so on
+where p1 is the probability for L-1 and e1 is the error that we make when using this length and so 
+on.
+
+
+Let's start with a given desired period  P  and 3 arbitrary integer lengths  L1,L2,L3  with the only 
+constraint that it is possible to form a weighted sum of  p1*L1 + p2*L2 + p3*L3  that sums up to P 
+when p1..p3 are all >= 0 and p1 + p2 + p3 = 1. That constraint requires in general that at least one
+of L1..L3 values is <= P and at least one of them is >= P (Verify! There may be edge cases, I 
+think). Define the 3 error values that correspond to the 3 L1..L3 lengths as:
+
+  e1 = L1 - P,  e2 = L2 - P,  e3 = L3 - P
+  
+Define an error measure function f(x) that can be applied to the raw error values e1..e3. The 
+function f(x) could be, for example, the absolute value f(x) = |x| or the square f(x) = x^2. Using 
+this function, compute the 3 error measures:
+
+  m1 = f(e1),  m2 = f(e2),  m3 = f(e3)
+
+So far, everything can be explicitly and readily computed from the known P,L1,L2,L3 values. Now we 
+establish a linear system of 3 equations for our 3 weights or probabilities p1..p3 as follows:
+
+  p1    + p2    + p3    = 1        As usual for probabilities
+  p1*e1 + p2*e2 + p3*e3 = 0        The error should average out to zero
+  p1*m1 + p2*m2 + p3*m3 = M        The mean error measure should be a prescribed constant M
  
+This is a linear system of 3 equations for 3 unknowns p1,p2,p3 which we can readily solve using 
+SageMath:
+
+ ...TBC...
+ 
+To assign a value for M, we can compute M for the special case that P is a half integer. This 
+special case is the worst case in the sense that it's farthest away from an integer. We want to 
+compute out probabilities p1..p3 for the general case in such a way that the error measure always 
+equals the worst case error measure. ...
  
 ---------------------------------------------------------------------------------------------------- 
  

@@ -561,13 +561,6 @@ void testPitchDithering()
     int L1, Real p1, int L2, Real p2, int L3, Real p3,  // In params (lengths and probabilities)
     int* start, int* numL1, int* numL2, int* numL3)     // In/out params (start index and counters)
   {
-    // Sanity checks. Probabilities must add to 1 and the theoretical long term mean of the lengths
-    // should be our desired period:
-    Real probSum = p1    + p2    + p3;
-    Real lenMean = p1*L1 + p2*L2 + p3*L3;
-    rsAssert(rsIsCloseTo(probSum, 1.0,    1.e-13));
-    rsAssert(rsIsCloseTo(lenMean, period, 1.e-13));
-
     // Produce cycle:
     Real r = prng.getSample();
     if(r < p1)
@@ -576,8 +569,27 @@ void testPitchDithering()
       addCycle(x, L3, start, numL3);
     else
       addCycle(x, L2, start, numL2);
+
+    // Sanity checks. Probabilities must add to 1 and the theoretical long term mean of the lengths
+    // should be our desired period:
+    Real probSum = p1    + p2    + p3;
+    Real lenMean = p1*L1 + p2*L2 + p3*L3;
+    rsAssert(rsIsCloseTo(probSum, 1.0,    1.e-13));
+    rsAssert(rsIsCloseTo(lenMean, period, 1.e-13));
+
+    // Compute errors for the 3 integer lengths and expected error measures for inspection in 
+    // debugger:
+    Real e1  = Real(L1) - period;
+    Real e2  = Real(L2) - period;
+    Real e3  = Real(L3) - period;
+    Real mae = p1*rsAbs(e1) + p2*rsAbs(e2) + p3*rsAbs(e3);  // Mean absolute error
+    Real var = p1*e1*e1     + p2*e2*e2     + p3*e3*e3;      // Error variance
+    int dummy = 0;
+    // In algorithm 4, we expect that mae to be 0.5. But it isn't! For period = 100.3, we get
+    // mae = 0.56. Something is wrong!
   };
-  // ToDo: Verify if usage of < vs <= is correct. Use again 100.0, 100.3, 100.5, 100.7.
+  // ToDo: Verify if usage of < vs <= is correct. Use again 100.0, 100.3, 100.5, 100.7. Compute
+  // mean absolute error and variance (mean squared error).
 
 
 

@@ -538,9 +538,12 @@ void rsPitchDitherProto<T>::fillDitherSaw(
   std::vector<T>& x, T period, unsigned long seed, T amp)
 {
   // ToDo: Implement the deterministic dither algorithm, rename to fillDitherSawMinError
-
-
 }
+
+// ToDo:
+//
+// - Maybe implement the production of different waveforms. A sine could be produced from a saw
+//   by simply taking sin(pi*saw(t)). Let's also produce square- and triangle waves.
 
 //-------------------------------------------------------------------------------------------------
 

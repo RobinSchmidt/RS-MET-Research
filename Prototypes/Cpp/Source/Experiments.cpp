@@ -516,7 +516,6 @@ void testPitchDithering()
       addCycle(x3, L1, &n, &numL1);
       err -= f;
     }
-    //meanL = meanLength2(L1, numL1, L2, numL2);
     a3[i] = meanLength2(L1, numL1, L2, numL2);
   }
 
@@ -548,7 +547,9 @@ void testPitchDithering()
   // ToDo: implement similar function lengthsAndProbsEqVar that computes lengths and probabilities
   // that equalize the variance (i.e. the mean squared distance) and maybe also 
   // lengthsAndProbsMinDist (or MinVar - it minimizes both at the same time, I think)
-
+  //
+  // ToDo: Verify if usage of < vs <= is correct everywhere. Test both branches using for example
+  // period = 100.7 and 100.3. Test also the edge cases with 100.0 and 100.5.
 
 
   // Helper function to add a cycle with a random length L. It could be either L1 or L2 or L3 with
@@ -556,16 +557,16 @@ void testPitchDithering()
   // track of where we are in the output signal and how many cycles of each length were created so
   // far:
   auto addRandomCycle = [&prng, &period, &addCycle](    // Capture context by reference
-    Vec& x,                                             // In/out param
-    int L1, Real p1, int L2, Real p2, int L3, Real p3,  // In     params
-    int* start, int* numL1, int* numL2, int* numL3)     // In/out params
+    Vec& x,                                             // In/out param for the signal
+    int L1, Real p1, int L2, Real p2, int L3, Real p3,  // In params (lengths and probabilities)
+    int* start, int* numL1, int* numL2, int* numL3)     // In/out params (start index and counters)
   {
-    // Sanity checks. Probabilities must add to 1 and the mean of the lengths should be our desired
-    // period:
-    Real sum  = p1    + p2    + p3;
-    Real mean = p1*L1 + p2*L2 + p3*L3;                     // Theoretical long term mean
-    rsAssert(rsIsCloseTo(sum,  1.0,    1.e-13));            
-    rsAssert(rsIsCloseTo(mean, period, 1.e-13));
+    // Sanity checks. Probabilities must add to 1 and the theoretical long term mean of the lengths
+    // should be our desired period:
+    Real probSum = p1    + p2    + p3;
+    Real lenMean = p1*L1 + p2*L2 + p3*L3;
+    rsAssert(rsIsCloseTo(probSum, 1.0,    1.e-13));
+    rsAssert(rsIsCloseTo(lenMean, period, 1.e-13));
 
     // Produce cycle:
     Real r = prng.getSample();
@@ -576,6 +577,8 @@ void testPitchDithering()
     else
       addCycle(x, L2, start, numL2);
   };
+  // ToDo: Verify if usage of < vs <= is correct. Use again 100.0, 100.3, 100.5, 100.7.
+
 
 
   // Algorithm 4:
@@ -588,23 +591,16 @@ void testPitchDithering()
   Vec x4(numSamples); 
   Vec a4(numCycles);
   Real p1, p2, p3;     // Probabilities for L1, L2, L3. p2,p3 only used for verification
-  //p2 = 0.5;            // p2 never changes
   reset();
   for(int i = 0; i < numCycles; i++)
   {
     // Compute lengths and their probababilities:
     lengthsAndProbsEqDist(period, &L1, &p1, &L2, &p2, &L3, &p3);
 
-    // Produce cycle:
+    // Produce cycle and do bookkeeping for plotting:
     addRandomCycle(x4, L1, p1, L2, p2, L3, p3, &n, &numL1, &numL2, &numL3);
-
-    // Bookkeeping for plotting:
-    a4[i] = meanLength3(L1, numL1, L2, numL2, L3, numL3);  // Practical sample mean up to now
+    a4[i] = meanLength3(L1, numL1, L2, numL2, L3, numL3);
   }
-  // ToDo: Verify if usage of < vs <= is correct everywhere. Test the lower branch using 
-  // period = 100.7. With 100.3, we never enter it.
-
-  
 
   // Algorithm 5:
   //Vec x5(numSamples); 

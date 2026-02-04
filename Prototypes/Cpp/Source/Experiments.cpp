@@ -551,7 +551,33 @@ void testPitchDithering()
   // lengthsAndProbsMinDist (or MinVar - it minimizes both at the same time, I think)
 
 
+  // Helper function to add a cycle with a random length L. It could be either L1 or L2 or L3 with
+  // probabilities p1, p2, p3 respectively. The in/out parameters start, numL1, ... are to keep 
+  // track of where we are in the output signal and how many cycles of each length were created so
+  // far:
+  auto addRandomCycle = [&prng, &period, &addCycle](    // Capture context by reference
+    Vec& x,                                             // In/out param
+    int L1, Real p1, int L2, Real p2, int L3, Real p3,  // In     params
+    int* start, int* numL1, int* numL2, int* numL3)     // In/out params
+  {
+    // Sanity checks. Probabilities must add to 1 and the mean of the lengths should be our desired
+    // period:
+    Real sum  = p1    + p2    + p3;
+    Real mean = p1*L1 + p2*L2 + p3*L3;                     // Theoretical long term mean
+    rsAssert(rsIsCloseTo(sum,  1.0,    1.e-13));            
+    rsAssert(rsIsCloseTo(mean, period, 1.e-13));
 
+    // Produce cycle:
+    Real r = prng.getSample();
+    if(r < p1)
+      addCycle(x, L1, start, numL1);
+    else if(r >= p1 + 0.5)
+      addCycle(x, L3, start, numL3);
+    else
+      addCycle(x, L2, start, numL2);
+  };
+  // addCycle = [&amp](Vec& x, int length, int* start, int* counter) 
+  // addCycle(x4, L1, p1, L2, p2, L3, p3, &n, &numL1, &numL2, &numL3)
 
 
   // Algorithm 4:
@@ -576,7 +602,7 @@ void testPitchDithering()
 
 
     // Maybe factor this out into a function 
-    // addCycle(x4, &n, L1, p1, L2, p2, L3, p3, &numL1, &numL2, &numL3)
+    //addRandomCycle(x4, L1, p1, L2, p2, L3, p3, &n, &numL1, &numL2, &numL3);
 
     Real r = prng.getSample();
 

@@ -524,8 +524,21 @@ public:
 
   /** Computes the various error measures for a desired noninteger "period" length when we actually
   produce integer period lengths L1,L2,L3 with probabilities p1,p2,p3 respectively. */
-  //static CycleErrorMeasures getErrorMeasures(T period, int L1, T p1, int L2, T p2, int L3, T p3);
+  static CycleErrorMeasures getErrorMeasures(T period, int L1, T p1, int L2, T p2, int L3, T p3);
+  /*
+  {
+    CycleErrorMeasures r;                                      // Result
+    r.e1  = T(L1) - period;                                    // Error for cycle of length L1
+    r.e2  = T(L2) - period;                                    // Error for cycle of length L2
+    r.e3  = T(L3) - period;                                    // Error for cycle of length L3
+    r.mae = p1*rsAbs(r.e1) + p2*rsAbs(r.e2) + p3*rsAbs(r.e3);  // Mean absolute error
+    r.var = p1*r.e1*r.e1   + p2*r.e2*r.e2   + p3*r.e3*r.e3;    // Error variance
+    return r;
+  }
+  */
   // Instead of taking L1,p1,L2,p2,L3,p3 take a struct CycleDistribution by const reference.
+  // ToDo: Try to move implementation out of the class. But I get compilation errors when trying to
+  // do so. There is a commented out-of-class implementation below.
 
 };
 
@@ -620,20 +633,25 @@ void rsPitchDitherProto<T>::distributionViaOverlap(T period, rsPitchDitherProto<
 */
 
 
-/*
 template<class T>
-rsPitchDitherProto<T>::CycleErrorMeasures rsPitchDitherProto<T>::getErrorMeasures(
+typename rsPitchDitherProto<T>::CycleErrorMeasures rsPitchDitherProto<T>::getErrorMeasures(
   T period, int L1, T p1, int L2, T p2, int L3, T p3)
 {
-  CycleErrorMeasures r;                                      // Result
+  typename CycleErrorMeasures r;                             // Result
   r.e1  = T(L1) - period;                                    // Error for cycle of length L1
   r.e2  = T(L2) - period;                                    // Error for cycle of length L2
   r.e3  = T(L3) - period;                                    // Error for cycle of length L3
   r.mae = p1*rsAbs(r.e1) + p2*rsAbs(r.e2) + p3*rsAbs(r.e3);  // Mean absolute error
   r.var = p1*r.e1*r.e1   + p2*r.e2*r.e2   + p3*r.e3*r.e3;    // Error variance
   return r;
+
+  // It doesn't compile without the ugly "typename" nonsense. From Copilot:
+  //
+  // "...typename is required whenever you refer to a nested type that depends on a template 
+  // parameter. You can’t completely avoid that requirement unless you put the definition inside 
+  // the class body."
 }
-*/
+
 
 
 // ToDo:

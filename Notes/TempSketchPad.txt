@@ -236,8 +236,7 @@ Plugging this expression into equation 2 and then solving it for p2 gives:
   
 Finally, plugging the expressions for p3,p2 into equation 3 and solving for p1 gives:  
 
-  
-
+  M = p1*m1 + ...
   
 
  ...TBC...

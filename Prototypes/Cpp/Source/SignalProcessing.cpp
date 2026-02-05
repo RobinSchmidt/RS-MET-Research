@@ -492,11 +492,24 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Cycle length and probability compuation
 
-  static void lengthsAndProbsOverlap(T period, int* L1, T* p1, int* L2, T* p2, T* L3, T* p3);
+  //static void lengthsAndProbsOverlap(T period, int* L1, T* p1, int* L2, T* p2, T* L3, T* p3);
+  // Old
+
+  /*
+  struct CycleDistribution
+  {
+    T   p1, p2, p3;
+    int L1, L2, L3;
+  };
+  */
+
+  //static void distributionViaOverlap(T period, CycleDistribution* cd);
   // Maybe insted of using 6 in/out parameters, make a struct that contains them all. Maybe call it
   // CycleDistribution. The call the function getOverlapDistribution(T period). The other functions
   // could be called getEqualDeviationDistribution(T period) or 
   // getEqualDistanceDistribution(T period), getEqualVarianceDistribution(T period)
+  // Or maybe call them just distri... without the "get" and assign the output to an out-parameter
+  // passed by pointer
 
 
   //-----------------------------------------------------------------------------------------------
@@ -511,7 +524,7 @@ public:
 
   /** Computes the various error measures for a desired noninteger "period" length when we actually
   produce integer period lengths L1,L2,L3 with probabilities p1,p2,p3 respectively. */
-  static CycleErrorMeasures getErrorMeasures(T period, int L1, T p1, int L2, T p2, int L3, T p3);
+  //static CycleErrorMeasures getErrorMeasures(T period, int L1, T p1, int L2, T p2, int L3, T p3);
   // Instead of taking L1,p1,L2,p2,L3,p3 take a struct CycleDistribution by const reference.
 
 };
@@ -581,6 +594,33 @@ void rsPitchDitherProto<T>::fillDitherSaw(
   // ToDo: Implement the deterministic dither algorithm, rename to fillDitherSawMinError
 }
 
+
+/*
+template<class T> 
+void rsPitchDitherProto<T>::distributionViaOverlap(T period, rsPitchDitherProto<T>::CycleDistribution* cd)
+{
+  T periodFloor = rsFloor(period);
+  T periodFrac  = period - periodFloor;
+  if(periodFrac < 0.5)
+  {
+    cd->L1 = (int)periodFloor - 1;
+    cd->p1 = 0.5 * (0.5 - periodFrac);
+    cd->p3 = 0.5 - cd->p1;
+  }
+  else
+  {
+    cd->L1 = (int)periodFloor;                               // No -1 here
+    cd->p3 = 0.5 * (periodFrac - 0.5);
+    cd->p1 = 0.5 - cd->p3;
+  }
+  cd->p2 = 0.5;                                              // p2 is always 0.5
+  cd->L2 = cd->L1 + 1;
+  cd->L3 = cd->L2 + 1;
+}
+*/
+
+
+/*
 template<class T>
 rsPitchDitherProto<T>::CycleErrorMeasures rsPitchDitherProto<T>::getErrorMeasures(
   T period, int L1, T p1, int L2, T p2, int L3, T p3)
@@ -593,6 +633,7 @@ rsPitchDitherProto<T>::CycleErrorMeasures rsPitchDitherProto<T>::getErrorMeasure
   r.var = p1*r.e1*r.e1   + p2*r.e2*r.e2   + p3*r.e3*r.e3;    // Error variance
   return r;
 }
+*/
 
 
 // ToDo:

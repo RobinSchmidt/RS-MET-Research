@@ -406,7 +406,7 @@ void testPitchDithering()
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples = 88200;               // Number of samples to produce
-  Real period     =   100.9;             // Desired cycle length
+  Real period     =   100.3;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     2;               // Seed for PRNG
 
@@ -557,7 +557,8 @@ void testPitchDithering()
   // - Move into class rsPitchDitherProto.
   //
   // - Rename. It actually does _not_ lead to equal equalized mean absolute error. Maybe call it
-  //   lengthsAndProbsViaOverlap
+  //   lengthsAndProbsViaOverlap. ..ok - we have now:
+  //   rsPitchDitherProto<T>::distributionViaOverlap
 
 
   // Helper function to add a cycle with a random length L. It could be either L1 or L2 or L3 with

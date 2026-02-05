@@ -238,8 +238,57 @@ Finally, plugging the expressions for p3,p2 into equation 3 and solving for p1 g
 
   M = p1*m1 + ...
   
+...TBC...well - let's do that in SageMath:
 
- ...TBC...
+var("P M L1 L2 L3 p1 p2 p3 m1 m2 m3")
+e1 = L1 - P
+e2 = L2 - P
+e3 = L3 - P
+eq1 = 1 == p1    + p2    + p3
+eq2 = 0 == p1*e1 + p2*e2 + p3*e3
+eq3 = M == p1*m1 + p2*m2 + p3*m3
+solve([eq1,eq2,eq3],[p1,p2,p3])
+
+produces:
+
+  p1 =  (L3*(M - m2) - L2*(M - m3) + P*(m2 - m3)) / (L3*(m1 - m2) - L2*(m1 - m3) + L1*(m2 - m3))
+  p2 = -(L3*(M - m1) - L1*(M - m3) + P*(m1 - m3)) / (L3*(m1 - m2) - L2*(m1 - m3) + L1*(m2 - m3))
+  p3 =  (L2*(M - m1) - L1*(M - m2) + P*(m1 - m2)) / (L3*(m1 - m2) - L2*(m1 - m3) + L1*(m2 - m3))
+  
+Hmm...that's not so good. Let's reformulate the equations in terms of e1,e2,e3 rather than L1,L2,L3:
+
+reset()
+var("P M e1 e2 e3 p1 p2 p3 m1 m2 m3")
+eq1 = 1 == p1    + p2    + p3
+eq2 = 0 == p1*e1 + p2*e2 + p3*e3
+eq3 = M == p1*m1 + p2*m2 + p3*m3
+solve([eq1,eq2,eq3],[p1,p2,p3])
+
+produces:
+
+  p1 = -((M - m3)*e2 - (M - m2)*e3) / (e3*(m1 - m2) - e2*(m1 - m3) + e1*(m2 - m3))
+  p2 =  ((M - m3)*e1 - (M - m1)*e3) / (e3*(m1 - m2) - e2*(m1 - m3) + e1*(m2 - m3))
+  p3 = -((M - m2)*e1 - (M - m1)*e2) / (e3*(m1 - m2) - e2*(m1 - m3) + e1*(m2 - m3))
+
+which is a bit shorter. To get rid of the minus signs, we swap the terms in the numerators of the
+1st and 3d equation:
+
+  p1 =  ((M-m2)*e3 - (M-m3)*e2) / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3))
+  p2 =  ((M-m3)*e1 - (M-m1)*e3) / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3))
+  p3 =  ((M-m1)*e2 - (M-m2)*e1) / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3))
+
+Let's define:
+
+  M1 = M - m1,  M2 = M - m2,  M3 = M - m3
+  S  = 1 / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3))
+  
+Then we can write it as:
+
+  p1 = (M2*e3 - M3*e2) * S
+  p2 = (M3*e1 - M1*e3) * S
+  p3 = (M1*e2 - M2*e1) * S
+  
+
  
 To assign a value for M, we can compute M for the special case that P is a half integer. This 
 special case is the worst case in the sense that it's farthest away from an integer. We want to 

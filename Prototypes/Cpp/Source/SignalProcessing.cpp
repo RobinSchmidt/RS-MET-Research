@@ -490,6 +490,16 @@ public:
 
 
   //-----------------------------------------------------------------------------------------------
+  // \name Cycle length and probability compuation
+
+  static void lengthsAndProbsOverlap(T period, int* L1, T* p1, int* L2, T* p2, T* L3, T* p3);
+  // Maybe insted of using 6 in/out parameters, make a struct that contains them all. Maybe call it
+  // CycleDistribution. The call the function getOverlapDistribution(T period). The other functions
+  // could be called getEqualDeviationDistribution(T period) or 
+  // getEqualDistanceDistribution(T period), getEqualVarianceDistribution(T period)
+
+
+  //-----------------------------------------------------------------------------------------------
   // \name Algorithm assessment
 
   /** A struct to store various error measures. */
@@ -502,6 +512,7 @@ public:
   /** Computes the various error measures for a desired noninteger "period" length when we actually
   produce integer period lengths L1,L2,L3 with probabilities p1,p2,p3 respectively. */
   static CycleErrorMeasures getErrorMeasures(T period, int L1, T p1, int L2, T p2, int L3, T p3);
+  // Instead of taking L1,p1,L2,p2,L3,p3 take a struct CycleDistribution by const reference.
 
 };
 

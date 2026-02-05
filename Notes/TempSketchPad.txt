@@ -288,12 +288,16 @@ Then we can write it as:
   p2 = (M3*e1 - M1*e3) * S
   p3 = (M1*e2 - M2*e1) * S
   
-
- 
 To assign a value for M, we can compute M for the special case that P is a half integer. This 
 special case is the worst case in the sense that it's farthest away from an integer. We want to 
 compute out probabilities p1..p3 for the general case in such a way that the error measure always 
-equals the worst case error measure. ...
+equals the worst case error measure. 
+
+In the approach descirbed above with the slider which shall henceforth be called the "geometric 
+approach", we would replace the 3rd equation (i.e. the M = ... equation) with the very simple 
+equation p2 = 1/2. Or maybe the "overlap approach". When we slide the slider of length over the 
+"bar" with lengths and use the percentage of overlap with the middle length L2, it will always be 
+1/2 because the length of the slider is 2 length units.
  
 ---------------------------------------------------------------------------------------------------- 
  

@@ -556,7 +556,8 @@ void testPitchDithering()
   // 
   // - Move into class rsPitchDitherProto.
   //
-  // - Rename. It actually does _not_ lead to equal equalized mean absolute error. 
+  // - Rename. It actually does _not_ lead to equal equalized mean absolute error. Maybe call it
+  //   lengthsAndProbsViaOverlap
 
 
   // Helper function to add a cycle with a random length L. It could be either L1 or L2 or L3 with

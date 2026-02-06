@@ -380,7 +380,7 @@ bool rsIsCloseToUpTo(const std::vector<T>& x, const std::vector<T>& y, size_t N,
 }
 
 
-void testPitchDithering()
+void testPitchDithering1()
 {
   // In this experiment, we implement different pitch-dithering (or pitch-jittering) algorithms
   // that I describe here:
@@ -520,7 +520,6 @@ void testPitchDithering()
   }
 
 
-
   // Helper function to compute lengths and probabilities for an equalized mean distance (i.e. 
   // equalized mean absolute error) where the equalization is with respect to the fractional part
   // of the desired period P.
@@ -620,6 +619,11 @@ void testPitchDithering()
   };
   // ToDo: Verify if usage of < vs <= is correct. Use again 100.0, 100.3, 100.5, 100.7. Compute
   // mean absolute error and variance (mean squared error).
+  // Move this functionality into member 2 functions of class rsPitchDitherProto. One function for
+  // the cycle production and one for computing the error measures. The latter may also do the
+  // saniyt checks. Or maybe we could have a third function specifically for that purpose. it could
+  // be named something like verifyCycleDistribution or isCycleDistributionValid or something like
+  // that. It would take the period, the 3 lengths and their probabilities.
 
 
 
@@ -858,6 +862,33 @@ void testPitchDithering()
   // See:
   // https://en.wikipedia.org/wiki/Dither#Algorithms
   // https://en.wikipedia.org/wiki/Error_diffusion#minimized_average_error
+}
+
+void testPitchDithering2()
+{
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using PDP  = rsPitchDitherProto<Real>;
+
+  int  sampleRate = 44100;               // Sample rate for the wave files
+  int  numSamples = 88200;               // Number of samples to produce
+  Real period     =   100.3;             // Desired cycle length
+  Real amp        =     0.5;             // Amplitude of the saw
+  int  seed       =     2;               // Seed for PRNG
+
+
+
+  bool ok = true;
+
+
+
+  rsAssert(ok);
+}
+
+void testPitchDithering()
+{
+  //testPitchDithering1();
+  testPitchDithering2();
 }
 
 void testPitchDitherSuperSaw()

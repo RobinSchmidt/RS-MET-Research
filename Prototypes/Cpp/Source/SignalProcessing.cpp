@@ -510,9 +510,17 @@ public:
   // Or maybe call them just distri... without the "get" and assign the output to an out-parameter
   // passed by pointer
 
+  static void distributionEqualDeviation(T period, CycleDistribution* cd);
+
+  static void distributionEqualVariance(T period, CycleDistribution* cd);
+
+
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Algorithm assessment
+
+  static bool isCycleDistributionValid(T period, const CycleDistribution& cd);
 
   /** A struct to store various error measures. */
   struct CycleErrorMeasures
@@ -527,6 +535,8 @@ public:
   // Instead of taking L1,p1,L2,p2,L3,p3 take a struct CycleDistribution by const reference.
   // ToDo: Try to move implementation out of the class. But I get compilation errors when trying to
   // do so. There is a commented out-of-class implementation below.
+
+
 
 };
 

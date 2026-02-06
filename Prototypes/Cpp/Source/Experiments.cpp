@@ -913,9 +913,9 @@ void testPitchDithering2()
     em_v = PDP::getErrorMeasures(p, cd_v);
 
     // Check if the distributions are valid and some measures are as expected:
-    //ok &= PDP::isCycleDistributionValid(p, cd_o);  // Not yet implemented!
-    //ok &= PDP::isCycleDistributionValid(p, cd_d);
-    //ok &= PDP::isCycleDistributionValid(p, cd_v);
+    ok &= PDP::isCycleDistributionValid(p, cd_o);
+    ok &= PDP::isCycleDistributionValid(p, cd_d);
+    ok &= PDP::isCycleDistributionValid(p, cd_v);
     ok &= rsIsCloseTo(em_d.mae, 0.5,  tol);
     ok &= rsIsCloseTo(em_v.var, 0.25, tol);
 

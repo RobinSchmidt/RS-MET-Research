@@ -708,6 +708,19 @@ void rsPitchDitherProto<T>::distributionEqualVariance(
 
 
 
+template<class T>
+bool rsPitchDitherProto<T>::isCycleDistributionValid(
+  T period, const rsPitchDitherProto<T>::CycleDistribution& cd)
+{
+  bool ok = true;
+  T tol = 1024 * std::numeric_limits<T>::epsilon();
+  T probSum = cd.p1 + cd.p2 + cd.p3;
+  T lenMean = cd.p1*cd.L1 + cd.p2*cd.L2 + cd.p3*cd.L3;
+  ok &= rsIsCloseTo(probSum, 1.0,    tol);
+  ok &= rsIsCloseTo(lenMean, period, tol);
+  return ok;
+}
+
 
 
 template<class T>

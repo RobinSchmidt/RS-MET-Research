@@ -495,15 +495,14 @@ public:
   //static void lengthsAndProbsOverlap(T period, int* L1, T* p1, int* L2, T* p2, T* L3, T* p3);
   // Old
 
-  /*
+
   struct CycleDistribution
   {
     T   p1, p2, p3;
     int L1, L2, L3;
   };
-  */
 
-  //static void distributionViaOverlap(T period, CycleDistribution* cd);
+  static void distributionViaOverlap(T period, CycleDistribution* cd);
   // Maybe insted of using 6 in/out parameters, make a struct that contains them all. Maybe call it
   // CycleDistribution. The call the function getOverlapDistribution(T period). The other functions
   // could be called getEqualDeviationDistribution(T period) or 
@@ -525,17 +524,6 @@ public:
   /** Computes the various error measures for a desired noninteger "period" length when we actually
   produce integer period lengths L1,L2,L3 with probabilities p1,p2,p3 respectively. */
   static CycleErrorMeasures getErrorMeasures(T period, int L1, T p1, int L2, T p2, int L3, T p3);
-  /*
-  {
-    CycleErrorMeasures r;                                      // Result
-    r.e1  = T(L1) - period;                                    // Error for cycle of length L1
-    r.e2  = T(L2) - period;                                    // Error for cycle of length L2
-    r.e3  = T(L3) - period;                                    // Error for cycle of length L3
-    r.mae = p1*rsAbs(r.e1) + p2*rsAbs(r.e2) + p3*rsAbs(r.e3);  // Mean absolute error
-    r.var = p1*r.e1*r.e1   + p2*r.e2*r.e2   + p3*r.e3*r.e3;    // Error variance
-    return r;
-  }
-  */
   // Instead of taking L1,p1,L2,p2,L3,p3 take a struct CycleDistribution by const reference.
   // ToDo: Try to move implementation out of the class. But I get compilation errors when trying to
   // do so. There is a commented out-of-class implementation below.
@@ -608,9 +596,10 @@ void rsPitchDitherProto<T>::fillDitherSaw(
 }
 
 
-/*
+
 template<class T> 
-void rsPitchDitherProto<T>::distributionViaOverlap(T period, rsPitchDitherProto<T>::CycleDistribution* cd)
+void rsPitchDitherProto<T>::distributionViaOverlap(
+  T period, rsPitchDitherProto<T>::CycleDistribution* cd)
 {
   T periodFloor = rsFloor(period);
   T periodFrac  = period - periodFloor;
@@ -630,14 +619,16 @@ void rsPitchDitherProto<T>::distributionViaOverlap(T period, rsPitchDitherProto<
   cd->L2 = cd->L1 + 1;
   cd->L3 = cd->L2 + 1;
 }
-*/
+// Needs tests
+
 
 
 template<class T>
 typename rsPitchDitherProto<T>::CycleErrorMeasures rsPitchDitherProto<T>::getErrorMeasures(
   T period, int L1, T p1, int L2, T p2, int L3, T p3)
 {
-  typename CycleErrorMeasures r;                             // Result
+  //typename CycleErrorMeasures r;                             // Result
+  CycleErrorMeasures r;                                      // Result
   r.e1  = T(L1) - period;                                    // Error for cycle of length L1
   r.e2  = T(L2) - period;                                    // Error for cycle of length L2
   r.e3  = T(L3) - period;                                    // Error for cycle of length L3

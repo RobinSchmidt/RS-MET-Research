@@ -890,8 +890,6 @@ void testPitchDithering2()
   CEM em_d = PDP::getErrorMeasures(period, cd_d);
   CEM em_v = PDP::getErrorMeasures(period, cd_v);
 
-  //...TBC...
-
 
   // Compute some data to plot and do some checks along the way:
   bool ok = true;
@@ -899,9 +897,10 @@ void testPitchDithering2()
   Vec  mae_o(numPeriods), var_o(numPeriods);
   Vec  mae_d(numPeriods), var_d(numPeriods);
   Vec  mae_v(numPeriods), var_v(numPeriods);
+  Real tol = 1.e-13;
   for(int i = 0; i < numPeriods; i++)
   {
-    Real p = 100.0 + Real(i) / (numPeriods-1);   // Verify the +1!
+    Real p = 100.0 + Real(i) / (numPeriods-1);
 
     // Create the distributions for the current period p:
     PDP::distributionViaOverlap(    p, &cd_o);
@@ -909,9 +908,16 @@ void testPitchDithering2()
     PDP::distributionEqualVariance( p, &cd_v);
 
     // Compute error measures for these distributions:
-    CEM em_o = PDP::getErrorMeasures(p, cd_o);
-    CEM em_d = PDP::getErrorMeasures(p, cd_d);
-    CEM em_v = PDP::getErrorMeasures(p, cd_v);
+    em_o = PDP::getErrorMeasures(p, cd_o);
+    em_d = PDP::getErrorMeasures(p, cd_d);
+    em_v = PDP::getErrorMeasures(p, cd_v);
+
+    // Check if the distributions are valid and some measures are as expected:
+    //ok &= PDP::isCycleDistributionValid(p, cd_o);  // Not yet implemented!
+    //ok &= PDP::isCycleDistributionValid(p, cd_d);
+    //ok &= PDP::isCycleDistributionValid(p, cd_v);
+    ok &= rsIsCloseTo(em_d.mae, 0.5,  tol);
+    ok &= rsIsCloseTo(em_v.var, 0.25, tol);
 
     // Record the measurement data for plotting:
     mae_o[i] = em_o.mae;
@@ -920,11 +926,6 @@ void testPitchDithering2()
     var_d[i] = em_d.var;
     mae_v[i] = em_v.mae;
     var_v[i] = em_v.var;
-
-    // Check if the measures are as expected:
-    // ...
-
-    int dummy = 0;
   }
 
   // Plot the error measures:

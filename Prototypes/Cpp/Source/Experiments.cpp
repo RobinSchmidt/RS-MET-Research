@@ -869,20 +869,47 @@ void testPitchDithering2()
   using Real = double;
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
+  using CD   = PDP::CycleDistribution;
+  using CEM  = PDP::CycleErrorMeasures;
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples = 88200;               // Number of samples to produce
-  Real period     =   100.3;             // Desired cycle length
+  Real period     =   100.3;             // Desired cycle length ..maybe call it P
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     2;               // Seed for PRNG
+
+
+  // Create various cycle distributions and compute their error measures:
+  CD  cd_o;
+  PDP::distributionViaOverlap(period, &cd_o);
+  //CEM em_o = PDP::getErrorMeasures(period, cd_o);
+  //...TBC...
 
 
 
   bool ok = true;
 
 
-
   rsAssert(ok);
+
+
+  // ToDo:
+  //
+  // - Make a plot for the cycle error measures as function of the fractional part of the period.
+  //   use periods between 100 and 101 with increment 0.01. Plot the various error measures of the
+  //   different algorithms for producing the cycle distribution. For the equal variance 
+  //   distribution, we expect the variance measure to be constant, etc.
+  //
+  // - Generate actual sawtooth waves using the different distribtutions for P = 100.0, 100.1, 
+  //   100.2, ..., 100.9, 101.0 and plot their spectra. We are interested in which distribtuion
+  //   creates the most uniform spectra, i.e. spectra which are the most invariant with respect to
+  //   the fractional part of P. Maybe use numSamples = 2^16 for a nice FFT length. Or maybe 2^14 
+  //   is enough. We'll see how the plots look like - that will determine what sort of FFT 
+  //   resolution we will need. Maybe create a signal of length 2 or 3 cycles longer and then 
+  //   shorten it to the FFT length because for technical reasons, the last few cycles may cut off
+  //   in different ways for the different distributions. Maybe just use numSamples = 88200 and 
+  //   then use an initial section of the for the FFT. Use another fftSize parameter for that. 
+  //   Maybe use a window before applying the FFT.
 }
 
 void testPitchDithering()

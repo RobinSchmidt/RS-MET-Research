@@ -668,6 +668,47 @@ void rsPitchDitherProto<T>::distributionEqualDeviation(
   cd->p3 = (M1*e2 - M2*e1) * S;
 }
 
+template<class T> 
+void rsPitchDitherProto<T>::distributionEqualVariance(
+  T period, rsPitchDitherProto<T>::CycleDistribution* cd)
+{
+  T periodFloor = rsFloor(period);  
+  T periodFrac  = period - periodFloor;
+
+  // Compute lengths:
+  if(periodFrac < 0.5)
+    cd->L1 = (int)periodFloor - 1;
+  else
+    cd->L1 = (int)periodFloor;
+  cd->L2 = cd->L1 + 1;
+  cd->L3 = cd->L2 + 1;
+
+  // Compute intermediates:
+  T e1 = cd->L1 - period;
+  T e2 = cd->L2 - period;
+  T e3 = cd->L3 - period;
+  T m1 = e1*e1;
+  T m2 = e2*e2;
+  T m3 = e3*e3;
+  T M  = T(0.25);
+  T M1 = M - m1;
+  T M2 = M - m2; 
+  T M3 = M - m3;
+  T S  = 1 / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3));
+  
+  // Compute probabilities:
+  cd->p1 = (M2*e3 - M3*e2) * S;
+  cd->p2 = (M3*e1 - M1*e3) * S;
+  cd->p3 = (M1*e2 - M2*e1) * S;
+
+  // There is a lot of code duplication going on here! Try to refactor to get rid of it! Before
+  // refactoring, estbalish a unit test that checks the results for periods 100.0, 100.1, 100.2,
+  // 100.3,...,100.9
+}
+
+
+
+
 
 template<class T>
 typename rsPitchDitherProto<T>::CycleErrorMeasures rsPitchDitherProto<T>::getErrorMeasures(

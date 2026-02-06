@@ -883,11 +883,11 @@ void testPitchDithering2()
   CD  cd_o, cd_d, cd_v;
   PDP::distributionViaOverlap(    period, &cd_o);
   PDP::distributionEqualDeviation(period, &cd_d);
-  //PDP::distributionEqualVariance( period, &cd_v);
+  PDP::distributionEqualVariance( period, &cd_v);
 
   CEM em_o = PDP::getErrorMeasures(period, cd_o);
   CEM em_d = PDP::getErrorMeasures(period, cd_d);
-  //CEM em_v = PDP::getErrorMeasures(period, cd_v);
+  CEM em_v = PDP::getErrorMeasures(period, cd_v);
 
   //...TBC...
 
@@ -898,7 +898,12 @@ void testPitchDithering2()
 
   rsAssert(ok);
 
-
+  // Observations:
+  //
+  // - For a half-integer period like P = 100.5, all 3 algorithms produce the same distribution, 
+  //   namely (L1,L2,L3) = (100,101,102), (p1,p2,p3) = (0.5,0.5,0.0) which is what we expect.
+  //
+  //
   // ToDo:
   //
   // - Make a plot for the cycle error measures as function of the fractional part of the period.

@@ -536,6 +536,10 @@ public:
   // ToDo: Try to move implementation out of the class. But I get compilation errors when trying to
   // do so. There is a commented out-of-class implementation below.
 
+  static CycleErrorMeasures getErrorMeasures(T period, const CycleDistribution& cd)
+  { return getErrorMeasures(period, cd.L1, cd.p1, cd.L2, cd.p2, cd.L3, cd.p3); }
+
+
 
 
 };
@@ -606,7 +610,6 @@ void rsPitchDitherProto<T>::fillDitherSaw(
 }
 
 
-
 template<class T> 
 void rsPitchDitherProto<T>::distributionViaOverlap(
   T period, rsPitchDitherProto<T>::CycleDistribution* cd)
@@ -631,6 +634,39 @@ void rsPitchDitherProto<T>::distributionViaOverlap(
 }
 // Needs tests
 
+template<class T> 
+void rsPitchDitherProto<T>::distributionEqualDeviation(
+  T period, rsPitchDitherProto<T>::CycleDistribution* cd)
+{
+  T periodFloor = rsFloor(period);  
+  T periodFrac  = period - periodFloor;
+
+  // Compute lengths:
+  if(periodFrac < 0.5)
+    cd->L1 = (int)periodFloor - 1;
+  else
+    cd->L1 = (int)periodFloor;
+  cd->L2 = cd->L1 + 1;
+  cd->L3 = cd->L2 + 1;
+
+  // Compute intermediates:
+  T e1 = cd->L1 - period;
+  T e2 = cd->L2 - period;
+  T e3 = cd->L3 - period;
+  T m1 = rsAbs(e1);
+  T m2 = rsAbs(e2);
+  T m3 = rsAbs(e3);
+  T M  = T(0.5);
+  T M1 = M - m1;
+  T M2 = M - m2; 
+  T M3 = M - m3;
+  T S  = 1 / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3));
+  
+  // Compute probabilities:
+  cd->p1 = (M2*e3 - M3*e2) * S;
+  cd->p2 = (M3*e1 - M1*e3) * S;
+  cd->p3 = (M1*e2 - M2*e1) * S;
+}
 
 
 template<class T>

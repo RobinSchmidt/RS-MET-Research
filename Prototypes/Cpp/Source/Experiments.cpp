@@ -874,15 +874,21 @@ void testPitchDithering2()
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples = 88200;               // Number of samples to produce
-  Real period     =   100.3;             // Desired cycle length ..maybe call it P
+  Real period     =   100.5;             // Desired cycle length ..maybe call it P
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     2;               // Seed for PRNG
 
 
   // Create various cycle distributions and compute their error measures:
-  CD  cd_o;
-  PDP::distributionViaOverlap(period, &cd_o);
-  //CEM em_o = PDP::getErrorMeasures(period, cd_o);
+  CD  cd_o, cd_d, cd_v;
+  PDP::distributionViaOverlap(    period, &cd_o);
+  PDP::distributionEqualDeviation(period, &cd_d);
+  //PDP::distributionEqualVariance( period, &cd_v);
+
+  CEM em_o = PDP::getErrorMeasures(period, cd_o);
+  CEM em_d = PDP::getErrorMeasures(period, cd_d);
+  //CEM em_v = PDP::getErrorMeasures(period, cd_v);
+
   //...TBC...
 
 

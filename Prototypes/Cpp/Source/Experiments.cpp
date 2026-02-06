@@ -874,17 +874,18 @@ void testPitchDithering2()
 
   int  sampleRate = 44100;               // Sample rate for the wave files
   int  numSamples = 88200;               // Number of samples to produce
-  Real period     =   100.5;             // Desired cycle length ..maybe call it P
-  Real amp        =     0.5;             // Amplitude of the saw
-  int  seed       =     2;               // Seed for PRNG
+  Real period     =   100.3;             // Desired cycle length ..maybe call it P
+  //Real amp        =     0.5;             // Amplitude of the saw
+  //int  seed       =     2;               // Seed for PRNG
 
 
-  // Create various cycle distributions and compute their error measures:
+  // Create various cycle distributions via the different algorithms:
   CD  cd_o, cd_d, cd_v;
   PDP::distributionViaOverlap(    period, &cd_o);
   PDP::distributionEqualDeviation(period, &cd_d);
   PDP::distributionEqualVariance( period, &cd_v);
 
+  // Compute their error measures of the different cycle distributions:
   CEM em_o = PDP::getErrorMeasures(period, cd_o);
   CEM em_d = PDP::getErrorMeasures(period, cd_d);
   CEM em_v = PDP::getErrorMeasures(period, cd_v);
@@ -892,24 +893,75 @@ void testPitchDithering2()
   //...TBC...
 
 
-
+  // Compute some data to plot and do some checks along the way:
   bool ok = true;
+  int  numPeriods = 101;
+  Vec  mae_o(numPeriods), var_o(numPeriods);
+  Vec  mae_d(numPeriods), var_d(numPeriods);
+  Vec  mae_v(numPeriods), var_v(numPeriods);
+  for(int i = 0; i < numPeriods; i++)
+  {
+    Real p = 100.0 + Real(i) / (numPeriods-1);   // Verify the +1!
 
+    // Create the distributions for the current period p:
+    PDP::distributionViaOverlap(    p, &cd_o);
+    PDP::distributionEqualDeviation(p, &cd_d);
+    PDP::distributionEqualVariance( p, &cd_v);
+
+    // Compute error measures for these distributions:
+    CEM em_o = PDP::getErrorMeasures(p, cd_o);
+    CEM em_d = PDP::getErrorMeasures(p, cd_d);
+    CEM em_v = PDP::getErrorMeasures(p, cd_v);
+
+    // Record the measurement data for plotting:
+    mae_o[i] = em_o.mae;
+    var_o[i] = em_o.var;
+    mae_d[i] = em_d.mae;
+    var_d[i] = em_d.var;
+    mae_v[i] = em_v.mae;
+    var_v[i] = em_v.var;
+
+    // Check if the measures are as expected:
+    // ...
+
+    int dummy = 0;
+  }
+
+  // Plot the error measures:
+  rsPlotVectors(mae_o, mae_d, mae_v);
+  rsPlotVectors(var_o, var_d, var_v);
 
   rsAssert(ok);
 
   // Observations:
   //
   // - For a half-integer period like P = 100.5, all 3 algorithms produce the same distribution, 
-  //   namely (L1,L2,L3) = (100,101,102), (p1,p2,p3) = (0.5,0.5,0.0) which is what we expect.
+  //   namely (L1,L2,L3) = (100,101,102), (p1,p2,p3) = (0.5,0.5,0.0) which is what we expect. The
+  //   error measures are therfore also equal and given by: (e1,e2,e3) = (-0.5,0.5,1.5), mae = 0.5,
+  //   var = 0.25. 
+  // 
+  // - The half-integer period case is our reference case to which we want to adjust the 
+  //   probability distributions for all the other cases in order to match certain features of the 
+  //   half-integer error measures. The "EqualDeviation" distribution should always produce an mae 
+  //   of 0.5 and the "EqualVariance" distribution should always produce a var of 0.25.
+  // 
+  // - For an integer period like P = 100.0, the "Overlap" and "EqualDeviation" algorithms 
+  //   produce the same distributions, namely (L1,L2,L3) = (99,100,101), 
+  //   (p1,p2,p3) = (0.25,0.5,0.25). The "EqualVariance" distribution produces the same lengths
+  //   but the probabilities are (p1,p2,p3) = (0.125,0.75,0.125). The mae value of em_d is 0.5 and
+  //   the var value of em_v is 0.25 as expected.
   //
+  // - For a period of 100.3, we also observe an mae of 0.5 in the "EqualDeviation" algo and a var
+  //   of 0.25 in the "EqualVariance" algorithm. This is also as expected. The "Overlap" algo 
+  //   prodcues mae = 0.56 and a var = 0.41.
+  // 
   //
   // ToDo:
   //
   // - Make a plot for the cycle error measures as function of the fractional part of the period.
   //   use periods between 100 and 101 with increment 0.01. Plot the various error measures of the
   //   different algorithms for producing the cycle distribution. For the equal variance 
-  //   distribution, we expect the variance measure to be constant, etc.
+  //   distribution, we expect the variance measure to be constant, etc. Make a unit test for that.
   //
   // - Generate actual sawtooth waves using the different distribtutions for P = 100.0, 100.1, 
   //   100.2, ..., 100.9, 101.0 and plot their spectra. We are interested in which distribtuion

@@ -525,8 +525,8 @@ public:
   /** A struct to store various error measures. */
   struct CycleErrorMeasures
   {
-    T e1, e2, e3;
-    T mae, var;
+    T e1, e2, e3;   // Individual errors for the 3 lengths
+    T mae, var;     // Mean absolute error, Variance
   };
 
   /** Computes the various error measures for a desired noninteger "period" length when we actually

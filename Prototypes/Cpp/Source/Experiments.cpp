@@ -879,12 +879,12 @@ void testPitchDithering2()
   // measures for one specific desired period length for inspecttion the the debugger:
   Real period = 100.3;                              // Desired cycle length
   CD  cd_o, cd_d, cd_v;
-  PDP::distributionViaOverlap(    period, &cd_o);
-  PDP::distributionEqualDeviation(period, &cd_d);
-  PDP::distributionEqualVariance( period, &cd_v);
-  CEM em_o = PDP::getErrorMeasures(period, cd_o);
-  CEM em_d = PDP::getErrorMeasures(period, cd_d);
-  CEM em_v = PDP::getErrorMeasures(period, cd_v);
+  PDP::distributionViaOverlap(     period, &cd_o);
+  PDP::distributionEqualDeviation( period, &cd_d);
+  PDP::distributionEqualVariance(  period, &cd_v);
+  CEM em_o = PDP::getErrorMeasures(period,  cd_o);
+  CEM em_d = PDP::getErrorMeasures(period,  cd_d);
+  CEM em_v = PDP::getErrorMeasures(period,  cd_v);
 
   // Compute probability distributions for period lengths from 100.0 to 101.0 for plotting and do
   // some checks along the way:
@@ -995,10 +995,41 @@ void testPitchDithering2()
   //   testPitchDithering3() for this.
 }
 
+void testPitchDithering3()
+{
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using PDP  = rsPitchDitherProto<Real>;
+  using CD   = PDP::CycleDistribution;
+
+  int  sampleRate = 44100;               // Sample rate for the wave files
+  int  numSamples = 88200;               // Number of samples to produce
+  Real period     =   100.3;             // Desired cycle length
+  Real amp        =     0.5;             // Amplitude of the saw
+  int  seed       =     2;               // Seed for PRNG
+ 
+
+  Vec saw_m; PDP::fillDitherSawMinVariance(saw_m, period, seed, amp); // ToDo: Adapt API for consistency!
+  //Vec saw_o = PDP::getSawOverlap(numSamples, period, seed, amp);
+
+  CD cd;
+  PDP::distributionViaOverlap(period, &cd);
+  Vec saw_o = PDP::getSaw(numSamples, cd, seed, amp);
+
+
+
+
+  int dummy = 0;
+  
+
+
+}
+
 void testPitchDithering()
 {
   //testPitchDithering1();
-  testPitchDithering2();
+  //testPitchDithering2();
+  testPitchDithering3();
 }
 
 void testPitchDitherSuperSaw()

@@ -1011,7 +1011,7 @@ void testPitchDithering3()
   int  seed       =     2;      // Seed for PRNG
  
   // Test:
-  numSamples = 8192;
+  //numSamples = 8192;
 
   // Shorthands:
   int  N = numSamples;
@@ -1028,6 +1028,31 @@ void testPitchDithering3()
 
   //rsPlotVectors(saw1, saw2, saw3, saw4);
 
+  // Helper function to plot spectra of two signals. We always plot two because we want to compare
+  // two spectra at a time. To just plot one, just pass the same signal twice.
+  auto plotSpectra = [&sampleRate](Vec signal1, Vec signal2)
+  {
+    int N = (int) signal1.size();
+
+    Vec wnd(N);
+    //rsWindowFunction::flatTop(&wnd[0], N);
+    rsWindowFunction::blackman(&wnd[0], N);
+    signal1 = signal1 * wnd;
+    signal2 = signal2 * wnd;
+
+
+    Plt plt;
+    plt.setSampleRate(sampleRate);
+    plt.setFftSize(N);
+    plt.setNormalizationMode(Plt::NormalizationMode::toZeroDb);
+    //plt.setLogFreqAxis(true);
+    plt.plotSpectra(N, &signal1[0], &signal2[0]);
+  };
+
+
+  plotSpectra(saw1, saw2);
+
+  /*
   Plt plt;
   plt.setSampleRate(sampleRate);
   plt.setFftSize(N);
@@ -1036,6 +1061,7 @@ void testPitchDithering3()
   //plt.plotSpectra(N, &saw2[0]);
   //plt.plotSpectra(N, &saw3[0]);
   plt.plotSpectra(N, &saw1[0], &saw2[0]);
+  */
 
   int dummy = 0;
 

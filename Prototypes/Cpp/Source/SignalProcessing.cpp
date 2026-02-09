@@ -654,28 +654,56 @@ void rsWriteContentAt(const std::vector<T>& src, std::vector<T>& dst, size_t n)
 }
 
 template<class T> 
-std::vector<T> rsPitchDitherProto<T>::getSaw(int N, const CycleDistribution& cd,
-    unsigned long seed, T amp)
+std::vector<T> rsPitchDitherProto<T>::getSaw(
+  int N, const CycleDistribution& cd, unsigned long seed, T amp)
 {
   rsAssert(N >= 0);
 
+  //rsAssert(isCycleDistributionValid(cd)); // Needs the period which we don't have here. We could
+                                            // reconstruct it, though. It's p1*L1 + p2*L2 + p3*L3.
+   
+
   using Vec = std::vector<T>;
 
+
+  // Create 3 saw cycles of the 3 lengths that may be used:
   Vec cycleL1 = getSawCycle(cd.L1, amp);
   Vec cycleL2 = getSawCycle(cd.L2, amp);
   Vec cycleL3 = getSawCycle(cd.L3, amp);
+
+  // Set up the pseudo random number generator:
+  rsNoiseGenerator<T> prng;
+  prng.setRange(0.0, 1.0);             // Q: Is the interval open, closed or half-open?
+  prng.setSeed(seed);
+
+  // Create the sawtooth wave signal using one of the 3 prototype cycles for each cycle of the saw:
   Vec saw(N);
   size_t n = 0;
   while(n < (size_t) N)
   {
-    int L = cd.L2;                          // Preliminary
-    rsWriteContentAt(cycleL2, saw, n);
-    n += L;
+    T r = prng.getSample();
+    if(r < cd.p1)
+    {
+      rsWriteContentAt(cycleL1, saw, n);
+      n += cd.L1;
+    }
+    else if(r >= cd.p1 + 0.5)
+    {
+      rsWriteContentAt(cycleL3, saw, n);
+      n += cd.L3;
+    }
+    else
+    {
+      rsWriteContentAt(cycleL2, saw, n);
+      n += cd.L2;
+    }
   }
 
-
-
   return saw;
+
+  // ToDo: 
+  // 
+  // - Verify if usage of < vs <= is correct.
 }
 
 
@@ -813,6 +841,8 @@ bool rsPitchDitherProto<T>::isCycleDistributionValid(
   ok &= rsIsCloseTo(probSum, T(1),   tol);              // Probabilities must sum to 1.
   ok &= rsIsCloseTo(lenMean, period, tol);              // Lengths must average to period.
   return ok;
+
+  // ToDo: Maybe verify that L1 >= 2 and L2 == L1 + 1, L3 = L2 + 1
 }
 
 

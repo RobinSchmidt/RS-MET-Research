@@ -1003,13 +1003,14 @@ void testPitchDithering3()
   using CD   = PDP::CycleDistribution;
 
   int  sampleRate = 44100;               // Sample rate for the wave files
-  int  numSamples = 88200;               // Number of samples to produce
+  int  numSamples =  8200;               // Number of samples to produce
   Real period     =   100.3;             // Desired cycle length
   Real amp        =     0.5;             // Amplitude of the saw
   int  seed       =     2;               // Seed for PRNG
  
 
-  Vec saw_m; PDP::fillDitherSawMinVariance(saw_m, period, seed, amp); // ToDo: Adapt API for consistency!
+  Vec saw_m(numSamples);
+  PDP::fillDitherSawMinVariance(saw_m, period, seed, amp); // ToDo: Adapt API for consistency!
   //Vec saw_o = PDP::getSawOverlap(numSamples, period, seed, amp);
 
   CD cd;
@@ -1017,12 +1018,8 @@ void testPitchDithering3()
   Vec saw_o = PDP::getSaw(numSamples, cd, seed, amp);
 
 
-
-
+  rsPlotVectors(saw_m, saw_o);
   int dummy = 0;
-  
-
-
 }
 
 void testPitchDithering()

@@ -489,7 +489,8 @@ public:
   // Maybe rename "ViaOverlap" to something like equalCenter or equalMiddle or equalMidProb. Some 
   // name that reflects that the probability of the middle length is equalized, i.e. invariant to
   // changes in the fractional part of the period. Or maybe for shorter function names use
-  // distribEqMid, ..EqDev, ..EqVar, ..MinVar, ..MinErr/..MinAcc
+  // distribEqMid, ..EqDev, ..EqVar, ..MinVar,  or just
+  // distEqMid, distEqDev, distEqVar, distMinVar
 
   /** Produces a cycle distribution that ensures that the expected absolute error (which we call 
   the deviation) of the length of the cycles is independent from the fractional part of the desired

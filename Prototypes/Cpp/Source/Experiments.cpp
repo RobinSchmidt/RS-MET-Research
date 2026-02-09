@@ -1001,25 +1001,53 @@ void testPitchDithering3()
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
   using CD   = PDP::CycleDistribution;
+  using Plt  = SpectrumPlotter<Real>;
 
-  int  sampleRate = 44100;               // Sample rate for the wave files
-  int  numSamples =  8200;               // Number of samples to produce
-  Real period     =   100.3;             // Desired cycle length
-  Real amp        =     0.5;             // Amplitude of the saw
-  int  seed       =     2;               // Seed for PRNG
+  int  sampleRate = 50000;      // Sample rate for the wave files
+  int  numSamples = 16384;      // Number of samples to produce
+  //Real period     =   100.3;    // Desired cycle length
+  Real period     =   100.0;    // Desired cycle length
+  Real amp        =     0.5;    // Amplitude of the saw
+  int  seed       =     2;      // Seed for PRNG
  
+  // Test:
+  numSamples = 8192;
 
-  Vec saw_m(numSamples);
-  PDP::fillDitherSawMinVariance(saw_m, period, seed, amp); // ToDo: Adapt API for consistency!
-  //Vec saw_o = PDP::getSawOverlap(numSamples, period, seed, amp);
+  // Shorthands:
+  int  N = numSamples;
+  Real P = period;
+
+  Vec saw1(N);
+  PDP::fillDitherSawMinVariance(saw1, P, seed, amp); // ToDo: Adapt API for consistency!
+  //Vec saw_m = PDP::getSawOverlap(numSamples, period, seed, amp);
 
   CD cd;
-  PDP::distributionViaOverlap(period, &cd);
-  Vec saw_o = PDP::getSaw(numSamples, cd, seed, amp);
+  PDP::distributionViaOverlap(    P, &cd); Vec saw2 = PDP::getSaw(N, cd, seed, amp);
+  PDP::distributionEqualDeviation(P, &cd); Vec saw3 = PDP::getSaw(N, cd, seed, amp);
+  PDP::distributionEqualVariance( P, &cd); Vec saw4 = PDP::getSaw(N, cd, seed, amp);
 
+  //rsPlotVectors(saw1, saw2, saw3, saw4);
 
-  rsPlotVectors(saw_m, saw_o);
+  Plt plt;
+  plt.setSampleRate(sampleRate);
+  plt.setFftSize(N);
+  plt.setNormalizationMode(Plt::NormalizationMode::toZeroDb);
+  //plt.setLogFreqAxis(true);
+  //plt.plotSpectra(N, &saw2[0]);
+  //plt.plotSpectra(N, &saw3[0]);
+  plt.plotSpectra(N, &saw1[0], &saw2[0]);
+
   int dummy = 0;
+
+
+  // ToDo: 
+  //
+  // - Apply window function to saw signals.
+  //
+  // - Compare saw at integer with saw at half-integer cycle length in a single plot. Make such a 
+  //   plot for each algorithm. What we are really interested in is which algorithm gives the best 
+  //   match between integer and half-integer cycle lengths. Hopefully, all possible cycle lengths 
+  //   in between will the also have a similar spectrum.
 }
 
 void testPitchDithering()

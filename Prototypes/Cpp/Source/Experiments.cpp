@@ -875,28 +875,21 @@ void testPitchDithering2()
   using CD   = PDP::CycleDistribution;
   using CEM  = PDP::CycleErrorMeasures;
 
-  //int  sampleRate = 44100;               // Sample rate for the wave files
-  //int  numSamples = 88200;               // Number of samples to produce
-  Real period     =   100.3;             // Desired cycle length ..maybe call it P
-  //Real amp        =     0.5;             // Amplitude of the saw
-  //int  seed       =     2;               // Seed for PRNG
-
-
-  // Create various cycle distributions via the different algorithms:
+  // Compute probabilitiy distributions via the different algorithms and the resulting error 
+  // measures for one specific desired period length for inspecttion the the debugger:
+  Real period = 100.3;                              // Desired cycle length
   CD  cd_o, cd_d, cd_v;
   PDP::distributionViaOverlap(    period, &cd_o);
   PDP::distributionEqualDeviation(period, &cd_d);
   PDP::distributionEqualVariance( period, &cd_v);
-
-  // Compute their error measures of the different cycle distributions:
   CEM em_o = PDP::getErrorMeasures(period, cd_o);
   CEM em_d = PDP::getErrorMeasures(period, cd_d);
   CEM em_v = PDP::getErrorMeasures(period, cd_v);
 
-
-  // Compute some data to plot and do some checks along the way:
+  // Compute probability distributions for period lengths from 100.0 to 101.0 for plotting and do
+  // some checks along the way:
   bool ok = true;
-  int  numPeriods = 101;
+  int  numPeriods = 101;                            // Number of data points for plotting
   Vec  mae_o(numPeriods), var_o(numPeriods);
   Vec  mae_d(numPeriods), var_d(numPeriods);
   Vec  mae_v(numPeriods), var_v(numPeriods);
@@ -942,8 +935,8 @@ void testPitchDithering2()
   //
   // - For a half-integer period like P = 100.5, all 3 algorithms produce the same distribution, 
   //   namely (L1,L2,L3) = (100,101,102), (p1,p2,p3) = (0.5,0.5,0.0) which is what we expect. The
-  //   error measures are therfore also equal and given by: (e1,e2,e3) = (-0.5,0.5,1.5), mae = 0.5,
-  //   var = 0.25. 
+  //   error measures are therefore also equal and given by: (e1,e2,e3) = (-0.5,0.5,1.5), 
+  //   mae = 0.5, var = 0.25. 
   // 
   // - The half-integer period case is our reference case to which we want to adjust the 
   //   probability distributions for all the other cases in order to match certain features of the 
@@ -971,11 +964,6 @@ void testPitchDithering2()
   // 
   //
   // ToDo:
-  //
-  // - Make a plot for the cycle error measures as function of the fractional part of the period.
-  //   use periods between 100 and 101 with increment 0.01. Plot the various error measures of the
-  //   different algorithms for producing the cycle distribution. For the equal variance 
-  //   distribution, we expect the variance measure to be constant, etc. Make a unit test for that.
   // 
   // - Make a plot for the 3 probabilities as function of the fractional part of the period.
   // 
@@ -983,6 +971,16 @@ void testPitchDithering2()
   //   variance will also equalize the standard deviation, so this algo would do the same, I think.
   //   ...or would it? Maybe it's almost the same algorithm but using a different value for M, like
   //   0.5 instead of 0.25?
+  // 
+  // - What if we try to equalize the mean absolute error or the variance to values other than
+  //   0.5 and 0.25 respectively? I think, we probably cannot make them any smaller in general 
+  //   because I think these are the minimum attainable worst-case values (where the worst case 
+  //   occurs at half-integer periods). But perhaps we can make them bigger? That doesn't seem to 
+  //   be useful but it would be interesting to figure it out from an academic perspective. Maybe 
+  //   it could even be useful after all. Maybe it could make sense to introduce artificial 
+  //   pitch-jittering noise to make a (super)saw sound more rough and/or more spectrally dense. We
+  //   coul perhaps even imagine to use lengths of L-2,L-3,L-4,...  and L+3,L+4,L+5,... with 
+  //   certain probabilities.
   //
   // - Generate actual sawtooth waves using the different distributtions for P = 100.0, 100.1, 
   //   100.2, ..., 100.9, 101.0 and plot their spectra. We are interested in which distribtuion
@@ -994,7 +992,7 @@ void testPitchDithering2()
   //   in different ways for the different distributions. Maybe just use numSamples = 88200 and 
   //   then use an initial section of the for the FFT. Use another fftSize parameter for that. 
   //   Maybe use a window before applying the FFT. Maybe make a separate function 
-  //   testPitchDithering3() for this
+  //   testPitchDithering3() for this.
 }
 
 void testPitchDithering()

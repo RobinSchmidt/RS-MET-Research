@@ -490,28 +490,32 @@ public:
 
 
   //-----------------------------------------------------------------------------------------------
-  // \name Cycle length and probability compuation
+  // \name Cycle length and probability computation
 
-  //static void lengthsAndProbsOverlap(T period, int* L1, T* p1, int* L2, T* p2, T* L3, T* p3);
-  // Old
-
-
+  /** Structure to represent a probability distribution of cycle lengths. Cycles of lengths 
+  L1,L2,L3 will be produced with probabilities p1,p2,p3 respectively. */
   struct CycleDistribution
   {
     T   p1, p2, p3;
     int L1, L2, L3;
   };
 
+  /** Produces a cycle distribution based on a geometrical overlap consideration. We imagine a 
+  ruler that has a segment of unit length for each integer length that can be produced and a slider
+  of length 2 that we can slide along the ruler. The probabilities of the 3 lengths that straddle 
+  our desired period length are proportional to the overlap of the slider with the segments (the 
+  proportionality factor is 0.5). When computing the probabilities like this, the middle length L2
+  will always receive a probability of 0.5. ...TBC...  */
   static void distributionViaOverlap(T period, CycleDistribution* cd);
-  // Maybe insted of using 6 in/out parameters, make a struct that contains them all. Maybe call it
-  // CycleDistribution. The call the function getOverlapDistribution(T period). The other functions
-  // could be called getEqualDeviationDistribution(T period) or 
-  // getEqualDistanceDistribution(T period), getEqualVarianceDistribution(T period)
-  // Or maybe call them just distri... without the "get" and assign the output to an out-parameter
-  // passed by pointer
 
+  /** Produces a cycle distribution that ensures that the expected absolute error (which we call 
+  the deviation) of the length of the cycles is independent from the fractional part of the desired
+  period. */
   static void distributionEqualDeviation(T period, CycleDistribution* cd);
 
+  /** Produces a cycle distribution that ensures that the expected squared error (i.e. the variance 
+  of the error) of the length of the cycles is independent from the fractional part of the desired 
+  period. */
   static void distributionEqualVariance(T period, CycleDistribution* cd);
 
 
@@ -702,8 +706,10 @@ void rsPitchDitherProto<T>::distributionEqualVariance(
   cd->p3 = (M1*e2 - M2*e1) * S;
 
   // There is a lot of code duplication going on here! Try to refactor to get rid of it! Before
-  // refactoring, estbalish a unit test that checks the results for periods 100.0, 100.1, 100.2,
-  // 100.3,...,100.9
+  // refactoring, establish a unit test that checks the results for periods 100.0, 100.1, 100.2,
+  // 100.3,...,100.9. The only difference is the function to compute m1..m3 from e1..e3 and the
+  // target value M for the weighted average of m1..m3. Maybe we could factor out a function 
+  // distributionEqualMeasure(T period, CycleDistribution* cd, Func f, T mAvg). 
 }
 
 
@@ -716,8 +722,8 @@ bool rsPitchDitherProto<T>::isCycleDistributionValid(
   T tol = 1024 * std::numeric_limits<T>::epsilon();
   T probSum = cd.p1 + cd.p2 + cd.p3;
   T lenMean = cd.p1*cd.L1 + cd.p2*cd.L2 + cd.p3*cd.L3;
-  ok &= rsIsCloseTo(probSum, 1.0,    tol);
-  ok &= rsIsCloseTo(lenMean, period, tol);
+  ok &= rsIsCloseTo(probSum, T(1),   tol);              // Probabilities must sum to 1.
+  ok &= rsIsCloseTo(lenMean, period, tol);              // Lengths must average to period.
   return ok;
 }
 

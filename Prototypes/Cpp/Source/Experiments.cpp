@@ -866,14 +866,17 @@ void testPitchDithering1()
 
 void testPitchDithering2()
 {
+  // We plot the error measures for the 3 different algorithms to determine the probabilities 
+  // p1,p2,p3 for the 3 lengths L1,L2,L3 that are used in the pitch dithering algorithm.
+
   using Real = double;
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
   using CD   = PDP::CycleDistribution;
   using CEM  = PDP::CycleErrorMeasures;
 
-  int  sampleRate = 44100;               // Sample rate for the wave files
-  int  numSamples = 88200;               // Number of samples to produce
+  //int  sampleRate = 44100;               // Sample rate for the wave files
+  //int  numSamples = 88200;               // Number of samples to produce
   Real period     =   100.3;             // Desired cycle length ..maybe call it P
   //Real amp        =     0.5;             // Amplitude of the saw
   //int  seed       =     2;               // Seed for PRNG
@@ -932,6 +935,7 @@ void testPitchDithering2()
   rsPlotVectors(mae_o, mae_d, mae_v);
   rsPlotVectors(var_o, var_d, var_v);
 
+  // Verify that the embedded unit tests have passed:
   rsAssert(ok);
 
   // Observations:
@@ -956,6 +960,15 @@ void testPitchDithering2()
   //   of 0.25 in the "EqualVariance" algorithm. This is also as expected. The "Overlap" algo 
   //   prodcues mae = 0.56 and a var = 0.41.
   // 
+  // - The 3 mae (mean absolute error) plots look as follows: mae_o has two bumps with peaks at 
+  //   x=0.25 and x=0.75 (y-min: 0.5, y-max: 0.5625), mae_d is flat (at y=0.5), mae_v has a single 
+  //   bump at x=0.5 (y-min: 0.25, y-max: 0.5). The latter looks like a sine wave. Maybe it is one?
+  //   Figure out!
+  // 
+  // - The 3 variance plots look as follows: var_o has two bumps at 0.0 and 1.0 and a spikey 
+  //   minimum at 0.5 (y-min=0.25, y-max=0.5), var_d has a single trough at x=0.5 (y-min=0.25, 
+  //   y-max=0.5), var_v is flat (at y=0.25).
+  // 
   //
   // ToDo:
   //
@@ -963,8 +976,15 @@ void testPitchDithering2()
   //   use periods between 100 and 101 with increment 0.01. Plot the various error measures of the
   //   different algorithms for producing the cycle distribution. For the equal variance 
   //   distribution, we expect the variance measure to be constant, etc. Make a unit test for that.
+  // 
+  // - Make a plot for the 3 probabilities as function of the fractional part of the period.
+  // 
+  // - Maybe implement a 4th algo that equalizes the standard deviation. But no! Equalizing the 
+  //   variance will also equalize the standard deviation, so this algo would do the same, I think.
+  //   ...or would it? Maybe it's almost the same algorithm but using a different value for M, like
+  //   0.5 instead of 0.25?
   //
-  // - Generate actual sawtooth waves using the different distribtutions for P = 100.0, 100.1, 
+  // - Generate actual sawtooth waves using the different distributtions for P = 100.0, 100.1, 
   //   100.2, ..., 100.9, 101.0 and plot their spectra. We are interested in which distribtuion
   //   creates the most uniform spectra, i.e. spectra which are the most invariant with respect to
   //   the fractional part of P. Maybe use numSamples = 2^16 for a nice FFT length. Or maybe 2^14 
@@ -973,7 +993,8 @@ void testPitchDithering2()
   //   shorten it to the FFT length because for technical reasons, the last few cycles may cut off
   //   in different ways for the different distributions. Maybe just use numSamples = 88200 and 
   //   then use an initial section of the for the FFT. Use another fftSize parameter for that. 
-  //   Maybe use a window before applying the FFT.
+  //   Maybe use a window before applying the FFT. Maybe make a separate function 
+  //   testPitchDithering3() for this
 }
 
 void testPitchDithering()

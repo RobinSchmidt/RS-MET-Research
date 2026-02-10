@@ -1093,6 +1093,8 @@ void testPitchDithering3()
   //
   // - Apply some smoothing to the spectra to make it easier to see the height of the noise floor.
   //   The raw unsmoothed spectra look too erratic to read off a value.
+  //
+  // - Add also a test with P = 100.25
 }
 
 void testPitchDithering()

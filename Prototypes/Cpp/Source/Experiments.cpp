@@ -1061,21 +1061,30 @@ void testPitchDithering3()
   plotSpectra(saw1, saw2);
 
 
-  int dummy = 0;
-
   // Observations:
   //
   // - For the min-variance algorithm, the saw with period P = 100.0 has no noise floor at all and 
   //   the saw with P = 100.5 has a noise floor at around -45 dB.
   // 
-  // - For the overlap based algorithm, it looks the saw with period P = 100.0 has a higher noise 
+  // - For the "overlap" based algorithm, it looks the saw with period P = 100.0 has a higher noise
   //   floor than the saw with P = 100.5. The difference could be something between 3 and 5 dB. 
   //   It's hard to tell due to the erratic nature of the spectra.
   //
+  // - For the "equal deviation" algorithm, the saw with the integer period length P = 100.0 still
+  //   has a higher noise floor than the saw with half-integer period P = 100.5 but the the 
+  //   difference seems to be less than in the "overlap" algo.
+  // 
+  // - With the "equal variance" algorithm, the noise floor for integer and half-integer period 
+  //   lengths looks to be the same.
+  // 
+  // 
+  // Conclusions:
+  // 
+  // - The "equal variance" algorithm wins. This is the algorithm that creates the most similar 
+  //   spectra for integer and half-integer period lengths.
+  // 
   //
   // ToDo: 
-  //
-  // - Apply window function to saw signals.
   //
   // - Compare saw at integer with saw at half-integer cycle length in a single plot. Make such a 
   //   plot for each algorithm. What we are really interested in is which algorithm gives the best 
@@ -1086,6 +1095,11 @@ void testPitchDithering3()
   //   The raw unsmoothed spectra look too erratic to read off a value.
   //
   // - Add also a test with P = 100.25
+  //
+  // - Maybe implement yet more algorithms and test them here.
+  //
+  // - Try producing a pitch dithered sine wave rather than a saw wave. It may make reading the 
+  //   spectrum more easy because we will only have one spike.
 }
 
 void testPitchDithering()

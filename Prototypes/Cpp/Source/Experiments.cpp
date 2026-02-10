@@ -1006,26 +1006,36 @@ void testPitchDithering3()
   int  sampleRate = 50000;      // Sample rate for the wave files
   int  numSamples = 16384;      // Number of samples to produce
   //Real period     =   100.3;    // Desired cycle length
-  Real period     =   100.5;    // Desired cycle length
+  //Real period     =   100.5;    // Desired cycle length
   Real amp        =     0.5;    // Amplitude of the saw
   int  seed       =     2;      // Seed for PRNG
- 
+  Real P1         = 100.0;      // Integer cycle length
+  Real P2         = 100.5;      // Half-integer cycle length
+
   // Test:
   //numSamples = 8192;
 
   // Shorthands:
   int  N = numSamples;
-  Real P = period;
+  //Real P = period;
 
+
+  CD cd;
+  Vec saw1(N), saw2(N);
+
+  /*
+  //-----------------------------------
+  // Obsolete (soon):
   // Create saws:
   Vec saw1(N);
   PDP::fillDitherSawMinVariance(saw1, P, seed, amp); // ToDo: Adapt API for consistency!
   //Vec saw_m = PDP::getSawOverlap(numSamples, period, seed, amp);
 
-  CD cd;
   PDP::distributionViaOverlap(    P, &cd); Vec saw2 = PDP::getSaw(N, cd, seed, amp);
   PDP::distributionEqualDeviation(P, &cd); Vec saw3 = PDP::getSaw(N, cd, seed, amp);
   PDP::distributionEqualVariance( P, &cd); Vec saw4 = PDP::getSaw(N, cd, seed, amp);
+  //-----------------------------------
+  */
 
 
   // Helper function to plot spectra of two signals. We always plot two because we want to compare
@@ -1054,10 +1064,12 @@ void testPitchDithering3()
   //plotSpectra(saw1, saw2);
 
 
-  // Create saws for periods P = 100.0 and 100.5 using the "overlap" algorithm and plot their 
-  // spectra in one plot for comparison:
-  PDP::distributionViaOverlap(100.0, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
-  PDP::distributionViaOverlap(100.5, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
+
+
+  // Create saws for periods P1 and P2 using the "overlap" algorithm and plot their spectra in one
+  // plot for comparison:
+  PDP::distributionViaOverlap(P1, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
+  PDP::distributionViaOverlap(P2, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
   plotSpectra(saw1, saw2);
  
 

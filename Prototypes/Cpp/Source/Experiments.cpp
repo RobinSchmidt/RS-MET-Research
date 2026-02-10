@@ -1011,27 +1011,10 @@ void testPitchDithering3()
   Real P2         = 100.5;      // Half-integer cycle length
 
 
-
-  // Shorthands:
-  int  N = numSamples;
-
-  CD cd;
+  // Variables to be used:
+  int N = numSamples;           // Shorthand
+  CD  cd;
   Vec saw1(N), saw2(N);
-
-  /*
-  //-----------------------------------
-  // Obsolete (soon):
-  // Create saws:
-  Vec saw1(N);
-  PDP::fillDitherSawMinVariance(saw1, P, seed, amp); // ToDo: Adapt API for consistency!
-  //Vec saw_m = PDP::getSawOverlap(numSamples, period, seed, amp);
-
-  PDP::distributionViaOverlap(    P, &cd); Vec saw2 = PDP::getSaw(N, cd, seed, amp);
-  PDP::distributionEqualDeviation(P, &cd); Vec saw3 = PDP::getSaw(N, cd, seed, amp);
-  PDP::distributionEqualVariance( P, &cd); Vec saw4 = PDP::getSaw(N, cd, seed, amp);
-  //-----------------------------------
-  */
-
 
   // Helper function to plot spectra of two signals. We always plot two because we want to compare
   // two spectra at a time. To just plot one, just pass the same signal twice.
@@ -1056,7 +1039,6 @@ void testPitchDithering3()
   };
 
 
-
   // Create saws for periods P1 and P2 using the "min-variance" algorithm and plot their spectra in
   // one plot for comparison:
   PDP::fillDitherSawMinVariance(saw1, P1, seed, amp);  // ToDo: Adapt API for consistency with
@@ -1067,7 +1049,16 @@ void testPitchDithering3()
   PDP::distributionViaOverlap(P1, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
   PDP::distributionViaOverlap(P2, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
   plotSpectra(saw1, saw2);
+
+  // Now with the "equal deviation" algorithm:
+  PDP::distributionEqualDeviation(P1, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
+  PDP::distributionEqualDeviation(P2, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
+  plotSpectra(saw1, saw2);
  
+  // Now with the "equal variance" algorithm:
+  PDP::distributionEqualVariance(P1, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
+  PDP::distributionEqualVariance(P2, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
+  plotSpectra(saw1, saw2);
 
 
   int dummy = 0;

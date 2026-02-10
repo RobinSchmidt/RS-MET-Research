@@ -997,6 +997,14 @@ void testPitchDithering2()
 
 void testPitchDithering3()
 {
+  // We compare spectra of pitch-dithered sawtooth waves at integer and half-integer values for the
+  // desired cycle length in a single plot. We create such a comparison plot for each of the 
+  // algorithms for computing the cycle distributions. The goal is to figure out for which 
+  // algorithm the spectra look most similar because that's whyt we desired in an oscillator: the
+  // spectral character should be independent from whether or not we happen to hit an exact integer
+  // cycle length. Spoiler: The equal-variance algorithm is the winner. It produces the most 
+  // similar spectra.
+
   using Real = double;
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
@@ -1007,12 +1015,8 @@ void testPitchDithering3()
   int  numSamples = 16384;      // Number of samples to produce
   Real amp        =     0.5;    // Amplitude of the saw
   int  seed       =     2;      // Seed for PRNG
-  Real P1         = 100.0;      // Integer cycle length
-  Real P2         = 100.5;      // Half-integer cycle length
-
-
-  // Test:
-  numSamples = 4096;
+  Real P1         =  20.0;      // Integer cycle length
+  Real P2         =  20.5;      // Half-integer cycle length
 
   // Variables to be used:
   int N = numSamples;           // Shorthand
@@ -1027,9 +1031,6 @@ void testPitchDithering3()
 
     // Apply window:
     Vec wnd(N);
-    //rsWindowFunction::flatTop(&wnd[0], N);
-    //rsWindowFunction::blackman(&wnd[0], N);
-    //rsWindowFunction::blackmanNutall(&wnd[0], N);
     rsWindowFunction::dolphChebychev(&wnd[0], N, 200.0);
     //rsWindowFunction::truncatedGaussian(&wnd[0], N, 0.1);
     signal1 = signal1 * wnd;
@@ -1043,7 +1044,6 @@ void testPitchDithering3()
     //plt.setLogFreqAxis(true);
     plt.plotSpectra(N, &signal1[0], &signal2[0]);
   };
-
 
   // Create saws for periods P1 and P2 using the "min-variance" algorithm and plot their spectra in
   // one plot for comparison:
@@ -1066,7 +1066,6 @@ void testPitchDithering3()
   PDP::distributionEqualVariance(P2, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
   plotSpectra(saw1, saw2);
 
-
   // Observations:
   //
   // - For the min-variance algorithm, the saw with period P1 = 100.0 has no noise floor at all and 
@@ -1083,7 +1082,8 @@ void testPitchDithering3()
   //   difference seems to be less than in the "overlap" algo.
   // 
   // - With the "equal variance" algorithm, the noise floor for integer and half-integer period 
-  //   lengths looks to be the same.
+  //   lengths looks to be the same. This is epsecially apparent in the roll off on the left of the
+  //   plot, i.e. the roll off towards DC.
   // 
   // - The noise in the spectrum looks periodic. There random fluctuations of the spectral 
   //   magnitudes look (more or less) the same around each harmonic.
@@ -1096,21 +1096,20 @@ void testPitchDithering3()
   //   far, it seems to also produce similar spectra for all values in between exact integers and
   //   half-integers.
   // 
-  // - The fact that in the min-variance algo the noise floor is appearing rather steeply when one
+  // - The fact that in the min-variance algo the noise floor is appearing rather abruptly when one
   //   deviates only a tiny bit from an exact integer may means that in practice, it will be very 
   //   unlikely that one hits just the right frequency that makes the saw sound clean. There should
-  //   be only tiny windows around the excat integers at which the saw will sound clean. ToDo: 
-  //   Verify that by rendering signals for listening tests! Produce saws with periods: 100.0, 
-  //   100.01, 100.05 and 100.5. We expect that the 100.01 saw will sound more similar to the 100.5
-  //   saw than to the 100.0 saw, even though 100.01 is much closer to 100.0 than to 100.5.
+  //   be only tiny windows around the exact integers at which the saw will sound clean so hitting 
+  //   these special frequencies may be rare in practic. ToDo: Verify that by rendering signals for
+  //   listening tests! Produce saws with periods: 100.0, 100.01, 100.05 and 100.5. We expect that 
+  //   the 100.01 saw will sound more similar to the 100.5 saw than to the 100.0 saw, even though 
+  //   100.01 is much closer to 100.0 than to 100.5.
+  // 
+  // - In a practical implementation for an oscillator, we should use the "equal variance" 
+  //   algorithm anyway. It seems to be the perfect solution.
   // 
   //
   // ToDo: 
-  //
-  // - Compare saw at integer with saw at half-integer cycle length in a single plot. Make such a 
-  //   plot for each algorithm. What we are really interested in is which algorithm gives the best 
-  //   match between integer and half-integer cycle lengths. Hopefully, all possible cycle lengths 
-  //   in between will the also have a similar spectrum.
   //
   // - Apply some smoothing to the spectra to make it easier to see the height of the noise floor.
   //   The raw unsmoothed spectra look too erratic to read off a value. Or maybe use a more 

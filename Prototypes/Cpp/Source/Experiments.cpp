@@ -1005,20 +1005,15 @@ void testPitchDithering3()
 
   int  sampleRate = 50000;      // Sample rate for the wave files
   int  numSamples = 16384;      // Number of samples to produce
-  //Real period     =   100.3;    // Desired cycle length
-  //Real period     =   100.5;    // Desired cycle length
   Real amp        =     0.5;    // Amplitude of the saw
   int  seed       =     2;      // Seed for PRNG
   Real P1         = 100.0;      // Integer cycle length
   Real P2         = 100.5;      // Half-integer cycle length
 
-  // Test:
-  //numSamples = 8192;
+
 
   // Shorthands:
   int  N = numSamples;
-  //Real P = period;
-
 
   CD cd;
   Vec saw1(N), saw2(N);
@@ -1060,14 +1055,15 @@ void testPitchDithering3()
     plt.plotSpectra(N, &signal1[0], &signal2[0]);
   };
 
-  //rsPlotVectors(saw1, saw2, saw3, saw4);
-  //plotSpectra(saw1, saw2);
 
 
+  // Create saws for periods P1 and P2 using the "min-variance" algorithm and plot their spectra in
+  // one plot for comparison:
+  PDP::fillDitherSawMinVariance(saw1, P1, seed, amp);  // ToDo: Adapt API for consistency with
+  PDP::fillDitherSawMinVariance(saw2, P2, seed, amp);  // code below!
+  plotSpectra(saw1, saw2);
 
-
-  // Create saws for periods P1 and P2 using the "overlap" algorithm and plot their spectra in one
-  // plot for comparison:
+  // Now the same thing using the "overlap" algorithm:
   PDP::distributionViaOverlap(P1, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
   PDP::distributionViaOverlap(P2, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
   plotSpectra(saw1, saw2);
@@ -1078,9 +1074,12 @@ void testPitchDithering3()
 
   // Observations:
   //
-  // - For the overlap based algorithm, it looks the the saw with period P = 100.0 has a higher 
-  //   noise floor than the saw with P = 100.5. The difference could be something between 3 and 5 
-  //   dB. It's hard to tell due to the erratic nature of the spectra.
+  // - For the min-variance algorithm, the saw with period P = 100.0 has no noise floor at all and 
+  //   the saw with P = 100.5 has a noise floor at around -45 dB.
+  // 
+  // - For the overlap based algorithm, it looks the saw with period P = 100.0 has a higher noise 
+  //   floor than the saw with P = 100.5. The difference could be something between 3 and 5 dB. 
+  //   It's hard to tell due to the erratic nature of the spectra.
   //
   //
   // ToDo: 

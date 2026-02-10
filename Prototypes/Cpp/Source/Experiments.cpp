@@ -1353,7 +1353,14 @@ void testPitchDitherSuperSaw()
   //   channel and allows different settings for those with regard to detune, mix, maybe 
   //   filtering (simple 1st order LP/HP). Maybe it could be interesting anyway to split the
   //   supersaw into low and high frequency ranges and have different detuning for both
-
+  //
+  // - Maybe the saw oscillators shouldn't start at -1 but rather at +1 and then produce -1 as the
+  //   very next sample (and then only ramp up to 1-inc rather than 1). That would correspond to 
+  //   initializing the phase on the last sample of the saw and lead to an even more aggressive 
+  //   transient. 
+  //
+  // - Try using a disperser on a supersaw with a strong transient setting. The frequencies of the
+  //   allpasses should scale with note pitch - perhaps via a keytrack parameter
 }
 
 

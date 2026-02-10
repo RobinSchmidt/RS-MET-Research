@@ -1035,4 +1035,8 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::readSawValue(TInt n, TInt N)
 //   half integers.
 //
 // - Maybe get rid of the mode parameter again. Implement only the equal-variance algorithm. It 
-//   turned out to be the right one experimentally.
+//   turned out to be the right one experimentally. But maybe for experimentation and demonstration
+//   purposes, an implementation that offers the different modes could be useful, so maybe 
+//   implement all possible modes in this class and then make a smaller, optimized class that only
+//   has the equal-variance algorithm. It could also precompute the cycle distribtuion (i.e. L1..L3
+//   and p1..p3) so it doesn't need to be computed in each call to updateCycleLength().

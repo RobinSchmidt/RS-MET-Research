@@ -10,4 +10,12 @@ Using AI assistence:
 
 - Implement a algorithm or perform a computation for a small example problem and ask the AI to 
   extrapolate to the general case and generate a pseudo-code representation and actual code for it.
+  
+  
+ToDo:
+
+- Maybe try the "implement algo for small example, let AI generalize" workflow with the idea for a
+  transparent upsampling -> downsampling roundtrip. Maybe try it with Claude and ChatGPT 4 Pro. 
+  Sabine Hossenfelder said that the latter is the best at math stuff. ...but I'm afraid, it requires
+  a subscription
 

@@ -1006,7 +1006,7 @@ void testPitchDithering3()
   int  sampleRate = 50000;      // Sample rate for the wave files
   int  numSamples = 16384;      // Number of samples to produce
   //Real period     =   100.3;    // Desired cycle length
-  Real period     =   100.0;    // Desired cycle length
+  Real period     =   100.5;    // Desired cycle length
   Real amp        =     0.5;    // Amplitude of the saw
   int  seed       =     2;      // Seed for PRNG
  
@@ -1017,6 +1017,7 @@ void testPitchDithering3()
   int  N = numSamples;
   Real P = period;
 
+  // Create saws:
   Vec saw1(N);
   PDP::fillDitherSawMinVariance(saw1, P, seed, amp); // ToDo: Adapt API for consistency!
   //Vec saw_m = PDP::getSawOverlap(numSamples, period, seed, amp);
@@ -1026,7 +1027,6 @@ void testPitchDithering3()
   PDP::distributionEqualDeviation(P, &cd); Vec saw3 = PDP::getSaw(N, cd, seed, amp);
   PDP::distributionEqualVariance( P, &cd); Vec saw4 = PDP::getSaw(N, cd, seed, amp);
 
-  //rsPlotVectors(saw1, saw2, saw3, saw4);
 
   // Helper function to plot spectra of two signals. We always plot two because we want to compare
   // two spectra at a time. To just plot one, just pass the same signal twice.
@@ -1034,13 +1034,14 @@ void testPitchDithering3()
   {
     int N = (int) signal1.size();
 
+    // Apply window:
     Vec wnd(N);
     //rsWindowFunction::flatTop(&wnd[0], N);
     rsWindowFunction::blackman(&wnd[0], N);
     signal1 = signal1 * wnd;
     signal2 = signal2 * wnd;
 
-
+    // Plot:
     Plt plt;
     plt.setSampleRate(sampleRate);
     plt.setFftSize(N);
@@ -1049,23 +1050,27 @@ void testPitchDithering3()
     plt.plotSpectra(N, &signal1[0], &signal2[0]);
   };
 
+  //rsPlotVectors(saw1, saw2, saw3, saw4);
+  //plotSpectra(saw1, saw2);
 
+
+  // Create saws for periods P = 100.0 and 100.5 using the "overlap" algorithm and plot their 
+  // spectra in one plot for comparison:
+  PDP::distributionViaOverlap(100.0, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
+  PDP::distributionViaOverlap(100.5, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
   plotSpectra(saw1, saw2);
+ 
 
-  /*
-  Plt plt;
-  plt.setSampleRate(sampleRate);
-  plt.setFftSize(N);
-  plt.setNormalizationMode(Plt::NormalizationMode::toZeroDb);
-  //plt.setLogFreqAxis(true);
-  //plt.plotSpectra(N, &saw2[0]);
-  //plt.plotSpectra(N, &saw3[0]);
-  plt.plotSpectra(N, &saw1[0], &saw2[0]);
-  */
 
   int dummy = 0;
 
-
+  // Observations:
+  //
+  // - For the overlap based algorithm, it looks the the saw with period P = 100.0 has a higher 
+  //   noise floor than the saw with P = 100.5. The difference could be something between 3 and 5 
+  //   dB. It's hard to tell due to the erratic nature of the spectra.
+  //
+  //
   // ToDo: 
   //
   // - Apply window function to saw signals.
@@ -1074,6 +1079,9 @@ void testPitchDithering3()
   //   plot for each algorithm. What we are really interested in is which algorithm gives the best 
   //   match between integer and half-integer cycle lengths. Hopefully, all possible cycle lengths 
   //   in between will the also have a similar spectrum.
+  //
+  // - Apply some smoothing to the spectra to make it easier to see the height of the noise floor.
+  //   The raw unsmoothed spectra look too erratic to read off a value.
 }
 
 void testPitchDithering()

@@ -686,8 +686,7 @@ std::vector<T> rsPitchDitherProto<T>::getSaw(
       rsWriteContentAt(cycleL1, saw, n);
       n += cd.L1;
     }
-    //else if(r >= cd.p1 + 0.5)                // WRONG!!!
-    else if(r >= cd.p1 + cd.p2)                // Ah! That looks better!
+    else if(r >= cd.p1 + cd.p2)
     {
       rsWriteContentAt(cycleL3, saw, n);
       n += cd.L3;
@@ -702,8 +701,6 @@ std::vector<T> rsPitchDitherProto<T>::getSaw(
   return saw;
 
   // ToDo: 
-  // 
-  // - ...Wait! That is wrong anyway! We need to use cd.p2
   // 
   // - Verify if usage of < vs <= and > vs >= is correct when checking r against cd.p1 etc.. I 
   //   think that can be decided only when we made a decision whether p1 or p3 should be zero in 
@@ -1036,3 +1033,6 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::readSawValue(TInt n, TInt N)
 //   error feedback), another probabilistic one that uses L-1, L, L+1 with p = 0.25, 0.5, 0.25
 //   respectively to make frequencies at exact integers sound similarly noisified as those at the
 //   half integers.
+//
+// - Maybe get rid of the mode parameter again. Implement only the equal-variance algorithm. It 
+//   turned out to be the right one experimentally.

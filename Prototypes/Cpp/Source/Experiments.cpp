@@ -1007,8 +1007,8 @@ void testPitchDithering3()
   int  numSamples = 16384;      // Number of samples to produce
   Real amp        =     0.5;    // Amplitude of the saw
   int  seed       =     2;      // Seed for PRNG
-  Real P1         = 100.0;      // Integer cycle length
-  Real P2         = 100.5;      // Half-integer cycle length
+  Real P1         =  30.0;      // Integer cycle length
+  Real P2         =  30.5;      // Half-integer cycle length
 
 
   // Variables to be used:
@@ -1100,6 +1100,14 @@ void testPitchDithering3()
   //
   // - Try producing a pitch dithered sine wave rather than a saw wave. It may make reading the 
   //   spectrum more easy because we will only have one spike.
+  //
+  // - Try to figure out how the noise floor increases as function of decreasing desired cycle 
+  //   length. We expect that for shorter cycles, we will get more noise because the relative 
+  //   deviation of the 3 integer lengths form the ideal desired period length P will be greater 
+  //   for shorter cycles. That means: higher frequencies will be noisier than lower frequencies.
+  //
+  // - Verify that the peaks of the (smoothed) spectrum are where they are supposed to be, namely
+  //   at the integer multiples of the desired fundamental frequency.
 }
 
 void testPitchDithering()

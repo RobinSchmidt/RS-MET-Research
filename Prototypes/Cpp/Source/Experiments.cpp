@@ -1007,9 +1007,12 @@ void testPitchDithering3()
   int  numSamples = 16384;      // Number of samples to produce
   Real amp        =     0.5;    // Amplitude of the saw
   int  seed       =     2;      // Seed for PRNG
-  Real P1         =  30.0;      // Integer cycle length
-  Real P2         =  30.5;      // Half-integer cycle length
+  Real P1         = 100.0;      // Integer cycle length
+  Real P2         = 100.5;      // Half-integer cycle length
 
+
+  // Test:
+  numSamples = 4096;
 
   // Variables to be used:
   int N = numSamples;           // Shorthand
@@ -1025,7 +1028,10 @@ void testPitchDithering3()
     // Apply window:
     Vec wnd(N);
     //rsWindowFunction::flatTop(&wnd[0], N);
-    rsWindowFunction::blackman(&wnd[0], N);
+    //rsWindowFunction::blackman(&wnd[0], N);
+    //rsWindowFunction::blackmanNutall(&wnd[0], N);
+    rsWindowFunction::dolphChebychev(&wnd[0], N, 200.0);
+    //rsWindowFunction::truncatedGaussian(&wnd[0], N, 0.1);
     signal1 = signal1 * wnd;
     signal2 = signal2 * wnd;
 
@@ -1063,25 +1069,40 @@ void testPitchDithering3()
 
   // Observations:
   //
-  // - For the min-variance algorithm, the saw with period P = 100.0 has no noise floor at all and 
-  //   the saw with P = 100.5 has a noise floor at around -45 dB.
+  // - For the min-variance algorithm, the saw with period P1 = 100.0 has no noise floor at all and 
+  //   the saw with P2 = 100.5 has a noise floor at around -45 dB. Throwing off P1 by a very small 
+  //   amount to 100.01 already brings up the noise floor significantly such that it almost matches
+  //   the worst case one at the half-integer 100.5
   // 
-  // - For the "overlap" based algorithm, it looks the saw with period P = 100.0 has a higher noise
-  //   floor than the saw with P = 100.5. The difference could be something between 3 and 5 dB. 
-  //   It's hard to tell due to the erratic nature of the spectra.
+  // - For the "overlap" based algorithm, it looks the saw with period P1 = 100.0 has a higher 
+  //   noise floor than the saw with P2 = 100.5. The difference could be something between 3 and 5
+  //   dB. It's hard to tell due to the erratic nature of the spectra.
   //
-  // - For the "equal deviation" algorithm, the saw with the integer period length P = 100.0 still
-  //   has a higher noise floor than the saw with half-integer period P = 100.5 but the the 
+  // - For the "equal deviation" algorithm, the saw with the integer period length P1 = 100.0 still
+  //   has a higher noise floor than the saw with half-integer period P2 = 100.5 but the the 
   //   difference seems to be less than in the "overlap" algo.
   // 
   // - With the "equal variance" algorithm, the noise floor for integer and half-integer period 
   //   lengths looks to be the same.
   // 
+  // - The noise in the spectrum looks periodic. There random fluctuations of the spectral 
+  //   magnitudes look (more or less) the same around each harmonic.
+  // 
   // 
   // Conclusions:
   // 
   // - The "equal variance" algorithm wins. This is the algorithm that creates the most similar 
-  //   spectra for integer and half-integer period lengths.
+  //   spectra for integer and half-integer period lengths. From my (not very exhaustive) tests so
+  //   far, it seems to also produce similar spectra for all values in between exact integers and
+  //   half-integers.
+  // 
+  // - The fact that in the min-variance algo the noise floor is appearing rather steeply when one
+  //   deviates only a tiny bit from an exact integer may means that in practice, it will be very 
+  //   unlikely that one hits just the right frequency that makes the saw sound clean. There should
+  //   be only tiny windows around the excat integers at which the saw will sound clean. ToDo: 
+  //   Verify that by rendering signals for listening tests! Produce saws with periods: 100.0, 
+  //   100.01, 100.05 and 100.5. We expect that the 100.01 saw will sound more similar to the 100.5
+  //   saw than to the 100.0 saw, even though 100.01 is much closer to 100.0 than to 100.5.
   // 
   //
   // ToDo: 
@@ -1092,7 +1113,11 @@ void testPitchDithering3()
   //   in between will the also have a similar spectrum.
   //
   // - Apply some smoothing to the spectra to make it easier to see the height of the noise floor.
-  //   The raw unsmoothed spectra look too erratic to read off a value.
+  //   The raw unsmoothed spectra look too erratic to read off a value. Or maybe use a more 
+  //   aggressive window function. That should also smooth the spectrum because the main lobe gets
+  //   wider. OK: Using a Dolph-Chebychev window with high sidlelobe attenuation (like 200 to 300 
+  //   dB) does indeed have a spectral smoothing effect. A Gaussian window with small sigma (like 
+  //   0.1) also works well.
   //
   // - Add also a test with P = 100.25
   //

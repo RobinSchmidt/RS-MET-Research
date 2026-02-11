@@ -6,6 +6,30 @@ This file contains temporary draft notes. It's just a totally messy sketchpad!
 ----------------------------------------------------------------------------------------------------
 Engrowler/Growlifier
 
+- My underlying working assumption is that "growliness" in a signal comes from minor differences 
+  between the different pitch cycles in a quasi-periodic signal. This could mean that different 
+  cycles have a slightly different lengths, amplitudes, shapes, etc..
+  
+- If that hypothesis is true, then we could impose "growl" on an existing monophonic, quasi-periodic 
+  signal by detecting the pitch cycles (for example by using a zero-crossing based detector) and 
+  whenever we encounter a cycle boundary, we could randomly change some parameter of some DSP 
+  algorithm. In the simplest case, we could just change the output amplitude like so:
+  
+  if(cycleEndDetected)
+    amp = 1.0 + growlAmount * getRandomNumber();
+  return amp * input;
+  
+- Other parameters that could be changed are filter settings like the center freq for a peaking EQ 
+  or the delay time in a delay line. In signal generator, we could also change the signal frequency.
+  
+- Maybe instead of using a PRNG, the random number could be derived from the input signal itself 
+  using a sort of "hash" function. That would make the output reproducible. To make the effect 
+  invariant with rewspect to the total gain of the input, we could use a signal measure that is 
+  itself independent of the gain of the signal. Examples could be the crest factor or the 
+  cross-correlation of two successive cycles. As we are detecting the cycle boundaries anyway, the 
+  setting elnds itself to use some measurement that is defined over one or multiple past cycles.
+
+
 
 
 ----------------------------------------------------------------------------------------------------

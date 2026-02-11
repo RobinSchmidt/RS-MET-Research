@@ -475,9 +475,12 @@ public:
   L1,L2,L3 will be produced with probabilities p1,p2,p3 respectively. */
   struct CycleDistribution
   {
-    T   p1, p2, p3;
-    int L1, L2, L3;
+    T   p1, p2, p3;   // p3 = 1 - (p1 + p2)
+    int L1, L2, L3;   // L2 = L1 + 1, L3 = L2 + 1 = L1 + 2
+    // We accept the redundancies of p3, L2, L3 because this is just a proof of concept and they 
+    // may add some clarity.
   };
+
 
   /** Produces a cycle distribution based on a geometrical overlap consideration. We imagine a 
   ruler that has a segment of unit length for each integer length that can be produced and a slider
@@ -503,7 +506,7 @@ public:
   static void distributionEqualVariance(T period, CycleDistribution* cd);
 
   // Make a function distributionMinVariance that has always 0 for p1 (or maybe 0 for p3 can also
-  // occur in an edge case?)
+  // occur in an edge case? But I don't think so.)
 
 
   //-----------------------------------------------------------------------------------------------
@@ -528,8 +531,6 @@ public:
 
   static std::vector<T> getSaw(int N, const CycleDistribution& cd, 
     unsigned long seed = 0, T amp = T(1));
-
-  //static std::vector<T> getSawOverlap(int N, T period, unsigned long seed = 0, T amp = T(1));
 
 
   //static void fillDitherSaw(
@@ -706,7 +707,8 @@ std::vector<T> rsPitchDitherProto<T>::getSaw(
   //   think that can be decided only when we made a decision whether p1 or p3 should be zero in 
   //   the edge case of an integer desired period P. Perhaps it makes more sense to set p1 to zero
   //   in the case if we want to maintain that the middle length L2 is always floor(P) which seems
-  //   to be a sensible convention.
+  //   to be a sensible convention. Of course, it would be best, if it would work correctly if any
+  //   of p1,p2,p3 is zero. If that's not possible, the priority list is: p1,p3,p2
   //
   // - Maybe let rsWriteContentAt() return the number of items written and then use:
   //   n += rsWriteContentAt(..) to compactify the 3 branches into 1-liners.
@@ -750,15 +752,14 @@ void rsPitchDitherProto<T>::distributionViaOverlap(
   }
   else
   {
-    cd->L1 = (int)periodFloor;                               // No -1 here
+    cd->L1 = (int)periodFloor;              // No -1 here
     cd->p3 = 0.5 * (periodFrac - 0.5);
     cd->p1 = 0.5 - cd->p3;
   }
-  cd->p2 = 0.5;                                              // p2 is always 0.5
+  cd->p2 = 0.5;                             // p2 is always 0.5
   cd->L2 = cd->L1 + 1;
   cd->L3 = cd->L2 + 1;
 }
-// Needs tests
 
 template<class T> 
 void rsPitchDitherProto<T>::distributionEqualDeviation(

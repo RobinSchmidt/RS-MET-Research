@@ -354,3 +354,9 @@ https://github.com/pure-data/externals-howto
 
 This Will Change The Way You Think About Arranging Music
 https://www.youtube.com/watch?v=nfLMVhheS2g  
+
+
+How Lagrange Solved the "Vandermonde Nightmare
+https://www.youtube.com/watch?v=JaQLpJEaHvU
+-Good explanation of Lagrange interpolation. Has interesting "barycentric optimization" at the end.
+ Maybe I should implement that. 

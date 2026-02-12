@@ -712,7 +712,7 @@ std::vector<T> rsPitchDitherProto<T>::getSawOld(
   //   to be a sensible convention. Of course, it would be best, if it would work correctly if any
   //   of p1,p2,p3 is zero. If that's not possible, the priority list is: p1,p3,p2
   // 
-  // - I think, it is indeed coorect. We could rewrite it in such a way that the 2nd branch 
+  // - I think, it is indeed correct. We could rewrite it in such a way that the 2nd branch 
   //   produces the cycles of length L2 and the 3rd branch those of length L3. To achieve this, we
   //   would have to change the "else-if" condition to "else if(r < cd.p1 + cd.p2)". Doing it like 
   //   that may look more orderly and could straightforwardly be generalized to more lengths and 
@@ -722,6 +722,10 @@ std::vector<T> rsPitchDitherProto<T>::getSawOld(
   //
   // - Maybe let rsWriteContentAt() return the number of items written and then use:
   //   n += rsWriteContentAt(..) to compactify the 3 branches into 1-liners.
+  //
+  // - The function has been renamed to getSawOld() with the intention to provide a new getSaw()
+  //   implementation doing what is suggested in the two points above. We could then implement
+  //   a unit test that ensures that the old and new version produce the same results.
 }
 
 

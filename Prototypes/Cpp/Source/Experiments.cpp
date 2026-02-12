@@ -1052,18 +1052,18 @@ void testPitchDithering3()
   plotSpectra(saw1, saw2);
 
   // Now the same thing using the "overlap" algorithm:
-  PDP::distributionViaOverlap(P1, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
-  PDP::distributionViaOverlap(P2, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
+  PDP::distributionViaOverlap(P1, &cd); saw1 = PDP::getSawOld(N, cd, seed, amp);
+  PDP::distributionViaOverlap(P2, &cd); saw2 = PDP::getSawOld(N, cd, seed, amp);
   plotSpectra(saw1, saw2);
 
   // Now with the "equal deviation" algorithm:
-  PDP::distributionEqualDeviation(P1, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
-  PDP::distributionEqualDeviation(P2, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
+  PDP::distributionEqualDeviation(P1, &cd); saw1 = PDP::getSawOld(N, cd, seed, amp);
+  PDP::distributionEqualDeviation(P2, &cd); saw2 = PDP::getSawOld(N, cd, seed, amp);
   plotSpectra(saw1, saw2);
  
   // Now with the "equal variance" algorithm:
-  PDP::distributionEqualVariance(P1, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
-  PDP::distributionEqualVariance(P2, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
+  PDP::distributionEqualVariance(P1, &cd); saw1 = PDP::getSawOld(N, cd, seed, amp);
+  PDP::distributionEqualVariance(P2, &cd); saw2 = PDP::getSawOld(N, cd, seed, amp);
   plotSpectra(saw1, saw2);
 
   // Observations:

@@ -31,7 +31,7 @@ Let's say that we have $n$ different (i.e. distinguishable) objects and we want 
 \begin{equation}
 P_n = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n = n!
 \end{equation}
-This is easy to understand when we recognize that there are exactly $n$ different ways to choose an element for the first position because we have $n$ elements to choose from. Then, after the first element has been chosen, we have left $n-1$ elements to choose for the second position, then $n-2$ for the third and so on. We get $n\cdot(n-1)\cdot(n-2)\cdot\ldots\cdot1$ ways all in all. It is easy to see that the factorial function obeys the simple recursion formula:
+This is easy to understand when we recognize that there are exactly $n$ different ways to choose an element for the first position because we have $n$ elements to choose from. Then, after the first element has been chosen, we have left $n-1$ elements left to choose for the second position, then $n-2$ for the third and so on. We get $n\cdot(n-1)\cdot(n-2)\cdot\ldots\cdot1$ ways all in all. It is easy to see that the factorial function obeys the simple recursion formula:
 \begin{equation}
 n! = n \cdot (n-1)!
 \end{equation}
@@ -176,6 +176,31 @@ The rules to compute the numbers are as follows: Start with the single $1$ in th
 % What about the double factorial?
 
 
+
+%\paragraph{Compositions and Binomial Coefficients}
+
+% The Hidden Pattern Behind Breaking Numbers Apart | Compositions
+% https://www.youtube.com/watch?v=oA1QDyfplCs
+% -In partitions, the order doesn't matter. In compositions it does. So, there are more 
+%  compositions than partitions because different compositions amount to the same partition.
+
+% https://en.wikipedia.org/wiki/Composition_(combinatorics)
+
+% Imagine representing a number like 5 as 5 dots (we use * as "dot" here): * * * * *. Now observe
+% that asking for the number of compositions of 5 is equivalent to asking how many ways there are
+% to set cuts between the dots. For example, we could cut it like * *|* *|*. Here we would have 
+% set 2 cuts - 1 after the 2nd, 1 after the 4th dot. For a number n there are always n-1 positions
+% for which we can decide to cut or not to cut. The total number of ways to cut up or string of dots
+% is therefore 2^(n-1). If we specify how many cuts are allowed, for example asking how many ways
+% are there to cut the 5 dots using 2 cuts, let's list them all:
+%
+%   *|*|* * *    *|* *|* *    *|* * *|*    * *|*|* *    * *|* *|*    * * *|*|*
+%
+% These are 6 ways. In general, the number of ways to cut n dots with k cuts is the binomial
+% coefficient B(n-1,k-1). A composition with exactly k parts is called a k-composition.
+
+
+
 \paragraph{Derangements and Subfactorials}
 The factorial of $n$ gives the number of ways, we can order $n$ items. What if we assume that our $n$ items have some natural order like $1,2,3,\ldots,n$ and we now ask how many ways there are to reorder them such that none of the items is in its original position. Such a messed up ordering is called a \emph{derangement} and the number of possible derangements of $n$ items is given by the subfactorial function. It is denoted by $!n$ and can be computed from the normal factorial via the formulas: 
 \begin{equation}
@@ -204,7 +229,7 @@ Some of the formulas do only hold for $n > 0$ and some only for $n > 1$, so take
 % https://de.wikipedia.org/wiki/Euler-Zahlen
 
 \subsection{Trees and Graphs}
-Aside from counting ways how to do certain things with sets, combinatorics is also used to count things that have to do with \emph{trees} or more general \emph{networks} of nodes (also known as \emph{graphs}, although that may be confused with the notion of function graphs). These ideas come up frequently in certain more specialized fields of mathematics such as graph theory and and in scientific and engineering fields like computer science.
+Aside from counting ways how to do certain things with sets, combinatorics is also used to count things that have to do with \emph{trees} or more general \emph{networks} of nodes (also known as \emph{graphs}, although that may be confused with the notion of function graphs). These ideas come up frequently in certain more specialized fields of mathematics such as graph theory and in scientific and engineering fields like computer science.
 
 %\footnote{Here, we refer to a grah in the sense of graph}
 %Another important area of combinatorics
@@ -218,12 +243,6 @@ Consider the task of computing a product of 4 numbers $p = a \cdot b \cdot c  \c
 % ToDo: explain where the parethisation of an expression may matter - for example in evaluating a matrix a product, it may make a (big) difference in terms of computational cost. Give an example where it matters a lot. Maybe a scalar prodcut of the form x^T A y where A = a b^T such that we have x^T a b^T y. Evaluating it like (x^T (a b^T)) y would be vastly more inefficient than x^T (a b^T) y, I think. I assume that x,y,a,b are column vectors. ...or maybe try to create an example with just 3 factors
 
 %Parenthisations?, Parenthesisations?
-
-
-%The number of different way
-
-% ((ab)c)d     (a(bc))d     (ab)(cd)     a((bc)d)     a(b(cd))
-
 
 
 % https://www.johndcook.com/blog/2013/10/03/parenthesize-expression-catalan/

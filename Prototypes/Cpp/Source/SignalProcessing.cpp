@@ -532,6 +532,9 @@ public:
   static std::vector<T> getSawOld(int N, const CycleDistribution& cd, 
     unsigned long seed = 0, T amp = T(1));
 
+  static std::vector<T> getSaw(int N, const CycleDistribution& cd, 
+    unsigned long seed = 0, T amp = T(1));
+
 
   //static void fillDitherSaw(
   //  std::vector<T>& x, T period, unsigned long seed = 0, T amp = T(1));
@@ -725,22 +728,21 @@ std::vector<T> rsPitchDitherProto<T>::getSawOld(
   //
   // - The function has been renamed to getSawOld() with the intention to provide a new getSaw()
   //   implementation doing what is suggested in the two points above. We could then implement
-  //   a unit test that ensures that the old and new version produce the same results.
+  //   a unit test that ensures that the old and new version produce the same results. The stub is
+  //   already below. At the moment, it just delegates to the old implementation.
 }
 
-
-/*
 template<class T> 
-std::vector<T> rsPitchDitherProto<T>::getSawOverlap(int N, T period, unsigned long seed, T amp)
+std::vector<T> rsPitchDitherProto<T>::getSaw(
+  int N, const CycleDistribution& cd, unsigned long seed, T amp)
 {
-  std::vector<T> saw(N);
-
-  return saw;
+  return getSawOld(N, cd, seed, amp);  // Preliminary! Delegate to old implementation.
 }
-*/
 
-//void fillDitherSawOverlap(
-//    std::vector<T>& x, T period, unsigned long seed = 0, T amp = T(1));
+
+
+
+
 
 /*
 template<class T> 

@@ -1052,18 +1052,18 @@ void testPitchDithering3()
   plotSpectra(saw1, saw2);
 
   // Now the same thing using the "overlap" algorithm:
-  PDP::distributionViaOverlap(P1, &cd); saw1 = PDP::getSawOld(N, cd, seed, amp);
-  PDP::distributionViaOverlap(P2, &cd); saw2 = PDP::getSawOld(N, cd, seed, amp);
+  PDP::distributionViaOverlap(P1, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
+  PDP::distributionViaOverlap(P2, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
   plotSpectra(saw1, saw2);
 
   // Now with the "equal deviation" algorithm:
-  PDP::distributionEqualDeviation(P1, &cd); saw1 = PDP::getSawOld(N, cd, seed, amp);
-  PDP::distributionEqualDeviation(P2, &cd); saw2 = PDP::getSawOld(N, cd, seed, amp);
+  PDP::distributionEqualDeviation(P1, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
+  PDP::distributionEqualDeviation(P2, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
   plotSpectra(saw1, saw2);
  
   // Now with the "equal variance" algorithm:
-  PDP::distributionEqualVariance(P1, &cd); saw1 = PDP::getSawOld(N, cd, seed, amp);
-  PDP::distributionEqualVariance(P2, &cd); saw2 = PDP::getSawOld(N, cd, seed, amp);
+  PDP::distributionEqualVariance(P1, &cd); saw1 = PDP::getSaw(N, cd, seed, amp);
+  PDP::distributionEqualVariance(P2, &cd); saw2 = PDP::getSaw(N, cd, seed, amp);
   plotSpectra(saw1, saw2);
 
   // Observations:
@@ -1132,6 +1132,16 @@ void testPitchDithering3()
   //
   // - Verify that the peaks of the (smoothed) spectrum are where they are supposed to be, namely
   //   at the integer multiples of the desired fundamental frequency.
+  //
+  // - Provide a function distributionMinVariance that computes a cycle distribution that is 
+  //   suitable for use with PDP::getSaw() and produces the exact same result as 
+  //   PDP::fillDitherSawMinVariance(). I think, the distribution should be:
+  //   L2 = floor(P); L1 = L2 - 1; L3 = L2 + 1; p1 = 0; p2 = 1 - frac(P); p3 = frac(P);
+  //   where P is the desired period. When we have this function in place, write a unit test that
+  //   verifies that using getSaw() with this distribution does indeed produce the same result as
+  //   fillDitherSawMinVariance(). Be sure to include the edge cases of integer periods P in the 
+  //   unit test. I think, the half integers are not an egde case here. They are with some other
+  //   distributions, though.
 }
 
 void testPitchDithering()

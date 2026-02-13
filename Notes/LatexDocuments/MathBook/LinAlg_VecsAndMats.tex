@@ -193,6 +193,9 @@ Matrices are added and subtracted element-wise. For that to work, the two matric
 \end{equation}
 The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element $c_{ij}$ can be interpreted as a scalar product of the $i$-th row of $\mathbf{A}$ with the $j$-th column of  $\mathbf{B}$. The matrix that has zeros everywhere except on the main diagonal where it has all ones is called the identity matrix and is usually denoted as $\mathbf{I}$. One could perhaps argue that $\mathbf{1}$ could also be a good notation, but I have never seen that - on the other hand, the difference is subtle anyway. This matrix is the neutral element of matrix multiplication. That means that  $\mathbf{I} \mathbf{A} = \mathbf{A} = \mathbf{A} \mathbf{I}$ for any (square) matrix $\mathbf{A}$ whatsoever. In this notation, it is usually understood that the size of $\mathbf{I}$ is matched to the size of $\mathbf{A}$. Matrix multiplication is associative: $(\mathbf{A} \mathbf{B}) \mathbf{C} = \mathbf{A} (\mathbf{B} \mathbf{C})$ and distributive over matrix addition and subtraction: $\mathbf{A} (\mathbf{B} \pm \mathbf{C}) = \mathbf{A} \mathbf{B} \pm \mathbf{A} \mathbf{C}$ but it is not generally commutative: $\mathbf{AB} \neq \mathbf{BA}$. 
 
+% -motivate this definition of matrix multiplication by considering a matrix a s a function to
+%  be applied to a vector and the ask what function composition would do. The matrix mutliplication
+%  rule falls out naturally and necessarily.  
 % -maybe add also the Kronecker product and list formulas for its connection with the regular
 %  product
 % -maybe explain block matrices
@@ -211,6 +214,8 @@ The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element
 %  right operand. If you swap the operands, you would be taking very different scalar products and
 %  there's really no reason to assume that they would give the same results.
 
+% How Matrix Multiplication Was Discovered
+% https://www.youtube.com/watch?v=5K6_UNOMjzg
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Transposition}

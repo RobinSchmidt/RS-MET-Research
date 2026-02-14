@@ -482,6 +482,9 @@ public:
   };
 
 
+
+  static void distributionMinVariance(T period, CycleDistribution* cd);
+
   /** Produces a cycle distribution based on a geometrical overlap consideration. We imagine a 
   ruler that has a segment of unit length for each integer length that can be produced and a slider
   of length 2 that we can slide along the ruler. The probabilities of the 3 lengths that straddle 
@@ -801,11 +804,6 @@ std::vector<T> rsPitchDitherProto<T>::getSaw(
   return saw;
 }
 
-
-
-
-
-
 /*
 template<class T> 
 void rsPitchDitherProto<T>::fillDitherSaw(
@@ -814,6 +812,48 @@ void rsPitchDitherProto<T>::fillDitherSaw(
   // ToDo: Implement the deterministic dither algorithm, rename to fillDitherSawMinError
 }
 */
+
+template<class T> 
+void rsPitchDitherProto<T>::distributionMinVariance(
+  T period, rsPitchDitherProto<T>::CycleDistribution* cd)
+{
+  T periodFloor = rsFloor(period);
+  T periodFrac  = period - periodFloor;
+  
+  cd->L2 = (int)periodFloor;
+  cd->L3 = cd->L2 + 1;
+  cd->L1 = cd->L2 - 1;                     // This length L1 will never be used because..
+  cd->p1 = T(0);                           // ..the corresponding probability p1 is zero.
+  cd->p2 = T(1) - periodFrac;
+  cd->p3 = periodFrac;
+
+  // Notes:
+  //
+  // - The distribution that minimizes the variance while still satisfying the constraint that the
+  //   mean cycle length is given by "period" will use only the two lengths L2 = floor(period) and 
+  //   L3 = L2 + 1. The length L1 = L2 - 1 will never actullay be used because its probability is 
+  //   exactly zero. For cleanliness we assign it to a value anyway and for that we use the value 
+  //   L1 = L2 - 1 to make it consistent with the other distributions.
+  //
+  //
+  // ToDo:
+  //
+  // - Write unit test that verifies that using getSaw() with the distribution produced by this 
+  //   function generates the same signal as using fillDitherSawMinVariance(). Maybe make sure that
+  //   even when the underlying integer prng produces a values of modulus-1, we still produce L2. 
+  //   That may be a bit questionable with T = float because due to rounding errors, the random 
+  //   number in 0..1 after conversion from int to float may be actually be 1 rather than 1-tiny. I
+  //   think, to make it work correctly, we really need to be sure that the range of the prng is 
+  //   the half open interval [0,1) rather tan the closed interval [0,1]. I think, for T = double,
+  //   that should be the case (but it should be verified anyway!) but for T = float, I'm not so 
+  //   sure. That means, with T = float, it could occasionally happen that when the period is an 
+  //   exact integer, we nevertheless occasionally produce a cycle that is one sample longer. That 
+  //   should happen only in the very rare case when the random number produced by the prng is 
+  //   extremely close to 1 and rounded up to exactly 1 because the decision logic in getSaw() uses
+  //   < rather than <= for entering the 2nd branch. I think, we can test the the behavior in this
+  //   edge case by setting the state of the prng manually to modulus-1 = 2^32 - 1. Maybe we can 
+  //   use this value as seed.
+}
 
 
 template<class T> 

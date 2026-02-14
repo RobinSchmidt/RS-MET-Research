@@ -995,7 +995,7 @@ void testPitchDithering2()
   //   testPitchDithering3() for this.
 }
 
-void testPitchDithering3()
+void testPitchDitherSpectra()
 {
   // We compare spectra of pitch-dithered sawtooth waves at integer and half-integer values for the
   // desired cycle length in a single plot. We create such a comparison plot for each of the 
@@ -1148,7 +1148,7 @@ void testPitchDithering()
 {
   //testPitchDithering1();
   //testPitchDithering2();
-  testPitchDithering3();
+  testPitchDitherSpectra();
 }
 
 void testPitchDitherSuperSaw()

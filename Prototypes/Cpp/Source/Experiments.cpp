@@ -995,6 +995,47 @@ void testPitchDithering2()
   //   testPitchDithering3() for this.
 }
 
+void testPitchDithering3()
+{
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using PDP  = rsPitchDitherProto<Real>;
+  using CD   = PDP::CycleDistribution;
+
+  int  sampleRate = 44100;      // Sample rate for the wave files
+  int  numSamples =  8200;      // Number of samples to produce
+  Real amp        =     0.5;    // Amplitude of the saw
+  int  seed       =     2;      // Seed for PRNG - maybe try using 2^32 - 1
+
+  // Variables to be used:
+  int N = numSamples;           // Shorthand
+  CD  cd;
+  Vec saw1(N), saw2(N);
+
+  bool ok = true;
+  int  numPeriods = 11;
+  Real tol = 1.e-13;
+  for(int i = 0; i < numPeriods; i++)
+  {
+    Real p = 100.0 + Real(i) / (numPeriods-1);
+
+    // Verify that a saw produce via getSaw() using a distribution produced by 
+    // distributionMinVariance produces the same saw as fillDitherSawMinVariance:
+    PDP::fillDitherSawMinVariance(saw1, p, seed, amp); 
+    PDP::distributionMinVariance(p, &cd);
+    saw2 = PDP::getSaw(N, cd, seed, amp);
+    ok &= rsIsCloseToUpTo(saw1, saw2, numSamples - ceil(p), tol);
+    Vec err = saw2 - saw1;
+    rsPlotVectors(saw1, saw2, err);
+    // This fails! saw1 and saw2 are NOT the same! Figure out why and fix it!
+
+
+
+    int dummy = 0;
+  }
+
+}
+
 void testPitchDitherSpectra()
 {
   // We compare spectra of pitch-dithered sawtooth waves at integer and half-integer values for the
@@ -1148,6 +1189,7 @@ void testPitchDithering()
 {
   //testPitchDithering1();
   //testPitchDithering2();
+  testPitchDithering3();
   testPitchDitherSpectra();
 }
 

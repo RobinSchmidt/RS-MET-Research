@@ -666,10 +666,8 @@ std::vector<T> rsPitchDitherProto<T>::getSawOld(
 {
   // Sanity checks:
   rsAssert(N >= 0);
-  T P = cd.p1*cd.L1 + cd.p2*cd.L2 + cd.p3*cd.L3;
+  T P = cd.p1*cd.L1 + cd.p2*cd.L2 + cd.p3*cd.L3;  // Reconstruct desired period.
   rsAssert(isCycleDistributionValid(P, cd)); 
-  // Needs the period which we don't have here. We reconstruct it.
-   
 
   using Vec = std::vector<T>;
 
@@ -729,12 +727,16 @@ std::vector<T> rsPitchDitherProto<T>::getSawOld(
   //   n += rsWriteContentAt(..) to compactify the 3 branches into 1-liners.
   //
   // - The function has been renamed to getSawOld() with the intention to provide a new getSaw()
-  //   implementation doing what is suggested in the two points above. We could then implement
-  //   a unit test that ensures that the old and new version produce the same results. The stub is
-  //   already below. At the moment, it just delegates to the old implementation.
+  //   implementation doing what is suggested in the two points above. ..ok - done. Now we sould 
+  //   implement a unit test that ensures that the old and new version produce the same results. 
+  //   If it all works well, maybe the old version can eventually be deleted.
 }
 
 
+/** Writes the content of the source vector "src" into the destination vector "dst" starting at 
+index "n" inside "dst". If the "src" vector is longer than the part of "dst" that starts as "n", 
+then the content of "src" with only be written partially into "dst" just to fill it up to its 
+end. The return value is the number of items written. */
 template<class T>
 size_t rsWriteContentAt(const std::vector<T>& src, std::vector<T>& dst, size_t n)
 {
@@ -748,14 +750,55 @@ size_t rsWriteContentAt(const std::vector<T>& src, std::vector<T>& dst, size_t n
   }
   return i;
 
-  // ToDo: Verify code and write unit tests. 
+  // ToDo: Verify code by inspection and write unit tests. Maybe we could use memcpy() to optimize
+  // this? But then it would only work for types T that are trivially copyable. Maybe we could have
+  // two versions rsWriteContentAtViaMemcpy(), rsWriteContentAtViaAssign() and then do a compile
+  // time dispatch here based on the type T.
 }
 
 template<class T> 
 std::vector<T> rsPitchDitherProto<T>::getSaw(
   int N, const CycleDistribution& cd, unsigned long seed, T amp)
 {
-  return getSawOld(N, cd, seed, amp);  // Preliminary! Delegate to old implementation.
+  //return getSawOld(N, cd, seed, amp);  // Preliminary! Delegate to old implementation.
+
+  // Sanity checks:
+  rsAssert(N >= 0);
+  T P = cd.p1*cd.L1 + cd.p2*cd.L2 + cd.p3*cd.L3;  // Reconstruct desired period P for..
+  rsAssert(isCycleDistributionValid(P, cd));      // ..this test here. It's not needed elswehere.
+
+  // Create 3 saw cycles of the 3 lengths that may be used:
+  using Vec = std::vector<T>;
+  Vec cycleL1 = getSawCycle(cd.L1, amp);
+  Vec cycleL2 = getSawCycle(cd.L2, amp);
+  Vec cycleL3 = getSawCycle(cd.L3, amp);
+
+  // Set up the pseudo random number generator:
+  rsNoiseGenerator<T> prng;
+  prng.setRange(0.0, 1.0);                        // The interval is half open: [0,1). (Verify!)
+  prng.setSeed(seed);
+
+  // Create the sawtooth wave signal using one of the 3 prototype cycles for each cycle of the saw:
+  Vec saw(N);
+  size_t n = 0;
+  while(n < (size_t) N)
+  {
+    T r = prng.getSample();                       // Random number in interval [0,1)
+    if(r < cd.p1)
+      n += rsWriteContentAt(cycleL1, saw, n);
+    else if(r < cd.p1 + cd.p2)
+      n += rsWriteContentAt(cycleL2, saw, n);
+    else
+      n += rsWriteContentAt(cycleL3, saw, n);
+
+    // Old:
+    //else if(r >= cd.p1 + cd.p2)
+    //  n += rsWriteContentAt(cycleL3, saw, n);
+    //else
+    //  n += rsWriteContentAt(cycleL2, saw, n);
+  }
+
+  return saw;
 }
 
 

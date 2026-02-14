@@ -612,14 +612,33 @@ void rsPitchDitherProto<T>::fillDitherSawMinVariance(
   {
     if(n >= N - L2)                    // Verify! Maybe we need to subtract 1 from the RHS?
       break;
-    T r = prng.getSample();            // Random number in [0..1) ..or is it [0..1]
-    if(r <= f)                       // Old
+    T r = prng.getSample();            // Random number in [0..1) ..or is it [0..1]?
+    r = T(1) - r;                      // To make the output match getSaw(). See Notes.
+    if(r <= f)                         // Old
     //if(r < f)                          // New
       fillSawCycle(x, &n, L2, amp);    // Probability for that branch is f
     else
       fillSawCycle(x, &n, L1, amp);    // Probability for that branch is 1-f
   }
 
+
+  // Notes:
+  //
+  // - We need to use the complementary random value 1-r here to match the output of getSaw() using 
+  //   distributionMinVariance(). I think, it may behave differently in edge cases (whose 
+  //   probability should be zero with infinite precision numbers and very low with floats), 
+  //   though. The complementation should change the random range from the interval [0,1) to (0,1].
+  //   Maybe we could fix it by using <= instead of < or vice versa. This would switch the behavior
+  //   in the highly unlikely edge case. I think, using <= may actually be consistent with what we
+  //   want because in getSaw() we use < and don't use the complementary value. ToDo: Cook up a 
+  //   unit test that actually hits the edge case. Maybe try to use a seed that ensures that the 
+  //   next produced integer value in the prng is the 2^32 - 1. That's the maximum value of the 
+  //   whole range integer range and should map to a floating point value barely below 1. We could 
+  //   find the required seed by using a "downdateState()" function in the prng. Such a function 
+  //   does not yet exist but there are some comments in rsNoiseGenerator about how this could be 
+  //   implemented.
+  //
+  //
   // Maybe it should use if(r < f) rather than if(r <= f) because then it would also work correctly
   // when r = 0. In that case, we should always use L1, i.e. always use the else-branch. With a
   // conditional if(f < 0) this would be the case because r < 0 is impossible. With <= 0, it would
@@ -787,6 +806,7 @@ std::vector<T> rsPitchDitherProto<T>::getSaw(
   while(n < (size_t) N)
   {
     T r = prng.getSample();                       // Random number in interval [0,1)
+    //r = 1 - r;                                    // Test
     if(r < cd.p1)
       n += rsWriteContentAt(cycleL1, saw, n);
     else if(r < cd.p1 + cd.p2)
@@ -824,8 +844,14 @@ void rsPitchDitherProto<T>::distributionMinVariance(
   cd->L3 = cd->L2 + 1;
   cd->L1 = cd->L2 - 1;                     // This length L1 will never be used because..
   cd->p1 = T(0);                           // ..the corresponding probability p1 is zero.
+
+  // This doesn't seem to be work quite right:
   cd->p2 = T(1) - periodFrac;
   cd->p3 = periodFrac;
+
+  // This is even more wrong - the saws drift apart:
+  //cd->p2 = periodFrac;
+  //cd->p3 = T(1) - periodFrac;
 
   // Notes:
   //

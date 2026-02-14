@@ -1007,7 +1007,7 @@ void testPitchDithering3()
   Real amp        =     0.5;    // Amplitude of the saw
   int  seed       =     2;      // Seed for PRNG - maybe try using 2^32 - 1
 
-  // Variables to be used:
+  // Variables to be used (maybe drag them into the loop):
   int N = numSamples;           // Shorthand
   CD  cd;
   Vec saw1(N), saw2(N);
@@ -1024,16 +1024,22 @@ void testPitchDithering3()
     PDP::fillDitherSawMinVariance(saw1, p, seed, amp); 
     PDP::distributionMinVariance(p, &cd);
     saw2 = PDP::getSaw(N, cd, seed, amp);
-    ok &= rsIsCloseToUpTo(saw1, saw2, numSamples - ceil(p), tol);
-    Vec err = saw2 - saw1;
-    rsPlotVectors(saw1, saw2, err);
-    // This fails! saw1 and saw2 are NOT the same! Figure out why and fix it!
+    ok &= rsIsCloseToUpTo(saw1, saw2, N - ceil(p), tol);
+    //Vec err = saw2 - saw1;
+    //rsPlotVectors(saw1, saw2, err);
 
+    saw2 = PDP::getSawOld(N, cd, seed, amp);
+    ok &= rsIsCloseToUpTo(saw1, saw2, N - ceil(p), tol);
 
+    // ToDo: Do this comparison of getSaw() and getSawOld() also for the other distributions. The
+    // other test (with fillDitheSaw..) doesn't apply to the other distributions because for these
+    // we don't have such "fill..." functions.
 
     int dummy = 0;
   }
 
+
+  rsAssert(ok);
 }
 
 void testPitchDitherSpectra()

@@ -637,7 +637,6 @@ std::vector<T> rsPitchDitherProto<T>::getSawCycle(int N, T amp)
   std::vector<T> cycle(N);
   fillSawCycle(&cycle[0], N, amp);
   return cycle;
-
 }
 
 /** Writes the content of the source vector "src" into the destination vector "dst" starting at 
@@ -665,10 +664,13 @@ template<class T>
 std::vector<T> rsPitchDitherProto<T>::getSawOld(
   int N, const CycleDistribution& cd, unsigned long seed, T amp)
 {
+  // Sanity checks:
   rsAssert(N >= 0);
-  //rsAssert(isCycleDistributionValid(cd)); // Needs the period which we don't have here. We could
-                                            // reconstruct it, though. It's p1*L1 + p2*L2 + p3*L3.
+  T P = cd.p1*cd.L1 + cd.p2*cd.L2 + cd.p3*cd.L3;
+  rsAssert(isCycleDistributionValid(P, cd)); 
+  // Needs the period which we don't have here. We reconstruct it.
    
+
   using Vec = std::vector<T>;
 
   // Create 3 saw cycles of the 3 lengths that may be used:
@@ -730,6 +732,23 @@ std::vector<T> rsPitchDitherProto<T>::getSawOld(
   //   implementation doing what is suggested in the two points above. We could then implement
   //   a unit test that ensures that the old and new version produce the same results. The stub is
   //   already below. At the moment, it just delegates to the old implementation.
+}
+
+
+template<class T>
+size_t rsWriteContentAt(const std::vector<T>& src, std::vector<T>& dst, size_t n)
+{
+  size_t Ns = src.size();
+  size_t Nd = dst.size();
+  size_t i  = 0;
+  while(i < Ns && n+i < Nd)
+  {
+    dst[n+i] = src[i];
+    i++;
+  }
+  return i;
+
+  // ToDo: Verify code and write unit tests. 
 }
 
 template<class T> 

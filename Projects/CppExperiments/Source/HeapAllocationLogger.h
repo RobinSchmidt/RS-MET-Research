@@ -5,6 +5,11 @@
 //#include <crtdbg.h>  // For __malloc_dbg etc in MSVC
 
 
+// This stuff here is very much UNDER CONSTRUCTION and DOES NOT YET WORK! The intention is to 
+// create some infrasctructure that lets us log _all_ heap allocations and deallocations. We can 
+// then use this in a unit test setting and use it to write unit tests that check, if we manage 
+// memory correctly.
+
 
 /** A class for logging heap allocations. A global object of this class is created and all calls to
 malloc, free, new, delete, etc. are intercepted by redefining them (via macros in case of the 
@@ -83,6 +88,10 @@ void operator delete(void *ptr)
 
 
 // ToDo:
+// 
+// - I think, the intention is to eventually call rsLoggingMalloc() and rsLoggingFree() in the 
+//   (re)definitions of the operators new and delete but it's not yet done that way because it 
+//   didn't work? I'm not sure about that, though.
 //
 // - What about realloc and calloc? I think, we may need to redefine these, too.
 //
@@ -130,5 +139,8 @@ void operator delete(void *ptr)
 // https://valgrind.org/
 // https://learn.microsoft.com/en-us/cpp/c-runtime-library/crt-debug-heap-details?view=msvc-170
 // https://learn.microsoft.com/en-us/cpp/cpp/new-and-delete-operators?view=msvc-170
+//
+// Back to Basics: Custom Allocators Explained - From Basics to Advanced - Kevin Carpenter - CppCon
+// https://www.youtube.com/watch?v=RpD-0oqGEzE
 
 #endif

@@ -1221,13 +1221,13 @@ public:
 
 protected:
 
-  T p1          = 0.0;    // Probability to use midLength - 1 
-  T p2          = 0.5;    // Probability to use midLength
-  //T p3          = 0.5;  // Probability to use midLength + 1. Equals 1 - (p1 + p2).
-  T sampleCount =   0;
-  T cycleLength = 100;    // Is midLength or midLength + 1 or midLength - 1.
-  T midLength   = 100;
-  T scale       = 1.0;    // Maybe rename to sawSlope
+  T p1          = T(0.0);      // Probability to use midLength - 1 
+  T p2          = T(0.5);      // Probability to use midLength
+  //T p3          = T(0.5);    // Probability to use midLength + 1. Equals 1 - (p1 + p2).
+  T sampleCount =   T(0);
+  T cycleLength = T(100);      // Is midLength or midLength + 1 or midLength - 1.
+  T midLength   = T(100);
+  T scale       = T(2)/T(99);  // Maybe rename to sawSlope, verify formula
 
   rsNoiseGenerator<T> prng;
 };
@@ -1240,12 +1240,12 @@ void rsPitchDitherSawOsc<T>::setPeriod(T newPeriod)
   T floorLength = rsFloor(newPeriod);
   T fracLength  = newPeriod - floorLength;
   T L1, L2, L3;
-  if(fracLength < 0.5)
-    L1 = floorLength - 1;
+  if(fracLength < T(0.5))
+    L1 = floorLength - T(1);
   else
     L1 = floorLength;
-  L2 = L1 + 1;
-  L3 = L2 + 1;
+  L2 = L1 + T(1);
+  L3 = L2 + T(1);
   midLength = L2;
 
   // Compute intermediates:
@@ -1278,26 +1278,22 @@ void rsPitchDitherSawOsc<T>::setPeriod(T newPeriod)
 }
 
 template<class T>
-T rsPitchDitherSawOsc<T>::getSample()
+inline T rsPitchDitherSawOsc<T>::getSample()
 {
-  T y = T(-1) + scale * T(sampleCount);
-  sampleCount++;
+  T y = T(-1) + scale * sampleCount;
+
+  sampleCount += T(1);
   if(sampleCount >= cycleLength)
   {
     updateCycleLength();
-    sampleCount = 0;
+    sampleCount = T(0);
   }
-  return y;
 
-  // ToDo:
-  //
-  // - Avoid int-to-float conversion by making sampleCount also a TFlt. Then we need to make 
-  //   cycleLength also TFlt. Maybe then we should make midLength also TFlt and get rid of the TInt
-  //   template parameter altogether. Then rename TFlt to just T.
+  return y;
 }
 
 template<class T>
-void rsPitchDitherSawOsc<T>::updateCycleLength()
+inline void rsPitchDitherSawOsc<T>::updateCycleLength()
 { 
   T r = prng.getSample();                     // Random number in interval [0,1)
 

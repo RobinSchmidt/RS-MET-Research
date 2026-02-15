@@ -1235,25 +1235,14 @@ protected:
   // between supersaw and superpulse
 
 
+  TFlt p1          = 0.0;    // Probability to use midLength - 1 
+  TFlt p2          = 0.5;    // Probability to use midLength
+  //TFlt p3          = 0.5;  // Probability to use midLength + 1. Equals 1 - (p1 + p2).
   TInt sampleCount =   0;
-
-  // Maybe these are not needed as members:
-  TInt floorLength = 100;    // Is the floor of the desired period (aka pitch cycle length).
-  TInt cycleLength = 100;    // Is floorLength or floorLength + 1 or floorLength - 1.
+  TInt cycleLength = 100;    // Is midLength or midLength + 1 or midLength - 1.
   TInt midLength   = 100;
-
-
-  TFlt fracLength  = 0.5;    // Get rid!
-
-
-  TFlt p1          = 0.0;    // Probability to use floorLength - 1 
-  TFlt p2          = 0.5;    // Probability to use floorLength
-  //TFlt p3          = 0.5;  // Probability to use floorLength + 1. Equals 1 - (p1 + p2).
-
   // ToDo: For optimization purposes, maybe we should keep all members as type TFlt in order to 
   // avoid int-to-float conversions in the per sample code. Maybe then call the type just T.
-
-
 
   rsNoiseGenerator<TFlt> prng;
 };
@@ -1262,10 +1251,9 @@ protected:
 template<class TFlt, class TInt>
 void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
 {
-  floorLength = rsFloorInt(newPeriod);
-  fracLength  = newPeriod - floorLength;
-
   // Compute lengths:
+  TFlt floorLength = rsFloor(newPeriod);
+  TFlt fracLength  = newPeriod - floorLength;
   TInt L1, L2, L3;
   if(fracLength < 0.5)
     L1 = floorLength - 1;
@@ -1273,6 +1261,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
     L1 = floorLength;
   L2 = L1 + 1;
   L3 = L2 + 1;
+  midLength = L2;
 
   // Compute intermediates:
   TFlt e1 = L1 - newPeriod;
@@ -1285,7 +1274,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
   TFlt M1 = M - m1;
   TFlt M2 = M - m2; 
   TFlt M3 = M - m3;
-  TFlt S  = 1 / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3));
+  TFlt S  = TFlt(1) / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3));
 
   // Compute probabilities:
   p1 = (M2*e3 - M3*e2) * S;
@@ -1293,16 +1282,14 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
   //p3 = (M1*e2 - M2*e1) * S;  // We don't have a member p3 because that would be redundant.
                                // We always have p3 = 1 - (p1 + p2)
 
-  // Assign middle length member:
-  midLength = L2;
-
-
 
   //updateCycleLength();       // Not sure if we should do this here
   // Maybe do not set this up here. We may get better behavior when modulating the period when we
   // defer this to getSample() which calls updateCycleLength(). When we don't set it here, we will
   // delay the update until the last cycle with the old length has been finished. Maybe in this 
-  // case, we should init cycleLength to zero in reset() and maybe also here
+  // case, we should init cycleLength to zero in reset() and maybe also here Maybe we should give 
+  // the functiona boolean flag called "immediateUpdate" or something. Or maybe "deferUpdate" with
+  // inverted logic.
 }
 
 template<class TFlt, class TInt>
@@ -1337,5 +1324,8 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::readSawValue(TInt n, TInt N)
   return (TFlt(-1) + s * TFlt(n));
 
   // Maybe the sampleCount variable should also be of type TFlt to avoid per sample conversion
-  // from int to float. Maybe precompute s in updateCycleLength and store result in a member.
+  // from int to float. Maybe precompute s in updateCycleLength and store result in a member. Maybe
+  // we can also optimize away the division by precomputing s? Then we would have to store it as a 
+  // member. I think, we would need to update it in updateCycleLength(). It's just 
+  // 2 / TFlt(cycleLength)  or maybe  2 / TFlt(cycleLength-1), I think. Verify!
 }

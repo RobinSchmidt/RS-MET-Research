@@ -1059,6 +1059,7 @@ void testPitchDithering()
 void testPitchDitherSuperSaw()
 {
   using Real = double;                              // ToDo: Use float. That's more realistic.
+  //using Real = float; 
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
   using PDSO = rsPitchDitherSawOsc<Real, int>;
@@ -1068,7 +1069,7 @@ void testPitchDitherSuperSaw()
   int  sampleRate =  44100;      // Sample rate for the wave files
   int  numSamples = 200000;      // Number of samples to produce
   int  seed       =      3;      // Seed for PRNG
-  Real midFreq    =    100.0;    // Center or middle frequency for saw cluster
+  Real midFreq    =   1000.0;    // Center or middle frequency for saw cluster
   Real amp        =      0.125;  // Amplitude of the saws
   Real detune     =      0.3;    // Supersaw detune in 0..1
   Real mix        =      1.0;    // Supersaw mix in 0..1
@@ -1078,7 +1079,7 @@ void testPitchDitherSuperSaw()
   // Table with the frequency offsets when the center saw is taken to have frequency 1:
   Vec freqOffsets({ 0, 160,  -160, 510, -515, 880, -900 });
   freqOffsets = freqOffsets / 8192.0;
-  Vec freqRatios = detune * freqOffsets + 1.0;
+  Vec freqRatios = detune * freqOffsets + Real(1);
   // The numbers were taken from here:
   // https://atosynth.blogspot.com/2026/01/a-closer-look-at-super-saw-code.html?m=1
   // and are supposed to be those that were used in the Roland JP-8000 and JP-8080.
@@ -1100,7 +1101,7 @@ void testPitchDitherSuperSaw()
     // Produce i-th saw and accumulate into the super saw:
     PDP::CycleDistribution cd;
     PDP::distributionEqualVariance(sawPeriod, &cd);
-    saw = PDP::getSaw(numSamples, cd, seed, amp);
+    saw = PDP::getSaw(numSamples, cd, seed+i, amp);
     supSaw = supSaw + saw;
   }
  
@@ -1110,7 +1111,7 @@ void testPitchDitherSuperSaw()
   PDSO osc[7];                             // We need 7 pitch dither osc objects. One for each saw.
   for(int i = 0; i < 7; i++)
   {
-    osc[i].setPeriod(sampleRate / (midFreq * (detune * freqOffsets[i] + 1.0)));
+    osc[i].setPeriod(sampleRate / (midFreq * (detune * freqOffsets[i] + Real(1))));
     osc[i].setRandomSeed(seed+i);
     osc[i].updateCycleLength();
   }
@@ -1127,7 +1128,8 @@ void testPitchDitherSuperSaw()
   // FAILS! Because the prototye does not correctly write the final cycles. We need to compare only
   // an initial section that leaves out the last 2 or 3 cycles. Maybe write a function that we can
   // call something like:
-  // ok &= rsEqualsUpTo(supSaw2, supSaw, numSamples/2);
+  Real tol = 1024 * std::numeric_limits<Real>::epsilon();
+  ok &= rsIsCloseToUpTo(supSaw2, supSaw, 5000, tol);
   rsPlotArrays(5000, &supSaw[0], &supSaw2[0]);  // It looks good
   //rsPlotArrays(5000, &supSaw[0], &supSawHp1[0], &supSawHp2[0]);
   //Vec err = supSaw2 - supSaw;
@@ -1138,7 +1140,7 @@ void testPitchDitherSuperSaw()
 
   // Apply highpass filter(s):
   SVF hpf;
-  Real omega = hpfCut * 2*PI*midFreq/sampleRate;
+  Real omega = hpfCut * Real(2*PI)*midFreq/sampleRate;
   hpf.setupHighpass(omega, hpfQ);
   Vec supSawHp1 = filterResponse(hpf, numSamples, supSaw);
   Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);

@@ -1225,13 +1225,10 @@ protected:
   TFlt p2          = 0.5;    // Probability to use midLength
   //TFlt p3          = 0.5;  // Probability to use midLength + 1. Equals 1 - (p1 + p2).
 
-  TInt sampleCount =   0;
-  TInt cycleLength = 100;    // Is midLength or midLength + 1 or midLength - 1.
-  TInt midLength   = 100;
-  // ToDo: For optimization purposes, maybe we should keep all members as type TFlt in order to 
-  // avoid int-to-float conversions in the per sample code. Maybe then call the type just T.
-
-  TFlt scale       = 1.0;
+  TFlt sampleCount =   0;
+  TFlt cycleLength = 100;    // Is midLength or midLength + 1 or midLength - 1.
+  TFlt midLength   = 100;
+  TFlt scale       = 1.0;    // Maybe rename to sawSlope
 
   rsNoiseGenerator<TFlt> prng;
 };
@@ -1303,7 +1300,8 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
 template<class TFlt, class TInt>
 void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
 { 
-  TFlt r = prng.getSample();       // Random number in interval [0,1)
+  TFlt r = prng.getSample();                     // Random number in interval [0,1)
+
   if(r < p1)
     cycleLength = midLength - 1;
   else if(r < p1 + p2)

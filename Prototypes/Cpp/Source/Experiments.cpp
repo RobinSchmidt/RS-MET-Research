@@ -1102,17 +1102,7 @@ void testPitchDitherSuperSaw()
     supSaw = supSaw + saw;
   }
  
-  // Apply highpass filter(s):
-  SVF hpf;
-  Real omega = hpfCut * 2*PI*midFreq/sampleRate;
-  hpf.setupHighpass(omega, hpfQ);
-  Vec supSawHp1 = filterResponse(hpf, numSamples, supSaw);
-  Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);
-  
-  // Write supersaw signals to wave files:
-  rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw[0],    numSamples, sampleRate);
-  rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
-  rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
+
 
   // Now try to produce the same signal with 7 instances of the realtime pitch dither oscillator 
   // and verify that it produces the same output as our prototype implementation that was used 
@@ -1143,6 +1133,24 @@ void testPitchDitherSuperSaw()
   //Vec err = supSaw2 - supSaw;
   //rsPlotVector(err);
   rsAssert(ok);
+
+
+
+  // Apply highpass filter(s):
+  SVF hpf;
+  Real omega = hpfCut * 2*PI*midFreq/sampleRate;
+  hpf.setupHighpass(omega, hpfQ);
+  Vec supSawHp1 = filterResponse(hpf, numSamples, supSaw);
+  Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);
+  
+  // Write supersaw signals to wave files:
+  rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw[0],    numSamples, sampleRate);
+  rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
+  rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
+
+
+
+
 
 
 

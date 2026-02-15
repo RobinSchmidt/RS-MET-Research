@@ -1175,3 +1175,151 @@ TFlt rsPitchDitherSawOscOld<TFlt, TInt>::readSawValue(TInt n, TInt N)
 //   implement all possible modes in this class and then make a smaller, optimized class that only
 //   has the equal-variance algorithm. It could also precompute the cycle distribtuion (i.e. L1..L3
 //   and p1..p3) so it doesn't need to be computed in each call to updateCycleLength().
+
+//-------------------------------------------------------------------------------------------------
+
+/** Under construction.
+
+A realtime oscillator that produces pitch-dithered sawtooth waves.
+
+This is the new implementation. It has been copied form the old and now needs to be adapted.
+
+*/
+
+template<class TFlt, class TInt> 
+class rsPitchDitherSawOsc
+{
+
+public:
+
+  rsPitchDitherSawOsc()
+  {
+    prng.setRange(0.0, 1.0);
+  }
+
+  /** Sets the period, i.e. the desired length of one cycle of the waveform. This is a floating 
+  point value and it can be computed as  period = sampleRate / frequency  where frequency is the 
+  desired oscillator frequency. If the period length is L and that number is not an integer but 
+  has a fractional part of f, then the oscillator will produce cycles of length L1 = floor(L) and
+  L2 = L1 + 1 in such a way that over time, the average length of the cycles will come out as L. */
+  void setPeriod(TFlt newPeriod);
+  // ..TBC... ToDo: explain deterministic and probabilistic modes
+
+  void setRandomSeed(uint32_t newSeed)
+  {
+    prng.setSeed(newSeed);
+  }
+
+
+
+  //void setPhase(TFlt newPhase);
+  // Should set up the current phase, i.e. the sampleCount variable
+
+
+  enum class Mode
+  {
+    minVariance,      // Random cycle lengths with minimized variance
+    equalVariance,
+    equalDistance,
+    minError          // Deterministic algo based on error feedback
+  };
+
+  void setMode(Mode newMode)
+  {
+    mode = newMode;
+  }
+
+
+
+
+  inline TFlt getSample();
+
+  void reset()
+  {
+    sampleCount = 0;
+    prng.reset();
+  }
+
+  inline void updateCycleLength();
+
+
+protected:
+
+  inline TFlt readSawValue(TInt sampleIndex, TInt cycleLength);
+  // Maybe make this a static member function. It could be useful for other outside code. But maybe
+  // when we optimize later, this function should use some values that are precomputed by other 
+  // member functions, so maybe leave it as protected and non-static. Maybe rename to something 
+  // like readSawValue..ok - done. Maybe make a function readPulseValue based on calling 
+  // readSawValue twice (with phase-shifted arguments, depending on the pulseWidth parameter) and 
+  // negating one of the saws. That means, we subtrac a phased-shifted version of the saw from the
+  // saw. Maybe we can scale the subtracted phase-shifted version. Thereby, we can smoothly morph 
+  // between supersaw and superpulse
+
+
+  TInt sampleCount =   0;
+  TInt floorLength = 100;    // Is the floor of the desired period (aka pitch cycle length).
+  TInt cycleLength = 100;    // Is either floorLength or floorLength + 1
+  TFlt fracLength  = 0.5;
+  Mode mode        = Mode::minVariance;
+  // ToDo: For optimization purposes, maybe we should keep all members as type TFlt in order to 
+  // avoid int-to-float conversions in the per sample code. Maybe then call the type just T.
+
+  rsNoiseGenerator<TFlt> prng;
+};
+
+
+template<class TFlt, class TInt>
+void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
+{
+  floorLength = rsFloorInt(newPeriod);
+  fracLength  = newPeriod - floorLength;
+
+  //cycleLength = floorLength;
+  // Maybe do not set this up here. We may get better behavior when modulating the period when we
+  // defer this to getSample() which calls updateCycleLength(). When we don't set it here, we will
+  // delay the update until the last cycle with the old length has been finished. Maybe in this 
+  // case, we should init cycleLength to zero in reset() and maybe also here
+}
+
+template<class TFlt, class TInt>
+TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
+{
+  TFlt y = readSawValue(sampleCount, cycleLength);
+  sampleCount++;
+  if(sampleCount >= cycleLength)
+  {
+    updateCycleLength();
+    sampleCount = 0;
+  }
+  return y;
+}
+
+template<class TFlt, class TInt>
+void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
+{ 
+  switch(mode)
+  {
+  case Mode::minVariance:
+  {
+    cycleLength = floorLength;
+    TFlt r = prng.getSample();
+    if(r <= fracLength)          // Maybe use < instead of <=. See comment in rsPitchDitherProto 
+      cycleLength++;
+  } break;
+
+  // ToDo: Implement the other modes
+
+  default:
+    rsError("Unknown Mode");
+  }
+}
+
+template<class TFlt, class TInt>
+TFlt rsPitchDitherSawOsc<TFlt, TInt>::readSawValue(TInt n, TInt N)
+{
+  TFlt s = TFlt(2) / TFlt(N-1);      // Maybe precompute this and store in a member
+  return (TFlt(-1) + s * TFlt(n));
+
+  // Maybe the sampleCount variable should also be of type TFlt to avoid per sample conversion
+  // from int to float. Maybe precompute s in updateCycleLength and store result in a member.
+}

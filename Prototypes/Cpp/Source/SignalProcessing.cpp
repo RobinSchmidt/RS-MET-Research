@@ -1221,17 +1221,26 @@ public:
 
 protected:
 
-  T p1          = T(0.0);      // Probability to use midLength - 1 
-  T p2          = T(0.5);      // Probability to use midLength
-  //T p3          = T(0.5);    // Probability to use midLength + 1. Equals 1 - (p1 + p2).
-  T sampleCount =   T(0);
-  T cycleLength = T(100);      // Is midLength or midLength + 1 or midLength - 1.
+  // Members that are accessed per sample:
+  T sawSlope    = T(2) / T(99);  // Verify formula!
+  T sampleCount = T(0);
+  T cycleLength = T(100);        // Is midLength or midLength + 1 or midLength - 1.
+
+  // Members that are accessed per cycle:
   T midLength   = T(100);
-  T scale       = T(2)/T(99);  // Maybe rename to sawSlope, verify formula
+  T p1          = T(0.0);        // Probability to use midLength - 1 
+  T p2          = T(0.5);        // Probability to use midLength
+  //T p3          = T(0.5);      // Probability to use midLength + 1. Equals 1 - (p1 + p2).
+  // Maybe rename p1,p2,p3 to probShort, probMid, probLong
 
   rsNoiseGenerator<T> prng;
-};
 
+  // Notes:
+  //
+  // - The members sampleCount, cycleLength and midLength are actually integer numbers but we let 
+  //   them be of type T (which is typically float or double) anyway for optimization purposes. We 
+  //   want to avoid int-to-float conversions.
+};
 
 template<class T>
 void rsPitchDitherSawOsc<T>::setPeriod(T newPeriod)
@@ -1274,13 +1283,15 @@ void rsPitchDitherSawOsc<T>::setPeriod(T newPeriod)
   // delay the update until the last cycle with the old length has been finished. Maybe in this 
   // case, we should init cycleLength to zero in reset() and maybe also here Maybe we should give 
   // the functiona boolean flag called "immediateUpdate" or something. Or maybe "deferUpdate" with
-  // inverted logic.
+  // inverted logic. Or maybe rename this function into setNextPeriodLength() and don't call update
+  // here and then have a function setPeriod() or setPeriodLength() that calls 
+  // setNextPeriodLength() and updateCycleLength()...or maybe call them set(Next)CycleLength
 }
 
 template<class T>
 inline T rsPitchDitherSawOsc<T>::getSample()
 {
-  T y = T(-1) + scale * sampleCount;
+  T y = T(-1) + sawSlope * sampleCount;
 
   sampleCount += T(1);
   if(sampleCount >= cycleLength)
@@ -1304,5 +1315,5 @@ inline void rsPitchDitherSawOsc<T>::updateCycleLength()
   else
     cycleLength = midLength + T(1);
 
-  scale = T(2) / T(cycleLength-1);
+  sawSlope = T(2) / T(cycleLength-1);
 }

@@ -1290,6 +1290,24 @@ void testPitchDitherSuperSaw()
   //
   // - Try using a disperser on a supersaw with a strong transient setting. The frequencies of the
   //   allpasses should scale with note pitch - perhaps via a keytrack parameter
+  //
+  // - Maybe make an optimized class rsPitchDitherSuperSawOsc class. The things that can be 
+  //   optimized compared to just using a bunch of rsPitchDitherSawOsc objects are: For the prngs,
+  //   we need to store only the state for each. The scale and shift values for conversion to float
+  //   are the same. It is perhaps advisable when the 3 member variables that are accessed at each 
+  //   sample (namely scale, sampleCount, cycleLength) are put into a struct and the first member
+  //   of the supersaw class is an array of these structs. The other members (midLength, p1, p2) 
+  //   are accessed only when one of the saws needs to start a new cycle, so maybe they should 
+  //   reside in a different chunk of memory. The rationale is that such a memory organization will
+  //   work well with caching and pre-fetching. Maybewe can even consolidate the convert, scale and
+  //   shift operation of all the prngs into one operation? But mayby for that we need to run the 
+  //   prng with uint64 and do manual bitmasking. But maybe we can use uint32 for the states and 
+  //   just use uint64 for an accumulator. This implies that for each accumulation step, an uint32 
+  //   has to be converted to uint64. I don't know, if that's cheap or expensive - figure out! If 
+  //   it's cheap, it may be better to keep the states in uint32 format.
+  // 
+  // - Maybe factor out the computations from rsPitchDitherSawOsc::setPeriod() into a 
+  //   rsPitchDitherHelpers class such that we can reuse it in the supersaw osc.
 }
 
 

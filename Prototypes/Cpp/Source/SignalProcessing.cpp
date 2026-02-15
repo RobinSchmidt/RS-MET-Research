@@ -1186,7 +1186,7 @@ This is the new implementation. It has been copied form the old and now needs to
 
 */
 
-template<class TFlt> 
+template<class T> 
 class rsPitchDitherSawOsc
 {
 
@@ -1194,13 +1194,13 @@ public:
 
   rsPitchDitherSawOsc()
   {
-    prng.setRange(0.0, 1.0);
+    prng.setRange(T(0), T(1));
   }
 
   /** Sets the period, i.e. the desired length of one cycle of the waveform. This is a floating 
   point value and it can be computed as  period = sampleRate / frequency  where frequency is the 
   desired oscillator frequency.  */
-  void setPeriod(TFlt newPeriod);
+  void setPeriod(T newPeriod);
 
   void setRandomSeed(uint32_t newSeed)
   {
@@ -1208,11 +1208,11 @@ public:
   }
 
 
-  inline TFlt getSample();
+  inline T getSample();
 
   void reset()
   {
-    sampleCount = 0;
+    sampleCount = T(0);
     prng.reset();
   }
 
@@ -1221,25 +1221,25 @@ public:
 
 protected:
 
-  TFlt p1          = 0.0;    // Probability to use midLength - 1 
-  TFlt p2          = 0.5;    // Probability to use midLength
-  //TFlt p3          = 0.5;  // Probability to use midLength + 1. Equals 1 - (p1 + p2).
-  TFlt sampleCount =   0;
-  TFlt cycleLength = 100;    // Is midLength or midLength + 1 or midLength - 1.
-  TFlt midLength   = 100;
-  TFlt scale       = 1.0;    // Maybe rename to sawSlope
+  T p1          = 0.0;    // Probability to use midLength - 1 
+  T p2          = 0.5;    // Probability to use midLength
+  //T p3          = 0.5;  // Probability to use midLength + 1. Equals 1 - (p1 + p2).
+  T sampleCount =   0;
+  T cycleLength = 100;    // Is midLength or midLength + 1 or midLength - 1.
+  T midLength   = 100;
+  T scale       = 1.0;    // Maybe rename to sawSlope
 
-  rsNoiseGenerator<TFlt> prng;
+  rsNoiseGenerator<T> prng;
 };
 
 
-template<class TFlt>
-void rsPitchDitherSawOsc<TFlt>::setPeriod(TFlt newPeriod)
+template<class T>
+void rsPitchDitherSawOsc<T>::setPeriod(T newPeriod)
 {
   // Compute lengths:
-  TFlt floorLength = rsFloor(newPeriod);
-  TFlt fracLength  = newPeriod - floorLength;
-  TFlt L1, L2, L3;
+  T floorLength = rsFloor(newPeriod);
+  T fracLength  = newPeriod - floorLength;
+  T L1, L2, L3;
   if(fracLength < 0.5)
     L1 = floorLength - 1;
   else
@@ -1249,17 +1249,17 @@ void rsPitchDitherSawOsc<TFlt>::setPeriod(TFlt newPeriod)
   midLength = L2;
 
   // Compute intermediates:
-  TFlt e1 = L1 - newPeriod;
-  TFlt e2 = L2 - newPeriod;
-  TFlt e3 = L3 - newPeriod;
-  TFlt m1 = e1*e1;
-  TFlt m2 = e2*e2;
-  TFlt m3 = e3*e3;
-  TFlt M  = TFlt(0.25);
-  TFlt M1 = M - m1;
-  TFlt M2 = M - m2; 
-  TFlt M3 = M - m3;
-  TFlt S  = TFlt(1) / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3));
+  T e1 = L1 - newPeriod;
+  T e2 = L2 - newPeriod;
+  T e3 = L3 - newPeriod;
+  T m1 = e1*e1;
+  T m2 = e2*e2;
+  T m3 = e3*e3;
+  T M  = T(0.25);
+  T M1 = M - m1;
+  T M2 = M - m2; 
+  T M3 = M - m3;
+  T S  = T(1) / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3));
 
   // Compute probabilities:
   p1 = (M2*e3 - M3*e2) * S;
@@ -1277,10 +1277,10 @@ void rsPitchDitherSawOsc<TFlt>::setPeriod(TFlt newPeriod)
   // inverted logic.
 }
 
-template<class TFlt>
-TFlt rsPitchDitherSawOsc<TFlt>::getSample()
+template<class T>
+T rsPitchDitherSawOsc<T>::getSample()
 {
-  TFlt y = (TFlt(-1) + scale * TFlt(sampleCount));
+  T y = T(-1) + scale * T(sampleCount);
   sampleCount++;
   if(sampleCount >= cycleLength)
   {
@@ -1296,17 +1296,17 @@ TFlt rsPitchDitherSawOsc<TFlt>::getSample()
   //   template parameter altogether. Then rename TFlt to just T.
 }
 
-template<class TFlt>
-void rsPitchDitherSawOsc<TFlt>::updateCycleLength()
+template<class T>
+void rsPitchDitherSawOsc<T>::updateCycleLength()
 { 
-  TFlt r = prng.getSample();                     // Random number in interval [0,1)
+  T r = prng.getSample();                     // Random number in interval [0,1)
 
   if(r < p1)
-    cycleLength = midLength - 1;
+    cycleLength = midLength - T(1);
   else if(r < p1 + p2)
     cycleLength = midLength;
   else
-    cycleLength = midLength + 1;
+    cycleLength = midLength + T(1);
 
-  scale = TFlt(2) / TFlt(cycleLength-1);
+  scale = T(2) / T(cycleLength-1);
 }

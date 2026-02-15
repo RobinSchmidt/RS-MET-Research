@@ -1007,12 +1007,14 @@ typename rsPitchDitherProto<T>::CycleErrorMeasures rsPitchDitherProto<T>::getErr
   // the class body."
 }
 
-
-
 // ToDo:
 //
 // - Maybe implement the production of different waveforms. A sine could be produced from a saw
 //   by simply taking sin(pi*saw(t)). Let's also produce square- and triangle waves.
+//
+// - See: https://en.wikipedia.org/wiki/Inverse_transform_sampling  I think, we are doing a very
+//   simple (and discretized) case of that general idea here. If that's indeed the case, maybe 
+//   mention it (very briefly) in the documentation.
 
 //-------------------------------------------------------------------------------------------------
 

@@ -463,6 +463,7 @@ void testPitchDithering1()
   for(int i = 0; i < numCycles; i++)
   {
     Real r = prng.getSample();           // Random number in 0..1
+    r = Real(1) - r;                     // For consistency with PDP::fillDitherSawMinVariance().
     if(r <= f)                           // Maybe it should be if(r < f)
       addCycle(x1, L2, &n, &numL2);      // Probability for that branch is f
     else
@@ -571,7 +572,7 @@ void testPitchDithering1()
   {
     // Produce cycle:
     Real r = prng.getSample();
-    //r = Real(1) - r;
+    //r = Real(1) - r;               // Not sure, if we need this here. Probably not.
     if(r < p1)
       addCycle(x, L1, start, numL1);
     else if(r >= p1 + 0.5)
@@ -622,9 +623,13 @@ void testPitchDithering1()
   // mean absolute error and variance (mean squared error).
   // Move this functionality into member 2 functions of class rsPitchDitherProto. One function for
   // the cycle production and one for computing the error measures. The latter may also do the
-  // saniyt checks. Or maybe we could have a third function specifically for that purpose. it could
+  // sanity checks. Or maybe we could have a third function specifically for that purpose. It could
   // be named something like verifyCycleDistribution or isCycleDistributionValid or something like
   // that. It would take the period, the 3 lengths and their probabilities.
+  // OK - I think, it's kinda done. Maybe we should get rid of this helper function here now. Maybe 
+  // delete the whole stuff after creating x3. I think, this stuff is now all implemented better
+  // in class rsPitchDitherProto which we test in testPitchDithering2() to show how (and verify 
+  // that) it works.
 
 
 

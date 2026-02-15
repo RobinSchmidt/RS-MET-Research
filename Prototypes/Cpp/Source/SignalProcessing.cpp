@@ -1186,7 +1186,7 @@ This is the new implementation. It has been copied form the old and now needs to
 
 */
 
-template<class TFlt, class TInt> 
+template<class TFlt> 
 class rsPitchDitherSawOsc
 {
 
@@ -1224,7 +1224,6 @@ protected:
   TFlt p1          = 0.0;    // Probability to use midLength - 1 
   TFlt p2          = 0.5;    // Probability to use midLength
   //TFlt p3          = 0.5;  // Probability to use midLength + 1. Equals 1 - (p1 + p2).
-
   TFlt sampleCount =   0;
   TFlt cycleLength = 100;    // Is midLength or midLength + 1 or midLength - 1.
   TFlt midLength   = 100;
@@ -1234,13 +1233,13 @@ protected:
 };
 
 
-template<class TFlt, class TInt>
-void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
+template<class TFlt>
+void rsPitchDitherSawOsc<TFlt>::setPeriod(TFlt newPeriod)
 {
   // Compute lengths:
   TFlt floorLength = rsFloor(newPeriod);
   TFlt fracLength  = newPeriod - floorLength;
-  TInt L1, L2, L3;
+  TFlt L1, L2, L3;
   if(fracLength < 0.5)
     L1 = floorLength - 1;
   else
@@ -1278,8 +1277,8 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
   // inverted logic.
 }
 
-template<class TFlt, class TInt>
-TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
+template<class TFlt>
+TFlt rsPitchDitherSawOsc<TFlt>::getSample()
 {
   TFlt y = (TFlt(-1) + scale * TFlt(sampleCount));
   sampleCount++;
@@ -1297,8 +1296,8 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
   //   template parameter altogether. Then rename TFlt to just T.
 }
 
-template<class TFlt, class TInt>
-void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
+template<class TFlt>
+void rsPitchDitherSawOsc<TFlt>::updateCycleLength()
 { 
   TFlt r = prng.getSample();                     // Random number in interval [0,1)
 

@@ -1061,7 +1061,7 @@ void testPitchDitherSuperSaw()
   using Real = float; 
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
-  using PDSO = rsPitchDitherSawOsc<Real, int>;
+  using PDSO = rsPitchDitherSawOsc<Real>;
   using SVF  = rsStateVariableFilter<Real, Real>;
 
   // Setup:
@@ -1127,8 +1127,8 @@ void testPitchDitherSuperSaw()
   Real tol = 1024 * std::numeric_limits<Real>::epsilon();
   bool ok  = true;
   ok &= rsIsCloseToUpTo(supSaw2, supSaw, 5000, tol);
-  rsPlotArrays(5000, &supSaw[0], &supSaw2[0]);  // It looks good
   rsAssert(ok);
+  rsPlotArrays(5000, &supSaw[0], &supSaw2[0]);  // It looks good
 
   // Apply highpass filter(s):
   SVF hpf;

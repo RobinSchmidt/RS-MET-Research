@@ -1282,7 +1282,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
   TFlt m1 = e1*e1;
   TFlt m2 = e2*e2;
   TFlt m3 = e3*e3;
-  TFlt M  = T(0.25);
+  TFlt M  = TFlt(0.25);
   TFlt M1 = M - m1;
   TFlt M2 = M - m2; 
   TFlt M3 = M - m3;

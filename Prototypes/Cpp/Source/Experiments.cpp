@@ -16473,7 +16473,7 @@ void testPairingFunctions()
 
 void testOrdinals()
 {
-  // Stub
+  // Under construction
 
   using Nat = uint64_t;         // Type for natural numbers
   using Ord = rsOrdinal<Nat>;   // Type for ordinal numbers
@@ -16590,8 +16590,44 @@ void testOrdinals()
   //   p.198: c = w^A1*a1 + ...  ->  c < w^(A1+1),  p.199: n*w^b = w^b
   //
   // - Do exmples from the exercises p.201
-
-
+  //
+  // - Implement a class rsCardinal. I think, it can be done as follows: The class should have a 
+  //   member "index" of type rsOrdinal and a boolean flag "isFinite" that indicates that the 
+  //   cardinal is finite. The class should maintain the invariant that if a cardinal is finite, 
+  //   then the ordinal member should correspond to a finite ordinal. If the cardinal is infinite 
+  //   (i.e. the isFinite flag is false) we interpret the ordinal member "index" as the index of an
+  //   aleph number. That means if isFinite = false and index = 0, the represented cardinal number 
+  //   is Aleph_0. If isFinite = false and index = 0, the represented cardinal number is just 0 
+  //   itself. That means that in essence, we prepend the natural numbers to the aleph numbers. The
+  //   aleph numbers themselves are indexed by an ordinal index. In case of a finite cardinal, we 
+  //   re-interpret the ordinal index as not being an index of an aleph number but instead as a 
+  //   natural number - hence the class invariant that in such a case, the ordinal index must 
+  //   indeed be a finite ordinal. 
+  // 
+  // - See ABoST, pg. 156 ff. ("Ordering of the Cardinal Numbers"). I think, the fact that the 
+  //   class of all cardinal numbers is well ordered (Theorem 8.8, pg 158) implies that we can map
+  //   it to the ordinal numbers. For the infinite cardinals, an ordinal appears as index such 
+  //   that we get Aleph_0, Aleph_1, Aleph_2, ..., Aleph_omega, Aleph_omega+1, ..., Aleph_omega^2,
+  //   ..., Aleph_omega^omega,.... But then we do not yet have covered the finite cardinals. That's
+  //   why we need this additional flag. We directly map the Aleph-numbers to the ordinals by 
+  //   interpreting the ordinal member as an index to aleph but we somehow need to prepend the 
+  //   naturals (aka finite cardinals). That's what we do with the flag. For finite cardinals,
+  //   we interpret the ordinal member differently(!) - namely as a plain old natural number. 
+  //   That's why we need to maintain this invariant. A state where the "isFinite" flag is true 
+  //   but the ordinal member nevertheless represents an infinite ordinal would be inconsistent
+  //   and meaningless. OK - now I explained it twice and therefore violated the DRY principle (it
+  //   doesn't necessarily apply to comments, though). I hope that at least one explanation makes 
+  //   any sense. The idea is a bit wacky and I'm not sure if it is any good. ToDo: Research how 
+  //   other implementations of cardinal numbers work.
+  // 
+  // - Maybe instead of calling the flag "isFinite" we could also call it "isAleph" and invert the 
+  //   logic (i.e. if it is true, then we have an infinite cardinal). That might be better because 
+  //   we may want to have a member function isFinite() and in this case, we cannot also have 
+  //   boolean flag with the same name as the member variable (I think). 
+  // 
+  // - Maybe rename rsOrdinal to rsOrdinalNumber and likewise for rsCardinal.
+  //
+  //
   // See also:
   // 
   // https://www.math.tugraz.at/~ganster/lv_grundlagen_mathematik_ss_2016/02_ordinalzahlen.pdf

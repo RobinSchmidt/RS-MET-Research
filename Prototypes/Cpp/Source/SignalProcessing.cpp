@@ -1240,12 +1240,10 @@ protected:
   // Maybe these are not needed as members:
   TInt floorLength = 100;    // Is the floor of the desired period (aka pitch cycle length).
   TInt cycleLength = 100;    // Is floorLength or floorLength + 1 or floorLength - 1.
-  TFlt fracLength  = 0.5;
+  TInt midLength   = 100;
 
-  // Maybe we should keep only L2 as reference length. Then  L1 = L2-1  and  L3 = L2+1.
-  //int L1 =  99;
-  int L2 = 100;              // Maybe rename to midLength
-  //int L3 = 101;
+
+  TFlt fracLength  = 0.5;    // Get rid!
 
 
   TFlt p1          = 0.0;    // Probability to use floorLength - 1 
@@ -1268,7 +1266,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
   fracLength  = newPeriod - floorLength;
 
   // Compute lengths:
-  int L1, L3;                  // L2 is a member. L1 and L3 aren't becase that would be redundant.
+  TInt L1, L2, L3;
   if(fracLength < 0.5)
     L1 = floorLength - 1;
   else
@@ -1288,12 +1286,16 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
   TFlt M2 = M - m2; 
   TFlt M3 = M - m3;
   TFlt S  = 1 / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3));
-  
+
   // Compute probabilities:
   p1 = (M2*e3 - M3*e2) * S;
   p2 = (M3*e1 - M1*e3) * S;
   //p3 = (M1*e2 - M2*e1) * S;  // We don't have a member p3 because that would be redundant.
                                // We always have p3 = 1 - (p1 + p2)
+
+  // Assign middle length member:
+  midLength = L2;
+
 
 
   //updateCycleLength();       // Not sure if we should do this here
@@ -1319,13 +1321,13 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
 template<class TFlt, class TInt>
 void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
 { 
-  TFlt r = prng.getSample();     // Random number in interval [0,1)
+  TFlt r = prng.getSample();       // Random number in interval [0,1)
   if(r < p1)
-    cycleLength = L2 - 1;        // L1 = L2 - 1. Use that and get rid of L1.
+    cycleLength = midLength - 1;
   else if(r < p1 + p2)
-    cycleLength = L2;
+    cycleLength = midLength;
   else
-    cycleLength = L2 + 1;        // L3 = L2 + 1. Use that and get rid of L3.
+    cycleLength = midLength + 1;
 }
 
 template<class TFlt, class TInt>

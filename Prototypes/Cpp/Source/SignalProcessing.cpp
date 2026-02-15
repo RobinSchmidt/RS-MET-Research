@@ -1221,17 +1221,6 @@ public:
 
 protected:
 
-  inline TFlt readSawValue(TInt sampleIndex);
-  // Maybe make this a static member function. It could be useful for other outside code. But maybe
-  // when we optimize later, this function should use some values that are precomputed by other 
-  // member functions, so maybe leave it as protected and non-static. Maybe rename to something 
-  // like readSawValue..ok - done. Maybe make a function readPulseValue based on calling 
-  // readSawValue twice (with phase-shifted arguments, depending on the pulseWidth parameter) and 
-  // negating one of the saws. That means, we subtrac a phased-shifted version of the saw from the
-  // saw. Maybe we can scale the subtracted phase-shifted version. Thereby, we can smoothly morph 
-  // between supersaw and superpulse
-
-
   TFlt p1          = 0.0;    // Probability to use midLength - 1 
   TFlt p2          = 0.5;    // Probability to use midLength
   //TFlt p3          = 0.5;  // Probability to use midLength + 1. Equals 1 - (p1 + p2).
@@ -1295,7 +1284,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
 template<class TFlt, class TInt>
 TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
 {
-  TFlt y = readSawValue(sampleCount);
+  TFlt y = (TFlt(-1) + scale * TFlt(sampleCount));
   sampleCount++;
   if(sampleCount >= cycleLength)
   {
@@ -1317,21 +1306,4 @@ void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
     cycleLength = midLength + 1;
 
   scale = TFlt(2) / TFlt(cycleLength-1);
-}
-
-template<class TFlt, class TInt>
-TFlt rsPitchDitherSawOsc<TFlt, TInt>::readSawValue(TInt n)
-{
-  // New:  
-  return (TFlt(-1) + scale * TFlt(n));
-
-  // Old:
-  //TFlt s = TFlt(2) / TFlt(N-1);      // Maybe precompute this and store in a member
-  //return (TFlt(-1) + s * TFlt(n));
-
-  // Maybe the sampleCount variable should also be of type TFlt to avoid per sample conversion
-  // from int to float. Maybe precompute s in updateCycleLength and store result in a member. Maybe
-  // we can also optimize away the division by precomputing s? Then we would have to store it as a 
-  // member. I think, we would need to update it in updateCycleLength(). It's just 
-  // 2 / TFlt(cycleLength)  or maybe  2 / TFlt(cycleLength-1), I think. Verify!
 }

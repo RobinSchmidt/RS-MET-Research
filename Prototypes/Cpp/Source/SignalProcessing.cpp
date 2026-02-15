@@ -1292,6 +1292,12 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
     sampleCount = 0;
   }
   return y;
+
+  // ToDo:
+  //
+  // - Avoid int-to-float conversion by making sampleCount also a TFlt. Then we need to make 
+  //   cycleLength also TFlt. Maybe then we should make midLength also TFlt and get rid of the TInt
+  //   template parameter altogether. Then rename TFlt to just T.
 }
 
 template<class TFlt, class TInt>

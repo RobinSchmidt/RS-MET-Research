@@ -1058,7 +1058,7 @@ void testPitchDithering()
 
 void testPitchDitherSuperSaw()
 {
-  using Real = double;
+  using Real = double;                              // ToDo: Use float. That's more realistic.
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
   using PDSO = rsPitchDitherSawOsc<Real, int>;

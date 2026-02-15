@@ -1199,11 +1199,8 @@ public:
 
   /** Sets the period, i.e. the desired length of one cycle of the waveform. This is a floating 
   point value and it can be computed as  period = sampleRate / frequency  where frequency is the 
-  desired oscillator frequency. If the period length is L and that number is not an integer but 
-  has a fractional part of f, then the oscillator will produce cycles of length L1 = floor(L) and
-  L2 = L1 + 1 in such a way that over time, the average length of the cycles will come out as L. */
+  desired oscillator frequency.  */
   void setPeriod(TFlt newPeriod);
-  // ..TBC... ToDo: explain deterministic and probabilistic modes
 
   void setRandomSeed(uint32_t newSeed)
   {

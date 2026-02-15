@@ -520,149 +520,6 @@ void testPitchDithering1()
     a3[i] = meanLength2(L1, numL1, L2, numL2);
   }
 
-
-  // Helper function to compute lengths and probabilities for an equalized mean distance (i.e. 
-  // equalized mean absolute error) where the equalization is with respect to the fractional part
-  // of the desired period P.
-  auto lengthsAndProbsEqDist = [](Real period, 
-    int* L1, Real* p1, int* L2, Real* p2, int* L3, Real* p3)
-  {
-    Real periodFloor = rsFloor(period);
-    Real periodFrac  = period - periodFloor;
-    if(periodFrac < 0.5)
-    {
-      *L1 = (int)periodFloor - 1;
-      *p1 = 0.5 * (0.5 - periodFrac);
-      *p3 = 0.5 - *p1;
-    }
-    else
-    {
-      *L1 = (int)periodFloor;            // No -1 here
-      *p3 = 0.5 * (periodFrac - 0.5);
-      *p1 = 0.5 - *p3;
-    }
-    *p2 = 0.5;                           // p2 is always 0.5
-    *L2 = *L1 + 1;
-    *L3 = *L2 + 1;
-  };
-  // ToDo: 
-  // 
-  // - Implement similar function lengthsAndProbsEqVar that computes lengths and probabilities
-  //   that equalize the variance (i.e. the mean squared distance) and maybe also 
-  //   lengthsAndProbsMinDist (or MinVar - it minimizes both at the same time, I think)
-  //
-  // - Verify if usage of < vs <= is correct everywhere. Test both branches using for example
-  //   period = 100.7 and 100.3. Test also the edge cases with 100.0 and 100.5.
-  // 
-  // - Move into class rsPitchDitherProto.
-  //
-  // - Rename. It actually does _not_ lead to equal equalized mean absolute error. Maybe call it
-  //   lengthsAndProbsViaOverlap. ..ok - we have now:
-  //   rsPitchDitherProto<T>::distributionViaOverlap
-
-
-  // Helper function to add a cycle with a random length L. It could be either L1 or L2 or L3 with
-  // probabilities p1, p2, p3 respectively. The in/out parameters start, numL1, ... are to keep 
-  // track of where we are in the output signal and how many cycles of each length were created so
-  // far:
-  auto addRandomCycle = [&prng, &period, &addCycle](    // Capture context by reference
-    Vec& x,                                             // In/out param for the signal
-    int L1, Real p1, int L2, Real p2, int L3, Real p3,  // In params (lengths and probabilities)
-    int* start, int* numL1, int* numL2, int* numL3)     // In/out params (start index and counters)
-  {
-    // Produce cycle:
-    Real r = prng.getSample();
-    //r = Real(1) - r;               // Not sure, if we need this here. Probably not.
-    if(r < p1)
-      addCycle(x, L1, start, numL1);
-    else if(r >= p1 + 0.5)
-      addCycle(x, L3, start, numL3);
-    else
-      addCycle(x, L2, start, numL2);
-
-    // Sanity checks. Probabilities must add to 1 and the theoretical long term mean of the lengths
-    // should be our desired period:
-    Real probSum = p1    + p2    + p3;
-    Real lenMean = p1*L1 + p2*L2 + p3*L3;
-    rsAssert(rsIsCloseTo(probSum, 1.0,    1.e-13));
-    rsAssert(rsIsCloseTo(lenMean, period, 1.e-13));
-
-    // Compute errors for the 3 integer lengths and expected error measures for inspection in 
-    // debugger:
-    Real e1  = Real(L1) - period;
-    Real e2  = Real(L2) - period;
-    Real e3  = Real(L3) - period;
-    Real mae = p1*rsAbs(e1) + p2*rsAbs(e2) + p3*rsAbs(e3);  // Mean absolute error
-    Real var = p1*e1*e1     + p2*e2*e2     + p3*e3*e3;      // Error variance
-    int dummy = 0;
-    // In algorithm 4, we expect that mae to be 0.5. But it isn't! For period = 100.3, we get
-    // mae = 0.56. Something is wrong! We get the following values:
-    //
-    // period       mae        var
-    // 100.0        0.5        0.5
-    // 100.1        0.54       0.49
-    // 100.2        0.56       0.46
-    // 100.25       0.5625     0.4375
-    // 100.3        0.56       0.41
-    // 100.4        0.54       0.34
-    // 100.5        0.5        0.25
-    // 100.6        0.54       0.34        
-    // 100.7        0.56       0.41
-    // 100.75       0.5625     0.4375
-    // 100.8        0.56       0.46
-    // 100.9        0.54       0.49
-    //
-    // ToDo: Move these computations out into a separate function that takes the period, the 3 
-    // lengths L1,L2,L3 with their probabilities p1,p2,p3 and it should return mae and var. Maybe
-    // we could put mae and var into some sort of CycleErrorMeasures struct. Maybe it could also 
-    // contain some other error measures as well. Maybe e1,e2,e3. Maybe my expectation that the mae
-    // should always be the same is wrong. Maybe I have made a mistake in the maths. Yes! I think 
-    // so!
-  };
-  // ToDo: Verify if usage of < vs <= is correct. Use again 100.0, 100.3, 100.5, 100.7. Compute
-  // mean absolute error and variance (mean squared error).
-  // Move this functionality into member 2 functions of class rsPitchDitherProto. One function for
-  // the cycle production and one for computing the error measures. The latter may also do the
-  // sanity checks. Or maybe we could have a third function specifically for that purpose. It could
-  // be named something like verifyCycleDistribution or isCycleDistributionValid or something like
-  // that. It would take the period, the 3 lengths and their probabilities.
-  // OK - I think, it's kinda done. Maybe we should get rid of this helper function here now. Maybe 
-  // delete the whole stuff after creating x3. I think, this stuff is now all implemented better
-  // in class rsPitchDitherProto which we test in testPitchDithering2() to show how (and verify 
-  // that) it works.
-
-
-
-  // Algorithm 4:
-  // Another probabilistic algorithm that produces cycles of length L-1, L, L+1 or L, L+1, L+2
-  // when the desired cycle length is L.f, i.e. L = floor(desiredLength), 
-  // f = fractionalPart(desiredLength) with probabilities pS = p(short) = p(L-1), 
-  // pM = p(medium) = p(L), pL = p(long) = p(L+1). These probabilities are computed in such a way
-  // as to achieve an equal expected deviation from the exact length L.f regardless of what f is. 
-  // ...TBC...
-  Vec x4(numSamples); 
-  Vec a4(numCycles);
-  Real p1, p2, p3;     // Probabilities for L1, L2, L3. p2,p3 only used for verification
-  reset();
-  for(int i = 0; i < numCycles; i++)
-  {
-    // Compute lengths and their probababilities:
-    lengthsAndProbsEqDist(period, &L1, &p1, &L2, &p2, &L3, &p3);
-
-    // Produce cycle and do bookkeeping for plotting:
-    addRandomCycle(x4, L1, p1, L2, p2, L3, p3, &n, &numL1, &numL2, &numL3);
-    a4[i] = meanLength3(L1, numL1, L2, numL2, L3, numL3);
-  }
-
-  // Algorithm 5:
-  //Vec x5(numSamples); 
-  //Vec a5(numCycles);
-  //reset();
-  // ...TBC...
-
-
-
-
   // Define a length for making comparison tests for signals generated with different versions of 
   // the code. We don't want to compare the whole length because the ends may differ due to 
   // technical details. We also use this for the plots because we don't want to plot excessively
@@ -688,11 +545,9 @@ void testPitchDithering1()
 
   // Plot results:
   //rsPlotArrays(plotLength, &x1[0], &x2[0]);
-  //rsPlotArrays(plotLength, &x1[0], &x5[0]);
   //rsPlotVectors(a2, a3);
-  //rsPlotVectors(a1, a2, a3);
+  rsPlotVectors(a1, a2, a3);
   //rsPlotVectors(a1); 
-  rsPlotVectors(a1, a4);           // Both probabilistic algos
   int dummy = 0;
 
 

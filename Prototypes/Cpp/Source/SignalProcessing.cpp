@@ -620,8 +620,7 @@ void rsPitchDitherProto<T>::fillDitherSawMinVariance(
       break;
     T r = prng.getSample();            // Random number in [0..1) ..or is it [0..1]?
     r = T(1) - r;                      // To make the output match getSaw(). See Notes.
-    if(r <= f)                         // Old
-    //if(r < f)                          // New
+    if(r <= f)
       fillSawCycle(x, &n, L2, amp);    // Probability for that branch is f
     else
       fillSawCycle(x, &n, L1, amp);    // Probability for that branch is 1-f

@@ -571,6 +571,7 @@ void testPitchDithering1()
   {
     // Produce cycle:
     Real r = prng.getSample();
+    //r = Real(1) - r;
     if(r < p1)
       addCycle(x, L1, start, numL1);
     else if(r >= p1 + 0.5)
@@ -1003,7 +1004,7 @@ void testPitchDithering3()
   using CD   = PDP::CycleDistribution;
 
   int  sampleRate = 44100;      // Sample rate for the wave files
-  int  numSamples =  8200;      // Number of samples to produce
+  int  numSamples = 44100;      // Number of samples to produce
   Real amp        =     0.5;    // Amplitude of the saw
   int  seed       =     2;      // Seed for PRNG - maybe try using 2^32 - 1
 
@@ -1027,7 +1028,6 @@ void testPitchDithering3()
     ok &= rsIsCloseToUpTo(saw1, saw2, N - ceil(p), tol);
     //Vec err = saw2 - saw1;
     //rsPlotVectors(saw1, saw2, err);
-
     saw2 = PDP::getSawOld(N, cd, seed, amp);
     ok &= rsIsCloseToUpTo(saw1, saw2, N - ceil(p), tol);
 
@@ -1147,13 +1147,14 @@ void testPitchDitherSpectra()
   //   deviates only a tiny bit from an exact integer may means that in practice, it will be very 
   //   unlikely that one hits just the right frequency that makes the saw sound clean. There should
   //   be only tiny windows around the exact integers at which the saw will sound clean so hitting 
-  //   these special frequencies may be rare in practic. ToDo: Verify that by rendering signals for
-  //   listening tests! Produce saws with periods: 100.0, 100.01, 100.05 and 100.5. We expect that 
-  //   the 100.01 saw will sound more similar to the 100.5 saw than to the 100.0 saw, even though 
-  //   100.01 is much closer to 100.0 than to 100.5.
+  //   these special frequencies may be rare in practice. ToDo: Verify that by rendering signals 
+  //   for listening tests! Produce saws with periods: 100.0, 100.01, 100.05 and 100.5. We expect 
+  //   that the 100.01 saw will sound more similar to the 100.5 saw than to the 100.0 saw, even 
+  //   though 100.01 is much closer to 100.0 than to 100.5.
   // 
-  // - In a practical implementation for an oscillator, we should use the "equal variance" 
-  //   algorithm anyway. It seems to be the perfect solution.
+  // - In a practical implementation for an oscillator to be used in production, this is all 
+  //   irrelevant because we should use the winner "equal variance" algorithm there anyway. It 
+  //   seems to be the perfect solution. Anything else is just of academic interest, if at all.
   // 
   //
   // ToDo: 
@@ -1167,7 +1168,8 @@ void testPitchDitherSpectra()
   //
   // - Add also a test with P = 100.25
   //
-  // - Maybe implement yet more algorithms and test them here.
+  // - Maybe implement yet more algorithms and test them here. Just for fun - I think, we already
+  //   have found our winner algo.
   //
   // - Try producing a pitch dithered sine wave rather than a saw wave. It may make reading the 
   //   spectrum more easy because we will only have one spike.
@@ -1179,22 +1181,17 @@ void testPitchDitherSpectra()
   //
   // - Verify that the peaks of the (smoothed) spectrum are where they are supposed to be, namely
   //   at the integer multiples of the desired fundamental frequency.
-  //
-  // - Provide a function distributionMinVariance that computes a cycle distribution that is 
-  //   suitable for use with PDP::getSaw() and produces the exact same result as 
-  //   PDP::fillDitherSawMinVariance(). I think, the distribution should be:
-  //   L2 = floor(P); L1 = L2 - 1; L3 = L2 + 1; p1 = 0; p2 = 1 - frac(P); p3 = frac(P);
-  //   where P is the desired period. When we have this function in place, write a unit test that
-  //   verifies that using getSaw() with this distribution does indeed produce the same result as
-  //   fillDitherSawMinVariance(). Be sure to include the edge cases of integer periods P in the 
-  //   unit test. I think, the half integers are not an egde case here. They are with some other
-  //   distributions, though.
 }
 
 void testPitchDithering()
 {
-  //testPitchDithering1();
-  //testPitchDithering2();
+  // Test under construction:
+  testPitchDithering3();
+  // I appears in the "All tests" list below, too.
+
+  // All tests:
+  testPitchDithering1();     // FAILS now! I think, we need to somewhere add the r = 1-r complementation
+  testPitchDithering2();
   testPitchDithering3();
   testPitchDitherSpectra();
 }

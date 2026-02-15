@@ -583,6 +583,12 @@ void rsPitchDitherProto<T>::fillSawCycle(T* x, int N, T amp)
   T s = T(2) / T(N-1);
   for(int n = 0; n < N; n++)
     x[n] = amp * (-1 + s * T(n));
+
+  // ToDo:
+  //
+  // - Maybe have an optional "anti-alias" parameter (defaulting to false). If it's true, create 
+  //   the saw additively or maybe by means of an iFFT. Maybe have two functions fillSawNaive(), 
+  //   fillSawAntiAliased() and use this function here as dispatcher.
 }
 
 template<class T> 
@@ -621,7 +627,6 @@ void rsPitchDitherProto<T>::fillDitherSawMinVariance(
       fillSawCycle(x, &n, L1, amp);    // Probability for that branch is 1-f
   }
 
-
   // Notes:
   //
   // - We need to use the complementary random value 1-r here to match the output of getSaw() using 
@@ -659,6 +664,7 @@ std::vector<T> rsPitchDitherProto<T>::getSawCycle(int N, T amp)
   std::vector<T> cycle(N);
   fillSawCycle(&cycle[0], N, amp);
   return cycle;
+
 }
 
 /** Writes the content of the source vector "src" into the destination vector "dst" starting at 
@@ -782,8 +788,6 @@ template<class T>
 std::vector<T> rsPitchDitherProto<T>::getSaw(
   int N, const CycleDistribution& cd, unsigned long seed, T amp)
 {
-  //return getSawOld(N, cd, seed, amp);  // Preliminary! Delegate to old implementation.
-
   // Sanity checks:
   rsAssert(N >= 0);
   T P = cd.p1*cd.L1 + cd.p2*cd.L2 + cd.p3*cd.L3;  // Reconstruct desired period P for..
@@ -806,21 +810,13 @@ std::vector<T> rsPitchDitherProto<T>::getSaw(
   while(n < (size_t) N)
   {
     T r = prng.getSample();                       // Random number in interval [0,1)
-    //r = 1 - r;                                    // Test
     if(r < cd.p1)
       n += rsWriteContentAt(cycleL1, saw, n);
     else if(r < cd.p1 + cd.p2)
       n += rsWriteContentAt(cycleL2, saw, n);
     else
       n += rsWriteContentAt(cycleL3, saw, n);
-
-    // Old:
-    //else if(r >= cd.p1 + cd.p2)
-    //  n += rsWriteContentAt(cycleL3, saw, n);
-    //else
-    //  n += rsWriteContentAt(cycleL2, saw, n);
   }
-
   return saw;
 }
 
@@ -839,19 +835,13 @@ void rsPitchDitherProto<T>::distributionMinVariance(
 {
   T periodFloor = rsFloor(period);
   T periodFrac  = period - periodFloor;
-  
+
   cd->L2 = (int)periodFloor;
   cd->L3 = cd->L2 + 1;
   cd->L1 = cd->L2 - 1;                     // This length L1 will never be used because..
   cd->p1 = T(0);                           // ..the corresponding probability p1 is zero.
-
-  // This doesn't seem to be work quite right:
   cd->p2 = T(1) - periodFrac;
   cd->p3 = periodFrac;
-
-  // This is even more wrong - the saws drift apart:
-  //cd->p2 = periodFrac;
-  //cd->p3 = T(1) - periodFrac;
 
   // Notes:
   //
@@ -880,7 +870,6 @@ void rsPitchDitherProto<T>::distributionMinVariance(
   //   edge case by setting the state of the prng manually to modulus-1 = 2^32 - 1. Maybe we can 
   //   use this value as seed.
 }
-
 
 template<class T> 
 void rsPitchDitherProto<T>::distributionViaOverlap(

@@ -1061,8 +1061,7 @@ void testPitchDitherSuperSaw()
   using Real = double;
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
-  using PDSO = rsPitchDitherSawOsc<Real, int>;        // New
-  //using PDSO = rsPitchDitherSawOscOld<Real, int>;     // Old
+  using PDSO = rsPitchDitherSawOsc<Real, int>;
   using SVF  = rsStateVariableFilter<Real, Real>;
 
   // Setup:
@@ -1087,8 +1086,6 @@ void testPitchDitherSuperSaw()
   // Produce the raw supersaw:
   int numSaws = (int) freqRatios.size();        // This is 7, of course.
   Vec saw(numSamples), supSaw(numSamples);      // Temp for one saw and accumulator for supersaw.
-
-
   for(int i = 0; i < numSaws; i++)
   {
     // Compute parameters for the i-th saw:
@@ -1100,23 +1097,13 @@ void testPitchDitherSuperSaw()
     else
       sawAmp = amp * mix;
 
-
     // Produce i-th saw and accumulate into the super saw:
-
-    // New:
     PDP::CycleDistribution cd;
     PDP::distributionEqualVariance(sawPeriod, &cd);
     saw = PDP::getSaw(numSamples, cd, seed, amp);
-
-    // Old:
-    //PDP::fillDitherSawMinVariance(saw, sawPeriod, seed+i, sawAmp);
-
-
     supSaw = supSaw + saw;
   }
  
-
-
   // Now try to produce the same signal with 7 instances of the realtime pitch dither oscillator 
   // and verify that it produces the same output as our prototype implementation that was used 
   // above:

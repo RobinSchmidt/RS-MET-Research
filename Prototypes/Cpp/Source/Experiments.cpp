@@ -1058,8 +1058,7 @@ void testPitchDithering()
 
 void testPitchDitherSuperSaw()
 {
-  using Real = double;                              // ToDo: Use float. That's more realistic.
-  //using Real = float; 
+  using Real = float; 
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
   using PDSO = rsPitchDitherSawOsc<Real, int>;
@@ -1123,20 +1122,13 @@ void testPitchDitherSuperSaw()
       y += amp * mix * osc[i].getSample();
     supSaw2[n] = y;
   }
-  bool ok = true;
-  //ok &= rsEquals(supSaw2, supSaw);
-  // FAILS! Because the prototye does not correctly write the final cycles. We need to compare only
-  // an initial section that leaves out the last 2 or 3 cycles. Maybe write a function that we can
-  // call something like:
+
+  // Verify that the realtime algo produces the same signal:
   Real tol = 1024 * std::numeric_limits<Real>::epsilon();
+  bool ok  = true;
   ok &= rsIsCloseToUpTo(supSaw2, supSaw, 5000, tol);
   rsPlotArrays(5000, &supSaw[0], &supSaw2[0]);  // It looks good
-  //rsPlotArrays(5000, &supSaw[0], &supSawHp1[0], &supSawHp2[0]);
-  //Vec err = supSaw2 - supSaw;
-  //rsPlotVector(err);
   rsAssert(ok);
-
-
 
   // Apply highpass filter(s):
   SVF hpf;
@@ -1144,7 +1136,8 @@ void testPitchDitherSuperSaw()
   hpf.setupHighpass(omega, hpfQ);
   Vec supSawHp1 = filterResponse(hpf, numSamples, supSaw);
   Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);
-  
+  //rsPlotArrays(5000, &supSaw[0], &supSawHp1[0], &supSawHp2[0]);
+
   // Write supersaw signals to wave files:
   rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw[0],    numSamples, sampleRate);
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);

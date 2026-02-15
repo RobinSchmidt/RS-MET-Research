@@ -1243,9 +1243,9 @@ protected:
   TFlt fracLength  = 0.5;
 
   // Maybe we should keep only L2 as reference length. Then  L1 = L2-1  and  L3 = L2+1.
-  int L1 =  99;
-  int L2 = 100;
-  int L3 = 101;
+  //int L1 =  99;
+  int L2 = 100;              // Maybe rename to midLength
+  //int L3 = 101;
 
 
   TFlt p1          = 0.0;    // Probability to use floorLength - 1 
@@ -1268,6 +1268,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
   fracLength  = newPeriod - floorLength;
 
   // Compute lengths:
+  int L1, L3;                  // L2 is a member. L1 and L3 aren't becase that would be redundant.
   if(fracLength < 0.5)
     L1 = floorLength - 1;
   else
@@ -1295,7 +1296,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
                                // We always have p3 = 1 - (p1 + p2)
 
 
-  //cycleLength = floorLength;
+  //updateCycleLength();       // Not sure if we should do this here
   // Maybe do not set this up here. We may get better behavior when modulating the period when we
   // defer this to getSample() which calls updateCycleLength(). When we don't set it here, we will
   // delay the update until the last cycle with the old length has been finished. Maybe in this 
@@ -1315,30 +1316,16 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
   return y;
 }
 
-
-
-
 template<class TFlt, class TInt>
 void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
 { 
-  //// Old:
-  //cycleLength = floorLength;
-  //TFlt r = prng.getSample();
-  //if(r <= fracLength)          // Maybe use < instead of <=. See comment in rsPitchDitherProto 
-  //  cycleLength++;
-
-  // New:
   TFlt r = prng.getSample();     // Random number in interval [0,1)
   if(r < p1)
-    cycleLength = L1;            // L1 = L2 - 1. Use that and get rid of L1.
+    cycleLength = L2 - 1;        // L1 = L2 - 1. Use that and get rid of L1.
   else if(r < p1 + p2)
     cycleLength = L2;
   else
-    cycleLength = L3;            // L3 = L2 + 1. Use that and get rid of L3.
-
-  // ToDo:
-  //
-  // - Switch to the equalized variance algorithm
+    cycleLength = L2 + 1;        // L3 = L2 + 1. Use that and get rid of L3.
 }
 
 template<class TFlt, class TInt>

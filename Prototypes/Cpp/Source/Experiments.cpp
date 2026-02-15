@@ -1203,6 +1203,13 @@ void testPitchDitherSuperSaw()
   // 
   // ToDo: 
   // 
+  // - Replace the call to PDP::fillDitherSawMinVariance() with a call to PDP::getSaw() using a 
+  //   previously created cycle distribution with equalized variance. That should make the unit 
+  //   test fail. To make it pass again, switch from 
+  //   "using PDSO = rsPitchDitherSawOscOld<Real, int>;" to
+  //   "using PDSO = rsPitchDitherSawOsc<Real, int>;"
+  //   The new implementation should match the output of the equalized variance algorithm.
+  // 
   // - To figure out why the center freq of the 14080 supersaw is off, try to render a single saw 
   //   at that frequency (maybe just set "mix" to zero for that). Done: It looks like the center 
   //   frequency is now somewhere around 14350 Hz. The signal sounds like a weird crackly form of

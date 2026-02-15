@@ -1211,27 +1211,6 @@ public:
   }
 
 
-
-  //void setPhase(TFlt newPhase);
-  // Should set up the current phase, i.e. the sampleCount variable
-
-
-  enum class Mode
-  {
-    minVariance,      // Random cycle lengths with minimized variance
-    equalVariance,
-    equalDistance,
-    minError          // Deterministic algo based on error feedback
-  };
-
-  void setMode(Mode newMode)
-  {
-    mode = newMode;
-  }
-
-
-
-
   inline TFlt getSample();
 
   void reset()
@@ -1257,12 +1236,26 @@ protected:
 
 
   TInt sampleCount =   0;
+
+  // Maybe these are not needed as members:
   TInt floorLength = 100;    // Is the floor of the desired period (aka pitch cycle length).
-  TInt cycleLength = 100;    // Is either floorLength or floorLength + 1
+  TInt cycleLength = 100;    // Is floorLength or floorLength + 1 or floorLength - 1.
   TFlt fracLength  = 0.5;
-  Mode mode        = Mode::minVariance;
+
+  // Maybe we should keep only L2 as reference length. Then  L1 = L2-1  and  L3 = L2+1.
+  int L1 =  99;
+  int L2 = 100;
+  int L3 = 101;
+
+
+  TFlt p1          = 0.0;    // Probability to use floorLength - 1 
+  TFlt p2          = 0.5;    // Probability to use floorLength
+  //TFlt p3          = 0.5;  // Probability to use floorLength + 1. Equals 1 - (p1 + p2).
+
   // ToDo: For optimization purposes, maybe we should keep all members as type TFlt in order to 
   // avoid int-to-float conversions in the per sample code. Maybe then call the type just T.
+
+
 
   rsNoiseGenerator<TFlt> prng;
 };
@@ -1273,6 +1266,34 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
 {
   floorLength = rsFloorInt(newPeriod);
   fracLength  = newPeriod - floorLength;
+
+  // Compute lengths:
+  if(fracLength < 0.5)
+    L1 = floorLength - 1;
+  else
+    L1 = floorLength;
+  L2 = L1 + 1;
+  L3 = L2 + 1;
+
+  // Compute intermediates:
+  TFlt e1 = L1 - newPeriod;
+  TFlt e2 = L2 - newPeriod;
+  TFlt e3 = L3 - newPeriod;
+  TFlt m1 = e1*e1;
+  TFlt m2 = e2*e2;
+  TFlt m3 = e3*e3;
+  TFlt M  = T(0.25);
+  TFlt M1 = M - m1;
+  TFlt M2 = M - m2; 
+  TFlt M3 = M - m3;
+  TFlt S  = 1 / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3));
+  
+  // Compute probabilities:
+  p1 = (M2*e3 - M3*e2) * S;
+  p2 = (M3*e1 - M1*e3) * S;
+  //p3 = (M1*e2 - M2*e1) * S;  // We don't have a member p3 because that would be redundant.
+                               // We always have p3 = 1 - (p1 + p2)
+
 
   //cycleLength = floorLength;
   // Maybe do not set this up here. We may get better behavior when modulating the period when we
@@ -1294,24 +1315,30 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
   return y;
 }
 
+
+
+
 template<class TFlt, class TInt>
 void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
 { 
-  switch(mode)
-  {
-  case Mode::minVariance:
-  {
-    cycleLength = floorLength;
-    TFlt r = prng.getSample();
-    if(r <= fracLength)          // Maybe use < instead of <=. See comment in rsPitchDitherProto 
-      cycleLength++;
-  } break;
+  //// Old:
+  //cycleLength = floorLength;
+  //TFlt r = prng.getSample();
+  //if(r <= fracLength)          // Maybe use < instead of <=. See comment in rsPitchDitherProto 
+  //  cycleLength++;
 
-  // ToDo: Implement the other modes
+  // New:
+  TFlt r = prng.getSample();     // Random number in interval [0,1)
+  if(r < p1)
+    cycleLength = L1;            // L1 = L2 - 1. Use that and get rid of L1.
+  else if(r < p1 + p2)
+    cycleLength = L2;
+  else
+    cycleLength = L3;            // L3 = L2 + 1. Use that and get rid of L3.
 
-  default:
-    rsError("Unknown Mode");
-  }
+  // ToDo:
+  //
+  // - Switch to the equalized variance algorithm
 }
 
 template<class TFlt, class TInt>

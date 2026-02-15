@@ -1241,6 +1241,8 @@ protected:
   // ToDo: For optimization purposes, maybe we should keep all members as type TFlt in order to 
   // avoid int-to-float conversions in the per sample code. Maybe then call the type just T.
 
+  TFlt scale       = 1.0;
+
   rsNoiseGenerator<TFlt> prng;
 };
 
@@ -1312,13 +1314,18 @@ void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
     cycleLength = midLength;
   else
     cycleLength = midLength + 1;
+  scale = TFlt(2) / TFlt(cycleLength-1);
 }
 
 template<class TFlt, class TInt>
 TFlt rsPitchDitherSawOsc<TFlt, TInt>::readSawValue(TInt n, TInt N)
 {
-  TFlt s = TFlt(2) / TFlt(N-1);      // Maybe precompute this and store in a member
-  return (TFlt(-1) + s * TFlt(n));
+  // New:  
+  return (TFlt(-1) + scale * TFlt(n));
+
+  // Old:
+  //TFlt s = TFlt(2) / TFlt(N-1);      // Maybe precompute this and store in a member
+  //return (TFlt(-1) + s * TFlt(n));
 
   // Maybe the sampleCount variable should also be of type TFlt to avoid per sample conversion
   // from int to float. Maybe precompute s in updateCycleLength and store result in a member. Maybe

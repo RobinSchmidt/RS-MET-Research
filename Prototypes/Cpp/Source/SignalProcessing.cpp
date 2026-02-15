@@ -1221,7 +1221,7 @@ public:
 
 protected:
 
-  inline TFlt readSawValue(TInt sampleIndex, TInt cycleLength);
+  inline TFlt readSawValue(TInt sampleIndex);
   // Maybe make this a static member function. It could be useful for other outside code. But maybe
   // when we optimize later, this function should use some values that are precomputed by other 
   // member functions, so maybe leave it as protected and non-static. Maybe rename to something 
@@ -1235,6 +1235,7 @@ protected:
   TFlt p1          = 0.0;    // Probability to use midLength - 1 
   TFlt p2          = 0.5;    // Probability to use midLength
   //TFlt p3          = 0.5;  // Probability to use midLength + 1. Equals 1 - (p1 + p2).
+
   TInt sampleCount =   0;
   TInt cycleLength = 100;    // Is midLength or midLength + 1 or midLength - 1.
   TInt midLength   = 100;
@@ -1294,7 +1295,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
 template<class TFlt, class TInt>
 TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
 {
-  TFlt y = readSawValue(sampleCount, cycleLength);
+  TFlt y = readSawValue(sampleCount);
   sampleCount++;
   if(sampleCount >= cycleLength)
   {
@@ -1314,11 +1315,12 @@ void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
     cycleLength = midLength;
   else
     cycleLength = midLength + 1;
+
   scale = TFlt(2) / TFlt(cycleLength-1);
 }
 
 template<class TFlt, class TInt>
-TFlt rsPitchDitherSawOsc<TFlt, TInt>::readSawValue(TInt n, TInt N)
+TFlt rsPitchDitherSawOsc<TFlt, TInt>::readSawValue(TInt n)
 {
   // New:  
   return (TFlt(-1) + scale * TFlt(n));

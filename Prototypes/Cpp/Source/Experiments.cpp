@@ -1061,7 +1061,7 @@ void testPitchDitherSuperSaw()
   using Real = double;
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
-  using PDSO = rsPitchDitherSawOsc<Real, int>;
+  using PDSO = rsPitchDitherSawOscOld<Real, int>;
   using SVF  = rsStateVariableFilter<Real, Real>;
 
   // Setup:

@@ -1024,12 +1024,12 @@ A realtime oscillator that produces pitch-dithered sawtooth waves.
 */
 
 template<class TFlt, class TInt> 
-class rsPitchDitherSawOsc
+class rsPitchDitherSawOscOld
 {
 
 public:
 
-  rsPitchDitherSawOsc()
+  rsPitchDitherSawOscOld()
   {
     prng.setRange(0.0, 1.0);
   }
@@ -1106,7 +1106,7 @@ protected:
 
 
 template<class TFlt, class TInt>
-void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
+void rsPitchDitherSawOscOld<TFlt, TInt>::setPeriod(TFlt newPeriod)
 {
   floorLength = rsFloorInt(newPeriod);
   fracLength  = newPeriod - floorLength;
@@ -1119,7 +1119,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::setPeriod(TFlt newPeriod)
 }
 
 template<class TFlt, class TInt>
-TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
+TFlt rsPitchDitherSawOscOld<TFlt, TInt>::getSample()
 {
   TFlt y = readSawValue(sampleCount, cycleLength);
   sampleCount++;
@@ -1132,7 +1132,7 @@ TFlt rsPitchDitherSawOsc<TFlt, TInt>::getSample()
 }
 
 template<class TFlt, class TInt>
-void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
+void rsPitchDitherSawOscOld<TFlt, TInt>::updateCycleLength()
 { 
   switch(mode)
   {
@@ -1152,7 +1152,7 @@ void rsPitchDitherSawOsc<TFlt, TInt>::updateCycleLength()
 }
 
 template<class TFlt, class TInt>
-TFlt rsPitchDitherSawOsc<TFlt, TInt>::readSawValue(TInt n, TInt N)
+TFlt rsPitchDitherSawOscOld<TFlt, TInt>::readSawValue(TInt n, TInt N)
 {
   TFlt s = TFlt(2) / TFlt(N-1);      // Maybe precompute this and store in a member
   return (TFlt(-1) + s * TFlt(n));

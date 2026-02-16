@@ -1250,31 +1250,46 @@ public:
 
   using PDH = rsPitchDitherHelpers<T>;   // Shorthand for convenience
 
+  //-----------------------------------------------------------------------------------------------
+  // \name Lifetime
+
   rsPitchDitherSawOsc()
   {
     prng.setRange(T(0), T(1));
   }
 
-  void setPeriodNoUpdate(T newPeriod)
-  { 
-    PDH::calcCycleDistribution(newPeriod, &midLength, &probShort, &probMid); 
-  }
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
 
   /** Sets the period, i.e. the desired length of one cycle of the waveform. This is a floating 
   point value and it can be computed as  period = sampleRate / frequency  where frequency is the 
-  desired oscillator frequency.  */
+  desired oscillator frequency. This will immediately trigger a recomputation of the probability
+  distribution of the cycle lengths and update the currently used cycle length. */
   void setPeriod(T newPeriod)
   {
     setPeriodNoUpdate(newPeriod);
     updateCycleLength();
   }
 
+  /** Sets up a new period length via calling setPeriod() but without immediately updating the
+  probability distribution and current cycle length. This results in the behavior that the new 
+  period will become not effective immediately but only after finishing the currently running 
+  cycle. */
+  void setPeriodNoUpdate(T newPeriod)
+  { 
+    PDH::calcCycleDistribution(newPeriod, &midLength, &probShort, &probMid); 
+  }
+
+  /** Sets the seed for the pseudo random number generator. */
   void setRandomSeed(uint32_t newSeed)
   {
     prng.setSeed(newSeed);
   }
 
+  //-----------------------------------------------------------------------------------------------
+  // \name Processing
 
+  /** Produced one sample at a time. */
   inline T getSample()
   {
     T y = T(-1) + sawSlope * sampleCount;
@@ -1289,6 +1304,7 @@ public:
     return y;
   }
 
+  /** Resets the internal state, i.e. the sample counter and the random generator. */
   void reset()
   {
     sampleCount = T(0);
@@ -1297,6 +1313,8 @@ public:
 
 
   // Move to protected:
+  /** Updates our cycleLength member by computing a new (pseudo) random cycle length to be used 
+  for the next cycle. Called from getSample() after each cycle has been completed. */
   inline void updateCycleLength()
   {
     T r = prng.getSample();                     // Random number in interval [0,1)
@@ -1312,6 +1330,7 @@ public:
   }
 
 
+
 protected:
 
   // Members that are accessed per sample:
@@ -1323,50 +1342,34 @@ protected:
   T midLength   = T(100);
   T probShort   = T(0.0);        // Probability to use midLength - 1 
   T probMid     = T(0.5);        // Probability to use midLength
-  //T probLong    = T(0.5);      // Probability to use midLength + 1. Equals 1 - (p1 + p2).
-  // Maybe rename p1,p2,p3 to probShort, probMid, probLong
-  // I think, the state after initilization is inconsistent. The given initial probabilities may 
-  // not correctly correspond to the set sawSlope, etc. Maybe we should not init them here but
-  // instead make a call to setPeriod() and reset() from the constructor. This call will then take 
-  // care of correctly initializing everything.
 
+  // Embedded DSP objects:
   rsNoiseGenerator<T> prng;
 
   // Notes:
   //
   // - The members sampleCount, cycleLength and midLength are actually integer numbers but we let 
   //   them be of type T (which is typically float or double) anyway for optimization purposes. We 
-  //   want to avoid int-to-float conversions.
+  //   want to avoid int-to-float conversions because they are costly. The other members are indeed
+  //   true floating point values that are not restricted to integers.
+  // 
+  // - There is no "probLong" member variable because that would be redundant. The probability to
+  //   use the long cycle is always given by  1 - (probShort + probMid)  because probabilities must
+  //   add up to 1.
+  //  
+  // 
+  // ToDo:
+  //
+  // - Replace the rsNoiseGenerator<T> member by a rsRandomGenerator<T>. This class does not exist 
+  //   yet. It is supposed to factor out the integer random number generation from rsNoiseGenerator
+  //   such that the object doesn't need to maintain the shift and scale members. It could provide
+  //   a convience function for producing floating point outputs in the fixed range [0,1) but it 
+  //   will not provide a user adjustable range. It could have a convenience function 
+  //   getSampleFloat(T min, T max), though. But using that function in a hot loop is not 
+  //   recommended for production code because it will need a costly division.
+  //
+  // - I think, the state after initilization is inconsistent. The given initial probabilities may 
+  //   not correctly correspond to the set sawSlope, etc. Maybe we should not init them here but
+  //   instead make a call to setPeriod() and reset() from the constructor. This call will then 
+  //   take care of correctly initializing everything.
 };
-
-/*
-template<class T>
-inline T rsPitchDitherSawOsc<T>::getSample()
-{
-  T y = T(-1) + sawSlope * sampleCount;
-
-  sampleCount += T(1);
-  if(sampleCount >= cycleLength)
-  {
-    updateCycleLength();
-    sampleCount = T(0);
-  }
-
-  return y;
-}
-
-template<class T>
-inline void rsPitchDitherSawOsc<T>::updateCycleLength()
-{ 
-  T r = prng.getSample();                     // Random number in interval [0,1)
-
-  if(r < probShort)
-    cycleLength = midLength - T(1);
-  else if(r < probShort + probMid)
-    cycleLength = midLength;
-  else
-    cycleLength = midLength + T(1);
-
-  sawSlope = T(2) / T(cycleLength-1);
-}
-*/

@@ -1110,9 +1110,18 @@ void testPitchDitherSuperSaw()
   PDSO osc[7];                             // We need 7 pitch dither osc objects. One for each saw.
   for(int i = 0; i < 7; i++)
   {
-    osc[i].setPeriod(sampleRate / (midFreq * (detune * freqOffsets[i] + Real(1))));
     osc[i].setRandomSeed(seed+i);
-    osc[i].updateCycleLength();
+    osc[i].setPeriod(sampleRate / (midFreq * (detune * freqOffsets[i] + Real(1))));
+
+    //osc[i].updateCycleLength();
+    // I think, the order of calling setPeriod() and setRandomSeed() matters when we don't call
+    // updateCycleLength() anymore. In production, we can't call it because it's supposed to be a 
+    // protected member function. But it's not good that the output depends on the order in which 
+    // we call the setters! That can lead to subtle bugs and reproducibility problems. Try to 
+    // implement it in such a way that it behaves the same way independently from the order of 
+    // calling the setters. Write aunit test that verifies this! Eventually, we want to use a class
+    // rsRandomGenerator that doesn't even have a seed member anyway. Instead, it should have a 
+    // setState() function. Maybe when we do it like this, the problem will go away? We'll see...
   }
   Vec supSaw2(numSamples);
   for(int n = 0; n < numSamples; n++)

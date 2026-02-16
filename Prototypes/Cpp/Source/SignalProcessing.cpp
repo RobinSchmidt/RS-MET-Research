@@ -1248,17 +1248,19 @@ class rsPitchDitherSawOsc
 
 public:
 
-  using PDH = rsPitchDitherHelpers<T>;   // Shorthand for convenience
+  using PDH = rsPitchDitherHelpers<T>;     // Shorthand for convenience
 
   //-----------------------------------------------------------------------------------------------
   // \name Lifetime
 
+  /** Default constructor. It puts the object into a valid initial state by setting up a default
+  period length of 100.0 samples and triggering the appropriate computations to set up our member
+  variables that control the distribution of cycle lengths. */
   rsPitchDitherSawOsc()
   {
-    // Put the object into a valid initial state:
-    prng.setRange(T(0), T(1));
-    setPeriod(T(100.0));
-    reset();
+    prng.setRange(T(0), T(1));             // We use random numbers in the interval [0,1).
+    setPeriod(T(100.0));                   // Triggers computations to set up members.
+    reset();                               // Assigns sampleCount.
   }
 
   //-----------------------------------------------------------------------------------------------
@@ -1274,9 +1276,9 @@ public:
     updateCycleLength();
   }
 
-  /** Sets up a new period length via calling setPeriod() but without immediately updating the
+  /** Sets up a new period length just like setPeriod() does but without immediately updating the
   probability distribution and current cycle length. This results in the behavior that the new 
-  period will become not effective immediately but only after finishing the currently running 
+  period will not become effective immediately but only after finishing the currently running 
   cycle. */
   void setPeriodNoUpdate(T newPeriod)
   { 
@@ -1308,14 +1310,14 @@ public:
   /** Produces one sample at a time. */
   inline T getSample()
   {
-    T y = T(-1) + sawSlope * sampleCount;   // Compute output
-    sampleCount += T(1);                    // Update sample counter
-    if(sampleCount >= cycleLength)          // Is cycle finished?
-    {
-      sampleCount = T(0);                   // Wrap around sample counter
-      updateCycleLength();                  // Compute cycleLength and sawSlope for next cycle
+    T y = T(-1) + sawSlope * sampleCount;  // Compute output sample.
+    sampleCount += T(1);                   // Update counter. We will have produced 1 sample.
+    if(sampleCount >= cycleLength)         // Is cycle finished?
+    {                                      // If so..
+      sampleCount = T(0);                  // ..Wrap around sample counter.
+      updateCycleLength();                 // ..Compute cycleLength and sawSlope for next cycle.
     }
-    return y;                               // Return output
+    return y;                              // Return output sample.
   }
 
   /** Resets the internal state, i.e. the sample counter and the random generator. */
@@ -1326,36 +1328,38 @@ public:
   }
 
 
-  // Move to protected:
+protected:
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Internals
+
   /** Updates our cycleLength member by computing a new (pseudo) random cycle length to be used 
   for the next cycle. Called from getSample() after each cycle has been completed. */
   inline void updateCycleLength()
   {
-    T r = prng.getSample();                     // Random number in interval [0,1)
-
+    T r = prng.getSample();                // Random number in interval [0,1).
     if(r < probShort)
-      cycleLength = midLength - T(1);
+      cycleLength = midLength - T(1);      // Next cycle is short.
     else if(r < probShort + probMid)
-      cycleLength = midLength;
+      cycleLength = midLength;             // Next cycle is medium.
     else
-      cycleLength = midLength + T(1);
+      cycleLength = midLength + T(1);      // Next cycle is long.
 
-    sawSlope = T(2) / T(cycleLength-1);
+    sawSlope = T(2) / T(cycleLength-1);    // Slope depends on cycle length.
   }
 
-
-
-protected:
+  //-----------------------------------------------------------------------------------------------
+  // \name Data
 
   // Members that are accessed per sample:
-  T sawSlope;
-  T sampleCount;
+  T sawSlope;      // Increase of output value per sample.
+  T sampleCount;   // Is always in interval [0, cycleLength).
   T cycleLength;   // Is midLength or midLength + 1 or midLength - 1.
 
   // Members that are accessed per cycle:
-  T midLength;     // The middle one of the 3 cycle lengths to be produced
-  T probShort;     // Probability to use midLength - 1 
-  T probMid;       // Probability to use midLength
+  T midLength;     // The middle one of the 3 cycle lengths to be produced.
+  T probShort;     // Probability to use midLength - 1.
+  T probMid;       // Probability to use midLength.
 
   // Embedded DSP objects:
   rsNoiseGenerator<T> prng;
@@ -1385,10 +1389,7 @@ protected:
   //   a convience function for producing floating point outputs in the fixed range [0,1) but it 
   //   will not provide a user adjustable range. It could have a convenience function 
   //   getSampleFloat(T min, T max), though. But using that function in a hot loop is not 
-  //   recommended for production code because it will need a costly division.
-  //
-  // - I think, the state after initilization is inconsistent. The given initial probabilities may 
-  //   not correctly correspond to the set sawSlope, etc. Maybe we should not init them here but
-  //   instead make a call to setPeriod() and reset() from the constructor. This call will then 
-  //   take care of correctly initializing everything.
+  //   recommended for production code because it will need a costly division. Maybe it should have
+  //   a normal getSample() function that produces floats in [0,1) and an additional getSampleRaw()
+  //   or getSampleInt() function that produces the raw integer value.
 };

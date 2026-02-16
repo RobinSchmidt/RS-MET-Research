@@ -1228,10 +1228,11 @@ protected:
 
   // Members that are accessed per cycle:
   T midLength   = T(100);
-  T p1          = T(0.0);        // Probability to use midLength - 1 
-  T p2          = T(0.5);        // Probability to use midLength
-  //T p3          = T(0.5);      // Probability to use midLength + 1. Equals 1 - (p1 + p2).
+  T probShort   = T(0.0);        // Probability to use midLength - 1 
+  T probMid     = T(0.5);        // Probability to use midLength
+  //T probLong    = T(0.5);      // Probability to use midLength + 1. Equals 1 - (p1 + p2).
   // Maybe rename p1,p2,p3 to probShort, probMid, probLong
+  // I think, the state after initilization is inconsitsent. h
 
   rsNoiseGenerator<T> prng;
 
@@ -1271,10 +1272,11 @@ void rsPitchDitherSawOsc<T>::setPeriod(T newPeriod)
   T S  = T(1) / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3));
 
   // Compute probabilities:
-  p1 = (M2*e3 - M3*e2) * S;
-  p2 = (M3*e1 - M1*e3) * S;
-  //p3 = (M1*e2 - M2*e1) * S;  // We don't have a member p3 because that would be redundant.
-                               // We always have p3 = 1 - (p1 + p2)
+  probShort = (M2*e3 - M3*e2) * S;
+  probMid   = (M3*e1 - M1*e3) * S;
+  //probLong = (M1*e2 - M2*e1) * S;  
+    // We don't have a member probLong because that would be redundant. It would always be given by
+    // 1 - (probShort + probMid)
 
 
   //updateCycleLength();       // Not sure if we should do this here
@@ -1286,6 +1288,11 @@ void rsPitchDitherSawOsc<T>::setPeriod(T newPeriod)
   // inverted logic. Or maybe rename this function into setNextPeriodLength() and don't call update
   // here and then have a function setPeriod() or setPeriodLength() that calls 
   // setNextPeriodLength() and updateCycleLength()...or maybe call them set(Next)CycleLength
+  //
+  // ToDo:
+  // 
+  // - Factor out a function that we can cll like 
+  //   calcCycleDistribution(period, &midLength, &probShort, &probLong)
 }
 
 template<class T>
@@ -1308,9 +1315,9 @@ inline void rsPitchDitherSawOsc<T>::updateCycleLength()
 { 
   T r = prng.getSample();                     // Random number in interval [0,1)
 
-  if(r < p1)
+  if(r < probShort)
     cycleLength = midLength - T(1);
-  else if(r < p1 + p2)
+  else if(r < probShort + probMid)
     cycleLength = midLength;
   else
     cycleLength = midLength + T(1);

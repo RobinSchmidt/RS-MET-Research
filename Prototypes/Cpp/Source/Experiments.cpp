@@ -1153,30 +1153,30 @@ void testPitchDitherSuperSaw()
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
 
 
-
-
-
-
-
   // Observations:
   //
-  // - I applied a highpass filter in a sample editor. Predictably, it makes the signal sound a 
-  //   little bit thinner, even if it's set somewhere below the fundamental (like 30 Hz for a 55 Hz
-  //   supersaw). For a supersaw osc, the highpass should probably be optional. It's not really 
-  //   needed for anti-aliasing anyway, if we do the pitch-dithering - even without any 
-  //   oversampling. However, for very high frequencies (like 14080), a highpass tuned to something
-  //   like 10000 cleans the signal up nicely, so maybe we should use an (optional) highpass tuned
-  //   below the fundamental. Maybe there should be a parameter in % and 100% should mean: cutoff
-  //   at fundamental and 0% means: Cutoff at 0, i.e. turned off.
+  // - Predictably, the highpass filtering makes the signal sound a little bit thinner, even if 
+  //   it's set somewhere below the fundamental (like 30 Hz for a 55 Hz supersaw). For a supersaw
+  //   osc, the highpass should probably be optional. It's not really needed for anti-aliasing 
+  //   anyway, if we do the pitch-dithering - even without any oversampling. However, for very high
+  //   frequencies (like 14080), a highpass tuned to something like 10000 cleans the signal up 
+  //   nicely, so maybe we should use an (optional) highpass tuned below the fundamental. The 
+  //   highpass is also needed to get the sawtooth shape right when we wnat to emulate the JP-8000
+  //   supersaw. Maybe there should be a parameter in % and 100% should mean: cutoff at fundamental
+  //   and 0% means: Cutoff at 0, i.e. turned off. ToDo: Figure out what order and cutoff frequency 
+  //   the JP-8000 highpass uses. We may wnat to emulate that.
   // 
   // - Maybe the highpass could have a little bit of resonance. That could help to boost the 
   //   fundamental to make the sound more full. Maybe use a 4th order highpass. Maybe use a linear
   //   ladder highpass that can be switched between 6,12,18,24 dB/oct and can have some resonance.
+  //   Or use a biquad highpass with adjustable Q.
   // 
   // - The sum of the freqOffsets is not 0 but -25 (before dividing by 8192). Does that mean that 
-  //   the perceived frequency woill go down a little bit?
+  //   the perceived frequency will go down a little bit? If so, should we compensate for that?
   // 
-  // - The wave at 14080 Hz looks more like it has its spectral peak somewhere near 14600 Hz
+  // - The wave at 14080 Hz looks more like it has its spectral peak somewhere near 14600 Hz. 
+  //   Verify that again. That comment was written when we had used the old "min-variance" 
+  //   algorithm for the cycle distribution.
   //
   // - Maybe detuning could benefit from some keytracking. I think, lower frequencies can be 
   //   detuned more strongly.
@@ -1207,7 +1207,8 @@ void testPitchDitherSuperSaw()
   // 
   // ToDo: 
   // 
-  // - Replace the call to PDP::fillDitherSawMinVariance() with a call to PDP::getSaw() using a 
+  // - DONE
+  //   Replace the call to PDP::fillDitherSawMinVariance() with a call to PDP::getSaw() using a 
   //   previously created cycle distribution with equalized variance. That should make the unit 
   //   test fail. To make it pass again, switch from 
   //   "using PDSO = rsPitchDitherSawOscOld<Real, int>;" to
@@ -1232,6 +1233,15 @@ void testPitchDitherSuperSaw()
   //   in an oscillator inside a synth. Maybe call it "PhaseSpread". Or maybe "Transient" and let 
   //   it behave in such a way that when it's at 100%, all saws start in phase and if it's at 0%
   //   the start phases are spread out evenly.
+  // 
+  // - Maybe the saw oscillators shouldn't start at -1 but rather at +1 and then produce -1 as the
+  //   very next sample (and then only ramp up to 1-inc rather than 1). That would correspond to 
+  //   initializing the phase on the last sample of the saw and lead to an even more aggressive 
+  //   transient. Maybe all of that could be done by providing a StartPhase and a PhaseSpread 
+  //   parameter.
+  //
+  // - Try using a disperser on a supersaw with a strong transient setting. The frequencies of the
+  //   allpasses should scale with note pitch - perhaps via a keytrack parameter
   //
   // - Maybe make it stereo by distributing the saws between the stereo channels. Maybe the panning
   //   of the saws could even be time varying. Or maybe create supersaws with different start 
@@ -1292,14 +1302,6 @@ void testPitchDitherSuperSaw()
   //   the saw. Maybe we can scale the subtracted phase-shifted version. Thereby, we can smoothly 
   //   morph between supersaw and superpulse
   //
-  // - Maybe the saw oscillators shouldn't start at -1 but rather at +1 and then produce -1 as the
-  //   very next sample (and then only ramp up to 1-inc rather than 1). That would correspond to 
-  //   initializing the phase on the last sample of the saw and lead to an even more aggressive 
-  //   transient. 
-  //
-  // - Try using a disperser on a supersaw with a strong transient setting. The frequencies of the
-  //   allpasses should scale with note pitch - perhaps via a keytrack parameter
-  //
   // - Maybe make an optimized class rsPitchDitherSuperSawOsc class. The things that can be 
   //   optimized compared to just using a bunch of rsPitchDitherSawOsc objects are: For the prngs,
   //   we need to store only the state for each. The scale and shift values for conversion to float
@@ -1315,8 +1317,7 @@ void testPitchDitherSuperSaw()
   //   has to be converted to uint64. I don't know, if that's cheap or expensive - figure out! If 
   //   it's cheap, it may be better to keep the states in uint32 format.
   // 
-  // - Maybe factor out the computations from rsPitchDitherSawOsc::setPeriod() into a 
-  //   rsPitchDitherHelpers class such that we can reuse it in the supersaw osc.
+  // - Move the code over to the main repo and continue improving it there.
 }
 
 

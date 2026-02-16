@@ -1190,6 +1190,12 @@ class rsPitchDitherHelpers
 public:
 
   static void calcCycleDistribution(T period, T* midLength, T* probShort, T* probMid);
+  // Maybe rename to cycleDistribEqualVariance (or ..EqVar) and maybe add functions to compute the
+  // other distributions as well, although, I think, the other distributions are not really useful.
+  // Not sure...maybe we shouldn't clutter the code with useless stuff. At leats not the production
+  // code. For research and prototype code, it's a different story. There, we may use the useless 
+  // code to demonstrate in experiments that it is indeed useless.  
+
 
 };
 
@@ -1237,6 +1243,9 @@ void rsPitchDitherHelpers<T>::calcCycleDistribution(
 //
 // - Add convenience functions to produce a whole signal vector of signals with various waveforms.
 //   maybe take the waveform as std::function or some callable template type F. 
+//
+// - Maybe create functions to produce various wvaeforms, including additively syntehsized saw
+//   waves (mayby by using trig-recursions for an optimized implementation)
 
 //-------------------------------------------------------------------------------------------------
 
@@ -1337,15 +1346,15 @@ protected:
   for the next cycle. Called from getSample() after each cycle has been completed. */
   inline void updateCycleLength()
   {
-    T r = prng.getSample();                // Random number in interval [0,1).
+    T r = prng.getSample();                  // Random number in interval [0,1).
     if(r < probShort)
-      cycleLength = midLength - T(1);      // Next cycle is short.
+      cycleLength = midLength - T(1);        // Next cycle is short.
     else if(r < probShort + probMid)
-      cycleLength = midLength;             // Next cycle is medium.
+      cycleLength = midLength;               // Next cycle is medium.
     else
-      cycleLength = midLength + T(1);      // Next cycle is long.
+      cycleLength = midLength + T(1);        // Next cycle is long.
 
-    sawSlope = T(2) / T(cycleLength-1);    // Slope depends on cycle length.
+    sawSlope = T(2) / (cycleLength - T(1));  // Slope depends on cycle length.
   }
 
   //-----------------------------------------------------------------------------------------------
@@ -1392,4 +1401,9 @@ protected:
   //   recommended for production code because it will need a costly division. Maybe it should have
   //   a normal getSample() function that produces floats in [0,1) and an additional getSampleRaw()
   //   or getSampleInt() function that produces the raw integer value.
+  // 
+  // - setRandomSeed() should probably eventually be replaced by a setRandomState function. Or 
+  //   maybe complemented by it. We actually do want to have a setRandomSeed() function as well. 
+  //   But when we switch to a PRNG that has no built in seed member, we will need a randomSeed 
+  //   member variable here.
 };

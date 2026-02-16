@@ -1275,7 +1275,19 @@ public:
   }
 
 
-  inline T getSample();
+  inline T getSample()
+  {
+    T y = T(-1) + sawSlope * sampleCount;
+
+    sampleCount += T(1);
+    if(sampleCount >= cycleLength)
+    {
+      updateCycleLength();
+      sampleCount = T(0);
+    }
+
+    return y;
+  }
 
   void reset()
   {
@@ -1283,7 +1295,21 @@ public:
     prng.reset();
   }
 
-  inline void updateCycleLength();
+
+  // Move to protected:
+  inline void updateCycleLength()
+  {
+    T r = prng.getSample();                     // Random number in interval [0,1)
+
+    if(r < probShort)
+      cycleLength = midLength - T(1);
+    else if(r < probShort + probMid)
+      cycleLength = midLength;
+    else
+      cycleLength = midLength + T(1);
+
+    sawSlope = T(2) / T(cycleLength-1);
+  }
 
 
 protected:
@@ -1315,27 +1341,6 @@ protected:
 
 /*
 template<class T>
-void rsPitchDitherSawOsc<T>::setPeriod(T newPeriod)
-{
-  rsPitchDitherHelpers<T>::calcCycleDistribution(newPeriod, &midLength, &probShort, &probMid);
-
-  //updateCycleLength();       // Not sure if we should do this here
-  // Maybe do not set this up here. We may get better behavior when modulating the period when we
-  // defer this to getSample() which calls updateCycleLength(). When we don't set it here, we will
-  // delay the update until the last cycle with the old length has been finished. Maybe in this 
-  // case, we should init cycleLength to zero in reset() and maybe also here Maybe we should give 
-  // the functiona boolean flag called "immediateUpdate" or something. Or maybe "deferUpdate" with
-  // inverted logic. Or maybe rename this function into setNextPeriodLength() and don't call update
-  // here and then have a function setPeriod() or setPeriodLength() that calls 
-  // setNextPeriodLength() and updateCycleLength()...or maybe call them set(Next)CycleLength
-  //
-  // ToDo:
-  // 
-  // - Move implementation into class
-}
-*/
-
-template<class T>
 inline T rsPitchDitherSawOsc<T>::getSample()
 {
   T y = T(-1) + sawSlope * sampleCount;
@@ -1364,3 +1369,4 @@ inline void rsPitchDitherSawOsc<T>::updateCycleLength()
 
   sawSlope = T(2) / T(cycleLength-1);
 }
+*/

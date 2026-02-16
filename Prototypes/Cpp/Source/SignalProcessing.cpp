@@ -1176,15 +1176,71 @@ TFlt rsPitchDitherSawOscOld<TFlt, TInt>::readSawValue(TInt n, TInt N)
 //   has the equal-variance algorithm. It could also precompute the cycle distribtuion (i.e. L1..L3
 //   and p1..p3) so it doesn't need to be computed in each call to updateCycleLength().
 
+
+
 //-------------------------------------------------------------------------------------------------
 
-/** Under construction.
+/** A class that factors out some functionality that is common to all generators that make use of 
+pitch dithering. ...TBC... */
 
-A realtime oscillator that produces pitch-dithered sawtooth waves.
+template<class T>
+class rsPitchDitherHelpers
+{
 
-This is the new implementation. It has been copied form the old and now needs to be adapted.
+public:
 
-*/
+  static void calcCycleDistribution(T period, T* midLength, T* probShort, T* probMid);
+
+};
+
+template<class T>
+void rsPitchDitherHelpers<T>::calcCycleDistribution(
+  T period, T* midLength, T* probShort, T* probMid)
+{
+  // Compute lengths:
+  T floorLength = rsFloor(period);
+  T fracLength  = period - floorLength;
+  T L1, L2, L3;
+  if(fracLength < T(0.5))
+    L1 = floorLength - T(1);
+  else
+    L1 = floorLength;
+  L2 = L1 + T(1);
+  L3 = L2 + T(1);
+
+  // Compute intermediates:
+  T e1 = L1 - period;
+  T e2 = L2 - period;
+  T e3 = L3 - period;
+  T m1 = e1*e1;
+  T m2 = e2*e2;
+  T m3 = e3*e3;
+  T M  = T(0.25);
+  T M1 = M - m1;
+  T M2 = M - m2; 
+  T M3 = M - m3;
+  T S  = T(1) / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3));
+
+  // Compute outputs:
+  *midLength = L2;
+  *probShort = (M2*e3 - M3*e2) * S;
+  *probMid   = (M3*e1 - M1*e3) * S;
+  //*probLong  = (M1*e2 - M2*e1) * S;  // Would be redundant. See Notes
+  
+  // Notes:
+  // 
+  // - We don't have a probLong parameter because that would be redundant. It would always be given
+  //   by 1 - (probShort + probMid).
+}
+
+// ToDo:
+//
+// - Add convenience functions to produce a whole signal vector of signals with various waveforms.
+//   maybe take the waveform as std::function or some callable template type F. 
+
+//-------------------------------------------------------------------------------------------------
+
+/** A realtime oscillator that produces pitch-dithered sawtooth waves. */
 
 template<class T> 
 class rsPitchDitherSawOsc
@@ -1246,6 +1302,8 @@ protected:
 template<class T>
 void rsPitchDitherSawOsc<T>::setPeriod(T newPeriod)
 {
+  /*
+  // Old:
   // Compute lengths:
   T floorLength = rsFloor(newPeriod);
   T fracLength  = newPeriod - floorLength;
@@ -1277,7 +1335,10 @@ void rsPitchDitherSawOsc<T>::setPeriod(T newPeriod)
   //probLong = (M1*e2 - M2*e1) * S;  
     // We don't have a member probLong because that would be redundant. It would always be given by
     // 1 - (probShort + probMid)
+  */
 
+  // New:
+  rsPitchDitherHelpers<T>::calcCycleDistribution(newPeriod, &midLength, &probShort, &probMid);
 
   //updateCycleLength();       // Not sure if we should do this here
   // Maybe do not set this up here. We may get better behavior when modulating the period when we

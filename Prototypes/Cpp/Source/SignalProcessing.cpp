@@ -1255,8 +1255,10 @@ public:
 
   rsPitchDitherSawOsc()
   {
-    setPeriod(T(100.0));
+    // Put the object into a valid initial state:
     prng.setRange(T(0), T(1));
+    setPeriod(T(100.0));
+    reset();
   }
 
   //-----------------------------------------------------------------------------------------------
@@ -1303,19 +1305,17 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Processing
 
-  /** Produced one sample at a time. */
+  /** Produces one sample at a time. */
   inline T getSample()
   {
-    T y = T(-1) + sawSlope * sampleCount;
-
-    sampleCount += T(1);
-    if(sampleCount >= cycleLength)
+    T y = T(-1) + sawSlope * sampleCount;   // Compute output
+    sampleCount += T(1);                    // Update sample counter
+    if(sampleCount >= cycleLength)          // Is cycle finished?
     {
-      updateCycleLength();
-      sampleCount = T(0);
+      sampleCount = T(0);                   // Wrap around sample counter
+      updateCycleLength();                  // Compute cycleLength and sawSlope for next cycle
     }
-
-    return y;
+    return y;                               // Return output
   }
 
   /** Resets the internal state, i.e. the sample counter and the random generator. */
@@ -1348,14 +1348,14 @@ public:
 protected:
 
   // Members that are accessed per sample:
-  T sawSlope    = T(2) / T(99);  // Verify formula!
-  T sampleCount = T(0);
-  T cycleLength = T(100);        // Is midLength or midLength + 1 or midLength - 1.
+  T sawSlope;
+  T sampleCount;
+  T cycleLength;   // Is midLength or midLength + 1 or midLength - 1.
 
   // Members that are accessed per cycle:
-  T midLength   = T(100);
-  T probShort   = T(0.0);        // Probability to use midLength - 1 
-  T probMid     = T(0.5);        // Probability to use midLength
+  T midLength;     // The middle one of the 3 cycle lengths to be produced
+  T probShort;     // Probability to use midLength - 1 
+  T probMid;       // Probability to use midLength
 
   // Embedded DSP objects:
   rsNoiseGenerator<T> prng;
@@ -1370,6 +1370,11 @@ protected:
   // - There is no "probLong" member variable because that would be redundant. The probability to
   //   use the long cycle is always given by  1 - (probShort + probMid)  because probabilities must
   //   add up to 1.
+  // 
+  // - The member variables are deliberately not initialized in their declarations because some 
+  //   initializations would require using some moderately complex formulas for a consistent, valid
+  //   initial state. So we leave this member initialization to the constructor which calls some 
+  //   functions to do the appropriate computations.
   //  
   // 
   // ToDo:
@@ -1386,8 +1391,4 @@ protected:
   //   not correctly correspond to the set sawSlope, etc. Maybe we should not init them here but
   //   instead make a call to setPeriod() and reset() from the constructor. This call will then 
   //   take care of correctly initializing everything.
-  //
-  // - Maybe add a function getPeriod() that computes and returns the average period length from
-  //   the cycle lengths and their probabilities. It's given by:
-  //   period = probShort * (midLength - 1) + probMid*midLength + probLong * (midLength + 1).
 };

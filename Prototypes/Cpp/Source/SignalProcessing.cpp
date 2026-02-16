@@ -1248,15 +1248,26 @@ class rsPitchDitherSawOsc
 
 public:
 
+  using PDH = rsPitchDitherHelpers<T>;   // Shorthand for convenience
+
   rsPitchDitherSawOsc()
   {
     prng.setRange(T(0), T(1));
   }
 
+  void setPeriodNoUpdate(T newPeriod)
+  { 
+    PDH::calcCycleDistribution(newPeriod, &midLength, &probShort, &probMid); 
+  }
+
   /** Sets the period, i.e. the desired length of one cycle of the waveform. This is a floating 
   point value and it can be computed as  period = sampleRate / frequency  where frequency is the 
   desired oscillator frequency.  */
-  void setPeriod(T newPeriod);
+  void setPeriod(T newPeriod)
+  {
+    setPeriodNoUpdate(newPeriod);
+    updateCycleLength();
+  }
 
   void setRandomSeed(uint32_t newSeed)
   {
@@ -1288,7 +1299,10 @@ protected:
   T probMid     = T(0.5);        // Probability to use midLength
   //T probLong    = T(0.5);      // Probability to use midLength + 1. Equals 1 - (p1 + p2).
   // Maybe rename p1,p2,p3 to probShort, probMid, probLong
-  // I think, the state after initilization is inconsitsent. h
+  // I think, the state after initilization is inconsistent. The given initial probabilities may 
+  // not correctly correspond to the set sawSlope, etc. Maybe we should not init them here but
+  // instead make a call to setPeriod() and reset() from the constructor. This call will then take 
+  // care of correctly initializing everything.
 
   rsNoiseGenerator<T> prng;
 
@@ -1299,45 +1313,10 @@ protected:
   //   want to avoid int-to-float conversions.
 };
 
+/*
 template<class T>
 void rsPitchDitherSawOsc<T>::setPeriod(T newPeriod)
 {
-  /*
-  // Old:
-  // Compute lengths:
-  T floorLength = rsFloor(newPeriod);
-  T fracLength  = newPeriod - floorLength;
-  T L1, L2, L3;
-  if(fracLength < T(0.5))
-    L1 = floorLength - T(1);
-  else
-    L1 = floorLength;
-  L2 = L1 + T(1);
-  L3 = L2 + T(1);
-  midLength = L2;
-
-  // Compute intermediates:
-  T e1 = L1 - newPeriod;
-  T e2 = L2 - newPeriod;
-  T e3 = L3 - newPeriod;
-  T m1 = e1*e1;
-  T m2 = e2*e2;
-  T m3 = e3*e3;
-  T M  = T(0.25);
-  T M1 = M - m1;
-  T M2 = M - m2; 
-  T M3 = M - m3;
-  T S  = T(1) / (e3*(m1-m2) - e2*(m1-m3) + e1*(m2-m3));
-
-  // Compute probabilities:
-  probShort = (M2*e3 - M3*e2) * S;
-  probMid   = (M3*e1 - M1*e3) * S;
-  //probLong = (M1*e2 - M2*e1) * S;  
-    // We don't have a member probLong because that would be redundant. It would always be given by
-    // 1 - (probShort + probMid)
-  */
-
-  // New:
   rsPitchDitherHelpers<T>::calcCycleDistribution(newPeriod, &midLength, &probShort, &probMid);
 
   //updateCycleLength();       // Not sure if we should do this here
@@ -1352,9 +1331,9 @@ void rsPitchDitherSawOsc<T>::setPeriod(T newPeriod)
   //
   // ToDo:
   // 
-  // - Factor out a function that we can cll like 
-  //   calcCycleDistribution(period, &midLength, &probShort, &probLong)
+  // - Move implementation into class
 }
+*/
 
 template<class T>
 inline T rsPitchDitherSawOsc<T>::getSample()

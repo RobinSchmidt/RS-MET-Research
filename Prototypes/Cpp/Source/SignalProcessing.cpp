@@ -1255,6 +1255,7 @@ public:
 
   rsPitchDitherSawOsc()
   {
+    setPeriod(T(100.0));
     prng.setRange(T(0), T(1));
   }
 
@@ -1285,6 +1286,19 @@ public:
   {
     prng.setSeed(newSeed);
   }
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+  /** Returns the average length of the cycles that are being produced. If the 3 integer cycle 
+  lengths are given by L1,L2,L3 and cycles with these 3 lengths are produced with probabilities 
+  p1,p2,p3 respectively, then the average cycle length P will be: P = p1*L1 + p2*L2 + p3*L3. */
+  T getPeriod()
+  {
+    T probLong = T(1) - (probShort + probMid);
+    return probShort * (midLength - T(1)) + probMid * midLength + probLong * (midLength + T(1));
+  }
+  // Needs tests
 
   //-----------------------------------------------------------------------------------------------
   // \name Processing
@@ -1372,4 +1386,8 @@ protected:
   //   not correctly correspond to the set sawSlope, etc. Maybe we should not init them here but
   //   instead make a call to setPeriod() and reset() from the constructor. This call will then 
   //   take care of correctly initializing everything.
+  //
+  // - Maybe add a function getPeriod() that computes and returns the average period length from
+  //   the cycle lengths and their probabilities. It's given by:
+  //   period = probShort * (midLength - 1) + probMid*midLength + probLong * (midLength + 1).
 };

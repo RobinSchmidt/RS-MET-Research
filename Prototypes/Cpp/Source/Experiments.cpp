@@ -1084,8 +1084,9 @@ std::vector<T> getPitchDitherSuperSaw1(
   using PDP = rsPitchDitherProto<T>;
 
   Vec freqOffsets = getSuperSawFreqOffsetsJp8000<T>();
-  int numSaws = (int) freqOffsets.size();       // This is 7, of course.
-  Vec saw(numSamples), supSaw(numSamples);      // Temp for one saw and accumulator for supersaw.
+  int numSaws = (int) freqOffsets.size();                // This is 7, of course.
+  Vec saw(numSamples);                                   // Temp for one saw
+  Vec supSaw(numSamples);                                // Accumulator for supersaw.
   Vec freqRatios = detune * freqOffsets + T(1);
   for(int i = 0; i < numSaws; i++)
   {
@@ -1107,6 +1108,8 @@ std::vector<T> getPitchDitherSuperSaw1(
 
   return supSaw;
 }
+
+
 
 
 void testPitchDitherSuperSaw1()
@@ -1131,36 +1134,12 @@ void testPitchDitherSuperSaw1()
   // Table with the frequency offsets when the center saw is taken to have frequency 1:
   Vec freqOffsets = getSuperSawFreqOffsetsJp8000<Real>();
 
-  // Produce the raw supersaw:
-  /*
-  int numSaws = (int) freqOffsets.size();       // This is 7, of course.
-  Vec saw(numSamples), supSaw(numSamples);      // Temp for one saw and accumulator for supersaw.
-  Vec freqRatios = detune * freqOffsets + Real(1);
-  for(int i = 0; i < numSaws; i++)
-  {
-    // Compute parameters for the i-th saw:
-    Real sawFreq   = midFreq * freqRatios[i];
-    Real sawPeriod = sampleRate / sawFreq;
-    Real sawAmp;
-    if(i == 0)
-      sawAmp = amp;
-    else
-      sawAmp = amp * mix;
-
-    // Produce i-th saw and accumulate into the super saw:
-    PDP::CycleDistribution cd;
-    PDP::distributionEqualVariance(sawPeriod, &cd);
-    saw = PDP::getSaw(numSamples, cd, seed+i, amp);
-    supSaw = supSaw + saw;
-  }
-  */
-
+  // Produce the raw supersaw via 1st algorithm:
   Vec supSaw = 
     amp * getPitchDitherSuperSaw1(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
 
 
-  // getPitchDitherSuperSaw1(
-  // T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
+
  
   // Now try to produce the same signal with 7 instances of the realtime pitch dither oscillator 
   // and verify that it produces the same output as our prototype implementation that was used 

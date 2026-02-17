@@ -1343,7 +1343,11 @@ void testPitchDitherSuperSaw2()
 
   SSO sso;
 
-  // ...TBC...
+  // ToDo:
+  //
+  // - Factor out the rendering of the supersaws from the previous experiment into 2 functions
+  //   getSuperSaw1(T freq, T sampleRate, T detune, T mix, int numSamples); such that we can
+  //   call them here to produce reference signals
 }
 
 void testPitchDitherSuperSaw()

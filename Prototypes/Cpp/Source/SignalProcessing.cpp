@@ -624,13 +624,38 @@ public:
 
   rsPitchDitherSuperSawOsc();
 
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  void setSampleRate(T newSampleRate)
+  {
+    sampleRate = newSampleRate;
+    updateSawPeriods();
+  }
+
+  void setFrequency(T newFreq)
+  {
+    freq = newFreq;
+    updateSawPeriods();
+  }
+
+  void setNumSaws(uint32_t newNumSaws)
+  {
+    numSaws = newNumSaws;
+    updateSawPeriods();      // May be needed when newNumSaws > old numSaws
+
+    // ToDo: Maybe also set an amplitude scaling factor as 1 / sqrt(numSaws).
+  }
+
   void setRandomSeed(uint32_t newSeed) 
   { 
     seed = newSeed;
-    reset();             // Maybe that call should be optional?
+    //reset();             // Maybe that call should be optional?
   }
 
-
+  //-----------------------------------------------------------------------------------------------
+  // \name Processing
 
   inline T getSample();
 
@@ -643,18 +668,32 @@ public:
 
 protected:
 
-  //static const uint32_t maxNumSaws = 16;
+  //-----------------------------------------------------------------------------------------------
+  // \name Internals
+
+
+
+  void updateSawPeriods();
+
+  //void updateCycleLength(uint32_t sawIndex);
+
+
   static const uint32_t maxNumSaws = 7;     // Maybe allow more later!
 
-  rsRandomGenerator prngs[maxNumSaws];
-
+  // Algo parameters:
   T freqRatios[maxNumSaws];
-  T detune = T(0);
-  T mix    = T(0);
+  T periods[maxNumSaws];
 
+  // User parameters:
+  T detune     = T(0);
+  T mix        = T(0);
+  T freq       = T(440);
+  T sampleRate = T(44100);
   uint32_t seed    = 0;
-
   uint32_t numSaws = 7;  // Maybe the user parameter could be called Density or NumVoices
+
+  // Embedded DSP objects:
+  rsRandomGenerator prngs[maxNumSaws];
 
 };
 
@@ -686,6 +725,23 @@ rsPitchDitherSuperSawOsc<T>::rsPitchDitherSuperSawOsc()
   // corresponding to the note pitch. Maybe we should also normalize the output power by dividing
   // the amplitude by sqrt(numSaws). 
 }
+
+
+template<class T>
+void rsPitchDitherSuperSawOsc<T>::updateSawPeriods()
+{
+  for(uint32_t i = 0; i < numSaws; i++)
+    periods[i] = sampleRate / (freq * detune * freqRatios[i]);  // Verify!
+
+  // Notes:
+  //
+  // - We loop only up to numSaws rather than maxNumSaws in order to avoid unnecessary computations
+  //   when the user is using less saws and the setFrequency() is called often (i.e. per sample) 
+  //   due to a pitch envelope or LFO. That implies that setNumSaws() should also call 
+  //   updateCycleLengths() to have all periods be computed correctly when the used increases the
+  //   numSaws parameter on a GUI or by automation.
+}
+
 
 template<class T>
 inline T rsPitchDitherSuperSawOsc<T>::getSample()

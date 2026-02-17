@@ -681,7 +681,7 @@ protected:
   static const uint32_t maxNumSaws = 7;     // Maybe allow more later!
 
   // Algo parameters:
-  T freqRatios[maxNumSaws];
+  T freqOffsets[maxNumSaws];
   T periods[maxNumSaws];
 
   // User parameters:
@@ -706,13 +706,13 @@ rsPitchDitherSuperSawOsc<T>::rsPitchDitherSuperSawOsc()
   // ToDo: Move this into a function setFrequencyDistribution() which takes an enum value where one
   // of the possible values is JP_8000. In the correspoanding case-block, do these assignments. Or 
   // better: Move the code into class rsRatioGenerator.
-  freqRatios[0] = 1.0;
-  freqRatios[1] = 1.0 + 0.01953125;
-  freqRatios[2] = 1.0 - 0.01953125;
-  freqRatios[3] = 1.0 + 0.06225585;
-  freqRatios[4] = 1.0 - 0.0628662;
-  freqRatios[5] = 1.0 + 0.107421875;
-  freqRatios[6] = 1.0 - 0.10986328125;
+  freqOffsets[0] =  0.0;
+  freqOffsets[1] = +0.01953125;
+  freqOffsets[2] = -0.01953125;
+  freqOffsets[3] = +0.06225585;
+  freqOffsets[4] = -0.0628662;
+  freqOffsets[5] = +0.107421875;
+  freqOffsets[6] = -0.10986328125;
   // [0, 0.01953125, -0.01953125, 0.06225585, -0.0628662, 0.107421875, -0.10986328125]
   // See: https://atosynth.blogspot.com/2026/01/a-closer-look-at-super-saw-code.html?m=1
   // ToDo: Figure out how we can best embed these hardcoded numbers for 7 saws into a more general

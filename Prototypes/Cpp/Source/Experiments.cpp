@@ -1060,6 +1060,31 @@ void testPitchDithering()
   // - Move to main repo.
 }
 
+
+
+template<class T>
+std::vector<T> getSuperSawFreqOffsetsJp8000()
+{
+  std::vector<T> freqOffsets({ 0, 160,  -160, 510, -515, 880, -900 });
+  freqOffsets = freqOffsets / 8192.0;
+  return freqOffsets;
+
+  // Notes:
+  //
+  // - The numbers were taken from here:
+  //   https://atosynth.blogspot.com/2026/01/a-closer-look-at-super-saw-code.html?m=1
+  //   and are supposed to be those that were used in the Roland JP-8000 and JP-8080.
+}
+
+template<class T>
+std::vector<T> getPitchDitherSuperSaw1(
+  T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
+{
+
+
+}
+
+
 void testPitchDitherSuperSaw1()
 {
   using Real = float; 
@@ -1080,16 +1105,12 @@ void testPitchDitherSuperSaw1()
   Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
 
   // Table with the frequency offsets when the center saw is taken to have frequency 1:
-  Vec freqOffsets({ 0, 160,  -160, 510, -515, 880, -900 });
-  freqOffsets = freqOffsets / 8192.0;
-  Vec freqRatios = detune * freqOffsets + Real(1);
-  // The numbers were taken from here:
-  // https://atosynth.blogspot.com/2026/01/a-closer-look-at-super-saw-code.html?m=1
-  // and are supposed to be those that were used in the Roland JP-8000 and JP-8080.
+  Vec freqOffsets = getSuperSawFreqOffsetsJp8000<Real>();
 
   // Produce the raw supersaw:
-  int numSaws = (int) freqRatios.size();        // This is 7, of course.
+  int numSaws = (int) freqOffsets.size();       // This is 7, of course.
   Vec saw(numSamples), supSaw(numSamples);      // Temp for one saw and accumulator for supersaw.
+  Vec freqRatios = detune * freqOffsets + Real(1);
   for(int i = 0; i < numSaws; i++)
   {
     // Compute parameters for the i-th saw:
@@ -1352,7 +1373,7 @@ void testPitchDitherSuperSaw2()
 
 void testPitchDitherSuperSaw()
 {
-  testPitchDitherSuperSaw2();
+  //testPitchDitherSuperSaw2();
 
 
   testPitchDitherSuperSaw1();

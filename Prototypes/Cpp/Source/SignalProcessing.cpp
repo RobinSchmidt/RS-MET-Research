@@ -616,4 +616,88 @@ TFlt rsPitchDitherSawOscOld<TFlt, TInt>::readSawValue(TInt n, TInt N)
 
 //-------------------------------------------------------------------------------------------------
 
+template<class T>
+class rsPitchDitherSuperSawOsc
+{
 
+public:
+
+  rsPitchDitherSuperSawOsc();
+
+  void setRandomSeed(uint32_t newSeed) 
+  { 
+    seed = newSeed;
+    reset();             // Maybe that call should be optional?
+  }
+
+
+
+  inline T getSample();
+
+  void reset()
+  {
+    for(uint32_t i = 0; i < maxNumSaws; i++)
+      prngs[i].setState(seed + i);
+  }
+
+
+protected:
+
+  //static const uint32_t maxNumSaws = 16;
+  static const uint32_t maxNumSaws = 7;     // Maybe allow more later!
+
+  rsRandomGenerator prngs[maxNumSaws];
+
+  T freqRatios[maxNumSaws];
+  T detune = T(0);
+  T mix    = T(0);
+
+  uint32_t seed    = 0;
+
+  uint32_t numSaws = 7;  // Maybe the user parameter could be called Density or NumVoices
+
+};
+
+
+template<class T>
+rsPitchDitherSuperSawOsc<T>::rsPitchDitherSuperSawOsc()
+{
+  reset();
+
+  // ToDo: Move this into a function setFrequencyDistribution() which takes an enum value where one
+  // of the possible values is JP_8000. In the correspoanding case-block, do these assignments. Or 
+  // better: Move the code into class rsRatioGenerator.
+  freqRatios[0] = 1.0;
+  freqRatios[1] = 1.0 + 0.01953125;
+  freqRatios[2] = 1.0 - 0.01953125;
+  freqRatios[3] = 1.0 + 0.06225585;
+  freqRatios[4] = 1.0 - 0.0628662;
+  freqRatios[5] = 1.0 + 0.107421875;
+  freqRatios[6] = 1.0 - 0.10986328125;
+  // [0, 0.01953125, -0.01953125, 0.06225585, -0.0628662, 0.107421875, -0.10986328125]
+  // See: https://atosynth.blogspot.com/2026/01/a-closer-look-at-super-saw-code.html?m=1
+  // ToDo: Figure out how we can best embed these hardcoded numbers for 7 saws into a more general
+  // oscillator that allows the user to choose between 1 and maxNumSaws saws where maxNumSaws shall
+  // be assumed to be greater than 7 like maybe 16 or something. We need to make up more numbers. 
+  // Maybe append some with offsets from one going up to around 0.2 when maxNumSaws = 16. But maybe
+  // when the numSaws setting is less than maxNumSaws should renormalize the maximum detuning in 
+  // such a way that that maximum deviation from 1 is always the same. Maybe we should also 
+  // renormalize the middle frequency such that the (weighted) mean is always at a fixed frequency
+  // corresponding to the note pitch. Maybe we should also normalize the output power by dividing
+  // the amplitude by sqrt(numSaws). 
+}
+
+template<class T>
+inline T rsPitchDitherSuperSawOsc<T>::getSample()
+{
+  return T(0);  // Preliminary
+}
+
+
+/*
+template<class T>
+void rsPitchDitherSuperSawOsc<T>::setRandomSeed(uint32_t newSeed)
+{
+  seed = newSeed;
+}
+*/

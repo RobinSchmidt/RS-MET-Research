@@ -1054,9 +1054,13 @@ void testPitchDithering()
   testPitchDithering2();
   testPitchDithering3();
   testPitchDitherSpectra();
+
+  // ToDo:
+  //
+  // - Move to main repo.
 }
 
-void testPitchDitherSuperSaw()
+void testPitchDitherSuperSaw1()
 {
   using Real = float; 
   using Vec  = std::vector<Real>;
@@ -1318,6 +1322,37 @@ void testPitchDitherSuperSaw()
   //   it's cheap, it may be better to keep the states in uint32 format.
   // 
   // - Move the code over to the main repo and continue improving it there.
+}
+
+void testPitchDitherSuperSaw2()
+{
+  using Real = float; 
+  using Vec  = std::vector<Real>;
+  using SO   = rsPitchDitherSawOsc<Real>;
+  using SSO  = rsPitchDitherSuperSawOsc<Real>;
+
+  // Setup:
+  int  sampleRate =  44100;      // Sample rate for the wave files
+  int  numSamples =   5000;      // Number of samples to produce
+  int  seed       =      3;      // Seed for PRNG
+  Real midFreq    =   1000.0;    // Center or middle frequency for saw cluster
+  Real amp        =      0.125;  // Amplitude of the saws
+  Real detune     =      0.3;    // Supersaw detune in 0..1
+  Real mix        =      1.0;    // Supersaw mix in 0..1
+
+
+  SSO sso;
+
+  // ...TBC...
+}
+
+void testPitchDitherSuperSaw()
+{
+  testPitchDitherSuperSaw2();
+
+
+  testPitchDitherSuperSaw1();
+  testPitchDitherSuperSaw2();
 }
 
 

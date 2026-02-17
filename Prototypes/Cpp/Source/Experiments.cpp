@@ -1109,6 +1109,42 @@ std::vector<T> getPitchDitherSuperSaw1(
   return supSaw;
 }
 
+template<class T>
+std::vector<T> getPitchDitherSuperSaw2(
+  T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
+{
+  using Vec  = std::vector<T>;
+  using PDSO = rsPitchDitherSawOsc<T>;
+
+  Vec freqOffsets = getSuperSawFreqOffsetsJp8000<T>();
+  PDSO osc[7];                             // We need 7 pitch dither osc objects. One for each saw.
+  for(int i = 0; i < 7; i++)
+  {
+    osc[i].setRandomSeed(seed+i);
+    osc[i].setPeriod(sampleRate / (frequency * (detune * freqOffsets[i] + T(1))));
+
+    //osc[i].updateCycleLength();
+    // I think, the order of calling setPeriod() and setRandomSeed() matters when we don't call
+    // updateCycleLength() anymore. In production, we can't call it because it's supposed to be a 
+    // protected member function. But it's not good that the output depends on the order in which 
+    // we call the setters! That can lead to subtle bugs and reproducibility problems. Try to 
+    // implement it in such a way that it behaves the same way independently from the order of 
+    // calling the setters. Write aunit test that verifies this! Eventually, we want to use a class
+    // rsRandomGenerator that doesn't even have a seed member anyway. Instead, it should have a 
+    // setState() function. Maybe when we do it like this, the problem will go away? We'll see...
+  }
+  Vec supSaw2(numSamples);
+  for(int n = 0; n < numSamples; n++)
+  {
+    T y = osc[0].getSample();     // Outside the loop because has different amp factor.
+    for(int i = 1; i < 7; i++)
+      y += mix * osc[i].getSample();
+    supSaw2[n] = y;
+  }
+
+  return supSaw2;
+}
+
 
 
 
@@ -1132,44 +1168,16 @@ void testPitchDitherSuperSaw1()
   Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
 
   // Table with the frequency offsets when the center saw is taken to have frequency 1:
-  Vec freqOffsets = getSuperSawFreqOffsetsJp8000<Real>();
+  //Vec freqOffsets = getSuperSawFreqOffsetsJp8000<Real>();
 
-  // Produce the raw supersaw via 1st algorithm:
+  // Produce the raw supersaw our 2 algorithms:
   Vec supSaw = 
     amp * getPitchDitherSuperSaw1(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
 
+  Vec supSaw2 = 
+    amp * getPitchDitherSuperSaw2(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
 
-
- 
-  // Now try to produce the same signal with 7 instances of the realtime pitch dither oscillator 
-  // and verify that it produces the same output as our prototype implementation that was used 
-  // above:
-  PDSO osc[7];                             // We need 7 pitch dither osc objects. One for each saw.
-  for(int i = 0; i < 7; i++)
-  {
-    osc[i].setRandomSeed(seed+i);
-    osc[i].setPeriod(sampleRate / (midFreq * (detune * freqOffsets[i] + Real(1))));
-
-    //osc[i].updateCycleLength();
-    // I think, the order of calling setPeriod() and setRandomSeed() matters when we don't call
-    // updateCycleLength() anymore. In production, we can't call it because it's supposed to be a 
-    // protected member function. But it's not good that the output depends on the order in which 
-    // we call the setters! That can lead to subtle bugs and reproducibility problems. Try to 
-    // implement it in such a way that it behaves the same way independently from the order of 
-    // calling the setters. Write aunit test that verifies this! Eventually, we want to use a class
-    // rsRandomGenerator that doesn't even have a seed member anyway. Instead, it should have a 
-    // setState() function. Maybe when we do it like this, the problem will go away? We'll see...
-  }
-  Vec supSaw2(numSamples);
-  for(int n = 0; n < numSamples; n++)
-  {
-    Real y = amp * osc[0].getSample();     // Outside the loop because has different amp factor.
-    for(int i = 1; i < 7; i++)
-      y += amp * mix * osc[i].getSample();
-    supSaw2[n] = y;
-  }
-
-  // Verify that the realtime algo produces the same signal:
+  // Verify that the both algos produces the same signal:
   Real tol = 1024 * std::numeric_limits<Real>::epsilon();
   bool ok  = true;
   ok &= rsIsCloseToUpTo(supSaw2, supSaw, 5000, tol);

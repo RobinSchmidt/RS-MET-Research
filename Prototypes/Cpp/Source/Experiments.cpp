@@ -1133,20 +1133,17 @@ std::vector<T> getPitchDitherSuperSaw2(
     // rsRandomGenerator that doesn't even have a seed member anyway. Instead, it should have a 
     // setState() function. Maybe when we do it like this, the problem will go away? We'll see...
   }
-  Vec supSaw2(numSamples);
+  Vec supSaw(numSamples);
   for(int n = 0; n < numSamples; n++)
   {
     T y = osc[0].getSample();     // Outside the loop because has different amp factor.
     for(int i = 1; i < 7; i++)
       y += mix * osc[i].getSample();
-    supSaw2[n] = y;
+    supSaw[n] = y;
   }
 
-  return supSaw2;
+  return supSaw;
 }
-
-
-
 
 void testPitchDitherSuperSaw1()
 {
@@ -1167,33 +1164,30 @@ void testPitchDitherSuperSaw1()
   Real hpfCut     =      1.0;    // Highpass cutoff as fraction of osc freq
   Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
 
-  // Table with the frequency offsets when the center saw is taken to have frequency 1:
-  //Vec freqOffsets = getSuperSawFreqOffsetsJp8000<Real>();
-
+ 
   // Produce the raw supersaw our 2 algorithms:
-  Vec supSaw = 
+  Vec supSaw1 = 
     amp * getPitchDitherSuperSaw1(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
-
   Vec supSaw2 = 
     amp * getPitchDitherSuperSaw2(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
 
   // Verify that the both algos produces the same signal:
   Real tol = 1024 * std::numeric_limits<Real>::epsilon();
   bool ok  = true;
-  ok &= rsIsCloseToUpTo(supSaw2, supSaw, 5000, tol);
+  ok &= rsIsCloseToUpTo(supSaw2, supSaw1, 5000, tol);
   rsAssert(ok);
-  rsPlotArrays(5000, &supSaw[0], &supSaw2[0]);  // It looks good
+  rsPlotArrays(5000, &supSaw1[0], &supSaw2[0]);
 
   // Apply highpass filter(s):
   SVF hpf;
   Real omega = hpfCut * Real(2*PI)*midFreq/sampleRate;
   hpf.setupHighpass(omega, hpfQ);
-  Vec supSawHp1 = filterResponse(hpf, numSamples, supSaw);
+  Vec supSawHp1 = filterResponse(hpf, numSamples, supSaw1);
   Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);
   //rsPlotArrays(5000, &supSaw[0], &supSawHp1[0], &supSawHp2[0]);
 
   // Write supersaw signals to wave files:
-  rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw[0],    numSamples, sampleRate);
+  rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw1[0],   numSamples, sampleRate);
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
 

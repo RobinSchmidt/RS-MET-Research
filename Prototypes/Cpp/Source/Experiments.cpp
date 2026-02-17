@@ -1379,10 +1379,11 @@ void testPitchDitherSuperSaw2()
   SSO sso;
 
   // ToDo:
-  //
-  // - Factor out the rendering of the supersaws from the previous experiment into 2 functions
-  //   getSuperSaw1(T freq, T sampleRate, T detune, T mix, int numSamples); such that we can
-  //   call them here to produce reference signals
+  // 
+  // - Use getPitchDitherSuperSaw1(..) to produce a reference signal and then try to recreate it 
+  //   via rsPitchDitherSuperSawOsc. Maybe we should just implement a 3rd version of the function
+  //   getPitchDitherSuperSaw1(..) and test it with the experiment above. That would be more 
+  //   economic.
 }
 
 void testPitchDitherSuperSaw()

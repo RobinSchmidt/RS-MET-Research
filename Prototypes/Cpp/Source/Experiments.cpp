@@ -1079,9 +1079,33 @@ std::vector<T> getSuperSawFreqOffsetsJp8000()
 template<class T>
 std::vector<T> getPitchDitherSuperSaw1(
   T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
-{
+{  
+  using Vec = std::vector<T>;
+  using PDP = rsPitchDitherProto<T>;
 
+  Vec freqOffsets = getSuperSawFreqOffsetsJp8000<T>();
+  int numSaws = (int) freqOffsets.size();       // This is 7, of course.
+  Vec saw(numSamples), supSaw(numSamples);      // Temp for one saw and accumulator for supersaw.
+  Vec freqRatios = detune * freqOffsets + T(1);
+  for(int i = 0; i < numSaws; i++)
+  {
+    // Compute parameters for the i-th saw:
+    T sawFreq   = frequency * freqRatios[i];
+    T sawPeriod = sampleRate / sawFreq;
+    T sawAmp;
+    if(i == 0)
+      sawAmp = T(1);
+    else
+      sawAmp = mix;
 
+    // Produce i-th saw and accumulate into the super saw:
+    PDP::CycleDistribution cd;
+    PDP::distributionEqualVariance(sawPeriod, &cd);
+    saw = PDP::getSaw(numSamples, cd, seed+i, T(1));
+    supSaw = supSaw + saw;
+  }
+
+  return supSaw;
 }
 
 
@@ -1108,6 +1132,7 @@ void testPitchDitherSuperSaw1()
   Vec freqOffsets = getSuperSawFreqOffsetsJp8000<Real>();
 
   // Produce the raw supersaw:
+  /*
   int numSaws = (int) freqOffsets.size();       // This is 7, of course.
   Vec saw(numSamples), supSaw(numSamples);      // Temp for one saw and accumulator for supersaw.
   Vec freqRatios = detune * freqOffsets + Real(1);
@@ -1128,6 +1153,14 @@ void testPitchDitherSuperSaw1()
     saw = PDP::getSaw(numSamples, cd, seed+i, amp);
     supSaw = supSaw + saw;
   }
+  */
+
+  Vec supSaw = 
+    amp * getPitchDitherSuperSaw1(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
+
+
+  // getPitchDitherSuperSaw1(
+  // T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
  
   // Now try to produce the same signal with 7 instances of the realtime pitch dither oscillator 
   // and verify that it produces the same output as our prototype implementation that was used 

@@ -622,6 +622,8 @@ class rsPitchDitherSuperSawOsc
 
 public:
 
+  using PDH = rsPitchDitherHelpers<T>;     // Shorthand for convenience
+
   rsPitchDitherSuperSawOsc();
 
 
@@ -720,8 +722,8 @@ protected:
   //-----------------------------------------------------------------------------------------------
   // \name User Parameters
 
-  T detune     = T(0);
-  T mix        = T(0);
+  T detune     = T(0.25);      // Not yet sure, if that's a good inital value
+  T mix        = T(1.0);       // Dito.
   T freq       = T(440);
   T sampleRate = T(44100);
   uint32_t seed    = 0;
@@ -734,7 +736,9 @@ protected:
   //-----------------------------------------------------------------------------------------------
   // \name Embedded DSP Objects:
 
-  rsRandomGenerator prngs[maxNumSaws];
+    
+  rsNoiseGenerator<T> prngs[maxNumSaws];  // Preliminary.
+  //rsRandomGenerator prngs[maxNumSaws];  // Later, we want to use that.
 
 };
 
@@ -742,8 +746,6 @@ protected:
 template<class T>
 rsPitchDitherSuperSawOsc<T>::rsPitchDitherSuperSawOsc()
 {
-  reset();
-
   // ToDo: Move this into a function setFrequencyDistribution() which takes an enum value where one
   // of the possible values is JP_8000. In the correspoanding case-block, do these assignments. Or 
   // better: Move the code into class rsRatioGenerator.
@@ -765,19 +767,50 @@ rsPitchDitherSuperSawOsc<T>::rsPitchDitherSuperSawOsc()
   // renormalize the middle frequency such that the (weighted) mean is always at a fixed frequency
   // corresponding to the note pitch. Maybe we should also normalize the output power by dividing
   // the amplitude by sqrt(numSaws). 
+
+  for(uint32_t i = 0; i < maxNumSaws; i++)
+    prngs[i].setRange(T(0), T(1));
+
+
+  updateSawPeriods();
+  reset();
 }
 
 template<class T>
 inline T rsPitchDitherSuperSawOsc<T>::getSample()
 {
-  return T(0);  // Preliminary
+  T supSaw(0);
+  for(uint32_t i = 0; i < numSaws; i++)
+  {  
+    DspParams& dp = dspParams[i];
+    T saw = T(-1) + dp.sawSlope * dp.sampleCount; 
+    dp.sampleCount += T(1);
+    if(dp.sampleCount >= dp.cycleLength)
+    {
+      dp.sampleCount = T(0);
+      updateCycleLength(i);
+    }
+    supSaw += saw;
+   
+  }
+  return supSaw;
+  //return T(0);  // Preliminary
 }
 
 template<class T>
 void rsPitchDitherSuperSawOsc<T>::updateSawPeriods()
 {
   for(uint32_t i = 0; i < numSaws; i++)
+  {
     periods[i] = sampleRate / (freq * (T(1) + detune * freqOffsets[i]));  // Verify!
+
+    CycleDist& cd = cycleDists[i];
+    PDH::calcCycleDistribution(periods[i], &cd.midLength, &cd.probShort, &cd.probMid);
+    // ToDo: Call it like PDH::calcCycleDistribution(periods[i], &cd); or just
+    // PDH::calcCycleDistribution(periods[i], &cycleDists[i]);
+    // For that, we need to make the CycleDist struct part of rsPitchDitherHelpers. See comment in
+    // updateCycleLength() for why we want to do this anyway.
+  }
 
   // Notes:
   //
@@ -798,7 +831,7 @@ void rsPitchDitherSuperSawOsc<T>::updateCycleLength(uint32_t i)
   T r = prngs[i].getSample();                    // Random number in interval [0,1).
   if(r < cd.probShort)
     dp.cycleLength = cd.midLength - T(1);        // Next cycle is short.
-  else if(r < probShort + probMid)
+  else if(r < cd.probShort + cd.probMid)
     dp.cycleLength = cd.midLength;               // Next cycle is medium.
   else
     dp.cycleLength = cd.midLength + T(1);        // Next cycle is long.
@@ -811,5 +844,23 @@ void rsPitchDitherSuperSawOsc<T>::updateCycleLength(uint32_t i)
 // - Maybe put the internally used structs DspParams and CycleDist into class rsPitchDitherHelpers
 //   and then re-use them in class rsPitchDitherSawOsc. That would make the code of this class more
 //   consistent with the code of rsPitchDitherSuperSawOsc. 
+//
+// - rsPitchDitherHelpers could also implement the updateCycleLength functionality. Maybe it should
+//   have a static function:
+//   updateDspParams(const CycleDist& cd, rsNoiseGenerator* ng, DspParams* dp);
+//   The function could also reset the sampleCount to 0 - although, I'm not so sure, if we will 
+//   really always want to reset the sample counter whenever we update sawSlope and cycleLength.
+//   Currently this is indeed the case but when we want to add frequency modulation later, it may 
+//   not be. Maybe split the function into two: one without the reset and a second that calls the 
+//   first _and_then_ does the reset. Maybe they could be called updateDspParams() and 
+//   updateDspParamsAndReset(). The second could perhaps also be called handleCycleEnd or 
+//   startNewCycle or prepareForNewCycle or initNextCycle.
+//
+// - Use the pattern with the atomic dirty flag for managing the calls to updateSawPeriods(). That 
+//   serves two purposes: (1) Consolidating the updates into one update per sample even when 
+//   multiple setters are called in succesion for one sample, (2) Thread sync when someone calls
+//   the setters from a different thread (i.e. not from the audio thread, mayby from the GUI 
+//   thread).
+
 
 

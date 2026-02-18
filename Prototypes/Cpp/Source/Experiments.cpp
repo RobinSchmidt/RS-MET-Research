@@ -1200,9 +1200,10 @@ void testPitchDitherSuperSaw1()
   Real tol = 1024 * std::numeric_limits<Real>::epsilon();
   bool ok  = true;
   ok &= rsIsCloseToUpTo(supSaw1, supSaw2, 5000, tol);
-  //ok &= rsIsCloseToUpTo(supSaw1, supSaw3, 5000, tol);  // FAILS. It's still under construction.
+  ok &= rsIsCloseToUpTo(supSaw1, supSaw3, 5000, tol);  // FAILS. It's still under construction.
   rsAssert(ok);
   rsPlotArrays(5000, &supSaw1[0], &supSaw2[0], &supSaw3[0]);
+  // supSaw3 seems to use a different random seed than supSaw1 and supSaw2. Fix that!
 
   // Apply highpass filter(s):
   SVF hpf;

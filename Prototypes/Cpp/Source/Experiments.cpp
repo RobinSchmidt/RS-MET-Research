@@ -1145,6 +1145,28 @@ std::vector<T> getPitchDitherSuperSaw2(
   return supSaw;
 }
 
+template<class T>
+std::vector<T> getPitchDitherSuperSaw3(
+  T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
+{
+  using Vec = std::vector<T>;
+  using SSO = rsPitchDitherSuperSawOsc<T>;
+
+  SSO sso;
+  sso.setSampleRate(sampleRate);
+  sso.setFrequency(frequency);
+  sso.setDetune(detune);
+  sso.setMix(mix);
+  sso.setRandomSeed(seed);
+
+  Vec supSaw(numSamples);
+  for(int n = 0; n < numSamples; n++)
+    supSaw[n] = sso.getSample();
+
+  return supSaw;
+}
+
+
 void testPitchDitherSuperSaw1()
 {
   using Real = float; 
@@ -1165,18 +1187,22 @@ void testPitchDitherSuperSaw1()
   Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
 
  
-  // Produce the raw supersaw our 2 algorithms:
+  // Produce the raw supersaw our 3 algorithms:
   Vec supSaw1 = 
     amp * getPitchDitherSuperSaw1(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
   Vec supSaw2 = 
     amp * getPitchDitherSuperSaw2(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
+  Vec supSaw3 = 
+    amp * getPitchDitherSuperSaw3(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
+
 
   // Verify that the both algos produces the same signal:
   Real tol = 1024 * std::numeric_limits<Real>::epsilon();
   bool ok  = true;
-  ok &= rsIsCloseToUpTo(supSaw2, supSaw1, 5000, tol);
+  ok &= rsIsCloseToUpTo(supSaw1, supSaw2, 5000, tol);
+  //ok &= rsIsCloseToUpTo(supSaw1, supSaw3, 5000, tol);  // FAILS. It's still under construction.
   rsAssert(ok);
-  rsPlotArrays(5000, &supSaw1[0], &supSaw2[0]);
+  rsPlotArrays(5000, &supSaw1[0], &supSaw2[0], &supSaw3[0]);
 
   // Apply highpass filter(s):
   SVF hpf;

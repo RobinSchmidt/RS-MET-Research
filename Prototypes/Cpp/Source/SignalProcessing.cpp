@@ -640,10 +640,23 @@ public:
     updateSawPeriods();
   }
 
+  void setDetune(T newDetune)
+  {
+    detune = newDetune;
+    updateSawPeriods();
+  }
+
+  void setMix(T newMix)
+  {
+    mix = newMix;
+    //updateAmpScaler();
+  }
+
   void setNumSaws(uint32_t newNumSaws)
   {
     numSaws = newNumSaws;
     updateSawPeriods();      // May be needed when newNumSaws > old numSaws
+    //updateAmpScaler();
 
     // ToDo: Maybe also set an amplitude scaling factor as 1 / sqrt(numSaws).
   }
@@ -731,7 +744,7 @@ template<class T>
 void rsPitchDitherSuperSawOsc<T>::updateSawPeriods()
 {
   for(uint32_t i = 0; i < numSaws; i++)
-    periods[i] = sampleRate / (freq * detune * freqRatios[i]);  // Verify!
+    periods[i] = sampleRate / (freq * (T(1) + detune * freqOffsets[i]));  // Verify!
 
   // Notes:
   //
@@ -742,7 +755,6 @@ void rsPitchDitherSuperSawOsc<T>::updateSawPeriods()
   //   numSaws parameter on a GUI or by automation.
 }
 
-
 template<class T>
 inline T rsPitchDitherSuperSawOsc<T>::getSample()
 {
@@ -750,10 +762,3 @@ inline T rsPitchDitherSuperSawOsc<T>::getSample()
 }
 
 
-/*
-template<class T>
-void rsPitchDitherSuperSawOsc<T>::setRandomSeed(uint32_t newSeed)
-{
-  seed = newSeed;
-}
-*/

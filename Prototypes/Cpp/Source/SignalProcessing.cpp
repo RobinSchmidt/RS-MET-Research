@@ -675,7 +675,10 @@ public:
   void reset()
   {
     for(uint32_t i = 0; i < maxNumSaws; i++)
+    {
       prngs[i].setState(seed + i);
+      dspParams[i].sampleCount = T(0);
+    }
   }
 
 
@@ -688,24 +691,49 @@ protected:
 
   void updateSawPeriods();
 
-  //void updateCycleLength(uint32_t sawIndex);
+  void updateCycleLength(uint32_t sawIndex);
 
 
   static const uint32_t maxNumSaws = 7;     // Maybe allow more later!
 
-  // Algo parameters:
-  T freqOffsets[maxNumSaws];
-  T periods[maxNumSaws];
+  //-----------------------------------------------------------------------------------------------
+  // \name Algorithm Parameters
 
-  // User parameters:
+  /** Struct for the DSP parameters that are accessed per sample. */
+  struct DspParams
+  {
+    T sawSlope;
+    T sampleCount;
+    T cycleLength;
+  };
+  DspParams dspParams[maxNumSaws];
+
+  /** Struct for the cycle distribution parameters that are accessed per cycle (for each saw). */
+  struct CycleDist
+  {
+    T midLength;
+    T probShort;
+    T probMid;
+  };
+  CycleDist cycleDists[maxNumSaws];
+
+  //-----------------------------------------------------------------------------------------------
+  // \name User Parameters
+
   T detune     = T(0);
   T mix        = T(0);
   T freq       = T(440);
   T sampleRate = T(44100);
   uint32_t seed    = 0;
-  uint32_t numSaws = 7;  // Maybe the user parameter could be called Density or NumVoices
+  uint32_t numSaws = 7;        // Maybe the GUI parameter could be called Density or NumVoices
 
-  // Embedded DSP objects:
+  T freqOffsets[maxNumSaws];   // Currently hard-coded to JP-8000 values.
+  T periods[maxNumSaws];       // Computed from freq, sampleRate, detune and freqOffsets.
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Embedded DSP Objects:
+
   rsRandomGenerator prngs[maxNumSaws];
 
 };
@@ -739,6 +767,11 @@ rsPitchDitherSuperSawOsc<T>::rsPitchDitherSuperSawOsc()
   // the amplitude by sqrt(numSaws). 
 }
 
+template<class T>
+inline T rsPitchDitherSuperSawOsc<T>::getSample()
+{
+  return T(0);  // Preliminary
+}
 
 template<class T>
 void rsPitchDitherSuperSawOsc<T>::updateSawPeriods()
@@ -755,10 +788,28 @@ void rsPitchDitherSuperSawOsc<T>::updateSawPeriods()
   //   numSaws parameter on a GUI or by automation.
 }
 
+
 template<class T>
-inline T rsPitchDitherSuperSawOsc<T>::getSample()
+void rsPitchDitherSuperSawOsc<T>::updateCycleLength(uint32_t i)
 {
-  return T(0);  // Preliminary
+  CycleDist& cd = cycleDists[i];
+  DspParams& dp = dspParams[i];
+
+  T r = prngs[i].getSample();                    // Random number in interval [0,1).
+  if(r < cd.probShort)
+    dp.cycleLength = cd.midLength - T(1);        // Next cycle is short.
+  else if(r < probShort + probMid)
+    dp.cycleLength = cd.midLength;               // Next cycle is medium.
+  else
+    dp.cycleLength = cd.midLength + T(1);        // Next cycle is long.
+
+  dp.sawSlope = T(2) / (dp.cycleLength - T(1));  // Slope depends on cycle length.
 }
+
+// ToDo:
+//
+// - Maybe put the internally used structs DspParams and CycleDist into class rsPitchDitherHelpers
+//   and then re-use them in class rsPitchDitherSawOsc. That would make the code of this class more
+//   consistent with the code of rsPitchDitherSuperSawOsc. 
 
 

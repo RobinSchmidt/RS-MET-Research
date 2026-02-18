@@ -1164,6 +1164,12 @@ std::vector<T> getPitchDitherSuperSaw3(
     supSaw[n] = sso.getSample();
 
   return supSaw;
+
+  // Bugs:
+  //
+  // - We still seem to use a different random seed that the reference implementations. Maybe it
+  //   depends on the order of the calles to the setters? But when calling setRandomSeed() first,
+  //   we get an even worse behavior. The signal seems to grow linearly without bound in this case.
 }
 
 

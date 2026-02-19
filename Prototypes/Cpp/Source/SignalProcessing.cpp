@@ -616,6 +616,15 @@ TFlt rsPitchDitherSawOscOld<TFlt, TInt>::readSawValue(TInt n, TInt N)
 
 //-------------------------------------------------------------------------------------------------
 
+/** Under construction. Is still buggy. Something is wrong about the initialization of the PRNGs.
+See experiments and tests. There are some comments.
+
+This implements a supersaw oscillator that uses pitch dithering. It is supposed to produce the 
+same result as a bunch of instances of type rsPitchDitherSawOsc but it optimizes a bit of stuff.
+Certain variables can be shared among the voices and that's what we do here.
+
+*/
+
 template<class T>
 class rsPitchDitherSuperSawOsc
 {
@@ -679,6 +688,7 @@ public:
     for(uint32_t i = 0; i < maxNumSaws; i++)
     {
       prngs[i].setState(seed + i);
+      //prngs[i].setSeed(seed + i);
       dspParams[i].sampleCount = T(0);
     }
   }
@@ -795,6 +805,15 @@ inline T rsPitchDitherSuperSawOsc<T>::getSample()
   }
   return supSaw;
   //return T(0);  // Preliminary
+
+  // ToDo:
+  //
+  // - Factor out a function getSawSample(uint32_t sawIndex) that we can all in a loop over the 
+  //   saws. But for the saw with index zero, we need to call it outside the loop because that saw
+  //   gets a different amplitude. We do not yet take into account the mix parameter anyway. But we
+  //   should! Maybe in a more general implementation, we can have another array amps[] with the 
+  //   saw amplitudes. When we have that, we can later provide more general amplitude 
+  //   distributions (like a bell-shape, for example)
 }
 
 template<class T>
@@ -805,6 +824,7 @@ void rsPitchDitherSuperSawOsc<T>::updateSawPeriods()
     periods[i] = sampleRate / (freq * (T(1) + detune * freqOffsets[i]));  // Verify!
 
     CycleDist& cd = cycleDists[i];
+
     PDH::calcCycleDistribution(periods[i], &cd.midLength, &cd.probShort, &cd.probMid);
     // ToDo: Call it like PDH::calcCycleDistribution(periods[i], &cd); or just
     // PDH::calcCycleDistribution(periods[i], &cycleDists[i]);

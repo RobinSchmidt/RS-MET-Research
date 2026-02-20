@@ -910,10 +910,10 @@ void testPitchDithering4()
   using CD   = PDP::CycleDistribution;
   using PDO  = rsPitchDitherSawOsc<Real>;
 
-  int  numSamples = 5000;      // Number of samples to produce
+  int  numSamples = 5000;              // Number of samples to produce
   Real period     =  100.3;
-  Real amp        =    0.5;    // Amplitude of the saw
-  int  seed       =    3;      // Seed for PRNG
+  Real amp        =    0.5;            // Amplitude of the saw
+  int  seed       =    3;              // Seed for PRNG
 
   // Create saw via the prototype implementation in rsPitchDitherProto:
   CD cd;
@@ -924,16 +924,15 @@ void testPitchDithering4()
   PDO osc;
   osc.setRandomSeed(seed);
   osc.setPeriod(period);
+  osc.reset();                         // Puts PRNG into initial seed state
   Vec saw2(numSamples);
   for(int n = 0; n < numSamples; n++)
     saw2[n] = amp * osc.getSample();
 
   // Verify that results match:
   bool ok = true;
-  ok &= saw1 == saw2;    // Maybe we need a tolerance? But I actually don't think so.
-  //rsAssert(ok);          // This currently FAILS! 
-  // There is something worng with the seeding of the PRNG. It's apparently not the same in both 
-  // implementations.
+  ok &= saw1 == saw2;
+  rsAssert(ok);
 
   // Plot both outputs:
   rsPlotVectors(saw1, saw2);

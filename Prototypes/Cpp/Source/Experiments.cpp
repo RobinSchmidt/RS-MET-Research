@@ -894,10 +894,7 @@ void testPitchDithering3()
     // ToDo: Do this comparison of getSaw() and getSawOld() also for the other distributions. The
     // other test (with fillDitheSaw..) doesn't apply to the other distributions because for these
     // we don't have such "fill..." functions.
-
-    int dummy = 0;
   }
-
 
   rsAssert(ok);
 }
@@ -936,9 +933,6 @@ void testPitchDithering4()
 
   // Plot both outputs:
   rsPlotVectors(saw1, saw2);
-
-
-  int dummy = 0;
 }
 
 
@@ -1086,7 +1080,7 @@ void testPitchDitherSpectra()
 void testPitchDithering()
 {
   // Test under construction:
-  testPitchDithering4();
+  //testPitchDithering4();
   // I appears in the "All tests" list below, too.
 
   // All tests:

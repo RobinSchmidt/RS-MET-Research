@@ -1161,9 +1161,8 @@ std::vector<T> getPitchDitherSuperSaw2(
 
     // New:
     osc[i].setRandomSeed(seed+i);
-    osc[i].reset();
     osc[i].setPeriod(sampleRate / (frequency * (detune * freqOffsets[i] + T(1))));
-
+    osc[i].reset();
 
     //osc[i].updateCycleLength();
     // I think, the order of calling setPeriod() and setRandomSeed() matters when we don't call

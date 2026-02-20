@@ -1199,6 +1199,7 @@ std::vector<T> getPitchDitherSuperSaw3(
   sso.setDetune(detune);
   sso.setMix(mix);
   sso.setRandomSeed(seed);
+  sso.reset();
 
   Vec supSaw(numSamples);
   for(int n = 0; n < numSamples; n++)

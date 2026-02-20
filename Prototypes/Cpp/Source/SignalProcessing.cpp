@@ -690,6 +690,8 @@ public:
       prngs[i].setState(seed + i);
       //prngs[i].setSeed(seed + i);
       dspParams[i].sampleCount = T(0);
+
+      updateCycleLength(i);
     }
   }
 

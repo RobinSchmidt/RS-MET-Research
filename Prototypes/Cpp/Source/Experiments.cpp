@@ -1046,11 +1046,11 @@ void testPitchDitherSpectra()
 void testPitchDithering()
 {
   // Test under construction:
-  testPitchDithering3();
+  //testPitchDithering3();
   // I appears in the "All tests" list below, too.
 
   // All tests:
-  testPitchDithering1();     // FAILS now! I think, we need to somewhere add the r = 1-r complementation
+  testPitchDithering1();
   testPitchDithering2();
   testPitchDithering3();
   testPitchDitherSpectra();
@@ -1120,8 +1120,15 @@ std::vector<T> getPitchDitherSuperSaw2(
   PDSO osc[7];                             // We need 7 pitch dither osc objects. One for each saw.
   for(int i = 0; i < 7; i++)
   {
+    // Old:
+    //osc[i].setRandomSeed(seed+i);
+    //osc[i].setPeriod(sampleRate / (frequency * (detune * freqOffsets[i] + T(1))));
+
+    // New:
     osc[i].setRandomSeed(seed+i);
+    osc[i].reset();
     osc[i].setPeriod(sampleRate / (frequency * (detune * freqOffsets[i] + T(1))));
+
 
     //osc[i].updateCycleLength();
     // I think, the order of calling setPeriod() and setRandomSeed() matters when we don't call
@@ -1210,6 +1217,13 @@ void testPitchDitherSuperSaw1()
   rsPlotArrays(5000, &supSaw1[0], &supSaw2[0], &supSaw3[0]);
   rsAssert(ok);
   // supSaw3 seems to use a different random seed than supSaw1 and supSaw2. Fix that!
+  // ...After switching from uning rsNoiseGenerator to rsRandomGenerator, all 3 supersaws look 
+  // different. Apparently, they all start from a different initial state in the PRNG. Why is that?
+  // There must a bug with the calls that set the seed and or cause a reset of the PRNG to the seed
+  // state. Maybe we are calling it in wrong places or something?
+  // ToDo: Write a function testPitchDithering4() that compares the output of classes 
+  // rsPitchDitherProto and rsPitchDitherSawOsc. They currently disaggree and we need to debug that
+  // and that's easier when we just create a single pitch dithered saw rather than a supersaw.
 
   // Apply highpass filter(s):
   SVF hpf;

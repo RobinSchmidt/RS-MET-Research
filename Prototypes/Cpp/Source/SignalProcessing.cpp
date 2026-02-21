@@ -616,12 +616,15 @@ TFlt rsPitchDitherSawOscOld<TFlt, TInt>::readSawValue(TInt n, TInt N)
 
 //-------------------------------------------------------------------------------------------------
 
-/** Under construction. Is still buggy. Something is wrong about the initialization of the PRNGs.
-See experiments and tests. There are some comments.
+/** This implements a supersaw oscillator that uses pitch dithering. It is supposed to produce the 
+same result as 7 instances of type rsPitchDitherSawOsc but it takes advantage of certain values 
+that are shared between the individual oscillators to avoid redundancies. So using a single 
+instance of this class should be more memory friendly (and therefore more cahce friendly and 
+therefore more CPU firendly) than using 7 instances of a single osc. 
 
-This implements a supersaw oscillator that uses pitch dithering. It is supposed to produce the 
-same result as a bunch of instances of type rsPitchDitherSawOsc but it optimizes a bit of stuff.
-Certain variables can be shared among the voices and that's what we do here.
+ToDo:
+
+- Add documentation.
 
 */
 
@@ -639,30 +642,22 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Setup
 
-  void setSampleRate(T newSampleRate)
-  {
-    sampleRate = newSampleRate;
-    updateSawPeriods();
-  }
+  /** Sets the sample rate at which this oscillator runs. */
+  void setSampleRate(T newSampleRate) { sampleRate = newSampleRate;  updateSawPeriods(); }
 
-  void setFrequency(T newFreq)
-  {
-    freq = newFreq;
-    updateSawPeriods();
-  }
+  /** Sets the nominal frequency of the supersaw. That is: The frequency of the middle sawtooth 
+  which is supposed to correspond to the pitch of the note being played. */
+  void setFrequency(T newFreq) { freq = newFreq; updateSawPeriods(); }
 
-  void setDetune(T newDetune)
-  {
-    detune = newDetune;
-    updateSawPeriods();
-  }
+  /** Sets the amount yb which the other 6 saws are detuned with respect to the middle saw. It 
+  should typically be a value in the range 0..1. */
+  void setDetune(T newDetune) { detune = newDetune; updateSawPeriods(); }
 
-  void setMix(T newMix)
-  {
-    mix = newMix;
-    //updateAmpScaler();
-  }
+  /** Sets the amplitude by which the 6 other saws are mixed with the center saw. It's a raw 
+  amplitude multiplier witha typical range of 0..1. */
+  void setMix(T newMix) { mix = newMix; /*updateAmpScaler();*/ }
 
+  /*
   void setNumSaws(uint32_t newNumSaws)
   {
     numSaws = newNumSaws;
@@ -671,26 +666,28 @@ public:
 
     // ToDo: Maybe also set an amplitude scaling factor as 1 / sqrt(numSaws).
   }
+  */
+  // I think, this does not yet work. At least, it has not yet been tested. Maybe comment it out
+  // for the time being
 
-  void setRandomSeed(uint32_t newSeed) 
-  { 
-    seed = newSeed;
-    //reset();             // Maybe that call should be optional?
-  }
+  /** Sets the seed for the pseudo random number generator that is used for the pitch dithering. */
+  void setRandomSeed(uint32_t newSeed) { seed = newSeed; }
 
   //-----------------------------------------------------------------------------------------------
   // \name Processing
 
+  /** Produces one sample at a time. */
   inline T getSample();
 
+  /** Resets the state of this oscillator. This involves resetting the states of all the random 
+  generators, resetting the sample counters for all the saws and re-initializing the cycle 
+  distributions for all saws. */
   void reset()
   {
     for(uint32_t i = 0; i < maxNumSaws; i++)
     {
       prngs[i].setState(seed + i);
-      //prngs[i].setSeed(seed + i);
       dspParams[i].sampleCount = T(0);
-
       updateCycleLength(i);
     }
   }
@@ -708,7 +705,7 @@ protected:
   void updateCycleLength(uint32_t sawIndex);
 
 
-  static const uint32_t maxNumSaws = 7;     // Maybe allow more later!
+  static const uint32_t maxNumSaws = 7;          // Maybe allow more later!
 
   //-----------------------------------------------------------------------------------------------
   // \name Algorithm Parameters
@@ -744,13 +741,10 @@ protected:
   T freqOffsets[maxNumSaws];   // Currently hard-coded to JP-8000 values.
   T periods[maxNumSaws];       // Computed from freq, sampleRate, detune and freqOffsets.
 
-
   //-----------------------------------------------------------------------------------------------
   // \name Embedded DSP Objects:
 
-    
-  //rsNoiseGenerator<T> prngs[maxNumSaws];  // Preliminary.
-  rsRandomGenerator<T> prngs[maxNumSaws];  // Later, we want to use that.
+  rsRandomGenerator<T> prngs[maxNumSaws];
 
 };
 
@@ -780,10 +774,6 @@ rsPitchDitherSuperSawOsc<T>::rsPitchDitherSuperSawOsc()
   // corresponding to the note pitch. Maybe we should also normalize the output power by dividing
   // the amplitude by sqrt(numSaws). 
 
-  //for(uint32_t i = 0; i < maxNumSaws; i++)
-  //  prngs[i].setRange(T(0), T(1));
-
-
   updateSawPeriods();
   reset();
 }
@@ -806,7 +796,6 @@ inline T rsPitchDitherSuperSawOsc<T>::getSample()
    
   }
   return supSaw;
-  //return T(0);  // Preliminary
 
   // ToDo:
   //
@@ -823,10 +812,8 @@ void rsPitchDitherSuperSawOsc<T>::updateSawPeriods()
 {
   for(uint32_t i = 0; i < numSaws; i++)
   {
-    periods[i] = sampleRate / (freq * (T(1) + detune * freqOffsets[i]));  // Verify!
-
+    periods[i] = sampleRate / (freq * (T(1) + detune * freqOffsets[i]));
     CycleDist& cd = cycleDists[i];
-
     PDH::calcCycleDistribution(periods[i], &cd.midLength, &cd.probShort, &cd.probMid);
     // ToDo: Call it like PDH::calcCycleDistribution(periods[i], &cd); or just
     // PDH::calcCycleDistribution(periods[i], &cycleDists[i]);
@@ -875,14 +862,19 @@ void rsPitchDitherSuperSawOsc<T>::updateCycleLength(uint32_t i)
 //   Currently this is indeed the case but when we want to add frequency modulation later, it may 
 //   not be. Maybe split the function into two: one without the reset and a second that calls the 
 //   first _and_then_ does the reset. Maybe they could be called updateDspParams() and 
-//   updateDspParamsAndReset(). The second could perhaps also be called handleCycleEnd or 
-//   startNewCycle or prepareForNewCycle or initNextCycle.
+//   updateDspParamsAndReset(). The second could perhaps also be called handleCycleEnd() or 
+//   startNewCycle() or prepareForNewCycle() or initNextCycle().
 //
 // - Use the pattern with the atomic dirty flag for managing the calls to updateSawPeriods(). That 
 //   serves two purposes: (1) Consolidating the updates into one update per sample even when 
 //   multiple setters are called in succesion for one sample, (2) Thread sync when someone calls
-//   the setters from a different thread (i.e. not from the audio thread, mayby from the GUI 
-//   thread).
+//   the setters from a different thread (i.e. not from the audio thread, maybe from the GUI 
+//   thread). The consolidation of the responses to multiple setter calls in (1) may also help to
+//   make the exact sequence of the randomized cycle lengths more reproducible because I think, 
+//   when calling various setters in random order, it may put the PRNG into an undefined state in 
+//   the current implementation. The consolidation would presumably solve that problem as well. If
+//   it is considered a problem, that is. Having randomized things not always exactly reproducible 
+//   may be borderline acceptable in a synthesizer plugin but it may thwart unit testing.
 
 
 

@@ -749,8 +749,8 @@ protected:
   // \name Embedded DSP Objects:
 
     
-  rsNoiseGenerator<T> prngs[maxNumSaws];  // Preliminary.
-  //rsRandomGenerator prngs[maxNumSaws];  // Later, we want to use that.
+  //rsNoiseGenerator<T> prngs[maxNumSaws];  // Preliminary.
+  rsRandomGenerator<T> prngs[maxNumSaws];  // Later, we want to use that.
 
 };
 
@@ -780,8 +780,8 @@ rsPitchDitherSuperSawOsc<T>::rsPitchDitherSuperSawOsc()
   // corresponding to the note pitch. Maybe we should also normalize the output power by dividing
   // the amplitude by sqrt(numSaws). 
 
-  for(uint32_t i = 0; i < maxNumSaws; i++)
-    prngs[i].setRange(T(0), T(1));
+  //for(uint32_t i = 0; i < maxNumSaws; i++)
+  //  prngs[i].setRange(T(0), T(1));
 
 
   updateSawPeriods();
@@ -850,7 +850,7 @@ void rsPitchDitherSuperSawOsc<T>::updateCycleLength(uint32_t i)
   CycleDist& cd = cycleDists[i];
   DspParams& dp = dspParams[i];
 
-  T r = prngs[i].getSample();                    // Random number in interval [0,1).
+  T r = prngs[i].getSampleInUnitRange();         // Random number in interval [0,1).
   if(r < cd.probShort)
     dp.cycleLength = cd.midLength - T(1);        // Next cycle is short.
   else if(r < cd.probShort + cd.probMid)

@@ -1206,17 +1206,19 @@ std::vector<T> getPitchDitherSuperSaw3(
     supSaw[n] = sso.getSample();
 
   return supSaw;
-
-  // Bugs:
-  //
-  // - We still seem to use a different random seed that the reference implementations. Maybe it
-  //   depends on the order of the calles to the setters? But when calling setRandomSeed() first,
-  //   we get an even worse behavior. The signal seems to grow linearly without bound in this case.
 }
-
 
 void testPitchDitherSuperSaw1()
 {
+  // We produce a pitch dithered supersaw signal using 3 different implementations and verify that
+  // they all prodcue the same result. That's the unit test part of this function. The other part 
+  // is to write the result out to a wavefile for inspection and audition. For the wavefiles, we 
+  // also apply a highpass filter because that's what the JP-8000 did. It did it to supress the 
+  // aliasing products below the fundamental. We don't have such aliasing here - but we may have 
+  // some noise below the fundamental which may also be worth filtering out. Also, maybe it's good
+  // to match the waveshape because that will change how such a signal will respond to wvaeshaping
+  // distortion.
+
   using Real = float; 
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
@@ -1234,7 +1236,6 @@ void testPitchDitherSuperSaw1()
   Real hpfCut     =      1.0;    // Highpass cutoff as fraction of osc freq
   Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
 
- 
   // Produce the raw supersaw our 3 algorithms:
   Vec supSaw1 = 
     amp * getPitchDitherSuperSaw1(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
@@ -1243,22 +1244,13 @@ void testPitchDitherSuperSaw1()
   Vec supSaw3 = 
     amp * getPitchDitherSuperSaw3(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
 
-
   // Verify that the both algos produces the same signal:
   Real tol = 1024 * std::numeric_limits<Real>::epsilon();
   bool ok  = true;
   ok &= rsIsCloseToUpTo(supSaw1, supSaw2, 5000, tol);
-  ok &= rsIsCloseToUpTo(supSaw1, supSaw3, 5000, tol);  // FAILS. It's still under construction.
-  rsPlotArrays(5000, &supSaw1[0], &supSaw2[0], &supSaw3[0]);
+  ok &= rsIsCloseToUpTo(supSaw1, supSaw3, 5000, tol);
   rsAssert(ok);
-  // supSaw3 seems to use a different random seed than supSaw1 and supSaw2. Fix that!
-  // ...After switching from uning rsNoiseGenerator to rsRandomGenerator, all 3 supersaws look 
-  // different. Apparently, they all start from a different initial state in the PRNG. Why is that?
-  // There must a bug with the calls that set the seed and or cause a reset of the PRNG to the seed
-  // state. Maybe we are calling it in wrong places or something?
-  // ToDo: Write a function testPitchDithering4() that compares the output of classes 
-  // rsPitchDitherProto and rsPitchDitherSawOsc. They currently disaggree and we need to debug that
-  // and that's easier when we just create a single pitch dithered saw rather than a supersaw.
+  rsPlotArrays(5000, &supSaw1[0], &supSaw2[0], &supSaw3[0]);
 
   // Apply highpass filter(s):
   SVF hpf;

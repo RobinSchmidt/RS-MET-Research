@@ -1445,9 +1445,6 @@ void testPitchDitherSuperSaw2()
 
 void testPitchDitherSuperSaw()
 {
-  //testPitchDitherSuperSaw2();
-
-
   testPitchDitherSuperSaw1();
   testPitchDitherSuperSaw2();
 }

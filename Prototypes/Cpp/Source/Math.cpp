@@ -96,10 +96,6 @@ TArg rsPolynomialRootFinder::convergeLaguerre(
     return err;
   };
 
-
-
-
-
   return initialGuess;  // Preliminary
 
   // ToDo:
@@ -112,12 +108,6 @@ TArg rsPolynomialRootFinder::convergeLaguerre(
   //   internal helper function with a lambda function definition. We may not want to expose that
   //   function to the outside world.
 }
-
-
-
-
-
-
 
 // ToDo:
 // 
@@ -230,3 +220,53 @@ TArg rsPolynomialRootFinder::convergeLaguerre(
 
 
 
+//=================================================================================================
+
+
+/** A class to represent multivariate monomials. It's purpose is to be the basic building block for
+multivariate polynomials. ...TBC... */
+
+template<class T>
+class rsMultiVarMonomial
+{
+
+public:
+
+
+  template<class TArg>
+  TArg operator()(const std::vector<TArg>& x) const 
+  { 
+    rsAssert(x.size() == powers.size(), "Input vector x has wrong dimension.");
+    TArg product(1);
+    for(size_t i = 0; i < x.size(); i++)
+      product *= rsPow(x[i], TArg(powers[i]));
+    return TArg(coeff) * product;
+  }
+  // Needs tests.
+
+protected:
+
+  T coeff = T(0);
+  std::vector<int> powers;
+
+};
+
+
+/** Under construction. Just a stub.
+
+A class to represent multivariate polynomials. The implementation follows the one of 
+rsSparsePolynomial. ...TBC... */
+
+template<class T, class TTol = rsEmptyType>
+class rsMultiVarPolynomial
+{
+
+public:
+
+
+protected:
+
+  std::vector<rsMultiVarMonomial<T>> terms;
+  TTol tol = TTol(0);
+
+};

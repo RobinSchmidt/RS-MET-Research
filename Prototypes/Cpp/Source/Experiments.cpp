@@ -1096,7 +1096,10 @@ void testPitchDithering()
 }
 
 
-
+/** Returns a vector of normalized frequency offsets that can be used to detune 7 sawtooth 
+oscillators to emulate the JP-8000/JP-8080 supersaw oscillator. If you scale these offsets by a 
+detune parameter and then add these scaled offsets to 1, you will get a multiplier for the 
+frequency of the respective oscillator.  */
 template<class T>
 std::vector<T> getSuperSawFreqOffsetsJp8000()
 {
@@ -1109,12 +1112,21 @@ std::vector<T> getSuperSawFreqOffsetsJp8000()
   // - The numbers were taken from here:
   //   https://atosynth.blogspot.com/2026/01/a-closer-look-at-super-saw-code.html?m=1
   //   and are supposed to be those that were used in the Roland JP-8000 and JP-8080.
+  //
+  //
+  // ToDo:
+  // 
+  // - Try to figure out what numbers the Access Virus used and implement a similar function
+  //   getSuperSawFreqOffsetsVirus(). I think, the Virus had a "Hypersaw" with up to 16 saws so by
+  //   it's very nature, it can't use the same 7 numbers. Maybe the original 7 are embedded as a 
+  //   subset in the Virus'es implementation but it definitely has to have more numbers.
 }
 
+/** Creates a pitch dithered supersaw using the prototype implementation in rsPitchDitherProto. */
 template<class T>
 std::vector<T> getPitchDitherSuperSaw1(
   T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
-{  
+{ 
   using Vec = std::vector<T>;
   using PDP = rsPitchDitherProto<T>;
 
@@ -1144,6 +1156,7 @@ std::vector<T> getPitchDitherSuperSaw1(
   return supSaw;
 }
 
+/** Creates a pitch dithered supersaw using 7 instances of the class rsPitchDitherSawOsc. */
 template<class T>
 std::vector<T> getPitchDitherSuperSaw2(
   T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
@@ -1151,41 +1164,39 @@ std::vector<T> getPitchDitherSuperSaw2(
   using Vec  = std::vector<T>;
   using PDSO = rsPitchDitherSawOsc<T>;
 
+  // Create and set up 7 rsPitchDitherSawOsc objects:
   Vec freqOffsets = getSuperSawFreqOffsetsJp8000<T>();
-  PDSO osc[7];                             // We need 7 pitch dither osc objects. One for each saw.
+  PDSO osc[7];                         // We need 7 pitch dither osc objects. One for each saw.
   for(int i = 0; i < 7; i++)
   {
-    // Old:
-    //osc[i].setRandomSeed(seed+i);
-    //osc[i].setPeriod(sampleRate / (frequency * (detune * freqOffsets[i] + T(1))));
-
-    // New:
     osc[i].setRandomSeed(seed+i);
     osc[i].setPeriod(sampleRate / (frequency * (detune * freqOffsets[i] + T(1))));
     osc[i].reset();
-
-    //osc[i].updateCycleLength();
-    // I think, the order of calling setPeriod() and setRandomSeed() matters when we don't call
-    // updateCycleLength() anymore. In production, we can't call it because it's supposed to be a 
-    // protected member function. But it's not good that the output depends on the order in which 
-    // we call the setters! That can lead to subtle bugs and reproducibility problems. Try to 
-    // implement it in such a way that it behaves the same way independently from the order of 
-    // calling the setters. Write aunit test that verifies this! Eventually, we want to use a class
-    // rsRandomGenerator that doesn't even have a seed member anyway. Instead, it should have a 
-    // setState() function. Maybe when we do it like this, the problem will go away? We'll see...
   }
+
+  // Use the 7 oscs to produce a supersaw:
   Vec supSaw(numSamples);
   for(int n = 0; n < numSamples; n++)
   {
-    T y = osc[0].getSample();     // Outside the loop because has different amp factor.
+    T y = osc[0].getSample();          // Outside the loop because has different amp factor.
     for(int i = 1; i < 7; i++)
       y += mix * osc[i].getSample();
     supSaw[n] = y;
   }
 
   return supSaw;
+
+  // Notes:
+  //
+  // - I think, the order of calling setPeriod() and setRandomSeed() matters when we don't call
+  //   reset(). But I think, if we want to ensure reproducibility of our experiments, we actually
+  //   should call it anyway. That is to say: If we don't call reset() we should not expect 
+  //   reproducibility anyway. The PRNG may be in an undefined state after calling the setters in
+  //   random order. Only after calling reset(), we demand that the PRNG is in a well defined 
+  //   state.
 }
 
+/** Creates a pitch dithered supersaw using rsPitchDitherSuperSawOsc. */
 template<class T>
 std::vector<T> getPitchDitherSuperSaw3(
   T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
@@ -1237,12 +1248,10 @@ void testPitchDitherSuperSaw1()
   Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
 
   // Produce the raw supersaw our 3 algorithms:
-  Vec supSaw1 = 
-    amp * getPitchDitherSuperSaw1(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
-  Vec supSaw2 = 
-    amp * getPitchDitherSuperSaw2(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
-  Vec supSaw3 = 
-    amp * getPitchDitherSuperSaw3(midFreq, Real(sampleRate), detune, mix, numSamples, seed);
+  Real fs = Real(sampleRate);
+  Vec supSaw1 = amp * getPitchDitherSuperSaw1(midFreq, fs, detune, mix, numSamples, seed);
+  Vec supSaw2 = amp * getPitchDitherSuperSaw2(midFreq, fs, detune, mix, numSamples, seed);
+  Vec supSaw3 = amp * getPitchDitherSuperSaw3(midFreq, fs, detune, mix, numSamples, seed);
 
   // Verify that the both algos produces the same signal:
   Real tol = 1024 * std::numeric_limits<Real>::epsilon();
@@ -1264,7 +1273,6 @@ void testPitchDitherSuperSaw1()
   rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw1[0],   numSamples, sampleRate);
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
-
 
   // Observations:
   //
@@ -1319,14 +1327,6 @@ void testPitchDitherSuperSaw1()
   // 
   // 
   // ToDo: 
-  // 
-  // - DONE
-  //   Replace the call to PDP::fillDitherSawMinVariance() with a call to PDP::getSaw() using a 
-  //   previously created cycle distribution with equalized variance. That should make the unit 
-  //   test fail. To make it pass again, switch from 
-  //   "using PDSO = rsPitchDitherSawOscOld<Real, int>;" to
-  //   "using PDSO = rsPitchDitherSawOsc<Real, int>;"
-  //   The new implementation should match the output of the equalized variance algorithm.
   // 
   // - To figure out why the center freq of the 14080 supersaw is off, try to render a single saw 
   //   at that frequency (maybe just set "mix" to zero for that). Done: It looks like the center 
@@ -1391,9 +1391,11 @@ void testPitchDitherSuperSaw1()
   //   It gets more noisy towards higher pitches so a bit more filter resonance could impose more
   //   pitch on the noise and a higher cutoff would "clean up" the sound more.
   //
-  // - Maybe try to implement some sort of phase repel algorithm that makes the pahses of the 
-  //   individual saws was to repel one another such that the saws really do not want to be at the
-  //   same phase.
+  // - Maybe try to implement some sort of phase repel algorithm that makes the phases of the 
+  //   individual saws want to repel one another such that the saws really do not want to be at the
+  //   same phase. But actually we need to allow the phases to pass through one another because
+  //   otherwise, we would not end up with saws at different (average) frequencies. Maybe we should
+  //   limit the number of saws that can pass thorugh a phase of zero at a single instant?
   // 
   // - Or maybe implement an algrithm that reduces the amplitude of a saw when it's getting to 
   //   close in phase to the other saws. ...it's not quite clear what that means though, because 
@@ -1401,10 +1403,6 @@ void testPitchDitherSuperSaw1()
   //
   // - Maybe have a numSaws parameter which can be 1,3,5,7 or maybe allow 1,2,3,4,5,6,7 where in 
   //   the even case, we just skip the center saw.
-  //
-  // - Uncomment the line:
-  //   ok &= rsEqualsUpTo(supSaw2, supSaw, numSamples/2);
-  //   To do so, we first need to implement the rsEqualsUpTo() function appropriately.
   //
   // - Maybe implement a supersaw oscillator that generates separate supersaws for mid and side 
   //   channel and allows different settings for those with regard to detune, mix, maybe 
@@ -1414,21 +1412,6 @@ void testPitchDitherSuperSaw1()
   // - Maybe implement a "superpulse" wave by subtracing a phased-shifted version of the saw from 
   //   the saw. Maybe we can scale the subtracted phase-shifted version. Thereby, we can smoothly 
   //   morph between supersaw and superpulse
-  //
-  // - Maybe make an optimized class rsPitchDitherSuperSawOsc class. The things that can be 
-  //   optimized compared to just using a bunch of rsPitchDitherSawOsc objects are: For the prngs,
-  //   we need to store only the state for each. The scale and shift values for conversion to float
-  //   are the same. It is perhaps advisable when the 3 member variables that are accessed at each 
-  //   sample (namely scale, sampleCount, cycleLength) are put into a struct and the first member
-  //   of the supersaw class is an array of these structs. The other members (midLength, p1, p2) 
-  //   are accessed only when one of the saws needs to start a new cycle, so maybe they should 
-  //   reside in a different chunk of memory. The rationale is that such a memory organization will
-  //   work well with caching and pre-fetching. Maybewe can even consolidate the convert, scale and
-  //   shift operation of all the prngs into one operation? But mayby for that we need to run the 
-  //   prng with uint64 and do manual bitmasking. But maybe we can use uint32 for the states and 
-  //   just use uint64 for an accumulator. This implies that for each accumulation step, an uint32 
-  //   has to be converted to uint64. I don't know, if that's cheap or expensive - figure out! If 
-  //   it's cheap, it may be better to keep the states in uint32 format.
   // 
   // - Move the code over to the main repo and continue improving it there.
 }

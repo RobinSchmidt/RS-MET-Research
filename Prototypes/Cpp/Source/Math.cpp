@@ -232,6 +232,38 @@ class rsMultiVarMonomial
 public:
 
 
+  //-----------------------------------------------------------------------------------------------
+  /** \name Lifetime.  */
+
+  /** Default constructor. Constructs an empty term. An empty term is actually rather useless so 
+  using this constructor should be accompanied by a call to setup at some point probably soon after
+  construction. */
+  rsMultiVarMonomial() {}
+
+  /** Constructor that initializes our members to the given new coefficient and vector or powers.
+  For example, calling it like:
+
+    rsMultiVarMonomial m(5.0, std::vector<int>(2,3,1);
+
+  would create the monimial term  5.0 * x1^2 * x2^3 * x3^1  or  5.0 * x^2 * y^3 * z^1  if we would
+  use x,y,z as variable names in a trivariate polynomial. */
+  rsMultiVarMonomial(const T& newCoeff, const std::vector<int>& newPowers)
+  {
+    setup(newCoeff, newPowers);
+  }
+  // ToDo: Provide a similar constructor that takes an initializer list for a more ergonomic API.
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Setup.  */
+
+  void setup(const T& newCoeff, const std::vector<int>& newPowers)
+  {
+    coeff  = newCoeff;
+    powers = newPowers;
+  }
+
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry.  */
@@ -281,6 +313,8 @@ bool rsMultiVarMonomial<T>::lessLexicographically(
       return true;
   return false;
 }
+// Needs tests and verification. Does it make sense to sort the terms that way or would another 
+// order be more intuitive?
 
 
 //=================================================================================================

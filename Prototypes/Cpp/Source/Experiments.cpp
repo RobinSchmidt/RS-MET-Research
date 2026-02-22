@@ -15158,15 +15158,15 @@ void testMultiVarPolynomial()
   bool ok = true;
 
   using Num  = float;                      // Number type for the polynomial coefficients
-  using Vec  = std::vector<Num>;
+  using VecI = std::vector<int>;
   using Mono = rsMultiVarMonomial<Num>;
   using Poly = rsMultiVarPolynomial<Num>;
 
 
   Poly p(3);       // A polynomial in 3 variables, e.g. p(x,y,z) or p(x1,x2,x3)
-  Mono t;          // A single term in our polynomial, e.g. t = 3 * x^2 * y^3 * z
+  Mono t;          // A single term in our polynomial, e.g. t = 5 * x^2 * y^3 * z
 
-  //t.setup(3.f, Vec(2,3,1));  
+  t.setup(5.f, VecI({ 2,3,1 }));
   //p.addTerm(t);
 
 

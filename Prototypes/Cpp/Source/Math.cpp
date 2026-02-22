@@ -222,7 +222,6 @@ TArg rsPolynomialRootFinder::convergeLaguerre(
 
 //=================================================================================================
 
-
 /** A class to represent multivariate monomials. It's purpose is to be the basic building block for
 multivariate polynomials. ...TBC... */
 
@@ -233,6 +232,24 @@ class rsMultiVarMonomial
 public:
 
 
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Inquiry.  */
+
+  /** Returns true if the monomial lhs (left hand side) comes lexicographically before the monomial
+  rhs (right hand side). So it implements the "lhs < rhs" operation where the lass-than relation is
+  understood to be meant lexicographically. Such a comparison operation is needed in order to 
+  establish a well defined order of terms in a multivariate polynomial such that we can define what
+  it means for such a polynomial to be in a canonical representation because a canonical 
+  representation requires us to sort the terms according to a well defined rule.
+  ...TBC... ToDo: Elaborate what it means to lexicographically less in this context. */
+  static bool lessLexicographically(const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs);
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Operators. */
+
   template<class TArg>
   TArg operator()(const std::vector<TArg>& x) const 
   { 
@@ -242,7 +259,10 @@ public:
       product *= rsPow(x[i], TArg(powers[i]));
     return TArg(coeff) * product;
   }
+  // Maybe move implementation out of the class.
   // Needs tests.
+
+
 
 protected:
 
@@ -251,11 +271,30 @@ protected:
 
 };
 
+template<class T>
+bool rsMultiVarMonomial<T>::lessLexicographically(
+  const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs)
+{
+  rsAssert(lhs.size() == rhs.size(), "Sizes of lhs and rhs must match");
+  for(size_t i = 0; i < lhs.size(); i++)
+    if(lhs[i] < rhs[i])
+      return true;
+  return false;
+}
+
+
+//=================================================================================================
 
 /** Under construction. Just a stub.
 
 A class to represent multivariate polynomials. The implementation follows the one of 
-rsSparsePolynomial. ...TBC... */
+rsSparsePolynomial. We do not have the "Sparse" in the class name though because I do not intend to
+make a different implementation for the dense case because generalizing the implementation of 
+rsBiVariate.. and rsTriVariatePolynomial to the general case would be horribly complicated 
+(requiring convolutions of arbitrary dimensionality and stuff) and I'm not going to do that! This 
+class here should be used for the general case, i.e. for sparse and dense multivariate polynomials. 
+
+...TBC... */
 
 template<class T, class TTol = rsEmptyType>
 class rsMultiVarPolynomial
@@ -264,9 +303,70 @@ class rsMultiVarPolynomial
 public:
 
 
+  //-----------------------------------------------------------------------------------------------
+  /** \name Lifetime.  */
+
+
+  rsMultiVarPolynomial(int numVariables);
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Setup.  */
+
+  /** Reserves memory for the given number of terms. Can be called before calling functions like 
+  addTerm() to pre-allocate the desired amount of memory beforehand when multiple terms are being
+  added in a sequence. */
+  void reserve(size_t numTerms) { terms.reserve(numTerms); }
+  // Maybe we should loop through the terms and call terms[i].reserve() for each. Each term is an
+  // object of type rsMultiVarMonomial which itself contains a std::vector for the powers. Then 
+  // maybe we should move the implementation out of the class
+
+  /** Clears the array of terms. */
+  void clear() { terms.clear(); }
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Inquiry.  */
+
+  /** Returns the number of variables, i.e. the dimensionality of the input x. */
+  int getNumVariables() const { return numVars; }
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Operators. */
+
+  template<class TArg>
+  TArg operator()(const std::vector<TArg>& x) const
+  { 
+    rsAssert((int)x.size() == numVars, "Input vector x has wrong dimension.");
+    TArg y(0);
+    for(auto& t_i : terms)
+      y += t_i(x);
+    return y;
+  }
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Low level API.  */
+    
+  void _canonicalize();
+
 protected:
 
   std::vector<rsMultiVarMonomial<T>> terms;
+  int numVars = 1;  // Number of variables aka dimensionality of input x.
   TTol tol = TTol(0);
 
 };
+
+template<class T, class TTol>
+rsMultiVarPolynomial<T, TTol>::rsMultiVarPolynomial(int numVariables)
+{
+  numVars = numVariables;
+}
+
+
+// ToDo:
+//
+// - Add functions like addTerm(), subtractTerm(), etc.

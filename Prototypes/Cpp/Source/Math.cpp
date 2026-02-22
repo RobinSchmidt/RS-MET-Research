@@ -223,7 +223,7 @@ TArg rsPolynomialRootFinder::convergeLaguerre(
 //=================================================================================================
 
 /** A class to represent multivariate monomials. It's purpose is to be the basic building block for
-multivariate polynomials. ...TBC... */
+multivariate polynomials, i.e. represents a term is such a polynomial. ...TBC... */
 
 template<class T>
 class rsMultiVarMonomial
@@ -236,17 +236,17 @@ public:
   /** \name Lifetime.  */
 
   /** Default constructor. Constructs an empty term. An empty term is actually rather useless so 
-  using this constructor should be accompanied by a call to setup at some point probably soon after
-  construction. */
+  using this constructor should be accompanied by a call to setup at some point presumably rather 
+  soon after construction. */
   rsMultiVarMonomial() {}
 
   /** Constructor that initializes our members to the given new coefficient and vector or powers.
   For example, calling it like:
 
-    rsMultiVarMonomial m(5.0, std::vector<int>(2,3,1);
+    rsMultiVarMonomial t(5.0, std::vector<int>(2,3,1);
 
-  would create the monimial term  5.0 * x1^2 * x2^3 * x3^1  or  5.0 * x^2 * y^3 * z^1  if we would
-  use x,y,z as variable names in a trivariate polynomial. */
+  would create the monimial term  t = 5.0 * x1^2 * x2^3 * x3^1  or  5.0 * x^2 * y^3 * z^1  if we 
+  would use x,y,z as variable names in a trivariate polynomial. */
   rsMultiVarMonomial(const T& newCoeff, const std::vector<int>& newPowers)
   {
     setup(newCoeff, newPowers);
@@ -264,6 +264,12 @@ public:
   }
 
 
+  void shiftCoeff(const T& amount) { coeff += amount; }
+
+  // ToDo: setCoeff(), setPowers(), negate(), ... see rsMonomial and implement analoguous functions 
+  // here.
+
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry.  */
@@ -277,7 +283,34 @@ public:
   ...TBC... ToDo: Elaborate what it means to lexicographically less in this context. */
   static bool lessLexicographically(const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs);
 
+  /** Returns treu, iff this terms should come before the "other" term in a canonicial 
+  representation of a multivariate polynomial. */
+  bool comesBefore(const rsMultiVarMonomial& other) const
+  {
+    return lessLexicographically(*this, other);
+  }
 
+  /** Returns true, iff the "other" term has the same powers as "this". */
+  bool hasSamePowersAs(const rsMultiVarMonomial& other) const
+  {
+    return powers == other.powers;
+  }
+
+  /** Returns a const reference to the coefficient. */
+  const T& getCoeff() const { return coeff; }
+
+  template<class TTol>
+  bool isCoeffZero(TTol tol) const
+  {
+    return rsIsNegligible(coeff, tol);
+    //return rsMaxNorm(coeff) <= tol;
+  }
+  // Needs tests for T = RAPT::rsComplex, std::complex and maybe with more complicated types T
+
+  /** Returns the number of variables in this term. */
+  int getNumVariables() const { return (int) powers.size(); }
+
+  // ToDo: getTotalDegree(), getMultiDegree()
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators. */
@@ -307,9 +340,9 @@ template<class T>
 bool rsMultiVarMonomial<T>::lessLexicographically(
   const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs)
 {
-  rsAssert(lhs.size() == rhs.size(), "Sizes of lhs and rhs must match");
-  for(size_t i = 0; i < lhs.size(); i++)
-    if(lhs[i] < rhs[i])
+  rsAssert(lhs.powers.size() == rhs.powers.size(), "lhs and rhs are incompatible");
+  for(size_t i = 0; i < lhs.powers.size(); i++)
+    if(lhs.powers[i] < rhs.powers[i])
       return true;
   return false;
 }
@@ -326,7 +359,11 @@ rsSparsePolynomial. We do not have the "Sparse" in the class name though because
 make a different implementation for the dense case because generalizing the implementation of 
 rsBiVariate.. and rsTriVariatePolynomial to the general case would be horribly complicated 
 (requiring convolutions of arbitrary dimensionality and stuff) and I'm not going to do that! This 
-class here should be used for the general case, i.e. for sparse and dense multivariate polynomials. 
+class here should be used for the general case, i.e. for sparse and dense multivariate polynomials.
+
+References:
+
+  - (IVA)  Ideals, Varieties, and Algorithms  by ...
 
 ...TBC... */
 
@@ -358,6 +395,9 @@ public:
   /** Clears the array of terms. */
   void clear() { terms.clear(); }
 
+  /** Adds the given monomial to the polynomial. */
+  void addTerm(const rsMultiVarMonomial<T>& newTerm);
+
 
 
   //-----------------------------------------------------------------------------------------------
@@ -365,6 +405,9 @@ public:
 
   /** Returns the number of variables, i.e. the dimensionality of the input x. */
   int getNumVariables() const { return numVars; }
+
+  /** Returns the number of terms in this polynomial. */
+  int getNumTerms() const { return (int) terms.size(); }
 
 
   //-----------------------------------------------------------------------------------------------
@@ -386,6 +429,8 @@ public:
     
   void _canonicalize();
 
+  size_t _findIndexForTerm(const rsMultiVarMonomial<T>& newTerm);
+
 protected:
 
   std::vector<rsMultiVarMonomial<T>> terms;
@@ -399,6 +444,70 @@ rsMultiVarPolynomial<T, TTol>::rsMultiVarPolynomial(int numVariables)
 {
   numVars = numVariables;
 }
+
+
+template<class T, class TTol>
+void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm)
+{
+  rsAssert(newTerm.getNumVariables() == getNumVariables(), "Term has wrong number of variables");
+
+  size_t i = _findIndexForTerm(newTerm);
+
+  if(i >= getNumTerms())
+  {
+    terms.push_back(newTerm);
+    return;
+  }
+
+  if(newTerm.hasSamePowersAs(terms[i]))
+  {
+    // Modify coeff at i:
+    terms[i].shiftCoeff(newTerm.getCoeff());
+    if(terms[i].isCoeffZero(tol))
+      rsRemove(terms, i);
+
+  }
+  else
+  {
+    // Insert new term at position i:
+    rsInsert(terms, newTerm, i);
+  }
+
+  // ToDo:
+  //
+  // - Scan through our terms array if a term with the same powers already exists. If so, add the
+  //   coeff of the new term to the coeff of the existing term. If after that addition, the coeff
+  //   is zero (up to tolerance), remove that term. If no term with the same powers is found, 
+  //   insert the new term in the irght position. It's perhaps advisable to first implement a 
+  //   function getIndexForTerm(newTerm) that returns the array index i at which the new term 
+  //   should be either inserted (terms[i].getPowers() == newTerm.getPowers()) or modified 
+  //   otherwise. ..ok - done. Needs tests now.
+}
+
+
+template<class T, class TTol>
+size_t rsMultiVarPolynomial<T, TTol>::_findIndexForTerm(const rsMultiVarMonomial<T>& newTerm)
+{
+  auto less = &rsMultiVarMonomial<T>::lessLexicographically; // Function poniter?
+
+  size_t i = 0;
+  while(i < terms.size() && less(terms[i], newTerm))
+  {
+    i++;
+  }
+  
+  return i;
+
+  // ToDo:
+  //
+  // - Maybe use binary search later.
+}
+
+
+
+
+
+
 
 
 // ToDo:

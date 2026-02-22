@@ -1093,6 +1093,12 @@ void testPitchDithering()
   // ToDo:
   //
   // - Move to main repo.
+  //
+  // - Maybe we could combine the the pitch-dithering with comb filtering in order to reduce the 
+  //   amount of noise. Maybe this could also be applied to the supersaw - but not using a comb 
+  //   per saw but one comb on the whole sum of saws. This may be beneficial when the higher 
+  //   harmonics become too noisy. We would thin out the spectrum again a bit. The effect would 
+  //   be similar to the highpass but acting in between the harmonics rather than below.
 }
 
 
@@ -15167,10 +15173,7 @@ void testMultiVarPolynomial()
   Mono t;          // A single term in our polynomial, e.g. t = 5 * x^2 * y^3 * z
 
   t.setup(5.f, VecI({ 2,3,1 }));
-  //p.addTerm(t);
-
-
-
+  p.addTerm(t);
 
 
   rsAssert(ok);

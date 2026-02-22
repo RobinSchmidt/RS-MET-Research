@@ -161,10 +161,10 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testChebychevEconomization();    // stub
   //testGeneratingFunction();
   //testCatalanNumbers();
-  testSmoothStep();                  // Stub
-  testSmoothCrossFade();
-  testSmoothCrossFade2();
-  testSmoothMax();                   // stub
+  //testSmoothStep();                  // Stub
+  //testSmoothCrossFade();
+  //testSmoothCrossFade2();
+  //testSmoothMax();                   // stub
   //testNewtonOptimizer1D();
   //testFourierTrafo2D();
   //testKroneckerTrafo2D();

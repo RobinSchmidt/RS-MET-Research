@@ -342,12 +342,17 @@ bool rsMultiVarMonomial<T>::lessLexicographically(
 {
   rsAssert(lhs.powers.size() == rhs.powers.size(), "lhs and rhs are incompatible");
   for(size_t i = 0; i < lhs.powers.size(); i++)
-    if(lhs.powers[i] < rhs.powers[i])
+    if(lhs.powers[i] < rhs.powers[i])      // Wrong?
+    //if(lhs.powers[i] > rhs.powers[i])    // Maybe we should do this instead?
       return true;
   return false;
 }
 // Needs tests and verification. Does it make sense to sort the terms that way or would another 
-// order be more intuitive?
+// order be more intuitive? I think, this is wrong! I think, we need to use > rather than <. 
+// OK. Done.
+// I think we currently have that x^2 = xx come before xy which is right but it also comes before
+// x^1 = x which seems wrong. In a dictionary we would have x before xx. But maybe it's not really
+// important to follow that convention here. Although it may be nice because
 
 
 //=================================================================================================
@@ -377,8 +382,12 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Lifetime.  */
 
-
-  rsMultiVarPolynomial(int numVariables);
+  /** Constructor. You may pass the number of variables that this polynomial expects. If you pass
+  nothing, that value will default to 1. That means that by default, we'll get a polynomial in just
+  a single variable. You can change that later by calling init() but such a call to init will also
+  clear the array of terms because changing the number of variables may make our existing array of 
+  terms incompatible with the new setting. */
+  rsMultiVarPolynomial(int numVariables = 1) { init(numVariables); }
 
 
   //-----------------------------------------------------------------------------------------------
@@ -391,6 +400,11 @@ public:
   // Maybe we should loop through the terms and call terms[i].reserve() for each. Each term is an
   // object of type rsMultiVarMonomial which itself contains a std::vector for the powers. Then 
   // maybe we should move the implementation out of the class
+
+  /** Initializes this polynomial. You need to pass the number of variables that this polynomial
+  expects as inputs. For example, for a trivariate polynomial p = p(x,y,z), that number would be
+  3. This will also clear our existing array of terms. */
+  void init(int newNumVariables) { numVars = newNumVariables; clear(); }
 
   /** Clears the array of terms. */
   void clear() { terms.clear(); }
@@ -447,11 +461,13 @@ protected:
 
 };
 
+/*
 template<class T, class TTol>
 rsMultiVarPolynomial<T, TTol>::rsMultiVarPolynomial(int numVariables)
 {
   numVars = numVariables;
 }
+*/
 
 
 template<class T, class TTol>

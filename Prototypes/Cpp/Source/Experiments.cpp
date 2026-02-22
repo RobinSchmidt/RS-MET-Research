@@ -15170,21 +15170,42 @@ void testMultiVarPolynomial()
   using Poly = rsMultiVarPolynomial<Num>;
 
 
-  Poly p(3);       // A polynomial in 3 variables, e.g. p(x,y,z) or p(x1,x2,x3)
-  Mono t;          // A single term in our polynomial, e.g. t = 5 * x^2 * y^3 * z
+  Poly p(3);                       // A polynomial in 3 variables, e.g. p(x,y,z) or p(x1,x2,x3)
+  Mono t;                          // A single term in our polynomial
 
-  t.setup(5.f, VecI({ 2,3,1 }));
+  t.setup(5.f, VecI({ 2,3,1 }));   // t = 5 * x^2 * y^3 * z^1
   p.addTerm(t);
+  Vec arg({2,-3,-0.25});           // arg = (x,y,z) = (2,-3,-0.25)
+  Num res = p(arg);                // res = 5 * 2^2 * -3^3 * -0.25^1 = 5 * 4 * -27 * -0.25 = 135
+  ok &= res == 135.f;              // Check that result is correct for the given argument
 
-  Vec x({2,-3,-0.25});
-  Num y = p(x);          // 5 * 2^2 * -3^3 * -0.25^1 = 5 * 4 * -27 * -0.25 = 135
-  ok &= y == 135.f;
+  t.setup(-2.f, VecI({ 3,1,2 }));  // t = -2 * x^3 * y^1 * z^2
+  p.addTerm(t);
+  // Something is wrong! The new term gets always added at the end regardless whether we use
+  // > or < in Mono::lessLexicographically(). Maybe add unit tests for this function. Maybe add
+  // a function testMultiVarMonomial() that we call here first.
 
 
   rsAssert(ok);
 
   // ToDo:
-  //
+  // 
+  // - Add more terms. Make sure that the terms are always added in the correct position. Also 
+  //   cover the case where adding a term just modifies an existing coeff and also cover the case
+  //   where this modification turns the coeff to zero such that the term gets removed.
+  // 
+  // - Maybe use Poly = rsMultiVarPolynomial<Num, Num>;  when Num = float or double. In this case
+  //   the default rsEmptyType for the tolerance template parameter is not appropriate. Maybe 
+  //   templatize the test on TNum and TTol such that we can create tests for:
+  // 
+  //     rsMultiVarPolynomial<int, rsEmptyType>; 
+  //     rsMultiVarPolynomial<rsFraction<int>, rsEmptyType>; 
+  //     rsMultiVarPolynomial<float, float>; 
+  //     rsMultiVarPolynomial<std::complex<float>, float>; 
+  //     rsMultiVarPolynomial<rsMatrix<float>, float>; 
+  // 
+  //   But maybe the latter needs a specific implementation
+  //   
   // - Maybe return the ok variable so we can use this function as a unit test.
 }
 

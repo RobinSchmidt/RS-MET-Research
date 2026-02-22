@@ -15139,13 +15139,7 @@ void testPolynomialQuotientRing()
   // operation such that pc is formally of degree 2.
  
 
-
-
-
-
-
   rsAssert(ok);
-
 
   // ToDo:
   //
@@ -15155,6 +15149,35 @@ void testPolynomialQuotientRing()
   //
   // - Demonstrate also isomorphy between Q[x] / (x^2 - 1) with the hyperbolic numbers and 
   //   Q[x] / (x^2) with the dual numbers.
+}
+
+void testMultiVarPolynomial()
+{
+  // We test the class rsMultiVarPolynomial which represents a polynomial in multiple variables.
+
+  bool ok = true;
+
+  using Num  = float;                      // Number type for the polynomial coefficients
+  using Vec  = std::vector<Num>;
+  using Mono = rsMultiVarMonomial<Num>;
+  using Poly = rsMultiVarPolynomial<Num>;
+
+
+  Poly p(3);       // A polynomial in 3 variables, e.g. p(x,y,z) or p(x1,x2,x3)
+  Mono t;          // A single term in our polynomial, e.g. t = 3 * x^2 * y^3 * z
+
+  //t.setup(3.f, Vec(2,3,1));  
+  //p.addTerm(t);
+
+
+
+
+
+  rsAssert(ok);
+
+  // ToDo:
+  //
+  // - Maybe return the ok variable so we can use this function as a unit test.
 }
 
 

@@ -14,7 +14,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testRandomVectors();               // Stub - Produce random vectors with user specified covariance matrix
   //testKalmanFilter();                // Under construction - doesn't work yet
   //testPitchDithering();              // Pitch dithering sawtooth waves
-  testPitchDitherSuperSaw();
+  //testPitchDitherSuperSaw();
 
 
   // Image processing:
@@ -95,7 +95,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPrimesAndMore();
   //testDivisors();
   //testEulerTotient();
-  //testGcdLcm();                    // stub
+  //testGcdLcm();                    // Stub
   //testSquarity();
   //testCompositeness();
   //testPrimeDecomposition();        // Decompose primes additively
@@ -103,7 +103,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testFiniteField();
   //testFieldExtensions();
   //testRingExtensions();
-  //testPolynomialQuotientRing();  // stub
+  //testPolynomialQuotientRing();  // Stub
+  testMultiVarPolynomial();        // Stub
   // ToDo: Drag over the code for arithmetic derivatives from the main repo.
 
   //testSet();
@@ -120,7 +121,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPowerCommutator();
   //testParticleSystem();
   //testWeightedAverages();
-  testSylvesterMatrix();
+  //testSylvesterMatrix();
   //testBezoutMatrix();
   //testMatrixMulAdapter();              // stub
   //testGeneralizedMatrixOperations();   // Generalize matrix add/mul to arbitrary shaped matrices

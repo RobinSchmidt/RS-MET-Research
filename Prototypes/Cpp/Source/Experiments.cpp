@@ -15164,6 +15164,7 @@ void testMultiVarPolynomial()
   bool ok = true;
 
   using Num  = float;                      // Number type for the polynomial coefficients
+  using Vec  = std::vector<Num>;
   using VecI = std::vector<int>;
   using Mono = rsMultiVarMonomial<Num>;
   using Poly = rsMultiVarPolynomial<Num>;
@@ -15174,6 +15175,10 @@ void testMultiVarPolynomial()
 
   t.setup(5.f, VecI({ 2,3,1 }));
   p.addTerm(t);
+
+  Vec x({2,-3,-0.25});
+  Num y = p(x);          // 5 * 2^2 * -3^3 * -0.25^1 = 5 * 4 * -27 * -0.25 = 135
+  ok &= y == 135.f;
 
 
   rsAssert(ok);

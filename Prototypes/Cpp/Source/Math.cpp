@@ -431,6 +431,14 @@ public:
 
   size_t _findIndexForTerm(const rsMultiVarMonomial<T>& newTerm);
 
+  /** Checks if this polynomial is in canonical representation. A representation is canonical if it
+  has no zero coefficients (up to the roundoff tolerance) and if the terms are lexicographically
+  ordered. The empty polynomial is also accepted as a canonical epresentation. It represents the 
+  zero polynomial. */
+  //bool _isCanonical() const;
+
+
+
 protected:
 
   std::vector<rsMultiVarMonomial<T>> terms;
@@ -482,26 +490,40 @@ void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm
   //   function getIndexForTerm(newTerm) that returns the array index i at which the new term 
   //   should be either inserted (terms[i].getPowers() == newTerm.getPowers()) or modified 
   //   otherwise. ..ok - done. Needs tests now.
+  //
+  // - Implement unit tests that verify that adding a term via this function maintains a canonical
+  //   representation.
 }
 
 
 template<class T, class TTol>
 size_t rsMultiVarPolynomial<T, TTol>::_findIndexForTerm(const rsMultiVarMonomial<T>& newTerm)
 {
-  auto less = &rsMultiVarMonomial<T>::lessLexicographically; // Function poniter?
-
+  auto less = &rsMultiVarMonomial<T>::lessLexicographically; // Function pointer
   size_t i = 0;
   while(i < terms.size() && less(terms[i], newTerm))
-  {
     i++;
-  }
-  
   return i;
 
   // ToDo:
   //
   // - Maybe use binary search later.
+  //
+  // - Verify that the lexicographic order makes most sense. If not, maybe use a different
+  //   canonical order
 }
+
+/*
+template<class T, class TTol>
+bool rsMultiVarPolynomial<T, TTol>::_isCanonical() const
+{
+  bool ok = true;
+  ok &=  _areTermsStrictlySorted();  // Powers are sorted and don't appear more than once.
+  ok &= !_hasZeroCoeffs();           // Any zero coeffs (up to roundoff) are cleaned up.
+  ok &= !_hasNegativePowers();       // No negative powers allowed. May be relaxed later if needed.
+  return ok;
+}
+*/
 
 
 

@@ -310,7 +310,12 @@ public:
   /** Returns the number of variables in this term. */
   int getNumVariables() const { return (int) powers.size(); }
 
-  // ToDo: getTotalDegree(), getMultiDegree()
+  /** Returns the total degree of this term which is defined to be the sum of all the powers. */
+  int getTotalDegree() const { return rsSum(powers); }
+
+
+
+  // ToDo: getTotalDegree() = sum(powers), getMultiDegree() = max(powers) I think
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators. */
@@ -347,12 +352,20 @@ bool rsMultiVarMonomial<T>::lessLexicographically(
       return true;
   return false;
 }
+// THIS IS BUGGY!!! See unit test. Ah! I see! The code makes no sense! It will return true whenever
+// there exists an index i for which lhs.powers[i] < rhs.powers[i]. This is clearly not what we 
+// want!
 // Needs tests and verification. Does it make sense to sort the terms that way or would another 
 // order be more intuitive? I think, this is wrong! I think, we need to use > rather than <. 
 // OK. Done.
 // I think we currently have that x^2 = xx come before xy which is right but it also comes before
 // x^1 = x which seems wrong. In a dictionary we would have x before xx. But maybe it's not really
-// important to follow that convention here. Although it may be nice because
+// important to follow that convention here. Although it may be nice because it would be consistent
+// with how we order the terms in single variable sparse polynomials.
+// Maybe we need to loop through the arrays backwards? Maybe make a prototype implementations that
+// first converts the arrays of powers into strings like [2,4,1,5,0,2] becomes 00111123333355 and
+// the compare these strings. This very inefficient implementation can serve as a reference in a 
+// unit test.
 
 
 //=================================================================================================

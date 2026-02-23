@@ -15157,18 +15157,48 @@ void testPolynomialQuotientRing()
   //   Q[x] / (x^2) with the dual numbers.
 }
 
+
+bool testMultiVarMonomial()
+{
+  bool ok = true;
+
+  using Num  = float; 
+  using VecI = std::vector<int>;
+  using Mono = rsMultiVarMonomial<Num>;
+
+  auto lessLex = &rsMultiVarMonomial<Num>::lessLexicographically; 
+
+  Mono t1, t2;
+  t1.setup( 5.f, VecI({ 2,3,1 }));   // t1 =  5 * x^2 * y^3 * z^1
+  t2.setup(-2.f, VecI({ 3,1,2 }));   // t2 = -2 * x^3 * y^1 * z^2
+
+  ok &=  lessLex(t2, t1);
+  ok &= !lessLex(t1, t2);            // FAILS!
+
+  return ok;
+
+  // ToDo:
+  //
+  // - Figure out why lessLex returns true in both cases. It would mean that we have t1 < t2
+  //   and t2 < t1 which is not how an order relation should behave. It is allowed for both cases
+  //   to be false at the same time (when t1 == t2) but it is not allowed for both cases to be true
+  //   at the same time. Then fix it!
+  //
+  // - Create more test cases.
+}
+
 void testMultiVarPolynomial()
 {
   // We test the class rsMultiVarPolynomial which represents a polynomial in multiple variables.
 
   bool ok = true;
+  ok &= testMultiVarMonomial();
 
   using Num  = float;                      // Number type for the polynomial coefficients
   using Vec  = std::vector<Num>;
   using VecI = std::vector<int>;
   using Mono = rsMultiVarMonomial<Num>;
   using Poly = rsMultiVarPolynomial<Num>;
-
 
   Poly p(3);                       // A polynomial in 3 variables, e.g. p(x,y,z) or p(x1,x2,x3)
   Mono t;                          // A single term in our polynomial

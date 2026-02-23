@@ -299,6 +299,19 @@ public:
   /** Returns a const reference to the coefficient. */
   const T& getCoeff() const { return coeff; }
 
+
+  /** Returns the power (aka exponent) for the variable given by varIndex where index counting 
+  starts at zero. So, for example, in a trivariate polynomial p = p(x,y,z), the exponent for x 
+  would correspond to varIndex = 0, the exponent for y to varIndex = 1 and the exponent for z to 
+  varIndex = 2. */
+  int getPower(int varIndex) const 
+  { 
+    rsAssert(varIndex >= 0 && varIndex < getNumVariables(), "varIndex is out of range.");
+    return powers[varIndex];
+  }
+  // Needs tests. Maybe we should have a function isValidVariableIndex() or isValidVarIndex() to be
+  // used in the assertion. If we need such assertions in other places as well, add that function.
+
   template<class TTol>
   bool isCoeffZero(TTol tol) const
   {

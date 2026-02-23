@@ -15157,6 +15157,36 @@ void testPolynomialQuotientRing()
   //   Q[x] / (x^2) with the dual numbers.
 }
 
+/** Appends multiple copies of the given element "newElem" to the vector "v". The number of times 
+is given by "numCopies".  */
+template<class T>
+void rsAppendWithRepeats(std::vector<T>& v, const T& newElem, size_t numCopies)
+{
+  size_t oldSize = v.size();
+  v.resize(oldSize + numCopies);
+  for(size_t i = 0; i < numCopies; i++)
+    v[oldSize + i] = newElem;
+}
+// Needs tests
+
+/** Converts the given multivariate monomial term t into a string-like representation just with the
+difference that the individual characters in the string are of type int rather than char. That's 
+why we call it an "IntString". It's a string of integers. For example a monominal term like 
+c * x0^2 * x1^4 * x2^1 * x3^5 * x4^0 * x5^2  which has the array of powers given by  [2,4,1,5,0,2] 
+becomes the IntString  00111123333355. The power for x_i in the term translates to the number of 
+repetitions of the index i in the string. The coefficent c of the monomial is ignored. This 
+conversion into pseudo-strings is useful for a prototype implementation of lexicographical 
+comparisons between monomials. */
+template<class T>
+std::vector<int> rsToIntString(const rsMultiVarMonomial<T>& t)
+{
+  std::vector<int> str;
+  for(int i = 0; i < t.getNumVariables(); i++)
+    rsAppendWithRepeats(str, i, t.getPower(i));
+  return str;
+}
+// Maybe rename to rsToIntString(). We produce a string of integers.
+
 
 bool testMultiVarMonomial()
 {
@@ -15171,6 +15201,10 @@ bool testMultiVarMonomial()
   Mono t1, t2;
   t1.setup( 5.f, VecI({ 2,3,1 }));   // t1 =  5 * x^2 * y^3 * z^1
   t2.setup(-2.f, VecI({ 3,1,2 }));   // t2 = -2 * x^3 * y^1 * z^2
+
+  VecI s1 = rsToIntString(t1);
+  VecI s2 = rsToIntString(t2);
+
 
   ok &=  lessLex(t2, t1);
   ok &= !lessLex(t1, t2);            // FAILS!

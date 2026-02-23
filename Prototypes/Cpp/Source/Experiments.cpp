@@ -15169,16 +15169,17 @@ void rsAppendWithRepeats(std::vector<T>& v, const T& newElem, size_t numCopies)
   for(size_t i = 0; i < numCopies; i++)
     v[oldSize + i] = newElem;
 }
-// Needs tests
+// Needs tests. If all is well, maybe move to RAPT
 
 /** Converts the given multivariate monomial term t into a string-like representation just with the
 difference that the individual characters in the string are of type int rather than char. That's 
-why we call it an "IntString". It's a string of integers. For example a monominal term like 
+why we call it an "IntString". It's a string of integers. For example, a monominal term like 
 c * x0^2 * x1^4 * x2^1 * x3^5 * x4^0 * x5^2  which has the array of powers given by  [2,4,1,5,0,2] 
 becomes the IntString  00111123333355. The power for x_i in the term translates to the number of 
 repetitions of the index i in the string. The coefficent c of the monomial is ignored. This 
-conversion into pseudo-strings is useful for a prototype implementation of lexicographical 
-comparisons between monomials. */
+conversion into pseudo-strings is useful for a naive prototype implementation of lexicographical 
+comparisons between monomials that can be used in unit test to produce reference values against 
+which a less naive algorithm can be tested. */
 template<class T>
 std::vector<int> rsToIntString(const rsMultiVarMonomial<T>& t)
 {
@@ -15227,17 +15228,20 @@ bool testIntStringCompare()
 {
   using Vec = std::vector<int>;
 
-  auto comp = &rsIntStringCompare;
+  auto comp = &rsIntStringCompare;  // Shorthand for convenience.
 
   bool ok = true;
 
-  Vec s1, s2;
+  Vec s1, s2;                 // s1 = s2 = ""
+  ok &= comp(s1, s2) == 0;    // "" == ""
+  s1 = Vec({0});              // s1 = "0"
+  ok &= comp(s1, s2) == +1;   // "0" > ""
+  ok &= comp(s2, s1) == -1;   // ""  < "0"
+  s2 = Vec({0,0});            // s2 = "00"
+  ok &= comp(s1, s2) == -1;   // "0"  < "00"
+  ok &= comp(s2, s1) == +1;   // "00" > "0"
 
-  s1 = Vec({0});
-  s2 = Vec({0,0});
-  ok &= comp(s1, s2) == -1;
-  ok &= comp(s2, s1) == +1;
-
+  // ...TBC...
 
   return ok;
 

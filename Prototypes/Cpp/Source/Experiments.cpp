@@ -15157,6 +15157,8 @@ void testPolynomialQuotientRing()
   //   Q[x] / (x^2) with the dual numbers.
 }
 
+
+
 /** Appends multiple copies of the given element "newElem" to the vector "v". The number of times 
 is given by "numCopies".  */
 template<class T>
@@ -15185,9 +15187,44 @@ std::vector<int> rsToIntString(const rsMultiVarMonomial<T>& t)
     rsAppendWithRepeats(str, i, t.getPower(i));
   return str;
 }
-// Maybe rename to rsToIntString(). We produce a string of integers.
+
+/** A function for a lexicographic comparison of the two integer strings s1 and s2. It behaves like
+the C function strcmp(). That means, it returns a negative integer if s1 < s2, zero if s1 == s2 and 
+a positive integer if s1 > s2. The order relation is defined as the lexicographic order where the 
+integer 0 corresponds to the character 'a', 1 to 'b', 2 to 'c', and so on. We basically use the set
+of all int values as our alphabet and the "letters" (i.e. numbers) are ordered according to the 
+usual order relation on the integers. */
+int rsIntStringCompare(const std::vector<int>& s1, const std::vector<int>& s2)
+{
+  size_t n1 = s1.size();
+  size_t n2 = s2.size();
+  size_t n  = std::min(n1, n2);
+
+  // Loop through the two strings letter by letter up to the length of the shorter one. If we 
+  // encounter a situation where the letters aren't equal, we can decide which string comes first 
+  // in the dictionary:
+  for(size_t i = 0; i < n; i++)
+  {
+    if(s1[i] < s2[i])
+      return -1;
+    else if(s1[i] > s2[i])
+      return +1;
+  }
+
+  // If we get here, the strings are equal up to the length of the shorter one. The longer string is
+  // then considered as greater:
+  if(n1 < n2)
+    return -1;
+  else if(n1 > n2)
+    return +1;
+  else
+    return 0;   // Both strings have the same length and are equal in all their characters
+}
+// ToDo: Verify code by inspection and unit tests. It was AI generated.
 
 
+
+/** Unit test function for the class rsMultiVarMonomial. */
 bool testMultiVarMonomial()
 {
   bool ok = true;
@@ -15212,6 +15249,11 @@ bool testMultiVarMonomial()
   return ok;
 
   // ToDo:
+  // 
+  // - Test the rsIntStringCompare() function with manually created integer strings. Test also 
+  //   cases that will not occurr in the context of multivariate monomial terms such as when the 
+  //   two int-strings are of different length. Maybe that should be factored out into a separate
+  //   function.
   //
   // - Figure out why lessLex returns true in both cases. It would mean that we have t1 < t2
   //   and t2 < t1 which is not how an order relation should behave. It is allowed for both cases

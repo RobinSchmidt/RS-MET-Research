@@ -15222,7 +15222,31 @@ int rsIntStringCompare(const std::vector<int>& s1, const std::vector<int>& s2)
 }
 // ToDo: Verify code by inspection and unit tests. It was AI generated.
 
+/** Unit test function for the rsIntStringCompare() function. */
+bool testIntStringCompare()
+{
+  using Vec = std::vector<int>;
 
+  auto comp = &rsIntStringCompare;
+
+  bool ok = true;
+
+  Vec s1, s2;
+
+  s1 = Vec({0});
+  s2 = Vec({0,0});
+  ok &= comp(s1, s2) == -1;
+  ok &= comp(s2, s1) == +1;
+
+
+  return ok;
+
+  // ToDo:
+  //
+  // - Add more test cases. Ensure that all relevant cases are covered. Makes sure that each 
+  //   possible code path out of the function (i.e. each of the 5 return statements) is covered at
+  //   least once, better multiple times.
+}
 
 /** Unit test function for the class rsMultiVarMonomial. */
 bool testMultiVarMonomial()
@@ -15232,6 +15256,10 @@ bool testMultiVarMonomial()
   using Num  = float; 
   using VecI = std::vector<int>;
   using Mono = rsMultiVarMonomial<Num>;
+
+
+  ok &= testIntStringCompare();
+
 
   auto lessLex = &rsMultiVarMonomial<Num>::lessLexicographically; 
 

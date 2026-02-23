@@ -15260,6 +15260,26 @@ bool testIntStringCompare()
   //   least once, better multiple times.
 }
 
+
+template<class T>
+int compLexic(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs)
+{
+  rsAssert(lhs.getNumVariables() == rhs.getNumVariables(), "lhs and rhs are incompatible");
+  for(size_t i = 0; i < lhs.getNumVariables(); i++)
+  {
+    int d = rhs.getPower(i) - lhs.getPower(i);
+    if(d < 0)
+      return -1;
+    if(d > 0)
+      return +1;
+  }
+  return 0;
+}
+// Needs tests.
+// Maybe move this as static member function into class rsMultiVarMonomial and implement 
+// lessLexicographically() in terms of it.
+
+
 /** Unit test function for the class rsMultiVarMonomial. */
 bool testMultiVarMonomial()
 {
@@ -15272,15 +15292,25 @@ bool testMultiVarMonomial()
 
   ok &= testIntStringCompare();
 
-
   auto lessLex = &rsMultiVarMonomial<Num>::lessLexicographically; 
 
   Mono t1, t2;
   t1.setup( 5.f, VecI({ 2,3,1 }));   // t1 =  5 * x^2 * y^3 * z^1
   t2.setup(-2.f, VecI({ 3,1,2 }));   // t2 = -2 * x^3 * y^1 * z^2
 
+
   VecI s1 = rsToIntString(t1);
   VecI s2 = rsToIntString(t2);
+  int rt, rs;
+  rt = compLexic(t1, t2);
+  rs = rsIntStringCompare(s1, s2);
+  ok &= rt == rs;
+  rt = compLexic(t2, t1);
+  rs = rsIntStringCompare(s2, s1);
+  ok &= rt == rs;
+  // ToDo: wrap this into a helper function checkLexComp(t1, t2) that returns a bool
+
+
 
 
   ok &=  lessLex(t2, t1);

@@ -512,6 +512,10 @@ public:
   bool _areTermsStrictlySorted() const;
   // Needs tests!
 
+  /** Returns true iff any of our terms array has a coefficient of zero (up to the roundoff 
+  tolerance). In a canonical representation, this is forbidden. */
+  bool _hasZeroCoeffs() const;
+
 
 protected:
 
@@ -578,7 +582,7 @@ bool rsMultiVarPolynomial<T, TTol>::_isCanonical() const
 {
   bool ok = true;
   ok &=  _areTermsStrictlySorted();  // Powers are sorted and don't appear more than once.
-  //ok &= !_hasZeroCoeffs();           // Any zero coeffs (up to roundoff) are cleaned up.
+  ok &= !_hasZeroCoeffs();           // Any zero coeffs (up to roundoff) are cleaned up.
   //ok &= !_hasNegativePowers();       // No negative powers allowed. May be relaxed later if needed.
   return ok;
 
@@ -618,6 +622,15 @@ bool rsMultiVarPolynomial<T, TTol>::_areTermsStrictlySorted() const
 }
 // Needs tests
 
+template<class T, class TTol>
+bool rsMultiVarPolynomial<T, TTol>::_hasZeroCoeffs() const
+{
+  for(auto& t : terms)
+    if( rsIsNegligible(t.getCoeff(), tol) )  // Maybe use t.isCoeffZero(tol)
+      return true;
+
+  return false;
+}
 
 
 

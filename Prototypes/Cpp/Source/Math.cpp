@@ -323,6 +323,9 @@ public:
   }
   // Needs tests for T = RAPT::rsComplex, std::complex and maybe with more complicated types T
 
+  /** Returns true iff one or more of the powers is negative. */
+  bool hasNegativePowers() const;
+
   /** Returns the number of variables in this term. */
   int getNumVariables() const { return (int) powers.size(); }
 
@@ -382,6 +385,16 @@ int rsMultiVarMonomial<T>::compLexic(
       return +1;
   }
   return 0;
+}
+
+template<class T>
+bool rsMultiVarMonomial<T>::hasNegativePowers() const
+{
+  for(auto& p : powers)
+    if(p < 0)
+      return true;
+
+  return false;
 }
 
 
@@ -516,6 +529,10 @@ public:
   tolerance). In a canonical representation, this is forbidden. */
   bool _hasZeroCoeffs() const;
 
+  /** Returns true iff any of our terms has a negative power. We currently consider this as not
+  allowed, i.e. a bug - but this restriction can be lifted later, if needed. */
+  bool _hasNegativePowers() const;
+
 
 protected:
 
@@ -583,12 +600,8 @@ bool rsMultiVarPolynomial<T, TTol>::_isCanonical() const
   bool ok = true;
   ok &=  _areTermsStrictlySorted();  // Powers are sorted and don't appear more than once.
   ok &= !_hasZeroCoeffs();           // Any zero coeffs (up to roundoff) are cleaned up.
-  //ok &= !_hasNegativePowers();       // No negative powers allowed. May be relaxed later if needed.
+  ok &= !_hasNegativePowers();       // No negative powers allowed. May be relaxed later if needed.
   return ok;
-
-  // ToDo:
-  //
-  // - Implement _hasZeroCoeffs() and _hasNegativePowers() and uncomments the calls.
 }
 
 
@@ -632,6 +645,15 @@ bool rsMultiVarPolynomial<T, TTol>::_hasZeroCoeffs() const
   return false;
 }
 
+template<class T, class TTol>
+bool rsMultiVarPolynomial<T, TTol>::_hasNegativePowers() const
+{
+  for(auto& t : terms)
+    if(t.hasNegativePowers())
+      return true;
+
+  return false;
+}
 
 
 

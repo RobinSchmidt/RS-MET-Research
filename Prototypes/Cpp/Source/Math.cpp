@@ -293,41 +293,24 @@ public:
   understood to be meant lexicographically. Such a comparison operation is needed in order to 
   establish a well defined order of terms in a multivariate polynomial such that we can define what
   it means for such a polynomial to be in a canonical representation because a canonical 
-  representation requires us to sort the terms according to a well defined rule.
-  ...TBC... ToDo: Elaborate what it means to lexicographically less in this context. */
-  static bool lessLexic(const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs);
-  // ToDo: Maybe shorten documentation and refer to compLexic. We basically just check here if
-  // compLexic returns a number less that 0
-
-  /** Returns treu, iff this terms should come before the "other" term in a canonicial 
-  representation of a multivariate polynomial. */
-  bool comesBefore(const rsMultiVarMonomial& other) const
-  {
-    return lessLexicographically(*this, other);
-  }
-  // Maybe get rid of that.
+  representation requires us to sort the terms according to a well defined rule. */
+  static bool lessLexic(const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs)
+  { return compLexic(lhs, rhs) < 0; }
 
   /** Returns true, iff the "other" term has the same powers as "this". */
   bool hasSamePowersAs(const rsMultiVarMonomial& other) const
-  {
-    return powers == other.powers;
-  }
+  { return powers == other.powers; }
 
   /** Returns a const reference to the coefficient. */
   const T& getCoeff() const { return coeff; }
-
 
   /** Returns the power (aka exponent) for the variable given by varIndex where index counting 
   starts at zero. So, for example, in a trivariate polynomial p = p(x,y,z), the exponent for x 
   would correspond to varIndex = 0, the exponent for y to varIndex = 1 and the exponent for z to 
   varIndex = 2. */
-  int getPower(int varIndex) const 
-  { 
-    rsAssert(varIndex >= 0 && varIndex < getNumVariables(), "varIndex is out of range.");
-    return powers[varIndex];
-  }
-  // Needs tests. Maybe we should have a function isValidVariableIndex() or isValidVarIndex() to be
-  // used in the assertion. If we need such assertions in other places as well, add that function.
+  int getPower(int varIndex) const { checkVarIndex(varIndex); return powers[varIndex];  }
+  // Needs tests. 
+
 
   template<class TTol>
   bool isCoeffZero(TTol tol) const
@@ -342,6 +325,17 @@ public:
 
   /** Returns the total degree of this term which is defined to be the sum of all the powers. */
   int getTotalDegree() const { return rsSum(powers); }
+
+  /** Returns true, iff the given index i is a valid variable index. It must be >= 0 and less than 
+  the number of variables. For example, in a trivariate monomial term t(x,y,z), valid indices would
+  be 0,1,2 where 0 is the index corresponding to the variable x and so on. */
+  bool isValidVariableIndex(int i) const { return i >= 0 && i < getNumVariables(); }
+
+  /** Checks, if the given i is a valid variable index and triggers a debug assertion otherwise. 
+  For debugging purposes only. Calls to it are supposed to be optimized away in realease builds 
+  but that really depends on the implementation of rsAssert(). */
+  void checkVarIndex(int i) const 
+  { rsAssert(isValidVariableIndex(i), "Invalid variable index!"); }
 
 
 
@@ -385,14 +379,6 @@ int rsMultiVarMonomial<T>::compLexic(
       return +1;
   }
   return 0;
-}
-
-template<class T>
-bool rsMultiVarMonomial<T>::lessLexic(
-  const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs)
-{
-  return compLexic(lhs, rhs) < 0;
-  // Maybe move into class.
 }
 
 

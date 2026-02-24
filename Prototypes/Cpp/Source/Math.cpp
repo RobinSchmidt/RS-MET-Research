@@ -274,8 +274,19 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry.  */
 
-
+  /** Compares lhs (left hand side) and rhs (right hand side) lexicographically and returns a 
+  number a number < 0 when lhs < rhs, a number > 0 when lhs > rhs and 0 when lhs == rhs. It thus 
+  behaves like the good old C function strcmp(). By lexicographic, we mean that we interpret 
+  monomial like x^2 * y^3 * z^1 as a string xxyyyz and we will put these strings into the order as
+  they would be found in a dictionary. The coefficient play no role in the comparison, so
+  3 * x^2 * y^3 * z^1  and  5 * x^2 * y^3 * z^1  would be considered to be the same with respect to 
+  that order. */
   static int compLexic(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs);
+  // Note: I think even though terms with the same powers but different coeffs are considered 
+  // equivalent (neither < nor >), I think, we still establish a total order because indeed either 
+  // a < b or b < a or a = b if we interpret the = not as exact equality of terms but as an 
+  // equivalence relation on the terms that _also_ ignores the coeff, which we probably should 
+  // indeed do in this context for consistency. Verify and maybe add to the documentation.
 
   /** Returns true if the monomial lhs (left hand side) comes lexicographically before the monomial
   rhs (right hand side). So it implements the "lhs < rhs" operation where the lass-than relation is
@@ -285,7 +296,8 @@ public:
   representation requires us to sort the terms according to a well defined rule.
   ...TBC... ToDo: Elaborate what it means to lexicographically less in this context. */
   static bool lessLexic(const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs);
-  // Rename to lessLexic
+  // ToDo: Maybe shorten documentation and refer to compLexic. We basically just check here if
+  // compLexic returns a number less that 0
 
   /** Returns treu, iff this terms should come before the "other" term in a canonicial 
   representation of a multivariate polynomial. */
@@ -293,6 +305,7 @@ public:
   {
     return lessLexicographically(*this, other);
   }
+  // Maybe get rid of that.
 
   /** Returns true, iff the "other" term has the same powers as "this". */
   bool hasSamePowersAs(const rsMultiVarMonomial& other) const
@@ -332,7 +345,7 @@ public:
 
 
 
-  // ToDo: getTotalDegree() = sum(powers), getMultiDegree() = max(powers) I think
+  // ToDo: getMultiDegree() = max(powers) I think. See IVA, pg...
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators. */
@@ -379,6 +392,7 @@ bool rsMultiVarMonomial<T>::lessLexic(
   const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs)
 {
   return compLexic(lhs, rhs) < 0;
+  // Maybe move into class.
 }
 
 

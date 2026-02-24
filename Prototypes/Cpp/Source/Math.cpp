@@ -502,7 +502,7 @@ public:
   has no zero coefficients (up to the roundoff tolerance) and if the terms are lexicographically
   ordered. The empty polynomial is also accepted as a canonical epresentation. It represents the 
   zero polynomial. */
-  //bool _isCanonical() const;
+  bool _isCanonical() const;
 
   /** Returns true iff the powers of our terms are strictly ordered (lexicographically) inside of 
   our terms array. This strict order requirement also entails uniqueness of the powers. That means 
@@ -572,17 +572,21 @@ size_t rsMultiVarPolynomial<T, TTol>::_findIndexForTerm(const rsMultiVarMonomial
   //   canonical order
 }
 
-/*
+
 template<class T, class TTol>
 bool rsMultiVarPolynomial<T, TTol>::_isCanonical() const
 {
   bool ok = true;
   ok &=  _areTermsStrictlySorted();  // Powers are sorted and don't appear more than once.
-  ok &= !_hasZeroCoeffs();           // Any zero coeffs (up to roundoff) are cleaned up.
-  ok &= !_hasNegativePowers();       // No negative powers allowed. May be relaxed later if needed.
+  //ok &= !_hasZeroCoeffs();           // Any zero coeffs (up to roundoff) are cleaned up.
+  //ok &= !_hasNegativePowers();       // No negative powers allowed. May be relaxed later if needed.
   return ok;
+
+  // ToDo:
+  //
+  // - Implement _hasZeroCoeffs() and _hasNegativePowers() and uncomments the calls.
 }
-*/
+
 
 template<class T, class TTol>
 bool rsMultiVarPolynomial<T, TTol>::_areTermsStrictlySorted() const
@@ -606,7 +610,7 @@ bool rsMultiVarPolynomial<T, TTol>::_areTermsStrictlySorted() const
 
   // ToDo:
   //
-  // - Maybe change the API of getTerm tor return a const poinetr. Or maybe add an additional 
+  // - Maybe change the API of getTerm tor return a const pointer. Or maybe add an additional 
   //   function getTermPtr() and/or getTermConstPtr(). Maybe if we allow to return non-const
   //   pointers, the functions should be marked with an underscore as low-level functions because
   //   they will allow the caller to manipulate the term directly which may mess up our supposed

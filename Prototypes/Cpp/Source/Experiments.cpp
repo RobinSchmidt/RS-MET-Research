@@ -15344,29 +15344,16 @@ void testMultiVarPolynomial()
 
   Mono t;                          // A single term in our polynomial
   Poly p(3);                       // A polynomial in 3 variables, e.g. p(x,y,z) or p(x1,x2,x3)
-
-
-  ok &= p._areTermsStrictlySorted();  // Use _isCanonical() later!
-
-
+  ok &= p._isCanonical();          // A freshly created empty polynomial is canonical
   t.setup(5.f, VecI({ 2,3,1 }));   // t = 5 * x^2 * y^3 * z^1
   p.addTerm(t);
-
-  ok &= p._areTermsStrictlySorted();  // Use _isCanonical() later!
-
+  ok &= p._isCanonical();          // Adding terms should maintain the canonical representation.
   Vec arg({2,-3,-0.25});           // arg = (x,y,z) = (2,-3,-0.25)
   Num res = p(arg);                // res = 5 * 2^2 * -3^3 * -0.25^1 = 5 * 4 * -27 * -0.25 = 135
   ok &= res == 135.f;              // Check that result is correct for the given argument
-
   t.setup(-2.f, VecI({ 3,1,2 }));  // t = -2 * x^3 * y^1 * z^2
   p.addTerm(t);
-
-  ok &= p._areTermsStrictlySorted();  // Use _isCanonical() later!
-
-
-  // Something is wrong! The new term gets always added at the end regardless whether we use
-  // > or < in Mono::lessLexicographically(). Maybe add unit tests for this function. Maybe add
-  // a function testMultiVarMonomial() that we call here first.
+  ok &= p._isCanonical();
 
 
   rsAssert(ok);
@@ -15390,6 +15377,9 @@ void testMultiVarPolynomial()
   //   But maybe the latter needs a specific implementation
   //   
   // - Maybe return the ok variable so we can use this function as a unit test.
+  //
+  // - Mess up the canonical representation in some way (using low-level methods with underscore
+  //   prefix) and verify that _isCanonical correctly returns false.
 }
 
 

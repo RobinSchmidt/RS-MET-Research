@@ -278,7 +278,7 @@ public:
   number a number < 0 when lhs < rhs, a number > 0 when lhs > rhs and 0 when lhs == rhs. It thus 
   behaves like the good old C function strcmp(). By lexicographic, we mean that we interpret 
   monomial like x^2 * y^3 * z^1 as a string xxyyyz and we will put these strings into the order as
-  they would be found in a dictionary. The coefficient play no role in the comparison, so
+  they would be found in a dictionary. The coefficient plays no role in the comparison, so
   3 * x^2 * y^3 * z^1  and  5 * x^2 * y^3 * z^1  would be considered to be the same with respect to 
   that order. */
   static int compLexic(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs);
@@ -526,14 +526,6 @@ void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm
   }
 
   // ToDo:
-  //
-  // - Scan through our terms array if a term with the same powers already exists. If so, add the
-  //   coeff of the new term to the coeff of the existing term. If after that addition, the coeff
-  //   is zero (up to tolerance), remove that term. If no term with the same powers is found, 
-  //   insert the new term in the irght position. It's perhaps advisable to first implement a 
-  //   function getIndexForTerm(newTerm) that returns the array index i at which the new term 
-  //   should be either inserted (terms[i].getPowers() == newTerm.getPowers()) or modified 
-  //   otherwise. ..ok - done. Needs tests now.
   //
   // - Implement unit tests that verify that adding a term via this function maintains a canonical
   //   representation.

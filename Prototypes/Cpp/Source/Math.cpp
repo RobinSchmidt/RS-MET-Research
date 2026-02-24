@@ -401,14 +401,15 @@ bool rsMultiVarMonomial<T>::hasNegativePowers() const
 
 //=================================================================================================
 
-/** Under construction. Just a stub.
+/** Under construction.
 
 A class to represent multivariate polynomials. The implementation follows the one of 
 rsSparsePolynomial. We do not have the "Sparse" in the class name though because I do not intend to
-make a different implementation for the dense case because generalizing the implementation of 
-rsBiVariate.. and rsTriVariatePolynomial to the general case would be horribly complicated 
-(requiring convolutions of arbitrary dimensionality and stuff) and I'm not going to do that! This 
-class here should be used for the general case, i.e. for sparse and dense multivariate polynomials.
+make a different implementation for the dense case because such a dense implementation would then
+probably have to look like a generalization of rsBiVariate.. and rsTriVariatePolynomial and that 
+would presumably be horribly messy to implement (requiring convolutions of arbitrary dimensionality
+and stuff) and I'm not convinced that this would be a good idea to do it like that! This class here
+should be used for the general case, i.e. for sparse and dense multivariate polynomials.
 
 References:
 
@@ -447,7 +448,9 @@ public:
 
   /** Initializes this polynomial. You need to pass the number of variables that this polynomial
   expects as inputs. For example, for a trivariate polynomial p = p(x,y,z), that number would be
-  3. This will also clear our existing array of terms. */
+  3. This will also clear our existing array of terms. This is required because changing the number
+  of variables may make our existing array of terms incompatible with the new setting. A 
+  re-initialization should be understood to be a disruptive operation that wipes out the state. */
   void init(int newNumVariables) { numVars = newNumVariables; clear(); }
 
   /** Clears the array of terms. */
@@ -456,6 +459,10 @@ public:
   /** Adds the given monomial to the polynomial. */
   void addTerm(const rsMultiVarMonomial<T>& newTerm);
 
+  // ToDo: setRoundoffTolerance(), subtractTerm(), scale(), negate(), ...
+  // But in rsSparsePolynomial, we implement scaling as a low-level method _scaleCoeffs() because
+  // the scaler could be zero. Maybe a high-level scale() method without underscore should allow
+  // only nonzero scalers. We could assert that the scaler is zero and then call _scaleCoeffs().
 
 
   //-----------------------------------------------------------------------------------------------
@@ -467,13 +474,11 @@ public:
   /** Returns the number of terms in this polynomial. */
   int getNumTerms() const { return (int) terms.size(); }
 
-  /*
+  
   const std::vector<int>& getPowers(int termIndex) 
   {
-    checkTermIndex(termIndex);
-    return terms[termIndex].getPowers();
+    return getTerm(termIndex).getPowers();
   }
-  */
   // Needs test
 
   const rsMultiVarMonomial<T>& getTerm(int termIndex) const
@@ -507,8 +512,13 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Low level API.  */
     
+  /** Turns the representation of the multivariate polynomial into a canonical one. A canonical 
+  representation has the following properties: (1) The terms in our array are sorted 
+  lexicographically. (2) No configuration of powers appears more than once. (3) No zero 
+  coefficients appear. We achieve this by first sorting the terms, then combining multiple terms
+  with equal exponent configurations into single terms and finally deleting all terms that have a
+  coefficient zero (up to the roundoff tolerance). */
   void _canonicalize();
-
 
 
   /** Finds the index in our terms array where the term at that index has the same powers as the
@@ -588,6 +598,10 @@ template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::_canonicalize()
 {
   rsMarkAsStub();
+
+  // ToDo:
+  //
+  // - Model the implementation after rsSparsePolynomial::_canonicalize(). 
 }
 
 template<class T, class TTol>
@@ -666,9 +680,10 @@ bool rsMultiVarPolynomial<T, TTol>::_hasNegativePowers() const
   return false;
 }
 
-
-
-
 // ToDo:
 //
-// - Add functions like addTerm(), subtractTerm(), etc.
+// - We actually get a lot of code duplication with rsSparsePolynomial in this class. Maybe think 
+//   about factoring out a common baseclass or maybe some free function templates that can be used
+//   by both classes. Maybe the template parameter should be the kind of term, i.e. 
+//   rsMultiVarMonomial here and rsMonomial for rsSparsePolynomial. Maybe we'll need a bit of duck
+//   typing to make it work.

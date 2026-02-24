@@ -304,6 +304,9 @@ public:
   /** Returns a const reference to the coefficient. */
   const T& getCoeff() const { return coeff; }
 
+  /** Returns a const reference to the vector of powers. */
+  const std::vector<int>& getPowers() const { return powers; }
+
   /** Returns the power (aka exponent) for the variable given by varIndex where index counting 
   starts at zero. So, for example, in a trivariate polynomial p = p(x,y,z), the exponent for x 
   would correspond to varIndex = 0, the exponent for y to varIndex = 1 and the exponent for z to 
@@ -451,6 +454,28 @@ public:
   /** Returns the number of terms in this polynomial. */
   int getNumTerms() const { return (int) terms.size(); }
 
+  /*
+  const std::vector<int>& getPowers(int termIndex) 
+  {
+    checkTermIndex(termIndex);
+    return terms[termIndex].getPowers();
+  }
+  */
+  // Needs test
+
+  const rsMultiVarMonomial<T>& getTerm(int termIndex) const
+  {
+    checkTermIndex(termIndex);
+    return terms[termIndex];
+  }
+  // Needs test
+
+    
+  bool isValidTermIndex(int i) const { return i >= 0 && i < getNumTerms(); }
+
+  void checkTermIndex(int i) const 
+  { rsAssert(isValidTermIndex(i), "Invalid term index!"); }
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators. */
@@ -479,6 +504,13 @@ public:
   zero polynomial. */
   //bool _isCanonical() const;
 
+  /** Returns true iff the powers of our terms are strictly ordered (lexicographically) inside of 
+  our terms array. This strict order requirement also entails uniqueness of the powers. That means 
+  that this function serves two purposes at the same time: Making sure that the terms are sorted 
+  and that no combination of powers appears more than once. These are two of the requirements for a
+  canonical representation. */
+  bool _areTermsStrictlySorted() const;
+  // Needs tests!
 
 
 protected:
@@ -488,15 +520,6 @@ protected:
   TTol tol = TTol(0);
 
 };
-
-/*
-template<class T, class TTol>
-rsMultiVarPolynomial<T, TTol>::rsMultiVarPolynomial(int numVariables)
-{
-  numVars = numVariables;
-}
-*/
-
 
 template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm)
@@ -561,7 +584,35 @@ bool rsMultiVarPolynomial<T, TTol>::_isCanonical() const
 }
 */
 
+template<class T, class TTol>
+bool rsMultiVarPolynomial<T, TTol>::_areTermsStrictlySorted() const
+{
+  if(terms.empty())
+    return true;
 
+  using Monom   = rsMultiVarMonomial<T>;
+  using TermPtr = const Monom*;
+
+  TermPtr prev = &getTerm(0);               // Pointer to previous term
+  for(int i = 1; i < getNumTerms(); i++)
+  {
+    const Monom& cur = getTerm(i);          // Reference to current term
+    if(!Monom::lessLexic(*prev, cur))
+      return false;
+    prev = &cur;                            // Rebind pointer
+  }
+
+  return true;
+
+  // ToDo:
+  //
+  // - Maybe change the API of getTerm tor return a const poinetr. Or maybe add an additional 
+  //   function getTermPtr() and/or getTermConstPtr(). Maybe if we allow to return non-const
+  //   pointers, the functions should be marked with an underscore as low-level functions because
+  //   they will allow the caller to manipulate the term directly which may mess up our supposed
+  //   canonical representation.
+}
+// Needs tests
 
 
 

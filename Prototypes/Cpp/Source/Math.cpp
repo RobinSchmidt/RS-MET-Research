@@ -274,6 +274,9 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry.  */
 
+
+  static int compLexic(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs);
+
   /** Returns true if the monomial lhs (left hand side) comes lexicographically before the monomial
   rhs (right hand side). So it implements the "lhs < rhs" operation where the lass-than relation is
   understood to be meant lexicographically. Such a comparison operation is needed in order to 
@@ -282,6 +285,7 @@ public:
   representation requires us to sort the terms according to a well defined rule.
   ...TBC... ToDo: Elaborate what it means to lexicographically less in this context. */
   static bool lessLexicographically(const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs);
+  // Rename to lessLexic
 
   /** Returns treu, iff this terms should come before the "other" term in a canonicial 
   representation of a multivariate polynomial. */
@@ -355,15 +359,34 @@ protected:
 };
 
 template<class T>
+int rsMultiVarMonomial<T>::compLexic(
+  const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs)
+{
+  rsAssert(lhs.getNumVariables() == rhs.getNumVariables(), "lhs and rhs are incompatible");
+  for(size_t i = 0; i < lhs.getNumVariables(); i++)
+  {
+    int d = rhs.getPower(i) - lhs.getPower(i);
+    if(d < 0)
+      return -1;
+    if(d > 0)
+      return +1;
+  }
+  return 0;
+}
+
+
+template<class T>
 bool rsMultiVarMonomial<T>::lessLexicographically(
   const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs)
 {
-  rsAssert(lhs.powers.size() == rhs.powers.size(), "lhs and rhs are incompatible");
-  for(size_t i = 0; i < lhs.powers.size(); i++)
-    if(lhs.powers[i] < rhs.powers[i])      // Wrong?
-    //if(lhs.powers[i] > rhs.powers[i])    // Maybe we should do this instead?
-      return true;
-  return false;
+  return compLexic(lhs, rhs) < 0;
+
+  //rsAssert(lhs.powers.size() == rhs.powers.size(), "lhs and rhs are incompatible");
+  //for(size_t i = 0; i < lhs.powers.size(); i++)
+  //  if(lhs.powers[i] < rhs.powers[i])      // Wrong?
+  //  //if(lhs.powers[i] > rhs.powers[i])    // Maybe we should do this instead?
+  //    return true;
+  //return false;
 }
 // THIS IS BUGGY!!! See unit test. Ah! I see! The code makes no sense! It will return true whenever
 // there exists an index i for which lhs.powers[i] < rhs.powers[i]. This is clearly not what we 

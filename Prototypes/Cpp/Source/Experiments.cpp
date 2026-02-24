@@ -15380,6 +15380,9 @@ void testMultiVarPolynomial()
   //
   // - Mess up the canonical representation in some way (using low-level methods with underscore
   //   prefix) and verify that _isCanonical correctly returns false.
+  // 
+  // - Verify that the lexicographic order makes most sense. If not, maybe use a different
+  //   canonical order
 }
 
 

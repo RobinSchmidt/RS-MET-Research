@@ -509,7 +509,16 @@ public:
     
   void _canonicalize();
 
-  size_t _findIndexForTerm(const rsMultiVarMonomial<T>& newTerm);
+
+
+  /** Finds the index in our terms array where the term at that index has the same powers as the
+  given "term". If no such term is found, it will return an invalid index, i.e. one that is above
+  the range of valid indices. */
+  size_t _findIndexForTerm(const rsMultiVarMonomial<T>& term);
+  // Maybe it should return an int and -1 for "not found"? But that would make it more complicated.
+  // The implementation would be more complicated and at the call site, we would potentially also 
+  // have to change the checks. But using an inte with -1 for not found would be consistent with
+  // conventions used in the RAPT library.
 
   /** Checks if this polynomial is in canonical representation. A representation is canonical if it
   has no zero coefficients (up to the roundoff tolerance) and if the terms are lexicographically
@@ -523,7 +532,6 @@ public:
   and that no combination of powers appears more than once. These are two of the requirements for a
   canonical representation. */
   bool _areTermsStrictlySorted() const;
-  // Needs tests!
 
   /** Returns true iff any of our terms array has a coefficient of zero (up to the roundoff 
   tolerance). In a canonical representation, this is forbidden. */
@@ -536,9 +544,9 @@ public:
 
 protected:
 
-  std::vector<rsMultiVarMonomial<T>> terms;
-  int numVars = 1;  // Number of variables aka dimensionality of input x.
-  TTol tol = TTol(0);
+  std::vector<rsMultiVarMonomial<T>> terms;  // Array of terms of the form c * x0^p0 * x1^p1 * ...
+  int numVars = 1;                           // Number of variables. Dimension of input argument.
+  TTol tol = TTol(0);                        // Tolerance for numerical comparisons.
 
 };
 
@@ -549,7 +557,7 @@ void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm
 
   size_t i = _findIndexForTerm(newTerm);
 
-  if(i >= getNumTerms())
+  if(i >= getNumTerms())                   // Maybe use if(!isValidTermIndex(i))
   {
     terms.push_back(newTerm);
     return;
@@ -577,22 +585,25 @@ void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm
 
 
 template<class T, class TTol>
-size_t rsMultiVarPolynomial<T, TTol>::_findIndexForTerm(const rsMultiVarMonomial<T>& newTerm)
+void rsMultiVarPolynomial<T, TTol>::_canonicalize()
 {
-  auto less = &rsMultiVarMonomial<T>::lessLexic; // Function pointer
+  rsMarkAsStub();
+}
+
+template<class T, class TTol>
+size_t rsMultiVarPolynomial<T, TTol>::_findIndexForTerm(const rsMultiVarMonomial<T>& t)
+{
+  auto less = &rsMultiVarMonomial<T>::lessLexic;
   size_t i = 0;
-  while(i < terms.size() && less(terms[i], newTerm))
+  while(i < terms.size() && less(terms[i], t))
     i++;
   return i;
 
   // ToDo:
   //
-  // - Maybe use binary search later.
+  // - Maybe use binary search rather than linear search later.
   //
-  // - Verify that the lexicographic order makes most sense. If not, maybe use a different
-  //   canonical order
 }
-
 
 template<class T, class TTol>
 bool rsMultiVarPolynomial<T, TTol>::_isCanonical() const

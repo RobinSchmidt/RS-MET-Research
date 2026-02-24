@@ -284,7 +284,7 @@ public:
   it means for such a polynomial to be in a canonical representation because a canonical 
   representation requires us to sort the terms according to a well defined rule.
   ...TBC... ToDo: Elaborate what it means to lexicographically less in this context. */
-  static bool lessLexicographically(const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs);
+  static bool lessLexic(const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs);
   // Rename to lessLexic
 
   /** Returns treu, iff this terms should come before the "other" term in a canonicial 
@@ -374,34 +374,13 @@ int rsMultiVarMonomial<T>::compLexic(
   return 0;
 }
 
-
 template<class T>
-bool rsMultiVarMonomial<T>::lessLexicographically(
+bool rsMultiVarMonomial<T>::lessLexic(
   const rsMultiVarMonomial& lhs, const rsMultiVarMonomial& rhs)
 {
   return compLexic(lhs, rhs) < 0;
-
-  //rsAssert(lhs.powers.size() == rhs.powers.size(), "lhs and rhs are incompatible");
-  //for(size_t i = 0; i < lhs.powers.size(); i++)
-  //  if(lhs.powers[i] < rhs.powers[i])      // Wrong?
-  //  //if(lhs.powers[i] > rhs.powers[i])    // Maybe we should do this instead?
-  //    return true;
-  //return false;
 }
-// THIS IS BUGGY!!! See unit test. Ah! I see! The code makes no sense! It will return true whenever
-// there exists an index i for which lhs.powers[i] < rhs.powers[i]. This is clearly not what we 
-// want!
-// Needs tests and verification. Does it make sense to sort the terms that way or would another 
-// order be more intuitive? I think, this is wrong! I think, we need to use > rather than <. 
-// OK. Done.
-// I think we currently have that x^2 = xx come before xy which is right but it also comes before
-// x^1 = x which seems wrong. In a dictionary we would have x before xx. But maybe it's not really
-// important to follow that convention here. Although it may be nice because it would be consistent
-// with how we order the terms in single variable sparse polynomials.
-// Maybe we need to loop through the arrays backwards? Maybe make a prototype implementations that
-// first converts the arrays of powers into strings like [2,4,1,5,0,2] becomes 00111123333355 and
-// the compare these strings. This very inefficient implementation can serve as a reference in a 
-// unit test.
+
 
 
 //=================================================================================================
@@ -564,7 +543,7 @@ void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm
 template<class T, class TTol>
 size_t rsMultiVarPolynomial<T, TTol>::_findIndexForTerm(const rsMultiVarMonomial<T>& newTerm)
 {
-  auto less = &rsMultiVarMonomial<T>::lessLexicographically; // Function pointer
+  auto less = &rsMultiVarMonomial<T>::lessLexic; // Function pointer
   size_t i = 0;
   while(i < terms.size() && less(terms[i], newTerm))
     i++;

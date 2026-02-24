@@ -15260,27 +15260,6 @@ bool testIntStringCompare()
   //   least once, better multiple times.
 }
 
-/*
-template<class T>
-int compLexic(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs)
-{
-  rsAssert(lhs.getNumVariables() == rhs.getNumVariables(), "lhs and rhs are incompatible");
-  for(size_t i = 0; i < lhs.getNumVariables(); i++)
-  {
-    int d = rhs.getPower(i) - lhs.getPower(i);
-    if(d < 0)
-      return -1;
-    if(d > 0)
-      return +1;
-  }
-  return 0;
-}
-*/
-// Needs tests.
-// Maybe move this as static member function into class rsMultiVarMonomial and implement 
-// lessLexicographically() in terms of it.
-
-
 /** Unit test function for the class rsMultiVarMonomial. */
 bool testMultiVarMonomial()
 {
@@ -15290,14 +15269,12 @@ bool testMultiVarMonomial()
   using VecI = std::vector<int>;
   using Mono = rsMultiVarMonomial<Num>;
 
-
+  // Make sure that our prototype reference implementations do actually produce correct results:
   ok &= testIntStringCompare();
 
-  auto lessLex = &rsMultiVarMonomial<Num>::lessLexicographically; 
-
+  // Shorthands for lexicographical comparison functions:
+  auto lessLex = &rsMultiVarMonomial<Num>::lessLexic; 
   auto compLex = &rsMultiVarMonomial<Num>::compLexic; 
-
-
 
   // Helper function that verifies that for the given two monomial terms t1,t2, the comparison via
   // naive conversion to IntString with subsequent strcmp-like lexicographic comparison produces 
@@ -15317,45 +15294,39 @@ bool testMultiVarMonomial()
     rt = compLex(t1, t2);
     ll = lessLex(t1, t2);
     ok &= rt == rs;
-    //// ToDo: Verify. It may be the other way around:
-    //if(rs < 0)
-    //  ok &= ll == true;
-    //else
-    //  ok &= ll == false;
+    if(rs < 0)
+      ok &= ll == true;
+    else
+      ok &= ll == false;
 
     rs = rsIntStringCompare(s2, s1);
     rt = compLex(t2, t1);
+    ll = lessLex(t2, t1);
     ok &= rt == rs;
-    // ToDo: Add the test with ll as above.
+    if(rs < 0)
+      ok &= ll == true;
+    else
+      ok &= ll == false;
 
     return ok;
   };
 
-
+  // Test a couple of cases of lexicogrpahical complarisons:
   Mono t1, t2;
   t1.setup( 5.f, VecI({ 2,3,1 }));   // t1 =  5 * x^2 * y^3 * z^1
   t2.setup(-2.f, VecI({ 3,1,2 }));   // t2 = -2 * x^3 * y^1 * z^2
+  ok &= testCompare(t1, t2);         // xxxyzz < xxyyyz lexicographically, so t2 < t1
+  // ...TBC...
 
-  ok &= testCompare(t1, t2);
-
-  //ok &=  lessLex(t2, t1);
-  //ok &= !lessLex(t1, t2);            // FAILS!
 
   return ok;
 
   // ToDo:
-  // 
-  // - Test the rsIntStringCompare() function with manually created integer strings. Test also 
-  //   cases that will not occurr in the context of multivariate monomial terms such as when the 
-  //   two int-strings are of different length. Maybe that should be factored out into a separate
-  //   function.
-  //
-  // - Figure out why lessLex returns true in both cases. It would mean that we have t1 < t2
-  //   and t2 < t1 which is not how an order relation should behave. It is allowed for both cases
-  //   to be false at the same time (when t1 == t2) but it is not allowed for both cases to be true
-  //   at the same time. Then fix it!
   //
   // - Create more test cases.
+  //
+  // - Maybe implement different orders like reverse lexicograpphic, graded (reverse) lex. , etc.
+  //   See book IVA. It says, different orderings are useful in different situations.
 }
 
 void testMultiVarPolynomial()

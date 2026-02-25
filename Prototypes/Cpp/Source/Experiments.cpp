@@ -15417,6 +15417,13 @@ void testMultiVarPolynomial()
   // 
   // - Verify that the lexicographic order makes most sense. If not, maybe use a different
   //   canonical order
+  //
+  // - IVA has an interesting formula for univariate polynomials on page 47. Let p_r be the reduced
+  //   version of a polynomial p(x) where any multiple zeros have been removed such that p_r has 
+  //   only simple zeros, i.e. p_r is square-free. We can compute p_r as p_r = p / gcd(p,p') where
+  //   p' is the derivative of p. Maybe implement this formula somewhere in some function
+  //   reduceMultipleRoots() or makeSquareFree() or makeRootsSimple() or something like that. This 
+  //   applies to class rsPolynomial
 }
 
 

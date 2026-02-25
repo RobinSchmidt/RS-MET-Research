@@ -837,3 +837,10 @@ bool rsMultiVarPolynomial<T, TTol>::_hasNegativePowers() const
 //   use of std::vector for the coefficient- or term arrays etc.) but I'm not sure how practical 
 //   that is. Maybe using std::vector makes more sense for some things, especially when we need to
 //   truncate a coefficient vector because some coeffs are getting zeroed out in an operation.
+//
+// - Candidates for factoring out:
+// 
+//   - Trivial: _hasNegativePowers, _hasZeroCoeffs, _isCanonical, _removeTermsWithZeroCoeff, ...
+// 
+//   - Harder: _areTermsStrictlySorted, _findIndexForTerm, _canonicalize, addTerm, add, ...
+//  

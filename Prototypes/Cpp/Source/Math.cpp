@@ -263,10 +263,11 @@ public:
     powers = newPowers;
   }
 
+  void setCoeff(const T& newCoeff) { coeff = newCoeff; }
 
   void shiftCoeff(const T& amount) { coeff += amount; }
 
-  // ToDo: setCoeff(), setPowers(), negate(), ... see rsMonomial and implement analoguous functions 
+  // ToDo: setPowers(), negate(), ... see rsMonomial and implement analoguous functions 
   // here.
 
 
@@ -486,7 +487,12 @@ public:
   }
   // Needs test
 
-
+  /** Returns the coefficient of the term with given index. */
+  const T& getCoeff(int termIndex) const 
+  { 
+    checkTermIndex(termIndex);
+    return terms[termIndex].getCoeff(); 
+  }
 
     
   bool isValidTermIndex(int i) const { return i >= 0 && i < getNumTerms(); }
@@ -539,6 +545,16 @@ public:
     checkTermIndex(index); 
     terms[index].setup(coeff, powers); 
   }
+  // Needs tests!
+
+
+  void _setTerm(int index, const rsMultiVarMonomial<T>& newTerm) 
+  { 
+    checkTermIndex(index); 
+    terms[index] = newTerm;
+  }
+  // Needs tests!
+
 
   /** Directly sets the coefficient of the term with given index. It may destroy the canonical
   representation by setting a coeff to zero. */
@@ -547,12 +563,12 @@ public:
     checkTermIndex(index); 
     terms[index].setCoeff(newCoeff); 
   }
-  // Maybe rename "index" to "termIndex"
+  // Maybe rename "index" to "termIndex", pass newCoeff by const ref
 
   /** Shifts the coefficient with the given index by the given amount, i.e. adds the given amount 
   to the coeff. It may decanonicalize the representation by leading to a zero coeff. */
   void _shiftCoeff(int index, T amount) { _setCoeff(index, amount + getCoeff(index)); }
-
+  // ToDo: Pass amount by const ref
 
   /** Finds the index in our terms array where the term at that index has the same powers as the
   given "term". If no such term is found, it will return an invalid index, i.e. one that is above
@@ -656,9 +672,27 @@ void rsMultiVarPolynomial<T, TTol>::_canonicalize()
 
   // Combine multiple terms with equal power/exponent into single terms: 
   int numTerms = getNumTerms();
+  //int p = getPower(0);            // Original
   TermPtr t = _getTermPtr(0);       // Current term
   int r = 1;                        // Read index
   int w = 0;                        // Write index
+  while(r < numTerms) 
+  {
+    //if(getPower(r) == p)                 // Original from rsSparsePolynomial
+    if( t->hasSamePowersAs(getTerm(r)) )   // Adaptation. Verify!
+      _shiftCoeff(w, getCoeff(r));
+    else 
+    {
+      w++;
+      //_setTerm(w, getCoeff(r), getPower(r));
+      //p = getPower(r);
+
+      _setTerm(w, getTerm(r));
+      t = _getTermPtr(r);
+    }
+    r++;
+  }
+  _setNumTerms(w+1);                // Possibly shorten the terms array
 
   // ...TBC...
 
@@ -767,4 +801,17 @@ bool rsMultiVarPolynomial<T, TTol>::_hasNegativePowers() const
 //   about factoring out a common baseclass or maybe some free function templates that can be used
 //   by both classes. Maybe the template parameter should be the kind of term, i.e. 
 //   rsMultiVarMonomial here and rsMonomial for rsSparsePolynomial. Maybe we'll need a bit of duck
-//   typing to make it work.
+//   typing to make it work. 
+// 
+// - Maybe we should write a class rsPolynomialHelpers into which we factor out various algorithms 
+//   that are used within implementations of polynomial classes but that operate on more basic 
+//   data structures like C-arrays and std::vectors. Some of the low-level static functions of 
+//   class rsPolynomial and also perhaps of class rsRationalFunction could be factored out into 
+//   such a "...Helpers" class. There we could also the code that is common between 
+//   rsSparsePolynomial and rsMultiVarPolynomial. Maybe root-finders could also be placed there. 
+//   or maybe they should go into a separate class rsPolynomialRootFinder. The key is that all 
+//   these helper classes should be independent of (decoupled from) our actual polynomial classes
+//   because they only operate on C/C++ primitives such as C-style arrays and (maybe) std::vectors,
+//   if needed. Peferably, we would only use C-style arrays in its API because that would make it 
+//   most flexible in the ways it could be used but I'm not sure how practical that is. Maybe using
+//   std::vector makes more sense for some things.

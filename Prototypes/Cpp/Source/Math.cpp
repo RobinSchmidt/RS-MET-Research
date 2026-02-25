@@ -656,8 +656,6 @@ void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm
 template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::_canonicalize()
 {
-  //rsMarkAsStub();
-
   // In the empty case, we have nothing to do and we really *need* to return early in order to not 
   // get an access violation in the code below (in the  int p = getPower(0);  line):
   if(terms.empty())
@@ -693,13 +691,27 @@ void rsMultiVarPolynomial<T, TTol>::_canonicalize()
     r++;
   }
   _setNumTerms(w+1);                // Possibly shorten the terms array
+  // This algorithm works only when the terms are sorted by exponent so it doesn't really make 
+  // sense to factor it out into a function in its own right. Doing so could invite calling it on 
+  // unsorted term arrays in which case we would have a bug.
 
-  // ...TBC...
+  // Remove terms with coefficient zero (up to roundoff tolerance):
+  _removeTermsWithZeroCoeff();
+
+  // Check postcondition:
+  rsAssert(_isCanonical(), "Canonicalization failed");
+  // If this triggers, there's a bug in the canonicalization code above and/or in the 
+  // implementation of _isCanonical().
 
 
   // ToDo:
   //
-  // - Model the implementation after rsSparsePolynomial::_canonicalize(). 
+  // - The implementation duplicates a lot of code from rsSparsePolynomial::_canonicalize(). Try to
+  //   factor out common code into a free function (maybe static member function fo some class 
+  //   rsPolynomialHelpers). But they are not exactly the same. There are some adaptation that had 
+  //   to be done here. This here is the more general case so if we want to unify both functions,
+  //   we'll probably have to do it more similar to the way it's written here rather than in
+  //   rsSparsePolynomial
 }
 
 template<class T, class TTol>

@@ -15343,7 +15343,7 @@ void testMultiVarPolynomial()
   using Poly = rsMultiVarPolynomial<Num>;
 
   Mono t;                          // A single term in our polynomial
-  Poly p(3);                       // A polynomial in 3 variables, e.g. p(x,y,z) or p(x1,x2,x3)
+  Poly p(3);                       // A polynomial in 3 variables, e.g. p(x,y,z) or p(x0,x1,x2)
   ok &= p._isCanonical();          // A freshly created empty polynomial is canonical
   t.setup(5.f, VecI({ 2,3,1 }));   // t = 5 * x^2 * y^3 * z^1
   p.addTerm(t);
@@ -15352,11 +15352,17 @@ void testMultiVarPolynomial()
   Num res = p(arg);                // res = 5 * 2^2 * -3^3 * -0.25^1 = 5 * 4 * -27 * -0.25 = 135
   ok &= res == 135.f;              // Check that result is correct for the given argument
   t.setup(-2.f, VecI({ 3,1,2 }));  // t = -2 * x^3 * y^1 * z^2
-  p.addTerm(t);
+  p.addTerm(t);                    // t({2,-3,-0.25}) = -2 * 2^3 * -3^1 * -0.25^2 = 3
   ok &= p._isCanonical();
+  res = p(arg); 
+  ok &= res == 138.f;
 
   // Temporary:
   p._canonicalize();
+  // This currently only checks, if _canonicalize() compiles. To check if it really works the way
+  // it should, we need a way to produce polynomials in non-canonical representations and then call
+  // that function on those and then verify that they are in canonical representation after the 
+  // call.
 
 
   rsAssert(ok);
@@ -15365,7 +15371,32 @@ void testMultiVarPolynomial()
   // 
   // - Add more terms. Make sure that the terms are always added in the correct position. Also 
   //   cover the case where adding a term just modifies an existing coeff and also cover the case
-  //   where this modification turns the coeff to zero such that the term gets removed.
+  //   where this modification turns the coeff to zero such that the term gets removed. Try adding
+  //   terms with the syntax p.addTerm(1.5,{4,2,3}); that takes a coefficient and an initializer
+  //   list (or std::vector) of exponents. I think, that's the most ergonomic syntax for adding 
+  //   terms.
+  // 
+  // - Implement arithmetic operators +,-,*.
+  // 
+  // - Create a second polynomial q. Then create a polynomial r as: p + q, p - q, p * q and 
+  //   evaluate r at a couple of arguments and make sure that the results match p(arg) + q(arg),
+  //   p(arg) - q(arg), p(arg) * q(arg).
+  // 
+  // - Maybe use x and y as variable names for inputs and outputs (rather that arg and res). But 
+  //   then we need to rewrite the comments by perhaps replacing x,y,z with x0,x1,x2 there because
+  //   it may be confusing to use a conflicting notation in the comments. And that would uglify the
+  //   comments. Using x,y,z as argument names for trivariate polynomials in convenient and common 
+  //   in the literature, so I'm not really sure about that. Maybe use v for the input indicating 
+  //   that the input is a vector and use f for the output indicating that it is a (scalar) 
+  //   function value.
+  // 
+  // - Implement and test polynomial division with remainder. Then implement div and mod operators
+  //   as / and %.
+  // 
+  // - Implement the greatest common divisor (GCD) algorithm, i.e. the Euclidean algorithm. Maybe
+  //   also implement the extended Euclidean algorithm.
+  // 
+  // - Maybe provide functions to produce the elementary symmetric polynomials.
   // 
   // - Maybe use Poly = rsMultiVarPolynomial<Num, Num>;  when Num = float or double. In this case
   //   the default rsEmptyType for the tolerance template parameter is not appropriate. Maybe 

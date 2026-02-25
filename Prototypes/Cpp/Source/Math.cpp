@@ -460,7 +460,11 @@ public:
   /** Adds the given monomial to the polynomial. */
   void addTerm(const rsMultiVarMonomial<T>& newTerm);
 
-  // ToDo: setRoundoffTolerance(), subtractTerm(), scale(), negate(), ...
+  //void addTerm(const T& newCoeff, const std::vector<int>& newPowers);
+  // Implement this so we can add terms via the syntax  p.addTerm(1.5,{4,2,3});  to add a term
+  // like 1.5 * x^4 * y^2 * z^3
+
+  // ToDo: setRoundoffTolerance(), subtractTerm(), scale(), negate(), 
   // But in rsSparsePolynomial, we implement scaling as a low-level method _scaleCoeffs() because
   // the scaler could be zero. Maybe a high-level scale() method without underscore should allow
   // only nonzero scalers. We could assert that the scaler is zero and then call _scaleCoeffs().
@@ -812,18 +816,24 @@ bool rsMultiVarPolynomial<T, TTol>::_hasNegativePowers() const
 // - We actually get a lot of code duplication with rsSparsePolynomial in this class. Maybe think 
 //   about factoring out a common baseclass or maybe some free function templates that can be used
 //   by both classes. Maybe the template parameter should be the kind of term, i.e. 
-//   rsMultiVarMonomial here and rsMonomial for rsSparsePolynomial. Maybe we'll need a bit of duck
-//   typing to make it work. 
+//   rsMultiVarMonomial here and rsMonomial for rsSparsePolynomial and the functions should operate
+//   on std::vectors of terms or maybe on C-style arrays of such terms. Maybe we'll need a bit of 
+//   duck typing to make it work, i.e. rsMonomial and rsMultiVarMonomial should provide equally 
+//   named member functions with the same semantics just with different data types for the powers, 
+//   namely int (or const int&) in the case of rsMonomial and std::vector<int>& in the case of
+//   rsMultiVarMonomial.
 // 
 // - Maybe we should write a class rsPolynomialHelpers into which we factor out various algorithms 
 //   that are used within implementations of polynomial classes but that operate on more basic 
 //   data structures like C-arrays and std::vectors. Some of the low-level static functions of 
 //   class rsPolynomial and also perhaps of class rsRationalFunction could be factored out into 
-//   such a "...Helpers" class. There we could also the code that is common between 
+//   such a "...Helpers" class as well. There we could also put the code that is common between 
 //   rsSparsePolynomial and rsMultiVarPolynomial. Maybe root-finders could also be placed there. 
-//   or maybe they should go into a separate class rsPolynomialRootFinder. The key is that all 
-//   these helper classes should be independent of (decoupled from) our actual polynomial classes
-//   because they only operate on C/C++ primitives such as C-style arrays and (maybe) std::vectors,
-//   if needed. Peferably, we would only use C-style arrays in its API because that would make it 
-//   most flexible in the ways it could be used but I'm not sure how practical that is. Maybe using
-//   std::vector makes more sense for some things.
+//   Or maybe they should go into a separate class rsPolynomialRootFinder. The key is that all 
+//   these helper classesor functions should be independent of (decoupled from) our actual 
+//   polynomial classes because they only operate on C/C++ primitives such as C-style arrays and 
+//   (maybe) std::vectors, if needed. Peferably, we would only use C-style arrays in its API 
+//   because that would make it most flexible in the ways it could be used (it wouldn't dictate 
+//   use of std::vector for the coefficient- or term arrays etc.) but I'm not sure how practical 
+//   that is. Maybe using std::vector makes more sense for some things, especially when we need to
+//   truncate a coefficient vector because some coeffs are getting zeroed out in an operation.

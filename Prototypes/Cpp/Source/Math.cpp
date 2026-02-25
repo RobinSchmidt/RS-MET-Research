@@ -363,6 +363,15 @@ public:
   // Maybe move implementation out of the class.
   // Needs tests.
 
+  /** Multiplies two multivariate polynomials. */
+  rsMultiVarMonomial<T> operator*(const rsMultiVarMonomial<T>& q) const 
+  { 
+    rsMultiVarMonomial<T> r;
+    r.coeff  = coeff  * q.coeff;
+    r.powers = powers + q.powers;
+    return r;
+  }
+
 
 
 protected:
@@ -524,9 +533,13 @@ public:
     return y;
   }
 
-  /** Adds two polynomials. */
+  /** Adds two multivariate polynomials. */
   MultiPoly operator+(const MultiPoly& q) const 
   { MultiPoly r; add(*this, q, &r); return r; }
+
+  /** Multiplies two multivariate polynomials. */
+  MultiPoly operator*(const MultiPoly& q) const 
+  { MultiPoly r; multiply(*this, q, &r); return r; }
 
 
   //-----------------------------------------------------------------------------------------------
@@ -535,6 +548,12 @@ public:
   /** Computes the sum r = p + q of the polynomials p and q and stores the result in r. */
   static void add(const MultiPoly& p, const MultiPoly& q, MultiPoly* r);
   // ToDo: document whether or not it can be used in place.
+
+  /** Multiplies polynomials p and q and stores the result in r. It may be used in place, i.e. the
+  result polynomial r can point to the memory location of the arguments p and/or q. */
+  static void multiply(const MultiPoly& p, const MultiPoly& q, MultiPoly* r);
+
+
 
   /** Turns the representation of the multivariate polynomial into a canonical one. A canonical 
   representation has the following properties: (1) The terms in our array are sorted 
@@ -683,8 +702,8 @@ void rsMultiVarPolynomial<T, TTol>::add(
   int Nq = q.getNumTerms();      // Number of terms in right operand q
   int Nr = Np + Nq;              // Number of terms in result r (before canonicalization)
 
-  r->tol = rsMax(p.tol, q.tol);
   r->init(p.numVars);
+  r->tol = rsMax(p.tol, q.tol);
   r->_setNumTerms(Nr);
   for(int i = 0; i < Np; i++)
     r->_setTerm(i, p.getTerm(i));
@@ -697,7 +716,43 @@ void rsMultiVarPolynomial<T, TTol>::add(
   // _canonicalize() call take care of combining terms with like powers and clean up terms whose
   // coeffs cancel to zero.
   //
-  // ToDo: Maybe use r->initFrom(p) in anticipation of factoring out the add() function.
+  // ToDo: Maybe use r->initFrom(p) in anticipation of factoring out the add() function. In 
+  // rsSparsePolynomial, we have separate implementations for add(), subtract(), weightedSum() and
+  // they differ only marginally. I think, doing the same here would really be too much code 
+  // duplication. Maybe just implement weightedSum() and treat add() and subtract() as special 
+  // cases of that. I'm not sure about that, though.
+}
+// Needs more tests
+
+template<class T, class TTol>
+void rsMultiVarPolynomial<T, TTol>::multiply(
+  const MultiPoly& p, const MultiPoly& q, MultiPoly* r)
+{
+  rsAssert(p._isCanonical());
+  rsAssert(q._isCanonical());
+
+  int Np = p.getNumTerms();
+  int Nq = q.getNumTerms();
+  int Nr = Np * Nq;
+
+  r->init(p.numVars);
+  r->tol = rsMax(p.tol, q.tol);
+  r->_setNumTerms(Nr);
+
+  // Running through the loops backwards allows us to use it in place, i.e. the polynomial r can
+  // point to the location of p and/or q:
+  for(int i = Np-1; i >= 0; i--)
+    for(int j = Nq-1; j >= 0; j--)
+    {
+      r->_setTerm(i*Nq+j, p.getTerm(i) * q.getTerm(j));
+      // New, adapted.
+
+      //r->_setTerm(i*Nq+j, p.getCoeff(i) * q.getCoeff(j), p.getPower(i) + q.getPower(j)); 
+      // Original from rsSparsePolynomial 
+    }
+
+  // We may have to re-canonicalize to combine terms with equal exponent:
+  r->_canonicalize();
 }
 // Needs tests
 
@@ -718,21 +773,16 @@ void rsMultiVarPolynomial<T, TTol>::_canonicalize()
 
   // Combine multiple terms with equal power/exponent into single terms: 
   int numTerms = getNumTerms();
-  //int p = getPower(0);            // Original
   TermPtr t = _getTermPtr(0);       // Current term
   int r = 1;                        // Read index
   int w = 0;                        // Write index
   while(r < numTerms) 
   {
-    //if(getPower(r) == p)                 // Original from rsSparsePolynomial
-    if( t->hasSamePowersAs(getTerm(r)) )   // Adaptation. Verify!
+    if( t->hasSamePowersAs(getTerm(r)) )
       _shiftCoeff(w, getCoeff(r));
     else 
     {
       w++;
-      //_setTerm(w, getCoeff(r), getPower(r));
-      //p = getPower(r);
-
       _setTerm(w, getTerm(r));
       t = _getTermPtr(r);
     }

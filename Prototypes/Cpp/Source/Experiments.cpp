@@ -15363,13 +15363,14 @@ void testMultiVarPolynomial()
   ok &= res == -9.f;
 
   // Test arithmetic operators:
-  Poly r = p + q;
-  res = r(arg); 
-  ok &= res == 129.f;
+  Poly r; 
+  r = p + q; ok &= r(arg) == p(arg) + q(arg); 
+  r = p * q; ok &= r(arg) == p(arg) * q(arg);
+  // Maybe rename arg to v (for vector)
 
 
   // Temporary:
-  p._canonicalize();
+  //p._canonicalize();
   // This currently only checks, if _canonicalize() compiles. To check if it really works the way
   // it should, we need a way to produce polynomials in non-canonical representations and then call
   // that function on those and then verify that they are in canonical representation after the 
@@ -15387,7 +15388,7 @@ void testMultiVarPolynomial()
   //   list (or std::vector) of exponents. I think, that's the most ergonomic syntax for adding 
   //   terms.
   // 
-  // - Implement arithmetic operators +,-,*.
+  // - Implement arithmetic operators +,-,*. Test them in a loop with random polynomials.
   // 
   // - Create a second polynomial q. Then create a polynomial r as: p + q, p - q, p * q and 
   //   evaluate r at a couple of arguments and make sure that the results match p(arg) + q(arg),

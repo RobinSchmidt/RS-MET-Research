@@ -475,10 +475,8 @@ public:
   int getNumTerms() const { return (int) terms.size(); }
 
   
-  const std::vector<int>& getPowers(int termIndex) 
-  {
-    return getTerm(termIndex).getPowers();
-  }
+  //const std::vector<int>& getPowers(int termIndex) 
+  //{ return getTerm(termIndex).getPowers(); }
   // Needs test
 
   const rsMultiVarMonomial<T>& getTerm(int termIndex) const
@@ -487,6 +485,8 @@ public:
     return terms[termIndex];
   }
   // Needs test
+
+
 
     
   bool isValidTermIndex(int i) const { return i >= 0 && i < getNumTerms(); }
@@ -520,6 +520,39 @@ public:
   coefficient zero (up to the roundoff tolerance). */
   void _canonicalize();
 
+  /** Removes all the terms that have a coefficient of zero (up to the roundofff tolerance). */
+  void _removeTermsWithZeroCoeff();
+
+  /** Sets the number of terms. If the new number is less than the current number, it will just 
+  cut off terms from the end. If the new number is greater than the current number, it will just
+  extend our vector of terms and the added terms at the end are uninitialized, i.e. may contain 
+  garbage. This function should only be used if you intend to set up the new terms via e.g. 
+  _setTerm() after calling _setNumTerms(). So, it's a function that needs a lot of care to be used
+  properly. */
+  void _setNumTerms(int newNumTerms) { terms.resize(newNumTerms); }
+
+  /** Directly sets the coefficient and powers of the term with given index. This may 
+  decanonicalize the representation in all sorts of ways: by destroying the order of terms, by 
+  destroying the "powers appear at most once" property, by setting a coeff to zero. */
+  void _setTerm(int index, T coeff, const std::vector<int>& powers) 
+  { 
+    checkTermIndex(index); 
+    terms[index].setup(coeff, powers); 
+  }
+
+  /** Directly sets the coefficient of the term with given index. It may destroy the canonical
+  representation by setting a coeff to zero. */
+  void _setCoeff(int index, T newCoeff)
+  { 
+    checkTermIndex(index); 
+    terms[index].setCoeff(newCoeff); 
+  }
+  // Maybe rename "index" to "termIndex"
+
+  /** Shifts the coefficient with the given index by the given amount, i.e. adds the given amount 
+  to the coeff. It may decanonicalize the representation by leading to a zero coeff. */
+  void _shiftCoeff(int index, T amount) { _setCoeff(index, amount + getCoeff(index)); }
+
 
   /** Finds the index in our terms array where the term at that index has the same powers as the
   given "term". If no such term is found, it will return an invalid index, i.e. one that is above
@@ -529,6 +562,16 @@ public:
   // The implementation would be more complicated and at the call site, we would potentially also 
   // have to change the checks. But using an inte with -1 for not found would be consistent with
   // conventions used in the RAPT library.
+
+
+
+  rsMultiVarMonomial<T>* _getTermPtr(int i)
+  {
+    checkTermIndex(i);
+    return &(terms[i]);
+  }
+  // Maybe return a const pointer
+
 
   /** Checks if this polynomial is in canonical representation. A representation is canonical if it
   has no zero coefficients (up to the roundoff tolerance) and if the terms are lexicographically
@@ -597,12 +640,48 @@ void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm
 template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::_canonicalize()
 {
-  rsMarkAsStub();
+  //rsMarkAsStub();
+
+  // In the empty case, we have nothing to do and we really *need* to return early in order to not 
+  // get an access violation in the code below (in the  int p = getPower(0);  line):
+  if(terms.empty())
+    return;
+
+  using Monom   = rsMultiVarMonomial<T>;
+  using TermPtr = const Monom*;
+
+  // Sort the terms by power/exponent:
+  std::sort(terms.begin(), terms.end(), 
+            [](const Monom& lhs, const Monom& rhs){ return Monom::lessLexic(lhs, rhs); });
+
+  // Combine multiple terms with equal power/exponent into single terms: 
+  int numTerms = getNumTerms();
+  TermPtr t = _getTermPtr(0);       // Current term
+  int r = 1;                        // Read index
+  int w = 0;                        // Write index
+
+  // ...TBC...
+
 
   // ToDo:
   //
   // - Model the implementation after rsSparsePolynomial::_canonicalize(). 
 }
+
+template<class T, class TTol>
+void rsMultiVarPolynomial<T, TTol>::_removeTermsWithZeroCoeff()
+{
+  rsRemoveIf
+  (terms, 
+    [this](const rsMultiVarMonomial<T>& term)
+    { 
+      return rsIsNegligible(term.getCoeff(), tol);
+    }
+  );
+
+  // Is slightly modified copy from rsSparsePolynomial
+}
+
 
 template<class T, class TTol>
 size_t rsMultiVarPolynomial<T, TTol>::_findIndexForTerm(const rsMultiVarMonomial<T>& t)
@@ -627,6 +706,8 @@ bool rsMultiVarPolynomial<T, TTol>::_isCanonical() const
   ok &= !_hasZeroCoeffs();           // Any zero coeffs (up to roundoff) are cleaned up.
   ok &= !_hasNegativePowers();       // No negative powers allowed. May be relaxed later if needed.
   return ok;
+
+  // Is verbatim copy from rsSparsePolynomial
 }
 
 

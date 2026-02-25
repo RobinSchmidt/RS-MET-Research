@@ -15355,6 +15355,9 @@ void testMultiVarPolynomial()
   p.addTerm(t);
   ok &= p._isCanonical();
 
+  // Temporary:
+  p._canonicalize();
+
 
   rsAssert(ok);
 

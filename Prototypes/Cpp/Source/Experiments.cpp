@@ -15357,6 +15357,17 @@ void testMultiVarPolynomial()
   res = p(arg); 
   ok &= res == 138.f;
 
+  Poly q(3);
+  q.addTerm(1.5f, {1,1,0});        // 1.5 * x^1 * y^1 * z^0 = 1.5 * x * y
+  res = q(arg); 
+  ok &= res == -9.f;
+
+  // Test arithmetic operators:
+  Poly r = p + q;
+  res = r(arg); 
+  ok &= res == 129.f;
+
+
   // Temporary:
   p._canonicalize();
   // This currently only checks, if _canonicalize() compiles. To check if it really works the way

@@ -425,6 +425,9 @@ class rsMultiVarPolynomial
 public:
 
 
+  using MultiPoly = rsMultiVarPolynomial<T, TTol>;  // For convenience
+
+
   //-----------------------------------------------------------------------------------------------
   /** \name Lifetime.  */
 
@@ -460,7 +463,10 @@ public:
   /** Adds the given monomial to the polynomial. */
   void addTerm(const rsMultiVarMonomial<T>& newTerm);
 
-  //void addTerm(const T& newCoeff, const std::vector<int>& newPowers);
+  void addTerm(const T& newCoeff, const std::vector<int>& newPowers)
+  {
+    addTerm(rsMultiVarMonomial<T>(newCoeff, newPowers));
+  }
   // Implement this so we can add terms via the syntax  p.addTerm(1.5,{4,2,3});  to add a term
   // like 1.5 * x^4 * y^2 * z^3
 
@@ -518,10 +524,18 @@ public:
     return y;
   }
 
+  /** Adds two polynomials. */
+  MultiPoly operator+(const MultiPoly& q) const 
+  { MultiPoly r; add(*this, q, &r); return r; }
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Low level API.  */
     
+  /** Computes the sum r = p + q of the polynomials p and q and stores the result in r. */
+  static void add(const MultiPoly& p, const MultiPoly& q, MultiPoly* r);
+  // ToDo: document whether or not it can be used in place.
+
   /** Turns the representation of the multivariate polynomial into a canonical one. A canonical 
   representation has the following properties: (1) The terms in our array are sorted 
   lexicographically. (2) No configuration of powers appears more than once. (3) No zero 
@@ -627,6 +641,7 @@ template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm)
 {
   rsAssert(newTerm.getNumVariables() == getNumVariables(), "Term has wrong number of variables");
+  // Maybe use a function like isTermCompatible(newTerm);
 
   size_t i = _findIndexForTerm(newTerm);
 
@@ -656,6 +671,35 @@ void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm
   //   representation.
 }
 
+template<class T, class TTol>
+void rsMultiVarPolynomial<T, TTol>::add(
+  const MultiPoly& p, const MultiPoly& q, MultiPoly* r)
+{
+  rsAssert(p._isCanonical());
+  rsAssert(q._isCanonical());
+  rsAssert(p.numVars == q.numVars);
+
+  int Np = p.getNumTerms();      // Number of terms in left operand p
+  int Nq = q.getNumTerms();      // Number of terms in right operand q
+  int Nr = Np + Nq;              // Number of terms in result r (before canonicalization)
+
+  r->tol = rsMax(p.tol, q.tol);
+  r->init(p.numVars);
+  r->_setNumTerms(Nr);
+  for(int i = 0; i < Np; i++)
+    r->_setTerm(i, p.getTerm(i));
+  for(int i = 0; i < Nq; i++)
+    r->_setTerm(Np + i, q.getTerm(i));
+
+  r->_canonicalize();
+
+  // The idea here is basically to just "concatenate" the two polynomials and then let the
+  // _canonicalize() call take care of combining terms with like powers and clean up terms whose
+  // coeffs cancel to zero.
+  //
+  // ToDo: Maybe use r->initFrom(p) in anticipation of factoring out the add() function.
+}
+// Needs tests
 
 template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::_canonicalize()
@@ -843,4 +887,10 @@ bool rsMultiVarPolynomial<T, TTol>::_hasNegativePowers() const
 //   - Trivial: _hasNegativePowers, _hasZeroCoeffs, _isCanonical, _removeTermsWithZeroCoeff, ...
 // 
 //   - Harder: _areTermsStrictlySorted, _findIndexForTerm, _canonicalize, addTerm, add, ...
-//  
+// 
+//   - For implmenting add(), we perhaps need a function like areCompatible() in both classes 
+//     that for multivariate polynomilas verifies that numVars match. For univariate ones, it 
+//     should just return true because there is no way that univariate polynomials could be 
+//     incompatible. We perhaps also need a function init() in both classes that takes another
+//     polynomials as reference. For MultoPolys, it should set the numVars variable from the 
+//     passed prototype.

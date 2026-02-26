@@ -761,6 +761,18 @@ void rsMultiVarPolynomial<T, TTol>::weightedSum(
   // implementing add() and subtract() by calling the weightedSum() function with weights 1,1 and
   // 1,-1 respectively. However, from a performance perspective, that seems to be not such a good
   // idea which is why I accept this code duplication here.
+  //
+  // ToDo: In anticipation of factoring out the implementation here and the one in 
+  // rsSparsePolynomial, we should perhaps do something like:
+  //
+  //   r->_setTerm(i,      wp * p.getTerm(i));
+  //   r->_setTerm(Np + i, wq * q.getTerm(i));
+  //
+  // Rationale: In the univariate case, the function getPowers() doesn't exist. There, it's named
+  // getPower() in singular. So, with this difference, duck-typing wouldn't work out. We could 
+  // provide a getPower() function here too and argue that the "power" is a single vector, but 
+  // that's somewhat awkward. That would require us to implement "scalar * monomial" operators for
+  // reMonomial and rsMultiVarMonomial. I think, that would be the cleanest solution.
 }
 
 

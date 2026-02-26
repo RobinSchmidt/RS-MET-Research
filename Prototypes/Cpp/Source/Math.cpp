@@ -503,11 +503,18 @@ public:
   }
   // Needs test
 
-  /** Returns the coefficient of the term with given index. */
+  /** Returns the coefficient of the term with given "termIndex". */
   const T& getCoeff(int termIndex) const 
   { 
     checkTermIndex(termIndex);
-    return terms[termIndex].getCoeff(); 
+    return terms[termIndex].getCoeff();
+  }
+
+  /** Returns a const reference to the vector of powers at the given "termIndex". */
+  const std::vector<int>& getPowers(int termIndex) const 
+  {
+    checkTermIndex(termIndex);
+    return terms[termIndex].getPowers();
   }
 
     
@@ -544,7 +551,12 @@ public:
     
   /** Computes the sum r = p + q of the polynomials p and q and stores the result in r. */
   static void add(const MultiPoly& p, const MultiPoly& q, MultiPoly* r);
-  // ToDo: document whether or not it can be used in place.
+  // ToDo: Document whether or not it can be used in place.
+
+  /** Computes the weighted sum r = wp * p + wq * q of the polynomials p and q and stores the 
+  result in r. */
+  static void weightedSum(
+    const MultiPoly& p, const T& wp, const MultiPoly& q, const T& wq, MultiPoly* r);
 
   /** Multiplies polynomials p and q and stores the result in r. It may be used in place, i.e. the
   result polynomial r can point to the memory location of the arguments p and/or q. */
@@ -720,6 +732,37 @@ void rsMultiVarPolynomial<T, TTol>::add(
   // cases of that. I'm not sure about that, though.
 }
 // Needs more tests
+
+
+template<class T, class TTol>
+void rsMultiVarPolynomial<T, TTol>::weightedSum(
+    const MultiPoly& p, const T& wp, const MultiPoly& q, const T& wq, MultiPoly* r)
+{
+  rsAssert(p._isCanonical());
+  rsAssert(q._isCanonical());
+  rsAssert(p.numVars == q.numVars);
+
+  int Np = p.getNumTerms();
+  int Nq = q.getNumTerms();
+  int Nr = Np + Nq;
+
+  r->init(p.numVars);
+  r->tol = rsMax(p.tol, q.tol);
+  r->_setNumTerms(Nr);
+  for(int i = 0; i < Np; i++)
+    r->_setTerm(i, wp * p.getCoeff(i), p.getPowers(i));
+  for(int i = 0; i < Nq; i++)
+    r->_setTerm(Np + i, wq * q.getCoeff(i), q.getPowers(i));
+
+  r->_canonicalize();
+
+  // From a "clean code" perspective, it may be cleaner to avoid the code duplication between 
+  // add(), subtract() and weightedSum() by just keeping the implementation of weightedSum() and
+  // implementing add() and subtract() by calling the weightedSum() function with weights 1,1 and
+  // 1,-1 respectively. However, from a performance perspective, that seems to be not such a good
+  // idea which is why I accept this code duplication here.
+}
+
 
 template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::multiply(

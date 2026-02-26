@@ -15368,6 +15368,11 @@ void testMultiVarPolynomial()
   r = p * q; ok &= r(arg) == p(arg) * q(arg);
   // Maybe rename arg to v (for vector)
 
+  Poly::weightedSum(p, 5.f, q, -3.f, &r);
+  ok &= r(arg) == 5.f * p(arg) - 3.f * q(arg);
+  //res = r(arg);  // 717
+
+
 
   // Temporary:
   //p._canonicalize();

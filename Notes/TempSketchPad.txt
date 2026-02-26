@@ -347,6 +347,12 @@ equation) with the very simple equation p2 = 1/2. . When we slide the slider of 
 "bar" with lengths and use the percentage of overlap with the middle length L2, it will always be 
 1/2 because the length of the slider is 2 length units.
  
+ 
+----------------------------------------------------------------------------------------------------
+De-Dithering or De-Quantization by Polynomial Regression
+
+ 
+ 
 ---------------------------------------------------------------------------------------------------- 
  
  

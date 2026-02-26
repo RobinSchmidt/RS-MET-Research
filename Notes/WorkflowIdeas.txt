@@ -1,4 +1,4 @@
-Using AI assistence:
+Using AI assistance:
 
 - Describe an algorithm in plain English in a very detailed way. Mayb create a .txt or .md document
   for that purpose. Direct the AI to the textual description and aks it to translate that it into 
@@ -10,6 +10,12 @@ Using AI assistence:
 
 - Implement a algorithm or perform a computation for a small example problem and ask the AI to 
   extrapolate to the general case and generate a pseudo-code representation and actual code for it.
+  
+- Maybe when creating a prototype implementation of a particular idea, do that in a separate file
+  or pair of .h/.cpp files so the AI can be pointed to these files and consume them with being 
+  distract by other stuff. Currently, I have a lot of prototype implementations in a single file.
+  That's fine for me working on them but for effective AI assistance, it may be a distraction.
+  
   
   
 ToDo:

@@ -15366,7 +15366,7 @@ void testMultiVarPolynomial()
   Poly r; 
   r = p + q; ok &= r(arg) == p(arg) + q(arg); 
   r = p * q; ok &= r(arg) == p(arg) * q(arg);
-  //r = p - q; ok &= r(arg) == p(arg) - q(arg);
+  r = p - q; ok &= r(arg) == p(arg) - q(arg);
   // Maybe rename arg to v (for vector)
 
   Poly::weightedSum(p, 5.f, q, -3.f, &r);

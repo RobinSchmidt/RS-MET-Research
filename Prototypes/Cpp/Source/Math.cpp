@@ -362,6 +362,9 @@ public:
   }
   // Maybe move implementation out of the class.
 
+  /** Returns the negative of this monomial. */
+  rsMultiVarMonomial<T> operator-() const { return rsMultiVarMonomial<T>(-coeff, powers); }
+
   /** Multiplies two multivariate monomials. */
   rsMultiVarMonomial<T> operator*(const rsMultiVarMonomial<T>& q) const 
   { return rsMultiVarMonomial<T>(coeff * q.coeff, powers + q.powers); }
@@ -541,6 +544,10 @@ public:
   MultiPoly operator+(const MultiPoly& q) const 
   { MultiPoly r; add(*this, q, &r); return r; }
 
+  /** Subtracts two multivariate polynomials. */
+  MultiPoly operator-(const MultiPoly& q) const 
+  { MultiPoly r; subtract(*this, q, &r); return r; }
+
   /** Multiplies two multivariate polynomials. */
   MultiPoly operator*(const MultiPoly& q) const 
   { MultiPoly r; multiply(*this, q, &r); return r; }
@@ -552,6 +559,9 @@ public:
   /** Computes the sum r = p + q of the polynomials p and q and stores the result in r. */
   static void add(const MultiPoly& p, const MultiPoly& q, MultiPoly* r);
   // ToDo: Document whether or not it can be used in place.
+
+  /** Computes the difference r = p - q of the polynomials p and q and stores the result in r. */
+  static void subtract(const MultiPoly& p, const MultiPoly& q, MultiPoly* r);
 
   /** Computes the weighted sum r = wp * p + wq * q of the polynomials p and q and stores the 
   result in r. */
@@ -733,6 +743,28 @@ void rsMultiVarPolynomial<T, TTol>::add(
 }
 // Needs more tests
 
+template<class T, class TTol>
+void rsMultiVarPolynomial<T, TTol>::subtract(
+  const MultiPoly& p, const MultiPoly& q, MultiPoly* r)
+{
+  rsAssert(p._isCanonical());
+  rsAssert(q._isCanonical());
+  rsAssert(p.numVars == q.numVars);
+
+  int Np = p.getNumTerms();
+  int Nq = q.getNumTerms();
+  int Nr = Np + Nq;
+
+  r->init(p.numVars);
+  r->tol = rsMax(p.tol, q.tol);
+  r->_setNumTerms(Nr);
+  for(int i = 0; i < Np; i++)
+    r->_setTerm(i, p.getTerm(i));
+  for(int i = 0; i < Nq; i++)
+    r->_setTerm(Np + i, -q.getTerm(i));
+
+  r->_canonicalize();
+}
 
 template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::weightedSum(

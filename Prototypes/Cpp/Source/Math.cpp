@@ -285,7 +285,7 @@ public:
   static int compLexic(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs);
   // Note: I think even though terms with the same powers but different coeffs are considered 
   // equivalent (neither < nor >), I think, we still establish a total order because indeed either 
-  // a < b or b < a or a = b if we interpret the = not as exact equality of terms but as an 
+  // a < b or b < a or a = b _if_ we interpret the = not as exact equality of terms but as an 
   // equivalence relation on the terms that _also_ ignores the coeff, which we probably should 
   // indeed do in this context for consistency. Verify and maybe add to the documentation.
 
@@ -361,17 +361,15 @@ public:
     return TArg(coeff) * product;
   }
   // Maybe move implementation out of the class.
-  // Needs tests.
 
-  /** Multiplies two multivariate polynomials. */
+  /** Multiplies two multivariate monomials. */
   rsMultiVarMonomial<T> operator*(const rsMultiVarMonomial<T>& q) const 
-  { 
-    rsMultiVarMonomial<T> r;
-    r.coeff  = coeff  * q.coeff;
-    r.powers = powers + q.powers;
-    return r;
-  }
+  { return rsMultiVarMonomial<T>(coeff * q.coeff, powers + q.powers); }
 
+  // ToDo: Maybe implement division as:
+  // "return rsMultiVarMonomial<T>(coeff / q.coeff, powers - q.powers);
+  // But this may in general produce terms that have negative powers and we also may get divisions
+  // by zero.
 
 
 protected:
@@ -472,12 +470,11 @@ public:
   /** Adds the given monomial to the polynomial. */
   void addTerm(const rsMultiVarMonomial<T>& newTerm);
 
+  /** Convenience function that can be used to add terms via the syntax  p.addTerm(1.5,{4,2,3});  
+  to add a term like  1.5 * x^4 * y^2 * z^3. */
   void addTerm(const T& newCoeff, const std::vector<int>& newPowers)
-  {
-    addTerm(rsMultiVarMonomial<T>(newCoeff, newPowers));
-  }
-  // Implement this so we can add terms via the syntax  p.addTerm(1.5,{4,2,3});  to add a term
-  // like 1.5 * x^4 * y^2 * z^3
+  { addTerm(rsMultiVarMonomial<T>(newCoeff, newPowers)); }
+
 
   // ToDo: setRoundoffTolerance(), subtractTerm(), scale(), negate(), 
   // But in rsSparsePolynomial, we implement scaling as a low-level method _scaleCoeffs() because

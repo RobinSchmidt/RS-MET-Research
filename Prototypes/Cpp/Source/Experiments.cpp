@@ -15348,29 +15348,28 @@ void testMultiVarPolynomial()
   t.setup(5.f, VecI({ 2,3,1 }));   // t = 5 * x^2 * y^3 * z^1
   p.addTerm(t);
   ok &= p._isCanonical();          // Adding terms should maintain the canonical representation.
-  Vec arg({2,-3,-0.25});           // arg = (x,y,z) = (2,-3,-0.25)
-  Num res = p(arg);                // res = 5 * 2^2 * -3^3 * -0.25^1 = 5 * 4 * -27 * -0.25 = 135
-  ok &= res == 135.f;              // Check that result is correct for the given argument
+  Vec v({2,-3,-0.25});             // v = (x,y,z) = (2,-3,-0.25)
+  Num f = p(v);                    // f = 5 * 2^2 * -3^3 * -0.25^1 = 5 * 4 * -27 * -0.25 = 135
+  ok &= f == 135.f;                // Check that result is correct for the given argument
   t.setup(-2.f, VecI({ 3,1,2 }));  // t = -2 * x^3 * y^1 * z^2
   p.addTerm(t);                    // t({2,-3,-0.25}) = -2 * 2^3 * -3^1 * -0.25^2 = 3
   ok &= p._isCanonical();
-  res = p(arg); 
-  ok &= res == 138.f;
+  f = p(v); 
+  ok &= f == 138.f;
 
   Poly q(3);
   q.addTerm(1.5f, {1,1,0});        // 1.5 * x^1 * y^1 * z^0 = 1.5 * x * y
-  res = q(arg); 
-  ok &= res == -9.f;
+  f = q(v); 
+  ok &= f == -9.f;
 
   // Test arithmetic operators:
   Poly r; 
-  r = p + q; ok &= r(arg) == p(arg) + q(arg); 
-  r = p * q; ok &= r(arg) == p(arg) * q(arg);
-  r = p - q; ok &= r(arg) == p(arg) - q(arg);
-  // Maybe rename arg to v (for vector)
+  r = p + q; ok &= r(v) == p(v) + q(v); 
+  r = p * q; ok &= r(v) == p(v) * q(v);
+  r = p - q; ok &= r(v) == p(v) - q(v);
 
   Poly::weightedSum(p, 5.f, q, -3.f, &r);
-  ok &= r(arg) == 5.f * p(arg) - 3.f * q(arg);
+  ok &= r(v) == 5.f * p(v) - 3.f * q(v);
 
 
   // Temporary:

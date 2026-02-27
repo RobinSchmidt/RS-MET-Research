@@ -15492,6 +15492,12 @@ void testMultiVarPolynomial()
   //   p' is the derivative of p. Maybe implement this formula somewhere in some function
   //   reduceMultipleRoots() or makeSquareFree() or makeRootsSimple() or something like that. This 
   //   applies to class rsPolynomial
+
+
+  // Resources:
+  // 
+  // Computer Algebra, Lecture Notes, Summer Term 2017, Janko Böhm:
+  // https://agag-jboehm.math.rptu.de/~boehm/lehre/1213_CA/ca.pdf
 }
 
 

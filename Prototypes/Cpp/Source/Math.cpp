@@ -452,6 +452,10 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Setup.  */
 
+
+  /** Clears the array of terms. */
+  void clear() { terms.clear(); }
+
   /** Reserves memory for the given number of terms. Can be called before calling functions like 
   addTerm() to pre-allocate the desired amount of memory beforehand when multiple terms are being
   added in a sequence. */
@@ -467,8 +471,16 @@ public:
   re-initialization should be understood to be a disruptive operation that wipes out the state. */
   void init(int newNumVariables) { numVars = newNumVariables; clear(); }
 
-  /** Clears the array of terms. */
-  void clear() { terms.clear(); }
+  /** Initializes this polynomial as the zero polynomial that is compatible with the given "other"
+  polynomial where compatibility is defined in the sense of the isCompatibleWith() function. */
+  void initLike(const MultiPoly& other)
+  {
+    numVars = other.numVars;
+    //termLess = other.termLess;   // Add this later
+    clear();
+  }
+  // Maybe rename to initCompatible() or initCompatibleWith()
+
 
   /** Adds the given monomial to the polynomial. */
   void addTerm(const rsMultiVarMonomial<T>& newTerm);
@@ -494,10 +506,22 @@ public:
   /** Returns the number of terms in this polynomial. */
   int getNumTerms() const { return (int) terms.size(); }
 
+  /** Returns true iff this polynomial is the zero polynomial. */
+  bool isZero() const { rsAssert(_isCanonical()); return terms.empty(); }
   
   //const std::vector<int>& getPowers(int termIndex) 
   //{ return getTerm(termIndex).getPowers(); }
   // Needs test
+
+
+  /** Returns the leading term in this polynomial. */
+  const rsMultiVarMonomial<T>& getLeadingTerm() const
+  {
+    rsAssert(_isCanonical());
+    if(terms.empty())
+      return zeroMonomial;
+    return terms[terms.size()-1];
+  }
 
   const rsMultiVarMonomial<T>& getTerm(int termIndex) const
   {
@@ -526,6 +550,13 @@ public:
   void checkTermIndex(int i) const 
   { rsAssert(isValidTermIndex(i), "Invalid term index!"); }
 
+  /** Checks whether the given "other" polynomial is compatible with this polynomial in the sense
+  that it accepts the same number of arguments (i.e. has the same "numVars" member) 
+  [ToDo: ...and uses the same monomial order (i.e. uses the same termLess function)].  */
+  bool isCompatibleWith(const MultiPoly& other) const
+  {
+    return numVars == other.numVars; // ToDo: && termLess == other.termLess;
+  }
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators. */
@@ -681,6 +712,12 @@ protected:
   int numVars = 1;                           // Number of variables. Dimension of input argument.
   TTol tol = TTol(0);                        // Tolerance for numerical comparisons.
 
+
+  static rsMultiVarMonomial<T> zeroMonomial;
+  // We need a static object to represent a zero polynomial in order to be able to assign the 
+  // return value of getters that return a const reference to a monomial when our terms array is
+  // empty.
+
   // Maybe in addition to the "numVars" variable, we also need a "termLess" function pointer that 
   // can be assigned in order to be able to use different term orders. We should then add 
   // assertions like rsAssert(p.isCompatibleWith(q)); whereever this is appropriate (e.g. in 
@@ -794,7 +831,7 @@ void rsMultiVarPolynomial<T, TTol>::weightedSum(
   int Nq = q.getNumTerms();
   int Nr = Np + Nq;
 
-  r->init(p.numVars);
+  r->init(p.numVars);                        // ToDo: use r->initLike(p)
   r->tol = rsMax(p.tol, q.tol);
   r->_setNumTerms(Nr);
   for(int i = 0; i < Np; i++)
@@ -863,6 +900,12 @@ void rsMultiVarPolynomial<T, TTol>::divide(
 {
   size_t N = fs.size();
 
+  // Sanity check the fs array:
+  for(const auto & fi : fs)
+  {
+    rsAssert(fi.isCompatibleWith(f));
+  }
+
   qs->resize(N);
   // ToDo: Loop through the qs and call q[i].initFrom(fs[0]) on each. This call should set up the
   // numVars and later also the termLess members of q[i]. We should also call r->initFrom(fs[0]).
@@ -890,11 +933,28 @@ void rsMultiVarPolynomial<T, TTol>::divide(
   //
   // Hmmm...conidering all these options, I tend to gravitate to initLike(). 
 
-  //r->copyDataFrom(f);
 
-  if(N == 0)
-    return;
+  // Helper function to extract the leading term:
+  auto lt = [](const MultiPoly& p) { return p.getLeadingTerm(); };
 
+  // Initializations:
+  MultiPoly p = f;                 // p = f
+  r->initLike(f);                  // r = 0
+  for(int i = 0; i < N; i++)
+    ((*qs)[i]).initLike(f);        // q_i = 0  for  i = 0,...,N-1
+
+  // This is currently an infinite loop:
+  /*
+  while(!p.isZero())
+  {
+    int i = 0;
+    bool divOccurred = false;
+    while(i < N && divOccurred == false)
+    {
+      // ...
+    }
+  }
+  */
 
 
   int dummy = 0;
@@ -902,6 +962,8 @@ void rsMultiVarPolynomial<T, TTol>::divide(
   // ToDo:
   //
   // - Implement the generalized polynomial division algorithm from IVA, pg. 65
+  //
+  // - Maybe rename fs to F and qs to Q.
 }
 
 

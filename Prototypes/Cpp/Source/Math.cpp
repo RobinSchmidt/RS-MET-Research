@@ -302,6 +302,12 @@ public:
   bool hasSamePowersAs(const rsMultiVarMonomial& other) const
   { return powers == other.powers; }
 
+  /** Returns true iff one or more of the powers is negative. */
+  bool hasNegativePowers() const;
+
+  bool isDivisibleBy(const rsMultiVarMonomial& other) const;
+
+
   /** Returns a const reference to the coefficient. */
   const T& getCoeff() const { return coeff; }
 
@@ -324,8 +330,7 @@ public:
   }
   // Needs tests for T = RAPT::rsComplex, std::complex and maybe with more complicated types T
 
-  /** Returns true iff one or more of the powers is negative. */
-  bool hasNegativePowers() const;
+
 
   /** Returns the number of variables in this term. */
   int getNumVariables() const { return (int) powers.size(); }
@@ -387,6 +392,9 @@ int rsMultiVarMonomial<T>::compLexic(
   const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs)
 {
   rsAssert(lhs.getNumVariables() == rhs.getNumVariables(), "lhs and rhs are incompatible");
+  // Maybe write this as lhs.isCompatibleWith(rhs).
+
+
   for(size_t i = 0; i < lhs.getNumVariables(); i++)
   {
     int d = rhs.getPower(i) - lhs.getPower(i);
@@ -407,6 +415,26 @@ bool rsMultiVarMonomial<T>::hasNegativePowers() const
 
   return false;
 }
+
+template<class T>
+bool rsMultiVarMonomial<T>::isDivisibleBy(const rsMultiVarMonomial& other) const
+{
+  rsAssert(powers.size() == other.powers.size());
+  // Maybe write this as this->isCompatibleWith(other).
+
+  for(size_t i = 0; i < powers.size(); i++)
+    if(other.powers[i] > powers[i])
+      return false;
+
+  return true;
+
+  // ToDo:
+  //
+  // - Verify if this is the correct criterion for divisibility. I think a term
+  //   x1^p1 * x2^p2 * x3^p3 ...  is divisible by another term y1^q1 * y2^q2 * y3^q3 * ...
+  //   if all the powers pi are greater or equal to the corresponding powers qi.
+}
+
 
 
 
@@ -951,10 +979,35 @@ void rsMultiVarPolynomial<T, TTol>::divide(
     bool divOccurred = false;
     while(i < N && divOccurred == false)
     {
-      // ...
+      const rsMultiVarMonomial<T>& ltp = lt(p);
+
+      if(ltp.isDivisibleBy(lt(fs[i])))
+      {
+
+        // ...
+
+      }
+      else
+      {
+        i++;
+      }
+
+      if(!divOccurred)
+      {
+        //r->addTerm(ltp);          // r = r + lt(p)
+        //p.removeLeadingTerm();    // p = p - lt(p)
+
+        // Maybe it would be nice to write it like this:
+        //r += ltp;
+        //p -= ltp;
+        // But the uglier variant above my be more efficient. Especially the removeLeadingTerm()
+        // call may be very
+      }
+ 
     }
   }
   */
+  
 
 
   int dummy = 0;

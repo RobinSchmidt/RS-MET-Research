@@ -15483,6 +15483,10 @@ void testMultiVarPolynomial()
   // - Mess up the canonical representation in some way (using low-level methods with underscore
   //   prefix) and verify that _isCanonical correctly returns false.
   // 
+  // - Implement other orders: reverse lexicographic (revlex), graded lex (grlex), graded reverse 
+  //   lex (grevlex). See IVA pg 56 ff, invlex, rinvlex (pg 61)
+  //   
+  // 
   // - Verify that the lexicographic order makes most sense. If not, maybe use a different
   //   canonical order
   //

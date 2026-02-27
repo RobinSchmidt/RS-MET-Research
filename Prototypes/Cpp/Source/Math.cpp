@@ -686,7 +686,8 @@ protected:
   // assertions like rsAssert(p.isCompatibleWith(q)); whereever this is appropriate (e.g. in 
   // adding, multiplying etc.). The isCompatibleWith() function should check that the numVars and 
   // termLess members match. termLess should by default be the less-than function that corresponds
-  // to lexicographic order.
+  // to lexicographic order. Maybe the init() function should take a 2nd parameter for this 
+  // function - maybe optional, defaulting to "lessLexic()".
 
 };
 
@@ -860,7 +861,43 @@ void rsMultiVarPolynomial<T, TTol>::divide(
   const MultiPoly& f, const std::vector<MultiPoly>& fs,
   std::vector<MultiPoly>* qs, MultiPoly* r)
 {
+  size_t N = fs.size();
 
+  qs->resize(N);
+  // ToDo: Loop through the qs and call q[i].initFrom(fs[0]) on each. This call should set up the
+  // numVars and later also the termLess members of q[i]. We should also call r->initFrom(fs[0]).
+  // Maybe we should have a conditional early return like if(fs.empty()). Or maybe we should use
+  // f instead of fs[0] for initFrom(). Maybe we should assert that all the fs[i] are compatible
+  // with f. But initFrom() is a bad name because it may be interpreted as creating a copy of the
+  // input when in fact, it just initializes to the zero polynomial with compatible numVars and
+  // termLess settings. But what would be a better name? 
+  // 
+  // AI says: Maybe "initCompatibleWith()" or "initFromCompatible()" or "initLike()". Maybe we 
+  // should just call it init() and pass the input polynomial as an argument. But that would be 
+  // somewhat inconsistent with the way we do initialization in other places where we just call 
+  // init() without arguments. Maybe we should have two overloads of init(): One without arguments
+  // that initializes to some default setting and one with a polynomial argument that initializes 
+  // to a compatible setting. That seems to be the cleanest solution. We should also add assertions
+  // to the add(), subtract(), weightedSum() and multiply() functions that check compatibility of 
+  // the inputs.
+  //
+  // My ideas: zeroFrom...or maybe use the free function rsZeroValue() with a prototype argument.
+  // That would be consistent with how we do it with modular integers and matrices. For example,
+  // rsZeroValue(rsMatrix<T> A) creates a zero matrix with the same shape as A. We want to do 
+  // something similar here just that here it's not about the shape but about numVars and termLess.
+  // But: rsZeroValue creates a new object. We actually want to re-initialize an existing object.
+  // Maybe estbalish a pattern for that in RAPT, too. 
+  //
+  // Hmmm...conidering all these options, I tend to gravitate to initLike(). 
+
+  //r->copyDataFrom(f);
+
+  if(N == 0)
+    return;
+
+
+
+  int dummy = 0;
 
   // ToDo:
   //

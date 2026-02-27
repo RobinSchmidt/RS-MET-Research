@@ -15341,6 +15341,7 @@ void testMultiVarPolynomial()
   using VecI = std::vector<int>;
   using Mono = rsMultiVarMonomial<Num>;
   using Poly = rsMultiVarPolynomial<Num>;
+  using VecP = std::vector<Poly>;
 
   Mono t;                          // A single term in our polynomial
   Poly p(3);                       // A polynomial in 3 variables, e.g. p(x,y,z) or p(x0,x1,x2)
@@ -15371,19 +15372,56 @@ void testMultiVarPolynomial()
   Poly::weightedSum(p, 5.f, q, -3.f, &r);
   ok &= r(v) == 5.f * p(v) - 3.f * q(v);
 
+
   // Test the generalized division algorithm:
-  // ToDo: Use the examples from the IVA book.
+  // 
+  // Example 1 from pg. 62 in the IVA book: f = x y^2 + 1, f1 = x y + 1, f2 = y + 1:
   Poly f(2), f1(2), f2(2);
 
   // f = x y^2 + 1:
-  f.addTerm(1.f, {1,2});     // x*y^2
+  f.addTerm(1.f, {1,2});     // x y^2
   ok &= f._isCanonical();
   f.addTerm(1.f, {0,0});     // 1
   ok &= f._isCanonical();
   // The order of terms in f seems to be wrong in the debugger! ..but the test passes. Maybe I 
   // have a wrong mental model about the order relation that we have defined? In f, the x*y^2
   // is listed first and then comes the constant term. I think, it should be the other way around.
-                            
+
+  // f1 = x y + 1:
+  f1.addTerm(1.f, {1,1});    // x y
+  ok &= f1._isCanonical();
+  f1.addTerm(1.f, {0,0});    // 1
+  ok &= f1._isCanonical();
+
+  // f2 = y + 1:
+  f2.addTerm(1.f, {0,1});    // y
+  ok &= f2._isCanonical();
+  f2.addTerm(1.f, {0,0});    // 1
+  ok &= f2._isCanonical();
+
+  VecP fs;
+  fs = VecP({f1, f2});
+  VecP qs(fs.size());
+  r.init(2);
+  Poly::divide(f, fs, &qs, &r);
+
+  // The result should be: q1 = y, q2 = -1, r = 2
+  // ...TBC...
+
+
+  // Example 2, pg. 63: f = x^2 y + x y^2 + y^2, f1 = x y - 1, f2 = y^2 - 1:
+  // ...
+
+  // Example 4, pg. 67: f = x^2 y + x y^2 + y^2, f1 = y^2 - 1, f2 = x y - 1.
+  // Like example 2 but with f1,f2 exchanged. 
+  // ...
+
+  // Example 5, pg. 68: f = x y^2 - x, f1 = x y - 1, f2 = y^2 - 1.
+  // ...
+
+
+
+
 
   // Temporary:
   //p._canonicalize();
@@ -15421,6 +15459,7 @@ void testMultiVarPolynomial()
   // - Implement and test polynomial division with remainder. Then implement div and mod operators
   //   as / and %. See IVA for the generalized division algorithm. The problem is that the results
   //   depend on the defined order relation on terms _and_ on how we order the array of divisors.
+  //   Maybe move the division tests into it own function.
   // 
   // - Implement the greatest common divisor (GCD) algorithm, i.e. the Euclidean algorithm. Maybe
   //   also implement the extended Euclidean algorithm.

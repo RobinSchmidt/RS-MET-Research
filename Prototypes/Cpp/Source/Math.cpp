@@ -573,6 +573,14 @@ public:
   static void multiply(const MultiPoly& p, const MultiPoly& q, MultiPoly* r);
 
 
+  static void divide(const MultiPoly& dividend, const std::vector<MultiPoly>& divisors,
+  std::vector<MultiPoly>* quotients, MultiPoly* remainder);
+  // Maybe instead of std::vectors, use C-style arrays. We would need an additional "numDivisors" 
+  // parameter. Maybe it should be the 3rd parameter, directly after the "divisors" parameter. The 
+  // number of quotients always equals the number of divisors and there is always a single 
+  // remainder.
+
+
 
   /** Turns the representation of the multivariate polynomial into a canonical one. A canonical 
   representation has the following properties: (1) The terms in our array are sorted 
@@ -672,6 +680,13 @@ protected:
   std::vector<rsMultiVarMonomial<T>> terms;  // Array of terms of the form c * x0^p0 * x1^p1 * ...
   int numVars = 1;                           // Number of variables. Dimension of input argument.
   TTol tol = TTol(0);                        // Tolerance for numerical comparisons.
+
+  // Maybe in addition to the "numVars" variable, we also need a "termLess" function pointer that 
+  // can be assigned in order to be able to use different term orders. We should then add 
+  // assertions like rsAssert(p.isCompatibleWith(q)); whereever this is appropriate (e.g. in 
+  // adding, multiplying etc.). The isCompatibleWith() function should check that the numVars and 
+  // termLess members match. termLess should by default be the less-than function that corresponds
+  // to lexicographic order.
 
 };
 
@@ -807,7 +822,6 @@ void rsMultiVarPolynomial<T, TTol>::weightedSum(
   // reMonomial and rsMultiVarMonomial. I think, that would be the cleanest solution.
 }
 
-
 template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::multiply(
   const MultiPoly& p, const MultiPoly& q, MultiPoly* r)
@@ -839,6 +853,21 @@ void rsMultiVarPolynomial<T, TTol>::multiply(
   r->_canonicalize();
 }
 // Needs tests
+
+
+template<class T, class TTol>
+void rsMultiVarPolynomial<T, TTol>::divide(
+  const MultiPoly& f, const std::vector<MultiPoly>& fs,
+  std::vector<MultiPoly>* qs, MultiPoly* r)
+{
+
+
+  // ToDo:
+  //
+  // - Implement the generalized polynomial division algorithm from IVA, pg. 65
+}
+
+
 
 template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::_canonicalize()

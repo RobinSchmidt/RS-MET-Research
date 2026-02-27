@@ -15349,18 +15349,18 @@ void testMultiVarPolynomial()
   p.addTerm(t);
   ok &= p._isCanonical();          // Adding terms should maintain the canonical representation.
   Vec v({2,-3,-0.25});             // v = (x,y,z) = (2,-3,-0.25)
-  Num f = p(v);                    // f = 5 * 2^2 * -3^3 * -0.25^1 = 5 * 4 * -27 * -0.25 = 135
-  ok &= f == 135.f;                // Check that result is correct for the given argument
+  Num fv = p(v);                   // f(v) = 5 * 2^2 * -3^3 * -0.25^1 = 5 * 4 * -27 * -0.25 = 135
+  ok &= fv == 135.f;               // Check that result is correct for the given argument
   t.setup(-2.f, VecI({ 3,1,2 }));  // t = -2 * x^3 * y^1 * z^2
   p.addTerm(t);                    // t({2,-3,-0.25}) = -2 * 2^3 * -3^1 * -0.25^2 = 3
   ok &= p._isCanonical();
-  f = p(v); 
-  ok &= f == 138.f;
+  fv = p(v); 
+  ok &= fv == 138.f;
 
   Poly q(3);
   q.addTerm(1.5f, {1,1,0});        // 1.5 * x^1 * y^1 * z^0 = 1.5 * x * y
-  f = q(v); 
-  ok &= f == -9.f;
+  fv = q(v); 
+  ok &= fv == -9.f;
 
   // Test arithmetic operators:
   Poly r; 
@@ -15371,6 +15371,19 @@ void testMultiVarPolynomial()
   Poly::weightedSum(p, 5.f, q, -3.f, &r);
   ok &= r(v) == 5.f * p(v) - 3.f * q(v);
 
+  // Test the generalized division algorithm:
+  // ToDo: Use the examples from the IVA book.
+  Poly f(2), f1(2), f2(2);
+
+  // f = x y^2 + 1:
+  f.addTerm(1.f, {1,2});     // x*y^2
+  ok &= f._isCanonical();
+  f.addTerm(1.f, {0,0});     // 1
+  ok &= f._isCanonical();
+  // The order of terms in f seems to be wrong in the debugger! ..but the test passes. Maybe I 
+  // have a wrong mental model about the order relation that we have defined? In f, the x*y^2
+  // is listed first and then comes the constant term. I think, it should be the other way around.
+                            
 
   // Temporary:
   //p._canonicalize();
@@ -15391,7 +15404,7 @@ void testMultiVarPolynomial()
   //   list (or std::vector) of exponents. I think, that's the most ergonomic syntax for adding 
   //   terms.
   // 
-  // - Implement arithmetic operators +,-,*. Test them in a loop with random polynomials.
+  // - Test arithmetic operators +,-,* in a loop with random polynomials.
   // 
   // - Create a second polynomial q. Then create a polynomial r as: p + q, p - q, p * q and 
   //   evaluate r at a couple of arguments and make sure that the results match p(arg) + q(arg),
@@ -15406,7 +15419,8 @@ void testMultiVarPolynomial()
   //   function value.
   // 
   // - Implement and test polynomial division with remainder. Then implement div and mod operators
-  //   as / and %.
+  //   as / and %. See IVA for the generalized division algorithm. The problem is that the results
+  //   depend on the defined order relation on terms _and_ on how we order the array of divisors.
   // 
   // - Implement the greatest common divisor (GCD) algorithm, i.e. the Euclidean algorithm. Maybe
   //   also implement the extended Euclidean algorithm.
@@ -15472,7 +15486,7 @@ void printOrderedPair(const rema::rsSetNaive& x)
 }
 
 /*
-// Quick factory function to create distiguishable sets:
+// Quick factory function to create distinguishable sets:
 rema::rsSetNaive nestedSingleton(int level)
 {
   rema::rsSetNaive A;

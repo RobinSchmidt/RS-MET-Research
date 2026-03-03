@@ -325,6 +325,8 @@ public:
 
   bool isDivisibleBy(const rsMultiVarMonomial& other) const;
 
+  bool divides(const rsMultiVarMonomial& other) const { return other.isDivisibleBy(*this); }
+
 
   /** Returns a const reference to the coefficient. */
   const T& getCoeff() const { return coeff; }
@@ -971,9 +973,9 @@ void rsMultiVarPolynomial<T, TTol>::divide(
   size_t N = F.size();
 
   // Sanity check the fs array:
-  for(const auto & fi : F)
+  for(const auto & f_i : F)
   {
-    rsAssert(fi.isCompatibleWith(f));
+    rsAssert(f_i.isCompatibleWith(f));
   }
 
   Q->resize(N);
@@ -1013,6 +1015,9 @@ void rsMultiVarPolynomial<T, TTol>::divide(
   for(int i = 0; i < N; i++)
     ((*Q)[i]).initLike(f);        // q_i = 0  for  i = 0,...,N-1
 
+
+
+  /*
   // This is currently an infinite loop:
   while(!p.isZero())
   {
@@ -1020,13 +1025,18 @@ void rsMultiVarPolynomial<T, TTol>::divide(
     bool divOccurred = false;
     while(i < N && divOccurred == false)
     {
-      const rsMultiVarMonomial<T>& ltp = lt(p);
+      const rsMultiVarPolynomial<T>& f_i  = F[i];     // i-th divisor polynomial
+      const rsMultiVarMonomial<T>&   ltp = lt(p);     // Leading term of p
+      const rsMultiVarMonomial<T>&   lti = lt(f_i); 
 
-      if(ltp.isDivisibleBy(lt(F[i])))
+      if(ltp.isDivisibleBy(lti))                      // Maybe use if(lti.divides(ltp))
       {
+        rsMultiVarMonomial<T> qlt = ltp / lti;        // Quotient of leading terms
 
-        // ...
+        //Q[i] += qlt;           // Does not yet compile because  +=  not yet implemented
+        //p    -= qlt * f_i;     // Dito for  -=  and  *
 
+        divOccurred = true;
       }
       else
       {
@@ -1035,8 +1045,8 @@ void rsMultiVarPolynomial<T, TTol>::divide(
 
       if(!divOccurred)
       {
-        //r->addTerm(ltp);          // r = r + lt(p)
-        //p.removeLeadingTerm();    // p = p - lt(p)
+        r->addTerm(ltp);                              // r += ltp
+        //p.removeLeadingTerm();                        // p -= ltp  , removeLeadingTerm() not yet implemented
 
         // Maybe it would be nice to write it like this:
         //r += ltp;
@@ -1044,9 +1054,9 @@ void rsMultiVarPolynomial<T, TTol>::divide(
         // But the uglier variant above my be more efficient. Especially the removeLeadingTerm()
         // call may be very
       }
- 
     }
   }
+  */
  
   
 
@@ -1054,10 +1064,17 @@ void rsMultiVarPolynomial<T, TTol>::divide(
   int dummy = 0;
 
   // ToDo:
+  // 
+  // - Implement the missing member functions and operators and uncomment the lines that make use 
+  //   of them. These are:  Q[i] += qlt;  p -= qlt * f_i;  p.removeLeadingTerm();  
+  //   Then, the algorithm should be complete and we need to write a couple of unit tests for it.
+  //   OR: First implement it in terms of the existing operators +,-,*, then write unit tests, then
+  //   rewrite it with the other operators/functions as an optimization while keeping the unit 
+  //   tests passing.
   //
-  // - Implement the generalized polynomial division algorithm from IVA, pg. 65
+  // - Document where the algorithm comes from. It's from page 65 in IVA.
   //
-  // - Maybe rename fs to F and qs to Q.
+  // - Maybe rename fs to F and qs to Q. ...done
 }
 
 

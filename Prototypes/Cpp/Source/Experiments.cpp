@@ -15324,6 +15324,14 @@ bool testMultiVarMonomial()
   // ToDo:
   //
   // - Create more test cases.
+  // 
+  // - Test multiplication and division of monomials. Maybe we can also implement addition and 
+  //   subtraction but these are only defined for two monomials when their powers match. Then we 
+  //   can just add or subtract the coeffs and copy the powers to the result. Maybe we could check
+  //   this conditions in functions like isAddableTo(), isSubtractableFrom() which should be
+  //   semantically analogous to the already existing isDivisibleBy() function. An 
+  //   isMultiplicableBy() or isMultiplyableBy() function is not needed because multiplication is
+  //   always defined....assuming the number of variables matches, that is.
   //
   // - Maybe implement different orders like reverse lexicograpphic, graded (reverse) lex. , etc.
   //   See book IVA. It says, different orderings are useful in different situations.

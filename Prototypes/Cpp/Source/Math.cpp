@@ -223,7 +223,25 @@ TArg rsPolynomialRootFinder::convergeLaguerre(
 //=================================================================================================
 
 /** A class to represent multivariate monomials. It's purpose is to be the basic building block for
-multivariate polynomials, i.e. represents a term is such a polynomial. ...TBC... */
+multivariate polynomials, i.e. an object of this class represents a term is such a polynomial. We 
+employ the convention that a monomial may also include a coefficient, so the general anatomy of a 
+monomial in this sense would look like:
+
+  c * x0^p0 * x1^p1 * x2^p2 * x3^p3 * ...
+
+where c is the coefficient, x0,x1,... are the variables and p0,p1,... are the powers (aka 
+exponents). In some parts of the literature, a monomial would only be the x0^p0 * x1^p1 * ... part 
+and the construct of that product together with a coefficient would be called a term. We use "term"
+and "monomial" interchangably. If we want to refer to a product of powers without the coeff, we 
+will call it a "primitive monomial". ...TBC... 
+
+
+References:
+
+https://en.wikipedia.org/wiki/Monomial
+
+
+*/
 
 template<class T>
 class rsMultiVarMonomial
@@ -374,10 +392,12 @@ public:
   rsMultiVarMonomial<T> operator*(const rsMultiVarMonomial<T>& q) const 
   { return rsMultiVarMonomial<T>(coeff * q.coeff, powers + q.powers); }
 
-  // ToDo: Maybe implement division as:
-  // "return rsMultiVarMonomial<T>(coeff / q.coeff, powers - q.powers);
-  // But this may in general produce terms that have negative powers and we also may get divisions
-  // by zero.
+  /** Divides two multivariate monomials. */
+  rsMultiVarMonomial<T> operator/(const rsMultiVarMonomial<T>& q) const 
+  { 
+    rsAssert(this->isDivisibleBy(other), "Invalid division of multivariate monomials");
+    return rsMultiVarMonomial<T>(coeff / q.coeff, powers - q.powers); 
+  }
 
 
 protected:
@@ -426,6 +446,9 @@ bool rsMultiVarMonomial<T>::isDivisibleBy(const rsMultiVarMonomial& other) const
     if(other.powers[i] > powers[i])
       return false;
 
+  if(other.isCoeffZero(TTol(0)))
+    return false;
+
   return true;
 
   // ToDo:
@@ -433,6 +456,15 @@ bool rsMultiVarMonomial<T>::isDivisibleBy(const rsMultiVarMonomial& other) const
   // - Verify if this is the correct criterion for divisibility. I think a term
   //   x1^p1 * x2^p2 * x3^p3 ...  is divisible by another term y1^q1 * y2^q2 * y3^q3 * ...
   //   if all the powers pi are greater or equal to the corresponding powers qi.
+  //
+  // - What if the coefficient of "other" is zero? We could also check against that but with 
+  //   a floating point type for T, what we should actually do is checking of the coeff is close to
+  //   zero up to some tolerance - but we have no API to pass in such a tolerance here and it would
+  //   be difficult to come up with one that is useful in the contexts that we need to call 
+  //   isDivisibleBy, like the division operator "/". To make that work, we may have to move the 
+  //   "tol" member from rsMultiVarPolynomial to rsMultiVarMonomial but this would lead to a lot of
+  //   redundancy in storing the tolerance. Hmm..ok - for the time being, we check against coeffs 
+  //   being exactly zero. That's better than nothing, I guess.
 }
 
 
@@ -534,12 +566,18 @@ public:
   /** Returns the number of terms in this polynomial. */
   int getNumTerms() const { return (int) terms.size(); }
 
-  /** Returns true iff this polynomial is the zero polynomial. */
-  bool isZero() const { rsAssert(_isCanonical()); return terms.empty(); }
   
   //const std::vector<int>& getPowers(int termIndex) 
   //{ return getTerm(termIndex).getPowers(); }
   // Needs test
+
+  const std::vector<int>& getMultiDegree() const
+  { return getLeadingTerm().getPowers(); }
+  // Verify! See IVA, pg 60.
+
+
+  /** Returns true iff this polynomial is the zero polynomial. */
+  bool isZero() const { rsAssert(_isCanonical()); return terms.empty(); }
 
 
   /** Returns the leading term in this polynomial. */

@@ -446,8 +446,8 @@ bool rsMultiVarMonomial<T>::isDivisibleBy(const rsMultiVarMonomial& other) const
     if(other.powers[i] > powers[i])
       return false;
 
-  if(other.isCoeffZero(TTol(0)))
-    return false;
+  //if(other.isCoeffZero(0))
+  //  return false;
 
   return true;
 
@@ -463,8 +463,7 @@ bool rsMultiVarMonomial<T>::isDivisibleBy(const rsMultiVarMonomial& other) const
   //   be difficult to come up with one that is useful in the contexts that we need to call 
   //   isDivisibleBy, like the division operator "/". To make that work, we may have to move the 
   //   "tol" member from rsMultiVarPolynomial to rsMultiVarMonomial but this would lead to a lot of
-  //   redundancy in storing the tolerance. Hmm..ok - for the time being, we check against coeffs 
-  //   being exactly zero. That's better than nothing, I guess.
+  //   redundancy in storing the tolerance. 
 }
 
 
@@ -794,6 +793,11 @@ protected:
 
 };
 
+
+template<class T, class TTol>
+rsMultiVarMonomial<T> rsMultiVarPolynomial<T, TTol>::zeroMonomial;
+
+
 template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm)
 {
@@ -961,22 +965,22 @@ void rsMultiVarPolynomial<T, TTol>::multiply(
 
 template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::divide(
-  const MultiPoly& f, const std::vector<MultiPoly>& fs,
-  std::vector<MultiPoly>* qs, MultiPoly* r)
+  const MultiPoly& f, const std::vector<MultiPoly>& F,
+  std::vector<MultiPoly>* Q, MultiPoly* r)
 {
-  size_t N = fs.size();
+  size_t N = F.size();
 
   // Sanity check the fs array:
-  for(const auto & fi : fs)
+  for(const auto & fi : F)
   {
     rsAssert(fi.isCompatibleWith(f));
   }
 
-  qs->resize(N);
-  // ToDo: Loop through the qs and call q[i].initFrom(fs[0]) on each. This call should set up the
-  // numVars and later also the termLess members of q[i]. We should also call r->initFrom(fs[0]).
-  // Maybe we should have a conditional early return like if(fs.empty()). Or maybe we should use
-  // f instead of fs[0] for initFrom(). Maybe we should assert that all the fs[i] are compatible
+  Q->resize(N);
+  // ToDo: Loop through the qs and call q[i].initFrom(F[0]) on each. This call should set up the
+  // numVars and later also the termLess members of q[i]. We should also call r->initFrom(F[0]).
+  // Maybe we should have a conditional early return like if(F.empty()). Or maybe we should use
+  // f instead of F[0] for initFrom(). Maybe we should assert that all the F[i] are compatible
   // with f. But initFrom() is a bad name because it may be interpreted as creating a copy of the
   // input when in fact, it just initializes to the zero polynomial with compatible numVars and
   // termLess settings. But what would be a better name? 
@@ -1007,10 +1011,9 @@ void rsMultiVarPolynomial<T, TTol>::divide(
   MultiPoly p = f;                 // p = f
   r->initLike(f);                  // r = 0
   for(int i = 0; i < N; i++)
-    ((*qs)[i]).initLike(f);        // q_i = 0  for  i = 0,...,N-1
+    ((*Q)[i]).initLike(f);        // q_i = 0  for  i = 0,...,N-1
 
   // This is currently an infinite loop:
-  /*
   while(!p.isZero())
   {
     int i = 0;
@@ -1019,7 +1022,7 @@ void rsMultiVarPolynomial<T, TTol>::divide(
     {
       const rsMultiVarMonomial<T>& ltp = lt(p);
 
-      if(ltp.isDivisibleBy(lt(fs[i])))
+      if(ltp.isDivisibleBy(lt(F[i])))
       {
 
         // ...
@@ -1044,7 +1047,7 @@ void rsMultiVarPolynomial<T, TTol>::divide(
  
     }
   }
-  */
+ 
   
 
 

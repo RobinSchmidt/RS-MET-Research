@@ -1018,17 +1018,18 @@ void rsMultiVarPolynomial<T, TTol>::divide(
 
 
   /*
-  // This is currently an infinite loop:
+  // This is currently an infinite loop bceause the code is not yet complete:
   while(!p.isZero())
   {
     int i = 0;
     bool divOccurred = false;
     while(i < N && divOccurred == false)
     {
-      const rsMultiVarPolynomial<T>& f_i  = F[i];     // i-th divisor polynomial
+      const rsMultiVarPolynomial<T>& f_i = F[i];      // i-th divisor polynomial. Maybe get rid. Use F[i] directly instead.
       const rsMultiVarMonomial<T>&   ltp = lt(p);     // Leading term of p
-      const rsMultiVarMonomial<T>&   lti = lt(f_i); 
+      const rsMultiVarMonomial<T>&   lti = lt(f_i);   // Leading term of F[i]
 
+      // Do division step, if possible:
       if(ltp.isDivisibleBy(lti))                      // Maybe use if(lti.divides(ltp))
       {
         rsMultiVarMonomial<T> qlt = ltp / lti;        // Quotient of leading terms
@@ -1043,6 +1044,8 @@ void rsMultiVarPolynomial<T, TTol>::divide(
         i++;
       }
 
+
+      // Do remainder step, if no division step was possible:
       if(!divOccurred)
       {
         r->addTerm(ltp);                              // r += ltp
@@ -1054,6 +1057,9 @@ void rsMultiVarPolynomial<T, TTol>::divide(
         // But the uglier variant above my be more efficient. Especially the removeLeadingTerm()
         // call may be very
       }
+      // I think, this is wrong! It should be outside the inner while loop!
+
+
     }
   }
   */
@@ -1075,6 +1081,8 @@ void rsMultiVarPolynomial<T, TTol>::divide(
   // - Document where the algorithm comes from. It's from page 65 in IVA.
   //
   // - Maybe rename fs to F and qs to Q. ...done
+  //
+  // - Maybe rename divOccurred to divStep and write into the documentation 
 }
 
 

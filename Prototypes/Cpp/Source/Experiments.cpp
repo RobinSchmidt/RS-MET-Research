@@ -15329,8 +15329,9 @@ bool testMultiVarMonomial()
   Mono t3;
   t3 = t2;
   t3.multiplyBy(t1);
-
-  //ok &= t3 == Mono(-10.f, VecI({5,4,3}));
+  ok &= t3 == Mono(-10.f, VecI({5,4,3})); 
+  // We would like to call the constructor like Mono(-10.f, {5,4,3}); Extend the API to allow 
+  // this.
   // t3 should be -10 * x^5 * y^4 * z^3. Verify that! We need a == operator for monomials.
 
 

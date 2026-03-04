@@ -407,6 +407,13 @@ public:
     return rsMultiVarMonomial<T>(coeff / q.coeff, powers - q.powers); 
   }
 
+  /** Compares monomials for equality. It's an exact equality comparison without any numerical 
+  tolerance for the coefficients. */
+  bool operator==(const rsMultiVarMonomial<T>& rhs) const
+  { return coeff == rhs.coeff && powers == rhs.powers; }
+  // ToDo: Implement an rsIsCloseTo() function that uses a tolerance for the coefficient 
+  // comparison.
+
 
 protected:
 

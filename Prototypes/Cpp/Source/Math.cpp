@@ -1072,11 +1072,11 @@ void rsMultiVarPolynomial<T, TTol>::divide(
   // This is currently an infinite loop because there is a bug:
   while(!p.isZero())
   {
-    int i = 0;
-    bool divStep = false;                             // Rename to divStep
-  
     const rsMultiVarMonomial<T>& ltp = lt(p);         // Leading term of p
+    bool divStep = false;
+    int i = 0;
 
+    // Try to find a divisor:
     while(i < N && divStep == false)
     {
       const rsMultiVarPolynomial<T>& f_i = F[i];      // i-th divisor polynomial. Maybe get rid. Use F[i] directly instead.
@@ -1087,14 +1087,23 @@ void rsMultiVarPolynomial<T, TTol>::divide(
       {
         rsMultiVarMonomial<T> qlt = ltp / lti;        // Quotient of leading terms
         (*Q)[i].addTerm(qlt);                         // q_i = q_i +  lt(p) / lt(f_i)
-        p = p - f_i * qlt;                            // p   = p   - (lt(p) / lt(f_i)) * f_i
+
+        //p = p - f_i * qlt;                            // p   = p   - (lt(p) / lt(f_i)) * f_i
+        // ...not sure, if that works...
+
+        // Break up the statement "p = p - f_i * qlt;" above into 3 steps so we can see exactly 
+        // whats going on:
+        rsMultiVarPolynomial<T> dp   = f_i * qlt;
+        rsMultiVarPolynomial<T> pNew = p - dp;
+        p = pNew;
+
+
         divStep = true;
       }
       else
       {
         i++;                                          // i = i + 1
       }
-
     }
 
     // Do remainder step, if no division step was possible:
@@ -1106,29 +1115,24 @@ void rsMultiVarPolynomial<T, TTol>::divide(
 
   }
  
-  
   int dummy = 0;
+
 
   // ToDo:
   // 
-  // - Implement the missing member functions and operators and uncomment the lines that make use 
-  //   of them. These are:  Q[i] += qlt;  p -= qlt * f_i;  p.removeLeadingTerm();  
-  //   Then, the algorithm should be complete and we need to write a couple of unit tests for it.
-  //   OR: First implement it in terms of the existing operators +,-,*, then write unit tests, then
-  //   rewrite it with the other operators/functions as an optimization while keeping the unit 
-  //   tests passing.
+  // - Bug: The p polynomial isn't getting any shorter during the algorithm. This is wrong! I 
+  //   think, the "p = p - f_i * qlt;" statement should shorten the p polynomial but it apparently
+  //   doesn't.
   //
   // - Document where the algorithm comes from. It's from page 65 in IVA.
-  //
-  // - Maybe rename fs to F and qs to Q. ...done
-  //
-  // - Maybe rename divOccurred to divStep and write into the documentation
   //
   // - Replace "p.subtractTerm(ltp)"  by  p.removeLeadingTerm(). This should be more efficient. It 
   //   should just shorten the terms array by one. The function needs to be added.
   //
   // - To find bugs, check at every step if the loop invariants are respected and that all 
   //   polynomials are in canonical representation. Verify that the algorithm makes progress.
+  //
+  // - Try the algorithm with the examples from the IVA book
 }
 
 

@@ -15277,9 +15277,6 @@ bool testMultiVarMonomial()
   using VecI = std::vector<int>;
   using Mono = rsMultiVarMonomial<Num>;
 
-  // Make sure that our prototype reference implementations do actually produce correct results:
-  ok &= testIntStringCompare();
-
   // Shorthands for lexicographical comparison functions:
   auto lessLex = &rsMultiVarMonomial<Num>::lessLexic; 
   auto compLex = &rsMultiVarMonomial<Num>::compLexic; 
@@ -15350,12 +15347,11 @@ bool testMultiVarMonomial()
   //   See book IVA. It says, different orderings are useful in different situations.
 }
 
-void testMultiVarPolynomial()
+bool testMultiVarPolynomial1()  // Rename to testMultiVarPolyBasics
 {
   // We test the class rsMultiVarPolynomial which represents a polynomial in multiple variables.
 
   bool ok = true;
-  ok &= testMultiVarMonomial();
 
   using Num  = float;                      // Number type for the polynomial coefficients
   using Vec  = std::vector<Num>;
@@ -15420,6 +15416,7 @@ void testMultiVarPolynomial()
   f2.addTerm(1.f, {0,0});    // 1
   ok &= f2._isCanonical();
 
+  // Move this into function testMultiVarPolyDiv():
   VecP fs;
   fs = VecP({f1, f2});
   VecP qs(fs.size());
@@ -15441,9 +15438,6 @@ void testMultiVarPolynomial()
   // ...
 
 
-
-
-
   // Temporary:
   //p._canonicalize();
   // This currently only checks, if _canonicalize() compiles. To check if it really works the way
@@ -15451,8 +15445,7 @@ void testMultiVarPolynomial()
   // that function on those and then verify that they are in canonical representation after the 
   // call.
 
-
-  rsAssert(ok);
+  return ok;
 
   // ToDo:
   // 
@@ -15524,6 +15517,19 @@ void testMultiVarPolynomial()
   // Computer Algebra, Lecture Notes, Summer Term 2017, Janko Böhm:
   // https://agag-jboehm.math.rptu.de/~boehm/lehre/1213_CA/ca.pdf
 }
+
+void testMultiVarPolynomial()
+{  
+  bool ok = true;
+
+  ok &= testIntStringCompare();
+  ok &= testMultiVarMonomial();
+  ok &= testMultiVarPolynomial1();   // Find better name
+
+  rsAssert(ok);
+}
+
+
 
 
 // Some helper function to turn sets into strings and/or print them out

@@ -556,13 +556,20 @@ public:
   // Maybe rename to initCompatible() or initCompatibleWith()
 
 
-  /** Adds the given monomial to the polynomial. */
+  /** Adds the given term to this polynomial. */
   void addTerm(const rsMultiVarMonomial<T>& newTerm);
 
   /** Convenience function that can be used to add terms via the syntax  p.addTerm(1.5,{4,2,3});  
   to add a term like  1.5 * x^4 * y^2 * z^3. */
   void addTerm(const T& newCoeff, const std::vector<int>& newPowers)
   { addTerm(rsMultiVarMonomial<T>(newCoeff, newPowers)); }
+
+  /** Subtracts the given term from this polynomial. */
+  void subtractTerm(const rsMultiVarMonomial<T>& newTerm) { addTerm(-newTerm); }
+  // For optimization, we may want to implement this later in a way similar to addTerm in order to
+  // avoid the heap allocation that is inherent in using the unary - operator on the given newTerm.
+
+
 
   void multiplyBy(const rsMultiVarMonomial<T>& factor);
 
@@ -807,8 +814,14 @@ protected:
   // adding, multiplying etc.). The isCompatibleWith() function should check that the numVars and 
   // termLess members match. termLess should by default be the less-than function that corresponds
   // to lexicographic order. Maybe the init() function should take a 2nd parameter for this 
-  // function - maybe optional, defaulting to "lessLexic()".
-
+  // function - maybe optional, defaulting to "lessLexic()". But maybe a simple function pointer is
+  // not flexible enough and we may need to use a function object because with simple function 
+  // pointers, it may be impractical to implement parametrized orders such as weight orders as 
+  // mentioned in IVA, page 75. Maybe we can use a std::function or we introduce an abstract 
+  // class rsMultiVarMonomialComparator with a purely virtual function:
+  // "bool less(const Monom& lhs, const Monom& rhs)" and keep a pointer to an object of a subclass
+  // of that here and use that for all of our comparisons. Maybe that's more economic than using
+  // std::function because it's just a simple pointer.
 };
 
 

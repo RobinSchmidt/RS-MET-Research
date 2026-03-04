@@ -1021,6 +1021,8 @@ void rsMultiVarPolynomial<T, TTol>::divide(
   const MultiPoly& f, const std::vector<MultiPoly>& F,
   std::vector<MultiPoly>* Q, MultiPoly* r)
 {
+  rsError("This does not yet work! It produces hangs, i.e. infinite loops.");
+
   size_t N = F.size();
 
   // Sanity check the fs array:
@@ -1124,6 +1126,9 @@ void rsMultiVarPolynomial<T, TTol>::divide(
   //
   // - Replace "p.subtractTerm(ltp)"  by  p.removeLeadingTerm(). This should be more efficient. It 
   //   should just shorten the terms array by one. The function needs to be added.
+  //
+  // - To find bugs, check at every step if the loop invariants are respected and that all 
+  //   polynomials are in canonical representation. Verify that the algorithm makes progress.
 }
 
 

@@ -1067,17 +1067,15 @@ void rsMultiVarPolynomial<T, TTol>::divide(
     (*Q)[i].initLike(f);           // q_i = 0  for  i = 0,...,N-1
 
 
-
-  
-  // This is currently an infinite loop bceause the code is not yet complete:
+  // This is currently an infinite loop because there is a bug:
   while(!p.isZero())
   {
     int i = 0;
-    bool divOccurred = false;                         // Rename to divStep
+    bool divStep = false;                             // Rename to divStep
   
     const rsMultiVarMonomial<T>& ltp = lt(p);         // Leading term of p
 
-    while(i < N && divOccurred == false)
+    while(i < N && divStep == false)
     {
       const rsMultiVarPolynomial<T>& f_i = F[i];      // i-th divisor polynomial. Maybe get rid. Use F[i] directly instead.
       const rsMultiVarMonomial<T>&   lti = lt(f_i);   // Leading term of F[i]
@@ -1086,44 +1084,27 @@ void rsMultiVarPolynomial<T, TTol>::divide(
       if(ltp.isDivisibleBy(lti))                      // Maybe use if(lti.divides(ltp))
       {
         rsMultiVarMonomial<T> qlt = ltp / lti;        // Quotient of leading terms
-
-        //Q[i] += qlt;           // Does not yet compile because  +=  not yet implemented
-        //p    -= qlt * f_i;     // Dito for  -=  and  *
-
-        (*Q)[i].addTerm(qlt);
-        //p = p - qlt * f_i;       // p -= qlt * f_i
-        p = p - f_i * qlt;         // p -= qlt * f_i
-
-        divOccurred = true;
+        (*Q)[i].addTerm(qlt);                         // q_i = q_i +  lt(p) / lt(f_i)
+        p = p - f_i * qlt;                            // p   = p   - (lt(p) / lt(f_i)) * f_i
+        divStep = true;
       }
       else
       {
-        i++;
+        i++;                                          // i = i + 1
       }
 
     }
 
-
-
     // Do remainder step, if no division step was possible:
-    if(!divOccurred)
+    if(!divStep)
     {
-      r->addTerm(ltp);              // r += lt(p)
-      r->subtractTerm(ltp);         // p -= lt(p)
-      //p.removeLeadingTerm();      // p -= lt(p)  , removeLeadingTerm() not yet implemented
-
-      // Maybe it would be nice to write it like this:
-      //r += ltp;
-      //p -= ltp;
-      // But the uglier variant above my be more efficient. Especially the removeLeadingTerm()
-      // call may be very
+      r->addTerm(ltp);                                // r = r + lt(p)
+      p.subtractTerm(ltp);                            // p = p - lt(p)
     }
 
   }
  
   
-
-
   int dummy = 0;
 
   // ToDo:
@@ -1139,7 +1120,10 @@ void rsMultiVarPolynomial<T, TTol>::divide(
   //
   // - Maybe rename fs to F and qs to Q. ...done
   //
-  // - Maybe rename divOccurred to divStep and write into the documentation 
+  // - Maybe rename divOccurred to divStep and write into the documentation
+  //
+  // - Replace "p.subtractTerm(ltp)"  by  p.removeLeadingTerm(). This should be more efficient. It 
+  //   should just shorten the terms array by one. The function needs to be added.
 }
 
 

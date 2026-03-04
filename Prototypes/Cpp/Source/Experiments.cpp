@@ -345,6 +345,14 @@ bool testKalmanFilter()
   //
   // - https://www.kalmanfilter.net/default.aspx
   //
+  //
+  // See also:
+  //
+  // - LQR Control: How and Why it works
+  //   https://www.youtube.com/watch?v=wYpBkctGqUw
+  //   It's about the "Linear Quadratic Regulator"
+  //   https://en.wikipedia.org/wiki/Linear%E2%80%93quadratic_regulator
+
 }
 
 
@@ -15317,6 +15325,13 @@ bool testMultiVarMonomial()
   t2.setup(-2.f, VecI({ 3,1,2 }));   // t2 = -2 * x^3 * y^1 * z^2
   ok &= testCompare(t1, t2);         // xxxyzz < xxyyyz lexicographically, so t2 < t1
   // ...TBC...
+
+  Mono t3;
+  t3 = t2;
+  t3.multiplyBy(t1);
+
+  //ok &= t3 == Mono(-10.f, VecI({5,4,3}));
+  // t3 should be -10 * x^5 * y^4 * z^3. Verify that! We need a == operator for monomials.
 
 
   return ok;

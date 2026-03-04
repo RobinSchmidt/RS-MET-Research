@@ -288,6 +288,12 @@ public:
   // ToDo: setPowers(), negate(), ... see rsMonomial and implement analoguous functions 
   // here.
 
+  void multiplyBy(const rsMultiVarMonomial<T>& other)
+  {
+    coeff  *= other.coeff;
+    powers += other.powers;
+  }
+  // ToDo: Implement *= operator in terms of this function
 
 
   //-----------------------------------------------------------------------------------------------
@@ -550,6 +556,9 @@ public:
   to add a term like  1.5 * x^4 * y^2 * z^3. */
   void addTerm(const T& newCoeff, const std::vector<int>& newPowers)
   { addTerm(rsMultiVarMonomial<T>(newCoeff, newPowers)); }
+
+  void multiplyBy(const rsMultiVarMonomial<T>& factor);
+
 
 
   // ToDo: setRoundoffTolerance(), subtractTerm(), scale(), negate(), 
@@ -835,6 +844,13 @@ void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm
 }
 
 template<class T, class TTol>
+void rsMultiVarPolynomial<T, TTol>::multiplyBy(const rsMultiVarMonomial<T>& factor)
+{
+  for(auto & t : terms)
+    t.multiplyBy(factor);
+}
+
+template<class T, class TTol>
 void rsMultiVarPolynomial<T, TTol>::add(
   const MultiPoly& p, const MultiPoly& q, MultiPoly* r)
 {
@@ -963,6 +979,20 @@ void rsMultiVarPolynomial<T, TTol>::multiply(
   r->_canonicalize();
 }
 // Needs tests
+
+
+
+
+/** Multiplies a multivariate monomial and a multivariate polynomial. */
+template<class T, class TTol>
+inline rsMultiVarPolynomial<T, TTol> operator*(
+  const rsMultiVarPolynomial<T, TTol>& p, const rsMultiVarMonomial<T>& m)
+{
+  rsMultiVarPolynomial<T, TTol> result = p;
+  result.multiplyBy(m);
+  return result;
+}
+
 
 
 template<class T, class TTol>

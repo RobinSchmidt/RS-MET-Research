@@ -15295,8 +15295,8 @@ bool testMultiVarMonomial()
 
     VecI s1 = rsToIntString(t1);
     VecI s2 = rsToIntString(t2);
-    int  rt, rs;                         // Results of term- and string-based comparisons
-    bool ll;                             // Result of the "lessLex" comparison
+    int  rt, rs;                       // Results of term- and string-based comparisons
+    bool ll;                           // Result of the "lessLex" comparison
 
     rs = rsIntStringCompare(s1, s2);
     rt = compLex(t1, t2);
@@ -15319,21 +15319,18 @@ bool testMultiVarMonomial()
     return ok;
   };
 
-  // Test a couple of cases of lexicogrpahical complarisons:
+  // Test a couple of cases of lexicographical complarisons:
   Mono t1, t2;
-  t1.setup( 5.f, VecI({ 2,3,1 }));   // t1 =  5 * x^2 * y^3 * z^1
-  t2.setup(-2.f, VecI({ 3,1,2 }));   // t2 = -2 * x^3 * y^1 * z^2
-  ok &= testCompare(t1, t2);         // xxxyzz < xxyyyz lexicographically, so t2 < t1
+  t1.setup( 5.f, { 2,3,1 });           // t1 =  5 * x^2 * y^3 * z^1
+  t2.setup(-2.f, { 3,1,2 });           // t2 = -2 * x^3 * y^1 * z^2
+  ok &= testCompare(t1, t2);           // xxxyzz < xxyyyz lexicographically, so t2 < t1
   // ...TBC...
 
+  // Test some manipulations of monomials:
   Mono t3;
   t3 = t2;
   t3.multiplyBy(t1);
-  ok &= t3 == Mono(-10.f, VecI({5,4,3})); 
-  // We would like to call the constructor like Mono(-10.f, {5,4,3}); Extend the API to allow 
-  // this.
-  // t3 should be -10 * x^5 * y^4 * z^3. Verify that! We need a == operator for monomials.
-
+  ok &= t3 == Mono(-10.f, {5,4,3});    // t3 = -10 * x^5 * y^4 * z^3
 
   return ok;
 

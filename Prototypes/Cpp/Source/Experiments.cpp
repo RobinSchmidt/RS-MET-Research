@@ -15347,7 +15347,7 @@ bool testMultiVarMonomial()
   //   See book IVA. It says, different orderings are useful in different situations.
 }
 
-bool testMultiVarPolynomial1()  // Rename to testMultiVarPolyBasics
+bool testMultiVarPolyBasics()  // Rename to testMultiVarPolyBasics
 {
   // We test the class rsMultiVarPolynomial which represents a polynomial in multiple variables.
 
@@ -15388,55 +15388,6 @@ bool testMultiVarPolynomial1()  // Rename to testMultiVarPolyBasics
 
   Poly::weightedSum(p, 5.f, q, -3.f, &r);
   ok &= r(v) == 5.f * p(v) - 3.f * q(v);
-
-
-  // Test the generalized division algorithm:
-  // 
-  // Example 1 from pg. 62 in the IVA book: f = x y^2 + 1, f1 = x y + 1, f2 = y + 1:
-  Poly f(2), f1(2), f2(2);
-
-  // f = x y^2 + 1:
-  f.addTerm(1.f, {1,2});     // x y^2
-  ok &= f._isCanonical();
-  f.addTerm(1.f, {0,0});     // 1
-  ok &= f._isCanonical();
-  // The order of terms in f seems to be wrong in the debugger! ..but the test passes. Maybe I 
-  // have a wrong mental model about the order relation that we have defined? In f, the x*y^2
-  // is listed first and then comes the constant term. I think, it should be the other way around.
-
-  // f1 = x y + 1:
-  f1.addTerm(1.f, {1,1});    // x y
-  ok &= f1._isCanonical();
-  f1.addTerm(1.f, {0,0});    // 1
-  ok &= f1._isCanonical();
-
-  // f2 = y + 1:
-  f2.addTerm(1.f, {0,1});    // y
-  ok &= f2._isCanonical();
-  f2.addTerm(1.f, {0,0});    // 1
-  ok &= f2._isCanonical();
-
-  // Move this into function testMultiVarPolyDiv():
-  VecP fs;
-  fs = VecP({f1, f2});
-  VecP qs(fs.size());
-  r.init(2);
-  Poly::divide(f, fs, &qs, &r);
-
-  // The result should be: q1 = y, q2 = -1, r = 2
-  // ...TBC...
-
-
-  // Example 2, pg. 63: f = x^2 y + x y^2 + y^2, f1 = x y - 1, f2 = y^2 - 1:
-  // ...
-
-  // Example 4, pg. 67: f = x^2 y + x y^2 + y^2, f1 = y^2 - 1, f2 = x y - 1.
-  // Like example 2 but with f1,f2 exchanged. 
-  // ...
-
-  // Example 5, pg. 68: f = x y^2 - x, f1 = x y - 1, f2 = y^2 - 1.
-  // ...
-
 
   // Temporary:
   //p._canonicalize();
@@ -15518,13 +15469,83 @@ bool testMultiVarPolynomial1()  // Rename to testMultiVarPolyBasics
   // https://agag-jboehm.math.rptu.de/~boehm/lehre/1213_CA/ca.pdf
 }
 
+bool testMultiVarPolyDiv()
+{
+  bool ok = true;
+
+  using Num  = float;                      // Number type for the polynomial coefficients
+  using Vec  = std::vector<Num>;
+  //using VecI = std::vector<int>;
+  using Mono = rsMultiVarMonomial<Num>;
+  using Poly = rsMultiVarPolynomial<Num>;
+  using VecP = std::vector<Poly>;
+
+
+  // Test the generalized division algorithm:
+  // 
+  // Example 1 from pg. 62 in the IVA book: f = x y^2 + 1, f1 = x y + 1, f2 = y + 1:
+  Poly f(2), f1(2), f2(2);
+
+  // f = x y^2 + 1:
+  f.addTerm(1.f, {1,2});     // x y^2
+  ok &= f._isCanonical();
+  f.addTerm(1.f, {0,0});     // 1
+  ok &= f._isCanonical();
+  // BUG!
+  // The order of terms in f seems to be wrong in the debugger! ..but the test passes. Maybe I 
+  // have a wrong mental model about the order relation that we have defined? In f, the x y^2
+  // is listed first and then comes the constant term. I think, it should be the other way around.
+  // The order of the terms if f is:  x y^2 + 1  but it should be  1 + x y^2. Nevertheless,
+  // f._isCanonical() returns true. So, it seems like both addterm() and _isCanonical() are still 
+  // buggy: addterm() inserts the new term in the wrong place and _isCanonical() fails to detect 
+  // the wrong order! Could that explain, why divide() runs into an infinite loop? In the division
+  // algo, the extraction of the leading term would extract the wrong term!
+
+  // f1 = x y + 1:
+  f1.addTerm(1.f, {1,1});    // x y
+  ok &= f1._isCanonical();
+  f1.addTerm(1.f, {0,0});    // 1
+  ok &= f1._isCanonical();
+
+  // f2 = y + 1:
+  f2.addTerm(1.f, {0,1});    // y
+  ok &= f2._isCanonical();
+  f2.addTerm(1.f, {0,0});    // 1
+  ok &= f2._isCanonical();
+
+  VecP F;
+  F = VecP({f1, f2});
+  VecP Q(F.size());
+  Poly r; 
+  r.init(2);
+  Poly::divide(f, F, &Q, &r);
+
+  // The result should be: q1 = y, q2 = -1, r = 2
+  // ...TBC...
+
+
+  // Example 2, pg. 63: f = x^2 y + x y^2 + y^2, f1 = x y - 1, f2 = y^2 - 1:
+  // ...
+
+  // Example 4, pg. 67: f = x^2 y + x y^2 + y^2, f1 = y^2 - 1, f2 = x y - 1.
+  // Like example 2 but with f1,f2 exchanged. 
+  // ...
+
+  // Example 5, pg. 68: f = x y^2 - x, f1 = x y - 1, f2 = y^2 - 1.
+  // ...
+
+
+  return ok;
+}
+
 void testMultiVarPolynomial()
 {  
   bool ok = true;
 
   ok &= testIntStringCompare();
   ok &= testMultiVarMonomial();
-  ok &= testMultiVarPolynomial1();   // Find better name
+  ok &= testMultiVarPolyBasics();
+  ok &= testMultiVarPolyDiv(); 
 
   rsAssert(ok);
 }

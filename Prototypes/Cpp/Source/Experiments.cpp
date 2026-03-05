@@ -15501,6 +15501,17 @@ bool testMultiVarPolyDiv()
   // the wrong order! Could that explain, why divide() runs into an infinite loop? In the division
   // algo, the extraction of the leading term would extract the wrong term!
 
+  // Try to compare terms of f:
+  auto termLess = &rsMultiVarMonomial<Num>::lessLexic;
+  Mono t0 = f.getTerm(0);
+  Mono t1 = f.getTerm(1);
+  bool less;
+  less = termLess(t0, t1);    // Yep. "less" is true. But that's wrong! Why?
+  less = termLess(t1, t0);    // ..and now it's false. I think, it should be the other way around!
+  // ToDo: Go back to the unit test testMultiVarMonomial() that tests the comparison functions in 
+  // isolation. Why does that test even pass? Try it with the same terms that we have here.
+
+
   // f1 = x y + 1:
   f1.addTerm(1.f, {1,1});    // x y
   ok &= f1._isCanonical();

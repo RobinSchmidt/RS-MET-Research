@@ -149,14 +149,19 @@ and it doesn't matter whether a prime $p_k$ occurs in $n$ or not. If it doesn't,
 
 \paragraph{Modulo for Negative Numbers}
 % Take care when using the modulo operator in programming languages. It may produce different
-% results!
+% results! If in doubt, I recommend to implement and use a custom mod(a,b) or modulo(a,b) function
+% and unit test that with all possible cases, i.e. a and b positive or negative or zero.
 
 
 
 \paragraph{Divisibility Rules}
 % give rules for decimal numbers
 % if a|b and a|c then a|(x*b + y*c) for any x,y in Z  (Bezout's Lemma(?))
-% special cases: a|(b+c), a|(b-c), a|(c-b)
+%  -> special cases: a|(b+c), a|(b-c), a|(c-b)
+%
+% I think, we also have:  d|(a+b)  iff  d | ((a%d) + (b%d))  where % is modulo (aka remainder)
+% and d | (a*b)  iff  d|a  or  d|b  where the "or" is, of course, an inclusive or
+
 
 \subsubsection{Greatest Common Divisors}
 % denoted as gcd(n,m) or sometimes just as (n,m) in articles about number theory.

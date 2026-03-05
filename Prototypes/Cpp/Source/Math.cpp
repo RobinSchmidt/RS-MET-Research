@@ -238,7 +238,10 @@ will call it a "primitive monomial". ...TBC...
 
 References:
 
-https://en.wikipedia.org/wiki/Monomial
+  - (IVA)  Ideals, Varieties, and Algorithms (An Introduction to Computational Algebraic Geometry
+           and Commutative Algebra), 5th Ed.  by David A. Cox, John Little, Donal O'Shea
+
+  - https://en.wikipedia.org/wiki/Monomial
 
 
 */
@@ -483,7 +486,19 @@ bool rsMultiVarMonomial<T>::isDivisibleBy(const rsMultiVarMonomial& other) const
 
 //=================================================================================================
 
-/** Abstract baseclass for a comparator for multivariabe monomials. ...TBC... */
+/** Abstract baseclass for a comparator for multivariabe monomials. In rsMultiVarPolynomial, we 
+need a way to define various order relations on monomials and that way needs to be flexible enough
+to accomodate for parametrized order relations, so a simple function pointer may sometimes not be
+enough. That's why we do it via this abstarct baseclass. The class rsMultiVarPolynomial will use a 
+baseclass pointer to a concrete object whose type is a subclass of rsMultiVarMonomLess and those
+concrete subclasses can then implement various orderings. Examples for such monomial orders are
+lexicographical, graded lexicographical, inverse lexicographical, etc. Such orders coud be 
+implemented using simple function pointers but the book "Ideals, Varieties, and Algorithms" also 
+mentions product orders and weight orders (on page 75) where the latter ones can be parametrized by
+a weight vector u, so it seems appropriate to use function objects for implementing the monomial 
+order such that we have enough flexibility to accomodate for orders that can be parametrized at 
+runtime. We could have used a std::function for this as well but I figured that a simple pointer is
+more economic (Verify!). ...TBC... */
 
 template<class T>
 class rsMultiVarMonomLess

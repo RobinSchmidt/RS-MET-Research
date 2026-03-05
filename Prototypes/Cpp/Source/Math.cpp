@@ -487,12 +487,10 @@ bool rsMultiVarMonomial<T>::isDivisibleBy(const rsMultiVarMonomial& other) const
 //=================================================================================================
 
 /** Abstract baseclass for a comparator for multivariabe monomials. In rsMultiVarPolynomial, we 
-need a way to define various order relations on monomials and that way needs to be flexible enough
-to accomodate for parametrized order relations, so a simple function pointer may sometimes not be
-enough. That's why we do it via this abstarct baseclass. The class rsMultiVarPolynomial will use a 
-baseclass pointer to a concrete object whose type is a subclass of rsMultiVarMonomLess and those
+need a way to define various order relations on monomials. The class rsMultiVarPolynomial will use 
+a baseclass pointer to a concrete object whose type is a subclass of rsMultiVarMonomLess and those
 concrete subclasses can then implement various orderings. Examples for such monomial orders are
-lexicographical, graded lexicographical, inverse lexicographical, etc. Such orders coud be 
+lexicographical, graded lexicographical, inverse lexicographical, etc.. These orders could be 
 implemented using simple function pointers but the book "Ideals, Varieties, and Algorithms" also 
 mentions product orders and weight orders (on page 75) where the latter ones can be parametrized by
 a weight vector u, so it seems appropriate to use function objects for implementing the monomial 
@@ -607,8 +605,8 @@ public:
   polynomial where compatibility is defined in the sense of the isCompatibleWith() function. */
   void initLike(const MultiPoly& other)
   {
-    numVars = other.numVars;
-    //termLess = other.termLess;   // Add this later
+    numVars  = other.numVars;
+    termLess = other.termLess;
     clear();
   }
   // Maybe rename to initCompatible() or initCompatibleWith()
@@ -703,7 +701,7 @@ public:
   [ToDo: ...and uses the same monomial order (i.e. uses the same termLess function)].  */
   bool isCompatibleWith(const MultiPoly& other) const
   {
-    return numVars == other.numVars; // ToDo: && termLess == other.termLess;
+    return numVars == other.numVars && termLess == other.termLess;
   }
 
   //-----------------------------------------------------------------------------------------------
@@ -854,7 +852,15 @@ public:
   bool _hasNegativePowers() const;
 
 
+  bool _isLess(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const
+  {
+    rsAssert(termLess != nullptr);
+    return termLess->less(lhs, rhs);
+  }
+
 protected:
+
+
 
   std::vector<rsMultiVarMonomial<T>> terms;  // Array of terms of the form c * x0^p0 * x1^p1 * ...
   rsMultiVarMonomLess<T>* termLess;          // Comparator object for terms
@@ -1216,7 +1222,7 @@ void rsMultiVarPolynomial<T, TTol>::_canonicalize()
 
   // Sort the terms by power/exponent:
   std::sort(terms.begin(), terms.end(), 
-            [](const Monom& lhs, const Monom& rhs){ return Monom::lessLexic(lhs, rhs); });
+            [this](const Monom& lhs, const Monom& rhs){ return _isLess(lhs, rhs); });
 
   // Combine multiple terms with equal power/exponent into single terms: 
   int numTerms = getNumTerms();
@@ -1277,9 +1283,9 @@ void rsMultiVarPolynomial<T, TTol>::_removeTermsWithZeroCoeff()
 template<class T, class TTol>
 size_t rsMultiVarPolynomial<T, TTol>::_findIndexForTerm(const rsMultiVarMonomial<T>& t)
 {
-  auto less = &rsMultiVarMonomial<T>::lessLexic;
+  //auto less = &rsMultiVarMonomial<T>::lessLexic;
   size_t i = 0;
-  while(i < terms.size() && less(terms[i], t))
+  while(i < terms.size() && _isLess(terms[i], t))
     i++;
   return i;
 
@@ -1293,13 +1299,12 @@ template<class T, class TTol>
 bool rsMultiVarPolynomial<T, TTol>::_isCanonical() const
 {
   bool ok = true;
-  ok &= termLess != nullptr;
   ok &=  _areTermsStrictlySorted();  // Powers are sorted and don't appear more than once.
   ok &= !_hasZeroCoeffs();           // Any zero coeffs (up to roundoff) are cleaned up.
   ok &= !_hasNegativePowers();       // No negative powers allowed. May be relaxed later if needed.
   return ok;
 
-  // It's similar to rsSparsePolynomial
+  // It's the same as in rsSparsePolynomial
 }
 
 
@@ -1316,7 +1321,7 @@ bool rsMultiVarPolynomial<T, TTol>::_areTermsStrictlySorted() const
   for(int i = 1; i < getNumTerms(); i++)
   {
     const Monom& cur = getTerm(i);          // Reference to current term
-    if(!Monom::lessLexic(*prev, cur))
+    if(!_isLess(*prev, cur))
       return false;
     prev = &cur;                            // Rebind pointer
   }

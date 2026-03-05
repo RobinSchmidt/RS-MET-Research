@@ -15460,7 +15460,9 @@ bool testMultiVarPolyBasics()  // Rename to testMultiVarPolyBasics
   //   only simple zeros, i.e. p_r is square-free. We can compute p_r as p_r = p / gcd(p,p') where
   //   p' is the derivative of p. Maybe implement this formula somewhere in some function
   //   reduceMultipleRoots() or makeSquareFree() or makeRootsSimple() or something like that. This 
-  //   applies to class rsPolynomial
+  //   applies to class rsPolynomial. I think, the formula implies that g = gcd(p,p') contains all 
+  //   the multiple zeros of the original p but with a multiplicity one less than in p. Maybe that 
+  //   g polynomial could be useful in its own right?
 
 
   // Resources:
@@ -15499,7 +15501,10 @@ bool testMultiVarPolyDiv()
   // f._isCanonical() returns true. So, it seems like both addterm() and _isCanonical() are still 
   // buggy: addterm() inserts the new term in the wrong place and _isCanonical() fails to detect 
   // the wrong order! Could that explain, why divide() runs into an infinite loop? In the division
-  // algo, the extraction of the leading term would extract the wrong term!
+  // algo, the extraction of the leading term would extract the wrong term! But should that even 
+  // matter? If the order is wrong in the same way in all the involved polynomials (like reversed),
+  // shouldn't the division algo also work? Isn'z it supposed to work with all sorts of different
+  // order relations?
 
   // Try to compare terms of f:
   auto termLess = &rsMultiVarMonomial<Num>::lessLexic;
@@ -15559,6 +15564,14 @@ void testMultiVarPolynomial()
   ok &= testMultiVarPolyDiv(); 
 
   rsAssert(ok);
+
+  // ToDo:
+  //
+  // - Make sure that the unit tests check two important special cases: The case of a polynomial
+  //   in a single variable and the case of linear polynomial in multiple variables. In the former 
+  //   case our results (for polynomial division, gcd, etc.) should be the same as when using 
+  //   rsSparsePolynomial. In the latter case, our result for solving equation should match those
+  //   that we obtain with rsLinearAlgebra - like transforming a system into row echelon from, etc.
 }
 
 

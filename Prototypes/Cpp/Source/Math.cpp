@@ -481,6 +481,40 @@ bool rsMultiVarMonomial<T>::isDivisibleBy(const rsMultiVarMonomial& other) const
   //   redundancy in storing the tolerance. 
 }
 
+//=================================================================================================
+
+/** Abstract baseclass for a comparator for multivariabe monomials. ...TBC... */
+
+template<class T>
+class rsMultiVarMonomLess
+{
+
+public:
+
+  virtual bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) = 0;
+
+};
+
+
+/** Concrete subclass of rsMultiVarMonomLess that implements lexicographic order. */
+
+template<class T>
+class rsMultiVarMonomLessLexic : public rsMultiVarMonomLess<T>
+{
+
+public:
+
+  bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) override
+  {
+    return rsMultiVarMonomial<T>::lessLexic(lhs, rhs);
+  }
+
+};
+
+
+
+
+
 
 
 
@@ -520,7 +554,11 @@ public:
   a single variable. You can change that later by calling init() but such a call to init will also
   clear the array of terms because changing the number of variables may make our existing array of 
   terms incompatible with the new setting. */
-  rsMultiVarPolynomial(int numVariables = 1) { init(numVariables); }
+  rsMultiVarPolynomial(int numVariables = 1) 
+  { 
+    init(numVariables);
+    setComparator(&termLessLexic);  // Set up default comparator
+  }
 
 
   //-----------------------------------------------------------------------------------------------
@@ -537,6 +575,11 @@ public:
   // Maybe we should loop through the terms and call terms[i].reserve() for each. Each term is an
   // object of type rsMultiVarMonomial which itself contains a std::vector for the powers. Then 
   // maybe we should move the implementation out of the class
+
+  /** Sets up the comparator object that we use to define a monomial order on our terms. 
+  ...TBC... */
+  void setComparator(rsMultiVarMonomLess<T>* newComparator)
+  { termLess = newComparator; }
 
   /** Initializes this polynomial. You need to pass the number of variables that this polynomial
   expects as inputs. For example, for a trivariate polynomial p = p(x,y,z), that number would be
@@ -799,9 +842,14 @@ public:
 protected:
 
   std::vector<rsMultiVarMonomial<T>> terms;  // Array of terms of the form c * x0^p0 * x1^p1 * ...
+  rsMultiVarMonomLess<T>* termLess;          // Comparator object for terms
   int numVars = 1;                           // Number of variables. Dimension of input argument.
   TTol tol = TTol(0);                        // Tolerance for numerical comparisons.
 
+
+  static rsMultiVarMonomLessLexic<T> termLessLexic;
+  // This static object is the default object that we assign to our termLess member such that when
+  // the user doesn't set up anthing else, we'll get lexicographical ordering by default.
 
   static rsMultiVarMonomial<T> zeroMonomial;
   // We need a static object to represent a zero polynomial in order to be able to assign the 
@@ -827,6 +875,9 @@ protected:
 
 template<class T, class TTol>
 rsMultiVarMonomial<T> rsMultiVarPolynomial<T, TTol>::zeroMonomial;
+
+template<class T, class TTol>
+rsMultiVarMonomLessLexic<T> rsMultiVarPolynomial<T, TTol>::termLessLexic;
 
 
 template<class T, class TTol>
@@ -1227,12 +1278,13 @@ template<class T, class TTol>
 bool rsMultiVarPolynomial<T, TTol>::_isCanonical() const
 {
   bool ok = true;
+  ok &= termLess != nullptr;
   ok &=  _areTermsStrictlySorted();  // Powers are sorted and don't appear more than once.
   ok &= !_hasZeroCoeffs();           // Any zero coeffs (up to roundoff) are cleaned up.
   ok &= !_hasNegativePowers();       // No negative powers allowed. May be relaxed later if needed.
   return ok;
 
-  // Is verbatim copy from rsSparsePolynomial
+  // It's similar to rsSparsePolynomial
 }
 
 

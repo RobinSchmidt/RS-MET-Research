@@ -697,12 +697,10 @@ public:
   { rsAssert(isValidTermIndex(i), "Invalid term index!"); }
 
   /** Checks whether the given "other" polynomial is compatible with this polynomial in the sense
-  that it accepts the same number of arguments (i.e. has the same "numVars" member) 
-  [ToDo: ...and uses the same monomial order (i.e. uses the same termLess function)].  */
+  that it accepts the same number of arguments (i.e. has the same "numVars" member) and uses the 
+  same monomial order relation (i.e. uses the same termLess function object). */
   bool isCompatibleWith(const MultiPoly& other) const
-  {
-    return numVars == other.numVars && termLess == other.termLess;
-  }
+  { return numVars == other.numVars && termLess == other.termLess; }
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators. */
@@ -813,12 +811,22 @@ public:
 
   /** Finds the index in our terms array where the term at that index has the same powers as the
   given "term". If no such term is found, it will return an invalid index, i.e. one that is above
-  the range of valid indices. */
+  the range of valid indices. 
+  
+  That documentation seems to be wrong! I think, it will scan through our terms array until it 
+  finds a term that is >= the new term. If terms[i] > term, than term should be inserted immediately
+  before terms[i]. If terms[i] == term, than the term should be added to terms[i], i.e. the coeffs
+  should be added. Here == is to be understood as an equivalence relation that looks only at the
+  exponents of the terms. If it finds no terms[i] that is > or == the given term, then the new term
+  should be appended at the end.  */
   size_t _findIndexForTerm(const rsMultiVarMonomial<T>& term);
   // Maybe it should return an int and -1 for "not found"? But that would make it more complicated.
   // The implementation would be more complicated and at the call site, we would potentially also 
   // have to change the checks. But using an inte with -1 for not found would be consistent with
   // conventions used in the RAPT library.
+  // ToDo: Implement unit tests for that function that cover all possible cases ("insert before",
+  // "modify at", "append at end"). Make sure that the "insert before" or "append at end" cases 
+  //  also work when terms is empty.
 
 
 
@@ -851,15 +859,14 @@ public:
   allowed, i.e. a bug - but this restriction can be lifted later, if needed. */
   bool _hasNegativePowers() const;
 
-
+  /** Returns true iff the given lhs term is less than the rhs term in the sense of our monomial 
+  order that can be customized by client code via calling setComparator(). If you don't set up 
+  anything, a default monomial order relation (namely lexicographical order) will be used. */
   bool _isLess(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const
-  {
-    rsAssert(termLess != nullptr);
-    return termLess->less(lhs, rhs);
-  }
+  { rsAssert(termLess != nullptr); return termLess->less(lhs, rhs); }
+
 
 protected:
-
 
 
   std::vector<rsMultiVarMonomial<T>> terms;  // Array of terms of the form c * x0^p0 * x1^p1 * ...
@@ -870,27 +877,13 @@ protected:
 
   static rsMultiVarMonomLessLexic<T> termLessLexic;
   // This static object is the default object that we assign to our termLess member such that when
-  // the user doesn't set up anthing else, we'll get lexicographical ordering by default.
+  // the user doesn't set up anything else, we'll get lexicographical ordering by default.
 
   static rsMultiVarMonomial<T> zeroMonomial;
   // We need a static object to represent a zero polynomial in order to be able to assign the 
   // return value of getters that return a const reference to a monomial when our terms array is
   // empty.
 
-  // Maybe in addition to the "numVars" variable, we also need a "termLess" function pointer that 
-  // can be assigned in order to be able to use different term orders. We should then add 
-  // assertions like rsAssert(p.isCompatibleWith(q)); whereever this is appropriate (e.g. in 
-  // adding, multiplying etc.). The isCompatibleWith() function should check that the numVars and 
-  // termLess members match. termLess should by default be the less-than function that corresponds
-  // to lexicographic order. Maybe the init() function should take a 2nd parameter for this 
-  // function - maybe optional, defaulting to "lessLexic()". But maybe a simple function pointer is
-  // not flexible enough and we may need to use a function object because with simple function 
-  // pointers, it may be impractical to implement parametrized orders such as weight orders as 
-  // mentioned in IVA, page 75. Maybe we can use a std::function or we introduce an abstract 
-  // class rsMultiVarMonomialComparator with a purely virtual function:
-  // "bool less(const Monom& lhs, const Monom& rhs)" and keep a pointer to an object of a subclass
-  // of that here and use that for all of our comparisons. Maybe that's more economic than using
-  // std::function because it's just a simple pointer.
 };
 
 
@@ -909,7 +902,7 @@ void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm
 
   size_t i = _findIndexForTerm(newTerm);
 
-  if(i >= getNumTerms())                   // Maybe use if(!isValidTermIndex(i))
+  if(i >= getNumTerms())                      // Maybe use if(!isValidTermIndex(i))
   {
     terms.push_back(newTerm);
     return;
@@ -917,22 +910,31 @@ void rsMultiVarPolynomial<T, TTol>::addTerm(const rsMultiVarMonomial<T>& newTerm
 
   if(newTerm.hasSamePowersAs(terms[i]))
   {
-    // Modify coeff at i:
-    terms[i].shiftCoeff(newTerm.getCoeff());
-    if(terms[i].isCoeffZero(tol))
-      rsRemove(terms, i);
-
+    terms[i].shiftCoeff(newTerm.getCoeff());  // Modify coeff at index i.
+    if(terms[i].isCoeffZero(tol))             // If that modification turned the coeff to zero..
+      rsRemove(terms, i);                     // ..remove the term.
   }
   else
   {
-    // Insert new term at position i:
-    rsInsert(terms, newTerm, i);
+    rsInsert(terms, newTerm, i);              // Insert new term at position i.
   }
+
+  // Check postcondition. The polynomial should still be in canonical representation:
+  rsAssert(_isCanonical(), "Adding a term caused decanonicalization!");
+  // I that fires, something has gone wrong here and adding the new term has messed up the 
+  // canonical representation which should never happen.
 
   // ToDo:
   //
   // - Implement unit tests that verify that adding a term via this function maintains a canonical
   //   representation.
+  //
+  // - Check if we really need the "if(i >= getNumTerms())" guard clause. Maybe the only way that
+  //   i could be >= numTerms is when i == numTerms and in that case rsInsert() in the else branch 
+  //   below would also do the right thing, namely insert the new term at the end of the terms 
+  //   array? Ah! But when we check the "if(newTerm.hasSamePowersAs(terms[i]))" condition, we must
+  //   already be sure that i < numTerms or else get an access violation!. So yes, it seems like we
+  //   indeed need it. Maybe document that properly.
 }
 
 template<class T, class TTol>
@@ -1283,7 +1285,6 @@ void rsMultiVarPolynomial<T, TTol>::_removeTermsWithZeroCoeff()
 template<class T, class TTol>
 size_t rsMultiVarPolynomial<T, TTol>::_findIndexForTerm(const rsMultiVarMonomial<T>& t)
 {
-  //auto less = &rsMultiVarMonomial<T>::lessLexic;
   size_t i = 0;
   while(i < terms.size() && _isLess(terms[i], t))
     i++;

@@ -19093,14 +19093,12 @@ void testRiemannFractal()
   using Real = double;
   using Vec  = std::vector<Real>;
 
-  int N    = 5001;                          // Number of samples
-  int kMax = 500;                           // Maximum value for the summation index k
+  int N    = 10001;                         // Number of samples
+  int kMax = 20;                            // Maximum value for the summation index k
 
   Vec x(N), y(N);
   for(int n = 0; n < N; n++)
   {
-    //Real t = PI * Real(n) / Real(N-1);    // Or maybe use 2*PI?
-
     Real t = 2 * PI * Real(n) / Real(N-1);
     x[n] = 0;
     y[n] = 0;
@@ -19110,15 +19108,46 @@ void testRiemannFractal()
       x[n] += sin(s * t) / s;
       y[n] += cos(s * t) / s;
     }
-
-    int dummy = 0;
   }
 
 
-  rsPlotVectors(x, y);
+  rsPlotVectors(  x, y);                    // Plot x(t) and y(t) as functions of t
+  rsPlotVectorsXY(x, y);                    // Plot the parametric 2D curve (x(t),y(t))
 
 
-
+  // Observations:
+  //
+  // - Even for moderate values of kMax, we need a rather high value of N in order to get a plot
+  //   where we don't get a lot of aliasing. This is plausible because the frequency of the k-th 
+  //   sine is scaled proportionally to k^2, so the frequencies of the partials increase quickly.
+  //
+  //
+  // ToDo:
+  //
+  // - Figure out the formula (as function of a given sampling resolution N) for maximum menaingful
+  //   value of kMax such that we avoid aliasing. Or the other way around: For given kMax, solve 
+  //   the for the required resolution N such that we don't get aliasing.
+  // 
+  // - Maybe when we have such a formula, replace the inner for loop by a while(true) loop and use 
+  //   as break condition something like if(s >= sMax) where sMax can be precomputed from our
+  //   "don't alias" requirement.
+  // 
+  // - When we have that, we can replace the like s = k*k by a more felxible s = pow(k, p) for a 
+  //   user parameter p that determines the roughness. Higher p will make the curve smoother. Or 
+  //   wait! Maybe we should use two different s-values for inside the sine and the denominator.
+  //   It's the value in the denominator that determines the smoothness (i.e. the spectral rolloff)
+  //   but the multiplier inside the sine determines the partial frequencies and for those, we 
+  //   probably shoudl restrict ourselves to integer powers or else we will get partials with 
+  //   frequencies that do not have the right perdiod, i.e. produce aperiodic functions. Experiment
+  //   with that! 
+  // 
+  // - It could make for an interesting fractal audio oscillator. For that, we could use different
+  //   prototype waveforms, e.g. triangle, saw, pulse, etc. instead of sine.
+  // 
+  // - Instead of using sine and cosine, we could use sines with arbitrary phases. The phase could
+  //   be a function of k.
+  // 
+  // - Set up the plot more nicely with respect to plotting range, size, style, etc.
 }
 
 

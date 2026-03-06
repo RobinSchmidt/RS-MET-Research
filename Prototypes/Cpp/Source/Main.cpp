@@ -104,7 +104,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testFieldExtensions();
   //testRingExtensions();
   //testPolynomialQuotientRing();  // Stub
-  testMultiVarPolynomial();        // Stub
+
+// testMultiVarPolynomial();        // Stub
+
   // ToDo: Drag over the code for arithmetic derivatives from the main repo.
 
   //testSet();
@@ -135,9 +137,10 @@ int main (int /*argc*/, char* /*argv[]*/)
   // -Maybe move the string-group code over here from the main repo, and write testStringGroup()
 
   //testAttractors();  // move into a section for physics/models
+  testRiemannFractal();
 
 
-//  testPolynomialRootFinder();        // stub
+  //testPolynomialRootFinder();        // stub
   //testLiftedPolynomial();
   //testFactoredPolynomial();
   //testPolynomialRootCorrespondence1();

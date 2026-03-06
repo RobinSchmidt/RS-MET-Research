@@ -15333,7 +15333,9 @@ bool testMultiVarMonomial()
 
   // ToDo:
   //
-  // - Create more test cases.
+  // - Create more test cases. Try it with univariate polynomials like x^0 + x^1 + x^2 + x^3 and
+  //   with linear trivariate polynomials like 1 + x + y + z and check if lexicographic order does
+  //   the right thing.
   // 
   // - Test multiplication and division of monomials. Maybe we can also implement addition and 
   //   subtraction but these are only defined for two monomials when their powers match. Then we 
@@ -19074,6 +19076,51 @@ void testAttractors()
   //testAttractorDenTSUCS2();
   testAttractorChaoticRotor();
 }
+
+void testRiemannFractal()
+{
+  // We generate plots of (variations of) Riemann's fractal function defined as:
+  // 
+  //   f(t) = sum_k sin(pi k^2 t) / k^2
+  // 
+  // where k goes from 1 to inf. We use t for the variable instead of x in anticipation of wanting 
+  // to draw a parametric curve where we use f(t) for x(t) and a cosine-based version of the same 
+  // function for y(t). ...TBC...
+  // 
+  // See:
+  // https://www.youtube.com/shorts/FgdFOehfL_E
+
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+  int N    = 5001;                          // Number of samples
+  int kMax = 500;                           // Maximum value for the summation index k
+
+  Vec x(N), y(N);
+  for(int n = 0; n < N; n++)
+  {
+    //Real t = PI * Real(n) / Real(N-1);    // Or maybe use 2*PI?
+
+    Real t = 2 * PI * Real(n) / Real(N-1);
+    x[n] = 0;
+    y[n] = 0;
+    for(int k = 1; k <= kMax; k++)
+    {
+      Real s = k*k;                         // Scaler
+      x[n] += sin(s * t) / s;
+      y[n] += cos(s * t) / s;
+    }
+
+    int dummy = 0;
+  }
+
+
+  rsPlotVectors(x, y);
+
+
+
+}
+
 
 
 bool testPolynomialRootFinder()

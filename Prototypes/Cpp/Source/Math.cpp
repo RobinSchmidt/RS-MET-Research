@@ -432,7 +432,6 @@ int rsMultiVarMonomial<T>::compLexic(
   rsAssert(lhs.getNumVariables() == rhs.getNumVariables(), "lhs and rhs are incompatible");
   // Maybe write this as lhs.isCompatibleWith(rhs).
 
-
   for(size_t i = 0; i < lhs.getNumVariables(); i++)
   {
     int d = lhs.getPower(i) - rhs.getPower(i);
@@ -442,6 +441,12 @@ int rsMultiVarMonomial<T>::compLexic(
       return +1;
   }
   return 0;
+
+  // This seems to be still buggy. We want the constants to come first, then x, then y, then z, 
+  // etc. But maybe that's not what lexicographical means in the IVA book? Maybe for the ordre we
+  // want to define here, we need a special case rule for when one of the exponent-arrays is 
+  // all-zeros? Maybe the order we want to define here doesn't even qualify as a monomial order? 
+  // A monomial order must satisfy certain requirements. Figure that out!
 }
 
 template<class T>

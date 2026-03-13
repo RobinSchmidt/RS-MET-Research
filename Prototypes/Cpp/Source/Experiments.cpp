@@ -15310,7 +15310,15 @@ bool testMultiMonomCompare()
   ok &= testComp({2}, {2},  0);               // x^2  ==  x^2
 
   // Tests with bivariate polynomials:
-  ok &= testComp({0,0}, {0,0},  0);           // c    ==  c
+  ok &= testComp({0,0}, {0,0},  0);           // c        ==  c
+  ok &= testComp({0,0}, {1,0}, -1);           // c        <   x^1
+  ok &= testComp({0,0}, {0,1}, -1);           // c        <   y^1
+
+  //ok &= testComp({1,0}, {0,1}, -1);           // x^1      <   y^1   FAILS!
+  //ok &= testComp({1,1}, {0,1}, -1);           // x^1 y^1  <   y^1   FAILS!
+  //ok &= testComp({2,1}, {0,1}, -1);           // x^2 y^1  <   y^1   FAILS!
+  //ok &= testComp({2,2}, {0,1}, -1);           // x^2 y^2  <   y^1   FAILS!
+
   // ...TBC...
  
 

@@ -15248,6 +15248,7 @@ bool testIntStringCompare()
   s2 = Vec({0,0});            // s2 = "00"
   ok &= comp(s1, s2) == -1;   // "0"  < "00"
   ok &= comp(s2, s1) == +1;   // "00" > "0"
+
   s1 = Vec({1});              // s1 = "1"
   ok &= comp(s1, s2) == +1;   // "1"  > "00"
   ok &= comp(s2, s1) == -1;   // "00" < "1"
@@ -15258,6 +15259,21 @@ bool testIntStringCompare()
   ok &= comp(s1, s2) == 0;    // "01" == "01"
 
   // ...TBC...
+
+  // Helper function that we can all like  ok &= testComp({0,0},{0,1}, -1);  which would mean the
+  // "00" < "01" for example.
+  auto testComp = [](const Vec& s1, const Vec& s2, int target) 
+  {
+    int result = rsIntStringCompare(s1, s2);
+    return result == target;
+  };
+
+  ok &= testComp({},    {},     0);      // "" == ""
+  ok &= testComp({0},   {},    +1);      // "0" > ""
+  ok &= testComp({},    {0},   -1);      // "" < "0"
+  ok &= testComp({0},   {0,0}, -1);      // "0" < "00"
+  ok &= testComp({0,0}, {0},   +1);      // "00" > "0"
+
 
   return ok;
 
@@ -19132,7 +19148,7 @@ void testRiemannFractal()
   //   as break condition something like if(s >= sMax) where sMax can be precomputed from our
   //   "don't alias" requirement.
   // 
-  // - When we have that, we can replace the like s = k*k by a more felxible s = pow(k, p) for a 
+  // - When we have that, we can replace the like s = k*k by a more flexible s = pow(k, p) for a 
   //   user parameter p that determines the roughness. Higher p will make the curve smoother. Or 
   //   wait! Maybe we should use two different s-values for inside the sine and the denominator.
   //   It's the value in the denominator that determines the smoothness (i.e. the spectral rolloff)
@@ -19148,6 +19164,9 @@ void testRiemannFractal()
   //   be a function of k.
   // 
   // - Set up the plot more nicely with respect to plotting range, size, style, etc.
+  //
+  // - Make a similar experiment with the Weierstrass function:
+  //   https://en.wikipedia.org/wiki/Weierstrass_function
 }
 
 

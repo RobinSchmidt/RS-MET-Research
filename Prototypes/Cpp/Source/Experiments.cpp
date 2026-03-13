@@ -15234,11 +15234,12 @@ int rsIntStringCompare(const std::vector<int>& s1, const std::vector<int>& s2)
 /** Unit test function for the rsIntStringCompare() function. */
 bool testIntStringCompare()
 {
+  bool ok = true;
+
   using Vec = std::vector<int>;
 
+  /*
   auto comp = &rsIntStringCompare;  // Shorthand for convenience.
-
-  bool ok = true;
 
   Vec s1, s2;                 // s1 = s2 = ""
   ok &= comp(s1, s2) == 0;    // "" == ""
@@ -15248,7 +15249,6 @@ bool testIntStringCompare()
   s2 = Vec({0,0});            // s2 = "00"
   ok &= comp(s1, s2) == -1;   // "0"  < "00"
   ok &= comp(s2, s1) == +1;   // "00" > "0"
-
   s1 = Vec({1});              // s1 = "1"
   ok &= comp(s1, s2) == +1;   // "1"  > "00"
   ok &= comp(s2, s1) == -1;   // "00" < "1"
@@ -15257,8 +15257,8 @@ bool testIntStringCompare()
   ok &= comp(s2, s1) == -1;   // "00" < "01"
   s2 = Vec({0,1});            // s2 = "01"
   ok &= comp(s1, s2) == 0;    // "01" == "01"
+  */
 
-  // ...TBC...
 
   // Helper function that we can all like  ok &= testComp({0,0},{0,1}, -1);  which would mean the
   // "00" < "01" for example.
@@ -15268,11 +15268,21 @@ bool testIntStringCompare()
     return result == target;
   };
 
-  ok &= testComp({},    {},     0);      // "" == ""
-  ok &= testComp({0},   {},    +1);      // "0" > ""
-  ok &= testComp({},    {0},   -1);      // "" < "0"
-  ok &= testComp({0},   {0,0}, -1);      // "0" < "00"
-  ok &= testComp({0,0}, {0},   +1);      // "00" > "0"
+  ok &= testComp({},    {},     0);     // ""   == ""
+  ok &= testComp({},    {0},   -1);     // ""   <  "0"
+  ok &= testComp({0},   {},    +1);     // "0"  >  ""
+  ok &= testComp({0},   {0,0}, -1);     // "0"  <  "00"
+  ok &= testComp({0,0}, {0},   +1);     // "00" >  "0"
+  ok &= testComp({0},   {1},   -1);     // "0"  <  "1"
+  ok &= testComp({1},   {0},   +1);     // "1"  >  "0"
+  ok &= testComp({0,0}, {1},   -1);     // "00" <  "1"
+  ok &= testComp({1},   {0,0}, +1);     // "1"  >  "00"
+  ok &= testComp({0,0}, {0,1}, -1);     // "00" <  "01"
+  ok &= testComp({0,1}, {0,0}, +1);     // "01" <  "00"
+  ok &= testComp({0,1}, {0,1},  0);     // "01" == "01"
+
+  // ...TBC...
+
 
 
   return ok;

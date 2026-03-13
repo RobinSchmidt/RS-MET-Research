@@ -15238,28 +15238,6 @@ bool testIntStringCompare()
 
   using Vec = std::vector<int>;
 
-  /*
-  auto comp = &rsIntStringCompare;  // Shorthand for convenience.
-
-  Vec s1, s2;                 // s1 = s2 = ""
-  ok &= comp(s1, s2) == 0;    // "" == ""
-  s1 = Vec({0});              // s1 = "0"
-  ok &= comp(s1, s2) == +1;   // "0" > ""
-  ok &= comp(s2, s1) == -1;   // ""  < "0"
-  s2 = Vec({0,0});            // s2 = "00"
-  ok &= comp(s1, s2) == -1;   // "0"  < "00"
-  ok &= comp(s2, s1) == +1;   // "00" > "0"
-  s1 = Vec({1});              // s1 = "1"
-  ok &= comp(s1, s2) == +1;   // "1"  > "00"
-  ok &= comp(s2, s1) == -1;   // "00" < "1"
-  s1 = Vec({0,1});            // s1 = "01"
-  ok &= comp(s1, s2) == +1;   // "01" > "00"
-  ok &= comp(s2, s1) == -1;   // "00" < "01"
-  s2 = Vec({0,1});            // s2 = "01"
-  ok &= comp(s1, s2) == 0;    // "01" == "01"
-  */
-
-
   // Helper function that we can all like  ok &= testComp({0,0},{0,1}, -1);  which would mean the
   // "00" < "01" for example.
   auto testComp = [](const Vec& s1, const Vec& s2, int target) 
@@ -15268,9 +15246,13 @@ bool testIntStringCompare()
     return result == target;
   };
 
+  // The actual tests:
   ok &= testComp({},    {},     0);     // ""   == ""
   ok &= testComp({},    {0},   -1);     // ""   <  "0"
   ok &= testComp({0},   {},    +1);     // "0"  >  ""
+  ok &= testComp({0},   {0},    0);     // "0"  ==  "0"
+  ok &= testComp({0},   {1},   -1);     // "0"  <   "1"
+  ok &= testComp({1},   {0},   +1);     // "1"  >   "0"
   ok &= testComp({0},   {0,0}, -1);     // "0"  <  "00"
   ok &= testComp({0,0}, {0},   +1);     // "00" >  "0"
   ok &= testComp({0},   {1},   -1);     // "0"  <  "1"
@@ -15280,19 +15262,61 @@ bool testIntStringCompare()
   ok &= testComp({0,0}, {0,1}, -1);     // "00" <  "01"
   ok &= testComp({0,1}, {0,0}, +1);     // "01" <  "00"
   ok &= testComp({0,1}, {0,1},  0);     // "01" == "01"
-
+  ok &= testComp({0,1}, {1,1}, -1);     // "01" <  "11"
+  ok &= testComp({1,1}, {0,1}, +1);     // "11" >  "01"
   // ...TBC...
-
-
 
   return ok;
 
   // ToDo:
   //
   // - Add more test cases. Ensure that all relevant cases are covered. Makes sure that each 
-  //   possible code path out of the function (i.e. each of the 5 return statements) is covered at
-  //   least once, better multiple times.
+  //   possible code path out of the function rsIntStringCompare (i.e. each of the 5 return 
+  //   statements) is covered at least once, better multiple times.
 }
+
+/** Unit test function for the rsMultiVarMonomial<T>::compLexic() function. It works the same way
+as testIntStringCompare(), just that it operates on multivariate monomials rather than 
+int-strings. */
+bool testMultiMonomCompare()
+{
+  bool ok = true;
+
+  using Num  = float; 
+  using VecI = std::vector<int>;
+  using Mono = rsMultiVarMonomial<Num>;
+
+  auto testComp = [](const VecI& p1, const VecI& p2, int target) 
+  {
+    Mono t1, t2;
+    t1.setup(1.f, p1);
+    t2.setup(1.f, p2);
+    int result = rsMultiVarMonomial<Num>::compLexic(t1, t2);
+    return result == target;
+  };
+
+  // The actual tests. In contrast to the tests in testIntStringCompare(), here we can test only
+  // monomials with a mathing number of variables. Someting like  testComp({2}, {3,1}, +1); 
+  // would be malformed because we would try to compare the univariate lhs f(x) = x^2 with the 
+  // bivariate rhs g(x,y) = x^3 y^1. This is not defined. 
+
+  // Tests with univariate polynomials: 
+  ok &= testComp({0},   {0},    0);       // c    ==  c
+  ok &= testComp({0},   {1},   -1);       // 0    <   x^1   !!!FAILS!!!
+  ok &= testComp({1},   {0},   +1);       // x^1  >   c     !!!FAILS!!!
+
+
+  // Tests with bivariate polynomials:
+  // ...TBC...
+
+
+  // Tests with trivariate polynomials:
+  // ...TBC...
+
+
+  return ok;
+}
+
 
 /** Unit test function for the class rsMultiVarMonomial. */
 bool testMultiVarMonomial()
@@ -15312,7 +15336,7 @@ bool testMultiVarMonomial()
   // the same result as the algorithm implemented in the compLexic() function. It then also 
   // verifies that the lessLex() function returns the correct boolean result that corresponds to 
   // the integers produced by the two functions mentioned before.
-  auto testCompare = [&lessLex, & compLex](const Mono& t1, const Mono& t2) 
+  auto testCompLex = [&lessLex, &compLex](const Mono& t1, const Mono& t2) 
   {
     bool ok = true;
 
@@ -15342,18 +15366,21 @@ bool testMultiVarMonomial()
     return ok;
   };
 
+
+
+
   // Test a couple of cases of lexicographical complarisons:
   Mono t1, t2;
-  t1.setup( 5.f, { 2,3,1 });           // t1 =  5 * x^2 * y^3 * z^1
-  t2.setup(-2.f, { 3,1,2 });           // t2 = -2 * x^3 * y^1 * z^2
-  ok &= testCompare(t1, t2);           // xxxyzz < xxyyyz lexicographically, so t2 < t1
+  t1.setup( 5.f, { 2,3,1 });           // t1 =  5 x^2 y^3 z^1
+  t2.setup(-2.f, { 3,1,2 });           // t2 = -2 x^3 y^1 z^2
+  ok &= testCompLex(t1, t2);           // xxxyzz < xxyyyz lexicographically, so t2 < t1
   // ...TBC...
 
   // Test some manipulations of monomials:
   Mono t3;
   t3 = t2;
   t3.multiplyBy(t1);
-  ok &= t3 == Mono(-10.f, {5,4,3});    // t3 = -10 * x^5 * y^4 * z^3
+  ok &= t3 == Mono(-10.f, {5,4,3});    // t3 = -10 x^5 y^4 z^3
 
   return ok;
 
@@ -15371,8 +15398,11 @@ bool testMultiVarMonomial()
   //   isMultiplicableBy() or isMultiplyableBy() function is not needed because multiplication is
   //   always defined....assuming the number of variables matches, that is.
   //
-  // - Maybe implement different orders like reverse lexicograpphic, graded (reverse) lex. , etc.
+  // - Maybe implement different orders like reverse lexicographic, graded (reverse) lex. , etc.
   //   See book IVA. It says, different orderings are useful in different situations.
+  //
+  // - Implement the tests in the same way as in testIntStringCompare() - with the same kind of 
+  //   helper function
 }
 
 bool testMultiVarPolyBasics()  // Rename to testMultiVarPolyBasics
@@ -15587,6 +15617,7 @@ void testMultiVarPolynomial()
   bool ok = true;
 
   ok &= testIntStringCompare();
+  ok &= testMultiMonomCompare();
   ok &= testMultiVarMonomial();
   ok &= testMultiVarPolyBasics();
   ok &= testMultiVarPolyDiv(); 

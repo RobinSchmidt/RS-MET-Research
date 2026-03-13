@@ -435,7 +435,7 @@ int rsMultiVarMonomial<T>::compLexic(
 
   for(size_t i = 0; i < lhs.getNumVariables(); i++)
   {
-    int d = rhs.getPower(i) - lhs.getPower(i);
+    int d = lhs.getPower(i) - rhs.getPower(i);
     if(d < 0)
       return -1;
     if(d > 0)

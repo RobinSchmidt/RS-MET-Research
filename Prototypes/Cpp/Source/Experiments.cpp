@@ -15302,8 +15302,8 @@ bool testMultiMonomCompare()
 
   // Tests with univariate polynomials: 
   ok &= testComp({0},   {0},    0);       // c    ==  c
-  ok &= testComp({0},   {1},   -1);       // 0    <   x^1   !!!FAILS!!!
-  ok &= testComp({1},   {0},   +1);       // x^1  >   c     !!!FAILS!!!
+  ok &= testComp({0},   {1},   -1);       // c    <   x^1 
+  ok &= testComp({1},   {0},   +1);       // x^1  >   c
 
 
   // Tests with bivariate polynomials:

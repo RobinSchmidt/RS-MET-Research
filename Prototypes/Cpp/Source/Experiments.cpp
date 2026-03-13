@@ -15298,23 +15298,40 @@ bool testMultiMonomCompare()
   // The actual tests. In contrast to the tests in testIntStringCompare(), here we can test only
   // monomials with a mathing number of variables. Someting like  testComp({2}, {3,1}, +1); 
   // would be malformed because we would try to compare the univariate lhs f(x) = x^2 with the 
-  // bivariate rhs g(x,y) = x^3 y^1. This is not defined. 
+  // bivariate rhs g(x,y) = x^3 y^1. This is not defined. It triggers an assert.
 
   // Tests with univariate polynomials: 
-  ok &= testComp({0},   {0},    0);       // c    ==  c
-  ok &= testComp({0},   {1},   -1);       // c    <   x^1 
-  ok &= testComp({1},   {0},   +1);       // x^1  >   c
-
+  ok &= testComp({0}, {0},  0);               // c    ==  c
+  ok &= testComp({0}, {1}, -1);               // c    <   x^1 
+  ok &= testComp({1}, {0}, +1);               // x^1  >   c
+  ok &= testComp({1}, {1},  0);               // x^1  ==  x^1
+  ok &= testComp({1}, {2}, -1);               // x^1  <   x^2
+  ok &= testComp({2}, {1}, +1);               // x^2  >   x^1
+  ok &= testComp({2}, {2},  0);               // x^2  ==  x^2
 
   // Tests with bivariate polynomials:
+  ok &= testComp({0,0}, {0,0},  0);           // c    ==  c
   // ...TBC...
-
+ 
 
   // Tests with trivariate polynomials:
+  ok &= testComp({0,0,0}, {0,0,0},  0);       // c    ==  c
   // ...TBC...
 
 
   return ok;
+
+  // ToDo:
+  //
+  // - May instead of calling testComp() manually also with swapped arguments, call it only for the
+  //   respective "<=" case, i.e. where lhs <= rhs and in the test itselfs, add a 2nd check where we
+  //   also call rsMultiVarMonomial<Num>::compLexic() with swapped arguments like: 
+  // 
+  //     int invResult = rsMultiVarMonomial<Num>::compLexic(t2, t1);
+  //
+  //  and then do:
+  // 
+  //    return (result == target) && (invResult == -target);
 }
 
 

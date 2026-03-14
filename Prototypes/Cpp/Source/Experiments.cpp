@@ -15304,16 +15304,94 @@ bool testIncWithWrap()
 
   using Vec = std::vector<int>;
 
+  /*
   Vec c(3);             ok &= c == Vec({0,0,0});    // Our counter has 3 digits
   rsIncWithWrap(c, 4);  ok &= c == Vec({0,0,1});
   rsIncWithWrap(c, 4);  ok &= c == Vec({0,0,2});
   rsIncWithWrap(c, 4);  ok &= c == Vec({0,0,3});
+
   rsIncWithWrap(c, 4);  ok &= c == Vec({0,1,0});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,1,1});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,1,2});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,1,3});
+
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,2,0});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,2,1});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,2,2});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,2,3});
+
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,3,0});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,3,1});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,3,2});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,3,3});
+
+
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,0,0});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,0,1});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,0,2});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,0,3});
+
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,1,0});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,1,1});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,1,2});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,1,3});
+
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,2,0});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,2,1});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,2,2});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,2,3});
+
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,3,0});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,3,1});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,3,2});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({1,3,3});
+  */
+
+
+  Vec c(3);                                // Our counter has 3 digits
+  ok &= c == Vec({0,0,0});                 // It should start at 000
+
+  // Helper function to excute the increment and verify that after the increment, the counter c 
+  // matches the given target:
+  auto incAndCheck = [&](Vec target)       // Maybe we can pass target by reference?
+  {
+    rsIncWithWrap(c, 4);
+    return c == target;
+  };
+
+  ok &= incAndCheck({0,0,1});
+  ok &= incAndCheck({0,0,2});
+  ok &= incAndCheck({0,0,3});
+
+  ok &= incAndCheck({0,1,0});
+  ok &= incAndCheck({0,1,1});
+  ok &= incAndCheck({0,1,2});
+  ok &= incAndCheck({0,1,3});
+
+  ok &= incAndCheck({0,2,0});
+  ok &= incAndCheck({0,2,1});
+  ok &= incAndCheck({0,2,2});
+  ok &= incAndCheck({0,2,3});
+
+  ok &= incAndCheck({0,3,0});
+  ok &= incAndCheck({0,3,1});
+  ok &= incAndCheck({0,3,2});
+  ok &= incAndCheck({0,3,3});
+
+
+
+
+
   // ...
 
 
     
   return ok;
+
+  // ToDo:
+  //
+  // - Maybe write a little helper function that we can call like e.g. incAndCheck({2,1,3}) and use
+  //   that instead of the sequence of calling rsInc..., ok &= ...
 
 }
 

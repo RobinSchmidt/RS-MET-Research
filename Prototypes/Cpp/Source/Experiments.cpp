@@ -15275,6 +15275,109 @@ bool testIntStringCompare()
   //   statements) is covered at least once, better multiple times.
 }
 
+/** We interpet the given "digits" vector a digits of a number in a given "base" and we increment
+that number by one (in place). ...TBC... */
+void rsIncWithWrap(std::vector<int>& digits, int base = 10)
+{
+  size_t N = digits.size();
+
+  int i = N-1;
+  while(i >= 0)
+  {
+    digits[i] += 1;
+    if(digits[i] >= base)
+    {
+      digits[i] = 0;             // Wrap around
+      i--;
+    }
+    else
+    {
+      break;
+    }
+  }
+}
+// Needs tests!
+
+bool testIncWithWrap()
+{  
+  bool ok = true;
+
+  using Vec = std::vector<int>;
+
+  Vec c(3);             ok &= c == Vec({0,0,0});    // Our counter has 3 digits
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,0,1});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,0,2});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,0,3});
+  rsIncWithWrap(c, 4);  ok &= c == Vec({0,1,0});
+  // ...
+
+
+    
+  return ok;
+
+}
+
+template<class T>
+bool isValidOrder(const rsMultiVarMonomLess<T>* less, int numVars, int maxDegree)
+{
+
+
+  bool ok = true;
+
+  ok &= testIncWithWrap();
+
+  // ...something to do....
+
+  return ok;
+}
+
+
+bool testMultiMonomOrders()
+{
+  bool ok = true;
+
+  using Num = float;
+  using Ord = rsMultiVarMonomLess<Num>;
+
+  Ord* less = nullptr;
+
+  less = new rsMultiVarMonomLessLexic<Num>();
+  ok &= isValidOrder(less, 1, 5);
+  delete less;
+
+
+  return ok;
+
+  // ToDo:
+  //
+  // - Write a function isValidOrder(const rsMultiVarMonomLess* less, int numVars, int maxDegree)
+  //   that verifies for the given "less" object, if the requirements for a proper monomial order
+  //   are satisfied (see IVA pg 55). These are: trichotomy, totality, transitivity and
+  //   product compatibility (the latter term I made up myself). So maybe the function should call
+  //   4 lower level functions isTrichotomic(), isTotal(), isTransitive() and isProductCompatible() 
+  //   or something. Inside these functions, we have nested loops that produce 2 (in isTotal()) or
+  //   3 (in all others) example polynomials for which the desired properties are verified. The 
+  //   example polynomials are all poylnomials up to some given total degree. I think, there are 
+  //   numVars^maxDegree many of them - and that number we have to take ^3 for the triple nesting, 
+  //   so the computational cost of this check may be quite high - so we need to be careful with 
+  //   the numbers. Then use this function for unit testing our different orders. Eventually, these
+  //   test functions should go to the library because we expect client code to define its own 
+  //   orders, so it may want to have access to these tests as well to make sure that the defined 
+  //   orders are actually valid.
+  //
+  // - Try to get rid of these repetitive new/test/delete sequences by somehow wrapping ths 3-step
+  //   sequence into a single function call like:
+  // 
+  //     ok &= checkOrder<rsMultiVarMonomLessLexic<Num>>(1,5);
+  // 
+  //   or something similar. Maybe isValidOrder() itself can be rewritten that way. But maybe it's
+  //   better to keep it as is and write a 2nd function on top of it because we later may want to
+  //   verify parametrized order objects, so we really want to be able to pass an actual object
+  //   rather than just specifying the object's type at the call site.
+}
+
+
+
 /** Unit test function for the rsMultiVarMonomial<T>::compLexic() function. It works the same way
 as testIntStringCompare(), just that it operates on multivariate monomials rather than 
 int-strings. */
@@ -15340,21 +15443,6 @@ bool testMultiMonomCompare()
   //  and then do:
   // 
   //    return (result == target) && (invResult == -target);
-  //
-  // - Write a function isValidOrder(const rsMultiVarMonomLess* less, int numVars, int maxDegree)
-  //   that verifies for the given "less" object, if the requirements for a proper monomial order
-  //   are satisfied (see IVA pg 55). These are: trichotomy, totality, transitivity and
-  //   product compatibility (the latter term I made up myself). So maybe the function should call
-  //   4 lower level functions isTrichotomic(), isTotal(), isTransitive() and isProductCompatible() 
-  //   or something. Inside these functions, we have nested loops that produce 2 (in isTotal()) or
-  //   3 (in all others) example polynomials for which the desired properties are verified. The 
-  //   example polynomials are all poylnomials up to some given total degree. I think, there are 
-  //   numVars^maxDegree many of them - and that number we have to take ^3 for the triple nesting, 
-  //   so the computational cost of this check may be quite high - so we need to be careful with 
-  //   the numbers. Then use this function for unit testing our different orders. Eventually, these
-  //   test functions should go to the library because we expect client code to define its own 
-  //   orders, so it may want to have access to these tests as well to make sure that the defined 
-  //   orders are actually valid.
 }
 
 
@@ -15657,6 +15745,7 @@ void testMultiVarPolynomial()
   bool ok = true;
 
   ok &= testIntStringCompare();
+  ok &= testMultiMonomOrders();
   ok &= testMultiMonomCompare();
   ok &= testMultiVarMonomial();
   ok &= testMultiVarPolyBasics();

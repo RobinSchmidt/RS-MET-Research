@@ -15279,7 +15279,7 @@ bool testIntStringCompare()
 that number by one (in place). ...TBC... */
 void rsIncWithWrap(std::vector<int>& digits, int base = 10)
 {
-  size_t N = digits.size();
+  int N = (int) digits.size();
   int i = N-1;
   while(i >= 0)
   {
@@ -15298,8 +15298,8 @@ void rsIncWithWrap(std::vector<int>& digits, int base = 10)
 // Maybe rename to something like rsIncrementDigitCounter()
 
 /** Unit test for rsIncWithWrap(). We use 3 digits and base 4 and check the results of the 
-increments for all possible states of the counter. There are 4^3 = 64 of them. In general, the 
-number of possible counter states is base^numDigits. */
+increments for all possible states of the counter from 000 to 333. There are 4^3 = 64 of these
+states. In general, the number of possible counter states is base^numDigits. */
 bool testIncWithWrap()  // Maybe rename to testIncWithWrap_3_4()
 {  
   bool ok = true;
@@ -15307,17 +15307,21 @@ bool testIncWithWrap()  // Maybe rename to testIncWithWrap_3_4()
   using Vec = std::vector<int>;
 
   Vec c(3);                                 // Our counter has 3 digits
-  ok &= c == Vec({0,0,0});                  // It should start at 000
 
   // Helper function to excute the increment and verify that after the increment, the counter c 
-  // matches the given target:
-  auto iac = [&](Vec target)        // Maybe we can pass target by reference?
+  // matches the given target. iac stands for increment-and-check:
+  auto iac = [&](Vec target)                // Maybe we can pass target by reference?
   {
     rsIncWithWrap(c, 4);                    // The 2nd argument 4 is the base we use.
     return c == target;
   };
-  // iac stands for increment-and-check
 
+  // The counter c should start at 000:
+  ok &= c == Vec({0,0,0});
+
+  // Now we succesively increment the counter and verify that after each increment, the state is as
+  // expected. A check for the {0,0,0} state is missing here becasue it has already been checked 
+  // and that check doesn't fit the pattern because we always increment before the check:
                       ok &= iac({0,0,1}); ok &= iac({0,0,2}); ok &= iac({0,0,3});
   ok &= iac({0,1,0}); ok &= iac({0,1,1}); ok &= iac({0,1,2}); ok &= iac({0,1,3});
   ok &= iac({0,2,0}); ok &= iac({0,2,1}); ok &= iac({0,2,2}); ok &= iac({0,2,3});
@@ -15339,7 +15343,7 @@ bool testIncWithWrap()  // Maybe rename to testIncWithWrap_3_4()
   ok &= iac({3,3,0}); ok &= iac({3,3,1}); ok &= iac({3,3,2}); ok &= iac({3,3,3});               
     
   // The now reached {3,3,3} state is the biggest representable state. Trying to increment that 
-  // state should wrap around back to 000:
+  // state once again should wrap the state around back to 000:
   ok &= iac({0,0,0});
 
   return ok;
@@ -15386,9 +15390,19 @@ bool isProductStable(const rsMultiVarMonomLess<T>* less, int numVars, int maxDeg
     rsIncWithWrap(a, maxDegree);
   }
 
-
   return ok;
 
+
+  // Notes:
+  //
+  // - In the notation  f(x) = 1 * x^a, the variables x and a are actually vectors such that it 
+  //   means:  f(x) = 1 * x0^a0 * x1^a1 * x2^a2 * ...  where a0,a1,a2 are the entries of the 
+  //   exponents (or powers) vector a and x0,x1,x2, ... are the variables. The same applies to 
+  //   g(x) and h(x). So, we have 3 vectors a,b,c that each loop independently through all 
+  //   possible configuations of the exponents for the given maximum (total) degree of the 
+  //   monomial.
+  //
+  //
   // ToDo:
   //
   // - Maybe the 4 functions isProductStable(), isTransitive(), etc. should all take the less 

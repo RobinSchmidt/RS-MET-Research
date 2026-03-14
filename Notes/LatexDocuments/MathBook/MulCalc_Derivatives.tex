@@ -128,7 +128,7 @@ Due to the symmetry of the partial derivatives when $f$ is twice continuously di
 \label{Eq:TaylorMultivariate2ndOrder}
  f(\mathbf{x + h}) \approx f(\mathbf{x}) + \mathbf{g^T h} + \frac{1}{2} \mathbf{h^T H h}
 \end{equation}	
-for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then this quadratic approximation function will be the locally (at $\mathbf{x}$) best fitting paraboloid. Such second order approximations of a multivariate scalar function play an important role in numerical optimization algorithms, i.e. algorithms that try to locate minima or maxima of such functions. The simpler of such algorithms use only the gradient, the more advanced ones may also use (an approximation of) the Hessian.
+for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then this quadratic approximation function will be the locally (at $\mathbf{x}$) best fitting paraboloid. Such second order approximations of a multivariate scalar function play an important role in numerical optimization algorithms, i.e. algorithms that try to locate minima or maxima of such functions. The simpler ones of these algorithms\footnote{For example: gradient descent and its refinements (like using adaptive step size control and/or momentum terms).} use only the gradient but the more advanced ones\footnote{For example: quasi-Newton methods or algorithms based on so called "conjugate gradients".} may also use (an approximation of) the Hessian. So, these ideas are very important in practical applications that involve multidimensional optimization such as machine learning.
 
 % https://en.wikipedia.org/wiki/Hessian_matrix#Generalization_to_the_complex_case
 
@@ -141,7 +141,7 @@ The approximation given in equation (\ref{Eq:TaylorMultivariate2ndOrder}) can be
  \frac{1}{1!} \sum_{i=1}^{n} \frac{\partial f}{\partial x_i} h_i + 
  \frac{1}{2!} \sum_{i=1}^{n} \sum_{j=1}^{n}  \frac{\partial f^2}{\partial x_i x_j} h_i h_j
 \end{equation}
-Writing it like this may help us to recognize a pattern that we are familiar with from the one dimensional Taylor series formula. A general multivariate Taylor polynomial would look like this:
+Writing it like this may help us to recognize a pattern that we are familiar with from the one dimensional Taylor series formula and it may enable us to find the proper generalization for approximations of arbitrary order. Without further ado, I'll give it to you: A general multivariate Taylor polynomial looks like this:
 \begin{equation}
 \label{Eq:TaylorSeriesMultiDim}
  f(\mathbf{x + h}) \approx
@@ -254,7 +254,7 @@ Now we can write down the $m$-th order Taylor approximation rather neatly as:
 f(\mathbf{x}) \approx \sum_{|\mathbf{k}| \leq m} \frac{1}{\mathbf{k}!} 
                       (\nabla ^ {\mathbf{k}} f)(\mathbf{a})  (\mathbf{x - a})^{\mathbf{k}}
 \end{equation}
-Whether such a condensed notation is really useful - I don't know. It requires us to be able to dissect it in our heads. I can't do that easily. I mean - really - what the hell is going on here? We are raising a differential operator to the power of a multi-index! Knowing what that is even supposed to mean legitimately qualifies as rather advanced stuff - at least in my book. In practice, I really prefer equation (\ref{Eq:TaylorSeriesMultiDim}). It may be verbose but at least, it's a straightforward generalization of the 1D case. I have given the other notations here not to show off but in order to enable the reader to translate them into the more elementary notation when they come across the more advanced notation somewhere in the wild, i.e. when reading a math-heavy paper or something. Some authors tend to just throw these fancy equations around\footnote{Preferably with intimidating remarks like "recall that" or "as everybody knows" or "obviously", etc..}, expecting the reader to just know, what they are supposed to mean. So now you know. TODO: figure out if there's a common way to write it in tensor notation (maybe using Einstein summation convention) - if so, give that too. %Maybe express the coeffs also in terms of multinomial coefficients.
+Whether such a condensed notation is really useful - I don't know. It requires us to be able to dissect it in our heads. I can't do that easily. I mean - really - what the hell is going on here? We are raising a differential operator to the power of a multi-index! Knowing what that is even supposed to mean legitimately qualifies as rather advanced stuff - at least in my book, which this is. In practice, I really prefer equation (\ref{Eq:TaylorSeriesMultiDim}). It may be verbose but at least, it's a straightforward generalization of the 1D case. I have given the other notations here not to show off but in order to enable the reader to translate them into the more elementary notation when they come across the more advanced notation somewhere in the wild, i.e. when reading a math-heavy paper or something. Some authors tend to just throw these fancy equations around\footnote{Preferably with intimidating remarks like "recall that" or "as everybody knows" or "obviously", etc..}, expecting the reader to just know, what they are supposed to mean. So now you know. TODO: figure out if there's a common way to write it in tensor notation (maybe using Einstein summation convention) - if so, give that too. %Maybe express the coeffs also in terms of multinomial coefficients.
 
 % See Arens, pg 891
 
@@ -335,6 +335,11 @@ Whether such a condensed notation is really useful - I don't know. It requires u
 %
 % ...ist Teil der Playlist:
 % https://www.youtube.com/watch?v=IcYB7cWLurI&list=PLdTL21qNWp2YKtHlyM7u_AOaQaBcvqdrO&index=6
+
+
+% Why I DON'T Like Calculus III
+% https://www.youtube.com/watch?v=_37sn8_s8js
+% -About how differential give a simpler approach to multivariable calculus than partial derivatives
 
 \subsubsection{The Total Derivative}
 

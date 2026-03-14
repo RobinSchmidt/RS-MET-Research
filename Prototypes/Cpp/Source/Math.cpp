@@ -447,6 +447,13 @@ int rsMultiVarMonomial<T>::compLexic(
   // want to define here, we need a special case rule for when one of the exponent-arrays is 
   // all-zeros? Maybe the order we want to define here doesn't even qualify as a monomial order? 
   // A monomial order must satisfy certain requirements. Figure that out!
+  // Maybe the fact that we represent constant terms with an all-zeros array of powers is an 
+  // implementation detail that the book didn't anticipate and the orders discussed there only 
+  // apply to terms that actually contain any variables? ...but I'm not really sure, if that's
+  // plausible. After all, to represent terms where any variable is missing, a zero must occur and
+  // and th all-zeros case would seem to be the natural way to represent constant terms in this
+  // framework. Maybe the book also assumes this but would put the constnats last. It alway 
+  // sorts descending anyway so maybe when sorting descending, it all woroks out?
 }
 
 template<class T>

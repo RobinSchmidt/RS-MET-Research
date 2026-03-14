@@ -15340,6 +15340,21 @@ bool testMultiMonomCompare()
   //  and then do:
   // 
   //    return (result == target) && (invResult == -target);
+  //
+  // - Write a function isValidOrder(const rsMultiVarMonomLess* less, int numVars, int maxDegree)
+  //   that verifies for the given "less" object, if the requirements for a proper monomial order
+  //   are satisfied (see IVA pg 55). These are: trichotomy, totality, transitivity and
+  //   product compatibility (the latter term I made up myself). So maybe the function should call
+  //   4 lower level functions isTrichotomic(), isTotal(), isTransitive() and isProductCompatible() 
+  //   or something. Inside these functions, we have nested loops that produce 2 (in isTotal()) or
+  //   3 (in all others) example polynomials for which the desired properties are verified. The 
+  //   example polynomials are all poylnomials up to some given total degree. I think, there are 
+  //   numVars^maxDegree many of them - and that number we have to take ^3 for the triple nesting, 
+  //   so the computational cost of this check may be quite high - so we need to be careful with 
+  //   the numbers. Then use this function for unit testing our different orders. Eventually, these
+  //   test functions should go to the library because we expect client code to define its own 
+  //   orders, so it may want to have access to these tests as well to make sure that the defined 
+  //   orders are actually valid.
 }
 
 

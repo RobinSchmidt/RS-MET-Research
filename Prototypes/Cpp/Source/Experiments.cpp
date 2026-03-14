@@ -15280,82 +15280,40 @@ that number by one (in place). ...TBC... */
 void rsIncWithWrap(std::vector<int>& digits, int base = 10)
 {
   size_t N = digits.size();
-
   int i = N-1;
   while(i >= 0)
   {
-    digits[i] += 1;
+    digits[i] += 1;              // Increment digit at index i.
     if(digits[i] >= base)
     {
-      digits[i] = 0;             // Wrap around
-      i--;
+      digits[i] = 0;             // Wrap around the digit if needed.
+      i--;                       // Prepare for potential carry to next higher digit.
     }
     else
     {
-      break;
+      break;                     // No carry occurred so we are done.
     }
   }
 }
-// Needs tests!
+// Maybe rename to something like rsIncrementDigitCounter()
 
+/** Unit test for rsIncWithWrap(). We use 3 digits and base 4 and check the results of the 
+increments for all possible states of the counter. There are 4^3 = 64 of them. In general, the 
+number of possible counter states is base^numDigits. */
 bool testIncWithWrap()
 {  
   bool ok = true;
 
   using Vec = std::vector<int>;
 
-  /*
-  Vec c(3);             ok &= c == Vec({0,0,0});    // Our counter has 3 digits
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,0,1});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,0,2});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,0,3});
-
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,1,0});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,1,1});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,1,2});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,1,3});
-
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,2,0});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,2,1});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,2,2});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,2,3});
-
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,3,0});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,3,1});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,3,2});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({0,3,3});
-
-
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,0,0});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,0,1});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,0,2});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,0,3});
-
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,1,0});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,1,1});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,1,2});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,1,3});
-
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,2,0});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,2,1});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,2,2});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,2,3});
-
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,3,0});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,3,1});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,3,2});
-  rsIncWithWrap(c, 4);  ok &= c == Vec({1,3,3});
-  */
-
-
-  Vec c(3);                                // Our counter has 3 digits
-  ok &= c == Vec({0,0,0});                 // It should start at 000
+  Vec c(3);                                 // Our counter has 3 digits
+  ok &= c == Vec({0,0,0});                  // It should start at 000
 
   // Helper function to excute the increment and verify that after the increment, the counter c 
   // matches the given target:
-  auto incAndCheck = [&](Vec target)       // Maybe we can pass target by reference?
+  auto incAndCheck = [&](Vec target)        // Maybe we can pass target by reference?
   {
-    rsIncWithWrap(c, 4);
+    rsIncWithWrap(c, 4);                    // The 2nd argument 4 is the base we use.
     return c == target;
   };
 
@@ -15379,34 +15337,162 @@ bool testIncWithWrap()
   ok &= incAndCheck({0,3,3});
 
 
+  ok &= incAndCheck({1,0,0});
+  ok &= incAndCheck({1,0,1});
+  ok &= incAndCheck({1,0,2});
+  ok &= incAndCheck({1,0,3});
+
+  ok &= incAndCheck({1,1,0});
+  ok &= incAndCheck({1,1,1});
+  ok &= incAndCheck({1,1,2});
+  ok &= incAndCheck({1,1,3});
+
+  ok &= incAndCheck({1,2,0});
+  ok &= incAndCheck({1,2,1});
+  ok &= incAndCheck({1,2,2});
+  ok &= incAndCheck({1,2,3});
+
+  ok &= incAndCheck({1,3,0});
+  ok &= incAndCheck({1,3,1});
+  ok &= incAndCheck({1,3,2});
+  ok &= incAndCheck({1,3,3});
 
 
+  ok &= incAndCheck({2,0,0});
+  ok &= incAndCheck({2,0,1});
+  ok &= incAndCheck({2,0,2});
+  ok &= incAndCheck({2,0,3});
 
-  // ...
+  ok &= incAndCheck({2,1,0});
+  ok &= incAndCheck({2,1,1});
+  ok &= incAndCheck({2,1,2});
+  ok &= incAndCheck({2,1,3});
+
+  ok &= incAndCheck({2,2,0});
+  ok &= incAndCheck({2,2,1});
+  ok &= incAndCheck({2,2,2});
+  ok &= incAndCheck({2,2,3});
+
+  ok &= incAndCheck({2,3,0});
+  ok &= incAndCheck({2,3,1});
+  ok &= incAndCheck({2,3,2});
+  ok &= incAndCheck({2,3,3});
 
 
-    
+  ok &= incAndCheck({3,0,0});
+  ok &= incAndCheck({3,0,1});
+  ok &= incAndCheck({3,0,2});
+  ok &= incAndCheck({3,0,3});
+
+  ok &= incAndCheck({3,1,0});
+  ok &= incAndCheck({3,1,1});
+  ok &= incAndCheck({3,1,2});
+  ok &= incAndCheck({3,1,3});
+
+  ok &= incAndCheck({3,2,0});
+  ok &= incAndCheck({3,2,1});
+  ok &= incAndCheck({3,2,2});
+  ok &= incAndCheck({3,2,3});
+
+  ok &= incAndCheck({3,3,0});
+  ok &= incAndCheck({3,3,1});
+  ok &= incAndCheck({3,3,2});
+  ok &= incAndCheck({3,3,3});               // This is the biggest representable state.
+
+
+  ok &= incAndCheck({0,0,0});               // Trying to increment that should wrap back to 000.
+
+  return ok;
+}
+
+
+template<class T>
+bool isProductStable(const rsMultiVarMonomLess<T>* less, int numVars, int maxDegree)
+{
+  rsError("Function is still under construction");
+
+  bool ok = true;
+
+  using Vec = std::vector<int>;
+  using Mon = rsMultiVarMonomial<T>;
+
+  // Compute the number of possible different (monic) monomials for the given number of variables 
+  // and the given maximum degree:
+  int numMons = pow(maxDegree, numVars);
+
+  // Let x^a, x^b and x^c each take on all possible monomials and for each setting, verify that the 
+  // requirements for a monomial order hold:
+  Vec a(numVars), b(numVars), c(numVars);
+  for(int i = 0; i < numMons; i++)
+  {
+    Mon xa(T(1), a);                            // f(x) = 1 * x^a
+    for(int j = 0; j < numMons; j++)
+    {
+      Mon xb(T(1), b);                          // g(x) = 1 * x^b
+      for(int k = 0; k < numMons; k++)
+      {
+        Mon xc(T(1), c);                        // h(x) = 1 * x^c
+
+        //bool a_less_b = less->less(a, b);
+        //bool b_less_a = less->less(b, a);
+
+        // ...TBC...
+
+
+        rsIncWithWrap(c, maxDegree);
+      }
+      rsIncWithWrap(b, maxDegree);
+    }
+    rsIncWithWrap(a, maxDegree);
+  }
+
+
   return ok;
 
   // ToDo:
   //
-  // - Maybe write a little helper function that we can call like e.g. incAndCheck({2,1,3}) and use
-  //   that instead of the sequence of calling rsInc..., ok &= ...
-
+  // - Maybe the 4 functions isProductStable(), isTransitive(), etc. should all take the less 
+  //   function and 3 example monomials as inputs such that we only need to write the nested loop
+  //   once
 }
 
 template<class T>
 bool isValidOrder(const rsMultiVarMonomLess<T>* less, int numVars, int maxDegree)
 {
-
-
   bool ok = true;
 
-  ok &= testIncWithWrap();
-
-  // ...something to do....
+  //ok &= isTotal(        less, numVars, maxDegree);
+  //ok &= isTrichotomic(  less, numVars, maxDegree);
+  //ok &= isTransitive(   less, numVars, maxDegree);
+  ok &= isProductStable(less, numVars, maxDegree);
 
   return ok;
+
+
+  // ToDo:
+  //
+  // - Write a function isValidOrder(const rsMultiVarMonomLess* less, int numVars, int maxDegree)
+  //   that verifies for the given "less" object, if the requirements for a proper monomial order
+  //   are satisfied (see IVA pg 55). These are: trichotomy, totality, transitivity and
+  //   product compatibility. The latter term I made up myself. It could perhaps also be called
+  //   product stability. The requirement is that for any 3 monomials x^a, x^b, x^c, we must have:
+  //   If x^a < x^b then we also have x^c * x^a < x^c * x^b. In this notation x,a,b,c are vectors 
+  //   such that x^a actually means: x^a = x0^a0 * x1^a1 * x2^a2 * ...
+  // 
+  // - Maybe the function should call 4 lower level functions isTrichotomic(), isTotal(), 
+  //   isTransitive() and isProductStable() or something. Inside these functions, we have nested 
+  //   loops that produce 2 (in isTotal()) or 3 (in all others) example polynomials for which the 
+  //   desired properties are verified. The example mononomials are all monomials up to some 
+  //   given total degree. We can produce them all one by one via using rsIncWithWrap() of a vector
+  //   of integers representing the powers. As coefficient, we can just always use 1. The 
+  //   coefficient does not matter for this ordering.
+  // 
+  // - I think, there are maxDegree^numVars many of those different monomials - and that number we
+  //   have to take ^3 for the triple nesting, so the computational cost of this check may be quite
+  //   high - so we need to be careful with the numbers. Then use this function for unit testing 
+  //   our different orders. Eventually, these test functions should go to the library because we 
+  //   expect client code to define its own orders, so it may want to have access to these tests as
+  //   well to make sure that the defined orders are actually valid.
 }
 
 
@@ -15421,27 +15507,14 @@ bool testMultiMonomOrders()
 
   less = new rsMultiVarMonomLessLexic<Num>();
   ok &= isValidOrder(less, 1, 5);
+  ok &= isValidOrder(less, 2, 5);
+  ok &= isValidOrder(less, 3, 4);
   delete less;
 
 
   return ok;
 
   // ToDo:
-  //
-  // - Write a function isValidOrder(const rsMultiVarMonomLess* less, int numVars, int maxDegree)
-  //   that verifies for the given "less" object, if the requirements for a proper monomial order
-  //   are satisfied (see IVA pg 55). These are: trichotomy, totality, transitivity and
-  //   product compatibility (the latter term I made up myself). So maybe the function should call
-  //   4 lower level functions isTrichotomic(), isTotal(), isTransitive() and isProductCompatible() 
-  //   or something. Inside these functions, we have nested loops that produce 2 (in isTotal()) or
-  //   3 (in all others) example polynomials for which the desired properties are verified. The 
-  //   example polynomials are all poylnomials up to some given total degree. I think, there are 
-  //   numVars^maxDegree many of them - and that number we have to take ^3 for the triple nesting, 
-  //   so the computational cost of this check may be quite high - so we need to be careful with 
-  //   the numbers. Then use this function for unit testing our different orders. Eventually, these
-  //   test functions should go to the library because we expect client code to define its own 
-  //   orders, so it may want to have access to these tests as well to make sure that the defined 
-  //   orders are actually valid.
   //
   // - Try to get rid of these repetitive new/test/delete sequences by somehow wrapping ths 3-step
   //   sequence into a single function call like:
@@ -15823,6 +15896,7 @@ void testMultiVarPolynomial()
   bool ok = true;
 
   ok &= testIntStringCompare();
+  ok &= testIncWithWrap();
   ok &= testMultiMonomOrders();
   ok &= testMultiMonomCompare();
   ok &= testMultiVarMonomial();
@@ -15831,6 +15905,13 @@ void testMultiVarPolynomial()
 
   rsAssert(ok);
 
+
+  // Notes:
+  //
+  // - testIncWithWrap() tests the function rsIncWithWrap() which is needed to produce all the 
+  //   possible exponent arrays inside testMultiMonomOrders().
+  //
+  //
   // ToDo:
   //
   // - Make sure that the unit tests check two important special cases: The case of a polynomial

@@ -518,7 +518,7 @@ class rsMultiVarMonomLess
 
 public:
 
-  virtual bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) = 0;
+  virtual bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const = 0;
 
 };
 
@@ -531,7 +531,7 @@ class rsMultiVarMonomLessLexic : public rsMultiVarMonomLess<T>
 
 public:
 
-  bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) override
+  bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
   {
     return rsMultiVarMonomial<T>::lessLexic(lhs, rhs);
   }

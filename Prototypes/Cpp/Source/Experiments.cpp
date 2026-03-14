@@ -15300,7 +15300,7 @@ void rsIncWithWrap(std::vector<int>& digits, int base = 10)
 /** Unit test for rsIncWithWrap(). We use 3 digits and base 4 and check the results of the 
 increments for all possible states of the counter. There are 4^3 = 64 of them. In general, the 
 number of possible counter states is base^numDigits. */
-bool testIncWithWrap()
+bool testIncWithWrap()  // Maybe rename to testIncWithWrap_3_4()
 {  
   bool ok = true;
 
@@ -15311,96 +15311,36 @@ bool testIncWithWrap()
 
   // Helper function to excute the increment and verify that after the increment, the counter c 
   // matches the given target:
-  auto incAndCheck = [&](Vec target)        // Maybe we can pass target by reference?
+  auto iac = [&](Vec target)        // Maybe we can pass target by reference?
   {
     rsIncWithWrap(c, 4);                    // The 2nd argument 4 is the base we use.
     return c == target;
   };
+  // iac stands for increment-and-check
 
-  ok &= incAndCheck({0,0,1});
-  ok &= incAndCheck({0,0,2});
-  ok &= incAndCheck({0,0,3});
+                      ok &= iac({0,0,1}); ok &= iac({0,0,2}); ok &= iac({0,0,3});
+  ok &= iac({0,1,0}); ok &= iac({0,1,1}); ok &= iac({0,1,2}); ok &= iac({0,1,3});
+  ok &= iac({0,2,0}); ok &= iac({0,2,1}); ok &= iac({0,2,2}); ok &= iac({0,2,3});
+  ok &= iac({0,3,0}); ok &= iac({0,3,1}); ok &= iac({0,3,2}); ok &= iac({0,3,3});
 
-  ok &= incAndCheck({0,1,0});
-  ok &= incAndCheck({0,1,1});
-  ok &= incAndCheck({0,1,2});
-  ok &= incAndCheck({0,1,3});
+  ok &= iac({1,0,0}); ok &= iac({1,0,1}); ok &= iac({1,0,2}); ok &= iac({1,0,3});
+  ok &= iac({1,1,0}); ok &= iac({1,1,1}); ok &= iac({1,1,2}); ok &= iac({1,1,3});
+  ok &= iac({1,2,0}); ok &= iac({1,2,1}); ok &= iac({1,2,2}); ok &= iac({1,2,3});
+  ok &= iac({1,3,0}); ok &= iac({1,3,1}); ok &= iac({1,3,2}); ok &= iac({1,3,3});
 
-  ok &= incAndCheck({0,2,0});
-  ok &= incAndCheck({0,2,1});
-  ok &= incAndCheck({0,2,2});
-  ok &= incAndCheck({0,2,3});
+  ok &= iac({2,0,0}); ok &= iac({2,0,1}); ok &= iac({2,0,2}); ok &= iac({2,0,3});
+  ok &= iac({2,1,0}); ok &= iac({2,1,1}); ok &= iac({2,1,2}); ok &= iac({2,1,3});
+  ok &= iac({2,2,0}); ok &= iac({2,2,1}); ok &= iac({2,2,2}); ok &= iac({2,2,3});
+  ok &= iac({2,3,0}); ok &= iac({2,3,1}); ok &= iac({2,3,2}); ok &= iac({2,3,3});
 
-  ok &= incAndCheck({0,3,0});
-  ok &= incAndCheck({0,3,1});
-  ok &= incAndCheck({0,3,2});
-  ok &= incAndCheck({0,3,3});
-
-
-  ok &= incAndCheck({1,0,0});
-  ok &= incAndCheck({1,0,1});
-  ok &= incAndCheck({1,0,2});
-  ok &= incAndCheck({1,0,3});
-
-  ok &= incAndCheck({1,1,0});
-  ok &= incAndCheck({1,1,1});
-  ok &= incAndCheck({1,1,2});
-  ok &= incAndCheck({1,1,3});
-
-  ok &= incAndCheck({1,2,0});
-  ok &= incAndCheck({1,2,1});
-  ok &= incAndCheck({1,2,2});
-  ok &= incAndCheck({1,2,3});
-
-  ok &= incAndCheck({1,3,0});
-  ok &= incAndCheck({1,3,1});
-  ok &= incAndCheck({1,3,2});
-  ok &= incAndCheck({1,3,3});
-
-
-  ok &= incAndCheck({2,0,0});
-  ok &= incAndCheck({2,0,1});
-  ok &= incAndCheck({2,0,2});
-  ok &= incAndCheck({2,0,3});
-
-  ok &= incAndCheck({2,1,0});
-  ok &= incAndCheck({2,1,1});
-  ok &= incAndCheck({2,1,2});
-  ok &= incAndCheck({2,1,3});
-
-  ok &= incAndCheck({2,2,0});
-  ok &= incAndCheck({2,2,1});
-  ok &= incAndCheck({2,2,2});
-  ok &= incAndCheck({2,2,3});
-
-  ok &= incAndCheck({2,3,0});
-  ok &= incAndCheck({2,3,1});
-  ok &= incAndCheck({2,3,2});
-  ok &= incAndCheck({2,3,3});
-
-
-  ok &= incAndCheck({3,0,0});
-  ok &= incAndCheck({3,0,1});
-  ok &= incAndCheck({3,0,2});
-  ok &= incAndCheck({3,0,3});
-
-  ok &= incAndCheck({3,1,0});
-  ok &= incAndCheck({3,1,1});
-  ok &= incAndCheck({3,1,2});
-  ok &= incAndCheck({3,1,3});
-
-  ok &= incAndCheck({3,2,0});
-  ok &= incAndCheck({3,2,1});
-  ok &= incAndCheck({3,2,2});
-  ok &= incAndCheck({3,2,3});
-
-  ok &= incAndCheck({3,3,0});
-  ok &= incAndCheck({3,3,1});
-  ok &= incAndCheck({3,3,2});
-  ok &= incAndCheck({3,3,3});               // This is the biggest representable state.
-
-
-  ok &= incAndCheck({0,0,0});               // Trying to increment that should wrap back to 000.
+  ok &= iac({3,0,0}); ok &= iac({3,0,1}); ok &= iac({3,0,2}); ok &= iac({3,0,3});
+  ok &= iac({3,1,0}); ok &= iac({3,1,1}); ok &= iac({3,1,2}); ok &= iac({3,1,3});
+  ok &= iac({3,2,0}); ok &= iac({3,2,1}); ok &= iac({3,2,2}); ok &= iac({3,2,3});
+  ok &= iac({3,3,0}); ok &= iac({3,3,1}); ok &= iac({3,3,2}); ok &= iac({3,3,3});               
+    
+  // The now reached {3,3,3} state is the biggest representable state. Trying to increment that 
+  // state should wrap around back to 000:
+  ok &= iac({0,0,0});
 
   return ok;
 }

@@ -633,13 +633,13 @@ Algorithmic Set Theory
 
 - In the mainstream of axiomatic set theory, the axiom of infinity is accepted. But there are also
   the finitists who do not accept that axiom. Maybe by approaching set theory from an algorithmic
-  perspective, we can do away with this axiom.
+  perspective, we can do away with this axiom and replacing it by something else.
   
 - My idea is to first craft a rigorous definition for what it even means for a set to "exist". The
   idea of "existence" in set theory seems to be used in a colloquial sense without even being 
-  defined anywhere (verify that!). If we can agree on a definition for what it means for a set to 
-  exist, the question whether or not certain infinite sets exist leave the realm of belief and enter
-  the realm of mathematical investigation.
+  defined anywhere (verify that!). If we can agree on a mathematical definition for what it means 
+  for a set to exist, the question whether or not certain infinite sets exist leave the realm of 
+  belief and enter the realm of mathematical investigation.
   
 - One possible definition could be: "A proposed set A exists iff it is generatable and verifiable." 
   where we must now define what it means to be "generatable" and "verifiable". I propose:
@@ -658,7 +658,32 @@ Algorithmic Set Theory
   Neumann natural, we may conclude that the set of natural numbers exists. I have implemented 
   algorithms for this. It would remain to prove that they indeed are correct, though.
   
+- We could also assign a complexity of a set. It could be defined in terms the computational 
+  complexity of the (best possible) algorithms to generate the set and to verify set membership. 
+  Sets could have linear, quadratic, polynomial, exponential, etc. complexity. These ideas may fit
+  well together with the idea of thinking about sizes of infinite sets in terms of growth functions
+  rather than cardinalities.
   
+- Maybe with these definitions, we can conclude that countably infinite sets exist but uncountably
+  infinite ones don't. If that is indeed so, it would put the approach in between finitism (which 
+  poses that only finite sets exist) and mainstream set theory (which poses that and infinitude of 
+  different sizes of infinity exists). I think, for a proposed uncountable set such as the real 
+  numbers, the "verification in finite time" requirement would fail. Verifying if a given set is a 
+  real number would take infinitely long. But for any given natural number, the membershiup test 
+  would indeed be doable in finite time.
+  
+- I think, it is specifically the requirement that a generator must be able to generate the set 
+  elements "one after another" is the one that limits us to countable infinity. We can understand 
+  the order in which the set elements are generated as a map from the naturals to the set elements 
+  by just counting our calls to getNextElement(). Maybe we could also call "generatable" as 
+  "serializable" or "sequenceable" or "sequentially generatable".
+  
+- It seems that the question of whether a particular set exists or not is boiled down to the 
+  question of whether or not we can do an infinite number of algorithmic steps - which we would 
+  answer with: "Nope - we can't".
+
+- Maybe write these ideas down into a paper "An Algorithmic Approach to Set Theory".
+
 
 ====================================================================================================
 

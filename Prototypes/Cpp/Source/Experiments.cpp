@@ -15449,6 +15449,10 @@ bool isValidOrder(const rsMultiVarMonomLess<T>* less, int numVars, int maxDegree
   //   well to make sure that the defined orders are actually valid.
   //
   // - Maybe pass the "less" object by reference rather than by pointer
+  //
+  // - Rename maxDegree to maxPower. The term degreee seems to be misleading here because the total
+  //   degree of a monomial is the sume of all exponents but here, each exponent goes from zero
+  //   to maxPower independently such that the maximum total degree is actualls numVars * maxPower.
 }
 
 

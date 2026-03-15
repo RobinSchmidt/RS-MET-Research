@@ -15447,6 +15447,8 @@ bool isValidOrder(const rsMultiVarMonomLess<T>* less, int numVars, int maxDegree
   //   our different orders. Eventually, these test functions should go to the library because we 
   //   expect client code to define its own orders, so it may want to have access to these tests as
   //   well to make sure that the defined orders are actually valid.
+  //
+  // - Maybe pass the "less" object by reference rather than by pointer
 }
 
 

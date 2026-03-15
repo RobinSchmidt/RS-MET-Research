@@ -628,12 +628,39 @@ Should go to Googology in the book:
 https://en.wikipedia.org/wiki/Large_numbers#Standardized_system_of_writing
 
 
+====================================================================================================
+Algorithmic Set Theory
 
+- In the mainstream of axiomatic set theory, the axiom of infinity is accepted. But there are also
+  the finitists who do not accept that axiom. Maybe by approaching set theory from an algorithmic
+  perspective, we can do away with this axiom.
+  
+- My idea is to first craft a rigorous definition for what it even means for a set to "exist". The
+  idea of "existence" in set theory seems to be used in a colloquial sense without even being 
+  defined anywhere (verify that!). If we can agree on a definition for what it means for a set to 
+  exist, the question whether or not certain infinite sets exist leave the realm of belief and enter
+  the realm of mathematical investigation.
+  
+- One possible definition could be: "A proposed set A exists iff it is generatable and verifiable." 
+  where we must now define what it means to be "generatable" and "verifiable". I propose:
+  "A set A is generatable if there exists an algorithm that generates all of it elements one after 
+  another." and: "A set A is verifiable if for any set x, we can algorithmically decide in finite 
+  time whether or not x is an element of A."
 
+- For these algorithms to work, we may first need to specify a way to represent sets via a data 
+  structure or possibly (more generally) via a stateful generator object that can produce sets via
+  some call like generator.getNextSet(). The representation via a generator object may be needed to
+  represent infinite sets. For a simpler representation via a finite data structure, look at my 
+  implementation in the research repo.
+
+- With these definitions, together with the von Neumann construction of the natural numbers and the
+  algorithms that generate the Neumann naturals and the one that verifies if a given set is a von 
+  Neumann natural, we may conclude that the set of natural numbers exists. I have implemented 
+  algorithms for this. It would remain to prove that they indeed are correct, though.
+  
+  
 
 ====================================================================================================
-
-
 
 ToDo:
 

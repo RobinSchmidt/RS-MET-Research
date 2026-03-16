@@ -15350,6 +15350,32 @@ bool testIncWithWrap()  // Maybe rename to testIncWithWrap_3_4()
 }
 
 
+/** Verifies if the given "less" function obejct is product-stable for the given 3 monomials 
+f,g,h. That means that  f < g  implies  f*h < g*h  and  g < f  implies  g*h < f*h. This product 
+stability is an important requirement for a monomial order. */
+template<class T>
+bool isProductStable(
+  const rsMultiVarMonomLess<T>* less,
+  const rsMultiVarMonomial<T>& f,
+  const rsMultiVarMonomial<T>& g,
+  const rsMultiVarMonomial<T>& h)
+{
+  bool ok = true;
+        
+  using Mon = rsMultiVarMonomial<T>;
+
+  Mon fh = f * h;
+  Mon gh = g * h;
+
+  if(less->less(f, g))
+    ok &= less->less(fh, gh);   // f < g  ->  f*h < g*h
+  else if(less->less(g, f))
+    ok &= less->less(gh, gh);   // g < f  ->  g*h < f*h
+  
+  return ok;
+}
+
+
 template<class T>
 bool isProductStable(const rsMultiVarMonomLess<T>* less, int numVars, int maxDegree)
 {
@@ -15376,13 +15402,7 @@ bool isProductStable(const rsMultiVarMonomLess<T>* less, int numVars, int maxDeg
       for(int k = 0; k < numMons; k++)
       {
         Mon xc(T(1), c);                        // h(x) = 1 * x^c
-
-        //bool a_less_b = less->less(a, b);
-        //bool b_less_a = less->less(b, a);
-
-        // ...TBC...
-
-
+        ok &= isProductStable(less, xa, xb, xc);
         rsIncWithWrap(c, maxDegree);
       }
       rsIncWithWrap(b, maxDegree);
@@ -15408,6 +15428,10 @@ bool isProductStable(const rsMultiVarMonomLess<T>* less, int numVars, int maxDeg
   // - Maybe the 4 functions isProductStable(), isTransitive(), etc. should all take the less 
   //   function and 3 example monomials as inputs such that we only need to write the nested loop
   //   once
+  // 
+  // - Rename maxDegree to maxPower.
+  //
+  // - Rename xa,xb,xc to f,g,h
 }
 
 template<class T>

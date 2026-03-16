@@ -520,6 +520,9 @@ public:
 
   virtual bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const = 0;
 
+  // Maybe use the () operator instead of a less() member function. But can operators actually be 
+  // purely virtual? We'll see...
+
 };
 
 

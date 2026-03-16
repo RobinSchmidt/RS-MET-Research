@@ -372,26 +372,35 @@ rsSetNaive rsSetNaive::powerSet(const rsSetNaive& A)
   rsWarning("Warning: function rsSetNaive::powerSet needs more tests."); 
   // I'm not sure about the formula for the inclusion decision
 
-  int N = A.getCardinality();
-  int M = rsPow(2, N);
+  int N = A.getCardinality();      // Cardinality of the input set A
+  int M = rsPow(2, N);             // Cardinality of the power set 2^A
   rsSetNaive P;
   for(size_t m = 0; m < M; m++)
   {
-    rsSetNaive S;                  // Current subset. Has index m
+    rsSetNaive S_m;                // Current subset. Has index m.
     for(int n = 0; n < N; n++)
       if((m >> n) & 1)             // VERIFY! Decides whether to include element n in subset m
-        S.addElement(A[n]);
-    P.addElement(S);
+        S_m.addElement(A[n]);      // Add n-th element of A to subset S_m
+    P.addElement(S_m);             // Add subset S_m of A to the power set P
   }
   return P;
 
-  // The idea for the formula  (m >> n) & 1  is: m runs through all possible bit-patterns of length 
-  // N which are all the numbers between 0 and M-1 in their binary expansion. For every such bit 
-  // pattern, we include the element with index n in the m-th subset S when the bit pattern has a 1 
-  // at the n-th position. The shift-and-mask operation extracts the bit at position n in the 
-  // current number m.
+  // Notes:
+  // 
+  // - The idea for the formula  (m >> n) & 1  is: m runs through all possible bit-patterns of 
+  //   length N which are all the numbers between 0 and M-1 in their binary expansion. For every
+  //   such bit pattern, we include the element with index n in the m-th subset S when the bit 
+  //   pattern has a 1 at the n-th position. The shift-and-mask operation extracts the bit at 
+  //   position n in the current number m.
+  //
+  // - Question: Is it possible to formulate the algorithm purely in terms of set-theoretical
+  //   operations without using the binary bit-trickery? Also I think, it will work correctly only
+  //   for sets A up to N < 31 or something like that. By using uint64_t for M (and maybe for N, 
+  //   too but that doesn't really matter), we could increase the limit to N = 64. That's not much,
+  //   but on the other hand M = 2^N = 2^64 _is_ much more than we could handle in practice anyway
+  //   so this additional limitation may not really matter in practice.
 }
-// Needs tests
+// Needs more unit tests!
 
 rsSetNaive rsSetNaive::transitiveClosure(const rsSetNaive& A)
 {

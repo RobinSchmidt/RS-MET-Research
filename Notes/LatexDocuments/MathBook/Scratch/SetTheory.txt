@@ -687,19 +687,21 @@ Algorithmic Set Theory
 
 - Maybe write these ideas down into a paper "An Algorithmic Approach to Set Theory".
 
+----------------------------------------------------------------------------------------------------
+Set as a data type:
+
 - Maybe the situation should be framed in the language of algebraic specification. We view "Set" as
   an abstract data type that can recursively defined as follows:
   
     Base case: The empty set is a set.
     Recursion: An (unordered) collection of sets is a set.
 	
-- The data type must support the following essential operations:
+- The data type must support the following essential/elementary operations:
 
   Inquiry:
 	isEqualTo(A,B)        Set x Set  ->  Bool     True, iff sets A and B have the same elements.
     isElementOf(A,B)      Set x Set  ->  Bool     True, iff A is an element of B.
-	isSubsetOf(A,B)       Set x Set  ->  Bool     True, if every element of A is also element of B.
-	
+	isSubsetOf(A,B)       Set x Set  ->  Bool     True, iff every element of A is also element of B.
 	
   Construction:
 	makeEmpty()                      ->  Set      Produces the empty set from nothing.
@@ -707,7 +709,9 @@ Algorithmic Set Theory
 	makePair(A,B)         Set x Set  ->  Set      For two sets A,B, produces the set {A,B}
 	makePower(A)          Set        ->  Set      Produces power set of set A, i.e. set of all subsets.
 	...TBC...
-	Maybe instead of make.., use get.. or maybe get should be reserved to extract elements.
+	Look up the Zermelo-Fraenkel axioms. These should be used to define all of the elementary 
+	operations for construction of sets. 
+	Maybe instead of make.., use get.. but maybe get should be reserved to extract elements.
 	
 - For convenience, the data type may support the following additional operations that can be built 
   from the essential ones:
@@ -722,7 +726,6 @@ Algorithmic Set Theory
 	makeTuple(A,B,...)    Set x ...  ->  Set
     ...TBC...
   
-
 - For technical (i.e. implementation) reasons, we may also want introduce some additional 
   operations:
 
@@ -731,6 +734,7 @@ Algorithmic Set Theory
     getMaximum(A)        Set         ->  Set     Maximum of set A.	
     getElement(A,n)      Set x Nat   ->  Set     Returns n-th element of set A.
 	getSomeElementOf(A)  Set         ->  Set     Returns some element of set A.
+	getNumElements(A)    Set         ->  Nat     Returns the numer of elements of A.
 
 - To formulate all of this purely in terms of sets, we will first need to clarify what the auxiliary
   data types like Bool and Nat are in terms of sets. For the naturals, we can use the von Neumann 
@@ -793,6 +797,10 @@ Actually, calling getMinimum on an empty set should be an error anyway. But if i
 accident, we have to return something. ...or maybe just use a special raiseError() function. The 
 getSomeElementOf(A) function should return some element from A. For the caller, it should not matter
 which it is. Could be the first, the last, some random one - it should never matter.
+
+ToDo: Give implementations for all of the elementary set operations that correspond to the 
+Zermelo-Frankel axioms. Maybe the getSomeElementOf function implements the choice function, i.e. the
+C in ZFC, and therefor should be elevated to the section of elementary operations?
 
 Maybe we can implement these function in Python using lists (of lists etc.). 
 

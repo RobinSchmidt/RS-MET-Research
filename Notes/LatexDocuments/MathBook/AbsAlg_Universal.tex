@@ -3,8 +3,37 @@ In \emph{universal algebra}, we take a birds eye view over the ideas that are co
 
 
 \subsection{Algebraic Structures}
-An \emph{algebraic structure} (aka an algebraic system or just an algebra) consists of the following ingredients: ...TBC...
+An \emph{algebraic structure} (aka an \emph{algebraic system} or just an \emph{algebra}\footnote{The term "algebra" may lead to confusion, though because it may mean different things in other contexts.}) consists of the following ingredients: ...TBC...
 
+% Ingredients: 
+% (1) A set called the carrier or domain or universe
+%     https://mathworld.wolfram.com/UniversalAlgebra.html
+% (2) A collection of operations, i.e. functions that take some number of inputs from the set
+%     and produce a new element from the set
+% (3) A collection of axioms
+
+% ToDo: Mention that the idea of an algebraic structure can be further generalized to allow multiple
+% carrier sets, relations instead of (or in addition to) functions, partial functions, infinitary 
+% operations, topological structures, See:
+% https://de.wikipedia.org/wiki/Universelle_Algebra#Verallgemeinerungen
+% ..so, the diea of an algebraic structure un universal algebra it's not so universal after all.
+
+
+\subsection{Algebraic Specification}
+
+\subsubsection{Data Structures}
+% ToDo: See pg 112 ff in "Mathematisch-strukturelle Grundlangen der Informatik"
+
+\subsubsection{Signatures}
+
+\subsubsection{Algebras}
+
+% https://en.wikipedia.org/wiki/Algebraic_specification
+% https://de.wikipedia.org/wiki/Spezifikation#Algebraische_Spezifikation
+
+% https://www.informatik.uni-bremen.de/theorie/teach/algspec/2008/Skript/
+% https://www.informatik.uni-bremen.de/theorie/teach/algspec/2008/Skript/Skript.pdf
+% https://www.informatik.uni-bremen.de/theorie/teach/algspec/2008/Folien/Foliensammlung.pdf
 
 \begin{comment}
 
@@ -13,13 +42,28 @@ https://en.wikipedia.org/wiki/Algebraic_structure
 https://en.wikipedia.org/wiki/Variety_(universal_algebra)
 https://en.wikipedia.org/wiki/Operad
 
+
+https://mathworld.wolfram.com/UniversalAlgebra.html
+https://de.wikipedia.org/wiki/Universelle_Algebra
+
+
 According to wikipedia, an algebraic structure is defined via a set and a collection of operations
 on the set. Wouldn't it be more general to have a collection of sets and operations between elements
 of those sets. Like, for example, the sets could be Nat and Bool and we could have operations like
-the unary isEven: Nat -> Bool?
+the unary isEven: Nat -> Bool or something like the binary isDivisibleBy: Nat x Nat -> Bool? Could
+functions also have multiple outputs, like for example: quotientAndRemainder Nat x Nat  ->  Nat x Nat
+or cartesianToPolar: Real x Real  ->  Real x Real
+
 
 See:
 https://en.wikipedia.org/wiki/Universal_algebra#Generalizations
 but that also doesn't talk about collections of sets.
+
+Aha! The more general structure seems to be a heterogeneous algebra:
+
+https://de.wikipedia.org/wiki/Universelle_Algebra#Verallgemeinerungen
+https://de.wikipedia.org/wiki/Heterogene_Algebra
+https://www.sciencedirect.com/science/article/pii/S002198007080014X
+
 
 \end{comment}

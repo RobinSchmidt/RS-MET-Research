@@ -676,13 +676,53 @@ Algorithmic Set Theory
   elements "one after another" is the one that limits us to countable infinity. We can understand 
   the order in which the set elements are generated as a map from the naturals to the set elements 
   by just counting our calls to getNextElement(). Maybe we could also call "generatable" as 
-  "serializable" or "sequenceable" or "sequentially generatable".
+  "serializable" or "sequenceable" or "sequentially generatable". Maybe "verifiable" could be 
+  replaced by "decidable". That would suggest a connection to the theory of computation (i.e. Turing
+  machines and stuff).
   
 - It seems that the question of whether a particular set exists or not is boiled down to the 
   question of whether or not we can do an infinite number of algorithmic steps - which we would 
   answer with: "Nope - we can't".
 
 - Maybe write these ideas down into a paper "An Algorithmic Approach to Set Theory".
+
+- Maybe the situation should be framed in the language of algebraic specification. We view "Set" as
+  an abstract data type that can recursively defined as follows:
+  
+    Base case: The empty set is a set.
+    Recursion: An (unordered) collection of sets is a set.
+	
+- The data type must support the following essential operations:
+
+    Inquiry:
+	isEqualTo(A,B)     Set x Set  ->  Bool     True, iff sets A and B have the same elements.
+    isElementOf(A,B)   Set x Set  ->  Bool     True, iff A is an element of B.
+	isSubsetOf(A,B)    Set x Set  ->  Bool     True, if every element of A is also element of B.
+	
+	Construction:
+	makeEmpty()                   ->  Set      Produces the empty set from nothing.
+	makeUnion(A,B)     Set x Set  ->  Set      Union of sets A and B
+	makePair(A,B)      Set x Set  ->  Set      For two sets A,B, produces the set {A,B}
+	makePower(A)       Set        ->  Set      Produces power set of set A, i.e. set of all subsets.
+	...TBC...
+	Maybe instead of make.., use get..
+	
+- For convenience, the data type may support the following additional operations that can be built 
+  from the essential ones:
+  
+  Construction:
+    makeSingleton(A)   Set -> Set              For a given set A, produces {A}. Impl: makePair(A,A)
+    ...TBC...
+  
+
+- For technical (i.e. implementation) reasons, we may also want introduce some additional 
+  operations:
+
+    isLess(A,B)        Set x Set   ->  Bool    True, iff A < B.
+    getMinimum(A)      Set         ->  Set     Minimum of set A.
+    getElement(A,n)    Set x Int   ->  Set     Returns n-th element of set A.
+
+
 
 
 ====================================================================================================

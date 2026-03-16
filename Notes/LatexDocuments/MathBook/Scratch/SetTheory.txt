@@ -644,8 +644,8 @@ Algorithmic Set Theory
 - One possible definition could be: "A proposed set A exists iff it is generatable and verifiable." 
   where we must now define what it means to be "generatable" and "verifiable". I propose:
   "A set A is generatable if there exists an algorithm that generates all of it elements one after 
-  another." and: "A set A is verifiable if for any set x, we can algorithmically decide in finite 
-  time whether or not x is an element of A."
+  another." and: "A set A is verifiable if for any set x, we can decide in finite time whether or 
+  not x is an element of A by a deterministic algorithm."
 
 - For these algorithms to work, we may first need to specify a way to represent sets via a data 
   structure or possibly (more generally) via a stateful generator object that can produce sets via
@@ -670,7 +670,8 @@ Algorithmic Set Theory
   different sizes of infinity exists). I think, for a proposed uncountable set such as the real 
   numbers, the "verification in finite time" requirement would fail. Verifying if a given set is a 
   real number would take infinitely long. But for any given natural number, the membershiup test 
-  would indeed be doable in finite time.
+  would indeed be doable in finite time. But no! I think asking if N is an element of N will not be
+  decidable in finite time by a (determininistic) algorithm
   
 - I think, it is specifically the requirement that a generator must be able to generate the set 
   elements "one after another" is the one that limits us to countable infinity. We can understand 
@@ -695,23 +696,28 @@ Algorithmic Set Theory
 - The data type must support the following essential operations:
 
     Inquiry:
-	isEqualTo(A,B)     Set x Set  ->  Bool     True, iff sets A and B have the same elements.
-    isElementOf(A,B)   Set x Set  ->  Bool     True, iff A is an element of B.
-	isSubsetOf(A,B)    Set x Set  ->  Bool     True, if every element of A is also element of B.
+	isEqualTo(A,B)        Set x Set  ->  Bool     True, iff sets A and B have the same elements.
+    isElementOf(A,B)      Set x Set  ->  Bool     True, iff A is an element of B.
+	isSubsetOf(A,B)       Set x Set  ->  Bool     True, if every element of A is also element of B.
 	
 	Construction:
-	makeEmpty()                   ->  Set      Produces the empty set from nothing.
-	makeUnion(A,B)     Set x Set  ->  Set      Union of sets A and B
-	makePair(A,B)      Set x Set  ->  Set      For two sets A,B, produces the set {A,B}
-	makePower(A)       Set        ->  Set      Produces power set of set A, i.e. set of all subsets.
+	makeEmpty()                      ->  Set      Produces the empty set from nothing.
+	makeUnion(A,B)        Set x Set  ->  Set      Union of sets A and B
+	makePair(A,B)         Set x Set  ->  Set      For two sets A,B, produces the set {A,B}
+	makePower(A)          Set        ->  Set      Produces power set of set A, i.e. set of all subsets.
 	...TBC...
 	Maybe instead of make.., use get..
 	
 - For convenience, the data type may support the following additional operations that can be built 
   from the essential ones:
   
+  Inquiry:
+    hasElement(A,B)       Set x Set  ->  Bool     True, iff A has B as element. Impl: isElementOf(B,A)
+  
   Construction:
-    makeSingleton(A)   Set -> Set              For a given set A, produces {A}. Impl: makePair(A,A)
+    makeSingleton(A)      Set        ->  Set      For a given set A, produces {A}. Impl: makePair(A,A)
+	makeOrderedPair(A,B)  Set x Set  ->  Set      Creates the Kuratowski pair {A, {A,B}}  ..Verify!
+	makeTuple(A,B,...)    Set x ...  ->  Set
     ...TBC...
   
 
@@ -720,7 +726,20 @@ Algorithmic Set Theory
 
     isLess(A,B)        Set x Set   ->  Bool    True, iff A < B.
     getMinimum(A)      Set         ->  Set     Minimum of set A.
-    getElement(A,n)    Set x Int   ->  Set     Returns n-th element of set A.
+    getElement(A,n)    Set x Nat   ->  Set     Returns n-th element of set A.
+
+- To formulate all of this purely in terms of sets, we will first need to clarify what the auxiliary
+  data types like Bool and Nat are in terms of sets. For the naturaly, we can use the von Neumann 
+  construction and for Bool, we can just use the numbers 0,1. Basically, what that means that all 
+  operations can only take sets as inputs and produce sets as outputs and the designations "Bool" 
+  and "Nat" just indicate that we expect of produce a Set that has a specific form/anatomy.
+
+- When we have formulated these constraints, we can provide more operations that can verify if a 
+  given set satisfies them. For example:
+  
+    isBoolean(A)         Set       ->  Bool
+    isNatural(A)         Set       ->  Bool
+
 
 
 

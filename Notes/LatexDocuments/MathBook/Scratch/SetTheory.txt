@@ -695,24 +695,26 @@ Algorithmic Set Theory
 	
 - The data type must support the following essential operations:
 
-    Inquiry:
+  Inquiry:
 	isEqualTo(A,B)        Set x Set  ->  Bool     True, iff sets A and B have the same elements.
     isElementOf(A,B)      Set x Set  ->  Bool     True, iff A is an element of B.
 	isSubsetOf(A,B)       Set x Set  ->  Bool     True, if every element of A is also element of B.
 	
-	Construction:
+	
+  Construction:
 	makeEmpty()                      ->  Set      Produces the empty set from nothing.
 	makeUnion(A,B)        Set x Set  ->  Set      Union of sets A and B
 	makePair(A,B)         Set x Set  ->  Set      For two sets A,B, produces the set {A,B}
 	makePower(A)          Set        ->  Set      Produces power set of set A, i.e. set of all subsets.
 	...TBC...
-	Maybe instead of make.., use get..
+	Maybe instead of make.., use get.. or maybe get should be reserved to extract elements.
 	
 - For convenience, the data type may support the following additional operations that can be built 
   from the essential ones:
   
   Inquiry:
     hasElement(A,B)       Set x Set  ->  Bool     True, iff A has B as element. Impl: isElementOf(B,A)
+	hasSubset(A,B)        Set x Set  ->  Bool    
   
   Construction:
     makeSingleton(A)      Set        ->  Set      For a given set A, produces {A}. Impl: makePair(A,A)
@@ -724,12 +726,14 @@ Algorithmic Set Theory
 - For technical (i.e. implementation) reasons, we may also want introduce some additional 
   operations:
 
-    isLess(A,B)        Set x Set   ->  Bool    True, iff A < B.
-    getMinimum(A)      Set         ->  Set     Minimum of set A.
-    getElement(A,n)    Set x Nat   ->  Set     Returns n-th element of set A.
+    isLess(A,B)          Set x Set   ->  Bool    True, iff A < B.
+    getMinimum(A)        Set         ->  Set     Minimum of set A.
+    getMaximum(A)        Set         ->  Set     Maximum of set A.	
+    getElement(A,n)      Set x Nat   ->  Set     Returns n-th element of set A.
+	getSomeElementOf(A)  Set         ->  Set     Returns some element of set A.
 
 - To formulate all of this purely in terms of sets, we will first need to clarify what the auxiliary
-  data types like Bool and Nat are in terms of sets. For the naturaly, we can use the von Neumann 
+  data types like Bool and Nat are in terms of sets. For the naturals, we can use the von Neumann 
   construction and for Bool, we can just use the numbers 0,1. Basically, what that means that all 
   operations can only take sets as inputs and produce sets as outputs and the designations "Bool" 
   and "Nat" just indicate that we expect of produce a Set that has a specific form/anatomy.
@@ -741,8 +745,56 @@ Algorithmic Set Theory
     isNatural(A)         Set       ->  Bool
 
 
+Implementations:
 
+These 3 are interdependent in a 3-way mutual recursion:
 
+isElementOf(x,A):
+  for all a in A:
+    if(isEqualTo(a,x)):
+	  return true
+  return false
+  
+isEqualTo(A,B):
+  if(isSubsetOf(A,B) and isSubsetOf(B,A)):
+    return true
+  else
+    return false
+
+isSubsetOf(A,B):
+  for all a in A:
+    if(not(isElementOf(a,B))
+	  return false
+  return true
+	  
+
+	  
+These 2 are interdependent in a 2-way mutual recursion:	 
+	 
+isLess(A,B)
+  if(isEmpty(A) and not isEmpty(B))
+    return true	    
+  elif(isEmpty(B) and not isEmpty(A))
+    return false
+  else
+    return isLess(getMinimum(a), getMinimum(B))
+
+getMinimum(A)
+  if(isEmpty(A))
+    raiseError("A must be nonempty!")
+    return makeEmpty()
+  m = getSomeElementOf(A)
+  for all a in A:
+    if(isLess(a,m))
+	  m = a
+  return m
+  
+Actually, calling getMinimum on an empty set should be an error anyway. But if it's done by 
+accident, we have to return something. ...or maybe just use a special raiseError() function. The 
+getSomeElementOf(A) function should return some element from A. For the caller, it should not matter
+which it is. Could be the first, the last, some random one - it should never matter.
+
+Maybe we can implement these function in Python using lists (of lists etc.). 
 
 ====================================================================================================
 

@@ -15355,7 +15355,7 @@ f,g,h. That means that  f < g  implies  f*h < g*h  and  g < f  implies  g*h < f*
 stability is an important requirement for a monomial order. */
 template<class T>
 bool isProductStable(
-  const rsMultiVarMonomLess<T>* less,
+  const rsMultiVarMonomLess<T>& less,
   const rsMultiVarMonomial<T>& f,
   const rsMultiVarMonomial<T>& g,
   const rsMultiVarMonomial<T>& h)
@@ -15367,16 +15367,22 @@ bool isProductStable(
   Mon fh = f * h;
   Mon gh = g * h;
 
-  if(less->less(f, g))
-    ok &= less->less(fh, gh);   // f < g  ->  f*h < g*h
-  else if(less->less(g, f))
-    ok &= less->less(gh, gh);   // g < f  ->  g*h < f*h
+  if(less.less(f, g))
+    ok &= less.less(fh, gh);   // f < g  ->  f*h < g*h
+  else if(less.less(g, f))
+    ok &= less.less(gh, gh);   // g < f  ->  g*h < f*h
   
   return ok;
+
+  // ToDo:
+  //
+  // - Change the API of rsMultiVarMonomLess such that we do not have to write less.less(..) but 
+  //   just less(..). For this, the class needs to define the operator () rather than a member 
+  //   function less().
 }
 
 template<class T>
-bool isValidOrder(const rsMultiVarMonomLess<T>* less, int numVars, int maxPower)
+bool isValidOrder(const rsMultiVarMonomLess<T>& less, int numVars, int maxPower)
 {
   //rsError("Function is still under construction");
 
@@ -15427,10 +15433,7 @@ bool isValidOrder(const rsMultiVarMonomLess<T>* less, int numVars, int maxPower)
   //
   //
   // ToDo:
-  //
-  // - Maybe the 4 functions isProductStable(), isTransitive(), etc. should all take the less 
-  //   function and 3 example monomials as inputs such that we only need to write the nested loop
-  //   once
+  // 
   // - Write a function isValidOrder(const rsMultiVarMonomLess* less, int numVars, int maxDegree)
   //   that verifies for the given "less" object, if the requirements for a proper monomial order
   //   are satisfied (see IVA pg 55). These are: trichotomy, totality, transitivity and
@@ -15439,26 +15442,12 @@ bool isValidOrder(const rsMultiVarMonomLess<T>* less, int numVars, int maxPower)
   //   If x^a < x^b then we also have x^c * x^a < x^c * x^b. In this notation x,a,b,c are vectors 
   //   such that x^a actually means: x^a = x0^a0 * x1^a1 * x2^a2 * ...
   // 
-  // - Maybe the function should call 4 lower level functions isTrichotomic(), isTotal(), 
-  //   isTransitive() and isProductStable() or something. Inside these functions, we have nested 
-  //   loops that produce 2 (in isTotal()) or 3 (in all others) example polynomials for which the 
-  //   desired properties are verified. The example mononomials are all monomials up to some 
-  //   given total degree. We can produce them all one by one via using rsIncWithWrap() of a vector
-  //   of integers representing the powers. As coefficient, we can just always use 1. The 
-  //   coefficient does not matter for this ordering.
-  // 
   // - I think, there are maxDegree^numVars many of those different monomials - and that number we
   //   have to take ^3 for the triple nesting, so the computational cost of this check may be quite
   //   high - so we need to be careful with the numbers. Then use this function for unit testing 
   //   our different orders. Eventually, these test functions should go to the library because we 
   //   expect client code to define its own orders, so it may want to have access to these tests as
   //   well to make sure that the defined orders are actually valid.
-  //
-  // - Maybe pass the "less" object by reference rather than by pointer
-  //
-  // - Rename maxDegree to maxPower. The term degreee seems to be misleading here because the total
-  //   degree of a monomial is the sume of all exponents but here, each exponent goes from zero
-  //   to maxPower independently such that the maximum total degree is actualls numVars * maxPower.
 }
 
 
@@ -15472,9 +15461,9 @@ bool testMultiMonomOrders()
   Ord* less = nullptr;
 
   less = new rsMultiVarMonomLessLexic<Num>();
-  ok &= isValidOrder(less, 1, 5);
-  ok &= isValidOrder(less, 2, 5);
-  ok &= isValidOrder(less, 3, 4);
+  ok &= isValidOrder(*less, 1, 5);
+  ok &= isValidOrder(*less, 2, 5);
+  ok &= isValidOrder(*less, 3, 4);
   delete less;
 
 

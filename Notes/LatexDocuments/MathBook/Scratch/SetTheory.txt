@@ -725,6 +725,9 @@ Set as a data type:
 	makeOrderedPair(A,B)  Set x Set  ->  Set      Creates the Kuratowski pair {A, {A,B}}  ..Verify!
 	makeTuple(A,B,...)    Set x ...  ->  Set
     ...TBC...
+	makeProduct(A,B)                              Cartesian product A x B
+	makePower(A,B)                                A^B. Set of all functions from B to A
+	makeTransitiveClosure(A)
   
 - For technical (i.e. implementation) reasons, we may also want introduce some additional 
   operations:

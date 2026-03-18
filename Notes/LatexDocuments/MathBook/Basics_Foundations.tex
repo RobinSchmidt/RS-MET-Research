@@ -300,7 +300,11 @@ As we see, relations are quite flexible tools and can be used to model several i
 % -functions of a scalar that yield vector outputs (parametric curves) using a set-product as output
 % -explain multifunctions such as the n-th root of a complex number
 % -explain the notation f: A -> B
-% -explain how the interpretations of two-input/one-output functions: A x B -> C and one-input/two-output function A -> B x C can be though of as ternary relations, i.e. subsets of A x B x C where formally A -> B x C is *interpreted* as A x (B x C) and A x B -> C as (A x B) x C but the interpretation can be "flattened out" and we can do partial application, currying, etc.
+% -explain how the interpretations of two-input/one-output functions: A x B -> C and one-input/two-output function A -> B x C can be thought of as ternary relations, i.e. subsets of A x B x C where formally A -> B x C is *interpreted* as A x (B x C) and A x B -> C as (A x B) x C but the interpretation can be "flattened out" and we can do partial application, currying, etc.
+% -For the cartesian product of arbitrary many sets A x B x C x D x ..., the question arises what to
+%  do for the edge case of the empty product. It turns out that for an empty cartesian product, it 
+%  makes sense to use an (arbitrary) singleton set. See page 127 in "Mathematisch-strukturelle 
+%  Grundlagen der Informatik"
 
 % what about relational algebra? useful for databases, I think
 

@@ -15375,11 +15375,10 @@ bool isProductStable(
   return ok;
 }
 
-
 template<class T>
-bool isProductStable(const rsMultiVarMonomLess<T>* less, int numVars, int maxDegree)
+bool isValidOrder(const rsMultiVarMonomLess<T>* less, int numVars, int maxPower)
 {
-  rsError("Function is still under construction");
+  //rsError("Function is still under construction");
 
   bool ok = true;
 
@@ -15388,29 +15387,33 @@ bool isProductStable(const rsMultiVarMonomLess<T>* less, int numVars, int maxDeg
 
   // Compute the number of possible different (monic) monomials for the given number of variables 
   // and the given maximum degree:
-  int numMons = pow(maxDegree, numVars);
+  int numMons = pow(maxPower, numVars);
 
   // Let x^a, x^b and x^c each take on all possible monomials and for each setting, verify that the 
   // requirements for a monomial order hold:
   Vec a(numVars), b(numVars), c(numVars);
   for(int i = 0; i < numMons; i++)
   {
-    Mon xa(T(1), a);                            // f(x) = 1 * x^a
+    Mon f(T(1), a);                             // f(x) = 1 * x^a
     for(int j = 0; j < numMons; j++)
     {
-      Mon xb(T(1), b);                          // g(x) = 1 * x^b
+      Mon g(T(1), b);                           // g(x) = 1 * x^b
+      //ok &= isTrichotomic(less, f, g);
       for(int k = 0; k < numMons; k++)
       {
-        Mon xc(T(1), c);                        // h(x) = 1 * x^c
-        ok &= isProductStable(less, xa, xb, xc);
-        rsIncWithWrap(c, maxDegree);
+        Mon h(T(1), c);                         // h(x) = 1 * x^c
+        //ok &= isTransitive(less, f, g, h);
+        ok &= isProductStable(less, f, g, h);
+        //ok &= isQuotientStable(less, f, g, h);
+        rsIncWithWrap(c, maxPower);
       }
-      rsIncWithWrap(b, maxDegree);
+      rsIncWithWrap(b, maxPower);
     }
-    rsIncWithWrap(a, maxDegree);
+    rsIncWithWrap(a, maxPower);
   }
 
   return ok;
+
 
 
   // Notes:
@@ -15428,27 +15431,6 @@ bool isProductStable(const rsMultiVarMonomLess<T>* less, int numVars, int maxDeg
   // - Maybe the 4 functions isProductStable(), isTransitive(), etc. should all take the less 
   //   function and 3 example monomials as inputs such that we only need to write the nested loop
   //   once
-  // 
-  // - Rename maxDegree to maxPower.
-  //
-  // - Rename xa,xb,xc to f,g,h
-}
-
-template<class T>
-bool isValidOrder(const rsMultiVarMonomLess<T>* less, int numVars, int maxDegree)
-{
-  bool ok = true;
-
-  //ok &= isTotal(        less, numVars, maxDegree);
-  //ok &= isTrichotomic(  less, numVars, maxDegree);
-  //ok &= isTransitive(   less, numVars, maxDegree);
-  ok &= isProductStable(less, numVars, maxDegree);
-
-  return ok;
-
-
-  // ToDo:
-  //
   // - Write a function isValidOrder(const rsMultiVarMonomLess* less, int numVars, int maxDegree)
   //   that verifies for the given "less" object, if the requirements for a proper monomial order
   //   are satisfied (see IVA pg 55). These are: trichotomy, totality, transitivity and
@@ -17523,7 +17505,8 @@ void testPowerCommutator()
   // q = a^b / b^a. If q > 1, color the pixel with gray value 1 - 1/q. If q < 1, color the pixel 
   // with gray value q. Does that make sense? Or maybe we need 1 - 1/(2q) and q/2? Figure out! The 
   // goal is to get a gray value of 0.5 when a^b = b^a, white for a^b > 0, b^a = 0, black for 
-  // a^b = 0, b^a > 0. Or: Maybe define a sort of normalized commutator: 
+  // a^b = 0, b^a > 0. Instead of using the quotient q = a^b / b^a, we could also look at the
+  // difference d = a^b - b^a. Maybe we could also define a sort of normalized commutator: 
   //   c = (a^b - b^a) / (a^b + b^a) 
   // and use that to color the pixel. ...TBC...
 
@@ -17570,36 +17553,53 @@ void testPowerCommutator()
   int dummy = 0;
 
   // Observations:
-  // -The black/white image shows not much interesting structure. Generally, the exponent is almost 
-  //  always more important that the base. But what if we multiply the base by some fixed number, 
-  //  i.e. look at (k*a)^b vs b^a for some k >= 1? Will that mae the pic more interesting? Not 
-  //  really. It just extends the white triangle to the right. Using (k*a)^b vs b^(a/k) seems to 
-  //  give the same picture as a^b vs b^a.
-  // -In most cases a^b > b^a when a < b. That means, the exponent "counts more" than the base in 
-  //  determining the size of the output. If you have two numbers of different size and want to get
-  //  the biggest power, you should put the bigger of the two numbers into the exponent. The only 
-  //  exception is (a,b) = (2,3). 2^3 = 8 and 3^2 = 9.
-  // -There's only one pair for which a != b but a^b == b^a and that pair is (2,4). We have 
-  //  2^4 = 4^2 = 16. We don't count (4,2) as a separate pair. It's kinda the same due to symmetry.
-  // -The PowerCommutatorGD has some mildly more interesting stuff going on
-
+  // 
+  // - The black/white image shows not much interesting structure. Generally, the exponent is 
+  //   almost always more important that the base. But what if we multiply the base by some fixed 
+  //   number, i.e. look at (k*a)^b vs b^a for some k >= 1? Will that mae the pic more 
+  //   interesting? Not really. It just extends the white triangle to the right. Using (k*a)^b vs
+  //   b^(a/k) seems to give the same picture as a^b vs b^a.
+  // 
+  // - In most cases a^b > b^a when a < b. That means, the exponent "counts more" than the base in 
+  //   determining the size of the output. If you have two numbers of different size and want to 
+  //   get the biggest power, you should put the bigger of the two numbers into the exponent. The 
+  //   only exception is (a,b) = (2,3). 2^3 = 8 and 3^2 = 9.
+  // 
+  // - There's only one pair of integers for which a != b but a^b == b^a and that pair is (2,4). We
+  //   have 2^4 = 4^2 = 16. We don't count (4,2) as a separate pair. It's kinda the same due to 
+  //   symmetry. But if we use real numbers for a and b, we should probably get infinitely many 
+  //   solutions to the equation a^b = b^a. Figure this out!
+  // 
+  // - The PowerCommutatorGD has some mildly more interesting stuff going on
+  //
+  //
   // ToDo:
-  // -Investigate the real valued bivariate function f(x,y) = (x^y - y^x) / (x^y + y^x). It's the 
-  //  smooth version of our normalized commutator function. Maybe it can tell us something 
-  //  interesting about the (non)commutativity of the exponentiation operation? maybe the amout of 
-  //  non-commutativity depends in an interesting way on the ratio or difference between x and y?
-  //  ...soo - maybe it could be turned into an univariate function? Maybe the normalization factor 
-  //  could be a different one like sqrt(x^2 + y^2) or just (x + y). 
-  // -What are the values of x,y for which x^y = y^x? If we allow only natural numbers for (x,y), 
-  //  we only get the pair (2,4) and its symmetric sibling (4,2). But if we allow real numbers for 
-  //  (x,y), we should get a 1D continuum of solutions. What curve does it describe? We are looking
-  //  for the solution set of the equation x^y = y^x or x^y - y^x = 0. That has a bit of algebraic
-  //  geometry flavor to it but the equation is non-algebraic. If we have a solution (x,y), what is 
-  //  the corresponding value z = x^y = y^x at our (x,y). At (2,4), we have z = 16 but what about 
-  //  other pairs (x,y)? The solution set is the straight line y = x together with some sort of 
-  //  hyperbola: https://www.desmos.com/calculator/wz4nru7rzz
-  // -Take also a look at f(x,y) = x^y / y^x. We may need some special definitions for when the 
-  //  denominator becomes zero.
+  // 
+  // - Investigate the real valued bivariate function f(x,y) = (x^y - y^x) / (x^y + y^x). It's the 
+  //   smooth version of our normalized commutator function. Maybe it can tell us something 
+  //   interesting about the (non)commutativity of the exponentiation operation? maybe the amout of
+  //   non-commutativity depends in an interesting way on the ratio or difference between x and y?
+  //   ...soo - maybe it could be turned into an univariate function? Maybe the normalization factor 
+  //   could be a different one like sqrt(x^2 + y^2) or just (x + y). 
+  // 
+  // - What are the values of x,y for which x^y = y^x? If we allow only natural numbers for (x,y), 
+  //   we only get the pair (2,4) and its symmetric sibling (4,2) besides the trivial solutions 
+  //   where x = y. But if we allow real numbers for (x,y), we should get a 1D continuum of 
+  //   solutions. What curve does it describe? We are looking for the solution set of the equation
+  //   x^y = y^x or x^y - y^x = 0. That has a bit of algebraic geometry flavor to it but the 
+  //   equation is non-algebraic. If we have a solution (x,y), what is the corresponding value 
+  //   z = x^y = y^x at our (x,y). At (2,4), we have z = 16 but what about other pairs (x,y)? The 
+  //   solution set is the straight line y = x together with some sort of hyperbola: 
+  //   https://www.desmos.com/calculator/wz4nru7rzz  It looks like the curves crosses the y = x 
+  //   line at Euler's number. Verify that! If true, that may be another interesting feature of e.
+  // 
+  // - Take also a look at f(x,y) = x^y / y^x. We may need some special definitions for when the 
+  //   denominator becomes zero.
+  //
+  // See also:
+  // https://www.youtube.com/watch?v=QGeZEIed1ns  This Video Will Make You Better At Algebra
+  // It derives a parametric form of a solution to the equation x^y = y^x. It's given by:
+  // x(t) = t^(1/(t-1)), y(t) = t*x(t) = t^(t/(t-1))
 }
 
 void testParticleSystem()

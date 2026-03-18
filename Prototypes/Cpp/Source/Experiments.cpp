@@ -15275,8 +15275,12 @@ bool testIntStringCompare()
   //   statements) is covered at least once, better multiple times.
 }
 
-/** We interpet the given "digits" vector a digits of a number in a given "base" and we increment
-that number by one (in place). ...TBC... */
+/** This function acts like an increment for a digit counter with wrap-around. We interpet the 
+given "digits" vector a digits of a number in a given "base" and we increment that number by one
+(in place). For example, for 4 digits and base 10, we would count from 0000 to 9999 and then wrap 
+back to 0000. If the counter is at 4699, the increment would produce 4700. The two last digits 
+would both wrap around and the 2nd digit would just count up from 6 to 7. 
+...TBC... Explain use cases. */
 void rsIncWithWrap(std::vector<int>& digits, int base = 10)
 {
   int N = (int) digits.size();
@@ -15295,7 +15299,12 @@ void rsIncWithWrap(std::vector<int>& digits, int base = 10)
     }
   }
 }
-// Maybe rename to something like rsIncrementDigitCounter()
+// Maybe rename to something like rsIncrementDigitCounter() or rsDigitInc(). Maybe templatize on 
+// the digit type for which we have hard-coded int here. I think, we can use signed or unsigned 
+// integer types for this. Maybe implement a function rsDigitAdd() and perhaps even rsDigitMul().
+// Somewher in the main repo, I have code for a rsBigInt class that also uses such algorithms. 
+// Maybe it could make sense to factor out the actual computation algorithms from this class into
+// free functions or maybe as static functions into a sort of rsDigitArithmetic class.
 
 /** Unit test for rsIncWithWrap(). We use 3 digits and base 4 and check the results of the 
 increments for all possible states of the counter from 000 to 333. There are 4^3 = 64 of these
@@ -15350,6 +15359,11 @@ bool testIncWithWrap()  // Maybe rename to testIncWithWrap_3_4()
 }
 
 
+
+
+
+
+
 /** Verifies if the given "less" function object is transitive for the given 3 monomials 
 f,g,h. That means that  (f < g  and  g < h)  implies  f < h. Transitivity is a general requirement
 for an order relation. */
@@ -15368,10 +15382,10 @@ bool isTransitive(
   return ok;
 }
 
-
 /** Verifies if the given "less" function object is product-stable for the given 3 monomials 
-f,g,h. That means that  f < g  implies  f*h < g*h  and  g < f  implies  g*h < f*h. This product 
-stability is an important requirement for a monomial order. */
+f,g,h. That means that  f < g  implies  f*h < g*h. This product stability is an important 
+additional requirement for a monomial order that must hold in addition to the general requirements
+for an order relation. */
 template<class T>
 bool isProductStable(
   const rsMultiVarMonomLess<T>& less,
@@ -15388,8 +15402,9 @@ bool isProductStable(
 
   if(less.less(f, g))
     ok &= less.less(fh, gh);   // f < g  ->  f*h < g*h
-  else if(less.less(g, f))
-    ok &= less.less(gh, gh);   // g < f  ->  g*h < f*h
+
+  //else if(less.less(g, f))
+  //  ok &= less.less(gh, gh);   // g < f  ->  g*h < f*h
   
   return ok;
 
@@ -15398,6 +15413,10 @@ bool isProductStable(
   // - Change the API of rsMultiVarMonomLess such that we do not have to write less.less(..) but 
   //   just less(..). For this, the class needs to define the operator () rather than a member 
   //   function less().
+  //
+  // - Remove the "else if" branch. We should only check the criterion for the f < g case because
+  //   otherwise, we do each check twice when the function gets called in the loop in 
+  //   isValidOrder() because there, f,g,h each independently go through all possibilities.
 }
 
 template<class T>
@@ -15461,12 +15480,27 @@ bool isValidOrder(const rsMultiVarMonomLess<T>& less, int numVars, int maxPower)
   //   If x^a < x^b then we also have x^c * x^a < x^c * x^b. In this notation x,a,b,c are vectors 
   //   such that x^a actually means: x^a = x0^a0 * x1^a1 * x2^a2 * ...
   // 
-  // - I think, there are maxDegree^numVars many of those different monomials - and that number we
+  // - I think, there are maxPower^numVars many of those different monomials - and that number we
   //   have to take ^3 for the triple nesting, so the computational cost of this check may be quite
   //   high - so we need to be careful with the numbers. Then use this function for unit testing 
   //   our different orders. Eventually, these test functions should go to the library because we 
   //   expect client code to define its own orders, so it may want to have access to these tests as
-  //   well to make sure that the defined orders are actually valid.
+  //   well to make sure that the defined orders are actually valid. Add that as a warning to the
+  //   documentation, i.e. document the computational complexity of this function as function of
+  //   numVars and maxPower. It's (maxPower^numVars)^3.
+  //
+  // - Implement a function isQuotientStable(less, f, g, h); and call it in the inner loop. It should 
+  //   check that  f < g  implies  f/h < g/h  whenever f and g are both divisible by h. The IVA book
+  //   actually says nothing about such a requirement but I think, we need this for the division 
+  //   algo to work as desired. Maybe it's equivalent to requiring product stability? Figure out!
+  //
+  // - Maybe instead of defining a function for each check (like isProductStable()) just inline the
+  //   code of the function bodies here. The functions don't really do that much. The boilerplate
+  //   to define them all does not seem to be justified unless we have use for these functions in 
+  //   other contexts. Well - that may well be the case at some point. We'll see. So maybe keep 
+  //   them for the time being. Or maybe move them into the class rsMultiVarMonomLess as static
+  //   member functions in some sort of "self-test" section. Actually, isValidOrder() itself could
+  //   also be moved there.
 }
 
 

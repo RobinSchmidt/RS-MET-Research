@@ -15359,10 +15359,32 @@ bool testIncWithWrap()  // Maybe rename to testIncWithWrap_3_4()
 }
 
 
+/** Exclusive or ("xor") for 3 values. The function xor(a,b,c) is 1 if and only if exactly one of
+the three values a,b,c is true and the other two are false. */
+bool rsXor(bool a, bool b, bool c)          // move somewhere else - maybe to RAPT
+{
+  return uint8_t(a) + uint8_t(b) + uint8_t(c) == uint8_t(1);
 
+  // Because a,b,c can all only be either 0 or 1, the sum a+b+c is 1 iff exactly one of the 3 
+  // values a,b,c is 1.
+}
 
+/** Verifies if the given "less" function object is trichotomic for the given 2 monomials 
+f,g. That means that exactly one of the 3 cases must be occur: f < g, f = g, f > g where f = g is
+interpreted here as: f and g have the same configuration of exponents so it's an equivalence 
+relation ignoring the coefficient. */
+template<class T>
+bool isTrichotomic(
+  const rsMultiVarMonomLess<T>& less,
+  const rsMultiVarMonomial<T>& f,
+  const rsMultiVarMonomial<T>& g)
+{
+  bool flg = less.less(f, g);        // flg: f less than g
+  bool glf = less.less(g, f);        // glf: g less than f
+  bool feg = f.hasSamePowersAs(g);   // feg: f equivalent to g (powers match, coeff may differ)
 
-
+  return rsXor(flg, glf, feg);
+}
 
 /** Verifies if the given "less" function object is transitive for the given 3 monomials 
 f,g,h. That means that  (f < g  and  g < h)  implies  f < h. Transitivity is a general requirement
@@ -15380,6 +15402,16 @@ bool isTransitive(
     ok &= less.less(f, h);
 
   return ok;
+
+  // ToDo:
+  //
+  // - Document that we only check the condition as stated above: f < g  and  g < h  ->  f < h.
+  //   We do _not_ verify transitivity in the other possible cases like g < f and f < h, 
+  //   h < g and g < f, f < h and h < g, etc. Doing so would mean to do a lot of redundant 
+  //   computations when we call this function inside a loop inside of which f,g,h go through all
+  //   possible configurations independently anyway. There are 3! = 6 possible ways in which f,g,h
+  //   could be ordered, so checking all possibilities would mean to have 6 if statements instead
+  //   of just 1.
 }
 
 /** Verifies if the given "less" function object is product-stable for the given 3 monomials 
@@ -15422,8 +15454,6 @@ bool isProductStable(
 template<class T>
 bool isValidOrder(const rsMultiVarMonomLess<T>& less, int numVars, int maxPower)
 {
-  //rsError("Function is still under construction");
-
   bool ok = true;
 
   using Vec = std::vector<int>;
@@ -15442,7 +15472,7 @@ bool isValidOrder(const rsMultiVarMonomLess<T>& less, int numVars, int maxPower)
     for(int j = 0; j < numMons; j++)
     {
       Mon g(T(1), b);                           // g(x) = 1 * x^b
-      //ok &= isTrichotomic(less, f, g);
+      ok &= isTrichotomic(less, f, g);
       for(int k = 0; k < numMons; k++)
       {
         Mon h(T(1), c);                         // h(x) = 1 * x^c
@@ -15466,8 +15496,7 @@ bool isValidOrder(const rsMultiVarMonomLess<T>& less, int numVars, int maxPower)
   //   means:  f(x) = 1 * x0^a0 * x1^a1 * x2^a2 * ...  where a0,a1,a2 are the entries of the 
   //   exponents (or powers) vector a and x0,x1,x2, ... are the variables. The same applies to 
   //   g(x) and h(x). So, we have 3 vectors a,b,c that each loop independently through all 
-  //   possible configuations of the exponents for the given maximum (total) degree of the 
-  //   monomial.
+  //   possible configuations of the exponents for the given maximum power.
   //
   //
   // ToDo:
@@ -15516,7 +15545,9 @@ bool testMultiMonomOrders()
   less = new rsMultiVarMonomLessLexic<Num>();
   ok &= isValidOrder(*less, 1, 5);
   ok &= isValidOrder(*less, 2, 5);
-  ok &= isValidOrder(*less, 3, 4);
+  ok &= isValidOrder(*less, 3, 3);
+  ok &= isValidOrder(*less, 4, 2); 
+  //ok &= isValidOrder(*less, 3, 4);               // Takes a little while
   delete less;
 
 

@@ -15350,7 +15350,26 @@ bool testIncWithWrap()  // Maybe rename to testIncWithWrap_3_4()
 }
 
 
-/** Verifies if the given "less" function obejct is product-stable for the given 3 monomials 
+/** Verifies if the given "less" function object is transitive for the given 3 monomials 
+f,g,h. That means that  (f < g  and  g < h)  implies  f < h. Transitivity is a general requirement
+for an order relation. */
+template<class T>
+bool isTransitive(
+  const rsMultiVarMonomLess<T>& less,
+  const rsMultiVarMonomial<T>& f,
+  const rsMultiVarMonomial<T>& g,
+  const rsMultiVarMonomial<T>& h)
+{
+  bool ok = true;
+
+  if(less.less(f, g) && less.less(g, h))
+    ok &= less.less(f, h);
+
+  return ok;
+}
+
+
+/** Verifies if the given "less" function object is product-stable for the given 3 monomials 
 f,g,h. That means that  f < g  implies  f*h < g*h  and  g < f  implies  g*h < f*h. This product 
 stability is an important requirement for a monomial order. */
 template<class T>
@@ -15408,7 +15427,7 @@ bool isValidOrder(const rsMultiVarMonomLess<T>& less, int numVars, int maxPower)
       for(int k = 0; k < numMons; k++)
       {
         Mon h(T(1), c);                         // h(x) = 1 * x^c
-        //ok &= isTransitive(less, f, g, h);
+        ok &= isTransitive(less, f, g, h);
         ok &= isProductStable(less, f, g, h);
         //ok &= isQuotientStable(less, f, g, h);
         rsIncWithWrap(c, maxPower);

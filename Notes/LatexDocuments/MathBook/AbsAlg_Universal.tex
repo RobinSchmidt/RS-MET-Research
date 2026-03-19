@@ -22,7 +22,7 @@ An \emph{algebraic structure} (aka an \emph{algebraic system} or just an \emph{a
 \subsection{Algebraic Specification}
 % Closely related to universal algebra as a subfield of mathematics is the subfield of theoretical computer science called algebraic specification or formal specification.
 
-% Dfiiferences: in formal specification we make a distinction between the abstract syntactic world defined by a signature and the concrete semantic world defined by an algebra that implements a given signature. Also, in formal specification, we don't deal with axioms (at least not primarily) whereas in universal algebra, the axioms are the focal point (verify!)
+% Differences: in formal specification we make a distinction between the abstract syntactic world defined by a signature and the concrete semantic world defined by an algebra that implements a given signature. Also, in formal specification, we don't deal with axioms (at least not primarily) whereas in universal algebra, the axioms are the focal point (verify!)
 
 
 \subsubsection{Data Structures}
@@ -30,7 +30,11 @@ An \emph{algebraic structure} (aka an \emph{algebraic system} or just an \emph{a
 
 \subsubsection{Signatures}
 
+% A \emph{signature} names abstract symbols for sorts (i.e. data types) and operations. Signatureas are often denoted by a greek uppercase sigma, i.e. by the symbol $\Sigma$. This $\Sigma$ is then used as a name or stand in for the signature just like the letter $f$ is often used as a name for a function.
+
 \subsubsection{Algebras}
+
+% An \emph{algebra} to a signature $\Sigma$ is called a $\Sigma$-Algebra\footnote{Do not confuse this term with the same term used in measure theory! There, $\Sigma$-Algebra refers to an entirely different concept. It's also different from the usage of the term "algebra" in the context of vector spaces where the term means yet a different thing, which is also distinguished from the usage of the term "algebra" as a subfield of math. There are at least 4 different meanings of the word "algebra" in math. It's a total mess!} and it assigns actual concrete sets the abstract sort symbols in $\Sigma$ and assigns concrete functions (aka maps) to the abstract operation symbols in $\Sigma$.
 
 % https://en.wikipedia.org/wiki/Algebraic_specification
 % https://de.wikipedia.org/wiki/Spezifikation#Algebraische_Spezifikation

@@ -379,6 +379,10 @@ public:
   { rsAssert(isValidVariableIndex(i), "Invalid variable index!"); }
 
 
+  bool isCompatibleWith(const rsMultiVarMonomial& other) const
+  { return getNumVariables() == other.getNumVariables(); }
+
+
 
   // ToDo: getMultiDegree() = max(powers) I think. See IVA, pg...
 
@@ -429,8 +433,8 @@ template<class T>
 int rsMultiVarMonomial<T>::compLexic(
   const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs)
 {
-  rsAssert(lhs.getNumVariables() == rhs.getNumVariables(), "lhs and rhs are incompatible");
-  // Maybe write this as lhs.isCompatibleWith(rhs).
+  //rsAssert(lhs.getNumVariables() == rhs.getNumVariables(), "lhs and rhs are incompatible");
+  rsAssert(lhs.isCompatibleWith(rhs), "lhs and rhs are incompatible");
 
   for(size_t i = 0; i < lhs.getNumVariables(); i++)
   {
@@ -452,8 +456,12 @@ int rsMultiVarMonomial<T>::compLexic(
   // apply to terms that actually contain any variables? ...but I'm not really sure, if that's
   // plausible. After all, to represent terms where any variable is missing, a zero must occur and
   // and th all-zeros case would seem to be the natural way to represent constant terms in this
-  // framework. Maybe the book also assumes this but would put the constnats last. It alway 
-  // sorts descending anyway so maybe when sorting descending, it all woroks out?
+  // framework. Maybe the book also assumes this but would put the constants last. It always
+  // sorts descending anyway so maybe when sorting descending, it all works out? Try all 4 possible
+  // ways of combining  lhs - rhs vs rhs - lhs  with  d < 0: -1, d > 0: +1 vs d < 0: +1, d > 0: -1.
+  // One of the 4 ways will probably give us the desired behavior. With lhs - rhs and d < 0 : -1,
+  // we get the correct behavior except in the case wehn of the terms is constant, i.e. has an all
+  // zeros powers array.
 }
 
 template<class T>
@@ -536,7 +544,27 @@ public:
 
   bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
   {
-    return rsMultiVarMonomial<T>::lessLexic(lhs, rhs);
+    // Old:
+    //return rsMultiVarMonomial<T>::lessLexic(lhs, rhs);
+
+    // New:
+    rsAssert(lhs.isCompatibleWith(rhs), "lhs and rhs are incompatible");
+    for(size_t i = 0; i < lhs.getNumVariables(); i++)
+    {
+      int d = lhs.getPower(i) - rhs.getPower(i);
+      if(d < 0)
+        return true;
+      else if(d > 0)
+        return false;   
+    }
+    return false;
+
+    // Possible variations: We can swap lhs and rhs in the difference (or equivalently, return 
+    // false for d < 0 and true for d > 0) and we can decide what we want to do in the case of 
+    // never hitting a d != 0 case in the loop, i.e. the last line can return true or false. I 
+    // think, in the case of returning true, we would place constant monomials first, i.e. consider
+    // them as least, which is what we want.
+
   }
 
 };

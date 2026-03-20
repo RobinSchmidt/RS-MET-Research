@@ -15575,23 +15575,8 @@ bool testMultiMonomOrders()
   using Num = float;
 
   ok &= checkMonomialOrder<rsMultiVarMonomLessLexic<Num>>();
+  ok &= checkMonomialOrder<rsMultiVarMonomLessLexic2<Num>>();
   // ...TBC... Check more orders - graded lexicographic, etc.
-
-
-  /*
-  using Ord = rsMultiVarMonomLess<Num>;
-
-  Ord* less = nullptr;
-
-  less = new rsMultiVarMonomLessLexic<Num>();  // # Tests: (numVars^maxPower)^3
-  ok &= isValidOrder(*less, 1, 5);             // (5^1)^3 =  5^3 =    125
-  ok &= isValidOrder(*less, 2, 5);             // (5^2)^3 = 25^3 =  15625 
-  ok &= isValidOrder(*less, 3, 3);             // (3^3)^3 = 27^3 =  19683
-  ok &= isValidOrder(*less, 4, 2);             // (2^4)^3 = 16^3 =   4096
-  //ok &= isValidOrder(*less, 3, 4);           // (4^3)^3 = 64^3 = 262144  ...takes a little while
-  delete less;
-  */
-
 
   return ok;
 

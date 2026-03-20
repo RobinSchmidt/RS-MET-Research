@@ -579,6 +579,29 @@ public:
 };
 
 
+template<class T>
+class rsMultiVarMonomLessLexic2 : public rsMultiVarMonomLess<T>
+{
+
+public:
+
+  bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
+  {
+    rsAssert(lhs.isCompatibleWith(rhs), "lhs and rhs are incompatible");
+    for(size_t i = 0; i < lhs.getNumVariables(); i++)
+    {
+      int d = lhs.getPower(i) - rhs.getPower(i);
+      if(d < 0)
+        return true;
+      else if(d > 0)
+        return false;   
+    }
+    return false;
+  }
+
+};
+
+
 
 
 

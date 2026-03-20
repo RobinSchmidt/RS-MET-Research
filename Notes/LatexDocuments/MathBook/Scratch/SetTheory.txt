@@ -418,6 +418,8 @@ ToDo/Notes:
 - Is there some sort of right pseudo right-distributivity where, when distributing a factor over 
   terms in a sum, we must swap the side from which we multiply? Like 
   (1+1)*w = w*1 + w*1 = w+w = w*2? ...wait - no - I think, that's wrong! Check with ABoST, p.172
+  See also: https://en.wikipedia.org/wiki/Distributive_property#Antidistributivity  for another 
+  relative of the distributive law
 
 - I think, as soon as we have ordinal multiplication in place, implementating exponentiation is 
   easy. I think, in an exponentiation C = A^B, we just need to multiply the exponent in leftmost 

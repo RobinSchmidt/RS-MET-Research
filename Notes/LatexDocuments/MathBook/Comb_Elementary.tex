@@ -244,7 +244,13 @@ Aside from counting ways how to do certain things with sets, combinatorics is al
 \paragraph{Parenthesations and Catalan Numbers}
 Consider the task of computing a product of 4 numbers $p = a \cdot b \cdot c  \cdot d = abcd$. Now we ask how many ways there are to evaluate this product assuming that in each step, we compute a product of two numbers. That is: we ask how many ways are there to set the parentheses. The answer is 5. These are the 5 ways to compute the product: $((ab)c)d, (a(bc))d, (ab)(cd), a((bc)d), a(b(cd))$. In general, the number of ways to evaluate/parenthesize a product of $n$ factors is given by the $n$th Catalan number. The Catalan number pop up in various other settings as well  ...TBC...
 
-% Is there some sort of recursion relation that allows efficient computation?
+% Is there some sort of recursion relation that allows efficient computation? A sort of "Catalan triangle"?
+
+% Yes:
+% https://en.wikipedia.org/wiki/Catalan%27s_triangle
+
+% Look slike c(i,j) = c(i-1,j) + c(i,j-1). Every entry is the sum of the two neighbors to the left and to the top except for the 1st value of each rwo where the entries are just 1 and the last value of each row which juts repats the second to last. Well - that actually fits the formula if in this case we just assume the top neighbor to be 0. The Catalan numbers appeard as the last values of all the rows, i.e. c(n,n) is the n-th Catalan number
+
 
 % ToDo: explain where the parethisation of an expression may matter - for example in evaluating a matrix a product, it may make a (big) difference in terms of computational cost. Give an example where it matters a lot. Maybe a scalar prodcut of the form x^T A y where A = a b^T such that we have x^T a b^T y. Evaluating it like (x^T (a b^T)) y would be vastly more inefficient than x^T (a b^T) y, I think. I assume that x,y,a,b are column vectors. ...or maybe try to create an example with just 3 factors
 
@@ -254,6 +260,9 @@ Consider the task of computing a product of 4 numbers $p = a \cdot b \cdot c  \c
 % https://www.johndcook.com/blog/2013/10/03/parenthesize-expression-catalan/
 % https://en.wikipedia.org/wiki/Catalan_number
 % https://de.wikipedia.org/wiki/Catalan-Zahl
+
+
+% https://en.wikipedia.org/wiki/Associahedron
 
 % What are Catalan Numbers?
 % https://www.youtube.com/watch?v=vS1Ye2ArjNY

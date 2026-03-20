@@ -15533,11 +15533,52 @@ bool isValidOrder(const rsMultiVarMonomLess<T>& less, int numVars, int maxPower)
 }
 
 
+template<class TOrd>
+bool checkMonomialOrder()
+{
+  bool ok = true;
+
+  // Create the comparator object:
+  TOrd less;
+
+  // Verify its behavior for different numbers of variables and for different maximum exponents:
+                                         // # Tests: (numVars^maxPower)^3
+  ok &= isValidOrder(less, 1, 5);        // (5^1)^3 =  5^3 =    125
+  ok &= isValidOrder(less, 2, 5);        // (5^2)^3 = 25^3 =  15625 
+  ok &= isValidOrder(less, 3, 3);        // (3^3)^3 = 27^3 =  19683
+  ok &= isValidOrder(less, 4, 2);        // (2^4)^3 = 16^3 =   4096
+  //ok &= isValidOrder(less, 3, 4);      // (4^3)^3 = 64^3 = 262144  ...takes a little while
+
+  return ok;
+
+  // Notes:
+  //
+  // - We can only use small numbers for the maximum exponent/power especially when we have more 
+  //   variables because the compuational cost to check all possibilities grows rather rapidly as
+  //   function of the number of variables and the maximum power, namely as (numVars^maxPower)^3.
+  //
+  //
+  // ToDo:
+  //
+  // - Maybe factor out a function checkMonomialOrder(const rsMultiVarMonomLess<Num>& less);
+  //   We may need such a function when we want to test parametrized orders because for these, we
+  //   need to create the object, set it up and then do the checks, i.e. the calls to 
+  //   isValidOrder(). This setup step is something we don't need here because currently, the 
+  //   orders we used do not require a setup.
+}
+
+
 bool testMultiMonomOrders()
 {
   bool ok = true;
 
   using Num = float;
+
+  ok &= checkMonomialOrder<rsMultiVarMonomLessLexic<Num>>();
+  // ...TBC... Check more orders - graded lexicographic, etc.
+
+
+  /*
   using Ord = rsMultiVarMonomLess<Num>;
 
   Ord* less = nullptr;
@@ -15549,6 +15590,7 @@ bool testMultiMonomOrders()
   ok &= isValidOrder(*less, 4, 2);             // (2^4)^3 = 16^3 =   4096
   //ok &= isValidOrder(*less, 3, 4);           // (4^3)^3 = 64^3 = 262144  ...takes a little while
   delete less;
+  */
 
 
   return ok;

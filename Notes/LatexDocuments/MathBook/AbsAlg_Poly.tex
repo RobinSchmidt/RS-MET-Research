@@ -1,5 +1,5 @@
-%\section{Polynomial Algebra}
-\section{Theory of Polynomials} % Maybe rename to just Polynomials
+\section{Polynomial Algebra}
+%\section{Theory of Polynomials} % Maybe rename to just Polynomials
 Linear algebra is, to a large part, about finding solution vectors $\mathbf{x}$ to equations of the general form $\mathbf{A x} = \mathbf{b}$ which are called linear equations. More generally, algebra is about the solution of algebraic equations which are defined to be equations that can be formed by using the basic arithmetic operations and roots. The roots are included because they are thought of as being inversions of the operation of repeatedly multiplying an object by itself so they are in some sense induced by the multiplication operation. Polynomial equations are an important subset of algebraic equations. In one dimension, these are equations of the general form:
 \begin{equation}
  \sum_{n=0}^N a_n x^n = 0
@@ -16,6 +16,11 @@ where the $a_n$ are known quantities, called the coefficients and $x$ is an unkn
 % In a way, the theory of polynomials is the point where all the other classical topics of abstract alegebra (groups, rings, fields, vector spaces) culminate in order to provide a theory about the solution structure of polynomial equations. We will encounter polynomial rings over a given field or ring (and certain quotient rings of those polynomial rings), we will meet the "Galois group" and "splitting field" of a polynomial where the latter will usually be represented in terms of a vector space.
 
 % So, there are two distinct ways in which we may view the algebra of polynomials: (1) as an algebraic structure arising from the polynomials themselves by adding, multiplying, subtracting and dividing polynomials which doesn't require evaluation and (2) as an attempt to answer questions about the solution set of a given specific polynomial equation which requires evaluation.
+
+% Polynomial algebra is the field of math where all the ideas discussed so far in abstract algebra come together. A set of polynomials over a given _field_ of coefficients is itself a _commutative_ring_. This is true for univariate and multivariate polynomials. When we focus on the _vector_ of coefficients rather than the polynomial as complete expressions, our set of polynomials can also be seen as a _vector_space_. The vector space of all polynomials over a given field is infinite dimensional but we often look at finite dimensional subspaces of that by limiting the degree of the polynomials. When we view the polynomials not just as formal expressions but rather as functions, we can ask questions about their zero sets. For univariate polynomials, these zero sets happen to be discrete sets of points called the "roots" of the polynomial. When we consider certain ways to permute these roots, we are lead to the idea of the Galois _group_ of the given polynomial (verify!). Now I have mentioned all 4 of the fundamental algebraic structures we have seen so far - groups, rings, fields and vector spaces. In polynomial algebra, all of this groundwork culimnates in powerful theorems about the roots of polynomials (Abel Ruffini Theorem)
+
+% There's also Bezout's Theorem - not sure if that's considered part of polynopmial ablgebra, though. More generally, there are theorems from algebraic geometry...
+% ...Hilbert's Basis Theorem...
 
 %===================================================================================================
 \subsection{Operations on Polynomials}

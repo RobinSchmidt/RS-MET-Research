@@ -532,6 +532,9 @@ public:
   // purely virtual? We'll see...
 
 };
+// Maybe rename to rsMultiVarMonomCompare and rename the less() function to before(). The reason is
+// that we may also want to use descending orders, i.e. a comparator could also implement a greater
+// rather than a less function.
 
 
 /** Concrete subclass of rsMultiVarMonomLess that implements lexicographic order. */
@@ -557,7 +560,6 @@ public:
       else if(d > 0)
         return false;   
     }
-    //return true;
     return false;
 
     // Possible variations: We can swap lhs and rhs in the difference (or equivalently, return 
@@ -580,7 +582,7 @@ public:
 
 
 template<class T>
-class rsMultiVarMonomLessLexic2 : public rsMultiVarMonomLess<T>
+class rsMultiVarMonomLessLexic2 : public rsMultiVarMonomLess<T> // Maybe rename to ..GreaterLexic
 {
 
 public:
@@ -590,13 +592,28 @@ public:
     rsAssert(lhs.isCompatibleWith(rhs), "lhs and rhs are incompatible");
     for(size_t i = 0; i < lhs.getNumVariables(); i++)
     {
-      int d = lhs.getPower(i) - rhs.getPower(i);
+      int d = rhs.getPower(i) - lhs.getPower(i);  // rhs and lhs are swapped compared to rsMultiVarMonomLessLexic
       if(d < 0)
         return true;
       else if(d > 0)
         return false;   
     }
-    return false;
+    return false;     // Works
+    //return true;    // Fails
+
+    // Notes:
+    //
+    // - I think, returning false as the last line is the only viable option because when d is 
+    //   never positive or negative within the loop, it means that the arrays of powers of lhs and
+    //   rhs are equal which means lhs and rhs should be considered to be equivalent. None of the 
+    //   two is less than the other.
+    //
+    // - I also think, to get the desired behavior of considering constant polynomials to always be
+    //   less than non-constant ones, we need to first check if lhs is constant and rhs 
+    //   non-constant and return true in this case and otherwise check if rhs is constant and lhs
+    //   non-constant and return false in this case. ...but I'm not really sure about this - it 
+    //   somehow still feels weird to me that we should not be able to cover this case within the
+    //   loop.
   }
 
 };

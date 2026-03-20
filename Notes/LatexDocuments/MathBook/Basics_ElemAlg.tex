@@ -127,6 +127,26 @@ The sum and product notation are the most common examples for an idea in math kn
 % important (i.e. more common and without it, a lot more of our nice algebraic rules break down).
 
 %---------------------------------------------------------------------------------------------------
+\subsubsection{The Generalized Distributive Law}
+We have already seen the distributive law as $a (b + c) = a b + a c$ for numbers. It could also be rewritten as $(b + c) a = b a + c a$ by right multiplying the $(b+c)$ expression by $a$ rather than left multiplying. In some mathematical areas where the product is not commutative, for example when $a$ and $b$ are not numbers but some other kinds of objects, for example matrices (which will be introduced later), we really need the two different distributive laws which can then be called left-distributive and right-distributive laws. Whenever we deal with mathematical objects for which these two distributive laws hold, we can use them to derive the following:
+\begin{eqnarray}
+(a+b)(c+d) &= a(c+d) + b(c+d) &= ac + ad + bc + bd \\
+(a+b)(c+d) &= (a+b)c + (a+b)d &= ac + bc + ad + bd 
+\end{eqnarray}
+In the top line, we have used right-distributivity first and then left-distributivity and in the bottom line, we used left-distributivity first and then right-distributivity. Together with the commutativity of addition, we observe that the expressions of the right hand side are equal in both lines which the must be because the left hand sides are literally equal. To generalize further, we can say that whenever we have left- and right distributive laws at our disposal, the following holds:
+\begin{equation}
+\left(\sum_{i=1}^{m} a_i \right) \left(\sum_{j=1}^{n} b_i \right) =
+\sum_{i=1}^{m} \sum_{j=1}^{n} a_i b_j
+\end{equation}
+The law says that to compute the product of two sums, we need to multiply each summand in the first sum which each summand and the second sum and then take the sum of all of these pairwise products.
+
+%ToDo: Check if for this generalization to apply, we also need other laws such as associativity of addition. I think so.
+
+% See also:
+% https://en.wikipedia.org/wiki/Generalized_distributive_law
+% -This seems to use the term "generalied distributive law" for a further generaliation
+
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Factorials and Binomial Coefficients}
 \label{Sec:FactorialsAndBinomCoeffs}
 Another thing that is used often enough to deserve its own notation is the so called \emph{factorial} of a natural number $n$. It's defined as the product of all positive natural numbers up to $n$ and denoted with an exclamation mark:

@@ -55,7 +55,7 @@ f(x) = f_e(x) + f_o(x)
 One way to define a function is to prescribe a simple \emph{calculation rule} such as $f(x) = x^2 + 3 x - 5$ that applies equally to all possible inputs $x$. Up to until a few hundred years, this was the only way that was acceptable for mathematicians to define a function. Today, we have become a lot more liberal in that regard and allow functions to be defined in more esoteric ways. Some of these ways will involve concepts that are discussed only later in the book. If you don't understand these definitions, you can skip them on a first reading. In a first pass, you need to understand only this and the next way.
 
 \paragraph{Piecewise Definitions}
-A slightly more complicated way to define a function would be to have different calculation rules for different subsets of the domain. If these subsets are succesive intervals of the real number line, this way of defining a function is called a \emph{piecewise definition}. They are written down like this:
+A slightly more complicated way to define a function would be to have different calculation rules for different subsets of the domain. If these subsets are successive intervals of the real number line, this way of defining a function is called a \emph{piecewise definition}. They are written down like this:
 \begin{equation}
 f(x) = 
 \begin{cases} 
@@ -483,6 +483,9 @@ The evaluation of a polynomial is best done in nested form. Evaluating polynomia
 Polynomials, given as arrays of coefficients, can be added and subtracted element wise. If the input arrays are of different length, i.e. the polynomials are of a different degree, the lower degree coefficient array has to be padded with zeros to match the length of the larger one.
 %...python code is buggy
 
+% ToDo: Say something about the degree of the result. It is bounded by 
+% deg(p+q) <= max(deg(p), deg(q)). It can be smaller than that when higher order coefficients sum to zero.
+
 \paragraph{Multiplication}
 When we multiply two polynomials $f(x), g(x)$ with degrees $m,n$ together, we will get a new polynomial of degree $m+n$. The coefficients of this new polynomial can be found by an algorithm called \emph{convolution}. Let's see how this would look like:
 \begin{eqnarray}
@@ -509,7 +512,9 @@ That formula to compute the new list of $c$-coefficients from the $a$- and $b$-c
 
 % Maybe give an example with two finite polynomials - mostly to show where this summation ends. Explain that end also in terms of imagining the higher order coeffs being zero.
 
-% give a similar formula also for nesting and deconvolution
+% Give a similar formula also for nesting and deconvolution
+
+% Say something about the degree. I think it's deg(p q) = deg(p) + deg(q). In this case, we don not need to worry about cancellation because when we assume that both leading coeffs of pq and q are nonzero (which we indeed do assume by definition of what leading coeff means), so will be their product.
 
 \paragraph{Division}
 Let's now see, if we can reverse the process. Let's assume that we know the coefficient arrays $c_n$ and $b_n$ and want to figure out all the $a_n$. We need to make sure that the coefficients for like powers of $x$ match. For example, at the top of the triangle, we have the product $a_0 b_0$. That's how we computed the coeff for the constant term in the product polynomial $c_0$. So we have $c_0 = a_0 b_0$. That actually already tells us $a_0 = c_0 / b_0$. Now look at the line immediately below the tip of the triangle. The sum in brackets must equal $c_1$. But $c_1 = a_0 b_1 + a_1 b_0$ means $a_1 = (c_1 -a_0 b_1)/b_0$. We have found our next coefficient! Everything on the right is already known, The $b$- and $c$-coeffs are assumed to be known anyway and $a_0$ has just been computed in the previous step. One line more to establish the pattern: we must have $c_2 = a_0 b_2 + a_1 b_1 + a_2 b_0$ so we have $a_2 = (c_2 - a_0 b_2 - a_1 b_1)/b_0$. In general:

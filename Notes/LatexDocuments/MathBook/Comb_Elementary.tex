@@ -248,11 +248,18 @@ Consider the task of computing a product of 4 numbers $p = a \cdot b \cdot c  \c
 
 % Yes:
 % https://en.wikipedia.org/wiki/Catalan%27s_triangle
+%
+%  1                               1
+%  1   1                           1
+%  1   2   2                       2
+%  1   3   5   5                   5
+%  1   4   9  14  14              14
+%  1   5  14  28  42  42          42
 
-% Look slike c(i,j) = c(i-1,j) + c(i,j-1). Every entry is the sum of the two neighbors to the left and to the top except for the 1st value of each rwo where the entries are just 1 and the last value of each row which juts repats the second to last. Well - that actually fits the formula if in this case we just assume the top neighbor to be 0. The Catalan numbers appeard as the last values of all the rows, i.e. c(n,n) is the n-th Catalan number
+% Looks like c(i,j) = c(i-1,j) + c(i,j-1). Every entry is the sum of the two neighbors to the left and to the top except for the 1st value of each rwo where the entries are just 1 and the last value of each row which juts repats the second to last. Well - that actually fits the formula if in this case we just assume the top neighbor to be 0. The Catalan numbers appeared as the last values of all the rows, i.e. c(n,n) is the n-th Catalan number. for example, in the 3rd line, we get 3=2+1, 5=2+3, 5=0+2, in the 4th line it is 4=3+1, 9=5+4, 14=5+9, 14=0+14, ...
 
 
-% ToDo: explain where the parethisation of an expression may matter - for example in evaluating a matrix a product, it may make a (big) difference in terms of computational cost. Give an example where it matters a lot. Maybe a scalar prodcut of the form x^T A y where A = a b^T such that we have x^T a b^T y. Evaluating it like (x^T (a b^T)) y would be vastly more inefficient than x^T (a b^T) y, I think. I assume that x,y,a,b are column vectors. ...or maybe try to create an example with just 3 factors
+% ToDo: explain where the parenthisation of an expression may matter - for example in evaluating a matrix a product, it may make a (big) difference in terms of computational cost. Give an example where it matters a lot. Maybe a scalar product of the form x^T A y where A = a b^T such that we have x^T a b^T y. Evaluating it like (x^T (a b^T)) y would be vastly more inefficient than x^T (a b^T) y, I think. I assume that x,y,a,b are column vectors. ...or maybe try to create an example with just 3 factors
 
 %Parenthisations?, Parenthesisations?
 

@@ -693,7 +693,8 @@ Algorithmic Set Theory
 Set as a data type:
 
 - Maybe the situation should be framed in the language of algebraic specification. We view "Set" as
-  an abstract data type that can recursively defined as follows:
+  an abstract data type. We may also define the set datatype recursively similar to lists as 
+  follows:
   
     Base case: The empty set is a set.
     Recursion: An (unordered) collection of sets is a set.
@@ -745,7 +746,7 @@ Set as a data type:
   data types like Bool and Nat are in terms of sets. For the naturals, we can use the von Neumann 
   construction and for Bool, we can just use the numbers 0,1. Basically, what that means that all 
   operations can only take sets as inputs and produce sets as outputs and the designations "Bool" 
-  and "Nat" just indicate that we expect of produce a Set that has a specific form/anatomy.
+  and "Nat" just indicate that we expect to produce a Set that has a specific form/anatomy.
 
 - When we have formulated these constraints, we can provide more operations that can verify if a 
   given set satisfies them. For example:
@@ -786,7 +787,7 @@ isLess(A,B)
   elif(isEmpty(B) and not isEmpty(A))
     return false
   else
-    return isLess(getMinimum(a), getMinimum(B))
+    return isLess(getMinimum(A), getMinimum(B))
 
 getMinimum(A)
   if(isEmpty(A))
@@ -805,9 +806,9 @@ which it is. Could be the first, the last, some random one - it should never mat
 
 ToDo: Give implementations for all of the elementary set operations that correspond to the 
 Zermelo-Frankel axioms. Maybe the getSomeElementOf function implements the choice function, i.e. the
-C in ZFC, and therefor should be elevated to the section of elementary operations?
+C in ZFC, and therefore should be elevated to the section of elementary operations?
 
-Maybe we can implement these function in Python using lists (of lists etc.). 
+Maybe we can implement these functions on Python using lists (of lists etc.). 
 
 ====================================================================================================
 

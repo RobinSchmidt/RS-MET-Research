@@ -3,6 +3,10 @@
 
 \usepackage{verbatim}
 
+\usepackage{array}  
+% This is needed for specifying column widths in tabular environments which, in turn, is needed to 
+% be able to use verbatim environment within the tabular
+
 \begin{document}
 
 \chapter{Chapter Heading}
@@ -32,21 +36,42 @@ print(sum);
 \end{verbatim}
 
 
+This is a tabular environment with two left-justified columns:
+
 \begin{tabular}{ ll }
-%\begin{verbatim}
-%int sum = 0;
-%for(int i = 1; i < 10; i++)
-%  sum += i;
-%print(sum);
-%\end{verbatim}
-%%& 
-%\begin{verbatim}
-%int prod = 1;
-%for(int 1 = 0; i < 10; i++)
-%  prod *= i;
-%print(prod);
-%\end{verbatim}
+Left column
+&
+Right column
 \end{tabular}
+
+A blank line before and after the tabular is needed. Without it, the environment would appear in the text.
+
+
+\medskip
+This is a tabular environment with two columns, each holding a verbatim environment:
+
+%\begin{table}
+%\begin{tabular}{ l  l }
+\begin{tabular}{ m{7cm}  m{7cm} }
+\begin{verbatim}
+int sum = 0;
+for(int i = 1; i < 10; i++)
+  sum += i;
+print(sum);
+\end{verbatim}
+& 
+\begin{verbatim}
+int prod = 1;
+for(int 1 = 0; i < 10; i++)
+  prod *= i;
+print(prod);
+\end{verbatim}
+\end{tabular}
+%\end{table}
+
+These are quite finicky to create if you don't know how. One needs to specify column widths rather than alignments.
+
+% https://coltedition.blogspot.com/2012/02/latex-verbatim-and-other-environments.html
 
 
 

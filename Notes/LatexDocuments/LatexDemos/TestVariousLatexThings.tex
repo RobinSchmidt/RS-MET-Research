@@ -50,8 +50,6 @@ A blank line before and after the tabular is needed. Without it, the environment
 \medskip
 This is a tabular environment with two columns, each holding a verbatim environment:
 
-%\begin{table}
-%\begin{tabular}{ l  l }
 \begin{tabular}{ m{7cm}  m{7cm} }
 \begin{verbatim}
 int sum = 0;
@@ -67,7 +65,7 @@ for(int 1 = 0; i < 10; i++)
 print(prod);
 \end{verbatim}
 \end{tabular}
-%\end{table}
+
 
 These are quite finicky to create if you don't know how. One needs to specify column widths rather than alignments.
 

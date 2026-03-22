@@ -1,0 +1,53 @@
+%\documentclass[12pt]{article}           % For articles, \chapter doesn't work
+\documentclass[12pt, oneside]{book}
+
+\usepackage{verbatim}
+
+\begin{document}
+
+\chapter{Chapter Heading}
+This is a chapter.
+
+\section{Section Heading}
+This is a section.
+
+\subsection{Subsection Heading}
+This is a subsection.
+
+\subsubsection{Subsubsection Heading}
+This is a subsubsection.
+
+\paragraph{Paragraph Heading}
+This is a paragraph.
+
+\medskip
+\medskip
+\medskip
+This is a verbatim environment:
+\begin{verbatim}
+int sum = 0;
+for(int i = 1; i < 10; i++)
+  sum += i;
+print(sum);
+\end{verbatim}
+
+
+\begin{tabular}{ ll }
+%\begin{verbatim}
+%int sum = 0;
+%for(int i = 1; i < 10; i++)
+%  sum += i;
+%print(sum);
+%\end{verbatim}
+%%& 
+%\begin{verbatim}
+%int prod = 1;
+%for(int 1 = 0; i < 10; i++)
+%  prod *= i;
+%print(prod);
+%\end{verbatim}
+\end{tabular}
+
+
+
+\end{document}

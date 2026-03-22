@@ -78,6 +78,20 @@ which is, for this reason, typically pronounced as "$n$-choose-$k$". The formula
 One starts with writing down the two outer edges consisting of all ones. Then, to fill a row, one  just forms the sums of the two numbers north-west and north-east of the current position. For example, the two 10s in the 6th row are formed as $4+6$ and $6+4$ from the entries in the 5th row.
 ToDo: give recursion formula that can be interpreted in terms of Pascal's triangle. Maybe give more recursion formulas
 
+% ToDo: Give the actual recursion formula. i think, it's something like
+% C_n^k = C_{n-1}^k + C_{n-1}^{k-1}
+% To "see" the formula, it is usually better to write down the triangle left-justified like so:
+%
+%  1              
+%  1   1   
+%  1   2   1   
+%  1   3   3   1   
+%  1   4   6   4   1   
+%  1   5  10  10   5   1    
+%
+% because the centered justification makes it harder to see the column index. Maybe display the trinagle both ways - cenetered and left-justified.
+
+
 \medskip
 In some situations, we may be allowed to choose an element more than once such that we do not form a (sub)set anymore but instead a multiset with elements picked from a given set. For the number different possible such combinations with repetition we get:
 \begin{equation}

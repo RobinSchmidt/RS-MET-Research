@@ -526,7 +526,7 @@ class rsMultiVarMonomOrder
 
 public:
 
-  virtual bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const = 0;
+  //virtual bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const = 0;
 
   virtual bool operator()(
     const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const = 0;
@@ -548,12 +548,9 @@ class rsMultiVarMonomLessLexic : public rsMultiVarMonomOrder<T>
 
 public:
 
-  bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
+  bool operator()(
+    const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
   {
-    // Old:
-    //return rsMultiVarMonomial<T>::lessLexic(lhs, rhs);
-
-    // New:
     rsAssert(lhs.isCompatibleWith(rhs), "lhs and rhs are incompatible");
     for(size_t i = 0; i < lhs.getNumVariables(); i++)
     {
@@ -578,18 +575,7 @@ public:
     // 2:   x^2, 1+x^2, x+x^2, 1+x+x^2, y^2, ...
     // 3:
     // 4:
-
   }
-
-  bool operator()(
-    const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
-  {
-    return less(lhs, rhs); 
-    // Preliminary. ToDo: Copy the code from less and get rid of the function
-  }
-
-
-
 
 };
 
@@ -600,7 +586,8 @@ class rsMultiVarMonomLessLexic2 : public rsMultiVarMonomOrder<T> // Maybe rename
 
 public:
 
-  bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
+  bool operator()(
+    const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
   {
     rsAssert(lhs.isCompatibleWith(rhs), "lhs and rhs are incompatible");
     for(size_t i = 0; i < lhs.getNumVariables(); i++)
@@ -629,21 +616,7 @@ public:
     //   loop.
   }
 
-  bool operator()(
-    const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
-  {
-    return less(lhs, rhs); 
-    // Preliminary. ToDo: Copy the code from less and get rid of the function
-  }
-
 };
-
-
-
-
-
-
-
 
 //=================================================================================================
 
@@ -978,7 +951,11 @@ public:
   order that can be customized by client code via calling setComparator(). If you don't set up 
   anything, a default monomial order relation (namely lexicographical order) will be used. */
   bool _isLess(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const
-  { rsAssert(termLess != nullptr); return termLess->less(lhs, rhs); }
+  { 
+    rsAssert(termLess != nullptr); 
+    return (*termLess)(lhs, rhs); 
+    //return termLess->less(lhs, rhs); 
+  }
 
 
 protected:

@@ -15375,7 +15375,7 @@ interpreted here as: f and g have the same configuration of exponents so it's an
 relation ignoring the coefficient. */
 template<class T>
 bool isTrichotomic(
-  const rsMultiVarMonomLess<T>& less,
+  const rsMultiVarMonomOrder<T>& less,
   const rsMultiVarMonomial<T>& f,
   const rsMultiVarMonomial<T>& g)
 {
@@ -15391,7 +15391,7 @@ f,g,h. That means that  (f < g  and  g < h)  implies  f < h. Transitivity is a g
 for an order relation. */
 template<class T>
 bool isTransitive(
-  const rsMultiVarMonomLess<T>& less,
+  const rsMultiVarMonomOrder<T>& less,
   const rsMultiVarMonomial<T>& f,
   const rsMultiVarMonomial<T>& g,
   const rsMultiVarMonomial<T>& h)
@@ -15420,7 +15420,7 @@ additional requirement for a monomial order that must hold in addition to the ge
 for an order relation. */
 template<class T>
 bool isProductStable(
-  const rsMultiVarMonomLess<T>& less,
+  const rsMultiVarMonomOrder<T>& less,
   const rsMultiVarMonomial<T>& f,
   const rsMultiVarMonomial<T>& g,
   const rsMultiVarMonomial<T>& h)
@@ -15452,7 +15452,7 @@ bool isProductStable(
 }
 
 template<class T>
-bool isValidOrder(const rsMultiVarMonomLess<T>& less, int numVars, int maxPower)
+bool isValidOrder(const rsMultiVarMonomOrder<T>& less, int numVars, int maxPower)
 {
   bool ok = true;
 

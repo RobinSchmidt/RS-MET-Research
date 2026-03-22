@@ -521,7 +521,7 @@ could have used a std::function for this as well but I figured that a simple poi
 economic (Verify!). ...TBC... */
 
 template<class T>
-class rsMultiVarMonomLess
+class rsMultiVarMonomOrder
 {
 
 public:
@@ -532,15 +532,15 @@ public:
   // purely virtual? We'll see...
 
 };
-// Maybe rename to rsMultiVarMonomCompare and rename the less() function to before(). The reason is
-// that we may also want to use descending orders, i.e. a comparator could also implement a greater
-// rather than a less function.
+// Maybe rename to rsMultiVarMonomCompare/Before/Order and rename the less() function to before(). 
+// The reason is that we may also want to use descending orders, i.e. a comparator could also 
+// implement a greater rather than a less function.
 
 
 /** Concrete subclass of rsMultiVarMonomLess that implements lexicographic order. */
 
 template<class T>
-class rsMultiVarMonomLessLexic : public rsMultiVarMonomLess<T>
+class rsMultiVarMonomLessLexic : public rsMultiVarMonomOrder<T>
 {
 
 public:
@@ -582,7 +582,7 @@ public:
 
 
 template<class T>
-class rsMultiVarMonomLessLexic2 : public rsMultiVarMonomLess<T> // Maybe rename to ..GreaterLexic
+class rsMultiVarMonomLessLexic2 : public rsMultiVarMonomOrder<T> // Maybe rename to ..GreaterLexic
 {
 
 public:
@@ -685,8 +685,9 @@ public:
 
   /** Sets up the comparator object that we use to define a monomial order on our terms. 
   ...TBC... */
-  void setComparator(rsMultiVarMonomLess<T>* newComparator)
+  void setComparator(rsMultiVarMonomOrder<T>* newComparator)
   { termLess = newComparator; }
+  // Maybe rename to setTermOrder() or setMonomialOrder()
 
   /** Initializes this polynomial. You need to pass the number of variables that this polynomial
   expects as inputs. For example, for a trivariate polynomial p = p(x,y,z), that number would be
@@ -964,7 +965,7 @@ protected:
 
 
   std::vector<rsMultiVarMonomial<T>> terms;  // Array of terms of the form c * x0^p0 * x1^p1 * ...
-  rsMultiVarMonomLess<T>* termLess;          // Comparator object for terms
+  rsMultiVarMonomOrder<T>* termLess;         // Comparator object for terms - maybe rename to termBefore
   int numVars = 1;                           // Number of variables. Dimension of input argument.
   TTol tol = TTol(0);                        // Tolerance for numerical comparisons.
 

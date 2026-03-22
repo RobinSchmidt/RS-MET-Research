@@ -528,6 +528,9 @@ public:
 
   virtual bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const = 0;
 
+  virtual bool operator()(
+    const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const = 0;
+
   // Maybe use the () operator instead of a less() member function. But can operators actually be 
   // purely virtual? We'll see...
 
@@ -578,6 +581,16 @@ public:
 
   }
 
+  bool operator()(
+    const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
+  {
+    return less(lhs, rhs); 
+    // Preliminary. ToDo: Copy the code from less and get rid of the function
+  }
+
+
+
+
 };
 
 
@@ -614,6 +627,13 @@ public:
     //   non-constant and return false in this case. ...but I'm not really sure about this - it 
     //   somehow still feels weird to me that we should not be able to cover this case within the
     //   loop.
+  }
+
+  bool operator()(
+    const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
+  {
+    return less(lhs, rhs); 
+    // Preliminary. ToDo: Copy the code from less and get rid of the function
   }
 
 };

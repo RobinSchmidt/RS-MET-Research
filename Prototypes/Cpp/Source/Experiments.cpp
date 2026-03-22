@@ -15379,8 +15379,8 @@ bool isTrichotomic(
   const rsMultiVarMonomial<T>& f,
   const rsMultiVarMonomial<T>& g)
 {
-  bool flg = less.less(f, g);        // flg: f less than g
-  bool glf = less.less(g, f);        // glf: g less than f
+  bool flg = less(f, g);             // flg: f less than g
+  bool glf = less(g, f);             // glf: g less than f
   bool feg = f.hasSamePowersAs(g);   // feg: f equivalent to g (powers match, coeff may differ)
 
   return rsXor(flg, glf, feg);
@@ -15398,8 +15398,8 @@ bool isTransitive(
 {
   bool ok = true;
 
-  if(less.less(f, g) && less.less(g, h))
-    ok &= less.less(f, h);
+  if(less(f, g) && less(g, h))
+    ok &= less(f, h);
 
   return ok;
 
@@ -15432,11 +15432,11 @@ bool isProductStable(
   Mon fh = f * h;
   Mon gh = g * h;
 
-  if(less.less(f, g))
-    ok &= less.less(fh, gh);   // f < g  ->  f*h < g*h
+  if(less(f, g))
+    ok &= less(fh, gh);   // f < g  ->  f*h < g*h
 
-  //else if(less.less(g, f))
-  //  ok &= less.less(gh, gh);   // g < f  ->  g*h < f*h
+  //else if(less(g, f))
+  //  ok &= less(gh, gh);   // g < f  ->  g*h < f*h
   
   return ok;
 
@@ -15444,7 +15444,7 @@ bool isProductStable(
   //
   // - Change the API of rsMultiVarMonomLess such that we do not have to write less.less(..) but 
   //   just less(..). For this, the class needs to define the operator () rather than a member 
-  //   function less().
+  //   function less().  ...done!
   //
   // - Remove the "else if" branch. We should only check the criterion for the f < g case because
   //   otherwise, we do each check twice when the function gets called in the loop in 

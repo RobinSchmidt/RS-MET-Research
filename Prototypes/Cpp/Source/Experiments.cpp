@@ -19581,28 +19581,40 @@ void testWeierstrassFractal()
   using Real = double;
   using Vec  = std::vector<Real>;
 
-  Real a   = 0.5;
-  Real b   = 7.0;
-  int N    = 10001;                         // Number of samples
-  int kMax = 20;                            // Maximum value for the summation index k
+  Real a    = 0.5;
+  Real b    = 5.0;
+  Real tMin = -2.0;
+  Real tMax = +2.0;
+  int  N    = 10001;                         // Number of samples
+  int  kMax = 30;                            // Maximum value for the summation index k
 
-  Vec x(N), y(N);
+  // Verify that the parameters are in the desired range:
+  Real ab    = a*b;
+  Real abMin = 1 + 1.5*PI;                   // Minimum of what ab should be
+  bool paramsOk = true;
+  paramsOk &= a  > Real(0);
+  paramsOk &= a  < Real(1);
+  paramsOk &= ab > Real(abMin);
+
+
+  Vec t(N), x(N), y(N);
   for(int n = 0; n < N; n++)
   {
-    Real t   = 2 * PI * Real(n) / Real(N-1);
-    Real amp = pow(a, n);
-    Real frq = pow(b, n);
+    //Real t   = 2 * PI * Real(n) / Real(N-1);
+    t[n] = rsLinToLin(Real(n), Real(0), Real(N-1), tMin, tMax);
     x[n] = 0;
     y[n] = 0;
-    for(int k = 1; k <= kMax; k++)
+    for(int k = 0; k <= kMax; k++)
     {
-      x[n] += amp * sin(frq * t);
-      y[n] += amp * cos(frq * t);
+      Real amp = pow(a, k);
+      Real frq = pow(b, k);
+      x[n] += amp * sin(frq * t[n]);
+      y[n] += amp * cos(frq * t[n]);
     }
   }
 
-  rsPlotVectors(  x, y);                    // Plot x(t) and y(t) as functions of t
-  rsPlotVectorsXY(x, y);                    // Plot the parametric 2D curve (x(t),y(t))
+  rsPlotVectorsXY(t, x, y);                  // Plot x(t) and y(t) as functions of t
+  rsPlotVectorsXY(   x, y);                  // Plot the parametric 2D curve (x(t),y(t))
 
 
   // See:

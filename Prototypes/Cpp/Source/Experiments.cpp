@@ -15567,7 +15567,6 @@ bool checkMonomialOrder()
   //   orders we used do not require a setup.
 }
 
-
 bool testMultiMonomOrders()
 {
   bool ok = true;
@@ -15579,21 +15578,7 @@ bool testMultiMonomOrders()
   // ...TBC... Check more orders - graded lexicographic, etc.
 
   return ok;
-
-  // ToDo:
-  //
-  // - Try to get rid of these repetitive new/test/delete sequences by somehow wrapping ths 3-step
-  //   sequence into a single function call like:
-  // 
-  //     ok &= checkOrder<rsMultiVarMonomLessLexic<Num>>(1,5);
-  // 
-  //   or something similar. Maybe isValidOrder() itself can be rewritten that way. But maybe it's
-  //   better to keep it as is and write a 2nd function on top of it because we later may want to
-  //   verify parametrized order objects, so we really want to be able to pass an actual object
-  //   rather than just specifying the object's type at the call site.
 }
-
-
 
 /** Unit test function for the rsMultiVarMonomial<T>::compLexic() function. It works the same way
 as testIntStringCompare(), just that it operates on multivariate monomials rather than 

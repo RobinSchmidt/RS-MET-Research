@@ -15575,7 +15575,7 @@ bool testMultiMonomOrders()
   using Num = float;
 
   ok &= checkMonomialOrder<rsMultiVarMonomLessLexic<Num>>();
-  ok &= checkMonomialOrder<rsMultiVarMonomLessLexic2<Num>>();
+  ok &= checkMonomialOrder<rsMultiVarMonomGreaterLexic<Num>>();
   // ...TBC... Check more orders - graded lexicographic, etc.
 
   return ok;

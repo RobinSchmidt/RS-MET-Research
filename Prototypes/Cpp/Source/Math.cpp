@@ -526,21 +526,17 @@ class rsMultiVarMonomOrder
 
 public:
 
-  //virtual bool less(const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const = 0;
-
+  /** Subclasses need to implement this operator. It should rteurn true when the lhs is deemed to
+  come before the lhs in the order that the subclass specifies. ...TBC... */
   virtual bool operator()(
     const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const = 0;
 
-  // Maybe use the () operator instead of a less() member function. But can operators actually be 
-  // purely virtual? We'll see...
-
 };
-// Maybe rename to rsMultiVarMonomCompare/Before/Order and rename the less() function to before(). 
-// The reason is that we may also want to use descending orders, i.e. a comparator could also 
-// implement a greater rather than a less function.
 
 
-/** Concrete subclass of rsMultiVarMonomLess that implements lexicographic order. */
+
+/** Concrete subclass of rsMultiVarMonomOrder that implements ascending lexicographic order. That 
+means that the variables are odered as x0,x1,x2,.... */
 
 template<class T>
 class rsMultiVarMonomLessLexic : public rsMultiVarMonomOrder<T>
@@ -578,10 +574,14 @@ public:
   }
 
 };
+// Maybe rename to rsMultiVarMonomOrderLexAsc (for lexicographically ascending)
 
+
+/** Concrete subclass of rsMultiVarMonomOrder that implements descending lexicographic order. That 
+means that the variables are odered as ...,x2,x1,x0. */
 
 template<class T>
-class rsMultiVarMonomLessLexic2 : public rsMultiVarMonomOrder<T> // Maybe rename to ..GreaterLexic
+class rsMultiVarMonomGreaterLexic : public rsMultiVarMonomOrder<T>
 {
 
 public:

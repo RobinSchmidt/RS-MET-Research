@@ -19569,7 +19569,7 @@ void testRiemannFractal()
 
 void testWeierstrassFractal()
 {
-  // Weimplement a similar fractal plot as above for the Riemmann function but here we use the 
+  // We implement a similar fractal plot as above for the Riemmann function but here we use the 
   // Weierstrass function instead. See:
   //
   //   https://en.wikipedia.org/wiki/Weierstrass_function
@@ -19599,6 +19599,8 @@ void testWeierstrassFractal()
   paramsOk &= a  > Real(0);
   paramsOk &= a  < Real(1);
   paramsOk &= ab > Real(abMin);
+  // If paramsOk evaluates to false, the plot may look ok nonetheless because (I think), we don't
+  // actually take the infinite sum over k to infinity but truncate it at some finite kMax.
 
 
   Vec t(N), x(N), y(N);
@@ -19627,12 +19629,6 @@ void testWeierstrassFractal()
   //
   // - The frequency of the sinusoids increases exponentially, so we need to be careful with kMax
   //   to not get aliasing.
-  // 
-  // 
-  // Notes:
-  // 
-  // - The original Weierstrass function appears as y(t) here. The x(t) function is just the sine 
-  //   counterpart (to the cosine based original function) that I added to make a nice 2D plot.
   // 
   // 
   // ToDo:

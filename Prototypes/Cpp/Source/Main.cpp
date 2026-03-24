@@ -138,7 +138,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   //testAttractors();  // move into a section for physics/models
   //testRiemannFractal();
-  testWeierstrassFractal();            // Buggy
+  testWeierstrassFractal();
 
   //testPolynomialRootFinder();        // stub
   //testLiftedPolynomial();

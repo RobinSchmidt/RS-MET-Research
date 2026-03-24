@@ -19569,24 +19569,28 @@ void testRiemannFractal()
 
 void testWeierstrassFractal()
 {
-  // This does not work yet!
-
-  // We try to implement a similar fractal plot as above for the Riemmann function but here we use
-  // the Weierstrass function instead. See:
+  // Weimplement a similar fractal plot as above for the Riemmann function but here we use the 
+  // Weierstrass function instead. See:
   //
   //   https://en.wikipedia.org/wiki/Weierstrass_function
   //
-  // ...TBC...
+  // The original Weierstrass function is defined as:
+  //
+  //   f(t) = sum_{k=0}^inf a^n cos(pi * b^n * t)
+  //
+  // Here, in order to make a nice parametric 2D plot, we use the original function f(t) for y(t) 
+  // and compute x(t) by using the sine counterpart of the above function which results from just 
+  // replacing the cosine with the sine. ...TBC...
 
   using Real = double;
   using Vec  = std::vector<Real>;
 
-  Real a    = 0.5;
-  Real b    = 5.0;
-  Real tMin = -2.0;
-  Real tMax = +2.0;
-  int  N    = 10001;                         // Number of samples
-  int  kMax = 30;                            // Maximum value for the summation index k
+  Real a    =     0.4;
+  Real b    =     5.0;
+  Real tMin =    -1.0;
+  Real tMax =    +1.0;
+  int  N    = 30001;                         // Number of samples
+  int  kMax =     4;                         // Maximum value for the summation index k
 
   // Verify that the parameters are in the desired range:
   Real ab    = a*b;
@@ -19600,14 +19604,13 @@ void testWeierstrassFractal()
   Vec t(N), x(N), y(N);
   for(int n = 0; n < N; n++)
   {
-    //Real t   = 2 * PI * Real(n) / Real(N-1);
     t[n] = rsLinToLin(Real(n), Real(0), Real(N-1), tMin, tMax);
     x[n] = 0;
     y[n] = 0;
     for(int k = 0; k <= kMax; k++)
     {
       Real amp = pow(a, k);
-      Real frq = pow(b, k);
+      Real frq = pow(b, k) * PI;
       x[n] += amp * sin(frq * t[n]);
       y[n] += amp * cos(frq * t[n]);
     }
@@ -19616,7 +19619,28 @@ void testWeierstrassFractal()
   rsPlotVectorsXY(t, x, y);                  // Plot x(t) and y(t) as functions of t
   rsPlotVectorsXY(   x, y);                  // Plot the parametric 2D curve (x(t),y(t))
 
-
+  // Observations:
+  //
+  // - In our verifications of the parameter range, we often get paramsOk == false. I think, this
+  //   means that the infinite series would not converge. However, for our truncated series, we 
+  //   may nevertheless get some sort of ok looking plot.
+  //
+  // - The frequency of the sinusoids increases exponentially, so we need to be careful with kMax
+  //   to not get aliasing.
+  // 
+  // 
+  // Notes:
+  // 
+  // - The original Weierstrass function appears as y(t) here. The x(t) function is just the sine 
+  //   counterpart (to the cosine based original function) that I added to make a nice 2D plot.
+  // 
+  // 
+  // ToDo:
+  // 
+  // - Determine the appropriate kMax automatically from tMin, tMax, N by the requirement that we 
+  //   do not want to get aliasing. 
+  // 
+  //
   // See:
   //
   // https://www.youtube.com/shorts/2LaXHjcS7IE

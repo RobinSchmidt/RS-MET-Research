@@ -19567,6 +19567,48 @@ void testRiemannFractal()
   //   https://en.wikipedia.org/wiki/Weierstrass_function
 }
 
+void testWeierstrassFractal()
+{
+  // This does not work yet!
+
+  // We try to implement a similar fractal plot as above for the Riemmann function but here we use
+  // the Weierstrass function instead. See:
+  //
+  //   https://en.wikipedia.org/wiki/Weierstrass_function
+  //
+  // ...TBC...
+
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+  Real a   = 0.5;
+  Real b   = 7.0;
+  int N    = 10001;                         // Number of samples
+  int kMax = 20;                            // Maximum value for the summation index k
+
+  Vec x(N), y(N);
+  for(int n = 0; n < N; n++)
+  {
+    Real t   = 2 * PI * Real(n) / Real(N-1);
+    Real amp = pow(a, n);
+    Real frq = pow(b, n);
+    x[n] = 0;
+    y[n] = 0;
+    for(int k = 1; k <= kMax; k++)
+    {
+      x[n] += amp * sin(frq * t);
+      y[n] += amp * cos(frq * t);
+    }
+  }
+
+  rsPlotVectors(  x, y);                    // Plot x(t) and y(t) as functions of t
+  rsPlotVectorsXY(x, y);                    // Plot the parametric 2D curve (x(t),y(t))
+
+
+  // See:
+  //
+  // https://www.youtube.com/shorts/2LaXHjcS7IE
+}
 
 
 bool testPolynomialRootFinder()

@@ -19634,7 +19634,11 @@ void testWeierstrassFractal()
   // ToDo:
   // 
   // - Determine the appropriate kMax automatically from tMin, tMax, N by the requirement that we 
-  //   do not want to get aliasing. 
+  //   do not want to get aliasing.
+  // 
+  // - Document why we need those particular constraints for the parameters, i.e. 0 < a < 1, 
+  //   a*b > 1 + 1.5*pi. I think, these are the requirements for the infinite series to converge 
+  //   but I'm not sure -> figure out, document.
   // 
   //
   // See:

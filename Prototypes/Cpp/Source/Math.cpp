@@ -618,6 +618,17 @@ public:
 
 };
 
+// ToDo:
+//
+// - Make a class "rsMultiVarMonomOrders" and the current "rsMultiVarMonomOrder" (singular!) class
+//   should become an internal class called "Base" and the current free classes 
+//   "rsMultiVarMonomLessLexic" and "rsMultiVarMonomGreaterLexic" should also become internal 
+//   classes "LessLexic" and "GreaterLexic". We want to avoid a proliferation of classes on the top
+//   level with ugly redundant verbose names. It should still be possible to create subclasses of 
+//   "rsMultiVarMonomOrders::Base" on the top level, i.e. outside of "rsMultiVarMonomOrders" such 
+//   that client code can still create custom orders. However, the predifined orders such as lexic,
+//   graded lexic, etc. should all be internal to "rsMultiVarMonomOrders".
+
 //=================================================================================================
 
 /** Under construction.

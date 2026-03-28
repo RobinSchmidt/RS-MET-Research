@@ -604,39 +604,12 @@ public:
       else if(d > 0)
         return false;   
     }
-    return false;     // Works
-    //return true;    // Fails
-
-    // Notes:
-    //
-    // - I think, returning false as the last line is the only viable option because when d is 
-    //   never positive or negative within the loop, it means that the arrays of powers of lhs and
-    //   rhs are equal which means lhs and rhs should be considered to be equivalent. None of the 
-    //   two is less than the other.
-    //
-    // - I also think, to get the desired behavior of considering constant polynomials to always be
-    //   less than non-constant ones, we need to first check if lhs is constant and rhs 
-    //   non-constant and return true in this case and otherwise check if rhs is constant and lhs
-    //   non-constant and return false in this case. ...but I'm not really sure about this - it 
-    //   somehow still feels weird to me that we should not be able to cover this case within the
-    //   loop.
+    return false;
   }
 
 };
 
-// ToDo:
-//
-// - Make a class "rsMultiVarMonomOrders" and the current "rsMultiVarMonomOrder" (singular!) class
-//   should become an internal class called "Base" and the current free classes 
-//   "rsMultiVarMonomLessLexic" and "rsMultiVarMonomGreaterLexic" should also become internal 
-//   classes "LessLexic" and "GreaterLexic". We want to avoid a proliferation of classes on the top
-//   level with ugly redundant verbose names. It should still be possible to create subclasses of 
-//   "rsMultiVarMonomOrders::Base" on the top level, i.e. outside of "rsMultiVarMonomOrders" such 
-//   that client code can still create custom orders. However, the predifined orders such as lexic,
-//   graded lexic, etc. should all be internal to "rsMultiVarMonomOrders". 
-//
-// - Or, maybe even better, make a class Order as internal class inside rsMultiVarMonomial which
-//   we use as MultiVarMonomial<T>::Order
+
 
 //=================================================================================================
 

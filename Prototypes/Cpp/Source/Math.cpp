@@ -1024,12 +1024,19 @@ protected:
 
 
   std::vector<rsMultiVarMonomial<T>> terms;  // Array of terms of the form c * x0^p0 * x1^p1 * ...
+
+
   rsMultiVarMonomOrder<T>* termLess;         // Comparator object for terms - maybe rename to termBefore
+
+  typename rsMultiVarMonomial<T>::Order* termLess2;   // Comparator object for terms
+
+
   int numVars = 1;                           // Number of variables. Dimension of input argument.
   TTol tol = TTol(0);                        // Tolerance for numerical comparisons.
 
 
-  static rsMultiVarMonomLessLexic<T> termLessLexic;
+  static rsMultiVarMonomLessLexic<T> termLessLexic;  // Old
+  static typename rsMultiVarMonomial<T>::LessLexic termLessLexic2;  // New
   // This static object is the default object that we assign to our termLess member such that when
   // the user doesn't set up anything else, we'll get lexicographical ordering by default.
 
@@ -1044,8 +1051,14 @@ protected:
 template<class T, class TTol>
 rsMultiVarMonomial<T> rsMultiVarPolynomial<T, TTol>::zeroMonomial;
 
+// Old:
 template<class T, class TTol>
 rsMultiVarMonomLessLexic<T> rsMultiVarPolynomial<T, TTol>::termLessLexic;
+
+// New:
+template<class T, class TTol>
+typename rsMultiVarMonomial<T>::LessLexic rsMultiVarPolynomial<T, TTol>::termLessLexic2;
+
 
 
 template<class T, class TTol>

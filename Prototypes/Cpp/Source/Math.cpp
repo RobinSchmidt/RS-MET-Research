@@ -425,6 +425,19 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Term orders.  */
 
+  /** Abstract baseclass for a comparator for multivariabe monomials. In rsMultiVarPolynomial, we
+  need a way to define various order relations on monomials. The class rsMultiVarPolynomial will 
+  use a baseclass pointer to a concrete object whose type is a subclass of rsMultiVarMonomLess and
+  those concrete subclasses can then implement various orderings. Examples for such monomial orders
+  are lexicographical (short: lex), graded lexicographical, inverse lexicographical, etc.. These 
+  orders could be implemented using simple function pointers but the book "Ideals, Varieties, and
+  Algorithms" also mentions product orders and weight orders (on page 75) where the latter ones can
+  be parametrized by a weight vector u. On page 58, it says that lex order can be parametrized by a
+  permutation of the variables. To cater to all of these and potentially more situations, it seems
+  appropriate to use function objects for implementing the monomial order such that we have enough
+  flexibility to accomodate for orders that can be parametrized in arbitrary ways at runtime. We
+  could have used a std::function for this as well but I figured that a simple pointer is more
+  economic (Verify!). ...TBC... */
   class Order
   {
   public:
@@ -436,10 +449,53 @@ public:
 
   };
 
+  /** Concrete subclass of Order that implements ascending lexicographic order. That means that the
+  variables are odered as x0,x1,x2,.... */
   class LessLexic : public Order
   {
+  public:
+    bool operator()(
+      const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
+    {
+      rsAssert(lhs.isCompatibleWith(rhs), "lhs and rhs are incompatible");
+      for(size_t i = 0; i < lhs.getNumVariables(); i++)
+      {
+        int d = lhs.getPower(i) - rhs.getPower(i);
+        if(d < 0)
+          return true;
+        else if(d > 0)
+          return false;
+      }
+      return false;
+    }
+  };
+  // Maybe rename to rsMultiVarMonomOrderLexAsc (for lexicographically ascending)
+
+  /** Concrete subclass of Order that implements descending lexicographic order. That means that 
+  the variables are odered as ...,x2,x1,x0. */
+  class GreaterLexic : public Order
+  {
+
+  public:
+
+    bool operator()(
+      const rsMultiVarMonomial<T>& lhs, const rsMultiVarMonomial<T>& rhs) const override
+    {
+      rsAssert(lhs.isCompatibleWith(rhs), "lhs and rhs are incompatible");
+      for(size_t i = 0; i < lhs.getNumVariables(); i++)
+      {
+        int d = rhs.getPower(i) - lhs.getPower(i);  // rhs and lhs are swapped compared to LessLexic
+        if(d < 0)
+          return true;
+        else if(d > 0)
+          return false;
+      }
+      return false;
+    }
 
   };
+
+
 
 
 protected:

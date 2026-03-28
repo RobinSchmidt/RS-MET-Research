@@ -727,8 +727,21 @@ public:
 
   /** Sets up the comparator object that we use to define a monomial order on our terms. 
   ...TBC... */
+  // Old - soon obsolete:
   void setComparator(rsMultiVarMonomOrder<T>* newComparator)
   { termLess = newComparator; }
+  // Maybe rename to setTermOrder() or setMonomialOrder()
+
+  /** Sets up the comparator object that we use to define a monomial order on our terms. 
+  ...TBC... */
+  // New - should replace the old soon:
+  void setComparator(typename rsMultiVarMonomial<T>::Order* newComparator)
+  { 
+    //termLess = newComparator; 
+  }
+  // If I don't add the "typename", I get a syntax error here. It says "syntax error: 
+  // identifier 'Order'". 
+  // 
   // Maybe rename to setTermOrder() or setMonomialOrder()
 
   /** Initializes this polynomial. You need to pass the number of variables that this polynomial

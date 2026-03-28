@@ -15572,10 +15572,18 @@ bool testMultiMonomOrders()
   bool ok = true;
 
   using Num = float;
+  using Mon = rsMultiVarMonomial<Num>;
 
   ok &= checkMonomialOrder<rsMultiVarMonomLessLexic<Num>>();
   ok &= checkMonomialOrder<rsMultiVarMonomGreaterLexic<Num>>();
   // ...TBC... Check more orders - graded lexicographic, etc.
+
+  // Tests:
+  Mon::Order* ord = nullptr;
+  Mon::LessLexic    lessLex;
+  Mon::GreaterLexic grtrLex;
+  ord = &lessLex;
+
 
   return ok;
 

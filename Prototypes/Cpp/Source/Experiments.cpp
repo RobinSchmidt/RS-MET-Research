@@ -15578,6 +15578,22 @@ bool testMultiMonomOrders()
   // ...TBC... Check more orders - graded lexicographic, etc.
 
   return ok;
+
+  // ToDo:
+  //
+  // - Implement variations of LessLexic: We can swap lhs and rhs in the difference (or 
+  //   equivalently, return false for d < 0 and true for d > 0) and we can decide what we want 
+  //   to do in the case of never hitting a d != 0 case in the loop, i.e. the last line can 
+  //   return true or false. I think, in the case of returning true, we would place constant 
+  //   monomials first, i.e. consider them as least, which is what we want. But no! Returning 
+  //   true lets the unit test fail! Figure out why! Test the different variations on polynomials
+  //   with 2 variables and go up to a max power of 2, so we would get: 
+  //   Deg
+  //   0:   1 
+  //   1:   x,y, 1+x, 1+y,
+  //   2:   x^2, 1+x^2, x+x^2, 1+x+x^2, y^2, ...
+  //   3:
+  //   4:
 }
 
 /** Unit test function for the rsMultiVarMonomial<T>::compLexic() function. It works the same way

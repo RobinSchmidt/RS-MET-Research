@@ -15859,6 +15859,17 @@ bool testMultiVarPolyBasics()  // Rename to testMultiVarPolyBasics
   // https://agag-jboehm.math.rptu.de/~boehm/lehre/1213_CA/ca.pdf
 }
 
+bool testMultiVarPolyTermOrders()
+{
+  // We test using various term orders within a multivariate polynomial. We set up some polynomials
+  // with various term orders and check that the terms indeed get sorted as expected. ...TBC...
+
+  bool ok = true;
+
+  return ok;
+}
+
+
 bool testMultiVarPolyDiv()
 {
   bool ok = true;
@@ -15952,6 +15963,7 @@ void testMultiVarPolynomial()
   ok &= testMultiMonomCompare();
   ok &= testMultiVarMonomial();
   ok &= testMultiVarPolyBasics();
+  ok &= testMultiVarPolyTermOrders();
   ok &= testMultiVarPolyDiv(); 
 
   rsAssert(ok);
@@ -15970,6 +15982,11 @@ void testMultiVarPolynomial()
   //   case our results (for polynomial division, gcd, etc.) should be the same as when using 
   //   rsSparsePolynomial. In the latter case, our result for solving equation should match those
   //   that we obtain with rsLinearAlgebra - like transforming a system into row echelon from, etc.
+  //
+  // - Try representing ideals with different bases. Try implementing algorithms to change between
+  //   different bases. Maybe a simple case to check should be with byvariate polynomials of total
+  //   degree up to 1 with the 2 bases: (1,x,y) and (1,x+y,x-y). Next we could go for polynomials 
+  //   with total degree up to 2 with bases (1,x,y,x^2,xy,y^2), (1,x+1,y-1,x+y^2,y-x^2,xy+x-y).
 }
 
 

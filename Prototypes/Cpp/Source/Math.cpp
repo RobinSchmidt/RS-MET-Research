@@ -627,7 +627,10 @@ public:
 //   level with ugly redundant verbose names. It should still be possible to create subclasses of 
 //   "rsMultiVarMonomOrders::Base" on the top level, i.e. outside of "rsMultiVarMonomOrders" such 
 //   that client code can still create custom orders. However, the predifined orders such as lexic,
-//   graded lexic, etc. should all be internal to "rsMultiVarMonomOrders".
+//   graded lexic, etc. should all be internal to "rsMultiVarMonomOrders". 
+//
+// - Or, maybe even better, make a class Order as internal class inside rsMultiVarMonomial which
+//   we use as MultiVarMonomial<T>::Order
 
 //=================================================================================================
 

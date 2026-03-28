@@ -225,6 +225,14 @@ In the context of the more general power series formula given by (\ref{Eq:PowerS
 
 % https://en.wikipedia.org/wiki/Zero_to_the_power_of_zero
 
+% ToDo:
+% -Derive Taylor series expnasions for exp, sin, cos.
+
+% How Newton Discovered Series for Sine and Cosine without Taylor Expansion
+% https://www.youtube.com/watch?v=VKclP75BmjY
+% -About an alternative way to derive the series expansions for sin and cos. Maybe mention it
+%  briefly
+
 \medskip
 The practical usefulness of this Taylor expansion lies in the fact that when we just take a finite sum instead of an infinite one, we obtain an approximation to our function. The more terms we use, the better our approximation becomes (provided that the argument $x$ is within the radius of convergence - of course). The approximation also tends to be more accurate, the closer our input value $x$ is to the expansion center $x_0$. Due to the approximation feature, Taylor expansions are used a lot in numerical computations to approximate all kinds of functions. They are also used a lot in physics to simplify complicated problems by making approximations. There, often just first or second order approximations are used, i.e. approximations up to the linear or quadratic term. Let's see what happens, when we only use a single term, i.e. only the $k=0$ term. The formula tells us to evaluate the $0$th derivative of $f$, which is $f$ itself, at $x_0$, divide by $0!$, i.e. by one and multiply that by $(x-x_0)^0 = 1$. So what we get is just $f(x_0)$. The $0$th order Taylor polynomial around $x_0$ approximates $f$ as the constant function with value $f(x_0)$. Not a very impressive approximation but at least it has the correct function value at $x_0$ and that's the best we could possibly hope for, when we try to approximate a function $f$ by a constant function around some $x_0$. If we take one term more, we obtain a linear approximation of $f$ around $x_0$. It will have a matching function value and a matching first derivative. The approximant will be a tangent to our actual function at $(x_0, f(x_0))$. The next approximation will additionally match the second derivative and create a parabolic approximation. And so on. The more terms we use, the more derivatives our approximant will match to the target function. An $n$th order Taylor approximation matches our function $f$ at the point $x_0$ up to the $n$th derivative.
 

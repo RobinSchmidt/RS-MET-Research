@@ -130,7 +130,7 @@ The sum and product notation are the most common examples for an idea in math kn
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Generalized Distributive Law}
-We have already seen the distributive law as $a (b + c) = a b + a c$ for numbers. It could also be rewritten as $(b + c) a = b a + c a$ by right multiplying the $(b+c)$ expression by $a$ rather than left multiplying. In some mathematical areas where the product is not commutative, for example when $a$ and $b$ are not numbers but some other kinds of objects, for example matrices (which will be introduced later), we really need the two different distributive laws which can then be called left-distributive and right-distributive laws (see page \pageref{Sec:RingTheory} for more details). Whenever we deal with mathematical objects for which these two distributive laws hold, we can use them to derive the following:
+We have already seen the distributive law as $a (b + c) = a b + a c$ for numbers on page \pageref{Sec:ArithmeticLaws}. It could also be rewritten as $(b + c) a = b a + c a$ by right multiplying the $(b+c)$ expression by $a$ rather than left multiplying. In some mathematical areas where the product is not commutative, for example when $a$ and $b$ are not numbers but some other kinds of objects, for example matrices (which will be introduced later), we really need the two different distributive laws which can then be called left-distributive and right-distributive laws (see page \pageref{Sec:RingTheory} for more details). Whenever we deal with mathematical objects for which these two distributive laws hold, we can use them to derive the following:
 \begin{eqnarray}
 (a+b)(c+d) &= a(c+d) + b(c+d) &= ac + ad + bc + bd \\
 (a+b)(c+d) &= (a+b)c + (a+b)d &= ac + bc + ad + bd 
@@ -151,8 +151,10 @@ The law says that to compute the product of two sums, we need to multiply each s
 
 % Could it make sense to define a structure where we round after addition but do not round after multiplication? In such a structure, wemay have to zero-pad operands, when one of them has less precision that the other.
 
+% ToDo: make similar sections about generalized associative and commutative laws. The egenralized associative law would say that in an expression like a+b+c+d, we could set the parentheses in whichever way we want. The generalized commutative law would say that we can reorder the terms in whichever way we want. Maybe give all the possibilities for the case of 3 and 4 terms. The number of ways to do that are given by the Catalan numbers and the factorials respectively. But: The factorial is intoduced only later. But it's directly below so maybe it's a god way for a transition, i.e. say, "the number of ways to do it is given b the factorial, as descirbed below..."
 
-% ToDo: Maybe insert a pageref to the start of the ring theory section because there, we state the left- and right-distributive law independently and explain that both are needed ...done
+% Maybe then call the subsubsection "Generlaized Laws of Arithmetic" with paragraphs "Associativity", "Commutativity", "Distributivity" ...maybe do commutativity first just like we did in the initial introdcution of the laws. Commutativity is the easiest to understand - although associativity is in some ways more basic and important. There are many relevant structures where associativity holds but commutativity does not.
+
 
 % I think, we indeed need associativity of addition because we deal a special case of the situation explained above with the "iterated binary operation" which is addition in this case here.
 

@@ -130,7 +130,7 @@ The sum and product notation are the most common examples for an idea in math kn
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Generalized Distributive Law}
-We have already seen the distributive law as $a (b + c) = a b + a c$ for numbers. It could also be rewritten as $(b + c) a = b a + c a$ by right multiplying the $(b+c)$ expression by $a$ rather than left multiplying. In some mathematical areas where the product is not commutative, for example when $a$ and $b$ are not numbers but some other kinds of objects, for example matrices (which will be introduced later), we really need the two different distributive laws which can then be called left-distributive and right-distributive laws. Whenever we deal with mathematical objects for which these two distributive laws hold, we can use them to derive the following:
+We have already seen the distributive law as $a (b + c) = a b + a c$ for numbers. It could also be rewritten as $(b + c) a = b a + c a$ by right multiplying the $(b+c)$ expression by $a$ rather than left multiplying. In some mathematical areas where the product is not commutative, for example when $a$ and $b$ are not numbers but some other kinds of objects, for example matrices (which will be introduced later), we really need the two different distributive laws which can then be called left-distributive and right-distributive laws (see page \pageref{Sec:RingTheory} for more details). Whenever we deal with mathematical objects for which these two distributive laws hold, we can use them to derive the following:
 \begin{eqnarray}
 (a+b)(c+d) &= a(c+d) + b(c+d) &= ac + ad + bc + bd \\
 (a+b)(c+d) &= (a+b)c + (a+b)d &= ac + bc + ad + bd 
@@ -141,6 +141,18 @@ In the top line, we have used right-distributivity first and then left-distribut
 \sum_{i=1}^{m} \sum_{j=1}^{n} a_i b_j
 \end{equation}
 The law says that to compute the product of two sums, we need to multiply each summand $a_i$ in the first sum which each summand $b_j$ and the second sum and then take the sum of all of these pairwise products $a_i b_j$. This formula can be seen as a direct consequence of the distributive law and could therefore also seen as a generalization of the distributive law. It reduces to the old distributive law if one of the sums has only one summand and the other has two. If you do an internet search for "generalized distributive law", you will find some stuff about message passing algorithms which seem to use a law that is an even further generalization and refer to that as generalized distributive law. ToDo: Maybe state and explain that even more general law, too. Check if for this generalization to apply, we also need other laws (such as associativity of addition).
+
+% Q: Does a(b+c) = ab + ac imply a(b+c+d) = ab + ac + ad? I think, for the expression (a+b+c) to be well defined, we need + to associative because otherwise it wouldn't be clear if mean ((a+b)+c) or (a+(b+c)). Only when we have associativity of +, that doesn't matter. In this case, we could evalaute it as a(b+c+d) = a((b+c)+d) = a(b+c) + ad = ab + ac + ad  or, equivalently as a(b+(c+d)) = ab + a(c+d) = ab + ac + ad.
+
+% I also think, with associativity of addition, the right hand sides ac + ad + bc + bd  and  ac + bc + ad + bd  would not be well defined without parentheses. I think, they should be set like that:
+%  (ac + ad) + (bc + bd)   and   (ac + bc) + (ad + bd) ....verify! So that means, a generalized distributive law that doesn't assume associative additian would look like that? Maybe try it with a non-associative (but neverthless distributive) structure. Is there such a thing? If not, can we invent one?
+
+% There is actually a non-contrived (and actually very much practically relevant) example of a structure where addition is not associative, namely: an add-and-round operation in the real numbers which is what we in fact do in practice all the time - also with floating point numbers on a computer. Example: Let's assume that we use numbers with 3 significant decimal digits and we form the 3-term sums (123 + .456) + .123  vs  123 + (.456 + .123). In the first case, we would get 123 as result and in the second case 124 when we assume that we round to 3 digits after each 2-term addition.
+
+% Could it make sense to define a structure where we round after addition but do not round after multiplication? In such a structure, wemay have to zero-pad operands, when one of them has less precision that the other.
+
+
+% ToDo: Maybe insert a pageref to the start of the ring theory section because there, we state the left- and right-distributive law independently and explain that both are needed ...done
 
 % I think, we indeed need associativity of addition because we deal a special case of the situation explained above with the "iterated binary operation" which is addition in this case here.
 

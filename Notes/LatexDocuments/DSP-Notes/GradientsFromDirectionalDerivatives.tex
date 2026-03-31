@@ -8,6 +8,9 @@ DRAFT
 \section{Motivation}
 Numerical algorithms for solving partial differential equations (PDEs) by finite difference methods are easy to understand\footnote{What I mean by "easy to understand" is that the basic idea of the approach, i.e. just taking the PDE and and replacing derivatives with finite differences, is intuitive. If you want to do things like stability analysis an the like, it quickly gets fairly advanced.} and straightforward to use but they usually assume a regular mesh (a.k.a. grid - these two terms are used interchangably). For geometrically more complicated domains, this restriction is often inconvenient and for certain problems, we may want a higher grid resolution in certain areas, where the solution changes a lot. In such cases, finite element methods are typically used because they can deal with irregular grids just fine. On the downside, they are conceptually much more difficult to understand and harder to apply. If the problem involves a conservation law, finite volume methods may also be used. These are still relatively straightforward and can also deal with irregular meshes, but you need to have some sort of conservation law like, for example, the conservation of mass in fluid dynamic simulations. Here, we want to consider an idea that allows us to estimate (spatial) partial derivatives on an irregular mesh as a preliminary step to the eventual goal of developing a finite difference PDE solver for such irregular meshes.
 
+% Finite volume methods are not universally applicable because they needs this conservation law. Finite element methods, on the other hand, may at first also not seem to be universally applicable because you need to be able to reformulate the problem into its weak form which may involve tricky (i.e. impossible) analytic integrals. However, i think, for this numerical integration may come to the rescue (verify!). However - what I want is a universal _and_ conceptually simple method. 
+
+
 
 \section{Estimating Spatial Gradients}
 \subsection{Spatial Gradients on Regular Grids}
@@ -244,5 +247,9 @@ What remains to be done is to investigate, how this gradient estimation algorith
 % function meshGradientErrorVsDistance() in the TestsRosicAndRapt project.
 
 
+% I think, we will typically have meshes where each vertex has at least 3 neighbors. Well - at least
+% if we assume a polyhedral mesh - which may be a plausible assumption for the typical case:
 % 
+% Can 8,000 Bouncy Springs Hide Secret Messages? (Tutte's Theorem)
+% https://www.youtube.com/watch?v=3YlC_W5myxg
 

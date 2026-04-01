@@ -1571,7 +1571,9 @@ Every ordinal number $\alpha$ can be written in the form:
 \begin{equation}
 \alpha = \omega^{\beta_1} c_1 + \omega^{\beta_2} c_2 + \ldots + \omega^{\beta_k} c_k
 \end{equation}
-where $k$ is a natural number, the $c_i$ are also natural numbers and the $\beta_i$ are ordinal numbers and are sorted from largest to smallest, i.e. $\beta_1 > \beta_2 > \ldots > \beta_k$. The greatest exponent $\beta_1$ is called the degree of $\alpha$. Compare that to the way in which usually interpret decimal numbers as a weighted sum of powers of $10$. It's very similar here - just that the basis is not $10$ but $\omega$ and the weights are multiplied with the powers from the right. This is really necessary because ordinal multiplication is not commutative and multiplying an infinite ordinal from the left by any natural number changes nothing. The $\beta_i$ can, in turn, also be expressed in Cantor normal form and so on until one eventually arrives at an expression that contains only natural numbers and $\omega$s. This is similar to the hereditary base-$n$ notation of natural numbers. ...TODO: give alternative form without the $c_i$ coeffs
+where $k$ is a natural number, the $c_i$ are also natural numbers and the $\beta_i$ are ordinal numbers and are sorted from largest to smallest, i.e. $\beta_1 > \beta_2 > \ldots > \beta_k$. The greatest exponent $\beta_1$ is called the degree of $\alpha$. Compare that to the way in which usually interpret decimal numbers as a weighted sum of powers of $10$. It's very similar here - just that the basis is not $10$ but $\omega$ and the weights are multiplied with the powers from the right. This is really necessary because ordinal multiplication is not commutative and multiplying an infinite ordinal from the left by any natural number changes nothing. The exponents $\beta_i$ are themselves ordinals and therefore can, in turn, also be expressed in Cantor normal form and so on until one eventually arrives at an expression that contains only natural numbers and $\omega$s. This is similar to the hereditary base-$n$ notation of natural numbers. ...TODO: give alternative form without the $c_i$ coeffs
+
+% Explain why this definition via recursion must eventually hit the base case where the exponents become natural numbers. I guess, it has to do with the ordinals being well ordered?
 
 % https://de.wikipedia.org/wiki/Cantorsche_Normalform
 % https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form
@@ -1586,6 +1588,8 @@ where $k$ is a natural number, the $c_i$ are also natural numbers and the $\beta
 % Just like the von Neumann natural numbers can be used as prototypes for finite sets,
 % each ordinal number can serve as a prototype for a specific well ordered set. This works because 
 % for any well ordered set, there exists a unique ordinal number that is order isomorphic to it. 
+% Give examples for that. What is the ordinal that is isomorphic to the integers, rationals, reals,
+% etc.?
 
 
 \paragraph{Addition}

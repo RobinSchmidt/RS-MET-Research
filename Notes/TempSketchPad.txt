@@ -141,6 +141,21 @@ ResoVerb or TuneVerb or ModalVerb:
 ----------------------------------------------------------------------------------------------------
 De-Dithering or De-Quantization by Polynomial Regression
 
+Setting: We have a quantized discrete time sequence x[n] and we want to somehow "undo" the 
+quantization, i.e. produce a value that is most likely to be the original signal value before the 
+quantization step. The idea is to look at the surrounding values in some neighborhood, for example 
+at x[n-1], x[n], x[n+1] and fit a linear (or polynomial) regression function to these values. The 
+key is that the polynomial needs to have less degrees of freedom than the number of data points that
+we use. For example, with 3 data points, we could use at most a linear polynomial, i.e. linear 
+regression with its two coefficients for slope and offset. With 5 points, we could use a cubic - but 
+we could also use a quadratic or linear polynomial. The degree of the polynomial could be a 
+tweakable parameter (together with the number of data points to use). We could also try to fit other 
+types of functions such as (windowed) sincs, Gaussians, Wavelets, etc.
+
+
+Maybe try it on the following test signals: sinusoids, sums of sines, pink noise, brown noise, 
+polynomials with and without added noise. Maybe call it maximum likelikhood dequantization.
+
  
  
 ---------------------------------------------------------------------------------------------------- 

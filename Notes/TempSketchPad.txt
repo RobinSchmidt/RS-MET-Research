@@ -150,12 +150,27 @@ we use. For example, with 3 data points, we could use at most a linear polynomia
 regression with its two coefficients for slope and offset. With 5 points, we could use a cubic - but 
 we could also use a quadratic or linear polynomial. The degree of the polynomial could be a 
 tweakable parameter (together with the number of data points to use). We could also try to fit other 
-types of functions such as (windowed) sincs, Gaussians, Wavelets, etc.
+types of functions such as (windowed) sincs (with different shifts), Gaussians, Wavelets, etc.
 
+We could try to apply dithering before the quantization step. Maybe also try it with dithering only
+without subsequent quatization. Can we remove the dither noise again - well, certainly not 
+completely but maybe we can reduce it. The dithering noise and the quantization can both be seen as
+processes that add noise (dither noise and quantization noise).
 
-Maybe try it on the following test signals: sinusoids, sums of sines, pink noise, brown noise, 
+Maybe try it on the following test signals: sinusoids, sums of sines, pink noise, brown noise, DC,
 polynomials with and without added noise. Maybe call it maximum likelikhood dequantization.
 
+Maybe for the dither noise, the instantaneous probability distribution should depend on the sample 
+value. ...well - it kind of already does by using the sample value as mean but maybe it could also 
+depend in other vways on it - maybe by adjusting the variance accoridng to how close it is to a 
+quantization step. I'm not sure, if that makes sense, though. Maybe we could do something similar as
+in the pitch dithering. Maybe we could call it smart dithering or adaptive dithering. the goal of 
+the "smartness" should be that the reconstructed signal (by our regression algo) of a piecewise 
+polynomial input signal should have an expectation value that matches the input and a minimal 
+variance.
+ 
+Maybe we can combine the dithering of the amplitude values with jittering of (re)sampling instants 
+at a non-uniform sample rate to turn aliasing into noise?
  
  
 ---------------------------------------------------------------------------------------------------- 

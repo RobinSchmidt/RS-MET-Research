@@ -147,14 +147,26 @@ The law says that to compute the product of two sums, we need to multiply each s
 % I also think, with associativity of addition, the right hand sides ac + ad + bc + bd  and  ac + bc + ad + bd  would not be well defined without parentheses. I think, they should be set like that:
 %  (ac + ad) + (bc + bd)   and   (ac + bc) + (ad + bd) ....verify! So that means, a generalized distributive law that doesn't assume associative additian would look like that? Maybe try it with a non-associative (but neverthless distributive) structure. Is there such a thing? If not, can we invent one?
 
-% There is actually a non-contrived (and actually very much practically relevant) example of a structure where addition is not associative, namely: an add-and-round operation in the real numbers which is what we in fact do in practice all the time - also with floating point numbers on a computer. Example: Let's assume that we use numbers with 3 significant decimal digits and we form the 3-term sums (123 + .456) + .123  vs  123 + (.456 + .123). In the first case, we would get 123 as result and in the second case 124 when we assume that we round to 3 digits after each 2-term addition.
+% There is actually a non-contrived (and actually very much practically relevant) example of a structure where addition is not associative, namely: an add-and-round operation in the real numbers which is what we in fact do in practice all the time - also with floating point numbers on a computer. Example: Let's assume that we use numbers with 3 significant decimal digits and we form the 3-term sums (123 + .456) + .123  vs  123 + (.456 + .123). In the first case, we would get 123 as result and in the second case 124 when we assume that we round to 3 digits after each 2-term addition. Interestingly, the commutative law is actually not affected. It still holds for add-and-round. So, we have an example for a structure where commutativity holds but associativity doesn't! Intersting! Examples for it being the other way around are rather common in math - just take matrix-multiplication, for example.
 
-% Could it make sense to define a structure where we round after addition but do not round after multiplication? In such a structure, wemay have to zero-pad operands, when one of them has less precision that the other.
+% https://en.wikipedia.org/wiki/Associative_property#Nonassociativity_of_floating-point_calculation
+
+% Could it make sense to define a structure where we round after addition but do not round after multiplication? In such a structure, we may have to zero-pad operands, when one of them has less precision that the other.
 
 % ToDo: make similar sections about generalized associative and commutative laws. The egenralized associative law would say that in an expression like a+b+c+d, we could set the parentheses in whichever way we want. The generalized commutative law would say that we can reorder the terms in whichever way we want. Maybe give all the possibilities for the case of 3 and 4 terms. The number of ways to do that are given by the Catalan numbers and the factorials respectively. But: The factorial is intoduced only later. But it's directly below so maybe it's a god way for a transition, i.e. say, "the number of ways to do it is given b the factorial, as descirbed below..."
 
 % Maybe then call the subsubsection "Generlaized Laws of Arithmetic" with paragraphs "Associativity", "Commutativity", "Distributivity" ...maybe do commutativity first just like we did in the initial introdcution of the laws. Commutativity is the easiest to understand - although associativity is in some ways more basic and important. There are many relevant structures where associativity holds but commutativity does not.
 
+% Commutativity:
+% a+b+c = a+c+b = b+a+d = b+d+a = c+a+b = c+b+a  and abc = acb = bad = bda = cab = cba
+%   abcd = abdc = acbd = acdb = adbc = adcb
+% = bacd = badc = bcad = bcda = bdac = bdca
+% = cabd = ....
+% We order the different possibilities lexicographically. It follows directly from the 2-term rule by applying it to one of pairs (like bc) and then to the result of the operation and the other operand. But: does that imply that the "can reorder in any way" requires associativity as well? Maybe try to test it with non-associative (but commutative) structure like floating point numbers
+
+% https://en.wikipedia.org/wiki/Associative_property#Generalized_associative_law
+% https://math.stackexchange.com/questions/2459697/prove-generalized-associative-law
+% https://ntouikan.ext.unb.ca/MATH6022/IntroCGGT/html_output/sec_gen_assoc.html
 
 % I think, we indeed need associativity of addition because we deal a special case of the situation explained above with the "iterated binary operation" which is addition in this case here.
 
@@ -163,6 +175,21 @@ The law says that to compute the product of two sums, we need to multiply each s
 % -This seems to use the term "generalied distributive law" for a further generaliation
 
 % https://en.wikipedia.org/wiki/Distributive_property#Generalizations
+
+% Explain also lerf-associative and right-associative operations:
+% https://en.wikipedia.org/wiki/Associative_property#Notation_for_non-associative_operations
+% examples: division, subtraction, exponentiation
+
+% Related ideas:
+% https://en.wikipedia.org/wiki/Power_associativity
+% https://en.wikipedia.org/wiki/Alternativity
+% https://en.wikipedia.org/wiki/Flexible_algebra
+% https://en.wikipedia.org/wiki/N-ary_associativity
+%
+%
+% https://en.wikipedia.org/wiki/Commutative_property
+% https://en.wikipedia.org/wiki/Anticommutative_property
+% https://en.wikipedia.org/wiki/Commutator
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Factorials and Binomial Coefficients}

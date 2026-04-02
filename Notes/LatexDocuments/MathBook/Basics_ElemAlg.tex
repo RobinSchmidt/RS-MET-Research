@@ -131,15 +131,19 @@ The sum and product notation are the most common examples for an idea in math kn
 %---------------------------------------------------------------------------------------------------
 %Generlaized Laws of Arithmetic
 
+% Maybe that section should come before introducing the sum and product notation. It makes sense because these laws are a preliminary for the sum and product notation to be well defined (I think). But: the generalized distributive law makes use of the sum notation which would favor the current order. Maybe keep the order as is but make a little introductory segment that says something like: "In the definitions of the sum and product notations, we actually already assumed certain laws that may seem obvious but which we have not yet spelled out explicitly. We shall now ...(nachholen)... this. Or maybe state the generalized distributive rule without the sum notation using dots like (a_1 + a_2 + a_3 + ...) (b_1 + b_2 + b_3 + ...) = a_1 b_1 + a_1 b_2 + a1_ b_3 ... + a_2 b_1 ...
+
 \subsubsection{Generalized Arithmetic Laws}
 
 \paragraph{Commutativity}
-The basic commutative laws for addition and multiplication say $a+b = b+a$ and $a \cdot b = b \cdot a$. We may generalize these laws from two operands to any number of operands as follows: In a sum (or product) of arbitrary many summands (or factors), we can reorder these operands in any way we like without changing the final result.
-
-% ToDo: Maybe explain how we can derive this from the basic law. We may need associativity for this as well. Give examples for 3 and 4 factors. 3: abc = acb = bac = bca = cab = cba, 4: abcd = ... Note that the number of ways grows larger really fast. Mention the factorials (it's a forward reference.)
+The basic commutative laws for addition and multiplication say $a+b = b+a$ and $a \cdot b = b \cdot a$. We may generalize these laws from two operands to any number of operands as follows: In a sum (or product) of arbitrary many summands (or factors), we can reorder these operands in any way we like without changing the final result. For example, for a product of 3 factors $a,b,c$, we have the following 6 possible ways to order the factors $abc = acb = bac = bca = cab = cba$. With 4 factors, there would be 24 ways to order them. In general, for a product of $n$ factors, there will be $n!$ different ways to order the factors where $n!$ stands for the factorial of $n$ which is explained on page \pageref{Def:Factorial}.
 
 \paragraph{Associativity}
+The basic associative laws for addition and multiplication state that in a sum of 3 summands $a + b + c$ or a product of 3 factors $a b c$, we can evaluate these expressions either from left to right as $(a+b)+c$ and $(ab)c$ or from right to left as $a+(b+c)$ and $a(bc)$. This fact is the reason that the expressions $a+b+c$ and $abc$ are well defined in the first place. Without that rule, they would be ambiguous because one wouldn't know in which way one should evaluate the expressions. The generalized associative law says that in a sum of arbitrary many summands or a product of arbitrary many factors, we can set the parentheses in any way we like without changing the final result. For example, for a product of 4 factors $abcd$, we have the following 5 ways to set the parentheses: 
+
 ...TBC...ToDo: Explain that we can set the parentheses arbitrarily in a sum (or product) with arbitrary many summands (or factors)
+
+% Give as example the 5 ways to evaluate a product with 4 factors abcd
 
 % Mention the Catalan numbers (also a forward reference)
 
@@ -209,6 +213,7 @@ The law says that to compute the product of two sums, we need to multiply each s
 \subsubsection{Factorials and Binomial Coefficients}
 \label{Sec:FactorialsAndBinomCoeffs}
 Another thing that is used often enough to deserve its own notation is the so called \emph{factorial} of a natural number $n$. It's defined as the product of all positive natural numbers up to $n$ and denoted with an exclamation mark:
+\label{Def:Factorial}
 \begin{equation}
  n! = 1 \cdot 2 \cdot 3 \cdot 4 \cdot \ldots \cdot n = \prod_{k=1}^{n} k
 \end{equation}

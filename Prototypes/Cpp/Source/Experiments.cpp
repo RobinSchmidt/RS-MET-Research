@@ -749,10 +749,12 @@ void testPitchDitherAlgos()
   // Compute probabilitiy distributions via the different algorithms and the resulting error 
   // measures for one specific desired period length for inspecttion the the debugger:
   Real period = 100.3;                              // Desired cycle length
-  CD  cd_o, cd_d, cd_v;
+  CD  cd_m, cd_o, cd_d, cd_v;                       // min-var, overlap, eq. deviation, eq. var.
+  PDP::distributionMinVariance(    period, &cd_m);
   PDP::distributionViaOverlap(     period, &cd_o);
   PDP::distributionEqualDeviation( period, &cd_d);
   PDP::distributionEqualVariance(  period, &cd_v);
+  CEM em_m = PDP::getErrorMeasures(period,  cd_m);
   CEM em_o = PDP::getErrorMeasures(period,  cd_o);
   CEM em_d = PDP::getErrorMeasures(period,  cd_d);
   CEM em_v = PDP::getErrorMeasures(period,  cd_v);
@@ -761,6 +763,7 @@ void testPitchDitherAlgos()
   // some checks along the way:
   bool ok = true;
   int  numPeriods = 101;                            // Number of data points for plotting
+  Vec  mae_m(numPeriods), var_m(numPeriods);
   Vec  mae_o(numPeriods), var_o(numPeriods);
   Vec  mae_d(numPeriods), var_d(numPeriods);
   Vec  mae_v(numPeriods), var_v(numPeriods);
@@ -770,16 +773,19 @@ void testPitchDitherAlgos()
     Real p = 100.0 + Real(i) / (numPeriods-1);
 
     // Create the distributions for the current period p:
+    PDP::distributionMinVariance(   p, &cd_m);
     PDP::distributionViaOverlap(    p, &cd_o);
     PDP::distributionEqualDeviation(p, &cd_d);
     PDP::distributionEqualVariance( p, &cd_v);
 
     // Compute error measures for these distributions:
+    em_m = PDP::getErrorMeasures(p, cd_m);
     em_o = PDP::getErrorMeasures(p, cd_o);
     em_d = PDP::getErrorMeasures(p, cd_d);
     em_v = PDP::getErrorMeasures(p, cd_v);
 
     // Check if the distributions are valid and some measures are as expected:
+    ok &= PDP::isCycleDistributionValid(p, cd_m);
     ok &= PDP::isCycleDistributionValid(p, cd_o);
     ok &= PDP::isCycleDistributionValid(p, cd_d);
     ok &= PDP::isCycleDistributionValid(p, cd_v);
@@ -787,6 +793,8 @@ void testPitchDitherAlgos()
     ok &= rsIsCloseTo(em_v.var, 0.25, tol);
 
     // Record the measurement data for plotting:
+    mae_m[i] = em_m.mae;
+    var_m[i] = em_m.var;
     mae_o[i] = em_o.mae;
     var_o[i] = em_o.var;
     mae_d[i] = em_d.mae;
@@ -796,8 +804,8 @@ void testPitchDitherAlgos()
   }
 
   // Plot the error measures:
-  rsPlotVectors(mae_o, mae_d, mae_v);  // mae = mean average error?
-  rsPlotVectors(var_o, var_d, var_v);  // var = variance?
+  rsPlotVectors(mae_m, mae_o, mae_d, mae_v);  // mae = mean average error?
+  rsPlotVectors(var_m, var_o, var_d, var_v);  // var = variance?
 
   // Verify that the embedded unit tests have passed:
   rsAssert(ok);

@@ -737,11 +737,8 @@ void testPitchDithering1()
   // https://en.wikipedia.org/wiki/Error_diffusion#minimized_average_error
 }
 
-void testPitchDithering2()
+void testPitchDitherAlgos()
 {
-  // Maybe rename to testPitchDitherFormulas. We compare the different formulas to assign the cycle
-  // probabilities here.
-
   // We plot the error measures for the 3 different algorithms to determine the probabilities 
   // p1,p2,p3 for the 3 lengths L1,L2,L3 that are used in the pitch dithering algorithm.
 
@@ -1109,7 +1106,7 @@ void testPitchDithering()
 
   // All tests:
   testPitchDithering1();
-  testPitchDithering2();
+  testPitchDitherAlgos();
   testPitchDitherProto();
   testPitchDitherOsc();
   testPitchDitherSpectra();

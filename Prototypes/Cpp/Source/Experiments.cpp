@@ -871,9 +871,12 @@ void testPitchDithering2()
   //   testPitchDithering3() for this.
 }
 
-void testPitchDithering3()
+void testPitchDitherProto()
 {
-  // Maybe rename to testPitchDitherProto
+  // ToDo: Document what we test here. It looks like we produce a reference saw signal saw1 using
+  // PDP::fillDitherSawMinVariance() and then produce a saw2 signal using PDP::getSaw() and check 
+  // if that returns the same signal. We then also produce saw2 again using PDP::getSawOld() and 
+  // check if that is also the same as saw1.
 
   using Real = double;
   using Vec  = std::vector<Real>;
@@ -1107,7 +1110,7 @@ void testPitchDithering()
   // All tests:
   testPitchDithering1();
   testPitchDithering2();
-  testPitchDithering3();
+  testPitchDitherProto();
   testPitchDitherOsc();
   testPitchDitherSpectra();
 

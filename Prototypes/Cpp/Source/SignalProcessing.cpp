@@ -634,7 +634,8 @@ class rsPitchDitherSuperSawOsc
 
 public:
 
-  using PDH = rsPitchDitherHelpers<T>;     // Shorthand for convenience
+  using PDO = rsPitchDitherOsc<T>;     // Shorthand for convenience
+
 
   rsPitchDitherSuperSawOsc();
 
@@ -814,9 +815,9 @@ void rsPitchDitherSuperSawOsc<T>::updateSawPeriods()
   {
     periods[i] = sampleRate / (freq * (T(1) + detune * freqOffsets[i]));
     CycleDist& cd = cycleDists[i];
-    PDH::calcCycleDistribution(periods[i], &cd.midLength, &cd.probShort, &cd.probMid);
-    // ToDo: Call it like PDH::calcCycleDistribution(periods[i], &cd); or just
-    // PDH::calcCycleDistribution(periods[i], &cycleDists[i]);
+    PDO::calcCycleDistribution(periods[i], &cd.midLength, &cd.probShort, &cd.probMid);
+    // ToDo: Call it like PDO::calcCycleDistribution(periods[i], &cd); or just
+    // PDO::calcCycleDistribution(periods[i], &cycleDists[i]);
     // For that, we need to make the CycleDist struct part of rsPitchDitherHelpers. See comment in
     // updateCycleLength() for why we want to do this anyway.
   }

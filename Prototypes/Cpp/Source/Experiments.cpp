@@ -796,8 +796,8 @@ void testPitchDitherAlgos()
   }
 
   // Plot the error measures:
-  rsPlotVectors(mae_o, mae_d, mae_v);
-  rsPlotVectors(var_o, var_d, var_v);
+  rsPlotVectors(mae_o, mae_d, mae_v);  // mae = mean average error?
+  rsPlotVectors(var_o, var_d, var_v);  // var = variance?
 
   // Verify that the embedded unit tests have passed:
   rsAssert(ok);
@@ -1115,7 +1115,8 @@ bool rsHasPeriod(T* x, int N, int P, T tol = T(0))
 void testPitchDithering()
 {
   // Test under construction:
-  testPitchDitherOsc();
+  testPitchDitherAlgos();
+  //testPitchDitherOsc();
   // It appears in the "All tests" list below, too.
 
   // All tests:
@@ -1127,7 +1128,7 @@ void testPitchDithering()
 
   // ToDo:
   //
-  // - Move to main repo.
+  // - Move these as unit tests into the main repo.
   //
   // - Maybe we could combine the the pitch-dithering with comb filtering in order to reduce the 
   //   amount of noise. Maybe this could also be applied to the supersaw - but not using a comb 

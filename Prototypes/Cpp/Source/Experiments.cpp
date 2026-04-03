@@ -735,6 +735,45 @@ void testPitchDitherIdea()
   // https://en.wikipedia.org/wiki/Error_diffusion#minimized_average_error
 }
 
+/** Verifies that x[n] = x[n+P] for n = 0..N-P-1 up to the givne numerical tolerance. */
+template<class T>
+bool rsHasPeriod(T* x, int N, int P, T tol = T(0))
+{
+  for(int n = 0; n < N-P; n++)
+    if(!rsIsCloseTo(x[n], x[n+P], tol))
+      return false;
+  return true;
+}
+
+void testPitchDitherPeriod()
+{
+  // Verifies that the period of a pitch dithered waveform using the min-variance algorithm and an
+  // exact integer for the desired period does indeed produce a periodic signal with the desired 
+  // period. In particuar, we wnat to verify that the period is not off-by-one due getting it wrong
+  // to produce phasor values in the closed or half-open interval.
+
+  bool ok = true;
+
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using PDP  = rsPitchDitherProto<Real>;
+  using CD   = PDP::CycleDistribution;
+
+  int  numSamples =  1000;      // Number of samples to produce
+  int  period     =   100;      // Period of the waveform
+  Real amp        =     0.5;    // Amplitude of the saw
+  int  seed       =     2;      // Seed for PRNG - maybe try using 2^32 - 1
+
+  // Create the saw and verify that it has the desired period:
+  CD cd;
+  PDP::distributionMinVariance(Real(period), &cd);
+  Vec saw = PDP::getSaw(numSamples, cd, seed, amp);
+  ok &= rsHasPeriod(&saw[0], numSamples, period);
+  //rsPlotVectors(saw);
+
+  rsAssert(ok);
+}
+
 void testPitchDitherAlgos()
 {
   // We plot the error measures for the 3 different algorithms to determine the probabilities 
@@ -1108,27 +1147,20 @@ void testPitchDitherSpectra()
   //   at the integer multiples of the desired fundamental frequency.
 }
 
-/** Verifies that x[n] = x[n+P] for n = 0..N-P-1 up to the givne numerical tolerance. */
-template<class T>
-bool rsHasPeriod(T* x, int N, int P, T tol = T(0))
-{
-  for(int n = 0; n < N-P; n++)
-    if(!rsIsCloseTo(x[n], x[n+P], tol))
-      return false;
-  return true;
-}
-// Is not yet used anywhere. ToDo: write some unit tests that use this function as helper.
+
 
 
 void testPitchDithering()
 {
   // Test under construction:
-  testPitchDitherAlgos();
+  testPitchDitherPeriod();
+  //testPitchDitherAlgos();
   //testPitchDitherOsc();
   // It appears in the "All tests" list below, too.
 
   // All tests:
   testPitchDitherIdea();
+  testPitchDitherPeriod();
   testPitchDitherAlgos();
   testPitchDitherProto();
   testPitchDitherOsc();

@@ -914,6 +914,10 @@ void testPitchDitherProto()
   rsAssert(ok);
 }
 
+
+
+
+
 void testPitchDitherOsc()
 {
   // We test if the class rsPitchDitherOsc from the RAPT library (which is supposed to be 
@@ -1096,6 +1100,18 @@ void testPitchDitherSpectra()
   //   at the integer multiples of the desired fundamental frequency.
 }
 
+/** Verifies that x[n] = x[n+P] for n = 0..N-P-1 up to the givne numerical tolerance. */
+template<class T>
+bool rsHasPeriod(T* x, int N, int P, T tol = T(0))
+{
+  for(int n = 0; n < N-P; n++)
+    if(!rsIsCloseTo(x[n], x[n+P], tol))
+      return false;
+  return true;
+}
+// Is not yet used anywhere. ToDo: write some unit tests that use this function as helper.
+
+
 void testPitchDithering()
 {
   // Test under construction:
@@ -1123,7 +1139,12 @@ void testPitchDithering()
   //   that x[n] = x[n+P] for n = 0..N-P-1. Maybe with with optional tolerance (defaulting to 
   //   zero). Then use this function to figure out, if we actually produce the desired period 
   //   lengths. I think, we may be off by one. This function can be generally useful within the
-  //   unit tests. Check if rsPitchDitherOsc::getPeriod returns the correct result.
+  //   unit tests. Check if rsPitchDitherOsc::getPeriod returns the correct result. ...OK. The 
+  //   function is there. Now we need to use it to verify the formulas implemented in the various
+  //   pitch dithering functions. I have the suspicion that at least some implementation have an 
+  //   off-by-one error for the mean period. Maybe ask the class rsPitchDitherOsc to produce a
+  //   period of 100 samples. Or use the prototype with the "min-variance" algorithm. This should
+  //   produce the exact requested cycle length for every cycle.
 }
 
 

@@ -924,7 +924,7 @@ void testPitchDithering4()
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
   using CD   = PDP::CycleDistribution;
-  using PDO  = rsPitchDitherSawOsc<Real>;
+  using PDO  = rsPitchDitherOsc<Real>;
 
   int  numSamples = 5000;              // Number of samples to produce
   Real period     =  100.3;
@@ -943,7 +943,7 @@ void testPitchDithering4()
   osc.reset();                         // Puts PRNG into initial seed state
   Vec saw2(numSamples);
   for(int n = 0; n < numSamples; n++)
-    saw2[n] = amp * osc.getSample();
+    saw2[n] = amp * osc.getSampleSawUp();
 
   // Verify that results match:
   bool ok = true;
@@ -1187,11 +1187,11 @@ std::vector<T> getPitchDitherSuperSaw2(
   T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
 {
   using Vec  = std::vector<T>;
-  using PDSO = rsPitchDitherSawOsc<T>;
+  using PDO = rsPitchDitherOsc<T>;
 
   // Create and set up 7 rsPitchDitherSawOsc objects:
   Vec freqOffsets = getSuperSawFreqOffsetsJp8000<T>();
-  PDSO osc[7];                         // We need 7 pitch dither osc objects. One for each saw.
+  PDO osc[7];                              // We need 7 pitch dither osc objects. One for each saw.
   for(int i = 0; i < 7; i++)
   {
     osc[i].setRandomSeed(seed+i);
@@ -1203,9 +1203,9 @@ std::vector<T> getPitchDitherSuperSaw2(
   Vec supSaw(numSamples);
   for(int n = 0; n < numSamples; n++)
   {
-    T y = osc[0].getSample();          // Outside the loop because has different amp factor.
+    T y = osc[0].getSampleSawUp();         // Outside the loop because has different amp factor.
     for(int i = 1; i < 7; i++)
-      y += mix * osc[i].getSample();
+      y += mix * osc[i].getSampleSawUp();
     supSaw[n] = y;
   }
 
@@ -1258,7 +1258,7 @@ void testPitchDitherSuperSaw1()
   using Real = float; 
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
-  using PDSO = rsPitchDitherSawOsc<Real>;
+  using PDO  = rsPitchDitherOsc<Real>;
   using SVF  = rsStateVariableFilter<Real, Real>;
 
   // Setup:
@@ -1443,9 +1443,11 @@ void testPitchDitherSuperSaw1()
 
 void testPitchDitherSuperSaw2()
 {
+  // Under construction
+
   using Real = float; 
   using Vec  = std::vector<Real>;
-  using SO   = rsPitchDitherSawOsc<Real>;
+  using PDO  = rsPitchDitherOsc<Real>;
   using SSO  = rsPitchDitherSuperSawOsc<Real>;
 
   // Setup:

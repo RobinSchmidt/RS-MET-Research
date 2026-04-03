@@ -747,6 +747,8 @@ bool rsHasPeriod(T* x, int N, int P, T tol = T(0))
 
 void testPitchDitherPeriod()
 {
+  // Maybe rename to testPitchDitherWaveForms
+
   // Verifies that the period of a pitch dithered waveform using the min-variance algorithm and an
   // exact integer for the desired period does indeed produce a periodic signal with the desired 
   // period. In particuar, we wnat to verify that the period is not off-by-one due getting it wrong
@@ -758,20 +760,50 @@ void testPitchDitherPeriod()
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
   using CD   = PDP::CycleDistribution;
+  using WF   = rsWaveForms<Real>;
 
   int  numSamples =  1000;      // Number of samples to produce
   int  period     =   100;      // Period of the waveform
-  Real amp        =     0.5;    // Amplitude of the saw
-  int  seed       =     2;      // Seed for PRNG - maybe try using 2^32 - 1
+  Real amp        =     1.0;    // Amplitude of the saw
+  int  seed       =     2;      // Seed for PRNG
 
   // Create the saw and verify that it has the desired period:
   CD cd;
+  int N = numSamples;
   PDP::distributionMinVariance(Real(period), &cd);
-  Vec saw = PDP::getSaw(numSamples, cd, seed, amp);
-  ok &= rsHasPeriod(&saw[0], numSamples, period);
-  //rsPlotVectors(saw);
-
+  Vec saw = PDP::getSaw(N, cd, seed, amp);
+  ok &= rsHasPeriod(&saw[0], N, period);
   rsAssert(ok);
+
+  // Create some other derived waveforms:
+  Vec phasor = 0.5 * saw + 0.5;
+  Vec sawUp(N), sawDown(N), pulse50(N), pulse40(N);
+  for(int n = 0; n < N; n++)
+  {
+    Real p = phasor[n];
+    sawUp[n]   = WF::sawUp(p);
+    sawDown[n] = WF::sawDown(p);
+    pulse50[n] = WF::pulse(p, Real(0.5));
+    pulse40[n] = WF::pulse(p, Real(0.4));
+    // ...more to come...
+  }
+
+  // Plot the various signal that we have created:
+  rsPlotVectors(saw);
+  rsPlotVectors(phasor);
+  rsPlotVectors(sawUp);
+  rsPlotVectors(sawDown);
+  rsPlotVectors(pulse50);
+  rsPlotVectors(pulse40);
+
+  // ToDo:
+  //
+  // - Try extremely short periods like 2 samples. That should be the Nyquist limit. Maybe make the
+  //   numSamples dependent on the period like numSamples = 10*period. Or maybe get rid of 
+  //   numSamples completely and just use N = 10*period
+  //
+  // - Try creating other waveforms by converting the saw into a phasor (by using 0.5*saw + 0.5) 
+  //   and the using the phasor to create the other waveforms.
 }
 
 void testPitchDitherAlgos()

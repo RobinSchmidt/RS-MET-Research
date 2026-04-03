@@ -686,6 +686,26 @@ Algorithmic Set Theory
 - It seems that the question of whether a particular set exists or not is boiled down to the 
   question of whether or not we can do an infinite number of algorithmic steps - which we would 
   answer with: "Nope - we can't".
+  
+- Maybe we can view sets as decision function into which we can input a thing an then ask the set:
+  "Is this thing an element of you?". An infinite set would be a set that says "Yes." in an infinite
+  number of (different) cases. But this raises the question how we would represent/encode the 
+  "things" that we want to use as inputs, i.e. as potential elements. Maybe the standard encoding as
+  nested curly braces would be the obvious choice. Maybe we should add the requirement that the 
+  answer must be computable in finite time. I think, this would again lead to the conclusion that 
+  countably infite sets exist but uncounatbly infinite ones don't? I think, each input "thing" must
+  be itself finite but the number of things to which the set can answer "Yes, I have this thing as
+  element" could still be infinite. But it would have to be countably infinite because the number of
+  finite sets is countable. It's huge though in the sense that it grows fast (like tetration) with
+  the birthday. 
+
+- If we also require a set to be able to answer the question: "Are you equal to this other set?", 
+  then we may hit the problem that in order to answer this question in the case where both sets are
+  infinite, we would have to ask the "Is this thing an element of you?" and infinite number of times
+  and that is something we cannot do in finite time. So maybe the conclusion is that infinite sets 
+  will not support all operations that we expect from a set. But: The isElementOf() function calls
+  isEqualTo() and vice versa in a mutual recursion, so that may be problem - or it may be not 
+  because the isEqualTo() call is called on "smaller" sets.
 
 - Maybe write these ideas down into a paper "An Algorithmic Approach to Set Theory".
 
@@ -773,7 +793,7 @@ isEqualTo(A,B):
 
 isSubsetOf(A,B):
   for all a in A:
-    if(not(isElementOf(a,B))
+    if(not(isElementOf(a,B)):
 	  return false
   return true
 	  

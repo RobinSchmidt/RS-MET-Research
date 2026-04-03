@@ -1088,8 +1088,8 @@ void testPitchDitherSpectra()
 void testPitchDithering()
 {
   // Test under construction:
-  //testPitchDithering4();
-  // I appears in the "All tests" list below, too.
+  testPitchDithering4();
+  // It appears in the "All tests" list below, too.
 
   // All tests:
   testPitchDithering1();

@@ -269,4 +269,11 @@ integer value for p, the variance comes out as 0.5 * 0.5^2 + 0.5 * 0.5^2 = 0.5 *
 
 
 
+Try this - without the m1,m2,m3 and 1/4 for the variance instead of m:
+
+var("e1 e2 e3 p1 p2 p3")
+eq1 = 1   == p1       + p2       + p3
+eq2 = 0   == p1*e1    + p2*e2    + p3*e3
+eq3 = 1/4 == p1*e1*e1 + p2*e2*e2 + p3*e2*e3
+solve([eq1,eq2,eq3],[p1,p2,p3])
  

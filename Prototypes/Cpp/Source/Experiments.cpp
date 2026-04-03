@@ -763,21 +763,20 @@ void testPitchDitherPeriod()
   using WF   = rsWaveForms<Real>;
 
   // Setup:
-  int  period = 100;      // Period of the waveform
-  int  seed   =   2;      // Seed for PRNG
+  int period = 10;      // Period of the waveform
 
   // Create the saw and verify that it has the desired period:
   CD cd;
   int N = 10 * period;
   PDP::distributionMinVariance(Real(period), &cd);
-  Vec saw = PDP::getSaw(N, cd, seed, Real(1));
+  Vec saw = PDP::getSaw(N, cd, 0, Real(1));
   ok &= rsHasPeriod(&saw[0], N, period);
   rsAssert(ok);
 
   // Create some other derived waveforms:
   Vec phasor = 0.5 * saw + 0.5;
   Vec sawUp(N), sawDown(N), pulse50(N), pulse40(N);
-  //Vec sine(N);
+  Vec sine(N);
   for(int n = 0; n < N; n++)
   {
     Real p = phasor[n];
@@ -785,24 +784,46 @@ void testPitchDitherPeriod()
     sawDown[n] = WF::sawDown(p);
     pulse50[n] = WF::pulse(p, Real(0.5));
     pulse40[n] = WF::pulse(p, Real(0.4));
-
-    // These waveforms do not work yet:
-    //sine[n]    = WF::sine(p);
+    sine[n]    = WF::sine(p);
   }
 
   // Plot the various signal that we have created:
-  //rsPlotVectors(saw);
-  //rsPlotVectors(phasor);
+  rsPlotVectors(saw);
+  rsPlotVectors(phasor);
   rsPlotVectors(sawUp);
   rsPlotVectors(sawDown);
   rsPlotVectors(pulse50);
   rsPlotVectors(pulse40);
-  //rsPlotVectors(sine);        // Does not yet work
+  rsPlotVectors(sine); 
 
 
+  // Observations:
+  // 
+  // - The sine wave looks wrong: The zero sample is repeated. This is expected because our phasor
+  //   is in the closed interval [0,1]. When we produce the sine as sin(2*pi*phasor), we'll produce
+  //   a zero output when the phasor is 0 and also when the phasor is 1. So, it really is the 
+  //   expected behavior. It just seems to be the case that our way to produce the phasor is not 
+  //   compatible with creating sine-waves that way. To produce correct sine waves, we would have 
+  //   to produce a phasor in the half-open unit interval [0,1). But that would be lees nice for 
+  //   saws. It would not matter that there, though. The result would still be a saw. It would just
+  //   be a bit squashed.
+  //
+  // - With period = 2, all waveforms look like triangle waves in the plots. This is the correct
+  //   behavior that we would expect at the Nyquist limit. They are not really triangle waves, 
+  //   though. They just look like that due to the linear interpolation of the plotter. In a DSP
+  //   context, they would be rendered as sines due to the DAC using bandlimited interpolation. 
+  //   That is also the behavior that we would like to see. But for the sine wave, it actually 
+  //   alternates between exact zero and a value of the order of 10^-11 which is effectively also
+  //   zero. That is actually the correct result: a sine wave at the Nyquist freq is sampled at
+  //   its zero crossings so the sampled signal should be identically zero.
+  //
+  // 
   // ToDo:
   //
-  // - Try extremely short periods like 2 samples. That should be the Nyquist limit. 
+  // - Try periods that are less nice like 9, 11, 13, etc. Look at hwo the pulse-waves behvae in 
+  //   these cases. They should round their transition instants correctly. Maybe instead of 
+  //   rounding, we should also sort of dither these. Maybe that can be achieved by producing 
+  //   pulse waves by subtracting two (independently) pitch-dithered saws
 }
 
 void testPitchDitherAlgos()

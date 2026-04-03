@@ -390,6 +390,10 @@ bool rsIsCloseToUpTo(const std::vector<T>& x, const std::vector<T>& y, size_t N,
 
 void testPitchDithering1()
 {
+  // Maybe rename to testPitchDitherIdea. This experiment is the very first implementation of the
+  // initial idea and we do most computations directly here rather than using later implementation
+  // that have been factored out into classes.
+
   // In this experiment, we implement different pitch-dithering (or pitch-jittering) algorithms
   // that I describe here:
   // 
@@ -735,6 +739,9 @@ void testPitchDithering1()
 
 void testPitchDithering2()
 {
+  // Maybe rename to testPitchDitherFormulas. We compare the different formulas to assign the cycle
+  // probabilities here.
+
   // We plot the error measures for the 3 different algorithms to determine the probabilities 
   // p1,p2,p3 for the 3 lengths L1,L2,L3 that are used in the pitch dithering algorithm.
 
@@ -866,6 +873,8 @@ void testPitchDithering2()
 
 void testPitchDithering3()
 {
+  // Maybe rename to testPitchDitherProto
+
   using Real = double;
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
@@ -909,6 +918,8 @@ void testPitchDithering3()
 
 void testPitchDithering4()
 {
+  // Rename to testPitchDitherOsc
+
   using Real = float;
   using Vec  = std::vector<Real>;
   using PDP  = rsPitchDitherProto<Real>;
@@ -942,7 +953,6 @@ void testPitchDithering4()
   // Plot both outputs:
   rsPlotVectors(saw1, saw2);
 }
-
 
 void testPitchDitherSpectra()
 {
@@ -993,6 +1003,7 @@ void testPitchDitherSpectra()
     //plt.setLogFreqAxis(true);
     plt.plotSpectra(N, &signal1[0], &signal2[0]);
   };
+  // Maybe factor this out such that we can re-use it from other functions.
 
   // Create saws for periods P1 and P2 using the "min-variance" algorithm and plot their spectra in
   // one plot for comparison:

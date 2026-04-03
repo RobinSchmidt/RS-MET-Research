@@ -388,14 +388,10 @@ bool rsIsCloseToUpTo(const std::vector<T>& x, const std::vector<T>& y, size_t N,
 }
 
 
-void testPitchDithering1()
+void testPitchDitherIdea()
 {
-  // Maybe rename to testPitchDitherIdea. This experiment is the very first implementation of the
-  // initial idea and we do most computations directly here rather than using later implementation
-  // that have been factored out into classes.
-
-  // In this experiment, we implement different pitch-dithering (or pitch-jittering) algorithms
-  // that I describe here:
+  // In this experiment, we implement different ideas for pitch-dithering (or pitch-jittering) 
+  // algorithms that I describe here:
   // 
   //   https://www.kvraudio.com/forum/viewtopic.php?p=9189004#p9189004
   // 
@@ -409,7 +405,9 @@ void testPitchDithering1()
   // For example, to produce an average cycle length of 100.3 samples, one could produce cycles
   // or length 100 with probability p = 0.7 and cycles of length 101 with probability p = 0.3.
   // We implement different algorithms here to achieve the correct mean cycle length. Some are
-  // probabilistic (i.e. random), some are deterministic.
+  // probabilistic (i.e. random), some are deterministic. This experiment is the very first 
+  // implementation of the initial idea and we do most computations directly here rather than 
+  // using later implementation that have been factored out into classes.
 
 
   using Real = double;
@@ -1105,7 +1103,7 @@ void testPitchDithering()
   // It appears in the "All tests" list below, too.
 
   // All tests:
-  testPitchDithering1();
+  testPitchDitherIdea();
   testPitchDitherAlgos();
   testPitchDitherProto();
   testPitchDitherOsc();

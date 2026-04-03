@@ -916,9 +916,11 @@ void testPitchDithering3()
   rsAssert(ok);
 }
 
-void testPitchDithering4()
+void testPitchDitherOsc()
 {
-  // Rename to testPitchDitherOsc
+  // We test if the class rsPitchDitherOsc from the RAPT library (which is supposed to be 
+  // production ready code) produces the same results as the prototype implementation 
+  // rsPitchDitherProto.
 
   using Real = float;
   using Vec  = std::vector<Real>;
@@ -1099,14 +1101,14 @@ void testPitchDitherSpectra()
 void testPitchDithering()
 {
   // Test under construction:
-  testPitchDithering4();
+  testPitchDitherOsc();
   // It appears in the "All tests" list below, too.
 
   // All tests:
   testPitchDithering1();
   testPitchDithering2();
   testPitchDithering3();
-  testPitchDithering4();
+  testPitchDitherOsc();
   testPitchDitherSpectra();
 
   // ToDo:

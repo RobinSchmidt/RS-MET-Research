@@ -762,22 +762,22 @@ void testPitchDitherPeriod()
   using CD   = PDP::CycleDistribution;
   using WF   = rsWaveForms<Real>;
 
-  int  numSamples =  1000;      // Number of samples to produce
-  int  period     =   100;      // Period of the waveform
-  Real amp        =     1.0;    // Amplitude of the saw
-  int  seed       =     2;      // Seed for PRNG
+  // Setup:
+  int  period = 100;      // Period of the waveform
+  int  seed   =   2;      // Seed for PRNG
 
   // Create the saw and verify that it has the desired period:
   CD cd;
-  int N = numSamples;
+  int N = 10 * period;
   PDP::distributionMinVariance(Real(period), &cd);
-  Vec saw = PDP::getSaw(N, cd, seed, amp);
+  Vec saw = PDP::getSaw(N, cd, seed, Real(1));
   ok &= rsHasPeriod(&saw[0], N, period);
   rsAssert(ok);
 
   // Create some other derived waveforms:
   Vec phasor = 0.5 * saw + 0.5;
   Vec sawUp(N), sawDown(N), pulse50(N), pulse40(N);
+  //Vec sine(N);
   for(int n = 0; n < N; n++)
   {
     Real p = phasor[n];
@@ -785,25 +785,24 @@ void testPitchDitherPeriod()
     sawDown[n] = WF::sawDown(p);
     pulse50[n] = WF::pulse(p, Real(0.5));
     pulse40[n] = WF::pulse(p, Real(0.4));
-    // ...more to come...
+
+    // These waveforms do not work yet:
+    //sine[n]    = WF::sine(p);
   }
 
   // Plot the various signal that we have created:
-  rsPlotVectors(saw);
-  rsPlotVectors(phasor);
+  //rsPlotVectors(saw);
+  //rsPlotVectors(phasor);
   rsPlotVectors(sawUp);
   rsPlotVectors(sawDown);
   rsPlotVectors(pulse50);
   rsPlotVectors(pulse40);
+  //rsPlotVectors(sine);        // Does not yet work
+
 
   // ToDo:
   //
-  // - Try extremely short periods like 2 samples. That should be the Nyquist limit. Maybe make the
-  //   numSamples dependent on the period like numSamples = 10*period. Or maybe get rid of 
-  //   numSamples completely and just use N = 10*period
-  //
-  // - Try creating other waveforms by converting the saw into a phasor (by using 0.5*saw + 0.5) 
-  //   and the using the phasor to create the other waveforms.
+  // - Try extremely short periods like 2 samples. That should be the Nyquist limit. 
 }
 
 void testPitchDitherAlgos()

@@ -1118,6 +1118,12 @@ void testPitchDithering()
   //   per saw but one comb on the whole sum of saws. This may be beneficial when the higher 
   //   harmonics become too noisy. We would thin out the spectrum again a bit. The effect would 
   //   be similar to the highpass but acting in between the harmonics rather than below.
+  //
+  // - Introduce a helper function for unit tests rsHasPeriod(T* x, int N, int P) that verifies
+  //   that x[n] = x[n+P] for n = 0..N-P-1. Maybe with with optional tolerance (defaulting to 
+  //   zero). Then use this function to figure out, if we actually produce the desired period 
+  //   lengths. I think, we may be off by one. This function can be generally useful within the
+  //   unit tests. Check if rsPitchDitherOsc::getPeriod returns the correct result.
 }
 
 

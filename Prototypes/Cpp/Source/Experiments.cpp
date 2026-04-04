@@ -1076,29 +1076,31 @@ void testPitchDitherOscWaveForms()
   // Produce the waveforms:
   int N = 5 * period + 1;
   Vec phasorC(N), phasorH(N);
-  //Vec sawUp(N), sawDown(N), pulse50(N), pulse40(N);
-  //Vec sine(N);
+  Vec sawUp(N), sawDown(N), pulse50(N), pulse40(N);
+  Vec sine(N);
   for(int n = 0; n < N; n++)
   {
-    phasorC[n] = oscC.getSamplePhasor(true);
-    phasorH[n] = oscH.getSamplePhasor(false);
+    // Compute the two phasors with closed and half-open interval:
+    Real pc = phasorC[n] = oscC.getSamplePhasor(true);
+    Real ph = phasorH[n] = oscH.getSamplePhasor(false);
 
-    //sawUp[n]   = WF::sawUp(p);
-    //sawDown[n] = WF::sawDown(p);
-    //pulse50[n] = WF::pulse(p, Real(0.5));
-    //pulse40[n] = WF::pulse(p, Real(0.4));
-    //sine[n]    = WF::sine(p);
+    // Produce various waveforms using the appropriate variant of the phasors:
+    sawUp[n]   = WF::sawUp(pc);             // closed
+    sawDown[n] = WF::sawDown(pc);           // closed
+    pulse50[n] = WF::pulse(pc, Real(0.5));  // closed
+    pulse40[n] = WF::pulse(pc, Real(0.4));  // closed
+    sine[n]    = WF::sine(ph);              // half-open
   }
 
   // Plot the various signal that we have created:
   rsPlotVectors(phasorC);
   rsPlotVectors(phasorH);
   //rsPlotVectors(phasorH, phasorC);
-  //rsPlotVectors(sawUp);
-  //rsPlotVectors(sawDown);
-  //rsPlotVectors(pulse50);
-  //rsPlotVectors(pulse40);
-  //rsPlotVectors(sine); 
+  rsPlotVectors(sawUp);
+  rsPlotVectors(sawDown);
+  rsPlotVectors(pulse50);
+  rsPlotVectors(pulse40);
+  rsPlotVectors(sine); 
 
   // Observations:
   //
@@ -1107,12 +1109,19 @@ void testPitchDitherOscWaveForms()
   //   0.0 at sample 10. Then it repeats. The phasorH signal for the phasor that uses the half-open
   //   interval [0,1), ramps up from 0.0 to 0.9 from sample 0 to 10 and then also resets back to 
   //   0.0 at sample 10 and then repeats. This is the expected behavior.
+  // 
+  // - For sawtooth and pulse waveforms, the closed interval for the phasor is appropriate. For the
+  //   sine wave, the half-open interval is appropriate.
   //
   // 
   // ToDo:
   // 
-  // - Produce the other waveforms using the class rsWaveForms just like we do in the other 
-  //   experiment testPitchDitherPeriod().
+  // - Produce more waveforms. Maybe anti-aliased versions of saw and pulse waves based on additive
+  //   synthesis. They will also need the half-open phasor.
+  //
+  // - Maybe try using the half-open phasor also to producing other variants of saw- and 
+  //   pulse-waves. It's not optimal but we are interested in how exactly the results will be 
+  //   "inferior".
 }
 
 void testPitchDitherSpectra()

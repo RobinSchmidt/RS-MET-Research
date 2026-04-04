@@ -1112,16 +1112,28 @@ void testPitchDitherOscWaveForms()
   // 
   // - For sawtooth and pulse waveforms, the closed interval for the phasor is appropriate. For the
   //   sine wave, the half-open interval is appropriate.
+  // 
+  // - When using period = 10, seed = 0 and N = 5 * period + 1, we will only produce cycles of the
+  //   middle length. We were lucky, I guess. We don't see any pitch fluctuation. But when we 
+  //   produce many more cycles like when using N = 50 * period + 1, we will actually see some 
+  //   fluctuation. For an integer period like 10, the probability for the mid cycle is 0.75 and 
+  //   for the short and long cycle it's 0.125 each. The probability to see 5 cycles of mid length
+  //   is given by 0.75^5 = 0.2373..., so it's not too surprising to see this happen. But a bit of
+  //   luck was required.
   //
   // 
   // ToDo:
   // 
   // - Produce more waveforms. Maybe anti-aliased versions of saw and pulse waves based on additive
-  //   synthesis. They will also need the half-open phasor.
+  //   synthesis. They will also need the half-open phasor. What other waveforms will need the 
+  //   half-open interval?
   //
   // - Maybe try using the half-open phasor also to producing other variants of saw- and 
   //   pulse-waves. It's not optimal but we are interested in how exactly the results will be 
   //   "inferior".
+  //
+  // - Try other seeds. It seems that by sheer luck, the first few cycles have all the mid length.
+  //   Maybe produce more cycles to actually see some fluctuation of the cycle length.
 }
 
 void testPitchDitherSpectra()

@@ -1042,8 +1042,8 @@ void testPitchDitherOsc()
   // Create saw via the realtime implementation in rsPitchDitherSawOsc:
   PDO osc;
   osc.setRandomSeed(seed);
-  osc.setPeriod(period);
-  osc.reset();                         // Puts PRNG into initial seed state
+  osc.setPeriod(period, true);
+  osc.reset(true);                     // Puts PRNG into initial seed state
   Vec saw2(numSamples);
   for(int n = 0; n < numSamples; n++)
     saw2[n] = amp * osc.getSampleSawUp();
@@ -1062,27 +1062,26 @@ void testPitchDitherOscWaveForms()
   using Real = float;
   using Vec  = std::vector<Real>;
   using PDO  = rsPitchDitherOsc<Real>;
+  using WF   = rsWaveForms<Real>;
 
   // Setup:
-  int period = 20;      // Period of the waveform
+  int period = 10;      // Period of the waveform
   int seed   =  0;
-
-
 
   // Create and set up the two oscs to produce closed and half-open phasors:
   PDO oscC, oscH;      
-  oscC.setPeriod(period);   // ToDo: Pass true a 2ns param
-  oscH.setPeriod(period);   // ToDo: Pass flase as 2nd param
+  oscC.setPeriod(period, true);
+  oscH.setPeriod(period, false);
 
   // Produce the waveforms:
-  int N = 10 * period;
+  int N = 5 * period + 1;
   Vec phasorC(N), phasorH(N);
   //Vec sawUp(N), sawDown(N), pulse50(N), pulse40(N);
   //Vec sine(N);
   for(int n = 0; n < N; n++)
   {
-    phasorC[n] = oscC.getSamplePhasor();  // ToDo: Pass true
-    phasorH[n] = oscH.getSamplePhasor();  // ToDo: Pass false
+    phasorC[n] = oscC.getSamplePhasor(true);
+    phasorH[n] = oscH.getSamplePhasor(false);
 
     //sawUp[n]   = WF::sawUp(p);
     //sawDown[n] = WF::sawDown(p);
@@ -1094,11 +1093,26 @@ void testPitchDitherOscWaveForms()
   // Plot the various signal that we have created:
   rsPlotVectors(phasorC);
   rsPlotVectors(phasorH);
+  //rsPlotVectors(phasorH, phasorC);
   //rsPlotVectors(sawUp);
   //rsPlotVectors(sawDown);
   //rsPlotVectors(pulse50);
   //rsPlotVectors(pulse40);
   //rsPlotVectors(sine); 
+
+  // Observations:
+  //
+  // - With period = 10, we see that the phasorC signal for the phasor that uses the closed 
+  //   interval [0,1] ramps up from 0.0 to 1.0 from sample 0 to sample 9 and then resets back to
+  //   0.0 at sample 10. Then it repeats. The phasorH signal for the phasor that uses the half-open
+  //   interval [0,1), ramps up from 0.0 to 0.9 from sample 0 to 10 and then also resets back to 
+  //   0.0 at sample 10 and then repeats. This is the expected behavior.
+  //
+  // 
+  // ToDo:
+  // 
+  // - Produce the other waveforms using the class rsWaveForms just like we do in the other 
+  //   experiment testPitchDitherPeriod().
 }
 
 void testPitchDitherSpectra()
@@ -1360,8 +1374,8 @@ std::vector<T> getPitchDitherSuperSaw2(
   for(int i = 0; i < 7; i++)
   {
     osc[i].setRandomSeed(seed+i);
-    osc[i].setPeriod(sampleRate / (frequency * (detune * freqOffsets[i] + T(1))));
-    osc[i].reset();
+    osc[i].setPeriod(sampleRate / (frequency * (detune * freqOffsets[i] + T(1))), true);
+    osc[i].reset(true);
   }
 
   // Use the 7 oscs to produce a supersaw:

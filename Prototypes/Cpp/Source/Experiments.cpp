@@ -789,12 +789,12 @@ void testPitchDitherPeriod()
 
   // Plot the various signal that we have created:
   rsPlotVectors(saw);
-  rsPlotVectors(phasor);
-  rsPlotVectors(sawUp);
-  rsPlotVectors(sawDown);
-  rsPlotVectors(pulse50);
-  rsPlotVectors(pulse40);
-  rsPlotVectors(sine); 
+  //rsPlotVectors(phasor);
+  //rsPlotVectors(sawUp);
+  //rsPlotVectors(sawDown);
+  //rsPlotVectors(pulse50);
+  //rsPlotVectors(pulse40);
+  //rsPlotVectors(sine); 
 
 
   // Observations:
@@ -820,10 +820,12 @@ void testPitchDitherPeriod()
   // 
   // ToDo:
   //
-  // - Try periods that are less nice like 9, 11, 13, etc. Look at hwo the pulse-waves behvae in 
+  // - Try periods that are less nice like 9, 11, 13, etc. Look at how the pulse-waves behave in 
   //   these cases. They should round their transition instants correctly. Maybe instead of 
   //   rounding, we should also sort of dither these. Maybe that can be achieved by producing 
-  //   pulse waves by subtracting two (independently) pitch-dithered saws
+  //   pulse waves by subtracting two (independently) pitch-dithered saws. I think, this would also
+  //   introduce a random PWM effect due to the 2 saws possibly drifting. That drift would not
+  //   happen if we would trule dither the transition instant
 }
 
 void testPitchDitherAlgos()
@@ -1013,12 +1015,10 @@ void testPitchDitherProto()
   rsAssert(ok);
 }
 
-
-
-
-
 void testPitchDitherOsc()
 {
+  // Rename to testPitchDitherOscSaw
+
   // We test if the class rsPitchDitherOsc from the RAPT library (which is supposed to be 
   // production ready code) produces the same results as the prototype implementation 
   // rsPitchDitherProto.
@@ -1055,6 +1055,50 @@ void testPitchDitherOsc()
 
   // Plot both outputs:
   rsPlotVectors(saw1, saw2);
+}
+
+void testPitchDitherOscWaveForms()
+{
+  using Real = float;
+  using Vec  = std::vector<Real>;
+  using PDO  = rsPitchDitherOsc<Real>;
+
+  // Setup:
+  int period = 20;      // Period of the waveform
+  int seed   =  0;
+
+
+
+  // Create and set up the two oscs to produce closed and half-open phasors:
+  PDO oscC, oscH;      
+  oscC.setPeriod(period);   // ToDo: Pass true a 2ns param
+  oscH.setPeriod(period);   // ToDo: Pass flase as 2nd param
+
+  // Produce the waveforms:
+  int N = 10 * period;
+  Vec phasorC(N), phasorH(N);
+  //Vec sawUp(N), sawDown(N), pulse50(N), pulse40(N);
+  //Vec sine(N);
+  for(int n = 0; n < N; n++)
+  {
+    phasorC[n] = oscC.getSamplePhasor();  // ToDo: Pass true
+    phasorH[n] = oscH.getSamplePhasor();  // ToDo: Pass false
+
+    //sawUp[n]   = WF::sawUp(p);
+    //sawDown[n] = WF::sawDown(p);
+    //pulse50[n] = WF::pulse(p, Real(0.5));
+    //pulse40[n] = WF::pulse(p, Real(0.4));
+    //sine[n]    = WF::sine(p);
+  }
+
+  // Plot the various signal that we have created:
+  rsPlotVectors(phasorC);
+  rsPlotVectors(phasorH);
+  //rsPlotVectors(sawUp);
+  //rsPlotVectors(sawDown);
+  //rsPlotVectors(pulse50);
+  //rsPlotVectors(pulse40);
+  //rsPlotVectors(sine); 
 }
 
 void testPitchDitherSpectra()
@@ -1205,9 +1249,10 @@ void testPitchDitherSpectra()
 void testPitchDithering()
 {
   // Test under construction:
-  testPitchDitherPeriod();
+  //testPitchDitherPeriod();
   //testPitchDitherAlgos();
   //testPitchDitherOsc();
+  testPitchDitherOscWaveForms();
   // It appears in the "All tests" list below, too.
 
   // All tests:

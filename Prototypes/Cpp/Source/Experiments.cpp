@@ -1040,7 +1040,7 @@ void testPitchDitherOsc()
   // Create saw via the realtime implementation in rsPitchDitherSawOsc:
   PDO osc;
   osc.setRandomSeed(seed);
-  osc.setMeanPeriod(period, true);
+  osc.setMeanCycleLength(period, true);
   osc.reset(true);                     // Puts PRNG into initial seed state
   Vec saw2(numSamples);
   for(int n = 0; n < numSamples; n++)
@@ -1068,8 +1068,8 @@ void testPitchDitherOscWaveForms()
 
   // Create and set up the two oscs to produce closed and half-open phasors:
   PDO oscC, oscH;      
-  oscC.setMeanPeriod(period, true);
-  oscH.setMeanPeriod(period, false);
+  oscC.setMeanCycleLength(period, true);
+  oscH.setMeanCycleLength(period, false);
 
   // Produce the waveforms:
   int N = 5 * period + 1;
@@ -1397,7 +1397,7 @@ std::vector<T> getPitchDitherSuperSaw2(
   for(int i = 0; i < 7; i++)
   {
     osc[i].setRandomSeed(seed+i);
-    osc[i].setMeanPeriod(sampleRate / (frequency * (detune * freqOffsets[i] + T(1))), true);
+    osc[i].setMeanCycleLength(sampleRate / (frequency * (detune * freqOffsets[i] + T(1))), true);
     osc[i].reset(true);
   }
 

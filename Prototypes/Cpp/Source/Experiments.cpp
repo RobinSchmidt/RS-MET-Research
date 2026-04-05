@@ -780,10 +780,10 @@ void testPitchDitherPeriod()
   for(int n = 0; n < N; n++)
   {
     Real p = phasor[n];
-    sawUp[n]   = WF::sawUp(p);
+    sawUp[n]   = WF::saw(  p);              // Rename sawUp to saw
     pulse50[n] = WF::pulse(p, Real(0.5));
     pulse40[n] = WF::pulse(p, Real(0.4));
-    sine[n]    = WF::sine(p);
+    sine[n]    = WF::sine( p);
   }
 
   // Plot the various signal that we have created:
@@ -1074,7 +1074,7 @@ void testPitchDitherOscWaveForms()
   // Produce the waveforms:
   int N = 5 * period + 1;
   Vec phasorC(N), phasorH(N);
-  Vec sawUp(N), sawDown(N), pulse50(N), pulse40(N);
+  Vec saw(N), pulse50(N), pulse40(N);
   Vec sine(N);
   for(int n = 0; n < N; n++)
   {
@@ -1083,21 +1083,16 @@ void testPitchDitherOscWaveForms()
     Real ph = phasorH[n] = oscH.getSamplePhasor(false);
 
     // Produce various waveforms using the appropriate variant of the phasors:
-    sawUp[n]   = WF::sawUp(pc);             // closed
-    //sawDown[n] = WF::sawDown(pc);           // closed
+    saw[n]     = WF::saw(  pc);             // closed
     pulse50[n] = WF::pulse(pc, Real(0.5));  // closed
     pulse40[n] = WF::pulse(pc, Real(0.4));  // closed
-    sine[n]    = WF::sine(ph);              // half-open
+    sine[n]    = WF::sine( ph);             // half-open
   }
 
   // Plot the various signal that we have created:
   rsPlotVectors(phasorC);
   rsPlotVectors(phasorH);
-  //rsPlotVectors(phasorH, phasorC);
-  rsPlotVectors(sawUp);
-
-  //rsPlotVectors(sawDown);
-
+  rsPlotVectors(saw);
   rsPlotVectors(pulse50);
   rsPlotVectors(pulse40);
   rsPlotVectors(sine); 
@@ -1134,6 +1129,10 @@ void testPitchDitherOscWaveForms()
   //
   // - Try other seeds. It seems that by sheer luck, the first few cycles have all the mid length.
   //   Maybe produce more cycles to actually see some fluctuation of the cycle length.
+  //
+  // - Try if the pulse-wave works fine for period = 10 and pulse widths 0.0,0.1,0.2,...0.9,1.0.
+  //   Maybe we should create a unit test in which we exactly specify what we expect to see, like:
+  //   +1,+1,+1,-1,-1,-1,-1,-1,-1,-1, +1,+1,+1,-1,-1,...   for pw = 0.3 etc.
 }
 
 void testPitchDitherSpectra()

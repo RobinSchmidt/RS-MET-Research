@@ -775,13 +775,12 @@ void testPitchDitherPeriod()
 
   // Create some other derived waveforms:
   Vec phasor = 0.5 * saw + 0.5;
-  Vec sawUp(N), sawDown(N), pulse50(N), pulse40(N);
+  Vec sawUp(N), pulse50(N), pulse40(N);
   Vec sine(N);
   for(int n = 0; n < N; n++)
   {
     Real p = phasor[n];
     sawUp[n]   = WF::sawUp(p);
-    sawDown[n] = WF::sawDown(p);
     pulse50[n] = WF::pulse(p, Real(0.5));
     pulse40[n] = WF::pulse(p, Real(0.4));
     sine[n]    = WF::sine(p);
@@ -791,7 +790,6 @@ void testPitchDitherPeriod()
   rsPlotVectors(saw);
   //rsPlotVectors(phasor);
   //rsPlotVectors(sawUp);
-  //rsPlotVectors(sawDown);
   //rsPlotVectors(pulse50);
   //rsPlotVectors(pulse40);
   //rsPlotVectors(sine); 
@@ -1046,7 +1044,7 @@ void testPitchDitherOsc()
   osc.reset(true);                     // Puts PRNG into initial seed state
   Vec saw2(numSamples);
   for(int n = 0; n < numSamples; n++)
-    saw2[n] = amp * osc.getSampleSawUp();
+    saw2[n] = amp * osc.getSampleSaw();
 
   // Verify that results match:
   bool ok = true;
@@ -1086,7 +1084,7 @@ void testPitchDitherOscWaveForms()
 
     // Produce various waveforms using the appropriate variant of the phasors:
     sawUp[n]   = WF::sawUp(pc);             // closed
-    sawDown[n] = WF::sawDown(pc);           // closed
+    //sawDown[n] = WF::sawDown(pc);           // closed
     pulse50[n] = WF::pulse(pc, Real(0.5));  // closed
     pulse40[n] = WF::pulse(pc, Real(0.4));  // closed
     sine[n]    = WF::sine(ph);              // half-open
@@ -1097,7 +1095,9 @@ void testPitchDitherOscWaveForms()
   rsPlotVectors(phasorH);
   //rsPlotVectors(phasorH, phasorC);
   rsPlotVectors(sawUp);
-  rsPlotVectors(sawDown);
+
+  //rsPlotVectors(sawDown);
+
   rsPlotVectors(pulse50);
   rsPlotVectors(pulse40);
   rsPlotVectors(sine); 
@@ -1296,6 +1296,7 @@ void testPitchDithering()
   testPitchDitherAlgos();
   testPitchDitherProto();
   testPitchDitherOsc();
+  testPitchDitherOscWaveForms();
   testPitchDitherSpectra();
 
   // ToDo:
@@ -1405,9 +1406,9 @@ std::vector<T> getPitchDitherSuperSaw2(
   Vec supSaw(numSamples);
   for(int n = 0; n < numSamples; n++)
   {
-    T y = osc[0].getSampleSawUp();         // Outside the loop because has different amp factor.
+    T y = osc[0].getSampleSaw();           // Outside the loop because has different amp factor.
     for(int i = 1; i < 7; i++)
-      y += mix * osc[i].getSampleSawUp();
+      y += mix * osc[i].getSampleSaw();
     supSaw[n] = y;
   }
 

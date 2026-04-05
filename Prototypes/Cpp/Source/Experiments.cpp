@@ -1028,7 +1028,7 @@ void testPitchDitherOsc()
   using PDO  = rsPitchDitherOsc<Real>;
 
   int  numSamples = 5000;              // Number of samples to produce
-  Real period     =  100.3;
+  Real period     =  100.5;
   Real amp        =    0.5;            // Amplitude of the saw
   int  seed       =    3;              // Seed for PRNG
 
@@ -1285,7 +1285,7 @@ void testPitchDithering()
   // Test under construction:
   //testPitchDitherPeriod();
   //testPitchDitherAlgos();
-  //testPitchDitherOsc();
+  testPitchDitherOsc();
   testPitchDitherOscWaveForms();
   // It appears in the "All tests" list below, too.
 
@@ -1681,7 +1681,9 @@ void testPitchDitherSuperSaw()
   //
   // - When the Pitch-dither supsersaw code is finished, maybe try to contribute it to Surge. Maybe
   //   the osc should have an oversampling parameter. Check, if Surge already has suitable 
-  //   downsampling filters and try to use these when integrating it.
+  //   downsampling filters and try to use these when integrating it. Maybe if Surge already has a
+  //   PRNG, we could use that, too. When we add a highpass to it (which we should for a Roland-like
+  //   supersaw), maybe we can also use something that Surge already has.
 }
 
 

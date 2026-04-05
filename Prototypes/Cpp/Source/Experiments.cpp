@@ -1676,6 +1676,12 @@ void testPitchDitherSuperSaw()
 {
   testPitchDitherSuperSaw1();
   testPitchDitherSuperSaw2();
+
+  // ToDo: 
+  //
+  // - When the Pitch-dither supsersaw code is finished, maybe try to contribute it to Surge. Maybe
+  //   the osc should have an oversampling parameter. Check, if Surge already has suitable 
+  //   downsampling filters and try to use these when integrating it.
 }
 
 

@@ -1,0 +1,5 @@
+This project folder should probably be moved into:
+
+RS-MET-Research/Projects/
+
+and be renamed to ResearchExperiments

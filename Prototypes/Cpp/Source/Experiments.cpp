@@ -1317,7 +1317,9 @@ void testPitchDithering()
   //   pitch dithering functions. I have the suspicion that at least some implementation have an 
   //   off-by-one error for the mean period. Maybe ask the class rsPitchDitherOsc to produce a
   //   period of 100 samples. Or use the prototype with the "min-variance" algorithm. This should
-  //   produce the exact requested cycle length for every cycle.
+  //   produce the exact requested cycle length for every cycle. ...done!
+  //
+  // - Move the rsWaveForms class into the library and use it in rsPitchDitherOsc.
 }
 
 

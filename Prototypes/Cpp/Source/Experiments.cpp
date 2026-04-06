@@ -1501,6 +1501,7 @@ void testPitchDitherSuperSaw1()
   rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw1[0],   numSamples, sampleRate);
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
   rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
+  int dummy = 0;
 
   // Observations:
   //
@@ -1607,7 +1608,7 @@ void testPitchDitherSuperSaw1()
   //   spectral envelopes and or skewed frequency distributions.
   //
   // - When tuning the cutoff and Q for the highpass, may tune it in such a way that we have a 
-  //   little resonance bump exactly at the fundamental. Maybe that could give the sound mor body
+  //   little resonance bump exactly at the fundamental. Maybe that could give the sound more body
   //   and make it a bit fatter. Maybe for that, the cutoff needs to be slightly above the midFreq
   //   because the resonance bump tends to appear a bit below the cutoff frequency for low Q. Only
   //   for very high Q, it approaches the cutoff.

@@ -1686,6 +1686,18 @@ void testPitchDitherSuperSaw()
   //   downsampling filters and try to use these when integrating it. Maybe if Surge already has a
   //   PRNG, we could use that, too. When we add a highpass to it (which we should for a Roland-like
   //   supersaw), maybe we can also use something that Surge already has.
+  //
+  // - Features that I want for the pitch-dithered supersaw:
+  //   - Adjustable oversampling from 1 to 8 or 16 to reduce/adjust noise
+  //   - Stereo spread.
+  //   - Waveform adjustable between saw and pulse. Maybe implement it via hard-clipping the saw 
+  //     with DC offset. It should be unproblematic with regard to introducing aliasing. All we 
+  //     should get is a modification of the noise - which is a great deal! I think, this is a 
+  //     general feature of applying waveshaping to pitch-dithered waveforms! Try it with a sine!
+  //   - Maybe implement the TriSaw wave and let that be further shaped by waveshaping 
+  //     (DC + hardclip or softclip)
+  //   - Mixing taper curves (i.e. spectral envelopes that give each saw its own amplitude)
+  //   - Tuned comb to clean up the spectrum by reducing the noise between the harmonics
 }
 
 

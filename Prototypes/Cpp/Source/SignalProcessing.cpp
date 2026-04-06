@@ -617,7 +617,7 @@ TFlt rsPitchDitherSawOscOld<TFlt, TInt>::readSawValue(TInt n, TInt N)
 //-------------------------------------------------------------------------------------------------
 
 /** This implements a supersaw oscillator that uses pitch dithering. It is supposed to produce the 
-same result as 7 instances of type rsPitchDitherSawOsc but it takes advantage of certain values 
+same result as 7 instances of type rsPitchDitherOsc but it takes advantage of certain values 
 that are shared between the individual oscillators to avoid redundancies. So using a single 
 instance of this class should be more memory friendly (and therefore more cahce friendly and 
 therefore more CPU firendly) than using 7 instances of a single osc. 

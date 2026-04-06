@@ -490,7 +490,7 @@
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Generators\Oscillator3D.cpp">
       <Filter>JUCE Modules\rapt\Generators</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Generators\PhaseDitherOscs.cpp">
+    <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Generators\PitchDitherOscs.cpp">
       <Filter>JUCE Modules\rapt\Generators</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Generators\RayBouncer.cpp">
@@ -2478,7 +2478,7 @@
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Generators\Oscillator3D.h">
       <Filter>JUCE Modules\rapt\Generators</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Generators\PhaseDitherOscs.h">
+    <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Generators\PitchDitherOscs.h">
       <Filter>JUCE Modules\rapt\Generators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Generators\RayBouncer.h">

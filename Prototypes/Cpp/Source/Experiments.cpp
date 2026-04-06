@@ -1133,6 +1133,8 @@ void testPitchDitherOscWaveForms()
   // - Try if the pulse-wave works fine for period = 10 and pulse widths 0.0,0.1,0.2,...0.9,1.0.
   //   Maybe we should create a unit test in which we exactly specify what we expect to see, like:
   //   +1,+1,+1,-1,-1,-1,-1,-1,-1,-1, +1,+1,+1,-1,-1,...   for pw = 0.3 etc.
+  //
+  // - Maybe also plot the spectra.
 }
 
 void testPitchDitherSpectra()
@@ -1275,18 +1277,17 @@ void testPitchDitherSpectra()
   //
   // - Verify that the peaks of the (smoothed) spectrum are where they are supposed to be, namely
   //   at the integer multiples of the desired fundamental frequency.
+  // 
+  // - Rename to testPitchDitherSawSpectra(). We may want to create another function to plot 
+  //   spectra of other waveforms but this time, only using the equal-variance cycle distribution
+  //   because this experiment here has settled the matter: Equal-variance is the right choice.
+  //   Or maybe in testPitchDitherOscWaveForms(), we should also plot spectra?
 }
-
-
-
 
 void testPitchDithering()
 {
   // Test under construction:
-  //testPitchDitherPeriod();
-  //testPitchDitherAlgos();
-  testPitchDitherOsc();
-  testPitchDitherOscWaveForms();
+  //testPitchDitherOsc();
   // It appears in the "All tests" list below, too.
 
   // All tests:

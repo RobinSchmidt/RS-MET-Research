@@ -2,4 +2,5 @@ This project folder should probably be moved into:
 
 RS-MET-Research/Projects/
 
-and be renamed to ResearchExperiments
+and be renamed to ResearchExperiments. The main ReadMe file for the repo will then need to be
+updated as well.

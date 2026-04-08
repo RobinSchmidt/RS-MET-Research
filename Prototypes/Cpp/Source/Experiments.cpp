@@ -1595,7 +1595,9 @@ void testPitchDitherSuperSaw1()
   // - Try using a comb filter on the output that supresses the frequencies in between the desired
   //   harmonics. Try feedforward and feedback configurations. Maybe also try to supress the even
   //   harmonics (with an adjustable amount) using another comb, to give the sound a more squareish
-  //   character (i.e. more odd-harmonics focused)
+  //   character (i.e. more odd-harmonics focused). Rationale: Currently, the spectrum gets a bit
+  //   too noisy. If there only would be a type of filter that can supress frequency content at a
+  //   harmonic series! Wait! There is! It's called a comb filter! :-D
   //
   // - Introduce a MixTaper paremeter that applies a triangular spectral envelope, i.e. makes the
   //   outer frequencies quieter. Maybe try other shapes as well (bell, inverted bell, skewed etc.)
@@ -1638,7 +1640,7 @@ void testPitchDitherSuperSaw1()
   //   filtering (simple 1st order LP/HP). Maybe it could be interesting anyway to split the
   //   supersaw into low and high frequency ranges and have different detuning for both
   // 
-  // - Maybe implement a "superpulse" wave by subtracing a phased-shifted version of the saw from 
+  // - Maybe implement a "superpulse" wave by subtracting a phased-shifted version of the saw from 
   //   the saw. Maybe we can scale the subtracted phase-shifted version. Thereby, we can smoothly 
   //   morph between supersaw and superpulse
   // 

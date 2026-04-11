@@ -49,6 +49,9 @@ where we have expressed $c$ in its polar form as $c = r e^{\i \phi}$ with $r = |
 %
 ...TBC...
 
+% Seeing the Fourth Dimension (with the Square Root)
+% https://www.youtube.com/watch?v=vxvj5K78Mts
+
 \paragraph{The Roots of Unity}
 Let's have a look at the equation $z^n = 1$ for some given positive integer $n$. The complex numbers that solve that equation are called the $n$th roots of unity. Geometrically, they are the vertices of an $n$-sided regular polygon that is centered at the origin and has one of its corners at $z = 1$. ...tbc...
 
@@ -125,7 +128,11 @@ Having a little arsenal of complex functions $f: \mathbb{C} \rightarrow \mathbb{
   f'(z)	= \lim_{\Delta z \rightarrow 0 }
   \frac{f(z + \Delta z) - f(z)}{\Delta z}
 \end{equation}
-where $\Delta z$ is some arbitrary (small) complex number. For this derivative to be well defined, we must make sure that this limit does not depend on the direction of $\Delta z$. Recall our definition of differentiability for vector fields in 2D. For a function $f: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ with $f(x,y) = (u(x,y), v(x,y))$ to be differentiable at some point $(x_0, y_0)$, we demanded that the partial derivatives $\partial u / \partial x, \partial u / \partial y, \partial v / \partial x, \partial v / \partial y$ need to exist at that point. For a complex function $f: \mathbb{C} \rightarrow \mathbb{C}$ with $f(z) = f(x + \i y) = u(x,y) + \i v(x,y)$, we will also require the existence of these partial derivatives for which we will use the more convenient notation $u_x, u_y, v_x, v_y$. For $f$ to be called complex differentiable, the existence of the partial derivatives is not enough. The independence of the limit from the direction of $\Delta z$ must also be ensured. This additional requirement is captured in...
+where $\Delta z$ is some arbitrary (small) complex number. For this derivative to be well defined, we must make sure that this limit does not depend on the direction of $\Delta z$. Recall our definition of differentiability for vector fields in 2D. For a function $f: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ with $f(x,y) = (u(x,y), v(x,y))$ to be differentiable at some point $(x_0, y_0)$, we demanded that the partial derivatives $\partial u / \partial x, \partial u / \partial y, \partial v / \partial x, \partial v / \partial y$ need to exist at that point (ToDo: Verify! Is that really enough?). For a complex function $f: \mathbb{C} \rightarrow \mathbb{C}$ with $f(z) = f(x + \i y) = u(x,y) + \i v(x,y)$, we will also require the existence of these partial derivatives for which we will use the more convenient notation $u_x, u_y, v_x, v_y$. For $f$ to be called complex differentiable, the existence of the partial derivatives is not enough. The independence of the limit from the direction of $\Delta z$ must also be ensured. This additional requirement is captured in...
+
+% I think differentiability in the mutivariable case requires a bit more than just the existence of
+% the partial derivatives. Look it up in Weitz's book about differential geometry! It has a section
+% about this.
 
 \subsubsection{The Cauchy-Riemann Equations}
 A complex function $f(z) = f(x + \i y) = u(x,y) + \i v(x,y)$ is said to be complex differentiable, iff the four possible partial derivatives $u_x, u_y, v_x, v_y$ exist and satisfy the system of equations:

@@ -167,13 +167,27 @@ Defining a function via its inverse is a special case of an implicit function de
 
 
 \paragraph{Interlude - Evaluation}
-Of course, an implicit definition tells us nothing at all about how we would go about evaluating $y$ for a given $x$. Nonetheless, it is a valid definition of a function. Function definitions do not necessarily need to prescribe an explicit evaluation algorithm. Mathematical definitions in general are not always constructive. They are supposed to tell us \emph{what} it is, not \emph{how} we may compute it. If they do tell us how to compute it, that's a bonus. There are algorithms to solve such implicit equations numerically, though. But that's a topic for a later chapter. You may also wonder how we are supposed to evaluate functions that are defined by some infinite process. The answer is: on a computer, we cannot really represent real numbers exactly anyway. Our usual floating point numbers are always approximations. They attempt to approximate the real numbers - but can do so only up to a finite precision. So, from a practical point of view, it is good enough to be able to evaluate functions up to some given precision. For the infinite processes, that usually means that we can obtain a sufficiently precise approximation of the function by only doing a finite number of steps until we deem the result to be close enough. The best we can expect is to be precise within one ulp ("unit in the last place"). Usually, we'll accept even much higher errors.
+Of course, an implicit definition tells us nothing at all about how we would go about evaluating $y$ for a given $x$. Nonetheless, it is a valid definition of a function. Function definitions do not necessarily need to prescribe an explicit evaluation algorithm. Mathematical definitions in general are not always constructive. They are supposed to tell us \emph{what} it is, not \emph{how} we may compute it. If they do tell us how to compute it, that's a bonus. There are algorithms to solve such implicit equations numerically, though. But that's a topic for a later chapter. You may also wonder how we are supposed to evaluate functions that are defined by some infinite process. The answer is: on a computer, we cannot really represent real numbers exactly anyway. Our usual floating point numbers are always approximations. They attempt to approximate the real numbers - but can do so only up to a finite precision. So, from a practical point of view, it is good enough to be able to evaluate functions up to some given precision. For the infinite processes, that usually means that we can obtain a sufficiently precise approximation of the function by only doing a finite number of steps until we deem the result to be close enough. The best we can expect is to be precise within one ulp ("unit in the last place"). Usually, we'll accept even much higher errors. The problem of actually computing function values algorithmically goes even deeper than just worrying about the numerical precision of functions with real numbers as outputs. It turns out that there are even functions that are \emph{uncomputable} on a fundamental level. ...TBC...ToDo: mention the busy beaver function (in its own paragraph)
 
 % Maybe the difference between a function definition and a prescription of an algorithm to evaluate 
 % it can be likened to declarative vs imperative programming? When one says fac(0) = 1, 
 % fac(n) = n * fac(n-1) for n > 0, one just declares a mathematical rule without saying how to 
 % evaluate they factorial function. The definition may strongly suggest a recursive implementation 
 % but it doesn't really prescribe one.
+
+% ToDo:
+% Define the Busy Beaver function. Maybe as a very notorious example for how a mathematical function
+% definition does not necessarily give you an explicit evaluation algorithm. ...although..maybe here
+% we could actually give a brute force algorithm - it's just impractical to run because of its
+% insane computational complexity?
+% ...yeah - that seems to be the case. See:
+% https://www.youtube.com/watch?v=U1TdlgrldNM  This Number Cannot Ever Be Computed
+% ...or wait - no - it isn't! The number is not computable because a brute force method to find the
+% machine that runs longest (but still only a finite number of steps) requires solving the halting
+% problem for each of the machines that ae considered - which is not solvable! So, the busy-beaver
+% function is actually fundamentally unevaluatable (the correct term is uncomputable, I think)!
+
+% https://en.wikipedia.org/wiki/Computable_function#Uncomputable_functions_and_unsolvable_problems
 
 
 
@@ -264,6 +278,8 @@ We are trying to define a "function" that is zero everywhere except at zero. The
 
 %ToDo: integral equation
 % maybe make these subsubsection of an "Elementary functions"  section
+
+
 
 \paragraph{Whoa!} That was a tour de force! I have presented quite a lot of ways how a mathematical function can be defined. Some of them required some rather high level math which doesn't really belong into such an early chapter. I did this to point out that the idea of "defining a function" can, when intepreted liberally as we do in the modern world, include much more diverse and creative ways rather than just a simple and explicit calculation rule. However - most functions that we encounter in everyday life are not of such a complicated nature. There's a set of functions that tends to pop up everywhere and constitutes a sort of basic mathematical vocabulary that everybody needs to be familiar with. I'm talking about the so called...
 

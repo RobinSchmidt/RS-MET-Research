@@ -19948,10 +19948,19 @@ void testWeierstrassFractal()
   //   a*b > 1 + 1.5*pi. I think, these are the requirements for the infinite series to converge 
   //   but I'm not sure -> figure out, document.
   // 
+  // - Figure out what happens when we differentiate a single term of the function and then do that
+  //   for every term and sum them up. Formally, this should give us the derivative, right? We are
+  //   supposed to be able to differentiate term wise. How does this go wrong here? Is that 
+  //   term-wise differentiation somehow conditioned on some properties that this function fails to
+  //   meet?  ( a^n cos(pi * b^n * t) )' = - a^n * b^n * pi * sin(pi * b^n * t). Maybe the sum over
+  //   such terms diverges?
+  // 
   //
   // See:
   //
   // https://www.youtube.com/shorts/2LaXHjcS7IE
+  // https://www.youtube.com/watch?v=fozO9jyNsY8  The Function That Terrified Mathematicians
+
 }
 
 
@@ -19993,6 +20002,50 @@ bool testPolynomialRootFinder()
   //   example polynomials
   //   p(x) = 7 * (x-2) * (x-3) * (x-5)
   //   p(x) = 5 * (x-i) * (x+i) * (x-3) = 5 x^3 - 15 x^2 + 5 x - 15
+  //
+  // - Implement a specialized root finder that finds rational roos of polynomials with integer
+  //   coefficients.. there is the rational root theorem which says that for a polynomial
+  //     a0 + a1 x + a2 x^2 + ... aN x^N
+  //   any rational root of the form p/q must satisfy: p divides a0, q divides aN:
+  //   https://en.wikipedia.org/wiki/Rational_root_theorem
+  //   we could first create the lists of all divisors of a0 and aN and the loop through all the
+  //   pairs and check, if it's a root. Maybe we can optimize this a bit. This naive implementation
+  //   would have complexity of O(N^2). I don't know how to bring down the complexity class but 
+  //   maybe we can at least reduce the factors by avoiding certain combinations of trial values 
+  //   for p,q that are irrelevant - for example when p and q have common factors. I think, the 
+  //   search for divisors will not automatially ensure this, so maybe we can "thin out" our lists
+  //   of divisors a bit before using it. Maybe we need to keep only the prime divisors. ..Nope - 
+  //   that doesn't make sense. But we want p/q to be a reduced fraction, so before trying a pair
+  //   p,q, we could verify if their gcd is 1 and if not, skip it.
+  // 
+  // - There is also an integer root theorem that says that the roots of a monic polynomial with
+  //   integer coeffs, all the roots are either integer or irrational. See "Üolynomials of one
+  //   Variable: the Theory of Equations", page 71. On page 67, there's also the rational root 
+  //   theorem explained.
+  //
+  // - Try to find roots via various fixed-point iteration schemes. For example, consider the cubic
+  //   polynomial equation a0 + a1 x + a2 x^2 + a3 x^3 = 0. Transform it algebraically in such a 
+  //   way that x is isolated on one side of the equation and on the other side, there is an 
+  //   expression in x. There are various ways to do this. For example, bring over all terms with 
+  //   degree less than 3, then divide by a3 * x^2: 
+  //    a0 + a1 x + a2 x^2 + a3 x^3 = 0
+  //    a3 x^3 = -(a0 + a1 x + a2 x^2)
+  //    x = -(a0 + a1 x + a2 x^2) / (a3 x^2)
+  //   Then use that expression in a fixed point iteration. Another possibility would be:
+  //    a0 + a1 x + a2 x^2 + a3 x^3 = 0
+  //    a2 x^2 = -(a0 + a1 x + a3 x^3)
+  //    x = -(a0 + a1 x + a3 x^3) / (a2 x)
+  //   and a 3rd one:
+  //    x = -(a0 + a2 x^2 + a3 x^3) / (a1)
+  //   Maybe one could also use:
+  //    a0 + a1 x + a2 x^2 + a3 x^3 = 0
+  //    a3 x^3 = -(a0 + a1 x + a2 x^2)
+  //    x^3 = -(a0 + a1 x + a2 x^2) / (a3)
+  //    x = pow(-(a0 + a1 x + a2 x^2) / (a3), 1.0/3.0)
+  //   Maybe by such a strategy we could also find complex roots. But maybe in that case we should
+  //   isolate the x^2 term and use the sqrt instead of the cbrt. But: Which of the two solutions
+  //   of the sqrt should we choose? Maybe evaluate the polynomial for both and choose the one for 
+  //   which the result is closer to zero?
 }
 
 

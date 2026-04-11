@@ -135,8 +135,20 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 % What If You Add All The Numbers?
 % https://www.youtube.com/watch?v=dDWprjY5k7o
 
+% This Sum Should Be Infinite. But Is It?
+% https://www.youtube.com/watch?v=8qf6DlZ4x6o
+
 
 \subsection{Convergence}
+We met the notion of convergence already in the context of sequences. Since a series is just a special kind of sequence, we can apply this notion of convergence to sequences, too. 
+
+\subsubsection{Absolute Convergence}
+Specifically for series, there is a definition for an even stronger form of convergence that is relevant in certain contexts. This stronger type of convergence is called \emph{absolute convergence}. If a series converges absolutely, it means that we can form a new series by taking the absolute values of terms of the original series and that new series still converges. We can intuitively see that this is a stronger requirement by noticing that when a series has positive and negative terms, they may partially cancel out thereby making the partial sums smaller compared to the case when all terms would have the same sign. ...TBC...
+
+
+% https://en.wikipedia.org/wiki/Absolute_convergence
+
+
 
 \subsubsection{Acceleration of Convergence} Many mathematical problems have solutions that can be expressed in the form of convergent series. The practical relevance of such series solutions is that a truncation of such an infinite series can provide a good approximation to the desired solution. A truncated series is just a finite sum and can therefore be readily evaluated. The accuracy of the so obtained solution will depend on the number of terms after which we truncate and on the rate of convergence of the series. So, a faster rate of convergence is usually desirable if we want to use a series solution in practice. There are methods by which we can transform a given series with sum $S$ into another related series with sum $T$ such that we can express $S$ as some closed form formula of $T$, i.e. $S = f(T)$ with a series expression for $T$ that converges faster than the series expression for $S$. ...TBC... ToDo: explain Euler transformation, Kummer's method, etc.
 
@@ -157,7 +169,7 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 % -Maybe it makes sense to compare rates of convergence to zero with rates of divergence
 %  to infinity of sequences by turning the divergent sequence into a convergent one by taking
 %  the reciprocals of the elements. To make the comparison also applicable to sequences (a_n)
-%  that converge to sopme arbitrary limit A, we can consider the sequence (a_n-A) which converges
+%  that converge to some arbitrary limit A, we can consider the sequence (a_n-A) which converges
 %  to zero with the same rate as (a_n) converges to A. I'm intnetionally reverting back to talk
 %  about sequences here rather than series because it makes more sense this way.
 % -The example in the video of a series that diverges more slowly than 1/n is 1/(n*log(n)). Can we

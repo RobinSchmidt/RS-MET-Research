@@ -20045,7 +20045,13 @@ bool testPolynomialRootFinder()
   //   Maybe by such a strategy we could also find complex roots. But maybe in that case we should
   //   isolate the x^2 term and use the sqrt instead of the cbrt. But: Which of the two solutions
   //   of the sqrt should we choose? Maybe evaluate the polynomial for both and choose the one for 
-  //   which the result is closer to zero?
+  //   which the result is closer to zero? One could also do:
+  //    a0 + a1 x + a2 x^2 + a3 x^3 = 0
+  //    a0 + a1 x + (a2 x + a3 x^2) x = 0
+  //    x = -(a0 + a1 x) / (a2 x + a3 x^2)
+  //   We could generate a whole lot of expressions for iteration. Is there a systematic way to
+  //   construct a good one, i.e. one with nice convergence properties? Plot the right hand side.
+  //   We are looking for intersections of the resulting graph with the diagonal y = x line.
 }
 
 
@@ -20443,6 +20449,10 @@ void testPolynomialRootCorrespondence1()
   //   condition is met, root i of p also wants to be associated with root j of q. If they both 
   //   aggree on that, the association happens. ...that's the intuition - I have no idea, if that's
   //   really how any of this works.
+  // 
+  // - What happens to the roots when when we modify only a single coeff such as a0 or a1? Maybe in
+  //   this case, we can find a simpler rule compared to modifying them all at once which is what 
+  //   we do when crossfading between two polynomials?
   //
   //
   // ToDo:
@@ -26648,15 +26658,24 @@ void testRiemannZeta()
   int dummy = 0;
 
   // ToDo: 
-  // -Compute relative error, too
-  // -Implement a function RZW::eval(s) that dispatches between the various algorithms depending
-  //  on the input s and automatically chooses the correct number of terms to achieve a relative
-  //  precision of around 1.e-13 or something...like we would nomrally expect for double-precision
-  //  evaluations
-
+  // 
+  // - Compute relative error, too
+  // 
+  // - Implement a function RZW::eval(s) that dispatches between the various algorithms depending
+  //   on the input s and automatically chooses the correct number of terms to achieve a relative
+  //   precision of around 1.e-13 or something...like we would nomrally expect for double-precision
+  //   evaluations
+  // 
+  // 
   // Resources:
-  // -Only for real s: https://en.cppreference.com/w/cpp/numeric/special_functions/riemann_zeta
+  // 
+  // - Only for real s: https://en.cppreference.com/w/cpp/numeric/special_functions/riemann_zeta
+  // 
   // - https://www.boost.org/doc/libs/1_65_0/libs/math/doc/html/math_toolkit/zetas/zeta.html
+  // 
+  // - Zeta Explained #64: Computational Methods for Zeta:
+  //   https://www.youtube.com/watch?v=4FQUm2YO8yc
+
 }
 
 void plotZetaPotential()

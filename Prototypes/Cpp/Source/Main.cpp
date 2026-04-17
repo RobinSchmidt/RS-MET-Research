@@ -143,8 +143,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPolynomialRootFinder();        // stub
   //testLiftedPolynomial();
   //testFactoredPolynomial();
-  //testPolynomialRootCorrespondence1();
-  //testPolynomialRootCorrespondence2();
+  testPolynomialRootCorrespondence1();
+  testPolynomialRootCorrespondence2();
 
 
   // MIMO Filters:
@@ -186,7 +186,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   // Riemann zeta function:
   //testPolyaPotenialFormulas();
   //testPolarPotenialFormulas();
-  //testRiemannZeta();
+  testRiemannZeta();
   //plotZetaPotential();
   //plotZetaPotentialNumeric();
   //testNumericPotential();

@@ -105,8 +105,25 @@ Although the sequence of Fibonacci numbers itself diverges to infinity, we can c
 
 % https://en.wikipedia.org/wiki/Square_root_algorithms#Heron's_method
 
+% ToDo: 
+% - Explain that we have already seen the algorithm above to compute the square root
+% - Explain the general idea behind it (fitting a tangent to the function and solving for the zero 
+%   crossing of the tangent)
+% - Apply the same idea to other functions: n-th root, maybe logarithm, general polynomial roots, ..
+% - Explain a simple generalization that lets us find where the functions crosses any value with
+%   zero just being a special case
+% - Generally: x_{n+1} = x_n - f(x_n) / f'(x_n)
+
+% \paragraph{Generalizing to $n$th Roots}
+
+% - We apply the genral rule x_{n+1} = x_n - f(x_n) / f'(x_n) to f(x) = x^p so we have:
+%   f(x) = x^p, f'(x) = p x^{p-1}  ->  x_{n+1} = x_n - x^p / (p x^{p-1}). Let p = 1/q ...tbc...
+
+
 % Use it to compute the Lambert-W function. Apply it to y = x e^x  ->  x e^x - y = 0 where y is
 % just a constant in this context
+
+
 
 % Rigging Newton's Method | #SoME4
 % https://www.youtube.com/watch?v=I2sjchgXsmk

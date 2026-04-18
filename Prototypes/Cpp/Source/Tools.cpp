@@ -38,18 +38,29 @@ rsMatrix<T> rsSqrtNewton(const rsMatrix<T>& A)
     // maxD <= threshold
   }
 
-
   return X;
 
-  // ToDo: 
-  // -Optimize to avoid creation of temporary matrix objects, i.e. try to do as much in-place
-  //  processing as possible
-  // -Implement a variant that computes X such that X^T * X = A. This function computes X such that
-  //  X * X = A. The wikipedia article:
-  //  https://en.wikipedia.org/wiki/Square_root_of_a_matrix#By_the_Babylonian_method
-  //  says that the algorithm follows from Newtons method using X^2 - A = 0 with A X_k = X_k A. We
-  //  may need to modify that into X^T * X - A = 0. See:
-  //  https://en.wikipedia.org/wiki/Newton%27s_method#Multidimensional_formulations
+  // ToDo:
+  // 
+  // - Optimize to avoid creation of temporary matrix objects, i.e. try to do as much in-place
+  //   processing as possible. But keep this version here as prototype to check the optimized 
+  //   version against in a unit test. Maybe use a "Naive" qualifier in the function name.
+  // 
+  // - Implement a variant that computes X such that X^T * X = A. This function computes X such 
+  //   that X * X = A. The wikipedia article:
+  //   https://en.wikipedia.org/wiki/Square_root_of_a_matrix#By_the_Babylonian_method
+  //   says that the algorithm follows from Newtons method using X^2 - A = 0 with A X_k = X_k A. We
+  //   may need to modify that into X^T * X - A = 0. See:
+  //   https://en.wikipedia.org/wiki/Newton%27s_method#Multidimensional_formulations
+  //
+  // - Implement cube roots and generally n-th roots using the same idea (if possible - I'm not 
+  //   sure how easily this will generalize)
+  //
+  // - Figure out and document how we could handle the faction that roots are generally 
+  //   multi-valued. Could there be several matrices that solve the equation X^n = A? I think so.
+  //   How could we find them all? Maybe we could choose different initial guesses for X? But that
+  //   seems to be a pretty "random" thing to do - perhaps even literally if we produce these 
+  //   guesses (pseudo) randomly.
 }
 
 //=================================================================================================

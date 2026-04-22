@@ -1,5 +1,6 @@
-\section{Functionals} 
+\section{Functionals and Distributions} 
 
+\label{Sec:TestFunctions}
 \subsection{Test Functions}
 For the following material, we will need to work with a set of functions with some special properties. We want them to be smooth, which means they should be differentiable infinitely often everywhere. We also want them to have a finite support, which means they should be identically zero everywhere except within some finite interval $(a,b)$. This interval is assumed to be fixed and the same for each of the functions within the set. [VERIFY! Nope! I think, that's wrong!] The set of all functions that satisfy these two requirements will be called the set of "test functions". . At first glance, it may be a bit surprising that functions that satisfy both of these criteria even exist (it certainly suprised me). To make a function identically zero outside a given interval typically requires a piecewise definition and such piecewise definitions tend to make the functions non-smooth at the junctions of the pieces. However, such smooth, piecewise-defined functions do indeed exist, and a standard example is the so called bump function:
 \begin{equation}
@@ -45,10 +46,15 @@ In general, a dual space $V^*$ with respect to a given vector space $V$ is defin
 
 % https://en.wikipedia.org/wiki/Distribution_(mathematics)
 
-% Point out that we should not confuse the term distribtuion used here with the usage in probability theory. It's a different condept. But maybe there is some connection between the two? Figure out!
+% Point out that we should not confuse the term distribtuion used here with the usage in probability theory. It's a different condept. But maybe there is some connection between the two? Figure out! See this video:
+
+% The most misunderstood function in physics
+% https://www.youtube.com/watch?v=eAkOrWJEWxk
+
+% It says that it has indeed something to do with the idea of a probability density distribtuion
 
 \subsubsection{Regular Distributions}
-One way to construct such a linear functional is to multiply the input (test) function $f$ with some fixed other function $g$ and integrate the product over the interval $(a,b)$ over which our test function $f$ is nonzero\footnote{Which is obviously equivalent to integrating from $-\infty$ to $\infty$}. Let's call the resulting functional $G$, so we have:
+One way to construct such a linear functional is to multiply the input (test) function $f$ with some fixed other function $g$ and integrate the product over the interval $(a,b)$ over which our test function $f$ is nonzero\footnote{Which is obviously equivalent to integrating from $-\infty$ to $\infty$ so we could have just as well have used this infinite integration interval in the definition.}. Let's call the resulting functional $G$, so we have:
 \begin{equation}
  G(f) = \int_a^b g(x) f(x) \; dx
 \end{equation}
@@ -72,7 +78,7 @@ The so constructed functionals are what we will call \emph{regular distributions
 
 \subsubsection{Evaluating Distributions} ...TBC...ToDo: Explain that for distributions, it doesn't make sense (in general) to ask what value they have at a given point. 
 
-% They lose the main feature that we expect from functions: mapping values to values. But they retain some important other features. Explain which (see Weitz's video aboput the delta function).
+% They lose the main feature that we expect from functions: mapping values to values. But they retain some important other features. Explain which (see Weitz's video about the delta function).
 
 % Instead, we are only allowed to ask questions about what the integral above evaluates to for a given test function $f$. We can "test" the distribution $g$ with $f$, where $f$ may be localized (I guess) but we cannot ask for the value of $g$ at a specific $x$. So, "evaluating" a distribution amounts to testing / probing it with a test function? Maybe that is the reason for the term distribution? We are not allowed to evaluate the function *at* a point but we are only allowed to evaluate a (weighted) average *around* a point - that is: we can figure out how the function values are "distributed" around that point? Could that even hint to a connection to probability distributions? ...or more like: probability density function? 
 
@@ -150,7 +156,7 @@ Now let's assume, $g$ is actually some nasty, non-differentiable function such t
 \begin{equation}
  \int_a^b g'(x) f(x) \; dx = \Big[g(x) f(x)\Big]_a^b - \int_a^b g(x) f'(x) \; dx
 \end{equation}
-Now there's no $g'$ anymore in the right hand side. Instead, we have to differentiate $f$ and that will never pose a problem to us because $f$ was assumed to be a test function, so it's smooth (i.e. differentiable infinitely often everywhere). For test functions, we also we have $f(a) = f(b) = 0$ which makes the boundary terms vanish. So, what remains is:
+Now, observe how there's no $g'$ anymore in the right hand side. That means, we don't have to be able to differentiate $g$ anymore! Instead, we now have to differentiate $f$. Is that any better? Yes - it absolutely is! Differentiating $f$ will never pose a problem to us because $f$ was assumed to be a test function, so it's smooth (by definition) which means that it is differentiable, even infinitely often(!), everywhere. For test functions, we also we have $f(a) = f(b) = 0$ which makes the boundary terms vanish. So, what remains is:
 \begin{equation}
  G'(f) = - \int_a^b g(x) f'(x) \; dx
 \end{equation}
@@ -183,10 +189,13 @@ f'(x) =
 But note that this doesn't say anything about $f'(x)$ at $x = 0$. We can't assign a value there because $f(x) = |x|$ not differentiable at $x = 0$ in the usual sense. But it is differentiable in the weak sense. The derivative given above has only values for $x \neq 0$. But that is no problem if we view $f'$ as a distribution. Distributions are not supposed to have values everywhere - or anywhere at all, for that matter. All that we want from a distribution is to test it with a test function. We do not generally expect to be able to evaluate it a an arbitrary point in the sense of asking: "What's your value there?". If we can, that's a bonus but it's not required. ...TBC...explain the Heaviside step function - if shift and scale $f'$ above appropriately and arbitrarily define the value at zero to 1, we obtain it.
 
 % ToDo:
-% -Explain that for the derivatives of jump dsicontinuities, we see delta functions scaled by the
+% -Explain that for the derivatives of jump discontinuities, we see delta functions scaled by the
 %  height of the jump. If the function f(x) jumps down by 3 at x = 5, for example, the scaling 
 %  factor would  be -3. We would see a $ -3 \delta(x - 5)$ term appear in the derivative f'(x). The
 %  function value f(5) would be irrelevant (I think)
+% -Explain what is mean by the formulation "test it with a test function". I think, this means the 
+%  evaluation of the integral of the product of f with the test function in the case of a regular
+%  distribution. But what about singular distributions?
 
 
 %Note that for the weak derivative

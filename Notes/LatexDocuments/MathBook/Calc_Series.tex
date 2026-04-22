@@ -14,6 +14,8 @@ S = \lim_{n \rightarrow \infty} s_n
 \end{equation}
 This limit, if it exists and is finite, is called the \emph{sum} of the series. The rightmost expression in the equation is just a definition of notation. That is: we define a sum that has $\infty$ as its upper summation limit via replacing $\infty$ by $n$ and then take the limit as $n$ approaches infinity. That naturally extends our sigma notation for summation to the case of infinite upper limits. By the way, an analogous step can be taken to extend the notation further to allow $-\infty$ as lower summation limit. [Q: Is there a way to extend the notation to allow real numbers for the summation limits? And no, I don't mean integrals.]
 
+% Maybe express it more generally such that the index k does not need to start at 0 but at some arbitrary k_0
+
 % Is there a way to extend the notation to allow real numbers for the limits? I mean, we have integrals - but can we do it with sums, too?
 
 % Here is a way:
@@ -56,7 +58,26 @@ ToDo: give formulas for finite and infinite geometric series, infinite alternati
 % that has the same shape as R
 
 
-Series that converge but do not converge absolutely, have a rather peculiar property which is encapsulated in...
+
+
+
+
+
+
+
+\subsection{Convergence}
+We met the notion of convergence already in the context of sequences. Since a series is just a special kind of sequence, we can apply this notion of convergence to sequences, too. 
+
+\subsubsection{Absolute Convergence}
+Specifically for series, there is a definition for an even stronger form of convergence that is relevant in certain contexts. This stronger type of convergence is called \emph{absolute convergence}. If a series converges absolutely, it means that we can form a new series by taking the absolute values of terms of the original series and that new series still converges. We can intuitively see that this is a stronger requirement by noticing that when a series has positive and negative terms, they may partially cancel out thereby making the partial sums smaller compared to the case when all terms would have the same sign. Series that converge but do not converge absolutely, have a rather peculiar property which is encapsulated in...
+
+% ...TBC...
+% ToDo: Give the formula for the requirement for absolute convergence:
+% $\sum_{k=k_0}^{\infty} |a_k| < \infty $
+
+% https://en.wikipedia.org/wiki/Absolute_convergence
+
+
 
 % explain term "conditionally convergent", and "uniformly convergent" (means that the series converges to a function f in the sense that we can put a "tube" of fixed width (i.e. fixed y-width) around f and for some value of n, the series trucated at some m >= n will be completely inside the tube
 
@@ -141,14 +162,19 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 % https://www.youtube.com/watch?v=8qf6DlZ4x6o
 
 
-\subsection{Convergence}
-We met the notion of convergence already in the context of sequences. Since a series is just a special kind of sequence, we can apply this notion of convergence to sequences, too. 
-
-\subsubsection{Absolute Convergence}
-Specifically for series, there is a definition for an even stronger form of convergence that is relevant in certain contexts. This stronger type of convergence is called \emph{absolute convergence}. If a series converges absolutely, it means that we can form a new series by taking the absolute values of terms of the original series and that new series still converges. We can intuitively see that this is a stronger requirement by noticing that when a series has positive and negative terms, they may partially cancel out thereby making the partial sums smaller compared to the case when all terms would have the same sign. ...TBC...
 
 
-% https://en.wikipedia.org/wiki/Absolute_convergence
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -185,7 +211,7 @@ A power series is a series that involves a variable $x$. We imagine that we have
 \label{Eq:PowerSeries}
  f(x) = \sum_{n=0}^\infty a_n (x-c)^n
 \end{equation}
-where $c$ is some fixed constant. It's often zero but for generality, I've already included it. On the left hand side, I already suggestively have written $f(x)$ to indicate that this "infinite polynomial" may be used to define a function - at least for those values of $x$, for which the infinite sum converges to a finite value. Note that (finite) polynomials are included as the special case in which all the coefficients $a_n$ are equal to zero for $n > k$ for some $k$ ($k$ is actually the degree of the polynomial, in this case). If the series converges for any $x$ at all, it will do so inside a disc centered at $c$ (this is not supposed to be obvious) when we assume that $c$ and $x$ can be complex numbers. The radius of this disc is called the radius of convergence. On the boundary of this disc, the series may or may not converge and the convergence property may depend on the actual point on the boundary - so this needs to be investigated more closely, if this information is needed. The series will actually always converge for $x = c$ (we'll see later why) but what we are usually really interested in is whether or not it also converges inside come neighborhood of the expansion point $c$, i.e. whether or not the radius of convergence is nonzero. For some particularly well behaved functions, the so called \emph{entire functions}, it may even be infinite. In general, we could also allow complex coefficients $a_n$. For the time being, we'll focus our attention to real $x,c,a_n$ all being real numbers, though. A formula for the radius of convergence is given by the Cauchy-Hadamard theorem. ..TBC...
+where $c$ is some fixed constant. It's often zero but for generality, I've already included it. On the left hand side, I already suggestively have written $f(x)$ to indicate that this "infinite polynomial" may be used to define a function - at least for those values of $x$, for which the infinite sum converges to a finite value. Note that (finite) polynomials are included as the special case in which all the coefficients $a_n$ are equal to zero for $n > k$ for some $k$ ($k$ is actually the degree of the polynomial, in this case). If the series converges for any $x$ at all, it will do so inside a disc centered at $c$ (this is not supposed to be obvious) when we assume that $c$ and $x$ can be complex numbers. The radius of this disc is called the radius of convergence. On the boundary of this disc, the series may or may not converge and the convergence property may depend on the actual point on the boundary - so this needs to be investigated more closely, if this information is needed. The series will actually always converge for $x = c$ (we'll see later why) but what we are usually really interested in is whether or not it also converges inside come neighborhood of the expansion point $c$, i.e. whether or not the radius of convergence is nonzero. For some particularly well behaved functions, the so called \emph{entire functions}, it may even be infinite. In general, we could also allow complex coefficients $a_n$. For the time being, we'll focus our attention to real $x,c,a_n$ all being real numbers, though. A formula for the radius of convergence is given by the Cauchy-Hadamard theorem. ..TBC...ToDo: Explain that the radius of convergence is given by the distance between $c$ and the nearest singularity of $f$
 
 
 % https://en.wikipedia.org/wiki/Radius_of_convergence
@@ -205,8 +231,8 @@ where $c$ is some fixed constant. It's often zero but for generality, I've alrea
 \paragraph{Convolution Revisited}
 When we defined the convolution operation between sequences, it may have seemed somewhat arbitrary and unmotivated. In light of power series, we may give it some interpretation that also justifies why it is also called the Cauchy "product". Recall that to multiply two (finite) polynomials, we have to convolve their lists of coefficients. The Cauchy product is basically the infinite version of that. It's a generalization in the sense that it includes the finite case as special case when we assume that the sequences just become identically zero after some $n$. The product sequence is the sequence of coefficients of an infinite product polynomial, so to speak...TBC...that can perhaps be explained better
 
-\medskip
-...TBC..ToDo: explain how to compute radius of convergence - distance to nearest singularity
+%\medskip
+%...TBC..ToDo: explain how to compute radius of convergence - distance to nearest singularity
 
 %explain 
 
@@ -220,7 +246,7 @@ One truly remarkable result of calculus is that a lot of functions can be expres
 f(x) = \sum_{k=0}^\infty \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k
 %     = \sum_{k=0}^n \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k + \mathcal{O}(x-x_0)^n
 \end{equation}
-In the context of the more general power series formula given by (\ref{Eq:PowerSeries}), we recognize the Taylor series as the case where $c = x_0$ and $a_n =  \frac{f^{(k)}(x_0)}{k!}$ can be interpreted as a coefficient calculation formula for the $a_n$ of a general power series. For this formula to work, we require a few things. First, $f$ must be smooth at $x_0$ such that we actually can take all the derivatives. Second, we require $x$ to be within the radius of convergence of the series, i.e. close enough to $x_0$. There are some rather special functions that are indeed smooth but have a radius of convergence of zero. But we'll forget about that complication right now. For most functions, it works just fine. By inspecting this formula, we can see the reason why (\ref{Eq:PowerSeries}) always converges for $x=c$ or $x=x_0$ in the new notation here: the factor $(x-x_0)^k$ will be zero for any $k > 0$. For $x = x_0$ and $k = 0$, the factor $(x-x_0)^k$ actually evaluates to $0^0$. For the formula to still work at $x=x_0$, we are forced to define $0^0 = 1$ which is a quite common definition in algebra, calculus and combinatorics. Defining the \emph{indeterminate form} of $0^0$ to be equal to one just makes the most sense in these contexts because lets the formulas used in these fields to remain valid even in such edge cases. If the expansion point $x_0$ is chosen to be $x_0 = 0$, the Taylor series is also called \emph{Maclaurin series}. That is: a Maclaurin series is a special case of a Taylor series with $x_0 = 0$. 
+In the context of the more general power series formula given by (\ref{Eq:PowerSeries}), we recognize the Taylor series as the case where $c = x_0$ and $a_n =  \frac{f^{(k)}(x_0)}{k!}$ can be interpreted as a coefficient calculation formula for the $a_n$ of a general power series. For this formula to work, we require a few things. First, $f$ must be smooth at $x_0$ such that we actually can take all the (infinitely many) derivatives. Second, we require $x$ to be within the radius of convergence of the series, i.e. close enough to $x_0$. There are some rather special functions that are indeed smooth but have a radius of convergence of zero (at least at certain points). But we'll forget about that complication right now\footnote{We'll pick it up again when we will introduce the so called \emph{test functions} in the context of distribution theory. See page \pageref{Sec:TestFunctions}.}. For most functions, it works just fine. By inspecting this formula, we can see the reason why (\ref{Eq:PowerSeries}) always converges for $x=c$ or $x=x_0$ in the new notation here: the factor $(x-x_0)^k$ will be zero for any $k > 0$. For $x = x_0$ and $k = 0$, the factor $(x-x_0)^k$ actually evaluates to $0^0$. For the formula to still work at $x=x_0$, we are forced to define $0^0 = 1$ which is a quite common definition in algebra, calculus and combinatorics. Defining the \emph{indeterminate form} of $0^0$ to be equal to one just makes the most sense in these contexts because lets the formulas used in these fields to remain valid even in such edge cases. If the expansion point $x_0$ is chosen to be $x_0 = 0$, the Taylor series is also called \emph{Maclaurin series}. That is: a Maclaurin series is a special case of a Taylor series with $x_0 = 0$. 
 
 %In the context of the more general power series formula given by (\ref{Eq:PowerSeries}), we recognize the Taylor series as the case where $c = x_0$ and $a_n =  \frac{f^{(k)}(x_0)}{k!}$ can be interpreted as a coefficient calculation formula for the $a_n$ of a general power series.
 

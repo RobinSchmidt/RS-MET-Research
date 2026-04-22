@@ -344,6 +344,13 @@ I said formerly that an "elementary" function can only use the arithmetic operat
 % https://www.youtube.com/watch?v=3j8GIJd5-3A&list=PLHi0WgifODX19zsJhvCrizYEXiHY5qc9n
 
 
+% How sqrt(x) Encodes Decisions
+% https://www.youtube.com/watch?v=2wNUZ-2rsZU
+% - |x| = sqrt(x^2), max(x,y) = (x + y + |x-y|) / 2, min(x,y) = (x + y - |x-y|) / 2, 
+%   step(x) = (|x| + x) / 2, ....
+
+
+
 %---------------------------------------------------------------------------------------------------
 %\subsubsection{Distance}
 
@@ -386,7 +393,7 @@ A \emph{polynomial} can be written in various forms. Some important canonical fo
       = a_n \prod_{k=1}^{n} (x - r_k)
       = a_0 + x(a_1 + x(a_2 + \ldots + x(a_{n-1} + x a_n)))
 \end{equation}
-where the weights $a_k$ in the sum form are called the \emph{coefficients} of the polynomial and the highest power $n$ for which there is a nonzero coefficient is called the \emph{degree} of the polynomial and the coefficient $a_n$ in front of it is called the \emph{leading coefficient}. The $r_k$ in the product form are called the \emph{roots} of the polynomial. These are the values of $x$ where the output of the function $y = f(x)$ is zero. This is immediately obvious from the fact that a product is zero as soon as any of its factors is zero, which will clearly be the case if $x = r_k$ for one of the $r_k$. The roots $r_k$ may be real or complex and are not necessarily distinct. The number of times by which a root appears in the product is called the \emph{multiplicity} of the root. An important theorem, the \emph{fundamental theorem of algebra}, states that every polynomial of degree $n$ has exactly $n$ such roots in the complex plane (counted with multiplicity, i.e. a double root counts twice, etc.). You will sometimes find a weaker form of this statement called fundamental theorem of algebra, namely the statement that each polynomial of nonzero degree has a root. But the stronger statement immediately follows from the possibility of splitting off a linear factor and then recursively applying the same theorem to the other factor. It's usually preferable for a theorem to make the most precise and strongest possible statement from the weakest possible assumptions unless, perhaps, doing so would get in the way of comprehensibility. But that's not the case here so that's why I prefer the stronger version of the theorem that I stated first. By the way, the scaling factor $a_n$ in front of the product form is indeed the same $a_n$ as the $a_k, k=n$ coefficient in the sum form, i.e. the leading coefficient. Also, the $a_k$ in the nested form are the same coefficients as in the sum form. A polynomial of degree 1, i.e. a function of the form $f(x) = a_0 + a_1  x$, is a very simple special case which is of practical importance and is sometimes - somewhat inconsistently - called a linear function. This terminology is inconsistent because such a function satisfies the usual requirements for linearity - homogeneity and additivity - only when the additive constant is zero, i.e. when $a_0 = 0$. Nevertheless, you'll find that terminology used often, especially in high-school level math texts. That's because in these contexts, what they usually mean by "linear" is: "defines a line" rather than these more abstract homogeneity and additivity properties. In more advanced university-level texts, they may also be called \emph{affine} functions. In this context, "affine" usually means: "linear plus some offset". 
+where the weights $a_k$ in the sum form are called the \emph{coefficients} of the polynomial and the highest power $n$ for which there is a nonzero coefficient is called the \emph{degree} of the polynomial and the coefficient $a_n$ in front of it is called the \emph{leading coefficient}. The $r_k$ in the product form are called the \emph{roots} of the polynomial. These are the values of $x$ where the output of the function $y = f(x)$ is zero. This is immediately obvious from the fact that a product is zero as soon as any of its factors is zero, which will clearly be the case if $x = r_k$ for one of the $r_k$. The roots $r_k$ may be real or complex and are not necessarily distinct. The number of times by which a root appears in the product is called the \emph{multiplicity} of the root. An important theorem, the \emph{fundamental theorem of algebra}, states that every polynomial of degree $n$ has exactly $n$ such roots in the complex plane (counted with multiplicity, i.e. a double root counts twice, etc.). You will sometimes find a weaker form of this statement called fundamental theorem of algebra, namely the statement that each polynomial of nonzero degree has a root. But the stronger statement immediately follows from the possibility of splitting off a linear factor and then recursively applying the same theorem to the other factor. It's usually preferable for a theorem to make the most precise and strongest possible statement from the weakest possible assumptions unless, perhaps, doing so would get in the way of comprehensibility. But that's not the case here so that's why I prefer the stronger version of the theorem that I stated first. By the way, the scaling factor $a_n$ in front of the product form is indeed the same $a_n$ as the $a_k, k=n$ coefficient in the sum form, i.e. the leading coefficient. Also, the $a_k$ in the nested form are the same coefficients as in the sum form. A polynomial of degree 1, i.e. a function of the form $f(x) = a_0 + a_1  x$, is a very simple special case which is of practical importance and is sometimes - somewhat inconsistently - called a linear function. This terminology is inconsistent because such a function satisfies the usual requirements for linearity - homogeneity and additivity - only when the additive constant is zero, i.e. when $a_0 = 0$. Nevertheless, you'll find that terminology used often, especially in high-school level math texts. That's because in these contexts, what they usually mean by "linear" is: "defines a line" rather than these more abstract homogeneity and additivity properties which we will explain in more detail in the section about linear algebra on page \pageref{Def:Linearity}. In more advanced university-level texts, they may also be called \emph{affine} functions. In this context, "affine" usually means: "linear plus some offset". 
 
 % ToDo: explain that when the coeffs are real, then complex roots come in conjugate pairs and can be combined into quadratic factors with real coeffs
 
@@ -521,9 +528,9 @@ The coefficient $c_n$ in the resulting polynomial is the sum of all products of 
 \begin{equation}
   c_n = \sum_{k=0}^n a_k b_{n-k}
 \end{equation}
-That formula to compute the new list of $c$-coefficients from the $a$- and $b$-coefficients is called convolution. Multiplication of two polynomials is achieved by convolving their coefficient lists (yes, the noun is \emph{convolution} and the verb is \emph{convolve} - not convolute). Convolution is an important mathematical operation that crops up in different variations everywhere. Polynomial multiplication is just one of the many places. Signal processing is full of it. Its continuous variant plays a role in the solution of certain differential equations which are all over the place in physics. You may have learned in high school how to do polynomial multiplication with pencil and paper and you have probably hated it just as much as your seatmate and everybody else including me. Don't worry - we don't do such pointless things here. Instead, we teach a computer to do that boring calculation for us.
+That formula to compute the new list of $c$-coefficients from the $a$- and $b$-coefficients is called convolution. Multiplication of two polynomials is achieved by convolving their coefficient lists (yes, the noun is \emph{convolution} and the verb is \emph{convolve} - not convolute). Convolution is an important mathematical operation that crops up in different variations everywhere. Polynomial multiplication is just one of the many places. Signal processing is also full of it. Its continuous variant plays a role in the solution of certain differential equations which are all over the place in physics. You may have learned in high school how to do polynomial multiplication with pencil and paper and you have probably hated it just as much as your seatmate and everybody else including me. Don't worry - we don't do such pointless things here. Instead, we teach a computer to do that boring calculation for us.
 
-...TBC... TODo: give Python code for convolution - or give a reference to my C++ implementation
+...TBC... TODO: give Python code for convolution - or give a reference to my C++ implementation. Mention that polynomial multiplication (and therefore convolution) is commutative, associative, distributive over addition/subtraction (generally weighted sums i.e. linear combinations, actually)
 % \bigl(\sum_{n=0}^N  a_n x^n\bigr) \bigl( \sum_{k=0}^M b_k x^k \bigr) = $\sum_{n=0}^{N+M} c_n x^n, wher c_n = ...
 
 % Maybe give an example with two finite polynomials - mostly to show where this summation ends. Explain that end also in terms of imagining the higher order coeffs being zero.
@@ -539,6 +546,7 @@ a_n = \frac{1}{b_0} (  c_n - \sum_{k=0}^{n-1} a_k b_{n-k} )
 \end{equation}
 [...but there's a caveat: what, if $b_0 = 0$? Maybe we should find $m$ as the index of the first nonzero $b$-coeff and use $b_m$ as divisor? I think, the upper limit of the sum can then be reduced to $n-m-1$. -> figure out! What about polynomial division with remainder? Maybe apply the deconv-algo to sequences $c_n, b_n$ where $c_n$ actually did \emph{not} arise from a product involving $b_n$? Point out the caveats and provide working code that takes care of them!]
 
+% ToDo: Explain that it doesn't matter if we try to recove the a- or the b-coeffs (from c,b or c,a respectively) because due to the commutativity of convolution, we may freely swap their roles.
 
 %Oh my dog! Polynomial division! That pesky algorithm that we all once had to learn in school and then have forgotten for good! Worry not - you won't have to relearn it here and now. Executing algorithms with pencil and paper is not something we humans like to do and I personally find it as pointless as the next guy. Instead, I'll give you computer code for it, so we'll never ever have to do it again by hand. ....
 
@@ -1399,6 +1407,13 @@ https://www.youtube.com/watch?v=dPCg039QBwQ
 
 This Functional Equation Looks Impossible (The Trick is Genius)
 https://www.youtube.com/watch?v=FBhmhRzLhak
+
+All Functions Can Be Collapsed to Only One, Mathematician Proves
+https://www.youtube.com/watch?v=hwtqJaS42xk
+https://arxiv.org/html/2603.21852v2
+https://arxiv.org/abs/2603.21852
+-Makes the case that all elementary functions an be built from eml(x,y) = exp(x) - ln(y)
+-This is kind of analoguous to how all boolean functions can bebuilt from nand(x,y) = not(and(x,y))
 
 \end{comment}
 

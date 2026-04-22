@@ -23388,18 +23388,28 @@ void testQuaternion()
   Quat5 qp5 = q5*p5;
   Quat5 pq5 = p5*q5;
 
+  int dummy = 0;
+
 
 
   // ToDo:
-  // -Test representation as pair of complex numbers, the different 2x2 and 4x4 matrix 
-  //  representations (1) pg 129 ff. Maybe the pair of complex numbers could just be a nested
-  //  complex number?
-  // -Implement and test division for all the different representations.
-  // -Compare the performances of the different implementations (I guess, raw will be most 
-  //  performant?)
-
-
-  int dummy = 0;
+  // 
+  // - Test representation as pair of complex numbers, the different 2x2 and 4x4 matrix 
+  //   representations (1) pg 129 ff. Maybe the pair of complex numbers could just be a nested
+  //   complex number?
+  // 
+  // - Implement and test division for all the different representations.
+  // 
+  // - Compare the performances of the different implementations (I guess, raw will be most 
+  //   performant?)
+  //
+  // - As a prequel, create an experiment that demonstrates how to implement complex numbers as
+  //   2x2 matrices of the form [a,-b; b,a]. More generally, we could also use a representation in
+  //   the form of W * [a,-b; b,a] * W^-1 for any invertible matrix W. See "Zahlen" (Ebbinghaus),
+  //   pg. 57. It gives the example W = [2,3; 1,2] in which case the imaginary unit would be 
+  //   represented by the matrix [8,-13; 5,-8] according to the book (verify that!). Do some 
+  //   computations with various representations. Maybe W = [0.8,0.6; 0.6,-0.8] is also an 
+  //   interesting choice because it's orthonormal (I think - verify!) with rational entries.
 }
 
 void testChebychevExpansion()

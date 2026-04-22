@@ -159,7 +159,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   test2x2Matrices();               // stub
   //test2x2MatrixCommutation();
   //test2x2MatrixInterpolation();    // stub
-  //testQuaternion();
+  testQuaternion();
   //testChebychevExpansion();        // stub
   //testChebychevEconomization();    // stub
   //testGeneratingFunction();

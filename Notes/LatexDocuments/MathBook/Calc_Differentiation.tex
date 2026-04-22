@@ -633,14 +633,14 @@ For this to work, $f(x)$ must be positive at the evaluation point $x$ because ot
 % Give example to differentiate f(x) = x^x
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Generalized Power Rule} 
-We can generalize the power rule $(x^n)' = n x^{n-1}$ to higher order derivatives as follows:
+\subsubsection{The Power Rule} 
+We can generalize the power rule $(x^n)' = (x^n)^{(1)} = n x^{n-1}$ to higher order derivatives as follows:
 \begin{equation}
- \frac{d^k}{d x^k} x^n = \frac{n!}{(n-k)!}x^{n-k}
+ (x^n)^{(k)} = \frac{d^k}{d x^k} x^n = \frac{n!}{(n-k)!}x^{n-k}
 \end{equation}
 where $k$ is the order of the derivative. It can even be further generalized to non-integer numbers $a$ using the following expression using the gamma function:
 \begin{equation}
- \frac{d^a}{d x^a} x^n = \frac{\Gamma(n+1)}{\Gamma(n-a+1)}x^{n-a}
+ (x^n)^{(a)} = \frac{d^a}{d x^a} x^n = \frac{\Gamma(n+1)}{\Gamma(n-a+1)}x^{n-a}
 \end{equation}
 Here $a$ can be any real number\footnote{Q: Could it even be complex? I think so. Verify!}. But that would lead us into the territory of fractional calculus which is a more exotic and more advanced topic which we won't pursue here any further. The power rule can also be generalized to a power $f^g$ of two functions $f = f(x)$ and $g = g(x)$ in the following way:
 \begin{equation}
@@ -688,6 +688,9 @@ Or, with unsupressed argument $x$:
 %  $\frac{d^k}{d x^k} x^n = \frac{n!}{(n-k)!}x^{n-k}$
 %  ...which can be further generalized (to real k) using the gamma function:
 %  \frac{\Gamma(n+1)}{\Gamma(n-k+1)}x^{n-k}$
+
+% A better visualisation of derivatives
+% https://www.youtube.com/watch?v=xPIOzXpKxNU
 
 %===================================================================================================
 \subsection{Generalizations, Alternatives and Analogies}
@@ -875,6 +878,12 @@ Suppose we have a function $f$ of $x$, say $f(x) = x^6$, and we want to take the
 %\subsubsection{$\star$ Analogies}
 \subsubsection{$\star$ Analogies}
 There are certain derivative-like operations that can be applied to other things than real functions. They are "derivative-like" in the sense that they obey certain rules that derivatives also obey. Mostly we are interested in operations that satisfy a product rule similar to the one of differentiation [VERIFY].
+
+% I think, the reason why we focus on the product rule that these operations arise in the context of
+% algebraic structures where we are often dealing with sets on which we have the operations of
+% addition and multiplication defined. The derivative should interact with the multiplication in
+% the ways we are used to. For addition, we would require this as well but that is usually more 
+% trivially true anyway (verify!).
 
 % Can we also find derivative like things that obey a rule similar to the chain rule? We would
 % need so sort of (set of objects) object that can be composed. Maybe permutations or geometric

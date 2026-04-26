@@ -182,6 +182,11 @@ When a relation is \emph{reflexive}, it means that every element $a$ must be in 
 % Was sind angeordnete Körper? (Ordnungstheorie)
 % https://www.youtube.com/watch?v=RyhUIoif_B8
 
+% Maybe give some examples: x < y, x^2 + y^2 <= 1 (or = or <), x = y, x != y, x < y^2, x = y^2,
+% x^2 = y, ... After giving these examples, point out certain fetures that some examples have but
+% others don't. That's a nice preliminary discussion for motivating the definitions of terms like
+% "function", "equivalence relation", etc.
+
 
 \paragraph{Functions} A \emph{function} is a special kind of relation, namely a relation which is \emph{left-total} and \emph{right-unique}. You can think of functions as a definition of a map from a set $A$ to another set $B$. Each element of $A$ gets mapped to some unique element of $B$. You can throw any $a \in A$ at a function $f$ and it will unambiguously tell you, which $b \in B$ your given $a$ is mapped to. If a function is additionally left-unique, we can actually traverse the arrow back to figure out unambiguously, where we came from. We can undo the application of the functional mapping for those $b \in B$ which have an incoming arrow. Such left-unique functions are also called \emph{injective}. If, on the other hand, the function is right-total, i.e. every element of $B$ has an incoming arrow, we call the function \emph{surjective}. A function that is both injective and surjective is called \emph{bijective}. There is a one-to-one correspondence between the elements of $A$ and those of $B$. Such bijective functions can therefore be uniquely inverted, i.e. undone, for any $b \in B$ and are therefore also called \emph{invertible}.
 
@@ -191,7 +196,7 @@ When a relation is \emph{reflexive}, it means that every element $a$ must be in 
 % -explain creation of binary functions
 % -explain notation f: A -> B
 % -explain partial functions - need not to be left-total
-% -exaplain multifunctions - need not to be right-unique
+% -explain multifunctions - need not to be right-unique
 % -Explain the difference between undoable and invertible. Undoable is not a math term. By it, I 
 %  mean that I can apply f to x to get y and then apply f^-1 to y to get back x. The crucial 
 %  difference to "invertible" is that the undoability needs to apply only to those values in the 
@@ -206,6 +211,7 @@ When a relation is \emph{reflexive}, it means that every element $a$ must be in 
 %  injective:  undoable, reversible, backtrackable, backtracable
 %  I think, when we call a function exhaustive and backtraceble rather than surjective and 
 %  injective, it's harder to confuse which is which. I still often forget which is which.
+% -I have also some comments about this in the "Taxonomy" subsection in the section about functions
 
 \paragraph{Binary Operators} We sometimes need functions $f$ that map pairs of the form $(a,b)$ where $a$ and $b$ come from a set $A$ to another value $c$ also from the set $A$. Such a function is in certain contexts called \emph{binary operator} or \emph{binary operation} on the set $A$. Our usual arithmetic operators for addition and multiplication are of that kind. We already have all the tools to create such functions in our toolbag. We know how to create the set of tuples and we know how to create functions. Combining these two ideas, we have all the tools we need to create binary operations.
 
@@ -267,7 +273,7 @@ A \subset   B \;\;  \Leftrightarrow \;\;   x \in A \Rightarrow x \in B,& A \neq 
 A \supset   B \;\;  \Leftrightarrow \;\;   x \in B \Rightarrow x \in A,& A \neq B \qquad & \text{$A$ is strict superset of $B$}
 \end{eqnarray}
 % Alignment is ugly! Maybe use a tabular environment
-In contrast to orders, equivalences, functions and so on, the subset relation is an elementary set theoretical idea and not context dependent. If it is applied to a given set of sets, it satisfies the requirements of a partial order, by the way [VERIFY].
+In contrast to orders, equivalences, functions and so on, the subset relation is an elementary set theoretical idea and not context dependent. If it is applied to a given set of sets, it satisfies the requirements of a partial order, by the way [VERIFY]. ToDo: Maybe explain the "is-element-of" relation first
 
 % ToDo: maybe express the strict subset relations also as:
 % (A \subset  B)  -> ... and there exists an element of of B that is not an element of A.

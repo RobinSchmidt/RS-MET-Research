@@ -492,10 +492,30 @@ There are infinitely many numbers and even a single real number may need infinit
 \paragraph{The Circle Constants $\pi$ and $\tau$}
 %\paragraph{The Semicircle Constant}
 % $\pi$
-% -pi is the ratio of a circle's circumfence to its diameter - or half the ratio of the 
+% -pi is the ratio of a circle's circumference to its diameter - or half the ratio of the 
 %  circumfence to the radius. tau = 2*pi is the ratio of the circumfence to the radius.
-% -originates in geometry but has (surprising) uses everywhere. mention use in normal
+% -Originates in geometry but has (surprising) uses everywhere. mention use in normal
 %  distribution - and maybe how it arises.
+% -To turn this geometric definition into a defining equation, one needs some tools from calculus.
+%  One could define it as a limit using circumferences of regular polygons that are inscribed in a
+%  circle. Limits are a subject of caculus. One could also use differential geometry (which is 
+%  built on top of calculus) for example by using an integral over an arc-length element using the 
+%  equation x^2 + y^2 = 1 -> y = sqrt(1 - x^2) =: f(x) and integrating that f(x) from -1 to +1. One 
+%  could also use the same function f to compute the area of a half-circle which also involves pi -
+%  although it may from the outset not obvious that the same constant pi relates arc-length and 
+%  radius and area and radius. A more abstract definition which is neverless common is to define pi 
+%  as the first zero of the cosine function which is itself defined via a power series.  See also 
+%  "Zahlen" (Ebbinghaus), pg. 104. ff.
+%  via area: pi/2 = \int_{-1}^{+1} f(x) dx
+%  via arc length: pi = \int_{-1}^{+1} sqrt{1 + (y')^2} dx   with y = y(x) = sqrt(1 - x^2)
+%                   pi = \int_{-1}^{+1} 1 / sqrt{1 - x^2} dx
+%  The book gives also the euqation (attributed to Laurent)
+%  pi =  \int_{-inf}^{+inf} 1/(1+x^2) dx
+%  I don't know where that comes from. Maybe from a rational paramtrization of the (half) circle 
+%  given earlier in the book (pg. 71)? If not, maybe that parametrization can be used to derive yet
+%  another expression?
+
+
 
 %\paragraph{Euler's Number}
 % $\e$

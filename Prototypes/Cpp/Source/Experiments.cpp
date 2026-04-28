@@ -16278,6 +16278,11 @@ void testMultiVarPolynomial()
   //   different bases. Maybe a simple case to check should be with byvariate polynomials of total
   //   degree up to 1 with the 2 bases: (1,x,y) and (1,x+y,x-y). Next we could go for polynomials 
   //   with total degree up to 2 with bases (1,x,y,x^2,xy,y^2), (1,x+1,y-1,x+y^2,y-x^2,xy+x-y).
+  //
+  // - Test partial derivatives for monomials and, based on that, implement functions like gradient
+  //   and Hessian for polynomials and a Jacobian for systems of polynomials. For the latter, we 
+  //   first need a class like rsMultiVarPolySystem that represents a system of multivariate
+  //   polynomials. Or maybe call it rsMultiVarPolySys - that has a nice rhythm to it.
 }
 
 

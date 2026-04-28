@@ -382,9 +382,33 @@ public:
   bool isCompatibleWith(const rsMultiVarMonomial& other) const
   { return getNumVariables() == other.getNumVariables(); }
 
+  /** Returns a monomial that is a partial derivative of this monomial with respect to the i-th 
+  variable. */
+  rsMultiVarMonomial<T> getPartialDerivative(int i) const
+  {
+    rsMultiVarMonomial<T> d(*this);        // Copy coeff and powers from this into d.
+    d.coeff     *= T(powers[i]);           // The i-th exponent comes down..
+    d.powers[i]  = rsMax(0, powers[i]-1);  // ..and decrements - but not below 0.
+    return d;
+  }
+  // Needs tests. Figure out if we really need the rsMax() operation. Without it, we may produce
+  // negative exponents in (repeated) differentiation but the coeff would be zero such that the 
+  // negative exponent wouldn't matter.
 
+  rsMultiVarMonomial<T> getPartialDerivative2nd(int i, int j) const
+  {
+    return getPartialDerivative(i).getPartialDerivative(j);
+  }
+  // Needs tests. ToDo: Implement it in an optimized way that avoids one of the two heap 
+  // allocations. The implementation here could be kept to serve as prototype for unit tests.
 
   // ToDo: getMultiDegree() = max(powers) I think. See IVA, pg...
+  // getPartialDerivative2nd(int i, int j), getPartialDerivative3rd(int i, int j, int k),
+  // getPartialDerivativeNth(int* indices, int order) 
+  // Maybe implement in-place functions differentiate(int i), integrate(int i, T c) ..but wait:
+  // we cannot accept and integration constant c because if we would, the result would be an 
+  // expression of the form "monomial + constant" which is not a monomial anymore. For the naming
+  // convention, check what we did in rsBi- and rsTriVariatePolynomial and use that here, too.
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators. */

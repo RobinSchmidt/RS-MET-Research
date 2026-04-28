@@ -14,7 +14,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testRandomVectors();               // Stub - Produce random vectors with user specified covariance matrix
   //testKalmanFilter();                // Under construction - doesn't work yet
   //testPitchDithering();              // Pitch dithering waveforms (mostly saw)
-  testPitchDitherSuperSaw();           // Pitch dither applied to the supersaw
+  //testPitchDitherSuperSaw();           // Pitch dither applied to the supersaw
 
 
   // Image processing:
@@ -143,8 +143,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPolynomialRootFinder();        // stub
   //testLiftedPolynomial();
   //testFactoredPolynomial();
-  testPolynomialRootCorrespondence1();
-  testPolynomialRootCorrespondence2();
+  //testPolynomialRootCorrespondence1();
+  //testPolynomialRootCorrespondence2();
 
 
   // MIMO Filters:
@@ -155,11 +155,11 @@ int main (int /*argc*/, char* /*argv[]*/)
 
 
   // Math:
-  testMatrixSqrt();              // Tests functions to compute square root of a matrix
-  test2x2Matrices();               // stub
+  //testMatrixSqrt();              // Tests functions to compute square root of a matrix
+  //test2x2Matrices();               // stub
   //test2x2MatrixCommutation();
   //test2x2MatrixInterpolation();    // stub
-  testQuaternion();
+  //testQuaternion();
   //testChebychevExpansion();        // stub
   //testChebychevEconomization();    // stub
   //testGeneratingFunction();

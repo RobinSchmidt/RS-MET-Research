@@ -98,6 +98,11 @@ We first create a numerical (i.e. floating point) variable with 200 significant 
 % What are Continued Fractions? How to write continued fraction of a number? @Prof.SamKu_
 % https://www.youtube.com/watch?v=AiY9pPsl4bc
 
+% Maybe link to the the sequences of numerators and denominators of the convergents:
+% https://oeis.org/A002485
+% https://oeis.org/A002486
+
+
 \subsubsection{Simple CFE for a Rational Number}
 Let's now look at the case where $x$ is a rational number. Of cause, rational numbers are a subset of the real numbers, so in principle, the algorithm above should work for rational numbers, too. But there is the potential problem of numerical precision issues due to using a finite precision floating point format to represent real numbers. For rational numbers, we can avoid this problem and use an algorithm that sidesteps the use of floating point numbers. Consider this SageMath code snippet:
 \begin{center}

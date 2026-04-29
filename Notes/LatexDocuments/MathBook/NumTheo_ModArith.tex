@@ -137,9 +137,40 @@ We know from calculus that a sequence of real numbers $(s_n)$ is said to \emph{c
 % p-adic Numbers, Part 1: Introduction
 % https://www.youtube.com/watch?v=pIa94zvwl9w
 
-
 % [ANT15] p-adic integers: a primer, and an application (part 1)
 % https://www.youtube.com/watch?v=SwbJmKbFo7o
+
+% ToDo:
+%
+% - Maybe start form the definition of real numbers as equivalence classes of sequences of rational
+%   numbers
+%
+% - From this setting, give a couple of examples for how a real number (maybe take pi as example) can
+%   represented using various different sequences that converge to pi. Of special interest among 
+%   those are: the sequence of convergents of a continuous fraction representation (see
+%   https://oeis.org/A002485  https://oeis.org/A002486), 
+%   (3/1,31/10,314/100,3141/1000,31415/10000,...), 
+%
+% - Note that the second one results from a general decimal expansion of the form:
+%   x = sum_k c_k 10^k  where  k can, in general, range over all integers (the values c_k for k > 1
+%   are zero, though). 
+%
+% - Mention that we can use any base b instead of 10. In general, we can represent real numbers by a
+%   weighted geometric series:
+%   x = sum_k c_k b^k  where the weights c_k are in 0,1,2,...,b-1
+%   If we assume that after some cutoff point k_max all coeffs c_k are zero, we get a convergent
+%   series. Note that we allow k to be positive or negative here.
+%
+% - Representing real numbers like this actually aready seems to be the p-adic representation? Is
+%   the only difference between a p-adic number and a base-b representation of the number the
+%   definition of distance between two numbers?
+%
+% - The book "Zahlen" (Ebbinghaus) also mentions that such a base b representation is analoguous to
+%   a Laurent series representation of a function as:
+%   f(x) = sum_k c_k (x-a)^k  
+%   where the difference (x-a) between x and the expansion point a takes the role of the base b. The
+%   book doesn't really say it like this (it explains it much more abstractly) but I think, this is
+%   what the analogy is about.
 
 
 \subsection{$q$-analog Numbers}

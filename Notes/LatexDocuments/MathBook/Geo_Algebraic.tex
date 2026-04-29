@@ -14,6 +14,10 @@ Fun fact: algebraic geometry and geometric algebra are two fields of mathematics
 \subsection{Algebraic Varieties}  % and Schemes
 An \emph{algebraic variety} is the set of solutions to a system of polynomial equations $f_1(\mathbf{x}) = 0, \ldots, f_m(\mathbf{x}) = 0$ where $\mathbf{x} = (x_1, \ldots, x_n)$ and the $f_i$ are multivariate polynomials in these variables, i.e. polynomials with $n$ input variables that we may collect into an $n$-dimensional input vector $\mathbf{x}$ whenever this is notationally convenient. In general, this set of solutions is a set of points in an $n$-dimensional space. The dimensionality of the variety will typically be given by $n-m$ where $n$ is the number of variables and $m$ the number of equations [VERIFY!]. We may also collect the collection $(f_1, \ldots , f_m)$ of functions into a vector such that we write $\mathbf{f(x) = 0}$ for the whole system of $m$ equations. If there is only one single function $f$ and a single equation, we will write $f(\mathbf{x}) = 0$. In this case, the variety will be a curve. 
 
+% I think, the statement "The dimensionality of the variety will typically be given by $n-m$" can be made precise in the sense taht "atypical" situations where the dimension is less than n-m can be considered aedge cases that occur for a set of measure zero within some parameter space of polynomial coeffs? For example, when we consider 1 equation in 3D of degree at most 2 such that
+% F(x,y) = a + b x + c y + d x^2 + e xy + f y^2  will typically be a 2D manifold but thare are "edge cases" for cases that lie on a manifold with less than 7 dimensions in the 7D parameter space. Is that correct? It's my personal mental image. So, when we pick the 7 parameters a,b,c,d,e,f at random, the chacce to pick a combination such that the variety is not a 2D manifold but some lower dimensional object is zero?
+
+% But: what about when the solutions become complex?
 
 %A \emph{scheme} is similar to a variety but it takes into account multiplicities. Some part of a curve may belong to the set multiple times like when you take $(x^2 + y^2 - 1)^2 = 0$, you would get the unit circle two times because every solution of the circle equation $x^2 + y^2 - 1 = 0$ turns into two solutions when you square the polynomial on the left hand side. Varieties cannot model that because they are defined as sets - and sets do not distinguish between $\{1,2,2\}$ and $\{1,2\}$. Multisets do....
 % Nah - that's wrong - schemes are not multisets
@@ -31,6 +35,8 @@ An \emph{algebraic variety} is the set of solutions to a system of polynomial eq
 % Explain that extended notion here, too
 
 % Explain potential multiplicity of components. A component of the variety may be included twice or thrice etc.
+
+% Can a variety geometrically be characterized as a union of manifolds?
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Parameterizations}

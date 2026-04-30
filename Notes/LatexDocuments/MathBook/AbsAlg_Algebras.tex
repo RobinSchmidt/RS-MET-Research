@@ -3,6 +3,8 @@ In the previous section, we have seen that we can give additional structure to v
 
 % Maybe point out the parallel between "an algebra" and "(abstract) algebra" as a field and "a topology" and "topology" as a field.
 
+% TODO: Explain requirements on the product (bilinear, etc.)
+
 
 %These special vector spaces are important enough
 
@@ -25,7 +27,41 @@ In the previous section, we have seen that we can give additional structure to v
 
 % https://en.wikipedia.org/wiki/Algebra_over_a_field
 
-\subsubsection{Associative Algebras} 
+
+%\subsection{Motivating Examples}
+
+\subsection{Some Algebras over $\mathbb{R}$}
+
+\subsubsection{The Complex Numbers}
+
+\subsubsection{The Hyperbolic Numbers}
+
+\subsubsection{The Dual Numbers}
+
+
+%\subsubsection{Vectors in $3D$ and the Cross Product}
+%\subsubsection{Vector Algebra in $3D$}
+\subsubsection{Vectors in $3D$}
+ToDo: Introduce the cross product, explain its properties (anticommutative, non-associative, ...)
+
+% Works only in 3D, Maybe we can call it 3D vector algebra
+
+
+\subsubsection{The Quaternions}
+ToDo: Introduce quaternions as a 4D division algebra over $\mathbb{R}$. Define the quaternion product, give formulas for inversion, norm, etc. list important identities, give a bit of the historic backstory of how Hamilton discovered them, explain various representations and their pros and cons, ...
+
+
+\subsubsection{The Wedge Product}
+% Similar to cross product but generalizes to nD
+
+
+% ToDo: dual numbers, hyperbolic numbers, octonions, sedenions
+
+
+\subsection{Classification of Algebras}
+
+
+\subsubsection{Associative Algebras}
 
 % ToDo: explain power-associativity as a weake form of associativity. (see "Zahlen" (Ebbinghaus), 
 % pg. 151). x^m x^n = x^(m+n). In general, we cannot assume x x^2 = x^2 x even in the commutative
@@ -101,7 +137,15 @@ In a graded algebra, we are dealing with objects of different kinds that cannot 
 
 % https://en.wikipedia.org/wiki/Graded_structure
 
+
+
 \begin{comment}
+
+-Maybe begin a motivating sections using the 3D cross product and the 2D complex product and the 4D
+ quaternion product.
+
+-Maybe list a couple of hypercomplex algebras (biquaternions, ...). See "Mathematik mit 2x2 
+ Matrizen". It gives a lot of examples.
 
 
 
@@ -193,9 +237,20 @@ Some of my ideas to further classify algebras (todo: check, if these names are a
  should also satisfy the chain rule for the operations of derivation and composition. Try it with
  polynomials and power series.
 
+-Logical algebra: we have 2 binary operations and, or and one unary opration not and they satisfy
+ the rules of logic. I think especially interesting are the mutual distributive laws. Maybe we 
+ should call it "bidistributive". Aside from Boolean logic itself, set algebra with intersection,
+ union and complement also follows these rules. It basically inherits them from the definitions of
+ these set operations (which are in logical terms using and, or, not). Maybe a 3 valued logic also
+ follows these? What about probability logic? What about Z or N with min(a,b), max(a,b) and maybe
+ additionally with zero(a,b) = 0
+
+-What about the algebra of rational functions?
+
+-What about natural numbers with gcd, lcm and perhaps also mul?
 
 
-Ideas:
+More ideas:
 
 -Try defining a derivation operation on the space of NxN matrices. Maybe this operation can
  be expressed in the 5x5 case by multiplication with the fixed matrix:

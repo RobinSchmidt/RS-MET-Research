@@ -146,6 +146,26 @@ Associahedra: The Shapes of Multiplication | Infinite Series
 https://www.youtube.com/watch?v=N7wNWQ4aTLQ&list=PLa6IE8XPP_glwNKmFfl2tEL0b7E9D0WRr&index=19
 
 
+
+-Division algebra: An algebra where every element has a (unique?) multiplicative inverse.
+
+Some of my ideas to further classify algebras (todo: check, if these names are already in use):
+
+-Exponentiation algebra. Defines another binary operation a^b that satisfies the usual power law:
+ a^b * a^c = a^(b+c). Maybe some other laws should be satisfied as well but that seems to be the
+ most important one that establishes a relation between all 3 operations (addition, multiplication,
+ exponentiation).
+ -Maybe try to define exponentation for matrices by first defining exponentiation 
+  B = e^A = exp(A) via a power series, then defining the logarithm as inverse of that 
+  A = log(B) iff B = exp(A) and then use the change of basis formula C = A^B = log(A) * exp(B).
+
+-Composition algebra or functional algebra: Defines another binary operation which abstracts the
+ idea of function composition. Maybe if the algebra is also already a differential algebra, it
+ should also satisfy the chain rule for the operations of derivation and composition. Try it with
+ polynomials and power series.
+
+
+
 Ideas:
 
 -Try defining a derivation operation on the space of NxN matrices. Maybe this operation can
@@ -153,7 +173,7 @@ Ideas:
 
         0 1 2 3 4 5              0 1 2 3 4 5
         0 0 1 2 3 4              0 0 2 3 4 5
-   D =  0 0 0 1 2 3 ..or maybe   0 0 0 3 4 5
+   D =  0 0 0 1 2 3 ..or maybe   0 0 0 3 4 5  ?
         0 0 0 0 1 2              0 0 0 0 4 5
         0 0 0 0 0 1              0 0 0 0 0 5
 

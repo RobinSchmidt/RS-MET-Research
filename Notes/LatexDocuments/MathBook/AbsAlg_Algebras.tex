@@ -27,11 +27,18 @@ In the previous section, we have seen that we can give additional structure to v
 
 \subsubsection{Associative Algebras} 
 
+% ToDo: explain power-associativity as a weake form of associativity. (see "Zahlen" (Ebbinghaus), 
+% pg. 151). x^m x^n = x^(m+n). In general, we cannot assume x x^2 = x^2 x even in the commutative
+% case, so power associativity demands that to be satisfied
+
 \subsubsection{Alternative Algebras} 
 
 \subsubsection{Lie Algebras} 
 % https://en.wikipedia.org/wiki/Lie_algebra
 % https://en.wikipedia.org/wiki/Lie_bracket_of_vector_fields
+
+
+% https://en.wikipedia.org/wiki/Lie_group%E2%80%93Lie_algebra_correspondence
 
 %\subsubsection{Vertex Algebras} 
 
@@ -149,6 +156,8 @@ https://www.youtube.com/watch?v=N7wNWQ4aTLQ&list=PLa6IE8XPP_glwNKmFfl2tEL0b7E9D0
 
 -Division algebra: An algebra where every element has a (unique?) multiplicative inverse.
 
+-Lie algebra:
+
 Some of my ideas to further classify algebras (todo: check, if these names are already in use):
 
 -Exponentiation algebra. Defines another binary operation a^b that satisfies the usual power law:
@@ -158,6 +167,16 @@ Some of my ideas to further classify algebras (todo: check, if these names are a
  -Maybe try to define exponentation for matrices by first defining exponentiation 
   B = e^A = exp(A) via a power series, then defining the logarithm as inverse of that 
   A = log(B) iff B = exp(A) and then use the change of basis formula C = A^B = log(A) * exp(B).
+  Exponentiation should satisfy e^A e^B = e^(A+B) ..but maybe only if e^A and e^B commute. For 
+  non commuting matrices, there is a more general fomula involving commutators - the 
+  Baker-Campbell-Hausdorff formula:
+  https://en.wikipedia.org/wiki/Baker%E2%80%93Campbell%E2%80%93Hausdorff_formula
+  In general: e^A e^B = e^C with 
+  C = A + B  +  (1/2) * [A,B]  +  (1/12) * ([A,[A,B]] + [B,[B,A]]) + ...
+  where [A,B] = AB - BA is the commutator between A and B
+  Maybe we should also demand e^A e^-A = I and (e^A)^n = e^(nA) because that's what the Google 
+  AI overview says when searching for: "general rule for exponential functions when multiplication 
+  is not commutative"
 
 -Composition algebra or functional algebra: Defines another binary operation which abstracts the
  idea of function composition. Maybe if the algebra is also already a differential algebra, it

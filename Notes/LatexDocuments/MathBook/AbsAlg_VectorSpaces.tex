@@ -93,72 +93,36 @@ Further important features of linear maps that follow from this definition are: 
 % https://en.wikipedia.org/wiki/Kernel_(algebra)
 
 
-%===================================================================================================
-\subsection{Additional Structure from Products} 
-There are vector spaces that have additional operations defined on the vectors. These spaces are classified based on the properties of these additional operations. Typically, there is at least one additional binary operation between vectors, i.e. an operation that takes two vectors as input and produces another vector as output. This operation is often interpreted as "product" between the vectors although it may be any operation - remember that we are doing abstract algebra here. It could be a commutator between matrices (that happens in Lie algebras), a concatenation of loops (that happens in algebraic topology), etc. The product operation is typically bilinear. Vector spaces with such a bilinear product are called \emph{algebras over a field} or just \emph{algebras}\footnote{The term "algebra" is really overloaded a lot in mathematics. If you find that confusing then welcome to the club!}.
 
-% These vector spaces with additional structure are called \emph{algebras over a field} or just \emph{algebras}\footnote{The term "algebra" is really overloaded a lot in mathematics. If you find that confusing then welcome to the club!} when the additional structure arises from a bilinear product operation.
+\subsection{Vector Spaces with Additional Structure} 
 
-% Maybe make the subsection "Extra Structure" with subsubs
-% Products, Gradation, Derivation
+\subsubsection{Metric Vector Spaces}
 
-%an additional operation defined that serves the purpose of a product between vectors that yields another vector. Depending on the properties of that product operation, they get different names.
-
-% https://en.wikipedia.org/wiki/Algebra_over_a_field
-
-\subsubsection{Associative Algebras} 
-
-\subsubsection{Alternative Algebras} 
-
-\subsubsection{Lie Algebras} 
-% https://en.wikipedia.org/wiki/Lie_algebra
-% https://en.wikipedia.org/wiki/Lie_bracket_of_vector_fields
-
-%\subsubsection{Vertex Algebras} 
+% In a metric space, we have a distance function, also called a metric, that takes in two vectors and produces a scalar. I think, a metric space is more general than a normed space because each metric induces a norm by norm(x) = dist(x,0). Verify!
 
 
-\subsubsection{Poisson Algebras} 
-% https://en.wikipedia.org/wiki/Poisson_algebra
-% https://en.wikipedia.org/wiki/Product_rule
-% https://en.wikipedia.org/wiki/Derivation_(differential_algebra)
+\subsubsection{Normed Vector Spaces}
+
+% Each vector as a norm. That is, a function that takes a vector as input and returns a scalar.
 
 
-\subsubsection{Differential Algebras} 
-Differential algebras have a product and an additional univariate operator that we call a \emph{derivation}. That is: a derivation takes one vector as input and produces another one. Let's denote the operation as $D$ and use functional notation, i.e. $D(a)$ means: apply the operator $D$ to the vector $a$. The operator must satisfy the product rule:
-\begin{equation}
- D(a \cdot b) = a \cdot D(b) + D(a) \cdot b
-\end{equation}
-Compare this to the product rule that you know from calculus and you will notice that it is indeed the same rule. The vector space of differentiable functions with the pointwise multiplication between the functions as product and the derivative as derivation does indeed form a differential algebra. A subspace of that is the space of all polynomials. If we represent the polynomials as sequences of coefficients, we could use convolution as our product operation. The derivation operation would be to apply the rule how to differentiate polynomials: left-shifting the sequence $a_n$ by one and multiplying by the old index, i.e. informally $D(a_n) = n a_{n+1}$. If we now forget that the sequences originally were meant to represent polynomial coefficients, we have now a differential algebra on (finite) sequences of numbers without necessarily having to think about functions. It would straightforwardly generalize to infinite sequences, too - even if they don't converge as a power series, i.e. don't define a function [VERIFY!]. ...TBC...what other interesting examples are there (subalgebras don't count)? TODO: use boldface for $a,b$
+\subsubsection{Inner Product Spaces}
 
-% Sequences of numbers with convolution as multiplication. the derivation is: left-shifting by one and dividing by the old index, i.e. b_k = (a_{k+1})/(k+1). That's how polynomial multiplication and taking derivatives work. But we do not need to interpret the sequence as sequnece of polynomial coeffs
-
-% My C++ code says that the commutator in geometric algebra obeys the product rule - see enum class ProductType in Tools.cpp, line 5661
-
-% There is a univariate operation that satisfies the product rule
-% https://en.wikipedia.org/wiki/Derivation_(differential_algebra)
-
-% What about the arithmetic derivative?
-
-% I think  computer algebra systems rely on such an "algebraization" of calculus to do their computations
-
-% https://en.wikipedia.org/wiki/Gerstenhaber_algebra
-% https://en.wikipedia.org/wiki/Superalgebra
+% In an inner product space, the norm is defined via an inner product. ...tbc...
 
 
-\subsubsection{Graded Algebras} [VERIFY!]
-In a graded algebra, we are dealing with objects of different kinds that cannot be mixed up with one another in addition but can be in multiplication. As an example, consider the algebra of tensors over a vector space $V^n$. The product is, of course, the tensor product. We cannot add tensors of different ranks $m$ and $n$ but we can always multiply such tensors to get a new tensor of rank $m+n$. The rank of the tensor may also be called the \emph{grade}. Another example is the exterior algebra with the exterior product. We have scalars, vectors, bivectors, trivectors, etc. We cannot add a vector to a bivector - but we can multiply them to get a trivector ...TBC...
+%\subsubsection{Banach Spaces}
+
+% Banach spaces are complete, I think, 
+
+%\subsubsection{Sobolev Spaces}
+
+% Sort them from more general to more special
 
 
-%For example, it doesn't make sense to add a scalar to a vector but multiplication between a scalar and a vector does. 
 
-%In a graded algebr
 
-% Formally, the space we are dealignwith is expressed a a direct sum of the vector spaces for each grade
 
-% https://en.wikipedia.org/wiki/Graded_ring#Graded_algebra
-
-% https://en.wikipedia.org/wiki/Graded_ring
-% https://en.wikipedia.org/wiki/Graded_vector_space
 
 \begin{comment}
 
@@ -166,55 +130,9 @@ In a graded algebra, we are dealing with objects of different kinds that cannot 
 -maybe let Orthogonal complement and Direct sum be subsections, i.e. scrap the level "Operations"
 -Implementation could also be a subsection
 -Moduln/modules: like a vector space but made from an underlying ring rather than a field
-
--Matrix Lie groups are (?):
- -Vector space under matrix addition (just like more general sets of matrices)
- -Group under matrix multiplication (that's the special property?)
- 
--NxN-matrices together with scalars form a vector space under matrix-addition (as the
- vector-addition operation). Can we use other matrix operations to form such a vector
- space? Multiplication? Commutator? -> figure out!
- I think, for the distributive law to hold: a * (B * C) = a*B * a*C for scalar a and matrices B,C, 
- we must have a^2 = a so the set of scalars can contain only elements that square to themselves? In
- Z_6, we have 0,1,3 as such elements - but Z_6 is not a field...hmm...but perhaps Z_2 could work.
-	
-A gentle description of a vertex algebra.	
-https://www.youtube.com/watch?v=7j4YVIFmAXw	
--Associative algebra: 
- -A vector space with a (bilinear, associative) product
- -Examples: 
-  -NxN matrices (with matrix multiplication), 
-  -polynomials (with polynomial multiplication)
-  -multivariate polynomials with infinitely many variables
- -It's kinda like a ring with some extra structure.
--Lie algebra:
- -The product is usually written as a "Lie bracket": [x,y]
- -The product not associative but it follows the Jacobi identity 
- -The product is anticommutative aka antisymmetric (verify!)
- -Examples:
-  -Take any associative algebra and define [x,y] = xy - yx, i.e. use the commutator
-...ToDo: continue watching at 9:55 - there's more stuff
+-Make a section about additional structure due to norms, metrics, inner products, etc.
 
 
-
-alternative algebra -- featuring the octonions!
-https://www.youtube.com/watch?v=ZC7YofZp-cw
--An alternative algebra also starts with a vector space with a product
--The product satisfies (aa)b = a(ab)  and  (ab)b = a(bb). Note that these rules would follow
- immediately from associativity (ab)c = a(bc), if we would have associativity (which we don't). So, the "alternative" rule is a weaker rule than associativity.
--The "associator" is an operation defined as [a,b,c] = a(bc) - (ab)c. Thisn operation is an alternating multilinear form if we have an alternting(alternative?) algebra
-...ToDo: continue watching at 5:00
-
-
-The Multiplication Multiverse | Infinite Series
-https://www.youtube.com/watch?v=H4I2C3Ts7_w
--Lie-Algebra: Product is anti-commutative and satisfies the Jacobi identity
--Other possible identities: Poisson identity, Super-commutativity
- ...Poisson Algebra, Gerstenhabe algebra
--Topology gives a way to "multiply" loops - the multiplication is just concatenation
-
-Associahedra: The Shapes of Multiplication | Infinite Series
-https://www.youtube.com/watch?v=N7wNWQ4aTLQ&list=PLa6IE8XPP_glwNKmFfl2tEL0b7E9D0WRr&index=19
 
 Was sind Vektorräume?
 https://www.youtube.com/watch?v=DhW-Qef7mhQ

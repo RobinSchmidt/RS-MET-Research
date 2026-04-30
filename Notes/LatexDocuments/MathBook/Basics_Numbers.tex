@@ -24,6 +24,13 @@ We could write down some laws for subtraction and division, too. However, it tur
 
 % Actually, I think it may make sense to think about subtraction and division as being operations in their own right is some situations. For example, when we only have the natural numbers to work with, such that there are no negative numbers available, we may think of subtraction as a (partial) function from NxN to N. Similar for division in the integers (or naturals) when we do not yeat have the rational numbers available. There's also this integer division with remainder operation which can also be seen as operation in it own right (or as pair of 2 complementary operations - div and mod - or a sa single "divmod" operation f: NxN -> NxN. In practice, it's often more efficient to compute the quotient and remainder in one go - but that's an optimization consideration that has no mathematical significance, I think)
 
+% TODO: Maybe visualize the commutativity of multiplication using rows and colums of dots. The total number of dots is the number of rows times the number of columns and it is visually clear that a rotation does not change the total number of dots. Maybe use a 4x3 and 3x4 grid
+
+% To make clear that this is not so self evident, use a different visualization that is in a sense more representative for the intention of multiplication: use 3 groups of 4 dots like :: :: :: vs 4 groups of 3 dots like :. :. :. :. From that viusulization, it's not immediately obvious anymore that the total count must be the same because humans cannot subitize 12 dots. We can subitize the 3 or 4 groups and the 3 or 4 dots separately and mutliply in our heads - but for that we already assume the commutativity, i.e. we use it rather than show it.
+
+% https://en.wikipedia.org/wiki/Subitizing
+
+
 \subsubsection{Divisibility}
 A natural number $p$ is said to be divisible by some other natural number $d$, if there exists a natural number $q$, such that $p = q \cdot d$. In this case, we have $q = p/d$ and we call $p$ the product, $q$ the quotient and $d$ the divisor. In number theory, we express the fact that $p$ is divisible by $d$ by the notation $d | p$ which we read as "d divides p". For example, $15$ is divisible by $3$, because there exists a natural number, namely $5$, such that $15 = 5 \cdot 3$. Every number is divisible by itself and by one. TODO: introduce division with remainder: p = q*d + r, introduce symbols for division /, (maybe) introduce gcd and lcm (in an optional section - or maybe save that for later in the number theory section)
 

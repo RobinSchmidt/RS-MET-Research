@@ -5,8 +5,11 @@ In the previous section, we have seen that we can give additional structure to v
 
 % TODO: Explain requirements on the product (bilinear, etc.)
 
+% https://en.wikipedia.org/wiki/Algebra_over_a_field
 
-%These special vector spaces are important enough
+% These special vector spaces are important enough
+
+% Maybe
 
 
 %===================================================================================================
@@ -31,24 +34,44 @@ In the previous section, we have seen that we can give additional structure to v
 %\subsection{Motivating Examples}
 
 \subsection{Some Algebras over $\mathbb{R}$}
+Abstraction is best understood when we first see a bunch of concrete examples to motivate ourselves to have a bunch of different structures that have enough in common to make certain abstractions worthwhile. So will now look at a couple of motivating examples of algebras over the real numbers $\mathbb{R}$, which we also call $\mathbb{R}$-algebras. (verify!)
+
 
 \subsubsection{The Complex Numbers}
+We are already used to the idea to think of complex numbers as points in the real $2D$ plane, i.e. to envision $\mathbb{C}$ as the vector space $\mathbb{R}^2$ with some additional structure. This "additional structure" is brought to us via definition of the product between two complex numbers. This is the new operation that was totally unheard of in the more frugal world of plain $\mathbb{R}^2$. We cannot (yet) multiply $2D$ vectors, let alone divide them or even do more crazy stuff like raising one to the power of another. All of these things and more will become possible thanks to a simple definition ...TBC...
 
 \subsubsection{The Hyperbolic Numbers}
+The complex product is not the only possible way to define a product between two vectors of $\mathbb{R}^2$. Another possibility is ...TBC...ToDo: introduce $j$ with $j^2 = 1, j \neq 1$, define hyperbolic numbers as $a + b j$, multiply out to obtain the formulas for the 2 parts of the number
 
 \subsubsection{The Dual Numbers}
-
+There is yet a third way to define a product between two vectors of $\mathbb{R}^2$. ...TBC...ToDo: introduce $\varepsilon$ with $\varepsilon^2 = 0, \varepsilon \neq 0$, define dual numbers as $a + b \varepsilon$, multiply out to obtain the formulas for the 2 parts of the number
 
 %\subsubsection{Vectors in $3D$ and the Cross Product}
 %\subsubsection{Vector Algebra in $3D$}
-\subsubsection{Vectors in $3D$}
-ToDo: Introduce the cross product, explain its properties (anticommutative, non-associative, ...)
+\subsubsection{Vectors in $\mathbb{R}^3$}
+ToDo: Introduce the cross product, explain its properties (anticommutative, non-associative, ...), explain why this makes this algebra a bit awkward to work with, hint at the wedge product as solution, explain that a cross-product with certain desired properties (list them) can exist only in 3 and 7 dimensions
 
 % Works only in 3D, Maybe we can call it 3D vector algebra
 
+% why there is no four dimensional cross product.
+% https://www.youtube.com/watch?v=FPoo7rm0OGI
+
+\subsubsection{Matrices in $\mathbb{R}^{n \times n}$}
+ToDo: Remind the reader that $n \times n$ matrices over $\mathbb{R}$ already constitute a bona fide vector space and observe that we also already have matrix multiplication defined and when both matrices are of the same quadratic $n \times n$ shape, then so will be their product, such that the space is closed under this product. This product satisfies the other requirements as well (bilinearity, etc.), so we have an algebra. ....
+
+% TODO: List a couple of relevant sub-algebras: rotations (orthogonal (or unitary) matrices), symmetric (or Hermitian) matrices -> I think, the product is then commutative, maybe reflections or permutations could also be interesting? Maybe triangular matrices, diagonal matrices (would resmble vectors with a component-wise product).
+
+% TODO: Maybe also build algebras with other matrix products like component-wise, Hadamard, ...
+
+\subsubsection{Tensors in $\mathbb{R}^n$}
+ToDo: Introduce tensors as generalization of scalars, vectors and matrices, introduce the tensor product, explain how the tensor product produces objects of different rank such that the tensor algebra is a graded algebra (verify), ...
+
+% Are grade and rank synonymous?
 
 \subsubsection{The Quaternions}
-ToDo: Introduce quaternions as a 4D division algebra over $\mathbb{R}$. Define the quaternion product, give formulas for inversion, norm, etc. list important identities, give a bit of the historic backstory of how Hamilton discovered them, explain various representations and their pros and cons, ...
+ToDo: Introduce quaternions as a 4D division algebra over $\mathbb{R}$. Define the quaternion product, give formulas for inversion, norm, etc. list important identities, give a bit of the historic backstory of how Hamilton discovered them, explain various representations and their pros and cons, 
+
+
 
 
 \subsubsection{The Wedge Product}
@@ -59,15 +82,65 @@ ToDo: Introduce quaternions as a 4D division algebra over $\mathbb{R}$. Define t
 
 
 \subsection{Classification of Algebras}
+Okay - we have now seen a big enough zoo of different algebras to be ready for some abstractions. We can classify different types of algebras by abstractly requiring the product to satisfy certain additional properties and give these types special names.
+
+% TODO: explain how in certain algebras scalars can be embedded into the set of vectors such that we do not necessarily need them as separate data type anymore ... for matrices, we just form the diagonal matrix with the scalar in the diagonal, for complex numbers, we just keep the imaginary part zero. But I think, this is not possible with all algebras. For example, in tensor algebra, we still need them. Maybe also in 3D vector algebra. I'm not sure if there is already a name for it. If not maybe mention it as another possible classification - "scalar embeddable algebras" or something
+
+
+\subsubsection{Commutative Algebras}
+Very unsurprisingly, an algebra is called commutative when for all elements $a,b$ of the underlying set of vectors the product $ab$ is equal to the product $ba$. ...TBC...
+
+% TODO: Introduce the commutator  [a,b] = ab - ba  as a measure for the (non) commutativity of a,b
+
+% TODO: Give examples of commutative algebras: numbers (N,Z,Q,R,C), polynomials, functions, symmetric and Hermite matrices (verify!), mention that the "ideal" is a central concept in the subfield of "commutative algebra" - yeah - first mention that this is actually a whole subfield formerly known as "ideal theory"
+
+% Maybe make a section about non-commutative algebras and give some examples for some other rules (like anti-commutativity) that could hold instead. Maybe this is also the right context to introduce the commutator
+
+
+\subsubsection{Division Algebras}
+A division algebra is an algebra in which we can always divide by an element $a$ unless $a = 0$. ...TBC...
+
+%A division algebra is an algebra in which each element $a$ has a multiplicative inverse. ...TBC...
+% Nope! That may be wrong! We may have to distinguish between left and right division whne the algebra is non-commutative. I think multiplicative inverses need onyl exist in commutative division algebras (verify!)
+
+% what about zero divisors?
+
+% https://en.wikipedia.org/wiki/Division_algebra
+% -Associative division algebras have no nonzero zero divisors
 
 
 \subsubsection{Associative Algebras}
+A associative algebra is an algebra in which the associative rule holds for the multiplication. ...TBC...
+% Maybe mention that the associative rules is supposed to hold for addition anyway.
 
-% ToDo: explain power-associativity as a weake form of associativity. (see "Zahlen" (Ebbinghaus), 
+
+
+
+
+
+
+
+\subsubsection{Non-Associative Algebras}
+% https://en.wikipedia.org/wiki/Non-associative_algebra
+Certain types of non associative algebras satisfy weaker forms of associativity and some of these are noteworthy enough to have names. We'll look at some of them
+
+% Maybe there could also be alternative rules to associativity that are not necessarily weaker forms of it...maybe something like anti-associativity analoguous to anti-commutativity? Is that a thing? Could we define an "associator" analoguous to the commutator? Like [a,b,c] = (ab)c - a(bc)
+
+\paragraph{Alternative Algebras} 
+%https://en.wikipedia.org/wiki/Alternative_algebra
+
+\paragraph{Flexible Algebras} 
+% https://en.wikipedia.org/wiki/Flexible_algebra
+
+\paragraph{Power Associative Algebras}
+% https://en.wikipedia.org/wiki/Power_associativity
+
+% ToDo: explain power-associativity as a weaker form of associativity. (see "Zahlen" (Ebbinghaus), 
 % pg. 151). x^m x^n = x^(m+n). In general, we cannot assume x x^2 = x^2 x even in the commutative
 % case, so power associativity demands that to be satisfied
 
-\subsubsection{Alternative Algebras} 
+
+
 
 \subsubsection{Lie Algebras} 
 % https://en.wikipedia.org/wiki/Lie_algebra
@@ -86,7 +159,7 @@ ToDo: Introduce quaternions as a 4D division algebra over $\mathbb{R}$. Define t
 
 
 \subsubsection{Differential Algebras} 
-Differential algebras have a product and an additional univariate operator that we call a \emph{derivation}. That is: a derivation takes one vector as input and produces another one. Let's denote the operation as $D$ and use functional notation, i.e. $D(a)$ means: apply the operator $D$ to the vector $a$. The operator must satisfy the product rule:
+Differential algebras have a product like all algebras do and an additional univariate operator that we call a \emph{derivation}. That is: a derivation takes one vector as input and produces another one. Let's denote the operation as $D$ and use functional notation, i.e. $D(a)$ means: apply the operator $D$ to the vector $a$. The operator must satisfy the product rule:
 \begin{equation}
 % D(a \cdot b) = a \cdot D(b) + D(a) \cdot b
  D(a \times b) = a \times D(b) + D(a) \times b
@@ -115,8 +188,6 @@ Compare this to the product rule that you know from calculus and you will notice
 
 
 
-
-
 \subsubsection{Graded Algebras} [VERIFY!]
 In a graded algebra, we are dealing with objects of different kinds that cannot be mixed up with one another in addition but can be in multiplication. As an example, consider the algebra of tensors over a vector space $V^n$. The product is, of course, the tensor product. We cannot add tensors of different ranks $m$ and $n$ but we can always multiply such tensors to get a new tensor of rank $m+n$. The rank of the tensor may also be called the \emph{grade}. Another example is the exterior algebra with the exterior product. We have scalars, vectors, bivectors, trivectors, etc. We cannot\footnote{Not \emph{yet} in exterior algebra (aka Grassmann algebra), that is. But that problem is satisfyingly resolved in geometric algebra (aka Clifford algebra).} add a vector to a bivector - but we can multiply them to get a trivector ...TBC...
 
@@ -136,6 +207,19 @@ In a graded algebra, we are dealing with objects of different kinds that cannot 
 % https://de.wikipedia.org/wiki/Gra%C3%9Fmann-Algebra
 
 % https://en.wikipedia.org/wiki/Graded_structure
+
+
+\subsection{Existence of Algebras}
+Having all of these possible classifications in place, we could now proceed to ask: Which types of algebras are possible. Could there be a $3D$ division algebra, for example? And that question is far from being contrived. A $3D$ division algebra was actually precisely the thing that Hamilton so desperately wanted to find. Instead, what he found were the quaternions which are $4D$. And there's a deeper reason for that ...TBC...
+
+% We now know that a $3D$ divison algebra is provably impossible (verify - maybe it's only impossible when we also require some other constraints?) ...TBC...
+
+% ToDo: Cite results for which types of algebras are possible and which are not. For example, there are only 3 division algebras over $\mathbb{R}$, namely $\mathbb{R}$, $\mathbb{C}$, $\mathbb{H}$. Explain how this knowledge could save one a lot of futile work (use Hamilton's search for a $3D$ division algebra as example).
+
+
+
+% Why are there no 3 dimensional "complex numbers"?
+% https://www.youtube.com/watch?v=L-3AbJM-o0g
 
 
 
@@ -268,6 +352,36 @@ More ideas:
   Doing calculus with a matrix!
   https://www.youtube.com/watch?v=2iK3Hw2o_uo
 
+
+
+why some number systems can’t divide
+https://www.youtube.com/watch?v=ekHoYfT3rFI
+-About extension of the integers where we can still do division with remainder, so it's
+ not about fields or division algebras
+-Division with remainder is defined as follows: for all a,b, in Z there are q,r in Z such that:  
+ a = b*q + r  with  0 <= |r| < |b|. Here q is called quotient and r remainder.
+-Idea: Maybe in the integers, we can also work with negative remainders to make their absolute 
+ values even smaller. Normally, we would say that 23/5 = 4r3 but how about using 5r-2 instead? In
+ general, we could do floor division as usual to obtain q, compute the differences d1 = a - b*q
+ and d2 = a - b*(q+1) and whatever difference has the smaller absolute value decides if we report
+ q itself or q+1 as result (or quotient) with the corresponding remainder.
+-Could we define such a division-with-remainder also for matrices? Like A = B*Q + R where A,B,Q,R 
+ are all matrices? For regular (i.e. invertible) matrices A, the quotient Q would be the inverse of
+ A and the remainder R would be zero but for singular matrices, we could perhaps find some
+ pseudo-inverse that somehow minimizes some matrix-norm of the remainder matrix? Maybe try the
+ Frobenius norm. Maybe also try just using the Moore-Penrose pseudo inverse for Q. Does this lead
+ to something interesting and useful?
+-Maybe we could also put additional constraints on what type of matrices are allowed, like for
+ example, symmetric, pos. definite, orthogonal, etc. and find a Q that minimized the norm of R
+ subject to these constraints?
+
+
+The unreasonable effectiveness of linear algebra.
+https://www.youtube.com/watch?v=Rqv3cXt8ZNU
+-Gives an example of a 4D function space with a derivative operator
+
+Why can't you multiply vectors?
+https://www.youtube.com/watch?v=htYh-Tq7ZBI
 
 
 \end{comment}

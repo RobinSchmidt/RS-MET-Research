@@ -3,9 +3,12 @@ In the previous section, we have seen that we can give additional structure to v
 
 % Maybe point out the parallel between "an algebra" and "(abstract) algebra" as a field and "a topology" and "topology" as a field.
 
-% TODO: Explain requirements on the product (bilinear, etc.)
+% TODO: Explain requirements on the product (bilinear, left- and right-distributive, etc.). I think, bilinarity means (\alpha \vec{v}) \vec{w}
+
+% TODO: Compare the definition of the term algebra with the definition of a ring. Does it make sense to say that algebras are special rings where the underlying set happens to be a vector space rather than just any set? What role do the scalars play here? Couldn't we just somehow embedd them in the set of vectors? In the case of matrices, the scalars can be represented by diagonal matrices with the scalar on the diagonal. In the case of complex numbers, we just leave the imaginary part at zero. Is such an embedding always possible? Try to find counterexamples. Maybe R^3 with the cross-product? Maybe graded algebras like tensor algebra or exterior algebra?
 
 % https://en.wikipedia.org/wiki/Algebra_over_a_field
+
 
 % These special vector spaces are important enough
 
@@ -38,7 +41,32 @@ Abstraction is best understood when we first see a bunch of concrete examples to
 
 
 \subsubsection{The Complex Numbers}
-We are already used to the idea to think of complex numbers as points in the real $2D$ plane, i.e. to envision $\mathbb{C}$ as the vector space $\mathbb{R}^2$ with some additional structure. This "additional structure" is brought to us via definition of the product between two complex numbers. This is the new operation that was totally unheard of in the more frugal world of plain $\mathbb{R}^2$. We cannot (yet) multiply $2D$ vectors, let alone divide them or even do more crazy stuff like raising one to the power of another. All of these things and more will become possible thanks to a simple definition ...TBC...
+We are already used to the idea to think of complex numbers as points in the real $2D$ plane, i.e. to envision $\mathbb{C}$ as the vector space $\mathbb{R}^2$ with some additional structure. This "additional structure" is brought to us via definition of the product between two complex numbers. This is the new operation that was totally unheard of in the more frugal world of plain $\mathbb{R}^2$. We cannot (yet) multiply $2D$ vectors, let alone divide them or even do more crazy stuff like raising one to the power of another. All of these things and more will become possible thanks to a simple definition. Let's start from identifying two vectors $(a,b)$ and $(c,d)$ $\in \mathbb{R}^2$ with the complex numbers $a + \i b$  and $c + \i d$ respectively where $\i$ is defined by the property that $\i^2 = -1$. The goal is to find expressions for the real and imaginary part of their product. When we have these expressions in hand, we have a product on $\mathbb{R}^2$. Of course, we already know the result but for purposes of demonstrating the general approach, let's churn through the derivation step by step.
+
+\medskip
+\begin{tabular}{l l}
+$(a + \i b) (c + \i d)$           & Use right distributivity\\
+$a (c + \i d) + \i b (c + \i d)$  & Use left distributivity \\
+\end{tabular}
+\medskip
+
+
+% (a + i b) (c + i d)              Use right distributivity
+% a (c + i d) + i b (c + i d)      Use left distributivity
+
+% a c + a i d + i b c + i b i d    Use commutativity of multiplication
+% a c + i a d + i b c + i i b d    Use i i = i^2 = -1
+% a c + i a d + i b c - b d        Use commutativity of addition
+% a c - b d   + i a d + i b c      Use left distributivity for factoring out i
+% a c - b d   + i (a d + b c)      Extract terms with and without factor i
+% -> (a c - b d, a d + b c)
+
+
+...TBC...
+
+% Mention how we used the assumed commutativity of multiplication in step 5. This is a rule that we cannot always assume. Here, we can - but in general, we may need to be more careful about that. That will become relevant when deriving the formulas for the quaternion product.
+
+
 
 \subsubsection{The Hyperbolic Numbers}
 The complex product is not the only possible way to define a product between two vectors of $\mathbb{R}^2$. Another possibility is ...TBC...ToDo: introduce $j$ with $j^2 = 1, j \neq 1$, define hyperbolic numbers as $a + b j$, multiply out to obtain the formulas for the 2 parts of the number
@@ -56,12 +84,20 @@ ToDo: Introduce the cross product, explain its properties (anticommutative, non-
 % why there is no four dimensional cross product.
 % https://www.youtube.com/watch?v=FPoo7rm0OGI
 
+
+%\subsubsection{Vectors in $\mathbb{R}^n$}
+% With vectors in R^n, we can build an algebra using the (naive) component-wise product. It is indeed associative, distributive over addition and even commutative. The neutral element is a vector of all ones and the inverse elements are the evctors of the component-wise reciprocals. It's not a division algebra though because even one zero element in a vector makes it non-invertible and the unique neutral element of addition, i.e. the bona fide zero element of the algebra, is the vector of all zeros. Vectors containing zeros but also non-zero elements are the zero-divisors, I guess. Practical examplesof use: in programming (for example, in NumPy arrays, I think. In MatLab/Octave, it'S the .* operator)
+
+
 \subsubsection{Matrices in $\mathbb{R}^{n \times n}$}
 ToDo: Remind the reader that $n \times n$ matrices over $\mathbb{R}$ already constitute a bona fide vector space and observe that we also already have matrix multiplication defined and when both matrices are of the same quadratic $n \times n$ shape, then so will be their product, such that the space is closed under this product. This product satisfies the other requirements as well (bilinearity, etc.), so we have an algebra. ....
 
 % TODO: List a couple of relevant sub-algebras: rotations (orthogonal (or unitary) matrices), symmetric (or Hermitian) matrices -> I think, the product is then commutative, maybe reflections or permutations could also be interesting? Maybe triangular matrices, diagonal matrices (would resmble vectors with a component-wise product).
 
 % TODO: Maybe also build algebras with other matrix products like component-wise, Hadamard, ...
+
+% https://en.wikipedia.org/wiki/Hadamard_product_(matrices)
+% https://de.wikipedia.org/wiki/Hadamard-Produkt
 
 \subsubsection{Tensors in $\mathbb{R}^n$}
 ToDo: Introduce tensors as generalization of scalars, vectors and matrices, introduce the tensor product, explain how the tensor product produces objects of different rank such that the tensor algebra is a graded algebra (verify), ...
@@ -72,6 +108,8 @@ ToDo: Introduce tensors as generalization of scalars, vectors and matrices, intr
 ToDo: Introduce quaternions as a 4D division algebra over $\mathbb{R}$. Define the quaternion product, give formulas for inversion, norm, etc. list important identities, give a bit of the historic backstory of how Hamilton discovered them, explain various representations and their pros and cons, 
 
 
+% Another Imaginary Unit
+% https://www.youtube.com/watch?v=6w0Qb7rLUa0
 
 
 \subsubsection{The Wedge Product}
@@ -327,7 +365,12 @@ Some of my ideas to further classify algebras (todo: check, if these names are a
  union and complement also follows these rules. It basically inherits them from the definitions of
  these set operations (which are in logical terms using and, or, not). Maybe a 3 valued logic also
  follows these? What about probability logic? What about Z or N with min(a,b), max(a,b) and maybe
- additionally with zero(a,b) = 0
+ additionally with zero(a,b) = 0. I think, these are lattices. Why that name? Well, in abstract 
+ algebra, the names are traditionally badly chosen. A "ring" has also not really anything to do
+ with what we mean by the word in everyday language. We would expect it to be something that somehow
+ cycles back on itself in some way - maybe like a cyclic group but the actual definition of a ring 
+ has nothing to do whatsoever with such a cyclic behavior. For a lattice, I would assume something
+ like the Gaussian integers. 
 
 -What about the algebra of rational functions?
 
@@ -353,6 +396,22 @@ More ideas:
   https://www.youtube.com/watch?v=2iK3Hw2o_uo
 
 
+Questions:
+
+- When we talk about an R-algebra, does the R there refer to the set of scalars or to the vector
+  components? Do we even need to assume that the vectors hava a notion of components? There are
+  vector spaces, where "components" are not really a thing - for example function spaces. Do they
+  also count as algebras (over R)?
+
+- How does linear algebra fit into this framework? Can we talk about "the" linear algebra over R?
+  I think, generally, linear algebra as a math subfield deals with MxN matrices and the product
+  between matrices is really only a partial function. It's only defined between MxP and PxN 
+  matrices. We are not really dealing with a vector space here anymore because we cannot add
+  matrices of different shapes - unless we assume M and N to be fixed once and for all. In this 
+  case we do have a product, the matrix product, only when M=N. Although there may be other matrix
+  products like the Kronecker product that may also work on heterogeneous matrices...but we still
+  can't really add matrices of different shapes.
+
 
 why some number systems can’t divide
 https://www.youtube.com/watch?v=ekHoYfT3rFI
@@ -364,16 +423,32 @@ https://www.youtube.com/watch?v=ekHoYfT3rFI
  values even smaller. Normally, we would say that 23/5 = 4r3 but how about using 5r-2 instead? In
  general, we could do floor division as usual to obtain q, compute the differences d1 = a - b*q
  and d2 = a - b*(q+1) and whatever difference has the smaller absolute value decides if we report
- q itself or q+1 as result (or quotient) with the corresponding remainder.
+ q itself or q+1 as result (or quotient) with the corresponding remainder. I think, if b is even,
+ we could get ties and we need a rule to break them. Maybe then choose the positive remainder and
+ q itself rather than q+1 as quotient.
 -Could we define such a division-with-remainder also for matrices? Like A = B*Q + R where A,B,Q,R 
  are all matrices? For regular (i.e. invertible) matrices A, the quotient Q would be the inverse of
  A and the remainder R would be zero but for singular matrices, we could perhaps find some
- pseudo-inverse that somehow minimizes some matrix-norm of the remainder matrix? Maybe try the
- Frobenius norm. Maybe also try just using the Moore-Penrose pseudo inverse for Q. Does this lead
- to something interesting and useful?
+ pseudo-inverse that somehow minimizes some matrix-norm of the remainder matrix? Try to solve the
+ minimization problem |A - BQ| = min where |...| is some matrix norm. Maybe try the Frobenius norm
+ which is just the sum of the squares of the entries. Maybe also try just using the Moore-Penrose
+ pseudo inverse for Q. Does this lead to something interesting and useful? Could it have something 
+ to do with orthogonal projections? Maybe when A is singular, its columns are not spanning the 
+ whole space R^n but only a lower dimensional subspace of it BQ is somehow the orthogonal distance
+ between A and the subspace or something?
 -Maybe we could also put additional constraints on what type of matrices are allowed, like for
- example, symmetric, pos. definite, orthogonal, etc. and find a Q that minimized the norm of R
- subject to these constraints?
+ example, symmetric, pos. definite, orthogonal, integer, etc. and find a Q that minimizes the norm 
+ of R subject to these constraints?
+-Maybe we could also try to do this with an outer product rather than the normal matrix product.
+ Like  A = u * v^T + R   where A is an MxN matrix and u,v are M,N vectors respectively. I think,
+ we would try to express A as an outer product of two vectors, i.e. attampt a sort of tensor
+ decomposition or rank decomposition (or whatever this is called). We would try to express a rank 
+ 2 tensor as tensor product of two rank 1 tensors ...plus the remainder because in general, this is
+ not always exactly possible. If it's possible, it's actually exceptional because a full matrix has
+ many more degrees of freedom than the 2 vectors, i.e. more dimensions. A 3x3 matrix has 9 entries, 
+ whereas a pair of 2 3-vectors has only 6, for example
+
+
 
 
 The unreasonable effectiveness of linear algebra.

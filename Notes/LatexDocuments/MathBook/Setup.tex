@@ -94,6 +94,7 @@
 \DeclareMathOperator{\tr}{tr}                 % trace
 \DeclareMathOperator{\geo}{geo}               % geometric multiplicity
 \DeclareMathOperator{\alg}{alg}               % algebraic multiplicity 
+% https://en.wikipedia.org/wiki/Vectorization_(mathematics)
 
 % Multivariable calculus:
 %\DeclareMathOperator{\d}{d}                  % exterior derivative
@@ -120,6 +121,12 @@
 % https://mathworld.wolfram.com/NAND.html
 
 
+%\newcommand*{\vect}[1]{\mathbf{#1}} 
+%\newcommand{\vec}[1]{\mathbf{#1}}                % Vectors
+%\newcommand{\vtr}[1]{\mathbf{#1}}                 % Vectors
+%\newcommand{\vv}[1]{\mathbf{#1}}                 % Vectors
+% \vec doesn't work because we already defined the vectorize operation on matrices
+% See: https://claude.ai/chat/b8d78e4c-55b3-4baa-89b8-911f75022e2c
 
 % This LaTeX operator definition code has bee adapted from the last answer (Dec 2, 2014 at 15:45 by dremondaris) here (A replaced by K):
 
@@ -129,6 +136,7 @@
 \newcommand{\operator}[1]{\mathop{\vphantom{\sum}\mathchoice
 {\vcenter{\hbox{\huge $#1$}}}
 {\vcenter{\hbox{\Large $#1$}}}{#1}{#1}}\displaylimits}
+% Maybe rename to \bigoperator
 
 % This uses the above code to define a big K operator for continued fractions:
 \newcommand{\opK}{\operator{\mathrm{K}}}

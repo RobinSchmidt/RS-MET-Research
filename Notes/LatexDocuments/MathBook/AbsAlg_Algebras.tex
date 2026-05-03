@@ -1,5 +1,14 @@
 \section{Algebras}
-In the previous section, we have seen that we can give additional structure to vector spaces by introducing a couple of more operations. The metric and the inner product were operations that took two vectors and produced a scalar, the norm was an operation that took one vector and produced a scalar. In this section, we will be concerned with operations that take two vectors $\mathbf{u,v}$ and produce another vector $\mathbf{w}$. This new operation is the one that we want to interpret as a product between the two vectors. Our minimal requirements for such a product operation are the following:
+In the previous section, we have seen that we can give additional structure to vector spaces by introducing a couple of more operations. The metric and the inner product were operations that took two vectors and produced a scalar, the norm was an operation that took one vector and produced a scalar. In this section, we will be concerned with operations that take two vectors $\mathbf{u,v}$ and produce another vector $\mathbf{w}$. This new operation is the one that we want to interpret as a product between the two vectors. We'll denote the product between two vectors $\mathbf{u,v}$ generically by $\mathbf{u \cdot v}$ or sometimes also by $\mathbf{u v}$. In certain special contexts, other symbols may be used such as $\mathbf{u \times v}$. In abstract algebra, a vector space that is equipped with such a product is called an \emph{algebra}. 
+
+% Point out that we should not confuse it with the dot product. Maybe do not use the dot.
+
+% Maybe point out the parallel between "an algebra" and "(abstract) algebra" as a field and "a topology" and "topology" as a field.
+
+
+%===================================================================================================
+\subsection{Axioms} 
+Our minimal requirements for such a product operation are encapsulated in the following axioms:
 
 \medskip
 \begin{tabular}{l l}
@@ -9,10 +18,9 @@ Left distributivity:
 \medskip
 
 
+% Mention that in the last two lines we are dealing with two kinds of multiplication: the scalar multiplications and the vector multiplication.
 
-%If this new binary operation on vectors happens to satisfy our usual distributive laws of multiplication over addition (recall that vector addition is already well defined), then we can interpret this new operation as a multiplication or product. In abstract algebra, a vector space that is equipped with such a product is called an \emph{algebra}.
-
-% Maybe point out the parallel between "an algebra" and "(abstract) algebra" as a field and "a topology" and "topology" as a field.
+%If this new binary operation on vectors happens to satisfy our usual distributive laws of multiplication over addition (recall that vector addition is already well defined), then we can interpret this new operation as a multiplication or product. 
 
 % TODO: Explain requirements on the product (bilinear, left- and right-distributive, etc.). I think, bilinarity means (\alpha \vec{v}) \vec{w}
 

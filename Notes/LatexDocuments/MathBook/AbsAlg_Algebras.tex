@@ -41,19 +41,25 @@ Abstraction is best understood when we first see a bunch of concrete examples to
 
 
 \subsubsection{The Complex Numbers}
-We are already used to the idea to think of complex numbers as points in the real $2D$ plane, i.e. to envision $\mathbb{C}$ as the vector space $\mathbb{R}^2$ with some additional structure. This "additional structure" is brought to us via definition of the product between two complex numbers. This is the new operation that was totally unheard of in the more frugal world of plain $\mathbb{R}^2$. We cannot (yet) multiply $2D$ vectors, let alone divide them or even do more crazy stuff like raising one to the power of another. All of these things and more will become possible thanks to a simple definition. Let's start from identifying two vectors $(a,b)$ and $(c,d)$ $\in \mathbb{R}^2$ with the complex numbers $a + \i b$  and $c + \i d$ respectively where $\i$ is defined by the property that $\i^2 = -1$. The goal is to find expressions for the real and imaginary part of their product. When we have these expressions in hand, we have a product on $\mathbb{R}^2$. Of course, we already know the result but for purposes of demonstrating the general approach, let's churn through the derivation step by step.
+We are already used to the idea to think of complex numbers as points in the real $2D$ plane, i.e. to envision $\mathbb{C}$ as the vector space $\mathbb{R}^2$ with some additional structure. This "additional structure" is brought to us via definition of the product between two complex numbers. This is the new operation that was totally unheard of in the more frugal world of plain $\mathbb{R}^2$. We cannot (yet) multiply $2D$ vectors, let alone divide them or even do more crazy stuff like raising one to the power of another. All of these things and more will become possible thanks to a simple definition. Let's start from identifying two vectors $(a,b)$ and $(c,d)$ $\in \mathbb{R}^2$ with the complex numbers $a + \i b$  and $c + \i d$ respectively where $\i$ is defined by the property that $\i^2 = -1$. The goal is to find expressions for the real and imaginary part of their product. When we have these expressions in hand, we have a product on $\mathbb{R}^2$. Of course, we already know the result but for purposes of demonstrating the general approach, let's churn through the derivation step by step while making at every step explicit, which law we use.
 
 \medskip
 \begin{tabular}{l l}
-$(a + \i b) (c + \i d)$           & Use right distributivity\\
-$a (c + \i d) + \i b (c + \i d)$  & Use left distributivity \\
+$(a,b) (c,d)$                        & Product written with vectors. Rewrite as complex product. \\
+$(a + \i b) (c + \i d)$              & Use right distributivity\\
+$a (c + \i d) + \i b (c + \i d)$     & Use left distributivity \\
+$a c + a \i d + \i b c + \i b \i d$  & Use commutativity of multiplication  \\
+$a c + \i a d + \i b c + \i \i b d$  & Use $\i \i = \i^2 = -1$  \\
+$a c + \i a d + \i b c - b d$        & Use commutativity of addition  \\
+$a c - b d   + \i a d + \i b c$      & Use left distributivity for factoring out i  \\
+$a c - b d   + \i (a d + b c)$       & Extract terms with and without factor i  \\
+$(a c - b d, a d + b c)$             & Result written as vector  \\
 \end{tabular}
 \medskip
 
 
 % (a + i b) (c + i d)              Use right distributivity
 % a (c + i d) + i b (c + i d)      Use left distributivity
-
 % a c + a i d + i b c + i b i d    Use commutativity of multiplication
 % a c + i a d + i b c + i i b d    Use i i = i^2 = -1
 % a c + i a d + i b c - b d        Use commutativity of addition
@@ -64,7 +70,7 @@ $a (c + \i d) + \i b (c + \i d)$  & Use left distributivity \\
 
 ...TBC...
 
-% Mention how we used the assumed commutativity of multiplication in step 5. This is a rule that we cannot always assume. Here, we can - but in general, we may need to be more careful about that. That will become relevant when deriving the formulas for the quaternion product.
+% Mention how we used the assumed commutativity of multiplication in step 5. This is a rule that we cannot always assume. Here, we can - but in general, we may need to be more careful about that. That will become relevant when deriving the formulas for the quaternion product. Maybe also mention that in the "Use commutativity of addition" step, there was also a subtraction. Remind the reader that the $- bd$ is just a shorthand for $+ (-(bd))$
 
 
 

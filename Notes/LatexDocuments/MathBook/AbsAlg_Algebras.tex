@@ -20,6 +20,7 @@ Left distributivity:
 & $\mathbf{u} \cdot (\mathbf{v + w}) = \mathbf{u \cdot v + u \cdot w}$  \\	
 \end{tabular}
 \medskip
+...TBC...
 
 
 % Mention that in the last two lines we are dealing with two kinds of multiplication: the scalar multiplications and the vector multiplication.
@@ -29,6 +30,8 @@ Left distributivity:
 % TODO: Explain requirements on the product (bilinear, left- and right-distributive, etc.). I think, bilinarity means (\alpha \vec{v}) \vec{w}
 
 % TODO: Compare the definition of the term algebra with the definition of a ring. Does it make sense to say that algebras are special rings where the underlying set happens to be a vector space rather than just any set? What role do the scalars play here? Couldn't we just somehow embedd them in the set of vectors? In the case of matrices, the scalars can be represented by diagonal matrices with the scalar on the diagonal. In the case of complex numbers, we just leave the imaginary part at zero. Is such an embedding always possible? Try to find counterexamples. Maybe R^3 with the cross-product? Maybe graded algebras like tensor algebra or exterior algebra?
+% -> rings are always associative
+% -> in rings, the underlying set is not necessarily a vector space. It can be any group (the inherited group operation becomes the ring addition)
 
 % https://en.wikipedia.org/wiki/Algebra_over_a_field
 
@@ -146,13 +149,21 @@ Okay - we have now seen a big enough zoo of different algebras to be ready for s
 
 
 \subsubsection{Commutative Algebras}
-Very unsurprisingly, an algebra is called commutative when for all elements $a,b$ of the underlying set of vectors the product $ab$ is equal to the product $ba$. ...TBC...
+Very unsurprisingly, an algebra is called commutative when for all elements $u,v$ of the underlying set of vectors the product $uv$ is equal to the product $vu$. ...TBC...
 
 % TODO: Introduce the commutator  [a,b] = ab - ba  as a measure for the (non) commutativity of a,b
 
 % TODO: Give examples of commutative algebras: numbers (N,Z,Q,R,C), polynomials, functions, symmetric and Hermite matrices (verify!), mention that the "ideal" is a central concept in the subfield of "commutative algebra" - yeah - first mention that this is actually a whole subfield formerly known as "ideal theory"
 
 % Maybe make a section about non-commutative algebras and give some examples for some other rules (like anti-commutativity) that could hold instead. Maybe this is also the right context to introduce the commutator
+
+
+\subsubsection{Unitary Algebras}
+A unitary algebra is an algebra where a multiplicative identity element $e$ exists. This element $e$ satisfies:
+\begin{equation}
+ e \cdot v = v, \quad v \cdot e = v \qquad \forall v \in V
+\end{equation}
+A noteworthy feature of unitary algebras is that the set of scalars (which is inherited from the underlying vector space) can be embedded into the set of vectors by mapping any scalar $\alpha$ to the vector $\alpha e$ where $e$ is the multiplicative identity element. Thus, in unitary algebras, the scalars become superfluous because their effect on vectors (of scaling them) can also be achieved by certain special elements of the vector space itself via the additional multiplication operation that the algebra provides. The additional scalar multiplication that is inherited from the vector space becomes redundant. For example, in the algebra of complex numbers, the scalars are embedded as those complex numbers whose imaginary part is zero. The real numbers are embedded in the complex numbers.  In the algebra of $n \times n$ matrices, the scalars are embedded as the diagonal matrices where all diagonal elements are equal to the given scalar. But there are also algebras where the scalars cannot be embedded into the set of vectors. Take $\mathbb{R}^3$ with the cross product as counterexample. This algebra is non-unitary because not vector $e$ exists such that the cross product $e \times v$ with it leaves an arbitrary other vector $v$ as is. ...ToDo: Explain that this is the simplest nontrivial Lie algebra (Claude AI said this).
 
 
 \subsubsection{Division Algebras}
@@ -168,7 +179,7 @@ A division algebra is an algebra in which we can always divide by an element $a$
 
 
 \subsubsection{Associative Algebras}
-A associative algebra is an algebra in which the associative rule holds for the multiplication. ...TBC...
+A associative algebra is an algebra in which the associative law holds for the multiplication. ...TBC...
 % Maybe mention that the associative rules is supposed to hold for addition anyway.
 
 
@@ -218,10 +229,10 @@ Certain types of non associative algebras satisfy weaker forms of associativity 
 
 
 \subsubsection{Differential Algebras} 
-Differential algebras have a product like all algebras do and an additional univariate operator that we call a \emph{derivation}. That is: a derivation takes one vector as input and produces another one. Let's denote the operation as $D$ and use functional notation, i.e. $D(a)$ means: apply the operator $D$ to the vector $a$. The operator must satisfy the product rule:
+Differential algebras have additional univariate operator that we call a \emph{derivation}. That is: a derivation takes one vector as input and produces another one. Let's denote the operation as $D$ and use functional notation, i.e. $D(a)$ means: apply the operator $D$ to the vector $a$. The operator must satisfy the product rule:
 \begin{equation}
-% D(a \cdot b) = a \cdot D(b) + D(a) \cdot b
- D(a \times b) = a \times D(b) + D(a) \times b
+D(a \cdot b) = a \cdot D(b) + D(a) \cdot b
+%D(a \times b) = a \times D(b) + D(a) \times b
 \end{equation}
 Compare this to the product rule that you know from calculus and you will notice that it is indeed the same rule. The vector space of differentiable functions with the pointwise multiplication between the functions as product and the derivative as derivation does indeed form a differential algebra. A subspace of that is the space of all polynomials. If we represent the polynomials as sequences of coefficients, we could use convolution as our product operation. The derivation operation would be to apply the rule how to differentiate polynomials: left-shifting the sequence $a_n$ by one and multiplying by the old index, i.e. informally $D(a_n) = n a_{n+1}$. If we now forget that the sequences originally were meant to represent polynomial coefficients, we have now a differential algebra on (finite) sequences of numbers without necessarily having to think about functions. It would straightforwardly generalize to infinite sequences, too - even if they don't converge as a power series, i.e. don't define a function [VERIFY!]. ...TBC...what other interesting examples are there (subalgebras don't count)? 
 
@@ -433,6 +444,7 @@ Questions:
   products like the Kronecker product that may also work on heterogeneous matrices...but we still
   can't really add matrices of different shapes.
 
+- How do algebras compare to rings? 1: rings are always associative, algebras not necessarily, ...
 
 why some number systems can’t divide
 https://www.youtube.com/watch?v=ekHoYfT3rFI
@@ -479,5 +491,9 @@ https://www.youtube.com/watch?v=Rqv3cXt8ZNU
 Why can't you multiply vectors?
 https://www.youtube.com/watch?v=htYh-Tq7ZBI
 
+
+https://de.wikipedia.org/wiki/Vektorraum
+https://de.wikipedia.org/wiki/Heterogene_Algebra
+-includes vectros spaces
 
 \end{comment}

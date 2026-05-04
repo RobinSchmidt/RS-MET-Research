@@ -1,5 +1,5 @@
 \section{Algebras}
-In the previous section, we have seen that we can give additional structure to vector spaces by introducing a couple of more operations. The metric and the inner product were operations that took two vectors and produced a scalar, the norm was an operation that took one vector and produced a scalar. In this section, we will be concerned with operations that take two vectors $u,v$ and produce another vector $w$. This new operation is the one that we want to interpret as a product between the two vectors. We'll denote the product between two vectors $u,v$ generically by $u \cdot w$ or sometimes shorter by $u v$. In certain special contexts, other symbols may be used such as $u \times v$. In abstract algebra, a vector space that is equipped with such a product is called an \emph{algebra}. In the context of discussing algebras, I will not use the boldface notation for vectors anymore for reasons that will be explained soon. ...TBC...
+In the previous section, we have seen that we can give additional structure to vector spaces by introducing a couple of more operations. The metric and the inner product were operations that took two vectors and produced a scalar, the norm was an operation that took one vector and produced a scalar. In this section, we will be concerned with operations that take two vectors $u,v$ and produce another vector $w$. This new operation is the one that we want to interpret as a \emph{product} between the two vectors. We'll denote the product between two vectors $u,v$ generically by $u \cdot w$ or sometimes shorter by $u v$. In certain special contexts, other symbols may be used such as $u \times v$. In abstract algebra, a vector space that is equipped with such a product is called an \emph{algebra}. In the context of discussing algebras, I will not use the boldface notation for vectors anymore for reasons that will be explained soon. ...TBC...
 
 
 
@@ -23,7 +23,7 @@ Right linearity:      & $u \cdot (\alpha v) = \alpha (u \cdot v)$
 \end{tabular}
 \medskip
 
-The two linearity requirements can be (and often are) stated as the single requirement of \emph{bilinearity}. Just like in rings, we need two distributive laws because we do not in general require our product to be commutative. Note also that there is no general requirement of associativity and we will indeed encounter some non-associative algebras later on.
+The two linearity requirements can be (and often are) stated as the single requirement of \emph{bilinearity} which generally means that a binary operation must be linear in both of its arguments. That means that scaling one of the inputs results in an equal scaling of the output. Just like in rings, we need two distributive laws because we do not in general require our product to be commutative. It's also noteworthy\footnote{It is so noteworthy because in other contexts, associativity is usually the most basic one of our requirements.} that there is no general requirement of associativity and we will indeed encounter some non-associative algebras later on.
 
 ...TBC...
 
@@ -50,6 +50,11 @@ The two linearity requirements can be (and often are) stated as the single requi
 
 % TODO: Explain why the boldface notations for vectors has beed dropped. 
 
+% Vectors: u,v,w or x,y,z, sometimes v,w (complex) or q,p (quaternions)
+% Scalars: \alpha, \beta, \gamma
+% Vector components: a,b,c,d
+% Multiplicatve indentity vector / identity element: e or 1 or I
+% Zero vector: 0 ...but how do we distinguish it from the zero scalar?
 
 
 % The reasons are:
@@ -90,14 +95,14 @@ The two linearity requirements can be (and often are) stated as the single requi
 % https://en.wikipedia.org/wiki/Algebra_over_a_field
 
 
-%\subsection{Motivating Examples}
-
-\subsection{Some Algebras over $\mathbb{R}$}
-Abstraction is best understood when we first see a bunch of concrete examples to motivate ourselves to have a bunch of different structures that have enough in common to make certain abstractions worthwhile. So will now look at a couple of motivating examples of algebras over the real numbers $\mathbb{R}$, which we also call $\mathbb{R}$-algebras. (verify!)
+\subsection{Motivating Examples}
+%\subsection{Some Algebras over $\mathbb{R}$ as Motivating Examples}
+%\subsection{Some Algebras over $\mathbb{R}$}
+Abstraction is best understood when we first see a bunch of concrete examples to motivate ourselves to have a bunch of different structures that have enough in common to make certain abstractions worthwhile. So will now look at a couple of motivating examples of algebras over the real numbers $\mathbb{R}$, which we also call $\mathbb{R}$-algebras.
 
 
 \subsubsection{The Complex Numbers}
-We are already used to the idea to think of complex numbers as points in the real $2D$ plane, i.e. to envision $\mathbb{C}$ as the vector space $\mathbb{R}^2$ with some additional structure. This "additional structure" is brought to us via definition of the product between two complex numbers. This is the new operation that was totally unheard of in the more frugal world of plain $\mathbb{R}^2$. We cannot (yet) multiply $2D$ vectors, let alone divide them or even do more crazy stuff like raising one to the power of another. All of these things and more will become possible thanks to a simple definition. Let's start from identifying two vectors $(a,b)$ and $(c,d)$ $\in \mathbb{R}^2$ with the complex numbers $a + \i b$  and $c + \i d$ respectively where $\i$ is defined by the property that $\i^2 = -1$. The goal is to find expressions for the real and imaginary part of their product. When we have these expressions in hand, we have a product on $\mathbb{R}^2$. Of course, we already know the result but for purposes of demonstrating the general approach, let's churn through the derivation step by step.
+We are already used to the idea to think of complex numbers as points in the real $2D$ plane, i.e. to envision $\mathbb{C}$ as the vector space $\mathbb{R}^2$ with some additional structure. This "additional structure" is brought to us via definition of the product between two complex numbers. This is the new operation that was totally unheard of in the more frugal world of plain $\mathbb{R}^2$. We cannot (yet) multiply $2D$ vectors, let alone divide them or even do more crazy stuff like raising one to the power of another. All of these things and more will become possible thanks to a simple definition. Let's start from identifying two vectors $(a,b)$ and $(c,d)$ $\in \mathbb{R}^2$ with the complex numbers $a + \i b$  and $c + \i d$ respectively where $\i$ is defined by the property that $\i^2 = -1$. The goal is to find expressions for the two vector components of their product. Of course, we already know the result. They must be the real and imaginary part of the complex product. But for purposes of demonstrating the general approach, let's churn through the derivation step by step. When we have these expressions in hand, we have a product on $\mathbb{R}^2$. 
 
 \medskip
 \begin{tabular}{l l}
@@ -107,8 +112,8 @@ $a (c + \i d) + \i b (c + \i d)$     & Use left distributivity \\
 $a c + a \i d + \i b c + \i b \i d$  & Use commutativity of multiplication  \\
 $a c + \i a d + \i b c + \i \i b d$  & Use $\i \i = \i^2 = -1$  \\
 $a c + \i a d + \i b c - b d$        & Use commutativity of addition  \\
-$a c - b d   + \i a d + \i b c$      & Use left distributivity for factoring out i  \\
-$a c - b d   + \i (a d + b c)$       & Extract terms with and without factor i  \\
+$a c - b d   + \i a d + \i b c$      & Use left distributivity for factoring out $\i$  \\
+$a c - b d   + \i (a d + b c)$       & Extract terms with and without factor $\i$  \\
 $(a c - b d, a d + b c)$             & Result written as vector  \\
 \end{tabular}
 \medskip
@@ -136,6 +141,7 @@ ToDo: Introduce the cross product, explain its properties (anticommutative, non-
 
 % why there is no four dimensional cross product.
 % https://www.youtube.com/watch?v=FPoo7rm0OGI
+% -Has some expectations that we have on a cross product for what properties it should have
 
 
 %\subsubsection{Vectors in $\mathbb{R}^n$}
@@ -158,7 +164,7 @@ ToDo: Introduce tensors as generalization of scalars, vectors and matrices, intr
 % Are grade and rank synonymous?
 
 \subsubsection{The Quaternions}
-ToDo: Introduce quaternions as a 4D division algebra over $\mathbb{R}$. Define the quaternion product, give formulas for inversion, norm, etc. list important identities, give a bit of the historic backstory of how Hamilton discovered them, explain various representations and their pros and cons, 
+ToDo: Introduce quaternions as a 4D division algebra over $\mathbb{R}$. Define the quaternion product, give formulas for inversion, norm, etc. list important identities, give a bit of the historic backstory of how Hamilton discovered them while his goal was to find a 3D division algebra, explain various representations and their pros and cons, 
 
 
 % Another Imaginary Unit
@@ -193,7 +199,7 @@ A unitary algebra is an algebra where a multiplicative identity element $e$ exis
 \begin{equation}
  e \cdot v = v, \quad v \cdot e = v \qquad \forall v \in V
 \end{equation}
-A noteworthy feature of unitary algebras is that the set of scalars (which is inherited from the underlying vector space) can be embedded into the set of vectors by mapping any scalar $\alpha$ to the vector $\alpha e$ where $e$ is the multiplicative identity element. Thus, in unitary algebras, the scalars become superfluous because their effect on vectors (of scaling them) can also be achieved by certain special elements of the vector space itself via the additional multiplication operation that the algebra provides. The additional scalar multiplication that is inherited from the vector space becomes redundant. For example, in the algebra of complex numbers, the scalars are embedded as those complex numbers whose imaginary part is zero. The real numbers are embedded in the complex numbers.  In the algebra of $n \times n$ matrices, the scalars are embedded as the diagonal matrices where all diagonal elements are equal to the given scalar. But there are also algebras where the scalars cannot be embedded into the set of vectors. Take $\mathbb{R}^3$ with the cross product as counterexample. This algebra is non-unitary because not vector $e$ exists such that the cross product $e \times v$ with it leaves an arbitrary other vector $v$ as is. ...ToDo: Explain that this is the simplest nontrivial Lie algebra (Claude AI said this).
+A noteworthy feature of unitary algebras is that the set of scalars (which is inherited from the underlying vector space) can be embedded into the set of vectors by mapping any scalar $\alpha$ to the vector $\alpha e$ where $e$ is the multiplicative identity element. Thus, in unitary algebras, the scalars become superfluous because their effect on vectors (of scaling them) can also be achieved by certain special elements of the vector space itself via the additional multiplication operation that the algebra provides. The additional scalar multiplication that is inherited from the vector space becomes redundant. For example, in the algebra of complex numbers, the scalars are embedded as those complex numbers whose imaginary part is zero. The real numbers are embedded in the complex numbers.  In the algebra of $n \times n$ matrices, the scalars are embedded as the diagonal matrices where all diagonal elements are equal to the given scalar. But there are also algebras where the scalars cannot be embedded into the set of vectors. Take $\mathbb{R}^3$ with the cross product as counterexample. This algebra is non-unitary because no vector $e$ exists such that the cross product $e \times v$ with it leaves an arbitrary other vector $v$ as is. ...ToDo: Explain that this is the simplest nontrivial Lie algebra (Claude AI said this).
 
 
 \subsubsection{Division Algebras}
@@ -266,7 +272,7 @@ D(a \cdot b) = a \cdot D(b) + D(a) \cdot b
 \end{equation}
 Compare this to the product rule that you know from calculus and you will notice that it is indeed the same rule. The vector space of differentiable functions with the pointwise multiplication between the functions as product and the derivative as derivation does indeed form a differential algebra. A subspace of that is the space of all polynomials. If we represent the polynomials as sequences of coefficients, we could use convolution as our product operation. The derivation operation would be to apply the rule how to differentiate polynomials: left-shifting the sequence $a_n$ by one and multiplying by the old index, i.e. informally $D(a_n) = n a_{n+1}$. If we now forget that the sequences originally were meant to represent polynomial coefficients, we have now a differential algebra on (finite) sequences of numbers without necessarily having to think about functions. It would straightforwardly generalize to infinite sequences, too - even if they don't converge as a power series, i.e. don't define a function [VERIFY!]. ...TBC...what other interesting examples are there (subalgebras don't count)? 
 
-% TODO: Maybe use boldface for $a,b$ because they are vectors. But maybe not. Check what is common in the abstract algebra literature.
+% TODO: Maybe use $f,g$ instead of $a,b$ because that is more suggestive. But mention why we do this here.
 
 % TODO: Emphasize the order of D and mul on the right hand side. It matters in non-commutative algebras. Figure out and explain why the definition uses this order and not any of the other 3 possibilities. The 4 possibilities are: a D(b) + D(a) b, a D(b) + b D(a), D(b) a + D(a) b, a D(b) + b D(a), 
 
@@ -310,7 +316,7 @@ In a graded algebra, we are dealing with objects of different kinds that cannot 
 
 
 \subsection{Existence of Algebras}
-Having all of these possible classifications in place, we could now proceed to ask: Which types of algebras are possible. Could there be a $3D$ division algebra, for example? And that question is far from being contrived. A $3D$ division algebra was actually precisely the thing that Hamilton so desperately wanted to find. Instead, what he found were the quaternions which are $4D$. And there's a deeper reason for that ...TBC...
+Having all of these possible classifications in place, we could now proceed to ask: "Which types of algebras are possible?". Could there be a $3D$ division algebra, for example? And that specific question is far from being contrived. A $3D$ division algebra was actually precisely the thing that Hamilton so desperately wanted to find. Instead, what he found were the quaternions which are $4D$. And there's a deeper reason for that ...TBC...
 
 % We now know that a $3D$ divison algebra is provably impossible (verify - maybe it's only impossible when we also require some other constraints?) ...TBC...
 
@@ -321,6 +327,11 @@ Having all of these possible classifications in place, we could now proceed to a
 % Why are there no 3 dimensional "complex numbers"?
 % https://www.youtube.com/watch?v=L-3AbJM-o0g
 
+
+
+%\subsection{More Examples}
+\subsection{The Zoo of $\mathbb{R}$-Algebras}
+We have already seen a bunch of the more common $\mathbb{R}$-algebras in the section about the motivating examples. Now that we have some terminology for the classification at our disposal, we are ready to look at the broader zoo of all the various different $\mathbb{R}$-algebras and sort them into their appropriate combination of categories. ...TBC... ToDo: Classify the algebras that were already seen, introduce more algebras along with their classification, maybe widen the perspective to algebras over other fields or rings.
 
 
 \begin{comment}

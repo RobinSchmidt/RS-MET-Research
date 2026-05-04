@@ -110,21 +110,42 @@ Further important features of linear maps that follow from this definition are: 
 
 
 
-\subsection{Vector Spaces with Additional Structure} 
+%\subsection{Vector Spaces with Additional Structure} 
+\subsection{Special Vector Spaces} 
+Some vector spaces have additional structure built in by being equipped with additional operations. Here we will consider some operations that take one or two vectors as input and produce a scalar as output. If these operations satisfy certain requirements, we will have special vector spaces that are important enough to have their own names ...TBC...
 
 \subsubsection{Metric Vector Spaces}
-
-% In a metric space, we have a distance function, also called a metric, that takes in two vectors and produces a scalar. I think, a metric space is more general than a normed space because each metric induces a norm by norm(x) = dist(x,0). Verify!
-
+In a metric space, we have a distance function, also called a metric, that takes in two vectors and produces a scalar. ...TBC...
 
 \subsubsection{Normed Vector Spaces}
+In normed vector spaces, each vector has a so called norm. A norm is a function that takes a vector as input and returns a scalar. ...TBC...
 
-% Each vector as a norm. That is, a function that takes a vector as input and returns a scalar.
+% https://en.wikipedia.org/wiki/Normed_vector_space
+% -Has nice Venn diagram. Maybe reproduce it. Maybe replace the "Topological space" by "Vector 
+%  space". Maybe the topological space is yet more general that the vector space? Figure out! Maybe
+%  introduce another inclusion. But maybe don't draw a Venn diagram but instead just use a set
+%  inclusion chain:
+%  inner product spaces < normed spaces < metric spaces < vector spaces < topological spaces.
+%  where the < is replaced by \subset
+
+
+% I think, a metric space is more general than a normed space because each metric induces a norm by
+% norm(x) = dist(x,0). Verify! Nope! It's the other way around! A norm induces a distance via: 
+% dist(x,y) = norm(y-x). The difference y-x is always defined in a vector space. So yeah, in fact
+% metric spaces are more general because for every normed space, we can immediately produce a 
+% distance function via that formula. But we should discuss the idea of defining 
+% norm(x) = dist(x,0). Explain why it doesn't work this way.
+
+ 
+
+% https://en.wikipedia.org/wiki/Normed_vector_space
 
 
 \subsubsection{Inner Product Spaces}
 
 % In an inner product space, the norm is defined via an inner product. ...tbc...
+
+% https://en.wikipedia.org/wiki/Inner_product_space
 
 
 %\subsubsection{Banach Spaces}
@@ -135,8 +156,16 @@ Further important features of linear maps that follow from this definition are: 
 
 % Sort them from more general to more special
 
+% What about topological spaces? But i think, they are not necessarily vector spaces
+
+%\subsection{Generalizations} 
+\subsection{Modules as Generalization}
+If we replace the base field $\mathbb{F}$ with a more general ring $R$ in our definition of a vector space, we arrive at the definition of a module. Modules can therefore be seen as a generalization of the idea of a vector space that have less structure built in. In particular, we do not have multiplicative inverses in the set of scalars anymore and we also do not assume commutativity of the scalar multiplication anymore. ...TBC...
 
 
+% Maybe also make a section about "almost vector spaces", i.e. structures with less structure
+% Maybe call it generalizations
+% https://en.wikipedia.org/wiki/Module_(mathematics)
 
 
 

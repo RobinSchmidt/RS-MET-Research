@@ -115,10 +115,14 @@ Further important features of linear maps that follow from this definition are: 
 Some vector spaces have additional structure built in by being equipped with additional operations. Here we will consider some operations that take one or two vectors as input and produce a scalar as output. If these operations satisfy certain requirements, we will have special vector spaces that are important enough to have their own names ...TBC...
 
 \subsubsection{Metric Vector Spaces}
-In a metric space, we have a distance function, also called a metric, that takes in two vectors and produces a scalar. ...TBC...
+In a metric space, we have a function that takes two that takes two vectors $\mathbf{u,v}$ as inputs and produces a non-negative scalar as output. The geometric interpretation of the output of that function is the distance $d$ between the two input vectors which is why it is usually denoted by $d = \dist(\mathbf{u,v})$. A function that measures distances in a vector space is also called a metric. ...TBC...
+
+%In a metric space, we have a distance function, also called a metric, that takes in two vectors and produces a scalar. ...TBC...
+
+% The geometric interpretation of that function
 
 \subsubsection{Normed Vector Spaces}
-In normed vector spaces, each vector has a so called norm. A norm is a function that takes a vector as input and returns a scalar. ...TBC...
+In normed vector spaces, each vector has a so called norm. A norm is a function that takes one vector as input and returns a scalar. ...TBC...
 
 % https://en.wikipedia.org/wiki/Normed_vector_space
 % -Has nice Venn diagram. Maybe reproduce it. Maybe replace the "Topological space" by "Vector 
@@ -142,10 +146,14 @@ In normed vector spaces, each vector has a so called norm. A norm is a function 
 
 
 \subsubsection{Inner Product Spaces}
+In an inner product space, we have the notion of an inner product which is a function that takes two vectors and produces a scalar. In this regard, an inner product is similar to a metric but the geometric interpretation of the output is different. An inner product measures the similarity of the directions in which the two vectors point, i.e. the angle between the two vectors. But for that interpretation to work, the output needs to be renormalized (i.e. divided by) the norms of the inputs. So, does that mean that we require our vector space to be a normed space in the first place? Well, yes and no. The way this works is that the inner product itself induces the norm as follows: In an inner product space, the norm is defined via an inner product of a vector with itself. ...TBC...verify!
 
-% In an inner product space, the norm is defined via an inner product. ...tbc...
+% ToDo: explain orthogonality as a sort of independence of directions.
+
+% Verify: Maybe we need to take the inner product of v its complex conjugate in the case of complex valued vectors. But Wikipedia seems to say otherwise. Check other sources.
 
 % https://en.wikipedia.org/wiki/Inner_product_space
+% https://en.wikipedia.org/wiki/Inner_product_space#Basic_results,_terminology,_and_definitions
 
 
 %\subsubsection{Banach Spaces}

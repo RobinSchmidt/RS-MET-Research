@@ -1,8 +1,9 @@
 \section{Algebras}
-In the previous section, we have seen that we can give additional structure to vector spaces by introducing a couple of more operations. The metric and the inner product were operations that took two vectors and produced a scalar, the norm was an operation that took one vector and produced a scalar. In this section, we will be concerned with operations that take two vectors $\mathbf{u,v}$ and produce another vector $\mathbf{w}$. This new operation is the one that we want to interpret as a product between the two vectors. We'll denote the product between two vectors $\mathbf{u,v}$ generically by $\mathbf{u v}$. In certain special contexts, other symbols may be used such as $\mathbf{u \times v}$. 
+In the previous section, we have seen that we can give additional structure to vector spaces by introducing a couple of more operations. The metric and the inner product were operations that took two vectors and produced a scalar, the norm was an operation that took one vector and produced a scalar. In this section, we will be concerned with operations that take two vectors $u,v$ and produce another vector $w$. This new operation is the one that we want to interpret as a product between the two vectors. We'll denote the product between two vectors $u,v$ generically by $u \cdot w$ or sometimes shorter by $u v$. In certain special contexts, other symbols may be used such as $u \times v$. In abstract algebra, a vector space that is equipped with such a product is called an \emph{algebra}. In the context of discussing algebras, I will not use the boldface notation for vectors anymore for reasons that will be explained soon. ...TBC...
 
 
-In abstract algebra, a vector space that is equipped with such a product is called an \emph{algebra}. 
+
+
 
 % Point out that we should not confuse it with the dot product. Maybe do not use the dot.
 
@@ -15,11 +16,16 @@ Our minimal requirements for such a product operation are encapsulated in the fo
 
 \medskip
 \begin{tabular}{l l}
-Left distributivity: 
-& $\mathbf{u} \cdot (\mathbf{v + w}) = \mathbf{u \cdot v + u \cdot w}$  \\	
+Left distributivity:  & $u \cdot (v+w) = u \cdot v + u \cdot w$     \\	
+Right distributivity: & $(u+v) \cdot w = u \cdot w + v \cdot w$     \\
+Left linearity:       & $(\alpha u) \cdot v = \alpha (u \cdot v)$   \\
+Right linearity:      & $u \cdot (\alpha v) = \alpha (u \cdot v)$
 \end{tabular}
 \medskip
+
 ...TBC...
+
+% TODO: explain that the two linearity requirements are often stated as one which is then called bilinearity. Maybe mention a few other ways to condense the axioms to less equations.
 
 
 % Mention that in the last two lines we are dealing with two kinds of multiplication: the scalar multiplications and the vector multiplication.
@@ -41,6 +47,8 @@ Left distributivity:
 \paragraph{Notation and Terminology}
 
 % TODO: Explain why the boldface notations for vectors has beed dropped. 
+
+
 
 % The reasons are:
 % - This is common in the literature

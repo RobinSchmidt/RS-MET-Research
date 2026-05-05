@@ -52,7 +52,7 @@ The two linearity requirements can be (and often are) stated as the single requi
 
 % Vectors: u,v,w or x,y,z, sometimes v,w (complex) or q,p (quaternions)
 % Scalars: \alpha, \beta, \gamma
-% Vector components: a,b,c,d
+% Vector components: a,b,c,d  or x_1, x_2, ...
 % Multiplicatve indentity vector / identity element: e or 1 or I
 % Zero vector: 0 ...but how do we distinguish it from the zero scalar?
 
@@ -66,6 +66,7 @@ The two linearity requirements can be (and often are) stated as the single requi
 %   the quaternions we tend to use q,p, with matrices we tend to use uppercase bold. So, the 
 %   lowercase bold notation is not so universal anymore in many specific algebras so doesn't seem to 
 %   make too much sense to insist on it in a more general abstract discussion.
+%   -> maxbe use letters like x,y,z in general to fully de-emphasize the vectorial nature
 % - In many algebras the distinction between scalars and vectors gets a bit blurry anyway because 
 %   more often than not, the scalars are embedded into the vectors space in some way (see section
 %   about unitary algebras)
@@ -247,11 +248,17 @@ Certain types of non associative algebras satisfy weaker forms of associativity 
 
 % https://en.wikipedia.org/wiki/Jordan_algebra
 
+\paragraph{Quadratic Algebra}
+
+% https://en.wikipedia.org/wiki/Quadratic_algebra
+% https://www.spektrum.de/lexikon/mathematik/quadratische-algebra/9585
 
 \subsubsection{Lie Algebras} 
 % https://en.wikipedia.org/wiki/Lie_algebra
 % https://en.wikipedia.org/wiki/Lie_bracket_of_vector_fields
 
+% https://de.wikipedia.org/wiki/Lie-Algebra
+% https://de.wikipedia.org/wiki/Lie-Algebra#Beispiele
 
 % https://en.wikipedia.org/wiki/Lie_group%E2%80%93Lie_algebra_correspondence
 
@@ -294,6 +301,9 @@ Compare this to the product rule that you know from calculus and you will notice
 
 
 
+
+
+
 \subsubsection{Graded Algebras} [VERIFY!]
 In a graded algebra, we are dealing with objects of different kinds that cannot be mixed up with one another in addition but can be in multiplication. As an example, consider the algebra of tensors over a vector space $V^n$. The product is, of course, the tensor product. We cannot add tensors of different ranks $m$ and $n$ but we can always multiply such tensors to get a new tensor of rank $m+n$. The rank of the tensor may also be called the \emph{grade}. Another example is the exterior algebra with the exterior product. We have scalars, vectors, bivectors, trivectors, etc. We cannot\footnote{Not \emph{yet} in exterior algebra (aka Grassmann algebra), that is. But that problem is satisfyingly resolved in geometric algebra (aka Clifford algebra).} add a vector to a bivector - but we can multiply them to get a trivector ...TBC...
 
@@ -314,6 +324,14 @@ In a graded algebra, we are dealing with objects of different kinds that cannot 
 
 % https://en.wikipedia.org/wiki/Graded_structure
 
+
+%\subsubsection{Free Algebras} 
+
+% https://en.wikipedia.org/wiki/Free_algebra
+
+
+% Coalgebras:
+% https://en.wikipedia.org/wiki/Coalgebra
 
 \subsection{Existence of Algebras}
 Having all of these possible classifications in place, we could now proceed to ask: "Which types of algebras are possible?". Could there be a $3D$ division algebra, for example? And that specific question is far from being contrived. A $3D$ division algebra was actually precisely the thing that Hamilton so desperately wanted to find. Instead, what he found were the quaternions which are $4D$. And there's a deeper reason for that ...TBC...

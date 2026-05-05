@@ -1,15 +1,5 @@
 \section{Algebras}
-In the previous section, we have seen that we can give additional structure to vector spaces by introducing a couple of more operations. The metric and the inner product were operations that took two vectors and produced a scalar, the norm was an operation that took one vector and produced a scalar. In this section, we will be concerned with operations that take two vectors and produce another vector. This new operation is the one that we want to interpret as a \emph{product} between the two vectors.  In abstract algebra, a vector space that is equipped with such a product is called an \emph{algebra}. We'll denote the product between two elements $x,y$ of such an algebra by $x \cdot y$ or sometimes shorter by $x y$. The change of notation from e.g. $\mathbf{u,v}$ to e.g. $x,y$ will be justified below.
-
-%You may ask yourself why I denote the vectors by $x$ and $y$ rather than by something like $\mathbf{u,v}$ like we did in the previous chapter and all of the linear algebra chapters. 
-
-%In the context of discussing algebras, I will not use the boldface notation for vectors anymore for reasons that will be explained soon. ...TBC...
-
-
-
-
-
-% Point out that we should not confuse it with the dot product. Maybe do not use the dot.
+In the previous section, we have seen that we can give additional structure to vector spaces by introducing a couple of more operations. The metric and the inner product were operations that took two vectors and produced a scalar, the norm was an operation that took one vector and produced a scalar. In this section, we will be concerned with operations that take two vectors and produce another vector. This new operation is the one that we want to interpret as a \emph{product} between the two vectors.  In abstract algebra, a vector space that is equipped with such a product is called an \emph{algebra}. We'll denote the product between two elements $x,y$ of such an algebra by $x \cdot y$ or sometimes shorter by $x y$. The change of notation from e.g. $\mathbf{u,v}$ to e.g. $x,y$ will be justified below. Formally, we may denote an algebra $\mathcal{A}$ as a tuple $\mathcal{A} = (V, \cdot)$ where $V$ is the underlying vector space and $\cdot$ is our product operation which is a map $V \times V \rightarrow V$.
 
 % Maybe point out the parallel between "an algebra" and "(abstract) algebra" as a field and "a topology" and "topology" as a field.
 
@@ -27,30 +17,31 @@ Right linearity:      & $x \cdot (\alpha y) = \alpha (x \cdot y)$
 \end{tabular}
 \medskip
 
-The two linearity requirements can be (and often are) stated as the single requirement of \emph{bilinearity} which generally means that a binary operation must be linear in both of its arguments. That means that scaling one of the inputs results in an equal scaling of the output. Just like in rings, we need two distributive laws because we do not in general require our product to be commutative. It's also noteworthy\footnote{It is so noteworthy because in other contexts, associativity is usually the most basic one of our requirements.} that there is no general requirement of associativity and we will indeed encounter some non-associative algebras later on.
+where the $+$ operation is understood to be the vector addition that was inherited from the underlying vector space. The two linearity requirements can be (and often are) stated as the single requirement of \emph{bilinearity} which generally means that a binary operation must be linear in both of its arguments. That means that scaling one of the inputs results in an equal scaling of the output. Just like in rings, we need two distributive laws because we do not in general require our product to be commutative. It's also noteworthy\footnote{It is so noteworthy because in other contexts, associativity is usually the most basic one of our requirements.} that there is no general requirement of associativity and we will indeed encounter some non-associative algebras later on.
 
-...TBC...
+% Maybe note that the left linearity requirement would reduce to associativity when we would assume $\alpha, x, y$ to be of the same type and the two products be the same operation.
 
-% TODO: explain that the two linearity requirements are often stated as one which is then called bilinearity. Maybe mention a few other ways to condense the axioms to less equations.
+%...TBC...
 
+% What about (x a) y = x (a y)  and   x (y a) =  (x y) a ? Maybe that's superfluous because the definition of a vector space already requires the scalar multiplication to be commutative? Like  a x = x a for any vector x and any scalar a? Or maybe post-multiplication of a vector with a scalar isn't even a thing? Scaling is just an operation that takes a scalar (aka scaler) and a vector and we always pass the scaler as first argument by convention?
+
+% TODO: explain that the two linearity requirements are often stated as one which is then called bilinearity (done). Maybe mention a few other ways to condense the axioms to less equations.
 
 % Mention that in the last two lines we are dealing with two kinds of multiplication: the scalar multiplications and the vector multiplication.
 
 %If this new binary operation on vectors happens to satisfy our usual distributive laws of multiplication over addition (recall that vector addition is already well defined), then we can interpret this new operation as a multiplication or product. 
 
-% TODO: Explain requirements on the product (bilinear, left- and right-distributive, etc.). I think, bilinarity means (\alpha \vec{v}) \vec{w}
-
-% TODO: Compare the definition of the term algebra with the definition of a ring. Does it make sense to say that algebras are special rings where the underlying set happens to be a vector space rather than just any set? What role do the scalars play here? Couldn't we just somehow embedd them in the set of vectors? In the case of matrices, the scalars can be represented by diagonal matrices with the scalar on the diagonal. In the case of complex numbers, we just leave the imaginary part at zero. Is such an embedding always possible? Try to find counterexamples. Maybe R^3 with the cross-product? Maybe graded algebras like tensor algebra or exterior algebra?
-% -> rings are always associative
-% -> in rings, the underlying set is not necessarily a vector space. It can be any group (the inherited group operation becomes the ring addition)
 
 % https://en.wikipedia.org/wiki/Algebra_over_a_field
 
 
-% These special vector spaces are important enough
-
-
 \paragraph{Notation and Terminology}
+In the previous section about vector spaces and in the content about linear algebra, we used boldface letters like $\mathbf{u,v,w}$ to denote our vectors. Here, we again use the normal letters like $x,y,z$ for our elements of the algebra just like we did when introducing the idea of variables in elementary algebra. That doesn't mean that they aren't vectors anymore. Technically they are but in the present context, we want to de-emphasize their vectorial nature and instead focus on how they behave similar to numbers in the sense that we can add, subtract and multiply (and sometimes even divide) them. We also want to reclaim the notation $x \cdot y$ for denoting product of $x$ and $y$. When you see something like $\mathbf{u} \cdot \mathbf{v}$, you would probably assume that we are talking about the dot product in the sense of scalar product when we actually mean the vector valued and algebra specific product. When we need a scalar product here, we will denote it by $\langle x, y \rangle$. ...TBC...
+
+% Explain hwy we use greek letters for scalars
+% Remind reader of difference between "scalar product" and "scalar multiplication". The designation "scalar" in the scalar product refers to the output type whereas in "scalar multiplication" it refers to the type of one of the inputs 
+
+% Maybe denote the algebra as a tuple $\mathcal{A} = (V , \cdot)$
 
 % TODO: Explain why the boldface notations for vectors has beed dropped and why we use x,y rather than u,v. One argument may be that we now want to de-emphasize the vectorial nature of the variables and instead want to emphasize the fact that these objects x,y behave more similar to numbers again. ...although that may be a sort of post-hoc rationalization and the actual reason has more to do with consistency with the literature. But maybe the reason for the literature to use x,y is exactly that? ()
 
@@ -59,7 +50,9 @@ The two linearity requirements can be (and often are) stated as the single requi
 % Vector components: a,b,c,d  or x_1, x_2, ...
 % Multiplicatve indentity vector / identity element: e or 1 or I
 % Zero vector: 0 ...but how do we distinguish it from the zero scalar?
-
+% Scalar product: $\langle x, y \rangle$ ...was previously the dot product but we now have reclaimed
+% the dot for actual multiplication via the algebra's product. Point out that we should not confuse 
+% it with the dot product.
 
 % The reasons are:
 % - This is common in the literature
@@ -77,6 +70,21 @@ The two linearity requirements can be (and often are) stated as the single requi
 %   lowercase bold notation for vectors, readers would be very likely to mistake this for the
 %   dot product (aka scalar product) where we actually mean the algebra specific product that takes
 %   two vectors and produces a third vector.
+
+
+% See also:
+% https://claude.ai/chat/b8d78e4c-55b3-4baa-89b8-911f75022e2c
+% https://claude.ai/share/db34436e-0da2-42d4-86ff-16ea73181767  public share link
+
+
+
+\paragraph{Comparison to Rings}
+We have already seen another algebraic structure that defines a product on top of an existing structure, namely the ring. In that case, the more basic underlying structure was a commutative group. In the case of algebras, we build on top of a vector space instead. A vector space with addition is actually a specific case of a commutative group. It just has this additional interplay with the set of scalars which general commutative groups have no concept of. Although algebras inherit the scalars from their underlying vector spaces, the role of the scalars often tends to get de-emphasized, especially in unital algebras as we will see later. In both cases, rings and algebras, we inherit an existing addition operation and we require our multiplication to be (left- and right-) distributive over that addition. Another important difference between rings and algebras is that for rings, we require the multiplication to be associative whereas for algebras, we do not require this in general.
+
+% Maybe mention that in rings, a notion of left- and right linerarity (as required for algebras) would make no sense because rings do not have a notion of scalars. If we use as scalars just the ring elements themselves, the linearity requirements just boild down to requiring associativity for the multiplication.
+
+% TODO: What role do the scalars play in an algebra? Couldn't we just somehow embedd them in the set of vectors? In the case of matrices, the scalars can be represented by diagonal matrices with the scalar on the diagonal. In the case of complex numbers, we just leave the imaginary part at zero. Is such an embedding always possible? Try to find counterexamples. Maybe R^3 with the cross-product? Maybe graded algebras like tensor algebra or exterior algebra?
+
 
 
 
@@ -110,7 +118,7 @@ We are already used to the idea to think of complex numbers as points in the rea
 
 \medskip
 \begin{tabular}{l l}
-$(a,b) (c,d)$                        & Product written with vectors. Rewrite as complex product. \\
+$(a,b) \cdot (c,d)$                  & Product written with vectors. Rewrite as complex product. \\
 $(a + \i b) (c + \i d)$              & Use right distributivity\\
 $a (c + \i d) + \i b (c + \i d)$     & Use left distributivity \\
 $a c + a \i d + \i b c + \i b \i d$  & Use commutativity of multiplication  \\
@@ -122,9 +130,18 @@ $(a c - b d, a d + b c)$             & Result written as vector  \\
 \end{tabular}
 \medskip
 
-I was very detailed and careful here while making at every step explicit, which law was invoked. If you are concerned about the fact that the "Use commutativity of addition" step also involves a subtraction, recall that the notation the $- bd$ is just a shorthand for $+ (-(bd))$. If you are concerned about the validity of the "Use commutativity of multiplication" step, then you have a point. The step is valid in the special case here, but in general we need to be careful with such things because such a commutative law of multiplication is not always given. We will come back to this when deriving the formulas for the quaternion product later. ...TBC...
+I was very detailed and careful here while making at every step explicit, which law was invoked. If you are concerned about the fact that the "Use commutativity of addition" step also involves a subtraction, recall that the notation the $- bd$ is just a shorthand for $+ (-(bd))$. If you are concerned about the validity of the "Use commutativity of multiplication" step, then you have a point. The step is valid in the special case here, but in general we need to be careful with such things because such a commutative law of multiplication is not always given. We will come back to this when deriving the formulas for the quaternion product later. Let's summarize what we have found. In the algebra of the complex numbers, the product of two vectors $(a,b)$ and $(c,d)$ is defined as:
+\begin{equation}
+(a,b) \cdot (c,d) = (ac-bd, ad-bc)
+\end{equation}
+
+
+
+%...TBC...
 
 % ToDo: write down the end result in various forms including row and column vector notation.
+% Maybe write it as (a,b) \cdot (c,d) = (ac-bd, ad-bc)
+
 
 
 
@@ -139,7 +156,7 @@ There is yet a third way to define a product between two vectors of $\mathbb{R}^
 %\subsubsection{Vectors in $3D$ and the Cross Product}
 %\subsubsection{Vector Algebra in $3D$}
 \subsubsection{Vectors in $\mathbb{R}^3$}
-ToDo: Introduce the cross product, explain its properties (anticommutative, non-associative, ...), explain why this makes this algebra a bit awkward to work with, hint at the wedge product as solution, explain that a cross-product with certain desired properties (list them) can exist only in 3 and 7 dimensions
+ToDo: Introduce the cross product, explain its properties (anticommutative, non-associative, no identity element, ...), explain why this makes this algebra a bit awkward to work with, hint at the wedge product as solution, explain that a cross-product with certain desired properties (list them) can exist only in 3 and 7 dimensions
 
 % Works only in 3D, Maybe we can call it 3D vector algebra
 
@@ -162,13 +179,18 @@ ToDo: Remind the reader that $n \times n$ matrices over $\mathbb{R}$ already con
 % https://en.wikipedia.org/wiki/Hadamard_product_(matrices)
 % https://de.wikipedia.org/wiki/Hadamard-Produkt
 
-\subsubsection{Tensors in $\mathbb{R}^n$}
-ToDo: Introduce tensors as generalization of scalars, vectors and matrices, introduce the tensor product, explain how the tensor product produces objects of different rank such that the tensor algebra is a graded algebra (verify), ...
+%\subsubsection{Tensors in $\mathbb{R}^n$}
+%ToDo: Introduce tensors as generalization of scalars, vectors and matrices, introduce the tensor product, explain how the tensor product produces objects of different rank such that the tensor algebra is a graded algebra (verify), ...
 
+% Does a tensor algebra even qualify? Tensors of different rank do not live in the same vector space
 % Are grade and rank synonymous?
 
-\subsubsection{The Quaternions}
-ToDo: Introduce quaternions as a 4D division algebra over $\mathbb{R}$. Define the quaternion product, give formulas for inversion, norm, etc. list important identities, give a bit of the historic backstory of how Hamilton discovered them while his goal was to find a 3D division algebra, explain various representations and their pros and cons, 
+
+
+% Move to "The Zoo"
+
+%\subsubsection{The Quaternions}
+%ToDo: Introduce quaternions as a 4D division algebra over $\mathbb{R}$. Define the quaternion product, give formulas for inversion, norm, etc. list important identities, give a bit of the historic backstory of how Hamilton discovered them while his goal was to find a 3D division algebra, explain various representations and their pros and cons, 
 
 
 % Another Imaginary Unit
@@ -198,12 +220,18 @@ Very unsurprisingly, an algebra is called commutative when for all elements $u,v
 % Maybe make a section about non-commutative algebras and give some examples for some other rules (like anti-commutativity) that could hold instead. Maybe this is also the right context to introduce the commutator
 
 
-\subsubsection{Unitary Algebras}
+\subsubsection{Unital Algebras}
 A unitary algebra is an algebra where a multiplicative identity element $e$ exists. This element $e$ satisfies:
 \begin{equation}
  e \cdot v = v, \quad v \cdot e = v \qquad \forall v \in V
 \end{equation}
-A noteworthy feature of unitary algebras is that the set of scalars (which is inherited from the underlying vector space) can be embedded into the set of vectors by mapping any scalar $\alpha$ to the vector $\alpha e$ where $e$ is the multiplicative identity element. Thus, in unitary algebras, the scalars become superfluous because their effect on vectors (of scaling them) can also be achieved by certain special elements of the vector space itself via the additional multiplication operation that the algebra provides. The additional scalar multiplication that is inherited from the vector space becomes redundant. For example, in the algebra of complex numbers, the scalars are embedded as those complex numbers whose imaginary part is zero. The real numbers are embedded in the complex numbers.  In the algebra of $n \times n$ matrices, the scalars are embedded as the diagonal matrices where all diagonal elements are equal to the given scalar. But there are also algebras where the scalars cannot be embedded into the set of vectors. Take $\mathbb{R}^3$ with the cross product as counterexample. This algebra is non-unitary because no vector $e$ exists such that the cross product $e \times v$ with it leaves an arbitrary other vector $v$ as is. ...ToDo: Explain that this is the simplest nontrivial Lie algebra (Claude AI said this).
+A noteworthy feature of unitary algebras is that the set of scalars (which is inherited from the underlying vector space) can be embedded into the set of vectors by mapping any scalar $\alpha$ to the vector $\alpha e$ where $e$ is the multiplicative identity element. Thus, in unital algebras, the scalars become superfluous because their effect on vectors (of scaling them) can also be achieved by certain special elements of the vector space itself via the additional multiplication operation that the algebra provides. The additional scalar multiplication that is inherited from the vector space becomes redundant. For example, in the algebra of complex numbers, the scalars are embedded as those complex numbers whose imaginary part is zero. The real numbers are embedded in the complex numbers.  In the algebra of $n \times n$ matrices, the scalars are embedded as the diagonal matrices where all diagonal elements are equal to the given scalar. But there are also algebras where the scalars cannot be embedded into the set of vectors. Take $\mathbb{R}^3$ with the cross product as counterexample. This algebra is non-unitary because no vector $e$ exists such that the cross product $e \times v$ with it leaves an arbitrary other vector $v$ as is. ...ToDo: Explain that this is the simplest nontrivial Lie algebra (Claude AI said this).
+
+% TODO: Note that the mapping $\alpha \rightarrow \alpha e$ is a field isomorphism (verify!)
+
+% https://en.wikipedia.org/wiki/Unital
+% https://en.wikipedia.org/wiki/Algebra_over_a_field
+% aka unitary
 
 
 \subsubsection{Division Algebras}

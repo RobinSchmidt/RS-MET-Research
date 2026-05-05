@@ -113,7 +113,7 @@ We have already seen another algebraic structure that defines a product on top o
 Abstraction is best understood when we first see a bunch of concrete examples to motivate ourselves to have a bunch of different structures that have enough in common to make certain abstractions worthwhile. So will now look at a couple of motivating examples of algebras over the real numbers $\mathbb{R}$, which we also call $\mathbb{R}$-algebras.
 
 
-\subsubsection{The Complex Numbers}
+\subsubsection{Complex Numbers}
 We are already used to the idea to think of complex numbers as points in the real $2D$ plane, i.e. to envision $\mathbb{C}$ as the vector space $\mathbb{R}^2$ with some additional structure. This "additional structure" is brought to us via definition of the product between two complex numbers. This is the new operation that was totally unheard of in the more frugal world of plain $\mathbb{R}^2$. We cannot (yet) multiply $2D$ vectors, let alone divide them or even do more crazy stuff like raising one to the power of another. All of these things and more will become possible thanks to a simple definition. Let's start from identifying two vectors $(a,b)$ and $(c,d)$ $\in \mathbb{R}^2$ with the complex numbers $a + \i b$  and $c + \i d$ respectively where $\i$ is defined by the property that $\i^2 = -1$. The goal is to find expressions for the two vector components of their product. Of course, we already know the result. They must be the real and imaginary part of the complex product. But for purposes of demonstrating the general approach, let's churn through the derivation step by step. When we have these expressions in hand, we have a product on $\mathbb{R}^2$. 
 
 \medskip
@@ -143,13 +143,6 @@ I was very detailed and careful here while making at every step explicit, which 
 % Maybe write it as (a,b) \cdot (c,d) = (ac-bd, ad-bc)
 
 
-
-
-\subsubsection{The Hyperbolic Numbers}
-The complex product is not the only possible way to define a product between two vectors of $\mathbb{R}^2$. Another possibility is ...TBC...ToDo: introduce $j$ with $j^2 = 1, j \neq 1$, define hyperbolic numbers as $a + b j$, multiply out to obtain the formulas for the 2 parts of the number
-
-\subsubsection{The Dual Numbers}
-There is yet a third way to define a product between two vectors of $\mathbb{R}^2$. ...TBC...ToDo: introduce $\varepsilon$ with $\varepsilon^2 = 0, \varepsilon \neq 0$, define dual numbers as $a + b \varepsilon$, multiply out to obtain the formulas for the 2 parts of the number
 
 
 
@@ -187,31 +180,18 @@ ToDo: Remind the reader that $n \times n$ matrices over $\mathbb{R}$ already con
 
 
 
-% Move to "The Zoo"
-
-%\subsubsection{The Quaternions}
-%ToDo: Introduce quaternions as a 4D division algebra over $\mathbb{R}$. Define the quaternion product, give formulas for inversion, norm, etc. list important identities, give a bit of the historic backstory of how Hamilton discovered them while his goal was to find a 3D division algebra, explain various representations and their pros and cons, 
 
 
-% Another Imaginary Unit
-% https://www.youtube.com/watch?v=6w0Qb7rLUa0
-
-
-\subsubsection{The Wedge Product}
-% Similar to cross product but generalizes to nD
-
-
-% ToDo: dual numbers, hyperbolic numbers, octonions, sedenions
 
 
 \subsection{Classification of Algebras}
-Okay - we have now seen a big enough zoo of different algebras to be ready for some abstractions. We can classify different types of algebras by abstractly requiring the product to satisfy certain additional properties and give these types special names.
+Having seen a couple of different example algebras, we are now ready for some abstractions. We can classify different types of algebras by abstractly requiring the product to satisfy certain additional properties and give these types special names.
 
 % TODO: explain how in certain algebras scalars can be embedded into the set of vectors such that we do not necessarily need them as separate data type anymore ... for matrices, we just form the diagonal matrix with the scalar in the diagonal, for complex numbers, we just keep the imaginary part zero. But I think, this is not possible with all algebras. For example, in tensor algebra, we still need them. Maybe also in 3D vector algebra. I'm not sure if there is already a name for it. If not maybe mention it as another possible classification - "scalar embeddable algebras" or something
 
 
 \subsubsection{Commutative Algebras}
-Very unsurprisingly, an algebra is called commutative when for all elements $u,v$ of the underlying set of vectors the product $uv$ is equal to the product $vu$. ...TBC...
+Very unsurprisingly, an algebra is called commutative when for all elements $x,y$ of the algebra the product $xy$ is equal to the product $yx$. ...TBC...
 
 % TODO: Introduce the commutator  [a,b] = ab - ba  as a measure for the (non) commutativity of a,b
 
@@ -221,11 +201,11 @@ Very unsurprisingly, an algebra is called commutative when for all elements $u,v
 
 
 \subsubsection{Unital Algebras}
-A unitary algebra is an algebra where a multiplicative identity element $e$ exists. This element $e$ satisfies:
+A unitary algebra is an algebra where a multiplicative identity element $e \in V$ exists. This element $e$ satisfies:
 \begin{equation}
- e \cdot v = v, \quad v \cdot e = v \qquad \forall v \in V
+ e \cdot x = x, \quad x \cdot e = x \qquad \forall x \in V
 \end{equation}
-A noteworthy feature of unitary algebras is that the set of scalars (which is inherited from the underlying vector space) can be embedded into the set of vectors by mapping any scalar $\alpha$ to the vector $\alpha e$ where $e$ is the multiplicative identity element. Thus, in unital algebras, the scalars become superfluous because their effect on vectors (of scaling them) can also be achieved by certain special elements of the vector space itself via the additional multiplication operation that the algebra provides. The additional scalar multiplication that is inherited from the vector space becomes redundant. For example, in the algebra of complex numbers, the scalars are embedded as those complex numbers whose imaginary part is zero. The real numbers are embedded in the complex numbers.  In the algebra of $n \times n$ matrices, the scalars are embedded as the diagonal matrices where all diagonal elements are equal to the given scalar. But there are also algebras where the scalars cannot be embedded into the set of vectors. Take $\mathbb{R}^3$ with the cross product as counterexample. This algebra is non-unitary because no vector $e$ exists such that the cross product $e \times v$ with it leaves an arbitrary other vector $v$ as is. ...ToDo: Explain that this is the simplest nontrivial Lie algebra (Claude AI said this).
+A noteworthy feature of unital algebras is that the set of scalars (which is inherited from the underlying vector space) can be embedded into the set of vectors by mapping any scalar $\alpha$ to the vector $\alpha e$ where $e$ is the multiplicative identity element that we just postulated to exist within the set $V$ of vectors. Thus, in unital algebras, the scalars become superfluous because their effect on vectors (of scaling them) can also be achieved by certain special elements of the vector space itself via the multiplication operation that the algebra provides. The additional scalar multiplication that is inherited from the vector space becomes redundant. Instead of doing $\alpha x$, we can just as well do $(\alpha e) x$. It has the same effect. For example, in the algebra of complex numbers, the scalars are embedded as those complex numbers whose imaginary part is zero because the real numbers are embedded in the complex numbers.  In the algebra of $n \times n$ matrices, the scalars are embedded as the diagonal matrices where all diagonal elements are equal to the given scalar. Instead of doing $\alpha \mathbf{A}$, we can do $(\alpha \mathbf{I}) \mathbf{A}$ where $\mathbf{I}$ is the identity matrix. But there are also algebras where the scalars cannot be embedded into the set of vectors. Take $\mathbb{R}^3$ with the cross product as counterexample. This algebra is not unital because no vector $e$ exists such that the cross product $e \times v$ with it leaves an arbitrary other vector $v$ as is. ...ToDo: Explain that this is the simplest nontrivial Lie algebra (Claude AI said this).
 
 % TODO: Note that the mapping $\alpha \rightarrow \alpha e$ is a field isomorphism (verify!)
 
@@ -381,6 +361,43 @@ Having all of these possible classifications in place, we could now proceed to a
 %\subsection{More Examples}
 \subsection{The Zoo of $\mathbb{R}$-Algebras}
 We have already seen a bunch of the more common $\mathbb{R}$-algebras in the section about the motivating examples. Now that we have some terminology for the classification at our disposal, we are ready to look at the broader zoo of all the various different $\mathbb{R}$-algebras and sort them into their appropriate combination of categories. ...TBC... ToDo: Classify the algebras that were already seen, introduce more algebras along with their classification, maybe widen the perspective to algebras over other fields or rings.
+
+
+\subsubsection{Hyperbolic Numbers}
+The complex product is not the only possible way to define a product between two vectors of $\mathbb{R}^2$. Another possibility is ...TBC...ToDo: introduce $j$ with $j^2 = 1, j \neq 1$, define hyperbolic numbers as $a + b j$, multiply out to obtain the formulas for the 2 parts of the number
+
+\subsubsection{Dual Numbers}
+There is yet a third way to define a product between two vectors of $\mathbb{R}^2$. ...TBC...ToDo: introduce $\varepsilon$ with $\varepsilon^2 = 0, \varepsilon \neq 0$, define dual numbers as $a + b \varepsilon$, multiply out to obtain the formulas for the 2 parts of the number
+
+
+
+
+\subsubsection{Quaternions}
+%ToDo: Introduce quaternions as a 4D division algebra over $\mathbb{R}$. Define the quaternion product, give formulas for inversion, norm, etc. list important identities, give a bit of the historic backstory of how Hamilton discovered them while his goal was to find a 3D division algebra, explain various representations and their pros and cons, talk about the idea to produce systems of hypecomplex numbers.
+
+% Maybe move the hyperbolic and dual numbers also to here
+
+% Another Imaginary Unit
+% https://www.youtube.com/watch?v=6w0Qb7rLUa0
+
+\subsubsection{Octonions}
+% Also known as Cayley numbers / Cayley algebra
+
+
+\subsubsection{Sedenions}
+
+
+%\subsubsection{Exterior Algebra}
+%\subsubsection{Grassmann Algebra}
+%\subsubsection{The Wedge Product}
+% Similar to cross product but generalizes to nD
+
+
+%\subsubsection{Geometric Algebra}
+%\subsubsection{Clifford Algebra}
+
+% ToDo: dual numbers, hyperbolic numbers, octonions, sedenions
+
 
 % Maybe for an algebra ove a ring, we cannot use a vector space but instead need a module?
 

@@ -632,11 +632,19 @@ Density/Growth:  P < N, N < Q, Q < R, R < R^2
 1D Measure:      P = N = Q = 0, Q < R, undef?
 2D Measure:      P = N = Q = R = 0, R < R^2   
 
-Is there also a 0D measure, i.e. a measure on discrete sets like P,N,Q or does the idea only apply to continuous sets like R and R^2? Maybe also include the unit interval (I or U...look up if there's a common notation for it) and the unit square I^2 or U^2. Maybe as yet another way to quantify infinte sets consider the idea of dimension. I think discrete sets like the a single point, a finite number of points or a countable number of points are zero dimensional, the unit interval is 1D, the unit square is 2D, etc. I think, via dimension, the unit square is indistinguishable form the whole R^2 whereas by an 2D measure, they are distingushable: the unit suqare gets the value 1 whereas R^2 gets the value inf.
+Is there also a 0D measure, i.e. a measure on discrete sets like P,N,Q or does the idea only apply to continuous sets like R and R^2? Maybe also include the unit interval (I or U...look up if there's a common notation for it) and the unit square I^2 or U^2. Maybe as yet another way to quantify infinite sets consider the idea of dimension. I think discrete sets like the a single point, a finite number of points or a countable number of points are zero dimensional, the unit interval is 1D, the unit square is 2D, etc. I think, via dimension, the unit square is indistinguishable from the whole R^2 whereas by a 2D measure, they are distingushable: the unit suqare gets the value 1 whereas R^2 gets the value inf.
 
 
 
 Conclusion: Infinity is complicated and there is more than one way to quantify it and the different ways will sometimes give different results for particular size comparisons. When asking a question like: "Are there more natural numbers than rational numbers?" or "Are there more real 2D vectors in the unit square than real numbers in the unit interval?" we need to be more specific what we need by "more", i.e. which method of size comparison we want to use. Questions like: "How many..." cannot be assumed to be automatically and intuitively understood correctly. When we talk about finite sets, every "How many..." question has a natural number as answer. With infinite sets, this is not so and we must more precisely specify what we actually mean by that phrase. It's not self evident anymore.
 
+
+Intuitively if one set A is a strict subset of another set B, we would say that A < B because when we take away all elements a in A from B, there will be something left over. When Cantor says that A < B when there exists and injective map from A to B that fails to be surjective, i.e. doesn't reach everey b in B, this seems to appeal to the sam intuition that there are element in b left over that are not reached by the map.
+
+The big disadvantage of using the strict subset criterion for comparing infinite sets is that is not always applicable. We can apply it only, if one set is the subset of the other. Cantor's beijection based definition circumvents that by allowing a map between the sets.
+
+In particular for subsets of the naturals, we could quantify their infiniteness by considering how slow or fast the sum of their reciprocal converges or diverges. Not sure, if that's a useful measure, though. 
+
+How about considering the amount of information needed to store a finite number of elements and then looking at how that grows when storing all elements. We would somehow need to define a sampling algorithm that exhaustively samples the whole set in the limit as some variable n goes to infinity.
 
 \end{comment}

@@ -334,7 +334,7 @@ D(a \cdot b) = a \cdot D(b) + D(a) \cdot b
 \end{equation}
 Compare this to the product rule that you know from calculus and you will notice that it is indeed the same rule. The vector space of differentiable functions with the pointwise multiplication between the functions as product and the derivative as derivation does indeed form a differential algebra. A subspace of that is the space of all polynomials. If we represent the polynomials as sequences of coefficients, we could use convolution as our product operation. The derivation operation would be to apply the rule how to differentiate polynomials: left-shifting the sequence $a_n$ by one and multiplying by the old index, i.e. informally $D(a_n) = n a_{n+1}$. If we now forget that the sequences originally were meant to represent polynomial coefficients, we have now a differential algebra on (finite) sequences of numbers without necessarily having to think about functions. It would straightforwardly generalize to infinite sequences, too - even if they don't converge as a power series, i.e. don't define a function [VERIFY!]. ...TBC...what other interesting examples are there (subalgebras don't count)? 
 
-% TODO: Maybe use $f,g$ instead of $a,b$ because that is more suggestive. But mention why we do this here.
+% TODO: Maybe use $f,g$ instead of $a,b$ because that is more suggestive. But mention why we do this here. Or maybe use x,y.  An maybe denote  the derivation by a prime instead of D
 
 % TODO: Emphasize the order of D and mul on the right hand side. It matters in non-commutative algebras. Figure out and explain why the definition uses this order and not any of the other 3 possibilities. The 4 possibilities are: a D(b) + D(a) b, a D(b) + b D(a), D(b) a + D(a) b, a D(b) + b D(a), 
 

@@ -1,5 +1,7 @@
 \section{Algebras}
-In the previous section, we have seen that we can give additional structure to vector spaces by introducing a couple of more operations. The metric and the inner product were operations that took two vectors and produced a scalar, the norm was an operation that took one vector and produced a scalar. In this section, we will be concerned with operations that take two vectors and produce another vector. This new operation is the one that we want to interpret as a \emph{product} between the two vectors.  In abstract algebra, a vector space that is equipped with such a product is called an \emph{algebra}. We'll denote the product between two elements $x,y$ of such an algebra by $x \cdot y$ or sometimes shorter by $x y$. The change of notation from e.g. $\mathbf{u,v}$ to e.g. $x,y$ will be justified below. Formally, we may denote an algebra $\mathcal{A}$ as a tuple $\mathcal{A} = (V, \cdot)$ where $V$ is the underlying vector space and $\cdot$ is our product operation which is a map $V \times V \rightarrow V$.
+In the previous section, we have seen that we can give additional structure to vector spaces by introducing a couple of more operations. The metric and the inner product were operations that took two vectors and produced a scalar, the norm was an operation that took one vector and produced a scalar. In this section, we will be concerned with operations that take two vectors and produce another vector. This new operation is the one that we want to interpret as a \emph{product} between the two vectors.  In abstract algebra, a vector space that is equipped with such a product is called an \emph{algebra}. We'll denote the product between two elements $x,y$ of such an algebra by $x \cdot y$ or sometimes shorter by $x y$. The change of notation from e.g. $\mathbf{u,v}$ to e.g. $x,y$ will be justified below. Formally, we may denote an algebra $\mathcal{A}$ as a tuple $\mathcal{A} = (V, \cdot)$ where $V$ is the underlying vector space and $\cdot$ is our product operation which is a map $V \times V \rightarrow V$. An example for such an algebra are the complex numbers. In the present context, we may view their construction as just defining a particular product on top of the vector space $\mathbb{R}^2$.
+
+% TODO: Maybe motivate the search for nD algebras by trying to generalize the 2D complex numbers to spaces with other dimensions. The theory of algebras is concerned with finding useful number systems of higher dimension, i.e. hypercomplex numbers. Each such number system is called an algebra in this context (verify!)
 
 % Maybe point out the parallel between "an algebra" and "(abstract) algebra" as a field and "a topology" and "topology" as a field.
 
@@ -8,6 +10,7 @@ In the previous section, we have seen that we can give additional structure to v
 \paragraph{Axioms} 
 Our minimal requirements for such a product operation are encapsulated in the following axioms:
 
+\label{Def:ProductAxioms}  % References to that look awkward!
 \medskip
 \begin{tabular}{l l}
 Left distributivity:  & $x \cdot (y+z) = x \cdot y + x \cdot z$     \\	
@@ -36,9 +39,10 @@ where the $+$ operation is understood to be the vector addition that was inherit
 
 
 \paragraph{Notation and Terminology}
-In the previous section about vector spaces and in the content about linear algebra, we used boldface letters like $\mathbf{u,v,w}$ to denote our vectors. Here, we again use the normal letters like $x,y,z$ for our elements of the algebra just like we did when introducing the idea of variables in elementary algebra. That doesn't mean that they aren't vectors anymore. Technically they are but in the present context, we want to de-emphasize their vectorial nature and instead focus on how they behave similar to numbers in the sense that we can add, subtract and multiply (and sometimes even divide) them. We also want to reclaim the notation $x \cdot y$ for denoting product of $x$ and $y$. When you see something like $\mathbf{u} \cdot \mathbf{v}$, you would probably assume that we are talking about the dot product in the sense of scalar product when we actually mean the vector valued and algebra specific product. When we need a scalar product here, we will denote it by $\langle x, y \rangle$. ...TBC...
+In the previous section about vector spaces and in the content about linear algebra, we used boldface letters like $\mathbf{u,v,w}$ to denote our vectors. Here, we again use the normal letters like $x,y,z$ for our elements of the algebra just like we did when introducing the idea of variables in elementary algebra. That doesn't mean that they aren't vectors anymore. Technically they are but in the present context, we want to de-emphasize their vectorial nature and instead focus on how they behave similar to numbers in the sense that we can add, subtract and multiply (and sometimes even divide) them. We also want to reclaim the notation $x \cdot y$ for denoting product of $x$ and $y$. When you see something like $\mathbf{u} \cdot \mathbf{v}$, you would probably assume that we are talking about the dot product in the sense of scalar product when we actually mean the vector valued and algebra specific product. When we need a scalar product here, we will denote it by $\langle x, y \rangle$. The norm of a vector $x$ will be denoted by $|x|$ and for our purposes here it will be defined in terms of the scalar product as follows: $|x| = \sqrt{ \langle x, x \rangle }$.  ...TBC...
 
-% Explain hwy we use greek letters for scalars
+
+% Explain why we use greek letters for scalars
 % Remind reader of difference between "scalar product" and "scalar multiplication". The designation "scalar" in the scalar product refers to the output type whereas in "scalar multiplication" it refers to the type of one of the inputs 
 
 % Maybe denote the algebra as a tuple $\mathcal{A} = (V , \cdot)$
@@ -132,10 +136,12 @@ $(a c - b d, a d + b c)$             & Result written as vector  \\
 
 I was very detailed and careful here while making at every step explicit, which law was invoked. If you are concerned about the fact that the "Use commutativity of addition" step also involves a subtraction, recall that the notation the $- bd$ is just a shorthand for $+ (-(bd))$. If you are concerned about the validity of the "Use commutativity of multiplication" step, then you have a point. The step is valid in the special case here, but in general we need to be careful with such things because such a commutative law of multiplication is not always given. We will come back to this when deriving the formulas for the quaternion product later. Let's summarize what we have found. In the algebra of the complex numbers, the product of two vectors $(x_1,x_2)$ and $(y_1,y_2)$ is defined as:
 \begin{equation}
-%(a,b) \cdot (c,d) = (ac-bd, ad-bc)
-(x_1,x_2) \cdot (y_1,y_2) = (x_1 y_1 - x_2 y_2, \; x_1 y_2 - x_2 y_1)
+%(a,b) \cdot (c,d) = (ac-bd, ad+bc)
+(x_1,x_2) \cdot (y_1,y_2) = (x_1 y_1 - x_2 y_2, \; x_1 y_2 + x_2 y_1)
 \end{equation}
 where we have switched to the more generic notation of using $x_1,x_2,\ldots$ for vector components because this notation will generalize better to the other cases that we will see later.
+
+%TODO: Write doem properties: commutativity, existence of neutral element, product rule for norm (i.e. absolute value), ...
 
 %...TBC...
 
@@ -146,15 +152,26 @@ where we have switched to the more generic notation of using $x_1,x_2,\ldots$ fo
 %\subsubsection{Vectors in $3D$ and the Cross Product}
 %\subsubsection{Vector Algebra in $3D$}
 \subsubsection{Vectors in $\mathbb{R}^3$}
-Let $x = (x_1,x_2,x_3), y = (y_1,y_2,y_3)$ be two vectors in $\mathbb{R}^3$. We define the \emph{cross product}, aka \emph{vector product}, denoted by $x \times y$ as follows:
+Let $x = (x_1,x_2,x_3), y = (y_1,y_2,y_3)$ be two vectors in $\mathbb{R}^3$. We define the \emph{cross product}, aka \emph{vector product}, which is denoted by $x \times y$, as follows:
 \begin{equation}
 (x_1,x_2,x_3) \times (y_1,y_2,y_3) =
 (x_2 y_3 - x_3 y_2, \; x_3 y_1 - x_1 y_3, \; x_1 y_2 - x_2 y_1)
 \end{equation}
-ToDo: Explain its properties (anticommutative, non-associative, no identity element, ...), explain why this makes this algebra a bit awkward to work with, hint at the wedge product as solution, explain that a cross-product with certain desired properties (list them) can exist only in 3 and 7 dimensions
+Our so defined product has the following additional properties on top of the product axioms that were listed on page \pageref{Def:ProductAxioms}: 
+
+\medskip
+\begin{tabular}{l l}
+Anticommutativity: & $x \times y = - y \times x  $     \\	
+Swap rule:         & $\langle x \times y , z \rangle = \langle x, y \times z \rangle$ 
+\end{tabular}
+\medskip
+
+...TBC...TODO: verify, list more laws
+
+% Maybe use notation with columns vectors.
 
 
-
+%ToDo: Explain its properties (anticommutative, non-associative, no identity element, ...), explain why this makes this algebra a bit awkward to work with, hint at the wedge product as solution, explain that a cross-product with certain desired properties (list them) can exist only in 3 and 7 dimensions
 
 
 % -The 3D cross product is also not associative. 

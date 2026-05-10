@@ -155,7 +155,33 @@ ToDo: Introduce the cross product, explain its properties (anticommutative, non-
 
 % why there is no four dimensional cross product.
 % https://www.youtube.com/watch?v=FPoo7rm0OGI
-% -Has some expectations that we have on a cross product for what properties it should have
+% -Has some expectations that we have on a cross product for what properties it should have:
+%  -anti-commutative/ske-symmetric:  (u x v) = - (v x u)
+%  -bilinear: a x (b + c) = (a x b) + (b x c), (k a) x b = k (a x b)  k in R
+%  -produces vector that is orthogonal to inputs: <u, u x v> = 0, <v, u x v> = 0
+%   the 2nd is redundant when (anti)commutativity is already given
+%  -cross product of orthogonal unit vectors is a unit vector: |u x v|^2 = |u|^2 |v|^2 - <u,v>^2
+
+% -The 3D cross product is also not associative. 
+
+% -See also "Zahlen" (Ebbinghaus), pg. 152 and 228
+%  -Not associative (what is the associator?)
+%  -simplest non-trivial Lie algebra.
+%  -Swap rule (Vertauschungsregel): <u x v, w> = <u, v x w>
+%  -Given anti-commutativity and the swap rule, the following 3 propositions are equivalent:
+%   (1) if |u| = |v| = 1 and <u,v> = 0  then  |u x v| = 1
+%   (2) |u x v|^2 = |u|^2 |v|^2 - <u,v>^2
+%   (3) u x (u x v) = <u,v> u - |u|^2 v   with (1) we have  u x u = 0  as special case
+
+% Other features: There's no neutral element.
+
+% TODO: Verify all of these!
+
+% Q: Is the fact that vector products with these features exist only in 1,3,7 dimensions related
+%    to the fact that these are precisely the dimensions of the imaginary parts of of the complex
+%    numbers, quaternions and octonions, i.e. the imaginary parts of the 2,4 and 8 dimensional
+%    division algebras which are the only ones that exist?
+
 
 
 %\subsubsection{Vectors in $\mathbb{R}^n$}

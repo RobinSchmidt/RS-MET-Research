@@ -1,5 +1,5 @@
 \section{Algebras}
-In the previous section, we have seen that we can give additional structure to vector spaces by introducing a couple of more operations. The metric and the inner product were operations that took two vectors and produced a scalar, the norm was an operation that took one vector and produced a scalar. In this section, we will be concerned with operations that take two vectors and produce another vector. This new operation is the one that we want to interpret as a \emph{product} between the two vectors.  In abstract algebra, a vector space that is equipped with such a product is called an \emph{algebra}. We'll denote the product between two elements $x,y$ of such an algebra by $x \cdot y$ or sometimes shorter by $x y$. The change of notation from e.g. $\mathbf{u,v}$ to e.g. $x,y$ will be justified below. Formally, we may denote an algebra $\mathcal{A}$ as a tuple $\mathcal{A} = (V, \cdot)$ where $V$ is the underlying vector space and $\cdot$ is our product operation which is a map $V \times V \rightarrow V$. An example for such an algebra are the complex numbers. In the present context, we may view their construction as just defining a particular product on top of the vector space $\mathbb{R}^2$.
+In the previous section, we have seen that we can give additional structure to vector spaces by introducing a couple of more operations. The metric and the inner product were operations that took two vectors and produced a scalar, the norm was an operation that took one vector and produced a scalar. In this section, we will be concerned with operations that take two vectors and produce another vector. This new operation is the one that we want to interpret as a \emph{product} between the two vectors.  In abstract algebra, a vector space that is equipped with such a product is called an \emph{algebra}. We'll denote the product between two elements $x,y$ of such an algebra by $x \cdot y$ or sometimes shorter by $x y$. The change of notation from e.g. $\mathbf{u,v}$ to e.g. $x,y$ will be justified below. Formally, we may denote an algebra $\mathcal{A}$ as a tuple $\mathcal{A} = (V, \cdot)$ where $V$ is the underlying vector space and $\cdot$ is our product operation which is a map $V \times V \rightarrow V$. An example for such an algebra are the complex numbers. In the present context, we may view their construction as just defining a particular product on top of the vector space $\mathbb{R}^2$. Given the amazing success of the complex numbers, mathematicians naturally began to ask whether something similar is also possible for $\mathbb{R}^3, \mathbb{R}^4$ and generally $\mathbb{R}^n$. The theory of algebras is concerned with finding useful number systems of higher dimension, sometimes called hypercomplex numbers. It answers questions about what kind of number systems are and aren't possible and helps us to construct those that are possible.
 
 % TODO: Maybe motivate the search for nD algebras by trying to generalize the 2D complex numbers to spaces with other dimensions. The theory of algebras is concerned with finding useful number systems of higher dimension, i.e. hypercomplex numbers. Each such number system is called an algebra in this context (verify!)
 
@@ -239,7 +239,7 @@ Very unsurprisingly, an algebra is called commutative when for all elements $x,y
 
 
 \subsubsection{Unital Algebras}
-A unitary algebra is an algebra where a multiplicative identity element $e \in V$ exists. This element $e$ satisfies:
+A unital algebra is an algebra where a multiplicative identity element $e \in V$ exists. This element $e$ satisfies:
 \begin{equation}
  e \cdot x = x, \quad x \cdot e = x \qquad \forall x \in V
 \end{equation}
@@ -303,7 +303,7 @@ Certain types of non associative algebras satisfy weaker forms of associativity 
 
 % https://en.wikipedia.org/wiki/Jordan_algebra
 
-\paragraph{Quadratic Algebra}
+\paragraph{Quadratic Algebras}
 
 % https://en.wikipedia.org/wiki/Quadratic_algebra
 % https://www.spektrum.de/lexikon/mathematik/quadratische-algebra/9585
@@ -389,7 +389,7 @@ In a graded algebra, we are dealing with objects of different kinds that cannot 
 % https://en.wikipedia.org/wiki/Coalgebra
 
 \subsection{Existence of Algebras}
-Having all of these possible classifications in place, we could now proceed to ask: "Which types of algebras are possible?". Could there be a $3D$ division algebra, for example? And that specific question is far from being contrived. A $3D$ division algebra was actually precisely the thing that Hamilton so desperately wanted to find. Instead, what he found were the quaternions which are $4D$. And there's a deeper reason for that ...TBC...
+Having all of these possible classifications in place, we could now proceed to ask: "Which types of algebras are possible?". Could there be a $3D$ division algebra, for example? And that specific question is far from being contrived. A $3D$ division algebra was actually precisely the thing that Hamilton so desperately wanted to find. Instead, what he found were the quaternions which are $4D$. And there's a deeper reason for that: It turns out that a $3D$ division algebra is, in fact, provably impossible. If only Hamilton would have known this theorem, it would have saved him years (or even decades?) of futile and frustrating search. This shows that such theorems can be pretty useful indeed so in this section, we will list a couple of important theorems about what kinds of algebras are (im)possible. ...TBC...
 
 % We now know that a $3D$ divison algebra is provably impossible (verify - maybe it's only impossible when we also require some other constraints?) ...TBC...
 

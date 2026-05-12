@@ -461,7 +461,25 @@ In ring theory, ideals play a role analogous to that of the normal subgroups in 
 % google: factor ring
 % The quotient of a ring R, by a two-sided ideal I, is denoted by R / I . The result is called a quotient or factor ring. It is the set of additive cosets { a + I | a ∈ I } , with addition and multiplication defined as ( a + I ) + ( b + I ) = a + b + I , and ( a + I ) ( b + I ) = a b + I .
 
-
+% See "Zahlen" (Ebbinghaus), pg. 259. I think, the construction there can be generalized as follows:
+%
+% Let R be a ring and I be an ideal in R. We then define an equivalence relation ~ in R as follows:
+%
+%   a ~ b   iff   a-b \in I
+%
+% With this equivalence relation in hand, we can form the set of equivalence classes with respect 
+% to ~. This is our quotient ring denoted as R / I. The relation a ~ b is often written as:
+%
+%   a \equiv b  \mod I
+%
+% Maybe we can also write ~_I for the equivalence relation if I is not clear from the context.
+%
+% Questions: 
+% -Does it have to be a _maximal_ ideal? There, it is. Why does it have to be an ideal in
+%  the first place? Wouldn't any subset of R work? Figure out!
+% -How does the "mod" notation specialize to modular integers? Here, the ideal is the multiples of
+%  the modulus m. Let's denote this ideal by M, i.e. M = { k m | k \in Z }. When we write
+%  a \equiv b  \mod m, is this an abbreviation of  a \equiv b  \mod M
 
 
 %\subsection{Special Kinds of Rings}

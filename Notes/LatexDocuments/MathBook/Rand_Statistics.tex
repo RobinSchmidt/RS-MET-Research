@@ -74,13 +74,36 @@
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Entropy}
 
+% I think, this stuff below belongs into the section about probability theory, not statitics. For 
+% here, we should give formulas for estimating the entropy of a source.
+
 
 %\paragraph{Information}
-% Exmplain information content of receiveing one symbol
+% ToDo: Explain information content of receiving one symbol as preparation for the definition of
+% the entropy of a source as the expectation value of the information per symbol. (verify). I think
+% the information $I_s$ per symbol $s$ from a set of symbols $S$ is defined as $- \log_2 (p_s)$ 
+% where $p_s$ is the probability of symbol $s$. The negative sign is needed to make the final value 
+% positive because probabilities are <= 1. Using the base 2 logarithm gives us the information in 
+% the unit of bits (aka Shannons) whereas the natural logarithms would give it in the unit of nats. 
+% These two measures of information are proportional to one another.
+
+
+%\paragraph{Entropy}
+
+% $H = E[I_s] = \frac{1}{|S|} \sum_{s \in S} p_s I_s $
 
 % A Mathematical Theory of Communication (Part 1)
 % https://www.youtube.com/watch?v=n6Vv9CDUhJc
 
+% Entropy - Explained
+% https://www.youtube.com/watch?v=ZBp-uFwYlQg
+% -Nice explanation. Starts with the guessing game. When guesing a number from a given range (say 
+%  1..8), each yes/no question narrows down the possibilities by a factor of two. It's like doing a
+%   binary search algorithm.
+% -Explains also cross entropy: H(p,q) = - \sum_x p(x) \log_2( q(x) )  for two probability 
+%  distributions p(x), q(x). It corresponds to assuming distribution q but the data is actually
+%  distributed with distribution p. ...Is that function asymmetric, i.e. H(p,q) != H(q,p)?
+% -Explains also the KL-divergence
 
 %===================================================================================================
 \subsection{Parameter Estimation}

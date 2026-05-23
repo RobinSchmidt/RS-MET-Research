@@ -343,4 +343,47 @@ https://www.youtube.com/shorts/B6XX_4W9e0Q
 This PDE is Beautiful - Phase Field Modeling
 https://www.youtube.com/watch?v=areJqeWc49E
 
+
+ToDo:
+
+Maybe try to write (or vibe code) a little interactive program (maybe in JS or Python as Jupyter
+notebook) for exploring linear PDEs with constant coefficients of the general form:
+
+  a_0 + a_1 u_t + a_2 u_tt + ... = b_0 + b_1 u_x + b_2 u_xx + ...
+
+where the user has sliders to dial in the coefficients a_i, b_i and a plot shows the solutions and
+updates interactively when the user moves the sliders. It would also need some way to set up intial
+and boundary conditions. Maybe it could also make sense to allow for complex coefficients (like in
+the Schroedinger equation). If we allow complex coeffs, we could give the user sliders for real and
+imaginary parts or mayby use some sort of xy-pad - although I think, that would be harder to use 
+because it would be too easy to dial in a nonzero imaginary part unintentionally - so maybe separate
+1D sliders are the better choice. The constant coeffs a_0 and b_0 could actually be merged into one
+single coeff but for symmetry reasons, I have wrote it down like given. Maybe we could instead 
+replace a_0, b_0 by some sort of driving function. Maybe we could use:
+
+  a_1 u_t + a_2 u_tt + ... + b_1 u_x + b_2 u_xx + ... + f(x,t) = 0
+
+or
+
+  a_1 u_t + a_2 u_tt + ... + b_1 u_x + b_2 u_xx + ... = f(x,t)
+
+instead. We could set f(x,t) to a constant, too. The plot should be some sort of 2D plot. Maybe with
+x going from left to right and t going from front to back such that the front represents the state 
+"now" and the back represents the initial condition. Maybe there could also be a time slider that 
+sets up, what "now" means such that the plot always shows the entire history up to now in a sort of
+waterfall plot. Maybe the app could be called "PDE Explorer"
+
+  
+Question:
+
+How is the Fourier trafo used to solve PDEs vs ODEs? In the book "Harmonic Analysis" pg 28 ff, the
+authors apply a spatial FT to the PDE (heat, wave, Schroedinger, etc.) to obtain an ODE in time 
+only. I think, when applied to an ODE, we get an algebraic equation? What's the general pattern?
+Each FT reduces the dimensionality of the DE by 1? And a 1D DE, i.e. and ODE, therefore becomes
+a algebraic equation, i.e. no "differential" stuff going on anymore.
+
+
+
+
+
 \end{comment}

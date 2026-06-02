@@ -218,6 +218,71 @@ Besides growth, decay and oscillation, ODEs can also exhibit a kind of behavior 
 
 
 
+
+%===================================================================================================
+\subsection{Types of ODEs}
+
+
+%\paragraph{Euler Equations}
+
+% https://de.wikipedia.org/wiki/Eulersche_Differentialgleichung
+
+%\paragraph{Ricatti Equations}
+% https://en.wikipedia.org/wiki/Riccati_equation
+
+%\paragraph{Exact Differential Equations}
+
+%\paragraph{Bernoulli Equations}
+
+
+
+\subsubsection{Sturm-Liouville Theory}
+
+\paragraph{Sturm-Liouville Equations}
+A Sturm-Liouville equation is an ODE of the general form:
+\begin{equation}
+(s(x) \cdot y'(x))' + (\lambda w(x) - q(x)) \cdot y(x) = 0
+\quad \text{or shorter:} \quad
+(s \cdot y')' + (\lambda w - q) y = 0
+\end{equation}
+where $\lambda$ is a constant and $s(x),w(x),q(x)$ are given functions defined on a closed interval $[a,b]$ with $s(x) > 0, w(x) > 0$ on $(a,b)$ and $s(x) \geq 0, w(x) \geq 0$ on $[a,b]$, i.e. these function must be strictly greater than zero on the whole open interval $(a,b)$ but are allowed to be zero at the endpoints. The relevance of this particular form of an ODE is that the set of solutions to such an ODE has certain properties that are desirable when we want to expand an arbitrary function $f(x)$ by using the solutions $y_i(x)$ of this ODE as our basis. Namely, the set of solutions is complete and orthogonal. In the present context that means: ...TBC...
+
+% ToDo:
+% -Give the definition of orthogonality with respect to the given weight function w(x) and
+%  explain how this definition relates to our normal understanding of orthogonality
+% -Explain what completeness means. It means that any (nice enough) function f can be approximated 
+%  to arbitrary precision using a (finite) linear combination of the functions. The infinite 
+%  (weighted) sum converges to the function f (in some suitable sense - maybe not pointwise, but at
+%  least in squared-integrated-error sense). Here "nice enough" means: square integrable, absolutely
+%  integrable and continuous (I think). Or maybe it needs to be smooth? Figure out! Write these 
+%  conditons down in math notation. Like $f \in C^0([a,b]), \int_a^b |f(x)| dx < \infty, ...$
+% -The orthogonality makes it easy to compute the weighting coefficients - namely via an inner 
+%  product between the fucntion f and the basis function y_i (i.e. a projection of f onto y_i). The 
+%  inner product is just the weighted integral over the product f(x) * y_i(x) * w(x) over the 
+%  interval [a,b]. The contributions of the different basis function do not interfere in the 
+%  approximation of f. That is: The optimum weight for y_i (viewed as 1D optimization problem) does
+%  not depend on the present weight of any y_j (that we may take as a fixed and given parameter of 
+%  the optimization problem in this context).
+%   ...verify all of these! A lot of it is just from the top of my head.
+% -Figure out and explain the meaning and purpose of the other functions s(x) and q(x). Are there
+%  any requirements of q(x), too? Or are we totally free to choose any q we like. Maybe it needs to
+%  be at least piecewiese continuous? And maybe bounded? 
+% -Explain how the \lambda_i can be interpreted as eigenvalues and the solutions y_i(x) as
+%  eigenfunctions.
+% -Explain how to incorporate boundary conditions
+% -Explain how the Fourier basis arises as a special case for a specific choice of s,w,q,lambda
+% -See "Harmonic Analysis for ..." (Chirikjian, Kyatkin), pg 45 ff
+
+% 
+
+%\paragraph{Example: Fourier Series}
+
+% What other examples are relevant? Do the Chebychev polynomials also arise as the solution to
+% a Sturm-Liouville equation?
+
+% https://de.wikipedia.org/wiki/Sturm-Liouville-Problem
+% https://en.wikipedia.org/wiki/Sturm%E2%80%93Liouville_theory
+
 %===================================================================================================
 \subsection{Solution Methods}
 

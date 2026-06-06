@@ -801,7 +801,7 @@ isSubsetOf(A,B):
 	  
 These 2 are interdependent in a 2-way mutual recursion:	 
 	 
-isLess(A,B)
+isLess(A,B):
   if(isEmpty(A) and not isEmpty(B))
     return true	    
   elif(isEmpty(B) and not isEmpty(A))
@@ -809,7 +809,7 @@ isLess(A,B)
   else
     return isLess(getMinimum(A), getMinimum(B))
 
-getMinimum(A)
+getMinimum(A):
   if(isEmpty(A))
     raiseError("A must be nonempty!")
     return makeEmpty()

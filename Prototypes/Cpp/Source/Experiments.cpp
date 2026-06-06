@@ -23311,7 +23311,8 @@ void test2x2MatrixInterpolation()
   // interpolate the scaling matrix in the middle directly and then recompose the final matrix. If
   // this works well, it may be used as building block in an interpolation for a 2D affine 
   // transform: We just use the matrix-interpolation algorithm for the matrix-parts of the affine 
-  // transforms and apply linear interpolation to the translational part.
+  // transforms and apply linear interpolation to the translational part. The goal is to make 
+  // transitions between geometric transformations look natural when used in a graphics context.
   //
   // Questions: 
   // -what happens when one of the transforms contains reflection and the other one 
@@ -23319,10 +23320,15 @@ void test2x2MatrixInterpolation()
   //  a "collapsing" transform (i.e. one with determinant zero) which would actually look quite 
   //  natural in an animation of a reflection: when it's half-done, the 2D shapes collapse into the
   //  reflection axis...hopefully - that would be a desirable outcome - we'll see
-  // -Maybe if A and b are both symmetric, it could make more sense to do an eigendecomposition
+  // -Maybe if A and B are both symmetric, it could make more sense to do an eigendecomposition
   //  instead of an SVD?
   // -Maybe we should take the square-roots of the entries of the diagonal matrix, linearly 
   //  interpolate these and then square the results?
+  // -Maybe the interpolation for the scaling matrix would look more natural if we interpolate
+  //  the scaling along each dimension using an exponential law? Like: take the logarithms of the
+  //  scaling factors, interpolate those linearly, then take the exponential again? But: This will
+  //  not work when we need to deal with reflections, i.e. some of the scaleing factors must 
+  //  transition from positive to negative or vice versa.
 
   using Real = double;
   using Mat  = rsMatrix2x2<Real>;

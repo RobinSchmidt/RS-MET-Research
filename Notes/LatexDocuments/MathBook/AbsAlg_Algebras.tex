@@ -24,6 +24,19 @@ where the $+$ operation is understood to be the vector addition that was inherit
 
 % Maybe note that the left linearity requirement would reduce to associativity when we would assume $\alpha, x, y$ to be of the same type and the two products be the same operation.
 
+% Shouldn't the requirements of (left- and right-) linearity be called (left- and right-) 
+% homogeneity and linearity would then be homogeneity _and_ additivity where additivity is:
+% (x + y) z = x z + y z  
+% x (z + y) = x z + y z
+% ...but that's the same as distributivity. Maybe if this definition of "linearity" is indeed the
+% common one in this context, mention this slight inconsistency
+
+% Maybe write a single formula for bilinearity as:
+% (a x) \cdot (b y) = (a b) (x \cdot y)
+% where a b is just the normal product between scalars and x \cdot y is our new product between
+% vectors
+
+
 %...TBC...
 
 % What about (x a) y = x (a y)  and   x (y a) =  (x y) a ? Maybe that's superfluous because the definition of a vector space already requires the scalar multiplication to be commutative? Like  a x = x a for any vector x and any scalar a? Or maybe post-multiplication of a vector with a scalar isn't even a thing? Scaling is just an operation that takes a scalar (aka scaler) and a vector and we always pass the scaler as first argument by convention?
@@ -239,7 +252,7 @@ Very unsurprisingly, an algebra is called commutative when for all elements $x,y
 
 
 \subsubsection{Unital Algebras}
-A unital algebra is an algebra where a multiplicative identity element $e \in V$ exists. This element $e$ satisfies:
+A unital algebra is an algebra where a multiplicative identity element $e \in V$ exists. Note that by saying $e \in V$, we require $e$ to be a vector, not a scalar. This vector $e$ needs to satisfy:
 \begin{equation}
  e \cdot x = x, \quad x \cdot e = x \qquad \forall x \in V
 \end{equation}
@@ -335,16 +348,19 @@ Certain types of non associative algebras satisfy weaker forms of associativity 
 
 
 \subsubsection{Differential Algebras} 
-Differential algebras have additional univariate operator that we call a \emph{derivation}. That is: a derivation takes one vector as input and produces another one. Let's denote the operation as $D$ and use functional notation, i.e. $D(a)$ means: apply the operator $D$ to the vector $a$. The operator must satisfy the product rule:
+Differential algebras have an additional univariate operator that we call a \emph{derivation}. That is: a derivation takes one vector as input and produces another one. Let's denote the operation as $D$ and use functional notation, i.e. $D(a)$ means: apply the operator $D$ to the vector $a$. The operator must satisfy the product rule:
 \begin{equation}
 D(a \cdot b) = a \cdot D(b) + D(a) \cdot b
 %D(a \times b) = a \times D(b) + D(a) \times b
+%D[a \cdot b] = a \cdot D[b] + D[a] \cdot b
 \end{equation}
 Compare this to the product rule that you know from calculus and you will notice that it is indeed the same rule. The vector space of differentiable functions with the pointwise multiplication between the functions as product and the derivative as derivation does indeed form a differential algebra. A subspace of that is the space of all polynomials. If we represent the polynomials as sequences of coefficients, we could use convolution as our product operation. The derivation operation would be to apply the rule how to differentiate polynomials: left-shifting the sequence $a_n$ by one and multiplying by the old index, i.e. informally $D(a_n) = n a_{n+1}$. If we now forget that the sequences originally were meant to represent polynomial coefficients, we have now a differential algebra on (finite) sequences of numbers without necessarily having to think about functions. It would straightforwardly generalize to infinite sequences, too - even if they don't converge as a power series, i.e. don't define a function [VERIFY!]. ...TBC...what other interesting examples are there (subalgebras don't count)? 
 
 % TODO: Maybe use $f,g$ instead of $a,b$ because that is more suggestive. But mention why we do this here. Or maybe use x,y.  An maybe denote  the derivation by a prime instead of D
 
 % TODO: Emphasize the order of D and mul on the right hand side. It matters in non-commutative algebras. Figure out and explain why the definition uses this order and not any of the other 3 possibilities. The 4 possibilities are: a D(b) + D(a) b, a D(b) + b D(a), D(b) a + D(a) b, a D(b) + b D(a), 
+
+% TODO: Maybe use square brackets instead of paretheses to denote the application of the operator for consistency with the section about operator theory (in functional analysis)
 
 % Maybe use \times instead of \cdot to denote a general product in this section and maybe treat it as optional, i.e. a b means the same as a \times b
 
@@ -700,5 +716,11 @@ https://www.youtube.com/watch?v=htYh-Tq7ZBI
 https://de.wikipedia.org/wiki/Vektorraum
 https://de.wikipedia.org/wiki/Heterogene_Algebra
 -includes vectros spaces
+
+
+How Divergence and Curl Were Discovered
+https://www.youtube.com/watch?v=11QvV18JGQM
+-About the history of quaternions and vectors
+
 
 \end{comment}

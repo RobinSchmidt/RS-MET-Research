@@ -23327,8 +23327,9 @@ void test2x2MatrixInterpolation()
   // -Maybe the interpolation for the scaling matrix would look more natural if we interpolate
   //  the scaling along each dimension using an exponential law? Like: take the logarithms of the
   //  scaling factors, interpolate those linearly, then take the exponential again? But: This will
-  //  not work when we need to deal with reflections, i.e. some of the scaleing factors must 
-  //  transition from positive to negative or vice versa.
+  //  not work when we need to deal with reflections, i.e. some of the scaling factors must 
+  //  transition from positive to negative or vice versa. Maybe somethings based in sinh/asinh 
+  //  can be used in such a case? Sinh is the symmetric parts of exp and goes through zero.
 
   using Real = double;
   using Mat  = rsMatrix2x2<Real>;

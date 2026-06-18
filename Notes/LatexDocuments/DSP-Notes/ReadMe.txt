@@ -3,7 +3,8 @@ themselves. Instead, the "shell" document OneAtATime.tex should be loaded and co
 desired, to-be-compiled paper has been included. I did it this way back then in order to set up all
 the style settings consistently in the shell document such that all papers get the same style 
 without having to set it up redundantly in each paper and quite possibly diverging when some changes
-are not applied to all papers in sync.
+are not applied to all papers in sync. ToDo: Maybe try solving this problem differently by writing 
+a common "Setup.txt" file which can be included by all the papers.
 
 When the plots for the GradientsFromDirectionalDerivatives.tex need to be re-generated, the code for
 this is in the main RS-MET codebase in the function meshGradientErrorVsDistance() in the 

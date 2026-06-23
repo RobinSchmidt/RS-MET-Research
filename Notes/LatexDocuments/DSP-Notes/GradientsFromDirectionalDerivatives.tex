@@ -16,15 +16,19 @@ Numerical algorithms for solving partial differential equations (PDEs) by finite
 \subsection{Spatial Gradients on Regular Grids}
 We need to find expressions for approximating spatial derivatives from known function values on grid points. On a regular 2D grid with grid spacings $h_x, h_y$ in the $x$- and $y$-directions, we could approximate the first spatial derivatives $u_x,u_y$ of a bivariate function $u(x,y)$ with a forward difference:
 \begin{equation}
-  u_x \approx \frac{u(x+h_x,y) - u(x,y)} {h_x}  \qquad
+  u_x \approx \frac{u(x+h_x,y) - u(x,y)} {h_x},  \qquad
   u_y \approx \frac{u(x,y+h_y) - u(x,y)} {h_y}
 \end{equation}
-These two estimates of partial derivatives collected into a vector form a first order accurate numerical approximation to the gradient of $u(x,y)$ at some given point $(x,y)$. A central difference would be second order accurate. This would seem to be more desirable and it is what one would usually use in practice on a \emph{regular} grid. But for our eventual goal of a generalization to irregular grids, this one-sided forward difference is a more convenient starting point. But don't worry: in the end, we will get much better accuracy - even better than second order - by suitably combining several of such first order estimates. In fact, the central difference formula can be seen as taking the average of a forward and a backward difference, i.e. the mean of two first order accurate estimates which yields a second order accurate estimate. At the end of the day, we'll do something similar and take a weighted average of several of such first order estimates.
+These two estimates of partial derivatives, when collected into a vector, form a first order accurate numerical approximation to the gradient of $u(x,y)$ at some given point $(x,y)$. A central difference would be second order accurate. This would seem to be more desirable and it is what one would usually use in practice on a \emph{regular} grid. But for our eventual goal of a generalization to irregular grids, this one-sided forward difference is a more convenient starting point. But don't worry: in the end, we will get much better accuracy - even better than second order - by suitably combining several of such first order estimates. In fact, the central difference formula can be seen as taking the average of a forward and a backward difference, i.e. the mean of two first order accurate estimates which yields a second order accurate estimate. At the end of the day, we'll do something similar and take a weighted average of several of such first order estimates.
 
-%We'll do something similar, but with in general more than two first order estimates.
+% Maybe also give the backward-difference and central difference formulas and explain that the
+% central difference formula can be obtained as average of the forward- and backward-difference
+
+% We'll do something similar, but with in general more than two first order estimates.
+
 
 \subsection{Spatial Gradients on Irregular Grids}
-In the literature for numerical methods for PDEs, it's hard to find any methods to estimate these partial derivatives on irregular grids. It's sometimes mentioned, that a 2D Taylor polynomial could be fitted to the grid point, at which we want to estimate the gradient and its neighbor vertices (TODO: references needed). I've also found a paper that describes a rather complicated method based on the Green-Gauss theorem from vector analysis \cite{Xu}. Some textbooks even state that it's outright impossible \cite{Munz} Here, I want to describe a much simpler way that I could not find mentioned anywhere. Maybe it's known already and turned out to be useless for PDE solvers and I have (yet again) re-invented the wheel - but with edges. But if not, this could turn out to be quite useful. The two key ingredients to this approach are directional derivatives and a least-squares fit.
+In the literature for numerical methods for PDEs, it's hard to find any methods to estimate these partial derivatives on irregular grids. It's sometimes mentioned, that a 2D Taylor polynomial could be fitted to the grid point, at which we want to estimate the gradient and its neighbor vertices (TODO: references needed). I've also found a paper that describes a rather complicated method based on the Green-Gauss theorem from vector analysis \cite{Xu}. Some textbooks even state that it's outright impossible \cite{Munz} Here, I want to describe a much simpler way that I could not find mentioned anywhere. Maybe it's known already and turned out to be useless for PDE solvers and I have (yet again) re-invented the wheel. But if not, this could turn out to be quite useful. The two key ingredients to this approach are directional derivatives and a least-squares fit.
 
 \paragraph{An Example with 3 Neighbours}
 Let $P$ be a general grid point that is currently under consideration and let's assume, the point $P$ is connected to 3 other grid points $Q,R,S$ which we will refer to as its neighbors. We want to find a formula for approximating the first spatial derivatives $u_x$ and $u_y$ at $P$ and we assume that (approximate) function values $u(P),u(Q),u(R),u(S)$ are known. We define the vectors $\mathbf{a,b,c}$ as:
@@ -33,9 +37,9 @@ Let $P$ be a general grid point that is currently under consideration and let's 
 \end{equation}
 The first main idea is to approximate the 3 directional derivatives into the $\mathbf{a,b,c}$ directions at P as:
 \begin{equation}
- u_{\mathbf{a}} \approx \frac{u(Q)-u(P)}{||\mathbf{a}||}, \quad
- u_{\mathbf{b}} \approx \frac{u(R)-u(P)}{||\mathbf{b}||}, \quad
- u_{\mathbf{c}} \approx \frac{u(S)-u(P)}{||\mathbf{c}||}
+ u_{\mathbf{a}} \approx \frac{u(Q)-u(P)}{|\mathbf{a}|}, \quad
+ u_{\mathbf{b}} \approx \frac{u(R)-u(P)}{|\mathbf{b}|}, \quad
+ u_{\mathbf{c}} \approx \frac{u(S)-u(P)}{|\mathbf{c}|}
 \end{equation}
 % TODO: Maybe use single vertical lines like |a| to denote the norm of a vector
 Having found the estimates for the 3 directional derivatives, we now need a formula to convert them into estimates for the partial derivatives $u_x,u_y$ into the $x$- and $y$-directions which together constitue 
@@ -113,7 +117,7 @@ a_y u_{\mathbf{a}} + b_y u_{\mathbf{b}} + c_y u_{\mathbf{c}}
 which is easy to solve.
 
 \paragraph{Generalization to N Neighbours}
-Since we have set up the whole thing as a lest-squares fitting problem, the generalization to more than 3 neighbors is trivial: our matrix just gets more rows and so we must just add up more terms in these summations above. The pattern is obvious. When the number of neighbors is 2, we end up with a critically determined system: 2 equations for 2 unknowns, so no problems here either and we don't even have to treat this as a special case in an implementation because the least-squares solution just happens to become an exact solution in this special case. In the case, where there is only 1 neighbor, we are dealing with an underdetermined system, i.e. we have 1 equation for 2 unknowns. In such a case, there will in general be infinitely many solutions and it's common practice to select the solution that has the minimum Euclidean norm from this infinite set. I don't know, if that makes any sense in the context of a PDE solver but I don't care either because this situation is not supposed to occur in this context: we will create meshes where each vertex has at least 2 neighbors - even a corner vertex will.
+Since we have set up the whole thing as a least-squares fitting problem, the generalization to more than 3 neighbors is trivial: our matrix just gets more rows and so we must just add up more terms in these summations above. The pattern is obvious. When the number of neighbors is 2, we end up with a critically determined system: 2 equations for 2 unknowns, so no problems here either and we don't even have to treat this as a special case in an implementation because the least-squares solution just happens to become an exact solution in this special case. In the case, where there is only 1 neighbor, we are dealing with an underdetermined system, i.e. we have 1 equation for 2 unknowns. In such a case, there will in general be infinitely many solutions and it's common practice to select the solution that has the minimum Euclidean norm from this infinite set. I don't know, if that makes any sense in the context of a PDE solver but this situation is not supposed to occur in this context anyway because we will create meshes where each vertex has at least 2 neighbors. Even a corner vertex will. But for the sake of completeness, the code given below will handle this edge case of only 1 neighbor as well. And for 0 neighbors, we'll just assign the zero vector to the gradient.
 
 
 \section{Implementation}

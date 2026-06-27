@@ -212,7 +212,7 @@ ToDo:
   
 - The general algorithm will probably have to formulated in terms of a constrained optimization 
   problem where the constraints are derived from the perfect roundtrip requirements and the 
-  objective for the (numrical?) optimization should be the frequency response of the downsampling 
+  objective for the (numerical?) optimization should be the frequency response of the downsampling 
   kernel d. In this algorithm, we would treat the upsapling kernel as given. Maybe we can, in the 
   general case, produce it as a windowed sinc kernel or maybe by some sort of optimzed FIR design 
   routine.  

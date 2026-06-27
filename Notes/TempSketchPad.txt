@@ -16,6 +16,8 @@ Engrowler/Growlifier
     amp = 1.0 + growlAmount * getRandomNumber();
   return amp * input;
   
+  where "amp" is a member variable that gets updated whenever a cycle boundary was detected.
+  
 - Other parameters that could be changed are filter settings like the center freq for a peaking EQ 
   or the delay time in a delay line. Maybe we could have two biquads in peak eq mode and each gets 
   its own random freq offset on each trigger. That may produce pseudo-random format changes. In a 
@@ -23,13 +25,13 @@ Engrowler/Growlifier
   
 - Maybe instead of using a PRNG, the random number could be derived from the input signal itself 
   using a sort of "hash" function. That would make the output reproducible. To make the effect 
-  invariant with rewspect to the total gain of the input, we could use a signal measure that is 
+  invariant with respect to the total gain of the input, we could use a signal measure that is 
   itself independent of the gain of the signal. Examples could be the crest factor or the 
   cross-correlation of two successive cycles. As we are detecting the cycle boundaries anyway, the 
-  setting elnds itself to use some measurement that is defined over one or multiple past cycles. The
+  setting lends itself to use some measurement that is defined over one or multiple past cycles. The
   hash function could be something like  f(x) = 1 - 2*fmod(c*x, 1.0)  or  f(x) = sin(c*x)  where c 
   is some large (perhaps user defined) constant and x is our signal measure (like the correlation).
-  I defined the functions is such a way that the output is in the range -1..+1 which seems to be 
+  I defined the functions in such a way that the output is in the range -1..+1 which seems to be 
   most convenient here. Perhaps the range 0..1 could also be appropriate. Not sure yet.
   
 - If we do compute a cycle cross correlation along the way to use it as input for the hash function,
@@ -74,7 +76,7 @@ Catalog of anti-aliasing techniques.
   of the two it is depends on what you consider as the baseline reference. Impulse invariant 
   designs have indeed aliased frequency responses such that calling it an anti-aliasing technique
   is somewhat appropriate (although the term is being bent a bit to include frequency response
-  aliasing), bilinear transform based once show frequency warping.
+  aliasing), bilinear transform based ones show frequency warping.
   
 - Parameter range limitation or reduction of parameters that control spectral brightness by the 
   fundamental frequency in various syntesis methods like FM, PD, etc. Pro: Easy to implement. Very
@@ -83,11 +85,15 @@ Catalog of anti-aliasing techniques.
 
 - Highpass filtering: Can get rid of aliasing components below the fundamental which tend to be 
   especially annoying. It's also more in the "cheating" territory using psychoacoustic masking 
-  effects for the higher alias frequencies.
+  effects for the higher alias frequencies. Example: Roland's supersaw. 
+  
+- Maybe the highpass technique could be extended to comb-filtering to clean up the spectrum between
+  the desired harmonics. The highpass only cleans up below the fundamental. A comb would clean up 
+  between harmonics. ...just an idea.
 
 - Quantizing oscillator frequencies to those which have an integer number of samples in one cycle.
   Perhaps combined with internal resampling. Does not really get rid of the aliasing components but
-  strategically places them on top of the already existing harmonic, making their impact far less
+  strategically places them on top of the already existing harmonics, making their impact far less
   objectionable. They only alter the amplitudes but do not introduce new frequency components.
   Pro: efficient, easy to implement, Con: very restrictive in what pitches are allowed.
   
@@ -96,8 +102,13 @@ Catalog of anti-aliasing techniques.
   noise. This "pitch dithering" approach would pick two integer cycle lengths L1, L2 that straddle 
   the desired cycle length L and make sure that the _average_ cycle length equals the desired cycle  
   length by (probabilistically or determistically) alternating between cycles of lengths L1 and L2.
+  See https://github.com/RobinSchmidt/RS-MET/blob/work/Libraries/RobsJuceModules/rapt/Generators/PitchDitherOscs.h
 
-- Non-uniform (re)sampling. See     https://www.researchgate.net/publication/237136907_IMPLEMENTATION_OF_NON-UNIFORM_SAMPLING_FOR_%27ALIAS-FREE_PROCESSING%27_IN_DIGITAL_CONTROL
+- Non-uniform (re)sampling. 
+  See https://www.researchgate.net/publication/237136907_IMPLEMENTATION_OF_NON-UNIFORM_SAMPLING_FOR_%27ALIAS-FREE_PROCESSING%27_IN_DIGITAL_CONTROL
+  I think, this could be seen as extending the pitch-dithering idea from periodic to arbitrary 
+  signals. Although, for transient and noisy signals, aliasing may actually not be such a big 
+  problem anyway. But maybe form inharmonic steady signals, it could be useful.
   
 - Advanced interpolation techniques like (windowed) sinc interpolation. Theoretically, this ampounts
   to perfect resampling, i.e. going back to the continuous time domain and then back to a new 
@@ -126,7 +137,8 @@ ResoVerb or TuneVerb or ModalVerb:
 - A reverb based on allpasses based on my parallel-comb-bank-allpass filter
 
 - The resonances of the allpass can be adjusted to be musical notes such that we treat the "metallic
-  resonances" as a desirable feature, not as a flaw.
+  resonances" as a desirable feature, not as a flaw. When tuned to musically useful pitches, e.g. 
+  the root note of the song, they may actually sound good.
   
 - Maybe for each note we could tune 2 or 3 modal filters to slightly above and below in order to get
   sinusoidal undulations of amplitude. The frequency of these undulations, i.e. the frequency 
@@ -162,11 +174,11 @@ polynomials with and without added noise. Maybe call it maximum likelikhood dequ
 
 Maybe for the dither noise, the instantaneous probability distribution should depend on the sample 
 value. ...well - it kind of already does by using the sample value as mean but maybe it could also 
-depend in other vways on it - maybe by adjusting the variance accoridng to how close it is to a 
+depend in other ways on it - maybe by adjusting the variance according to how close it is to a 
 quantization step. I'm not sure, if that makes sense, though. Maybe we could do something similar as
-in the pitch dithering. Maybe we could call it smart dithering or adaptive dithering. the goal of 
+in the pitch dithering. Maybe we could call it smart dithering or adaptive dithering. The goal of 
 the "smartness" should be that the reconstructed signal (by our regression algo) of a piecewise 
-polynomial input signal should have an expectation value that matches the input and a minimal 
+polynomial input signal should have an expectation value that matches the input and have a minimal 
 variance.
  
 Maybe we can combine the dithering of the amplitude values with jittering of (re)sampling instants 

@@ -27,7 +27,7 @@ Some of the most basic combinatorial concepts come from counting certain things 
 % The terminology seems a mess
 
 \paragraph{Permutations and Factorials}
-Let's say that we have $n$ different (i.e. distinguishable) objects and we want to know, how many ways there are, to put these objects into a different order. For example, the possible orders for the $3$ objects $a,b,c$ are $abc$, $acb$, $bac$, $bca$, $cab$, $cba$. These are $6$ different orders. We call these different orderings of a number of $n$ different objects \emph{permutations}. The term "permute" means something like "reorder" where identity (i.e. do-nothing) reordering also counts as trivial edge case (as is typical in math). The number of permutations of $n$ distinguishable objects is given by \emph{factorial} of $n$:
+Let's say that we have $n$ different (i.e. distinguishable) objects and we want to know, how many ways there are, to put these objects into a different order. For example, the possible orders for the $3$ objects $a,b,c$ are $abc$, $acb$, $bac$, $bca$, $cab$, $cba$. These are $6$ different orders. We call these different orderings of a number of $n$ different objects \emph{permutations}. The term "permute" means something like "reorder" where the identity (i.e. do-nothing) reordering also counts as trivial edge case (as is typical in math). The number of permutations of $n$ distinguishable objects is given by \emph{factorial} of $n$:
 \begin{equation}
 P_n = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n = n!
 \end{equation}
@@ -64,6 +64,7 @@ C_n^k = \binom{n}{k}
       = \frac{n \cdot (n-1) \cdot (n-2) \cdot \ldots \cdot (n-k+1)}{k!}
       = \frac{\prod_{m=n-k+1}^{n} m}{k!}
 \end{equation}
+% ToDo: Maybe write the product in the rhs as $\frac{1}{k!} \prod_{m=n-k+1}^{n}$. It may look better
 which is, for this reason, typically pronounced as "$n$-choose-$k$". The formula above in terms of factorials is not the only way to compute binomial coefficents. A nice way to compute them is via \emph{Pascal's triangle} which looks like this:
 %\begin{center}  % doesn't work!
 %\begin{verbatim}
@@ -306,7 +307,7 @@ Consider the task of computing a product of 4 numbers $p = a \cdot b \cdot c  \c
 1   5  14  28  42  42          42
 \end{verbatim}
 \end{center}
-The recursive rule is $C(n,k) = C(n-1,k) + C(n,k-1)$ where I use the notation $C(n,k)$ for the number in the $n$th row and $k$th column. For example, in the 3rd line, we get 3=2+1, 5=2+3, in the 4th line it is 4=3+1, 9=5+4, 14=5+9, etc.. The Catalan numbers $C_n$ themselves appear as the last number on each row in the triangular table. For convenience, I have repeated them in the additional column to the right of the actual triangle. Every entry is the sum of the two neighbors to the left and to the top except for the first value of each row where the entries are just 1 and the last value of each row which just repeats the second to last. Well - that actually fits the pattern and the formula as well if in this case we just assume the missing top or left neighbor to be 0. The inner numbers of the triangle do also haven an interpretation: $C(n,k)$ gives the number of strings consisting of $n$ $A$s and $k$ $B$s such that no initial segment of the string has more $B$s than $A$s. The $C_n$ are, as said, the number of different possible parenthesations of a product of $n$ factors. We may care about the parenthesation in an evaluation of a matrix product involving $n$ matrices. In such a product, the computational cost may differ vastly depending on where we set the parentheses. ...TBC...Give example with 3 matrices
+The recursive rule is $C(n,k) = C(n-1,k) + C(n,k-1)$ where I use the notation $C(n,k)$ for the number in the $n$th row and $k$th column. For example, in the 3rd line, we get 3=2+1, 5=2+3, in the 4th line it is 4=3+1, 9=5+4, 14=5+9, etc.. The Catalan numbers $C_n$ themselves appear as the last number on each row in the triangular table. For convenience, I have repeated them in the additional column to the right of the actual triangle. Every entry is the sum of the two neighbors to the left and to the top except for the first value of each row where the entries are just 1 and the last value of each row which just repeats the second to last. Well - that actually fits the pattern and the formula as well if in this case we just assume the missing top or left neighbor to be 0. The inner numbers of the triangle do also have an interpretation: $C(n,k)$ gives the number of strings consisting of $n$ $A$s and $k$ $B$s such that no initial segment of the string has more $B$s than $A$s. The $C_n$ are, as said, the number of different possible parenthesations of a product of $n$ factors. We may care about the parenthesation in an evaluation of a matrix product involving $n$ matrices. In such a product, the computational cost may differ vastly depending on where we set the parentheses. ...TBC...Give example with 3 matrices, explain why the example for the inner numbers it not contrived (it surely appears to be), i.e. where it arises naturally
 
 % https://en.wikipedia.org/wiki/Catalan_number
 % https://en.wikipedia.org/wiki/Catalan%27s_triangle

@@ -25413,13 +25413,34 @@ void testMerge()
   int dummy = 0;
 }
 
-void testRecurrentNetwork()
+
+
+bool testRecurrentNetwork1()
 {
+  bool ok = true;
+
   using Real = double;
+  using Vec3 = rsVector3D<Real>;
   using Net  = rsRecurrentNetwork<Real, Real>;
 
-
   Net net;
+  //net.addNode(Vec3(0,0,0));
+  // When we do this, it crashes on destruction. Apparently, the delayline memory gets deleted 
+  // twice or something.
+
+  //net.addWire(0,0, 1.0);
+
+  return ok;
+}
+
+
+void testRecurrentNetwork()
+{
+  bool ok = true;
+
+  ok &= testRecurrentNetwork1();
+
+  rsAssert(ok);
 }
 
 

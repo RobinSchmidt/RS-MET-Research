@@ -6,11 +6,15 @@ Idea:
  neurons
 -if the input exceeds a (global? or per neuron?) threshold and the neuron is in "ready" mode, 
  it fires a spike and enters "recovering" mode in which it stays for a given time (global 
- parameter)
+ parameter...or maybe per neuron?)
 -the weights and delays are features of each connection
 -some neurons receive external inputs, these are input neurons - we may apply an input (a number in 
  0..1) and the input lets it produce periodic spikes whose rate depends on the strength of the 
  input. The maximum rate is 1 / recovery-time.
+-Maybe it should fire not for a single iteration but over multiple ones. We could implement this by
+ having 3 states: "ready", "firing", "recovering" and/or maybe we could smooth the spike at the 
+ output with another lowpass.
+ 
 
 Implementation:
 -each neuron has a delayline at its input into which at each time-step the input is gathered from
@@ -34,7 +38,9 @@ Learning:
 -maybe new neurons can pop into existence randomly
 -maybe the neurons should have a notion of their position in 3D space and connection delays are
  based on the distance
- -maybe these neurons could move in order to modify the connection delays
+ -maybe these neurons could move in order to modify the connection delays or the delays are adapted
+  over time modeling axons that do not go straight from source to target neuron but in some other
+  path
 
 Notes:
 -It's actually a kind of nonlinear feedback-delay-network. The feedback matrix consists of 

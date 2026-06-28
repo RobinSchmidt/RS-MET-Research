@@ -9706,7 +9706,12 @@ void rsPlotRootDistancesAndMap(
 
 //=================================================================================================
 
-/** UNDER CONSTRUCTION. Just a stub */
+/** UNDER CONSTRUCTION. Just a stub. 
+
+
+The idea is explained in:  RS-MET-Research/Notes/RecurrentActivationNetwork.txt
+
+*/
 
 template<class TSig, class TPar>
 class rsRecurrentNetwork
@@ -9714,9 +9719,29 @@ class rsRecurrentNetwork
 
 public:
 
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  void addNode(rsVector3D<TPar> nodePosition)
+  {
+    nodes.push_back(Node(nodePosition));
+
+    // ToDo: Init delay line and filter for the node
+  }
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Internal types
+
   class Node
   {
   public:
+
+    Node(rsVector3D<TPar> nodePosition)
+    {
+      pos = nodePosition;
+    }
 
   private:
 
@@ -9731,7 +9756,7 @@ public:
 
     // Sample counter to implement the recovery phase:
     int sampleCounter =   0;
-    int recoveryTime  = 100;
+    //int recoveryTime  = 100;  // Maybe this should be set globally
 
   };
 
@@ -9744,8 +9769,14 @@ public:
 
     Node* source;
     Node* target;
-    TPar  transmitDelay; // We should probably make this proportional to the Euclidean distance
-                         // between the source and target node
+
+    TPar  weight = TPar(1);
+    // Shall be adapted by some sort of learning algorithm. I don't know yet how. Maybe Hebbian
+    // learning could work?
+
+    TPar  transmitDelay = TPar(0);
+    // We should probably make this delay (initially) proportional to the Euclidean distance 
+    // between the source and target node. Maybe later it can be adapted
 
   };
 
@@ -9754,5 +9785,10 @@ protected:
 
   std::vector<Node> nodes;
   std::vector<Wire> wires;
+
+  int recoveryTime = 100;
+
+  // ToDo: have other global parameters such as the smoothing filter cutoff (or decay time) and 
+  // maybe a scaler for all delays.
 
 };

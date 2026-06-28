@@ -9701,3 +9701,58 @@ void rsPlotRootDistancesAndMap(
   plotMatrixWithMarkers(D, rootsMap); 
 }
 
+
+
+
+//=================================================================================================
+
+/** UNDER CONSTRUCTION. Just a stub */
+
+template<class TSig, class TPar>
+class rsRecurrentNetwork
+{
+
+public:
+
+  class Node
+  {
+  public:
+
+  private:
+
+    // 3D vector to encode the geometric position:
+    rsVector3D<TPar> pos;
+
+    // Input delayline to implement the transmission delays:
+    rsDelay<TSig> delay;
+
+    // Lowpass filter to implement the smoothing:
+    rsOnePoleFilter<TSig, TPar> smoother;
+
+    // Sample counter to implement the recovery phase:
+    int sampleCounter =   0;
+    int recoveryTime  = 100;
+
+  };
+
+  class Wire
+  {
+
+  public:
+
+  private:
+
+    Node* source;
+    Node* target;
+    TPar  transmitDelay; // We should probably make this proportional to the Euclidean distance
+                         // between the source and target node
+
+  };
+
+
+protected:
+
+  std::vector<Node> nodes;
+  std::vector<Wire> wires;
+
+};

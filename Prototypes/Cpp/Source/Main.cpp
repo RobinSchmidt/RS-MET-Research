@@ -105,7 +105,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testRingExtensions();
   //testPolynomialQuotientRing();  // Stub
 
-  testMultiVarPolynomial();        // Stub
+  //testMultiVarPolynomial();        // Stub
 
   // ToDo: Drag over the code for arithmetic derivatives from the main repo.
 
@@ -179,6 +179,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Misc:
   //testMerge();  // Trying to find an in-place merge algorithm - not sure, if that's possible, though
+  testRecurrentNetwork();                 // Stub
 
 
   //testGaussIntRoots();                  // stub
@@ -186,7 +187,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   // Riemann zeta function:
   //testPolyaPotenialFormulas();
   //testPolarPotenialFormulas();
-  testRiemannZeta();
+  //testRiemannZeta();
   //plotZetaPotential();
   //plotZetaPotentialNumeric();
   //testNumericPotential();

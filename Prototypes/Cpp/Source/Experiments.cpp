@@ -25410,8 +25410,18 @@ void testMerge()
 
   A = Vec({1, 4, 7, 8, 2, 3, 5, 6});
   
-  int dummy = 0; 
+  int dummy = 0;
 }
+
+void testRecurrentNetwork()
+{
+  using Real = double;
+  using Net  = rsRecurrentNetwork<Real, Real>;
+
+
+  Net net;
+}
+
 
 
 //-------------------------------------------------------------------------------------------------

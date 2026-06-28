@@ -877,5 +877,3 @@ void rsPitchDitherSuperSawOsc<T>::updateCycleLength(uint32_t i)
 //   it is considered a problem, that is. Having randomized things not always exactly reproducible 
 //   may be borderline acceptable in a synthesizer plugin but it may thwart unit testing.
 
-
-

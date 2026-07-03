@@ -2,13 +2,20 @@ Draft - Under construction
 
 The goal is to produce a pair of FIR filter kernels u[m] and d[m] where u is used for upsampling and
 d for downsampling such that an upsample -> downsample roundtrip is an identity operation. The 
-setting is as follows: We get an input signal x[n] and we want to oversample it by a factor M. We 
-first produce a signal y[m] by zero stuffing the original input signal. We will have y[m=n*M] = x[n]
-and for all other values m that are not a multiple of M, y[m] is zero. To this y signal, we apply 
-the upsampling filter which we represent by its impulse respone u[m] to obtain z[m]. z[m] shall be a
-smoothed version of y[m]. The filter u[m] serves as anti-imaging lowpass. Then, we apply to z[m] the
-downsampling filter represented by its impulse response (aka kernel) d[m] to obtain w[m]. What we 
-want is:
+typical application of this scheme is for audio effects that benefit from oversampling (such as
+waveshaping distortion) where we desire to leave the signal completely untouched (up to numerical 
+roundoff errors) when the user dials in neutral settings (like using the identity function as 
+waveshaping function). In common oversampling schemes, the upsampling -> downsampling roundtrip 
+itself would already modify the signal. It may be inaudible but it's undesirable anyway, so we want
+to try to avoid that.
+
+The setting is as follows: We get an input signal x[n] and we want to oversample it by a factor M. 
+We first produce a signal y[m] by zero stuffing the original input signal. We will have 
+y[m=n*M] = x[n] and for all other values m that are not a multiple of M, y[m] is zero. To this y 
+signal, we apply the upsampling filter which we represent by its impulse respone u[m] to obtain 
+z[m]. z[m] shall be a smoothed version of y[m]. The filter u[m] serves as anti-imaging lowpass. 
+Then, we apply to z[m] the downsampling filter represented by its impulse response (aka kernel) d[m]
+to obtain w[m]. The filter d[m] serves as anti-aliasing lowpass. What we want is:
 
   w[n*M] = y[n*M]
 
@@ -16,6 +23,7 @@ such that when decimating w[m] to extract every M-th value, we get our original 
 exactly. For values of m that are not a multiple of M, we do not yet have any conditions. For the 
 time being, these values can be whatever they want to be. We will later use these as degrees of 
 freedom to optimize our filters u[m],d[m] to some criteria.
+
 
 
 ...TBC...

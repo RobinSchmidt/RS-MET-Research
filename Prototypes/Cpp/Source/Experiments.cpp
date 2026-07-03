@@ -25424,9 +25424,11 @@ bool testRecurrentNetwork1()
   using Net  = rsRecurrentNetwork<Real, Real>;
 
   Net net;
-  //net.addNode(Vec3(0,0,0));
+  net.addNode(Vec3(0,0,0));
   // When we do this, it crashes on destruction. Apparently, the delayline memory gets deleted 
-  // twice or something.
+  // twice or something. Using nodes.emplace_back(Node(nodePosition)); in addNode does not fix it.
+  // There are some comments about this in class rsDelay. It has to do with shallow copying a
+  // rsDelay object, I think.
 
   //net.addWire(0,0, 1.0);
 

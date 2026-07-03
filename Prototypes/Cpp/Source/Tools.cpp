@@ -9724,7 +9724,14 @@ public:
 
   void addNode(rsVector3D<TPar> nodePosition)
   {
-    nodes.push_back(Node(nodePosition));
+    //nodes.push_back(Node(nodePosition));
+    nodes.emplace_back(Node(nodePosition));
+    // Nope! Both variants lead to double deletions. Maybe we should let the rsDelay member be a 
+    // pointer rather than a direct variable? But that would be ugly. How can we avoid the
+    // copy altogether? Maybe by using a vector of pointers to nodes rather than a vector of nodes?
+    // Or maybe we can use std::move to move the node into the vector? Or maybe we can use 
+    // std::unique_ptr<Node> in the vector? Or maybe in class Node use a pointer to rsDelay<TSig>
+    // instead of a direct object member
 
     // ToDo: Init delay line and filter for the node
   }

@@ -25,3 +25,10 @@ ToDo:
   Sabine Hossenfelder said that the latter is the best at math stuff. ...but I'm afraid, it requires
   a subscription
 
+
+
+Reosurces:
+
+https://github.com/kunitoki/sonic-skills
+-pack of Markdown skills for reviewing, debugging, explaining, and implementing audio software. 
+

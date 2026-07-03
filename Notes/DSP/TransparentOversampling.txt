@@ -13,9 +13,11 @@ The setting is as follows: We get an input signal x[n] and we want to oversample
 We first produce a signal y[m] by zero stuffing the original input signal. We will have 
 y[m=n*M] = x[n] and for all other values m that are not a multiple of M, y[m] is zero. To this y 
 signal, we apply the upsampling filter which we represent by its impulse respone u[m] to obtain 
-z[m]. z[m] shall be a smoothed version of y[m]. The filter u[m] serves as anti-imaging lowpass. 
-Then, we apply to z[m] the downsampling filter represented by its impulse response (aka kernel) d[m]
-to obtain w[m]. The filter d[m] serves as anti-aliasing lowpass. What we want is:
+z[m] such that z[m] shall be a smoothed version of y[m]. The filter u[m] serves as anti-imaging
+lowpass. At this point, we may eventually insert our ovesampled effect algorithm. But here, we 
+assume that we do nothing at all, i.e. leave the usampled signal z[m] untouched. Then, we apply to
+z[m] the downsampling filter represented by its impulse response (aka kernel) d[m] to obtain w[m]. 
+The filter d[m] serves as anti-aliasing lowpass. What we want is:
 
   w[n*M] = y[n*M]
 

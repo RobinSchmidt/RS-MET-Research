@@ -63,7 +63,7 @@ Catalog of anti-aliasing techniques.
 
 - ADAA (Anti Derivative Anti-Aliasing): Applicable to waveshapers
 
-- DSF (Discrete Summation Formulas):
+- DSF (Discrete Summation Formulas): ....
 
 - Lowpass filtering before downsampling. Applicable to waveform playback at higher speed.
 
@@ -108,9 +108,9 @@ Catalog of anti-aliasing techniques.
   See https://www.researchgate.net/publication/237136907_IMPLEMENTATION_OF_NON-UNIFORM_SAMPLING_FOR_%27ALIAS-FREE_PROCESSING%27_IN_DIGITAL_CONTROL
   I think, this could be seen as extending the pitch-dithering idea from periodic to arbitrary 
   signals. Although, for transient and noisy signals, aliasing may actually not be such a big 
-  problem anyway. But maybe form inharmonic steady signals, it could be useful.
+  problem anyway. But maybe for inharmonic steady signals, it could be useful.
   
-- Advanced interpolation techniques like (windowed) sinc interpolation. Theoretically, this ampounts
+- Advanced interpolation techniques like (windowed) sinc interpolation. Theoretically, this amounts
   to perfect resampling, i.e. going back to the continuous time domain and then back to a new 
   discrete time domain at a different sampling rate.
   
@@ -143,7 +143,7 @@ ResoVerb or TuneVerb or ModalVerb:
 - Maybe for each note we could tune 2 or 3 modal filters to slightly above and below in order to get
   sinusoidal undulations of amplitude. The frequency of these undulations, i.e. the frequency 
   difference between center freq and outer freqs may be different for each mode such that higher 
-  modes modulate faster and qe get a complex overall modulation pattern.
+  modes modulate faster and we get a complex overall modulation pattern.
   
 - Maybe a similar idea can be applied to the comb filters in an FDN. Tune them to musical notes. 
   Maybe it can also be applied to old school serial allpasses / parallel combs structures, i.e. 
@@ -165,7 +165,7 @@ tweakable parameter (together with the number of data points to use). We could a
 types of functions such as (windowed) sincs (with different shifts), Gaussians, Wavelets, etc.
 
 We could try to apply dithering before the quantization step. Maybe also try it with dithering only
-without subsequent quatization. Can we remove the dither noise again - well, certainly not 
+without subsequent quantization. Can we remove the dither noise again - well, certainly not 
 completely but maybe we can reduce it. The dithering noise and the quantization can both be seen as
 processes that add noise (dither noise and quantization noise).
 

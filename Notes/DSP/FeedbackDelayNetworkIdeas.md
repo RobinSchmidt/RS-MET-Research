@@ -71,7 +71,7 @@ ToDo
   (assuming high shelvers) by taking its square root? Try it!
 
 - Try picking up output signals after the A filters *and* after the B filters. This should be 
-  particularly good for the initial echo density because we will see early reflectios with all 9
+  particularly good for the initial echo density because we will see early reflections with all 9
   delay values.
 
 - Try to find optimization algorithms for the delay times that search for assignments of the 6 

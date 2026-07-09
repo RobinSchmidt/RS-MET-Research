@@ -14,7 +14,7 @@ We first produce a signal y[m] by zero stuffing the original input signal. We wi
 y[m=n*M] = x[n] and for all other values m that are not a multiple of M, y[m] is zero. To this y 
 signal, we apply the upsampling filter which we represent by its impulse respone u[m] to obtain 
 z[m] such that z[m] shall be a smoothed version of y[m]. The filter u[m] serves as anti-imaging
-lowpass. At this point, we may eventually insert our ovesampled effect algorithm. But here, we 
+lowpass. At this point, we may eventually insert our oversampled effect algorithm. But here, we 
 assume that we do nothing at all, i.e. leave the usampled signal z[m] untouched. Then, we apply to
 z[m] the downsampling filter represented by its impulse response (aka kernel) d[m] to obtain w[m]. 
 The filter d[m] serves as anti-aliasing lowpass. What we want is:
@@ -37,16 +37,16 @@ want to produce a fitting downsampling kernel d. For example, when upsamling by 
 linear interpolation, we would indeed get a kernel of length 3 which would look like 
 u = [1 2 1] / 2. It turns out that our d will have to be of length 5. 
 
-...Why? What's the general formula? I think, it's because we need to shift the kernel u into the 
-matrix rows until it disappears and the number of columns of the resulting matrix is our length for 
-d?  I think, we need to produce a circulant matrix from u such that we can express the convolution 
-of u and d as a matrix-vector product with an unknown vector d. The convolution result will become 
-our right hand side vector r. Our perfect reconstruction constraints will become requirements on 
-certain entries of this rhs vector r, namely: the middle sample must be one and we need to see zeros 
-at all samples that are a distance of n*M, where n is an integer, away from the middle (verify!). 
-All the other entries of the rhs vector are not yet determined by our perfect reconstruction 
-constraints. They will be our degrees of freedom that we can use to optimize the frequency response 
-of the decimation kernel d.
+...Why? What's the general formula? I figured it out for this special case by trial and error. In
+the general case, I think, we need to shift the kernel u into the matrix rows until it disappears 
+and the number of columns of the resulting matrix is our length for d? I think, we need to produce a
+circulant matrix from u such that we can express the convolution of u and d as a matrix-vector
+product with an unknown vector d. The convolution result will become our right hand side vector r.
+Our perfect reconstruction constraints will become requirements on certain entries of this rhs
+vector r, namely: the middle sample must be one and we need to see zeros at all samples that are a
+distance of n*M, where n is an integer, away from the middle (verify!). All the other entries of the
+rhs vector are not yet determined by our perfect reconstruction constraints. They will be our
+degrees of freedom that we can use to optimize the frequency response of the decimation kernel d.
 
 ...
 
@@ -60,8 +60,9 @@ u and a 5th order filter d, we can express the convolution as the following matr
   0   0   u2  u1  u0     d4     r4
   0   0   0   u2  u1            r5  <--- = 0   Eq. 3
   0   0   0   0   u2            r6
-							  
-The perfect reconstruction conditions give us 3 equations from the marked 3 lines (verify!):
+  
+where we use the shorthand notation u0 = u[0], etc. The perfect reconstruction conditions give us 3
+equations from the marked 3 lines (verify!):
 
   u1*d0 + u0*d1                         = 0    Eq. 1
           u2*d1 + u1*d2 + u0*d3         = 1    Eq. 2

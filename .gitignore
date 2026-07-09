@@ -59,6 +59,7 @@
 
 # Misc:
 *.blg
+*.bkp
 
 # Temporary 
 *.synctex(busy)

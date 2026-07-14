@@ -1465,7 +1465,7 @@ void testPitchDitherSuperSawImpls()
   // also apply a highpass filter because that's what the JP-8000 did. It did it to supress the 
   // aliasing products below the fundamental. We don't have such aliasing here - but we may have 
   // some noise below the fundamental which may also be worth filtering out. Also, maybe it's good
-  // to match the waveshape because that will change how such a signal will respond to wvaeshaping
+  // to match the waveshape because that will change how such a signal will respond to waveshaping
   // distortion.
 
   using Real = float; 
@@ -1655,41 +1655,70 @@ void testPitchDitherSuperSawImpls()
   // - Move the code over to the main repo and continue improving it there.
 }
 
-void testPitchDitherSuperSaw2()
+void testPitchDitherSuperSawFiltered()
 {
   // Under construction
 
-  using Real = float; 
+  using Real = float;
   using Vec  = std::vector<Real>;
-  using PDO  = rsPitchDitherOsc<Real>;
-  using SSO  = rsPitchDitherSuperSawOsc<Real>;
+  using SVF  = rsStateVariableFilter<Real, Real>;
 
   // Setup:
   int  sampleRate =  44100;      // Sample rate for the wave files
-  int  numSamples =   5000;      // Number of samples to produce
-  int  seed       =      3;      // Seed for PRNG
+  int  numSamples = 200000;      // Number of samples to produce
+  int  seed       =      0;      // Seed for PRNG
   Real midFreq    =   1000.0;    // Center or middle frequency for saw cluster
   Real amp        =      0.125;  // Amplitude of the saws
   Real detune     =      0.3;    // Supersaw detune in 0..1
   Real mix        =      1.0;    // Supersaw mix in 0..1
+  Real hpfCut     =      1.0;    // Highpass cutoff as fraction of osc freq
+  Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
 
+  // Produce the raw supersaw:
+  Real fs = Real(sampleRate);
+  int  N  = numSamples;
+  Vec supSawRaw = amp * getPitchDitherSuperSaw3(midFreq, fs, detune, mix, N, seed);
 
-  SSO sso;
+  // Apply highpass filter(s):
+  SVF hpf;
+  Real omega = hpfCut * Real(2*PI)*midFreq/sampleRate;
+  hpf.setupHighpass(omega, hpfQ);
+  Vec supSawHp1 = filterResponse(hpf, numSamples, supSawRaw);
+  Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);
+  //rsPlotArrays(5000, &supSawRaw[0], &supSawHp1[0], &supSawHp2[0]);
+
+  // Write supersaw signals to wave files:
+  rosic::writeToMonoWaveFile("PiDiSupSaw.wav",    &supSawRaw[0], N, fs);
+  rosic::writeToMonoWaveFile("PiDiSupSawHp1.wav", &supSawHp1[0], N, fs);
+  rosic::writeToMonoWaveFile("PiDiSupSawHp2.wav", &supSawHp2[0], N, fs);
+  int dummy = 0;
+
 
   // ToDo:
   // 
-  // - Use getPitchDitherSuperSaw1(..) to produce a reference signal and then try to recreate it 
-  //   via rsPitchDitherSuperSawOsc. Maybe we should just implement a 3rd version of the function
-  //   getPitchDitherSuperSaw1(..) and test it with the experiment above. That would be more 
-  //   economic.
+  // - Use different kinds of filters on the supersaw. 2nd and 4th order SVF highpass, higher order
+  //   Papoulis highpass, 2nd order allpass that rings at the fundamental, etc.
+  //
+  // - The goal of the highpasses is to remove the noise below the fundamental. The goal of the 
+  //   allpasses is to regain a sense of tonality in the higher registers where the raw (even 
+  //   highpassed) pitch-dithered supersaw becomes very noisy. The idea in using a Papoulis 
+  //   highpass is that this type of highpass rings stronly at the cutoff freq. Maybe try also an 
+  //   elliptic highpass. We want to use the filter's ringing to our advantage, namely to make it 
+  //   sound more pitched. Maybe we could also tune further allpasses to the harmonics.
+  //
+  // - Maybe the ringing time (i.e. the Q) of the allpass should increase with frequency because
+  //   lower frequencies are less noisy such that they may need less rinigng to impose the pitched
+  //   character.
 }
 
 
 
 void testPitchDitherSuperSaw()
 {
+  testPitchDitherSuperSawFiltered();
+
   testPitchDitherSuperSawImpls();
-  testPitchDitherSuperSaw2();
+  testPitchDitherSuperSawFiltered();
 
   // ToDo: 
   //

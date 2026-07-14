@@ -1713,6 +1713,16 @@ void testPitchDitherSuperSawFiltered()
   // - When using comb filters, we may try to also restrict them to integer delayline lengths and
   //   dither those lengths as well - either in sync or not with the dithering of the (central) 
   //   osc.
+  //
+  // - I tried in Audacity to distort the highpassed supersaw with a soft clipper. It does 
+  //   introduce a lot of low frequency garbage content. When we use another highpass to filter 
+  //   that away, we get a spectrum that looks very similar to the original highpassed supersaw. 
+  //   In particular, it doesn't seem like the spectrum is becoming much more complex. I found that
+  //   a bit surprising because I expected to get a much more spectrally messy result. Investigate 
+  //   further, how pitch-dithered super(!)saws interact with waveshaping and (highpass) filtering
+  //   and how that affects the final output spectrum. For single saws (or other single osc
+  //   waveforms), we already know the answer: Waveshaping just changes the waveform but it 
+  //   doesn't destroy the pitch-ditheredness.
 }
 
 void testPitchDitherSuperSaw()

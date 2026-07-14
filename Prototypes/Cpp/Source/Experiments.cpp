@@ -1636,9 +1636,8 @@ void testPitchDitherSuperSawFiltered()
   Real mix        =      1.0;    // Supersaw mix in 0..1
   Real hpfCut     =      1.0;    // Highpass cutoff as fraction of osc freq
   Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
-
   Real apfFrqRat  =      1.0;
-  Real apfQ       =    100.0;
+  Real apfQ       =      2.0;
 
   // Produce the raw supersaw:
   Real fs = Real(sampleRate);
@@ -1657,10 +1656,12 @@ void testPitchDitherSuperSawFiltered()
   SVF apf;
   Real apfW = apfFrqRat * Real(2*PI)*midFreq/sampleRate;
   apf.setupAllpass(apfW, apfQ);
+  Vec impRespAp = impulseResponse(apf, 5000, 1.f);
   Vec supSawAp1 = filterResponse(apf, numSamples, supSawRaw);
   Vec supSawAp2 = filterResponse(apf, numSamples, supSawAp1);
+  rsPlotArrays(5000, &impRespAp[0]);
   //rsPlotArrays(5000, &supSawRaw[0], &supSawAp1[0], &supSawAp2[0]);
-  //rsPlotArrays(5000, &supSawAp2[0]);
+  rsPlotArrays(5000, &supSawAp2[0]);
 
   // Write supersaw signals to wave files:
   rosic::writeToMonoWaveFile("PiDiSupSaw.wav",    &supSawRaw[0], N, fs);
@@ -1690,10 +1691,12 @@ void testPitchDitherSuperSawFiltered()
   //   ladder highpass that can be switched between 6,12,18,24 dB/oct and can have some resonance.
   //   Or use a biquad highpass with adjustable Q.
   // 
-  // - The allpasses do not seem to do much even with very high Q settings. Why? Try plotting the
-  //   impulse-repsonse and ringing response.
+  // - The allpasses do not seem to do much even with very high Q settings like 100. Why? Try 
+  //   plotting the impulse-repsonse and ringing response. OK - I see. The allpass is in fact 
+  //   ringing for a long time but the amplitude of this ringing is tiny compared to the initial 
+  //   spike when the Q is high. Increasing Q makes it ring longer but with less amplitude.
   //
-  // 
+  //
   // ToDo:
   // 
   // - Use different kinds of filters on the supersaw. 2nd and 4th order SVF highpass, higher order
@@ -1741,6 +1744,12 @@ void testPitchDitherSuperSawFiltered()
   //   and how that affects the final output spectrum. For single saws (or other single osc
   //   waveforms), we already know the answer: Waveshaping just changes the waveform but it 
   //   doesn't destroy the pitch-ditheredness.
+  //
+  // - Try using a long chain of allpasses all with the same settings and moderate Q. The goal is
+  //   to produce visible and audible filter ringing without affecting the magnitude.
+  //
+  // - Maybe we could also try using a bandpass bank or a peak-EQ bank whose effect gets stronger 
+  //   at higher fundamentals.
 }
 
 void testPitchDitherSuperSaw()

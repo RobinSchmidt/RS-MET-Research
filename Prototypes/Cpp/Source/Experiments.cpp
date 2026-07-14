@@ -1568,13 +1568,6 @@ void testPitchDitherSuperSawImpls()
   //
   // - Implement a pulse-wave osc based on the trick of subtracting two saws. 
   //
-  // - Try using a comb filter on the output that supresses the frequencies in between the desired
-  //   harmonics. Try feedforward and feedback configurations. Maybe also try to supress the even
-  //   harmonics (with an adjustable amount) using another comb, to give the sound a more squareish
-  //   character (i.e. more odd-harmonics focused). Rationale: Currently, the spectrum gets a bit
-  //   too noisy. If there only would be a type of filter that can supress frequency content at a
-  //   harmonic series! Wait! There is! It's called a comb filter! :-D
-  //
   // - Introduce a MixTaper paremeter that applies a triangular spectral envelope, i.e. makes the
   //   outer frequencies quieter. Maybe try other shapes as well (bell, inverted bell, skewed etc.)
   //
@@ -1585,18 +1578,7 @@ void testPitchDitherSuperSawImpls()
   //   call it "pitch compensation". This may become especially important when we allow for skewed
   //   spectral envelopes and or skewed frequency distributions.
   //
-  // - When tuning the cutoff and Q for the highpass, may tune it in such a way that we have a 
-  //   little resonance bump exactly at the fundamental. Maybe that could give the sound more body
-  //   and make it a bit fatter. Maybe for that, the cutoff needs to be slightly above the midFreq
-  //   because the resonance bump tends to appear a bit below the cutoff frequency for low Q. Only
-  //   for very high Q, it approaches the cutoff.
-  //
   // - Make a spectral plot here. The one from Audacity seems to produce artifacts.
-  //
-  // - Maybe the highpass parameters (cutoff scaler/ratio and Q) could benefit from keytracking.
-  //   Towards higher pitches, we could perhaps use a higher cutoff and/or higher Q. Rationale:
-  //   It gets more noisy towards higher pitches so a bit more filter resonance could impose more
-  //   pitch on the noise and a higher cutoff would "clean up" the sound more.
   //
   // - Maybe try to implement some sort of phase repel algorithm that makes the phases of the 
   //   individual saws want to repel one another such that the saws really do not want to be at the
@@ -1696,6 +1678,24 @@ void testPitchDitherSuperSawFiltered()
   // - Maybe the ringing time (i.e. the Q) of the allpass should increase with frequency because
   //   lower frequencies are less noisy such that they may need less rinigng to impose the pitched
   //   character.
+  //
+  // - Try using a comb filter on the output that supresses the frequencies in between the desired
+  //   harmonics. Try feedforward and feedback configurations. Maybe also try to supress the even
+  //   harmonics (with an adjustable amount) using another comb, to give the sound a more squareish
+  //   character (i.e. more odd-harmonics focused). Rationale: Currently, the spectrum gets a bit
+  //   too noisy. If there only would be a type of filter that can supress frequency content at a
+  //   harmonic series! Wait! There is! It's called a comb filter! :-D
+  //
+  // - When tuning the cutoff and Q for the highpass, may tune it in such a way that we have a 
+  //   little resonance bump exactly at the fundamental. Maybe that could give the sound more body
+  //   and make it a bit fatter. Maybe for that, the cutoff needs to be slightly above the midFreq
+  //   because the resonance bump tends to appear a bit below the cutoff frequency for low Q. Only
+  //   for very high Q, it approaches the cutoff.
+  //
+  // - Maybe the highpass parameters (cutoff scaler/ratio and Q) could benefit from keytracking.
+  //   Towards higher pitches, we could perhaps use a higher cutoff and/or higher Q. Rationale:
+  //   It gets more noisy towards higher pitches so a bit more filter resonance could impose more
+  //   pitch on the noise and a higher cutoff would "clean up" the sound more.
 }
 
 

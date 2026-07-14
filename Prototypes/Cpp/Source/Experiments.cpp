@@ -1455,18 +1455,10 @@ std::vector<T> getPitchDitherSuperSaw3(
   return supSaw;
 }
 
-void testPitchDitherSuperSawImpls()
+bool testPitchDitherSuperSawImpls()
 {
-  // ToDo: Move the highpassing into another function. Return the ok-variable
-
   // We produce a pitch dithered supersaw signal using 3 different implementations and verify that
-  // they all prodcue the same result. That's the unit test part of this function. The other part 
-  // is to write the result out to a wavefile for inspection and audition. For the wavefiles, we 
-  // also apply a highpass filter because that's what the JP-8000 did. It did it to supress the 
-  // aliasing products below the fundamental. We don't have such aliasing here - but we may have 
-  // some noise below the fundamental which may also be worth filtering out. Also, maybe it's good
-  // to match the waveshape because that will change how such a signal will respond to waveshaping
-  // distortion.
+  // they all produce the same result. 
 
   using Real = float; 
   using Vec  = std::vector<Real>;
@@ -1491,8 +1483,10 @@ void testPitchDitherSuperSawImpls()
   bool ok  = true;
   ok &= rsIsCloseToUpTo(supSaw1, supSaw2, 5000, tol);
   ok &= rsIsCloseToUpTo(supSaw1, supSaw3, 5000, tol);
+  //rsPlotArrays(5000, &supSaw1[0], &supSaw2[0], &supSaw3[0]);
+
   rsAssert(ok);
-  rsPlotArrays(5000, &supSaw1[0], &supSaw2[0], &supSaw3[0]);
+  return ok;
 
 
   // Observations:
@@ -1603,11 +1597,30 @@ void testPitchDitherSuperSawImpls()
   //   morph between supersaw and superpulse
   // 
   // - Move the code over to the main repo and continue improving it there.
+  //
+  // - Return the ok variable to turn this function into a unit test. Maybe let it receive the 
+  //   midFreq, detune and mix variables as parameters such that it can be called for various 
+  //   settings in a test runner. Maybe the numSamples value should also be passed as parameter to
+  //   let the runner decide about that.
 }
 
 void testPitchDitherSuperSawFiltered()
 {
-  // Under construction
+  // Under construction.
+
+  // We test to apply different sorts of filters to the raw, pitch-dithered supersaw. Highpass 
+  // filtering may help to clean up the noise below the fundamental and replicate what Roland did
+  // to remove the aliasing below the fundamental. It did it to supress the aliasing products 
+  // below the fundamental. We don't have such aliasing here but we do have some noise below the
+  // fundamental which may also be worth filtering out. Also, maybe it's good to match the 
+  // waveshape because that will change how such a signal will respond to waveshaping distortion.
+  // 
+  // Resonant allpass filters may help to regain a stronger pitch sensation at higher fundamental 
+  // frequencies by leveraging their ringing to impose a pitched character. We could perhaps also 
+  // use very steep "brickwall" highpass filters for that purpose as secondary effect besides their
+  // cleaning effect. Comb filters may help to clean up the spectrum in between the desired 
+  // harmonics of the fundamental.
+
 
   using Real = float;
   using Vec  = std::vector<Real>;
@@ -1676,7 +1689,7 @@ void testPitchDitherSuperSawFiltered()
   //   sound more pitched. Maybe we could also tune further allpasses to the harmonics.
   //
   // - Maybe the ringing time (i.e. the Q) of the allpass should increase with frequency because
-  //   lower frequencies are less noisy such that they may need less rinigng to impose the pitched
+  //   lower frequencies are less noisy such that they may need less ringing to impose the pitched
   //   character.
   //
   // - Try using a comb filter on the output that supresses the frequencies in between the desired
@@ -1696,16 +1709,18 @@ void testPitchDitherSuperSawFiltered()
   //   Towards higher pitches, we could perhaps use a higher cutoff and/or higher Q. Rationale:
   //   It gets more noisy towards higher pitches so a bit more filter resonance could impose more
   //   pitch on the noise and a higher cutoff would "clean up" the sound more.
+  //
+  // - When using comb filters, we may try to also restrict them to integer delayline lengths and
+  //   dither those lengths as well - either in sync or not with the dithering of the (central) 
+  //   osc.
 }
-
-
 
 void testPitchDitherSuperSaw()
 {
-  testPitchDitherSuperSawFiltered();
+  bool ok = true;
 
-  testPitchDitherSuperSawImpls();
-  testPitchDitherSuperSawFiltered();
+  ok &= testPitchDitherSuperSawImpls();
+  testPitchDitherSuperSawFiltered();       // This test doesn't return a bool. It's an experiment.
 
   // ToDo: 
   //

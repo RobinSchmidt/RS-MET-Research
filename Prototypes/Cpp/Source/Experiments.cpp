@@ -1470,7 +1470,6 @@ void testPitchDitherSuperSawImpls()
 
   using Real = float; 
   using Vec  = std::vector<Real>;
-  using SVF  = rsStateVariableFilter<Real, Real>;
 
   // Setup:
   int  sampleRate =  44100;      // Sample rate for the wave files
@@ -1480,8 +1479,6 @@ void testPitchDitherSuperSawImpls()
   Real amp        =      0.125;  // Amplitude of the saws
   Real detune     =      0.3;    // Supersaw detune in 0..1
   Real mix        =      1.0;    // Supersaw mix in 0..1
-  Real hpfCut     =      1.0;    // Highpass cutoff as fraction of osc freq
-  Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
 
   // Produce the raw supersaw our 3 algorithms:
   Real fs = Real(sampleRate);
@@ -1497,37 +1494,8 @@ void testPitchDitherSuperSawImpls()
   rsAssert(ok);
   rsPlotArrays(5000, &supSaw1[0], &supSaw2[0], &supSaw3[0]);
 
-  // Apply highpass filter(s):
-  SVF hpf;
-  Real omega = hpfCut * Real(2*PI)*midFreq/sampleRate;
-  hpf.setupHighpass(omega, hpfQ);
-  Vec supSawHp1 = filterResponse(hpf, numSamples, supSaw1);
-  Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);
-  //rsPlotArrays(5000, &supSaw[0], &supSawHp1[0], &supSawHp2[0]);
-
-  // Write supersaw signals to wave files:
-  rosic::writeToMonoWaveFile("PitchDitherSupSaw.wav",    &supSaw1[0],   numSamples, sampleRate);
-  rosic::writeToMonoWaveFile("PitchDitherSupSawHp1.wav", &supSawHp1[0], numSamples, sampleRate);
-  rosic::writeToMonoWaveFile("PitchDitherSupSawHp2.wav", &supSawHp2[0], numSamples, sampleRate);
-  int dummy = 0;
 
   // Observations:
-  //
-  // - Predictably, the highpass filtering makes the signal sound a little bit thinner, even if 
-  //   it's set somewhere below the fundamental (like 30 Hz for a 55 Hz supersaw). For a supersaw
-  //   osc, the highpass should probably be optional. It's not really needed for anti-aliasing 
-  //   anyway, if we do the pitch-dithering - even without any oversampling. However, for very high
-  //   frequencies (like 14080), a highpass tuned to something like 10000 cleans the signal up 
-  //   nicely, so maybe we should use an (optional) highpass tuned below the fundamental. The 
-  //   highpass is also needed to get the sawtooth shape right when we wnat to emulate the JP-8000
-  //   supersaw. Maybe there should be a parameter in % and 100% should mean: cutoff at fundamental
-  //   and 0% means: Cutoff at 0, i.e. turned off. ToDo: Figure out what order and cutoff frequency 
-  //   the JP-8000 highpass uses. We may wnat to emulate that.
-  // 
-  // - Maybe the highpass could have a little bit of resonance. That could help to boost the 
-  //   fundamental to make the sound more full. Maybe use a 4th order highpass. Maybe use a linear
-  //   ladder highpass that can be switched between 6,12,18,24 dB/oct and can have some resonance.
-  //   Or use a biquad highpass with adjustable Q.
   // 
   // - The sum of the freqOffsets is not 0 but -25 (before dividing by 8192). Does that mean that 
   //   the perceived frequency will go down a little bit? If so, should we compensate for that?
@@ -1694,6 +1662,25 @@ void testPitchDitherSuperSawFiltered()
   int dummy = 0;
 
 
+  // Observations:
+  // 
+  // - Predictably, the highpass filtering makes the signal sound a little bit thinner, even if 
+  //   it's set somewhere below the fundamental (like 30 Hz for a 55 Hz supersaw). For a supersaw
+  //   osc, the highpass should probably be optional. It's not really needed for anti-aliasing 
+  //   anyway, if we do the pitch-dithering - even without any oversampling. However, for very high
+  //   frequencies (like 14080), a highpass tuned to something like 10000 cleans the signal up 
+  //   nicely, so maybe we should use an (optional) highpass tuned below the fundamental. The 
+  //   highpass is also needed to get the sawtooth shape right when we wnat to emulate the JP-8000
+  //   supersaw. Maybe there should be a parameter in % and 100% should mean: cutoff at fundamental
+  //   and 0% means: Cutoff at 0, i.e. turned off. ToDo: Figure out what order and cutoff frequency 
+  //   the JP-8000 highpass uses. We may wnat to emulate that.
+  // 
+  // - Maybe the highpass could have a little bit of resonance. That could help to boost the 
+  //   fundamental to make the sound more full. Maybe use a 4th order highpass. Maybe use a linear
+  //   ladder highpass that can be switched between 6,12,18,24 dB/oct and can have some resonance.
+  //   Or use a biquad highpass with adjustable Q.
+  //
+  // 
   // ToDo:
   // 
   // - Use different kinds of filters on the supersaw. 2nd and 4th order SVF highpass, higher order

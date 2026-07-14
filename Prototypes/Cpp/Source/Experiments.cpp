@@ -1455,10 +1455,9 @@ std::vector<T> getPitchDitherSuperSaw3(
   return supSaw;
 }
 
-void testPitchDitherSuperSaw1()
+void testPitchDitherSuperSawImpls()
 {
-  // ToDo: Find better name. Maybe testPitchDitherSuperSawImplementations or ..Impls
-  // Maybe move the highpassing into another function. Return the ok-variable
+  // ToDo: Move the highpassing into another function. Return the ok-variable
 
   // We produce a pitch dithered supersaw signal using 3 different implementations and verify that
   // they all prodcue the same result. That's the unit test part of this function. The other part 
@@ -1471,8 +1470,6 @@ void testPitchDitherSuperSaw1()
 
   using Real = float; 
   using Vec  = std::vector<Real>;
-  //using PDP  = rsPitchDitherProto<Real>;
-  //using PDO  = rsPitchDitherOsc<Real>;
   using SVF  = rsStateVariableFilter<Real, Real>;
 
   // Setup:
@@ -1691,7 +1688,7 @@ void testPitchDitherSuperSaw2()
 
 void testPitchDitherSuperSaw()
 {
-  testPitchDitherSuperSaw1();
+  testPitchDitherSuperSawImpls();
   testPitchDitherSuperSaw2();
 
   // ToDo: 

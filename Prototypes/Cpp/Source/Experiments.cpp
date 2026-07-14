@@ -1355,6 +1355,9 @@ template<class T>
 std::vector<T> getPitchDitherSuperSaw1(
   T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
 { 
+  // ToDo: Reanme to getPitchDitherSuperSawProto. We use the prototype class rsPitchDitherProto to
+  // produce our signals.
+
   using Vec = std::vector<T>;
   using PDP = rsPitchDitherProto<T>;
 
@@ -1384,11 +1387,13 @@ std::vector<T> getPitchDitherSuperSaw1(
   return supSaw;
 }
 
-/** Creates a pitch dithered supersaw using 7 instances of the class rsPitchDitherSawOsc. */
+/** Creates a pitch dithered supersaw using 7 instances of the class rsPitchDitherOsc. */
 template<class T>
 std::vector<T> getPitchDitherSuperSaw2(
   T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
 {
+  // ToDo: Rename to getPitchDitherSuperSaw7Oscs. We use 7 instances of class rsPitchDitherOsc.
+
   using Vec  = std::vector<T>;
   using PDO = rsPitchDitherOsc<T>;
 
@@ -1429,6 +1434,9 @@ template<class T>
 std::vector<T> getPitchDitherSuperSaw3(
   T frequency, T sampleRate, T detune, T mix, int numSamples, int seed)
 {
+  // ToDo: Rename to getPitchDitherSuperSawClass. We use the actual, final class 
+  // rsPitchDitherSuperSawOsc that is eventually meant for production use. Or maybe use ...Prod
+
   using Vec = std::vector<T>;
   using SSO = rsPitchDitherSuperSawOsc<T>;
 
@@ -1449,6 +1457,9 @@ std::vector<T> getPitchDitherSuperSaw3(
 
 void testPitchDitherSuperSaw1()
 {
+  // ToDo: Find better name. Maybe testPitchDitherSuperSawImplementations or ..Impls
+  // Maybe move the highpassing into another function. Return the ok-variable
+
   // We produce a pitch dithered supersaw signal using 3 different implementations and verify that
   // they all prodcue the same result. That's the unit test part of this function. The other part 
   // is to write the result out to a wavefile for inspection and audition. For the wavefiles, we 
@@ -1460,8 +1471,8 @@ void testPitchDitherSuperSaw1()
 
   using Real = float; 
   using Vec  = std::vector<Real>;
-  using PDP  = rsPitchDitherProto<Real>;
-  using PDO  = rsPitchDitherOsc<Real>;
+  //using PDP  = rsPitchDitherProto<Real>;
+  //using PDO  = rsPitchDitherOsc<Real>;
   using SVF  = rsStateVariableFilter<Real, Real>;
 
   // Setup:
@@ -1675,6 +1686,8 @@ void testPitchDitherSuperSaw2()
   //   getPitchDitherSuperSaw1(..) and test it with the experiment above. That would be more 
   //   economic.
 }
+
+
 
 void testPitchDitherSuperSaw()
 {

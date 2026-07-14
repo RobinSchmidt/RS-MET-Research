@@ -110,6 +110,10 @@ Catalog of anti-aliasing techniques.
   signals. Although, for transient and noisy signals, aliasing may actually not be such a big 
   problem anyway. But maybe for inharmonic steady signals, it could be useful.
   
+- Using a fixed internal sample rate that is a perfect multiple of the oscillator frequency and then
+  resample to the target rate. It's also a way to "shape" the aliasing rather than trying to 
+  supress it.
+  
 - Advanced interpolation techniques like (windowed) sinc interpolation. Theoretically, this amounts
   to perfect resampling, i.e. going back to the continuous time domain and then back to a new 
   discrete time domain at a different sampling rate.

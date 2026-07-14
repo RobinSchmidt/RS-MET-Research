@@ -1637,23 +1637,38 @@ void testPitchDitherSuperSawFiltered()
   Real hpfCut     =      1.0;    // Highpass cutoff as fraction of osc freq
   Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
 
+  Real apfFrqRat  =      1.0;
+  Real apfQ       =    100.0;
+
   // Produce the raw supersaw:
   Real fs = Real(sampleRate);
   int  N  = numSamples;
   Vec supSawRaw = amp * getPitchDitherSuperSaw3(midFreq, fs, detune, mix, N, seed);
 
-  // Apply highpass filter(s):
+  // Apply highpass filters to raw:
   SVF hpf;
-  Real omega = hpfCut * Real(2*PI)*midFreq/sampleRate;
-  hpf.setupHighpass(omega, hpfQ);
+  Real hpfW = hpfCut * Real(2*PI)*midFreq/sampleRate;
+  hpf.setupHighpass(hpfW, hpfQ);
   Vec supSawHp1 = filterResponse(hpf, numSamples, supSawRaw);
   Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);
   //rsPlotArrays(5000, &supSawRaw[0], &supSawHp1[0], &supSawHp2[0]);
+
+  // Apply allpass filters to raw:
+  SVF apf;
+  Real apfW = apfFrqRat * Real(2*PI)*midFreq/sampleRate;
+  apf.setupAllpass(apfW, apfQ);
+  Vec supSawAp1 = filterResponse(apf, numSamples, supSawRaw);
+  Vec supSawAp2 = filterResponse(apf, numSamples, supSawAp1);
+  //rsPlotArrays(5000, &supSawRaw[0], &supSawAp1[0], &supSawAp2[0]);
+  //rsPlotArrays(5000, &supSawAp2[0]);
 
   // Write supersaw signals to wave files:
   rosic::writeToMonoWaveFile("PiDiSupSaw.wav",    &supSawRaw[0], N, fs);
   rosic::writeToMonoWaveFile("PiDiSupSawHp1.wav", &supSawHp1[0], N, fs);
   rosic::writeToMonoWaveFile("PiDiSupSawHp2.wav", &supSawHp2[0], N, fs);
+  rosic::writeToMonoWaveFile("PiDiSupSawAp1.wav", &supSawAp1[0], N, fs);
+  rosic::writeToMonoWaveFile("PiDiSupSawAp2.wav", &supSawAp2[0], N, fs);
+
   int dummy = 0;
 
 
@@ -1674,6 +1689,9 @@ void testPitchDitherSuperSawFiltered()
   //   fundamental to make the sound more full. Maybe use a 4th order highpass. Maybe use a linear
   //   ladder highpass that can be switched between 6,12,18,24 dB/oct and can have some resonance.
   //   Or use a biquad highpass with adjustable Q.
+  // 
+  // - The allpasses do not seem to do much even with very high Q settings. Why? Try plotting the
+  //   impulse-repsonse and ringing response.
   //
   // 
   // ToDo:

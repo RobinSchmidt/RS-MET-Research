@@ -25540,7 +25540,7 @@ bool testRecurrentNetwork1()
   // copy- and move constructors and assignment operators in class rsDelay. But we need to test it 
   // more thoroughly.
 
-  //net.addWire(0,0, 1.0); 
+  net.addWire(0,0, 1.0, 20.0);
   // Self-feedback from node[0] to node[0] with weight 1.0. But shouldn't we also pass a delay in
   // addition to the weight?
 

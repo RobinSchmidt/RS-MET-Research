@@ -9738,6 +9738,21 @@ public:
   }
 
 
+  void addWire(int sourceIndex, int targetIndex, TPar weight, TPar delay)
+  {
+    wires.emplace_back(Wire(sourceIndex, targetIndex, weight, delay));
+
+    // ToDo:
+    // 
+    // - Make sure that sourceIndex and targetIndex are within the allowed range, i.e. in
+    //   0...numNodes-1 and that the delay is >= TPar(0). Maybe also check that the weight is
+    //   finite and not NaN.
+    //
+    // - Make sure that the target node has enough delay memory allocated to support the desired
+    //   delay time. Maybe call a function hasNodeEnoughDelay(targetIndex, delay)
+  }
+
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Internal types
@@ -9773,16 +9788,42 @@ public:
 
   public:
 
+    Wire(int newSourceIndex, int newTargetIndex, TPar newWeight, TPar newDelay)
+      : sourceIndex(newSourceIndex)
+      , targetIndex(newTargetIndex)
+      , weight(newWeight)
+      , transmitDelay(newDelay)
+    {
+      rsAssert(isValid());
+      // Maybe we should check that on elevele higher at the networ level because there, we can 
+      // also check, if sourceIndex and targetIndex are within allowed range i.e. 
+      // 0 <= index < numNodes. Maybe have a isWireValid() function in class rsRecurrentNetwork()
+      // and get rid of Wire::isValid()
+    }
+
+
+    bool isValid() const
+    {
+      bool ok = true;
+      ok &= sourceIndex   >= 0;
+      ok &= targetIndex   >= 0;
+      ok &= transmitDelay >= TPar(0);
+      return ok;
+    }
+
   private:
 
-    Node* source;
-    Node* target;
+    //Node* source;
+    //Node* target;
+
+    int sourceIndex = -1;
+    int targetIndex = -1;
 
     TPar  weight = TPar(1);
     // Shall be adapted by some sort of learning algorithm. I don't know yet how. Maybe Hebbian
     // learning could work?
 
-    TPar  transmitDelay = TPar(0);
+    TPar  transmitDelay = TPar(0);  // Maybe rename to delay
     // We should probably make this delay (initially) proportional to the Euclidean distance 
     // between the source and target node. Maybe later it can be adapted
 
@@ -9794,7 +9835,8 @@ protected:
   std::vector<Node> nodes;
   std::vector<Wire> wires;
 
-  int recoveryTime = 100;
+  int  recoveryTime = 10;
+  TPar smoothCoeff  = TPar(0);
 
   // ToDo: have other global parameters such as the smoothing filter cutoff (or decay time) and 
   // maybe a scaler for all delays.

@@ -9747,11 +9747,6 @@ public:
 
     ensureMaxDelay(targetIndex, delay);
     wires.emplace_back(Wire(sourceIndex, targetIndex, weight, delay));
-
-    // ToDo:
-    //
-    // - Make sure that the target node has enough delay memory allocated to support the desired
-    //   delay time. Maybe call a function hasNodeEnoughDelay(targetIndex, delay)
   }
 
   void ensureMaxDelay(int nodeIndex, TPar desiredMaxDelay)
@@ -9787,6 +9782,33 @@ public:
 
 
   //-----------------------------------------------------------------------------------------------
+  // \name Processing
+
+  /** STUB */
+  void injectSignal(int nodeIndex, TSig signalValue)
+  {
+    // ...
+  }
+  // Maybe have an optionla 3rd parameter delay which defaults to zero. Maybe rename to 
+  // injectActivation() or inject() or stimulate() or stimulateAt()
+
+  /** STUB */
+  TSig extractSignal(int nodeIndex)
+  {
+    return TSig(0);  // Preliminary
+  }
+  // Maybe rename to readSignal() or readActivation() or measure() or probe() or probeAt()
+
+  void propagateActivations();
+  // Maybe rename to propagate()
+
+
+
+
+
+
+
+  //-----------------------------------------------------------------------------------------------
   // \name Internal types
 
   class Node
@@ -9813,6 +9835,43 @@ public:
 
 
 
+    /** Under construction. */
+    TSig getActivation(TSig thresh, int recoveryTime)
+    {
+      TSig tmp = delay.readOutput();
+      delay.writeInputAndUpdate(TSig(0));                    // Output was consumed. Reset zero.
+      // Maybe this can be expressed in one step
+      // tmp = delay.getSample(TSig(0));
+
+
+      tmp = smoother.getSample(tmp);
+
+
+      TSig out(0);
+
+      if(tmp > thresh && sampleCounter >= recoveryTime)
+      {
+        out = TSig(1);
+        sampleCounter = 0;
+      }
+
+
+      sampleCounter++;
+      return out;
+    }
+
+    /** Schedules an input spike for this node. The node will see it arriving after "spikeDelay"
+    samples. */
+    void scheduleInputSpike(TSig spikeValue, TPar spikeDelay)
+    {
+      delay.addToInputAt(spikeValue, (int) spikeDelay);
+
+      // ToDo: We need to de-interpolate the signalToInject into two samples of the delayline. The 
+      // current code is correct only for integer delay values.
+    }
+
+
+
   private:
 
     // 3D vector to encode the geometric position:
@@ -9822,7 +9881,7 @@ public:
     rsDelay<TSig> delay;
 
     // Lowpass filter to implement the smoothing:
-    rsOnePoleFilter<TSig, TPar> smoother;
+    rsOnePoleFilter<TSig, TPar> smoother; // Maybe use a (simpler) leaky integrator
 
     // Sample counter to implement the recovery phase:
     int sampleCounter =   0;
@@ -9843,15 +9902,13 @@ public:
     {}
 
 
-    TPar getWeight() const
-    {
-      return weight;
-    }
+    int getSourceIndex() const { return sourceIndex; }
 
-    TPar getDelay() const
-    {
-      return delay;
-    }
+    int getTargetIndex() const { return targetIndex; }
+
+    TPar getWeight()     const { return weight;      }
+
+    TPar getDelay()      const { return delay;       }
 
 
 
@@ -9864,7 +9921,7 @@ public:
     // Shall be adapted by some sort of learning algorithm. I don't know yet how. Maybe Hebbian
     // learning could work?
 
-    TPar delay = TPar(0);  // Maybe rename to delay
+    TPar delay = TPar(0);
     // We should probably make this delay (initially) proportional to the Euclidean distance 
     // between the source and target node. Maybe later it can be adapted
 
@@ -9878,8 +9935,41 @@ protected:
 
   int  recoveryTime = 10;
   TPar smoothCoeff  = TPar(0);
+  TSig threshold    = 1.0;
 
   // ToDo: have other global parameters such as the smoothing filter cutoff (or decay time) and 
   // maybe a scaler for all delays.
 
 };
+
+
+template<class TSig, class TPar>
+void rsRecurrentNetwork<TSig, TPar>::propagateActivations()
+{
+  // Compute activations:
+  int numNodes = getNumNodes();
+  std::vector<TSig> spikes(numNodes);  // Temp array
+  for(int n = 0; n < numNodes; n++)
+    spikes[n] = nodes[n].getActivation(threshold, recoveryTime);
+
+  // Accumulate the activations into the delaylines of their target nodes:
+  for(int w = 0; w < (int)wires.size(); w++)
+  {
+    const Wire& wire = wires[w];
+    int sourceIndex = wire.getSourceIndex();
+    int targetIndex = wire.getTargetIndex();
+    TPar weight     = wire.getWeight();
+    TPar delay      = wire.getDelay();
+    TSig spikeToInject = spikes[sourceIndex] * weight;
+    nodes[targetIndex].scheduleInputSpike(spikeToInject, delay);
+
+    // Needs thorough verification. Was partially AI generated. I think, we can also streamline it
+    // by avoiding some local variables. But for development/debugging, it may be convenient the
+    // way it is, so maybe save that streamlining for later.
+  }
+
+  // ToDo:
+  // 
+  // - Maybe make the temporary "spikes" array a member to avoid repeated allocations. Then we 
+  //   should probably call resize here which will do nothing most of the time.
+}

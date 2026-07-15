@@ -1653,7 +1653,7 @@ void testPitchDitherSuperSawFiltered()
   Real detune     =      0.3;    // Supersaw detune in 0..1
   Real mix        =      1.0;    // Supersaw mix in 0..1
   Real hpfFrqRat  =      1.0;    // Highpass cutoff as fraction of osc freq
-  Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
+  Real hpfQ       =      2.0;    // Quality factor "Q" for the highpass.
   Real apfFrqRat  =      1.0;
   Real apfQ       =      1.0;
   int  apfOrd     =     10;    // Order of the allpass, i.e. number of them
@@ -1667,8 +1667,9 @@ void testPitchDitherSuperSawFiltered()
   SVF hpf;
   Real hpfW = hpfFrqRat * Real(2*PI)*midFreq/sampleRate;
   hpf.setupHighpass(hpfW, hpfQ);
-  Vec supSawHp1 = filterResponse(hpf, numSamples, supSawRaw);
-  Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);
+  Real k = Real(1) / hpfQ;
+  Vec supSawHp1 = k * filterResponse(hpf, numSamples, supSawRaw);
+  Vec supSawHp2 = k * filterResponse(hpf, numSamples, supSawHp1);
   //rsPlotArrays(5000, &supSawRaw[0], &supSawHp1[0], &supSawHp2[0]);
 
   // Apply allpass filters to raw:
@@ -1679,22 +1680,15 @@ void testPitchDitherSuperSawFiltered()
   impulse[0] = Real(1);
   Vec impRespAp = rsFilterResponseMultiPass(apf, impulse,   apfOrd);
   Vec supSawAp  = rsFilterResponseMultiPass(apf, supSawRaw, apfOrd);
-  //Vec supSawAp2 = filterResponse(apf, numSamples, supSawAp1);
-  rsPlotArrays(5000, &impRespAp[0]);
-  //rsPlotArrays(5000, &supSawRaw[0], &supSawAp1[0], &supSawAp2[0]);
-  rsPlotArrays(5000, &supSawAp[0]);
-  // ToDo: Apply the allpasses in a loop (from 1..apfOrd)
+  //rsPlotArrays(5000, &impRespAp[0]);
+  //rsPlotArrays(5000, &supSawAp[0]);
+
 
   // Write supersaw signals to wave files:
   rosic::writeToMonoWaveFile("PiDiSupSaw.wav",    &supSawRaw[0], N, fs);
   rosic::writeToMonoWaveFile("PiDiSupSawHp1.wav", &supSawHp1[0], N, fs);
   rosic::writeToMonoWaveFile("PiDiSupSawHp2.wav", &supSawHp2[0], N, fs);
   rosic::writeToMonoWaveFile("PiDiSupSawAp.wav",  &supSawAp[0],  N, fs);
-  //rosic::writeToMonoWaveFile("PiDiSupSawAp1.wav", &supSawAp1[0], N, fs);
-  //rosic::writeToMonoWaveFile("PiDiSupSawAp2.wav", &supSawAp2[0], N, fs);
-
-  int dummy = 0;
-
 
   // Observations:
   // 
@@ -1704,7 +1698,7 @@ void testPitchDitherSuperSawFiltered()
   //   anyway, if we do the pitch-dithering - even without any oversampling. However, for very high
   //   frequencies (like 14080), a highpass tuned to something like 10000 cleans the signal up 
   //   nicely, so maybe we should use an (optional) highpass tuned below the fundamental. The 
-  //   highpass is also needed to get the sawtooth shape right when we wnat to emulate the JP-8000
+  //   highpass is also needed to get the sawtooth shape right when we want to emulate the JP-8000
   //   supersaw. Maybe there should be a parameter in % and 100% should mean: cutoff at fundamental
   //   and 0% means: Cutoff at 0, i.e. turned off. ToDo: Figure out what order and cutoff frequency 
   //   the JP-8000 highpass uses. We may wnat to emulate that.
@@ -1736,8 +1730,10 @@ void testPitchDitherSuperSawFiltered()
   //   allpasses is to regain a sense of tonality in the higher registers where the raw (even 
   //   highpassed) pitch-dithered supersaw becomes very noisy. The idea in using a Papoulis 
   //   highpass is that this type of highpass rings stronly at the cutoff freq. Maybe try also an 
-  //   elliptic highpass. We want to use the filter's ringing to our advantage, namely to make it 
-  //   sound more pitched. Maybe we could also tune further allpasses to the harmonics.
+  //   elliptic anc Chebychev highpass. We want to use the filter's ringing to our advantage, 
+  //   namely to make it sound more pitched. Maybe we could also tune further allpasses to the 
+  //   harmonics. But maybe we should make these experiments with a single saw rather than a 
+  //   supersaw?
   //
   // - Maybe the ringing time (i.e. the Q) of the allpass should increase with frequency because
   //   lower frequencies are less noisy such that they may need less ringing to impose the pitched

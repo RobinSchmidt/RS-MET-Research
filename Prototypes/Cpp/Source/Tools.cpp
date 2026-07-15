@@ -9734,7 +9734,8 @@ public:
     // instead of a direct object member. ...the problem seems to be fixed. But we still have the
     // potential performance problem of uneccesarry double construction, i.e. copying
 
-    // ToDo: Init delay line and filter for the node
+    // ToDo: Init delay line and filter for the node. Or maybe leave the setup of the delay to 
+    // addWire(). It can call setMaxDelayInSamples() or do nothing if not necessary.
   }
 
 
@@ -9744,12 +9745,24 @@ public:
     rsAssert(delay >= TPar(0));
     rsAssert(rsIsFiniteNumber(weight));
 
+    ensureMaxDelay(targetIndex, delay);
     wires.emplace_back(Wire(sourceIndex, targetIndex, weight, delay));
 
     // ToDo:
     //
     // - Make sure that the target node has enough delay memory allocated to support the desired
     //   delay time. Maybe call a function hasNodeEnoughDelay(targetIndex, delay)
+  }
+
+  void ensureMaxDelay(int nodeIndex, TPar desiredMaxDelay)
+  {
+    rsAssert(isValidNodeIndex(nodeIndex));         // Invalid node index
+
+    Node& node = nodes[nodeIndex];
+    int oldMaxDelay = node.getMaxDelay();
+    int newMaxDelay = rsCeilInt(desiredMaxDelay);  // Do we need +1 or is ceil() good enough?
+    if(newMaxDelay > oldMaxDelay)
+      node.setMaxDelay(newMaxDelay);
   }
 
 
@@ -9772,18 +9785,6 @@ public:
     return isValidNodeIndex(i) && isValidNodeIndex(j);
   }
 
-  /*
-  bool isWireValid(int sourceIndex, int targetIndex) const
-  {
-    bool ok = true;
-    int numNodes = (int)nodes.size();
-    ok &= sourceIndex >= 0 && sourceIndex < numNodes;
-    ok &= targetIndex >= 0 && sourceIndex < numNodes;
-    return ok;
-    //TPar w = getWireWeight(sourceIndex, targetIndex);
-  }
-  */
-
 
   //-----------------------------------------------------------------------------------------------
   // \name Internal types
@@ -9796,6 +9797,21 @@ public:
     {
       pos = nodePosition;
     }
+
+
+    void setMaxDelay(int newMax)
+    {
+      delay.setMaxDelayInSamples(newMax);
+    }
+
+
+    int getMaxDelay() const
+    {
+      return delay.getMaxDelayInSamples();
+    }
+
+
+
 
   private:
 
@@ -9823,14 +9839,8 @@ public:
       : sourceIndex(newSourceIndex)
       , targetIndex(newTargetIndex)
       , weight(newWeight)
-      , transmitDelay(newDelay)
-    {
-      //rsAssert(isValid());
-      // Maybe we should check that on elevele higher at the networ level because there, we can 
-      // also check, if sourceIndex and targetIndex are within allowed range i.e. 
-      // 0 <= index < numNodes. Maybe have a isWireValid() function in class rsRecurrentNetwork()
-      // and get rid of Wire::isValid()
-    }
+      , delay(newDelay)
+    {}
 
 
     TPar getWeight() const
@@ -9840,34 +9850,21 @@ public:
 
     TPar getDelay() const
     {
-      return transmitDelay;
+      return delay;
     }
 
 
-    /*
-    bool isValid() const
-    {
-      bool ok = true;
-      ok &= sourceIndex   >= 0;
-      ok &= targetIndex   >= 0;
-      ok &= transmitDelay >= TPar(0);
-      return ok;
-    }
-    */
 
   private:
-
-    //Node* source;
-    //Node* target;
 
     int sourceIndex = -1;
     int targetIndex = -1;
 
-    TPar  weight = TPar(1);
+    TPar weight = TPar(1);
     // Shall be adapted by some sort of learning algorithm. I don't know yet how. Maybe Hebbian
     // learning could work?
 
-    TPar  transmitDelay = TPar(0);  // Maybe rename to delay
+    TPar delay = TPar(0);  // Maybe rename to delay
     // We should probably make this delay (initially) proportional to the Euclidean distance 
     // between the source and target node. Maybe later it can be adapted
 

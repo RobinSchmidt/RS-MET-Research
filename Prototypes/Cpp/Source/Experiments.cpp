@@ -1604,6 +1604,24 @@ bool testPitchDitherSuperSawImpls()
   //   let the runner decide about that.
 }
 
+
+// Maybe move to TestUtilities.h
+template<class TSig, class TFlt>
+inline std::vector<TSig> rsFilterResponseMultiPass(
+  TFlt& filter, std::vector<TSig> x, int numPasses)
+{
+  int N = (int)x.size();
+  std::vector<TSig> y = x;
+  for(int i = 0; i < numPasses; i++)
+  {
+    filter.reset();
+    for(int n = 0; n < N; n++)
+      y[n] = filter.getSample(y[n]);
+  }
+  return y;
+}
+
+
 void testPitchDitherSuperSawFiltered()
 {
   // Under construction.
@@ -1637,8 +1655,8 @@ void testPitchDitherSuperSawFiltered()
   Real hpfFrqRat  =      1.0;    // Highpass cutoff as fraction of osc freq
   Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
   Real apfFrqRat  =      1.0;
-  Real apfQ       =      2.0;
-  //int  apfOrd     =     10;    // Order of the allpass, i.e. number of them
+  Real apfQ       =      1.0;
+  int  apfOrd     =     10;    // Order of the allpass, i.e. number of them
 
   // Produce the raw supersaw:
   Real fs = Real(sampleRate);
@@ -1657,20 +1675,23 @@ void testPitchDitherSuperSawFiltered()
   SVF apf;
   Real apfW = apfFrqRat * Real(2*PI)*midFreq/sampleRate;
   apf.setupAllpass(apfW, apfQ);
-  Vec impRespAp = impulseResponse(apf, 5000, 1.f);
-  Vec supSawAp1 = filterResponse(apf, numSamples, supSawRaw);
-  Vec supSawAp2 = filterResponse(apf, numSamples, supSawAp1);
+  Vec impulse(N);
+  impulse[0] = Real(1);
+  Vec impRespAp = rsFilterResponseMultiPass(apf, impulse,   apfOrd);
+  Vec supSawAp  = rsFilterResponseMultiPass(apf, supSawRaw, apfOrd);
+  //Vec supSawAp2 = filterResponse(apf, numSamples, supSawAp1);
   rsPlotArrays(5000, &impRespAp[0]);
   //rsPlotArrays(5000, &supSawRaw[0], &supSawAp1[0], &supSawAp2[0]);
-  rsPlotArrays(5000, &supSawAp2[0]);
+  rsPlotArrays(5000, &supSawAp[0]);
   // ToDo: Apply the allpasses in a loop (from 1..apfOrd)
 
   // Write supersaw signals to wave files:
   rosic::writeToMonoWaveFile("PiDiSupSaw.wav",    &supSawRaw[0], N, fs);
   rosic::writeToMonoWaveFile("PiDiSupSawHp1.wav", &supSawHp1[0], N, fs);
   rosic::writeToMonoWaveFile("PiDiSupSawHp2.wav", &supSawHp2[0], N, fs);
-  rosic::writeToMonoWaveFile("PiDiSupSawAp1.wav", &supSawAp1[0], N, fs);
-  rosic::writeToMonoWaveFile("PiDiSupSawAp2.wav", &supSawAp2[0], N, fs);
+  rosic::writeToMonoWaveFile("PiDiSupSawAp.wav",  &supSawAp[0],  N, fs);
+  //rosic::writeToMonoWaveFile("PiDiSupSawAp1.wav", &supSawAp1[0], N, fs);
+  //rosic::writeToMonoWaveFile("PiDiSupSawAp2.wav", &supSawAp2[0], N, fs);
 
   int dummy = 0;
 
@@ -1697,6 +1718,13 @@ void testPitchDitherSuperSawFiltered()
   //   plotting the impulse-repsonse and ringing response. OK - I see. The allpass is in fact 
   //   ringing for a long time but the amplitude of this ringing is tiny compared to the initial 
   //   spike when the Q is high. Increasing Q makes it ring longer but with less amplitude.
+  // 
+  // - Trying to use multiple passes of the allpass filter: with apfFrqRat=1, apfQ = 2.0, 
+  //   apfOrd = 10, the ininital transient turns into a blip but otherwise, the signal sounds very
+  //   similar to without the allpass. It's also noteworthy that the allpass impulse response does
+  //   not look like a ringing at a specific frequency but somehow more complicated. Increasing the
+  //   Q to 10 turns the initial blip more into something that sounds like a fast pitch envelope 
+  //   and going up to 20 makes it almost disappear.
   //
   //
   // ToDo:

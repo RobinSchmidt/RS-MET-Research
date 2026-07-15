@@ -1634,10 +1634,11 @@ void testPitchDitherSuperSawFiltered()
   Real amp        =      0.125;  // Amplitude of the saws
   Real detune     =      0.3;    // Supersaw detune in 0..1
   Real mix        =      1.0;    // Supersaw mix in 0..1
-  Real hpfCut     =      1.0;    // Highpass cutoff as fraction of osc freq
+  Real hpfFrqRat  =      1.0;    // Highpass cutoff as fraction of osc freq
   Real hpfQ       =      1.0;    // Quality factor "Q" for the highpass.
   Real apfFrqRat  =      1.0;
   Real apfQ       =      2.0;
+  //int  apfOrd     =     10;    // Order of the allpass, i.e. number of them
 
   // Produce the raw supersaw:
   Real fs = Real(sampleRate);
@@ -1646,7 +1647,7 @@ void testPitchDitherSuperSawFiltered()
 
   // Apply highpass filters to raw:
   SVF hpf;
-  Real hpfW = hpfCut * Real(2*PI)*midFreq/sampleRate;
+  Real hpfW = hpfFrqRat * Real(2*PI)*midFreq/sampleRate;
   hpf.setupHighpass(hpfW, hpfQ);
   Vec supSawHp1 = filterResponse(hpf, numSamples, supSawRaw);
   Vec supSawHp2 = filterResponse(hpf, numSamples, supSawHp1);
@@ -1662,6 +1663,7 @@ void testPitchDitherSuperSawFiltered()
   rsPlotArrays(5000, &impRespAp[0]);
   //rsPlotArrays(5000, &supSawRaw[0], &supSawAp1[0], &supSawAp2[0]);
   rsPlotArrays(5000, &supSawAp2[0]);
+  // ToDo: Apply the allpasses in a loop (from 1..apfOrd)
 
   // Write supersaw signals to wave files:
   rosic::writeToMonoWaveFile("PiDiSupSaw.wav",    &supSawRaw[0], N, fs);
@@ -1743,7 +1745,8 @@ void testPitchDitherSuperSawFiltered()
   //   further, how pitch-dithered super(!)saws interact with waveshaping and (highpass) filtering
   //   and how that affects the final output spectrum. For single saws (or other single osc
   //   waveforms), we already know the answer: Waveshaping just changes the waveform but it 
-  //   doesn't destroy the pitch-ditheredness.
+  //   doesn't destroy the pitch-ditheredness. Maybe try what happens with 2 pitch-dithered sines
+  //   which is a presumably much simpler case that 7 saws.
   //
   // - Try using a long chain of allpasses all with the same settings and moderate Q. The goal is
   //   to produce visible and audible filter ringing without affecting the magnitude.

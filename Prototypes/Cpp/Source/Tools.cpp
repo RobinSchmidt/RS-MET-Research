@@ -9740,18 +9740,49 @@ public:
 
   void addWire(int sourceIndex, int targetIndex, TPar weight, TPar delay)
   {
+    rsAssert(areValidNodeIndices(sourceIndex, targetIndex));
+    rsAssert(delay >= TPar(0));
+    rsAssert(rsIsFiniteNumber(weight));
+
     wires.emplace_back(Wire(sourceIndex, targetIndex, weight, delay));
 
     // ToDo:
-    // 
-    // - Make sure that sourceIndex and targetIndex are within the allowed range, i.e. in
-    //   0...numNodes-1 and that the delay is >= TPar(0). Maybe also check that the weight is
-    //   finite and not NaN.
     //
     // - Make sure that the target node has enough delay memory allocated to support the desired
     //   delay time. Maybe call a function hasNodeEnoughDelay(targetIndex, delay)
   }
 
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+  int getNumNodes() const
+  {
+    return (int)nodes.size();
+  }
+
+  bool isValidNodeIndex(int i) const
+  {
+    return i >= 0 && i < getNumNodes();
+  }
+
+  bool areValidNodeIndices(int i, int j) const
+  {
+    return isValidNodeIndex(i) && isValidNodeIndex(j);
+  }
+
+  /*
+  bool isWireValid(int sourceIndex, int targetIndex) const
+  {
+    bool ok = true;
+    int numNodes = (int)nodes.size();
+    ok &= sourceIndex >= 0 && sourceIndex < numNodes;
+    ok &= targetIndex >= 0 && sourceIndex < numNodes;
+    return ok;
+    //TPar w = getWireWeight(sourceIndex, targetIndex);
+  }
+  */
 
 
   //-----------------------------------------------------------------------------------------------
@@ -9794,7 +9825,7 @@ public:
       , weight(newWeight)
       , transmitDelay(newDelay)
     {
-      rsAssert(isValid());
+      //rsAssert(isValid());
       // Maybe we should check that on elevele higher at the networ level because there, we can 
       // also check, if sourceIndex and targetIndex are within allowed range i.e. 
       // 0 <= index < numNodes. Maybe have a isWireValid() function in class rsRecurrentNetwork()
@@ -9802,6 +9833,18 @@ public:
     }
 
 
+    TPar getWeight() const
+    {
+      return weight;
+    }
+
+    TPar getDelay() const
+    {
+      return transmitDelay;
+    }
+
+
+    /*
     bool isValid() const
     {
       bool ok = true;
@@ -9810,6 +9853,7 @@ public:
       ok &= transmitDelay >= TPar(0);
       return ok;
     }
+    */
 
   private:
 

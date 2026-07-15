@@ -9731,7 +9731,8 @@ public:
     // copy altogether? Maybe by using a vector of pointers to nodes rather than a vector of nodes?
     // Or maybe we can use std::move to move the node into the vector? Or maybe we can use 
     // std::unique_ptr<Node> in the vector? Or maybe in class Node use a pointer to rsDelay<TSig>
-    // instead of a direct object member
+    // instead of a direct object member. ...the problem seems to be fixed. But we still have the
+    // potential performance problem of uneccesarry double construction, i.e. copying
 
     // ToDo: Init delay line and filter for the node
   }

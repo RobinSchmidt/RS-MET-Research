@@ -24050,6 +24050,9 @@ void testSmoothMax()
   // crossfade between x and y where the crossfade parameter c is a smooth 1D function of x-y of 
   // sigmoid type that smoothly ramps up from 0 to 1.
   // ...TBC...
+
+  // See:
+  // https://www.youtube.com/watch?v=6Qb6QtC6QMs
 }
 
 
@@ -25533,9 +25536,14 @@ bool testRecurrentNetwork1()
   // When we do this, it crashes on destruction. Apparently, the delayline memory gets deleted 
   // twice or something. Using nodes.emplace_back(Node(nodePosition)); in addNode does not fix it.
   // There are some comments about this in class rsDelay. It has to do with shallow copying a
-  // rsDelay object, I think.
+  // rsDelay object, I think. OK ...this problem seems to be fixed now. We now have implemented
+  // copy- and move constructors and assignment operators in class rsDelay. But we need to test it 
+  // more thoroughly.
 
-  //net.addWire(0,0, 1.0);
+  //net.addWire(0,0, 1.0); 
+  // Self-feedback from node[0] to node[0] with weight 1.0. But shouldn't we also pass a delay in
+  // addition to the weight?
+
 
   return ok;
 }

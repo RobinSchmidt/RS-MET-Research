@@ -25523,6 +25523,42 @@ void testMerge()
 
 
 
+
+bool testRecurrentNetworkProto1()
+{
+  bool ok = true;
+
+  using Vec  = std::vector<double>;
+  using Vec3 = rsVector3D<double>;
+  using Net  = rsRecurrentNetworkProto;
+
+  double spikePeriod =  9.0;
+  int    numSamples  = 100;
+
+  Net net;
+
+  net.addNode(Vec3(0,0,0));
+  net.addWire(0,0, 1.0, spikePeriod);
+
+  net.injectSignal(0, 1.0);
+
+  Vec node0(numSamples);
+  for(int n = 0; n < numSamples; n++)
+  {
+    node0[n] = net.extractSignal(0);
+    net.propagateActivations();
+  }
+
+  rsPlotVector(node0);
+
+  return ok;
+
+  // ToDo:
+  //
+  // - It looks almost right. It's just that spike period is one sample too long. If we set
+  //   spikePeriod = 9, we actually get a period of 10, etc.
+}
+
 bool testRecurrentNetwork1()
 {
   bool ok = true;
@@ -25597,6 +25633,7 @@ void testRecurrentNetwork()
 {
   bool ok = true;
 
+  ok &= testRecurrentNetworkProto1();
   ok &= testRecurrentNetwork1();
 
   rsAssert(ok);

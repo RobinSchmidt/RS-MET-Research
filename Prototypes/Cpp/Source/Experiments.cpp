@@ -25534,7 +25534,7 @@ bool testRecurrentNetworkProto1()
   using Vec3 = rsVector3D<double>;
   using Net  = rsRecurrentNetworkProto;
 
-  double wireDelay  =  9.0;
+  double wireDelay  = 9.0;
   int    numSamples = 100;
 
   Net net;
@@ -25559,24 +25559,26 @@ bool testRecurrentNetworkProto1()
   // Observations:
   //
   // - We see as output of node[0] spike train with a period of wireDelay+1. I think, the +1 might
-  //   be explained by the implicit loop delay. Verify that!
-  
+  //   be explained by the implicit loop delay. Verify that! for example, with wireDelay = 9.0, 
+  //   we see a spike train with a period of 10 samples.
+  //
   // - wireDelay = 5, recoveryTime = 5: Spikes: at 0, 6, 12, 18, 24, ...
   // - wireDelay = 4, recoveryTime = 5: Spikes: at 0, 5.
   // - wireDelay = 3, recoveryTime = 5: Spikes: at 0, 4.
-  // - wireDelay = 2, recoveryTime = 5: Spikes: at 0, 3.  
+  // - wireDelay = 2, recoveryTime = 5: Spikes: at 0, 3.
+  // - wireDelay = 1, recoveryTime = 5: Spikes: at 0, 2.
+  // - wireDelay = 0, recoveryTime = 5: Spikes: at 0, 1.
   //
   // - Apparently, the initially injected spike is not taken into consideration in determining 
   //   whether the neuron is in "ready" or "recovering" state. I'm not sure, if that's the 
-  //   desirable behavior.
+  //   desirable behavior. So, injectSignal(0, 1.0) does not put the neuron into "recovering"
+  //   state
   // 
   // 
   // ToDo:
-  //
-  // - Figure out what happens in the edge case when wireDelay = 1 or 0.
   // 
-  // - Make a test where wireDelay < recoveryTime. In this case, we expect the signal to die out 
-  //   after the initial spike.
+  // - Add a unit test that checks that the node0 signal is a spike train with period
+  //   wireDelay+1.
   //
   // - Make a test with 2 nodes
 }

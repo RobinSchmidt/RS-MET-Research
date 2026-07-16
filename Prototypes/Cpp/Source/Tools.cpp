@@ -10087,7 +10087,14 @@ public:
       , targetIndex(newTargetIndex)
       , weight(newWeight)
       , delay(newDelay)
-    {}
+    {
+      int maxDelay = rsCeilInt(delay);
+      delayLine.setMaxDelayInSamples(maxDelay);
+      delayLine.setDelayInSamples(maxDelay);
+
+      // ToDo: Use an interpolating delayline that accepts a fractional delay and use our actual
+      // "delay" in setDelay...
+    }
 
     int getSourceIndex() const { return sourceIndex; }
     int getTargetIndex() const { return targetIndex; }

@@ -25528,12 +25528,14 @@ bool testRecurrentNetwork1()
   bool ok = true;
 
   using Real = double;
+  using Vec  = std::vector<Real>;
   using Vec3 = rsVector3D<Real>;
   using Net  = rsRecurrentNetwork<Real, Real>;
 
-  Real spikePeriod = 20.0;
+  Real spikePeriod =  20.0;
+  int  numSamples  = 100;
 
-  // Create our recurrent network object:
+  // Create our recurrent network object and set up its global parameters:
   Net net;
   //net.setSmoothingCoeff(  0.0);
   //net.setRecoveryTime(   10.0);  // Needs to be < or <= spikePeriod, I think.
@@ -25542,8 +25544,28 @@ bool testRecurrentNetwork1()
   // Add a single node (aka neuron) at the origin of the 3D coordinate system:
   net.addNode(Vec3(0,0,0));
 
-  // Add self-feedback from node[0] to node[0] with weight 1.0 and a delay of 2.0 samples:
+  // Add self-feedback from node[0] to node[0] with weight 1.0 and a delay given by our desired 
+  // "spikePeriod":
   net.addWire(0,0, 1.0, spikePeriod);
+
+  // Apply an initial stimulus of size 1.0 to neuron 0:
+  net.injectSignal(0, 1.0);
+
+  // Let the network run and record the activity of neuron 0:
+  Vec node0(numSamples);
+  for(int n = 0; n < numSamples; n++)
+  {
+    node0[n] = net.extractSignal(0);
+    net.propagateActivations();
+  }
+
+  // Plot the result:
+  rsPlotVector(node0);
+  // Is still completely silent. The implementation is not yet done. There are still many stubs and
+  // construction yards...
+
+  // Verify the result programatically:
+  // ...
 
 
   return ok;

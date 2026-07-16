@@ -10123,6 +10123,8 @@ public:
     double getWeight()   const { return weight;      }
     double getDelay()    const { return delay;       }
 
+    void injectSignal(double value) { delayLine.writeInputNoUpdate(value); }
+
   private:
 
     int sourceIndex = -1;
@@ -10144,3 +10146,30 @@ protected:
   double threshold   = 1.0;
 
 };
+
+void rsRecurrentNetworkProto::propagateActivations()
+{
+  // Compute activations:
+  int numNodes = getNumNodes();
+  std::vector<double> spikes(numNodes);  // Temp array
+  for(int n = 0; n < numNodes; n++)
+  {
+    nodes[n].updateActivation(threshold, recoveryTime);
+    spikes[n] = nodes[n].getActivation();
+  }
+
+  // Inject the activations into the appropriate wires:
+  for(int w = 0; w < (int)wires.size(); w++)
+  {
+    Wire& wire = wires[w];
+    int sourceIndex = wire.getSourceIndex();
+    for(int n = 0; n < numNodes; n++)
+    {
+      if(n == sourceIndex)
+        wire.injectSignal(spikes[n]);
+    }
+  }
+
+
+}
+

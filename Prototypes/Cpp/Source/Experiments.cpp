@@ -25531,21 +25531,36 @@ bool testRecurrentNetwork1()
   using Vec3 = rsVector3D<Real>;
   using Net  = rsRecurrentNetwork<Real, Real>;
 
-  Net net;
-  net.addNode(Vec3(0,0,0));
-  // When we do this, it crashes on destruction. Apparently, the delayline memory gets deleted 
-  // twice or something. Using nodes.emplace_back(Node(nodePosition)); in addNode does not fix it.
-  // There are some comments about this in class rsDelay. It has to do with shallow copying a
-  // rsDelay object, I think. OK ...this problem seems to be fixed now. We now have implemented
-  // copy- and move constructors and assignment operators in class rsDelay. But we need to test it 
-  // more thoroughly.
+  Real spikePeriod = 20.0;
 
-  net.addWire(0,0, 1.0, 20.0);
-  // Self-feedback from node[0] to node[0] with weight 1.0. But shouldn't we also pass a delay in
-  // addition to the weight?
+  // Create our recurrent network object:
+  Net net;
+  //net.setSmoothingCoeff(  0.0);
+  //net.setRecoveryTime(   10.0);  // Needs to be < or <= spikePeriod, I think.
+  //net.setFiringThreshold (0.5);
+
+  // Add a single node (aka neuron) at the origin of the 3D coordinate system:
+  net.addNode(Vec3(0,0,0));
+
+  // Add self-feedback from node[0] to node[0] with weight 1.0 and a delay of 2.0 samples:
+  net.addWire(0,0, 1.0, spikePeriod);
 
 
   return ok;
+
+  // ToDo:
+  // 
+  // - Set up the global parameters of the network: smoothing coeff (of zero - which is actually 
+  //   the default, but let's do it anyway just in case we change the default at some point), 
+  //   recovery time (should be less than (or equal to?) 20), firing threshold (needs to be <= 
+  //   1.0, I think).
+  // 
+  // - Inject an input of 1.0 into node[0] at the beginning of the computation
+  //
+  // - Set up a processing loop in which we repeatedly let the network update itself. Record the
+  //   output of node[0] over time and plot it. Check that it behvaes as expected. I think, we 
+  //   should expect a spike train with spike distance of 20 samples. If the plot looks right, add
+  //   a programmatic, unit-test like check, too.
 }
 
 

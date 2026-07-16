@@ -10197,6 +10197,9 @@ void rsRecurrentNetworkProto::propagateActivations()
   // Update the wires:  
   for(int w = 0; w < (int)wires.size(); w++)
     wires[w].stepTime();
+
+  // ToDo: Document why the order of the different steps is they way it is and what the 
+  // implications of that order are.
 }
 // This needs tests!
 

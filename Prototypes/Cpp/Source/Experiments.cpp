@@ -25556,7 +25556,10 @@ bool testRecurrentNetworkProto1()
   // ToDo:
   //
   // - It looks almost right. It's just that spike period is one sample too long. If we set
-  //   spikePeriod = 9, we actually get a period of 10, etc.
+  //   spikePeriod = 9, we actually get a period of 10, etc. Maybe it's because we have an implicit
+  //   loop delay? Maybe we should use  net.addWire(0,0, 1.0, spikePeriod - 1.0);
+  //
+  // - Figure out what happens in the edge case when spikePeriod = 1 or 0.
 }
 
 bool testRecurrentNetwork1()

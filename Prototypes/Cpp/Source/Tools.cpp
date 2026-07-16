@@ -10074,6 +10074,10 @@ public:
 
     void clearActivation() { output = 0.0; }
 
+
+
+
+
     /*
     void updateActivation(double thresh, int recoveryTime)
     {
@@ -10189,9 +10193,14 @@ void rsRecurrentNetworkProto::propagateActivations()
         tmp += wire.readOutput();
     }
 
+    // ToDo:
+    // Pass tmp through the smoother and apply thresholding and recovery-time
+
+
     // Maybe this could be done in a single call setActivation(tmp):
     nodes[n].clearActivation();
     nodes[n].injectSignal(tmp);
+    // ...or maybe updateActivation(double inputSum)
   }
 
   // Update the wires:  

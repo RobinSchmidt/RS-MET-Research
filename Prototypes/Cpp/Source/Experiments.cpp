@@ -25524,6 +25524,8 @@ void testMerge()
 
 
 
+
+
 bool testRecurrentNetworkProto1()
 {
   bool ok = true;
@@ -25532,13 +25534,13 @@ bool testRecurrentNetworkProto1()
   using Vec3 = rsVector3D<double>;
   using Net  = rsRecurrentNetworkProto;
 
-  double spikePeriod =  9.0;
-  int    numSamples  = 100;
+  double wireDelay  =  9.0;
+  int    numSamples = 100;
 
   Net net;
 
   net.addNode(Vec3(0,0,0));
-  net.addWire(0,0, 1.0, spikePeriod);
+  net.addWire(0,0, 1.0, wireDelay);
 
   net.injectSignal(0, 1.0);
 
@@ -25553,14 +25555,18 @@ bool testRecurrentNetworkProto1()
 
   return ok;
 
+  // Observations:
+  //
+  // - We see as output of node[0] spike train with a period of wireDelay+1. I think, the +1 might
+  //   be explained by the implicit loop delay. Verify that!
+  //
+  //
   // ToDo:
   //
-  // - It looks almost right. It's just that spike period is one sample too long. If we set
-  //   spikePeriod = 9, we actually get a period of 10, etc. Maybe it's because we have an implicit
-  //   loop delay? Maybe we should use  net.addWire(0,0, 1.0, spikePeriod - 1.0);
-  //
-  // - Figure out what happens in the edge case when spikePeriod = 1 or 0.
+  // - Figure out what happens in the edge case when wireDelay = 1 or 0.
 }
+
+
 
 bool testRecurrentNetwork1()
 {

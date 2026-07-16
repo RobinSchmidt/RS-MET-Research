@@ -10070,25 +10070,17 @@ public:
 
     double getActivation() const  { return output; }
 
-    void injectSignal(double value) { output += value;  }
+    void injectSignal(double value) { output += value; }
 
     void clearActivation() { output = 0.0; }
 
-
-
-
-
-    /*
-    void updateActivation(double thresh, int recoveryTime)
+    void updateActivation(double inputSum, double thresh, int recoveryTime)
     {
-      double tmp = 0.0;
-
-      // ToDo: Loop over the wires to collect the inputs
-
+      double tmp = inputSum;
       tmp = smoother.getSample(tmp);
       if(tmp >= thresh && timeToRecover == 0)
       {
-        output = 0.0;
+        output = 1.0;
         timeToRecover = recoveryTime;
       }
       else
@@ -10097,9 +10089,7 @@ public:
         timeToRecover = rsMax(timeToRecover-1, 0);
       }
     }
-    */
-    // But we don't have access to the wires here. Maybe all of this should be done in the
-    // "orchestrator" function rsRecurrentNetworkProto::propagateActivations()
+  
 
   private:
 
@@ -10184,13 +10174,13 @@ void rsRecurrentNetworkProto::propagateActivations()
   // Update the activations in the nodes:
   for(int n = 0; n < numNodes; n++)
   {
-    double tmp = 0.0;
+    double inputSum = 0.0;
     for(int w = 0; w < (int)wires.size(); w++)
     {
       Wire& wire = wires[w];
       int targetIndex = wire.getTargetIndex();
       if(n == targetIndex)
-        tmp += wire.readOutput();
+        inputSum += wire.readOutput();
     }
 
     // ToDo:
@@ -10198,9 +10188,11 @@ void rsRecurrentNetworkProto::propagateActivations()
 
 
     // Maybe this could be done in a single call setActivation(tmp):
-    nodes[n].clearActivation();
-    nodes[n].injectSignal(tmp);
+    //nodes[n].clearActivation();
+    //nodes[n].injectSignal(tmp);
     // ...or maybe updateActivation(double inputSum)
+
+    nodes[n].updateActivation(inputSum, threshold, recoveryTime);
   }
 
   // Update the wires:  

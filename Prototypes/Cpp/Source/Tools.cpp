@@ -9784,23 +9784,29 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Processing
 
-  /** STUB */
+  /** Injects a signal from the outside into the input of the node with the given nodeIndex. */
   void injectSignal(int nodeIndex, TSig signalValue)
   {
-    // ...
-  }
-  // Maybe have an optionla 3rd parameter delay which defaults to zero. Maybe rename to 
-  // injectActivation() or inject() or stimulate() or stimulateAt()
+    rsAssert(isValidNodeIndex(nodeIndex));
+    nodes[nodeIndex].scheduleInputSpike(signalValue, 0.0);
 
-  /** STUB */
+    // ToDo: Maybe have an optional 3rd parameter delay which defaults to zero. Maybe rename to 
+    // injectActivation() or inject() or stimulate() or stimulateAt()
+  }
+
+  /** Extracts a signal (i.e. the current activation state) from the node with the given 
+  nodeIndex. */
   TSig extractSignal(int nodeIndex)
   {
-    return TSig(0);  // Preliminary
+    rsAssert(isValidNodeIndex(nodeIndex));
+    return nodes[nodeIndex].getActivation();
+
+    // ToDo: Maybe rename to readSignal() or readActivation() or measure() or probe() or 
+    // probeAt()
   }
-  // Maybe rename to readSignal() or readActivation() or measure() or probe() or probeAt()
 
   void propagateActivations();
-  // Maybe rename to propagate()
+  // Maybe rename to propagate(), tick(), stepTime()
 
 
 
@@ -9834,9 +9840,13 @@ public:
 
 
 
+    TSig getActivation() const
+    {
+      return output;
+    }
 
     /** Under construction. */
-    TSig getActivation(TSig thresh, int recoveryTime)
+    void updateActivation(TSig thresh, int recoveryTime)
     {
       TSig tmp = delay.readOutput();
       delay.writeInputAndUpdate(TSig(0));                    // Output was consumed. Reset zero.
@@ -9846,18 +9856,16 @@ public:
 
       tmp = smoother.getSample(tmp);
 
-
-      TSig out(0);
-
       if(tmp > thresh && sampleCounter >= recoveryTime)
       {
-        out = TSig(1);
+        output = TSig(1);
         sampleCounter = 0;
       }
-
-
-      sampleCounter++;
-      return out;
+      else
+      {
+        output = TSig(0);
+        sampleCounter++;
+      }
     }
 
     /** Schedules an input spike for this node. The node will see it arriving after "spikeDelay"
@@ -9883,8 +9891,11 @@ public:
     // Lowpass filter to implement the smoothing:
     rsOnePoleFilter<TSig, TPar> smoother; // Maybe use a (simpler) leaky integrator
 
+    // Our current output activation/state:
+    TSig output = TSig(0);
+
     // Sample counter to implement the recovery phase:
-    int sampleCounter =   0;
+    int sampleCounter = 0;
     //int recoveryTime  = 100;  // Maybe this should be set globally
 
   };
@@ -9950,7 +9961,10 @@ void rsRecurrentNetwork<TSig, TPar>::propagateActivations()
   int numNodes = getNumNodes();
   std::vector<TSig> spikes(numNodes);  // Temp array
   for(int n = 0; n < numNodes; n++)
-    spikes[n] = nodes[n].getActivation(threshold, recoveryTime);
+  {
+    nodes[n].updateActivation(threshold, recoveryTime);
+    spikes[n] = nodes[n].getActivation();
+  }
 
   // Accumulate the activations into the delaylines of their target nodes:
   for(int w = 0; w < (int)wires.size(); w++)

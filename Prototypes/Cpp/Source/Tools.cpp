@@ -9856,15 +9856,15 @@ public:
 
       tmp = smoother.getSample(tmp);
 
-      if(tmp >= thresh && sampleCounter >= recoveryTime)
+      if(tmp >= thresh && timeToRecover == 0)
       {
         output = TSig(1);
-        sampleCounter = 0;
+        timeToRecover = recoveryTime;
       }
       else
       {
         output = TSig(0);
-        sampleCounter++;
+        timeToRecover = rsMax(timeToRecover-1, 0);
       }
 
       // I think, we should use a sampleCounter that counts _down_ from recoveryTime to zero. Maybe
@@ -9873,6 +9873,7 @@ public:
       // is initially in recovery state, i.e. in a state as if all neurons had just fired. But we 
       // want the system to start at rest state - with all neurons ready to fire. It will also 
       // solve the problem of an indefinitely increasing sampleCounter which may otherwise occur.
+      // ...done
     }
 
     /** Schedules an input spike for this node. The node will see it arriving after "spikeDelay"
@@ -9889,22 +9890,20 @@ public:
 
   private:
 
-    // 3D vector to encode the geometric position:
     rsVector3D<TPar> pos;
+    // 3D vector to encode the geometric position.
 
-    // Input delayline to implement the transmission delays:
     rsDelay<TSig> delay;
+    // Input delayline to implement the transmission delays.
 
-    // Lowpass filter to implement the smoothing:
-    rsOnePoleFilter<TSig, TPar> smoother; // Maybe use a (simpler) leaky integrator
+    rsOnePoleFilter<TSig, TPar> smoother;
+    // Lowpass filter to implement the smoothing. Maybe use a (simpler) leaky integrator
 
-    // Our current output activation/state:
     TSig output = TSig(0);
+    // Our current output activation/state.
 
-    // Sample counter to implement the recovery phase:
-    int sampleCounter = 0;
-    //int recoveryTime  = 100;  // Maybe this should be set globally
-
+    int timeToRecover = 0;
+    // Sample countdown to implement the recovery phase.
   };
 
   class Wire

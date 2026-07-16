@@ -10064,7 +10064,7 @@ public:
   {
   public:
 
-    Wire(int newSourceIndex, int newTargetIndex, TPar newWeight, TPar newDelay)
+    Wire(int newSourceIndex, int newTargetIndex, double newWeight, double newDelay)
       : sourceIndex(newSourceIndex)
       , targetIndex(newTargetIndex)
       , weight(newWeight)

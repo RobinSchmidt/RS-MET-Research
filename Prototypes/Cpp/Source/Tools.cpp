@@ -10040,6 +10040,26 @@ public:
 
 
   //-----------------------------------------------------------------------------------------------
+  // \name Processing
+
+  /** Injects a signal from the outside into the input of the node with the given nodeIndex. */
+  void injectSignal(int nodeIndex, double signalValue)
+  {
+    rsAssert(isValidNodeIndex(nodeIndex));
+    nodes[nodeIndex].injectSignal(signalValue);
+  }
+
+  double extractSignal(int nodeIndex)
+  {
+    rsAssert(isValidNodeIndex(nodeIndex));
+    return nodes[nodeIndex].getActivation();
+  }
+
+  void propagateActivations();
+
+
+
+  //-----------------------------------------------------------------------------------------------
   // \name Internal types
 
   class Node
@@ -10049,6 +10069,8 @@ public:
     Node(rsVector3D<double> nodePosition) { pos = nodePosition; }
 
     double getActivation() const  { return output; }
+
+    void injectSignal(double value) { output += value;  }
 
     void updateActivation(double thresh, int recoveryTime)
     {

@@ -25538,6 +25538,7 @@ bool testRecurrentNetworkProto1()
   int    numSamples = 100;
 
   Net net;
+  net.setRecoveryTime(5); 
 
   net.addNode(Vec3(0,0,0));
   net.addWire(0,0, 1.0, wireDelay);
@@ -25559,11 +25560,25 @@ bool testRecurrentNetworkProto1()
   //
   // - We see as output of node[0] spike train with a period of wireDelay+1. I think, the +1 might
   //   be explained by the implicit loop delay. Verify that!
+  
+  // - wireDelay = 5, recoveryTime = 5: Spikes: at 0, 6, 12, 18, 24, ...
+  // - wireDelay = 4, recoveryTime = 5: Spikes: at 0, 5.
+  // - wireDelay = 3, recoveryTime = 5: Spikes: at 0, 4.
+  // - wireDelay = 2, recoveryTime = 5: Spikes: at 0, 3.  
   //
-  //
+  // - Apparently, the initially injected spike is not taken into consideration in determining 
+  //   whether the neuron is in "ready" or "recovering" state. I'm not sure, if that's the 
+  //   desirable behavior.
+  // 
+  // 
   // ToDo:
   //
   // - Figure out what happens in the edge case when wireDelay = 1 or 0.
+  // 
+  // - Make a test where wireDelay < recoveryTime. In this case, we expect the signal to die out 
+  //   after the initial spike.
+  //
+  // - Make a test with 2 nodes
 }
 
 

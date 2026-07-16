@@ -10014,6 +10014,8 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Setup
 
+  void setRecoveryTime(int newRecoveryTime) { recoveryTime = newRecoveryTime; }
+
   void addNode(rsVector3D<double> nodePosition)
   {
     nodes.emplace_back(Node(nodePosition));
@@ -10072,7 +10074,7 @@ public:
 
     void injectSignal(double value) { output += value; }
 
-    void clearActivation() { output = 0.0; }
+    //void clearActivation() { output = 0.0; }
 
     void updateActivation(double inputSum, double thresh, int recoveryTime)
     {
@@ -10095,7 +10097,7 @@ public:
 
     rsVector3D<double> pos;
     rsOnePoleFilter<double, double> smoother;
-    double output = 0.0;
+    double output = 0.0;   // Maybe rename to activation
     int timeToRecover = 0;
   };
 
@@ -10145,9 +10147,9 @@ protected:
   std::vector<Node> nodes;
   std::vector<Wire> wires;
 
-  int  recoveryTime  = 5;        // Maybe use 0 as default later
-  double smoothCoeff = 0.0;
-  double threshold   = 1.0;
+  int    recoveryTime = 5;        // Maybe use 0 as default later
+  double smoothCoeff  = 0.0;
+  double threshold    = 1.0;
 
 };
 
@@ -10155,7 +10157,7 @@ void rsRecurrentNetworkProto::propagateActivations()
 {
   // Collect activations:
   int numNodes = getNumNodes();
-  std::vector<double> spikes(numNodes);  // Temp array
+  std::vector<double> spikes(numNodes);
   for(int n = 0; n < numNodes; n++)
     spikes[n] = nodes[n].getActivation();
 
@@ -10182,16 +10184,6 @@ void rsRecurrentNetworkProto::propagateActivations()
       if(n == targetIndex)
         inputSum += wire.readOutput();
     }
-
-    // ToDo:
-    // Pass tmp through the smoother and apply thresholding and recovery-time
-
-
-    // Maybe this could be done in a single call setActivation(tmp):
-    //nodes[n].clearActivation();
-    //nodes[n].injectSignal(tmp);
-    // ...or maybe updateActivation(double inputSum)
-
     nodes[n].updateActivation(inputSum, threshold, recoveryTime);
   }
 

@@ -10072,11 +10072,14 @@ public:
 
     void injectSignal(double value) { output += value;  }
 
+    void clearActivation() { output = 0.0; }
+
+    /*
     void updateActivation(double thresh, int recoveryTime)
     {
       double tmp = 0.0;
 
-      // ToDo: Loop over the wired to collect the inputs
+      // ToDo: Loop over the wires to collect the inputs
 
       tmp = smoother.getSample(tmp);
       if(tmp >= thresh && timeToRecover == 0)
@@ -10090,6 +10093,9 @@ public:
         timeToRecover = rsMax(timeToRecover-1, 0);
       }
     }
+    */
+    // But we don't have access to the wires here. Maybe all of this should be done in the
+    // "orchestrator" function rsRecurrentNetworkProto::propagateActivations()
 
   private:
 
@@ -10125,6 +10131,10 @@ public:
 
     void injectSignal(double value) { delayLine.writeInputNoUpdate(value); }
 
+    double readOutput() const { return delayLine.readOutput(); }
+
+    void stepTime() { delayLine.incrementTapPointers(); }
+
   private:
 
     int sourceIndex = -1;
@@ -10149,14 +10159,11 @@ protected:
 
 void rsRecurrentNetworkProto::propagateActivations()
 {
-  // Compute activations:
+  // Collect activations:
   int numNodes = getNumNodes();
   std::vector<double> spikes(numNodes);  // Temp array
   for(int n = 0; n < numNodes; n++)
-  {
-    nodes[n].updateActivation(threshold, recoveryTime);
     spikes[n] = nodes[n].getActivation();
-  }
 
   // Inject the activations into the appropriate wires:
   for(int w = 0; w < (int)wires.size(); w++)
@@ -10170,6 +10177,26 @@ void rsRecurrentNetworkProto::propagateActivations()
     }
   }
 
+  // Update the activations in the nodes:
+  for(int n = 0; n < numNodes; n++)
+  {
+    double tmp = 0.0;
+    for(int w = 0; w < (int)wires.size(); w++)
+    {
+      Wire& wire = wires[w];
+      int targetIndex = wire.getTargetIndex();
+      if(n == targetIndex)
+        tmp += wire.readOutput();
+    }
 
+    // Maybe this could be done in a single call setActivation(tmp):
+    nodes[n].clearActivation();
+    nodes[n].injectSignal(tmp);
+  }
+
+  // Update the wires:  
+  for(int w = 0; w < (int)wires.size(); w++)
+    wires[w].stepTime();
 }
+// This needs tests!
 

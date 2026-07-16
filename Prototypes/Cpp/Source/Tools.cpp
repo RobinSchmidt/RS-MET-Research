@@ -9760,20 +9760,12 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
-  int getNumNodes() const
-  {
-    return (int)nodes.size();
-  }
+  int getNumNodes() const { return (int)nodes.size(); }
 
-  bool isValidNodeIndex(int i) const
-  {
-    return i >= 0 && i < getNumNodes();
-  }
+  bool isValidNodeIndex(int i) const { return i >= 0 && i < getNumNodes(); }
 
   bool areValidNodeIndices(int i, int j) const
-  {
-    return isValidNodeIndex(i) && isValidNodeIndex(j);
-  }
+  { return isValidNodeIndex(i) && isValidNodeIndex(j); }
 
 
   //-----------------------------------------------------------------------------------------------
@@ -9930,8 +9922,6 @@ public:
 
     TPar getDelay()      const { return delay;       }
 
-
-
   private:
 
     int sourceIndex = -1;
@@ -10019,6 +10009,34 @@ class rsRecurrentNetworkProto
 
 public:
 
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  void addNode(rsVector3D<double> nodePosition)
+  {
+    nodes.emplace_back(Node(nodePosition));
+  }
+
+  void addWire(int sourceIndex, int targetIndex, double weight, double delay)
+  {
+    rsAssert(areValidNodeIndices(sourceIndex, targetIndex));
+    rsAssert(delay >= 0.0);
+    rsAssert(rsIsFiniteNumber(weight));
+
+    wires.emplace_back(Wire(sourceIndex, targetIndex, weight, delay));
+  }
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+  int getNumNodes() const { return (int)nodes.size(); }
+
+  bool isValidNodeIndex(int i) const { return i >= 0 && i < getNumNodes(); }
+
+  bool areValidNodeIndices(int i, int j) const
+  { return isValidNodeIndex(i) && isValidNodeIndex(j); }
 
 
   //-----------------------------------------------------------------------------------------------

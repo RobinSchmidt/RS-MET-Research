@@ -9856,7 +9856,7 @@ public:
 
       tmp = smoother.getSample(tmp);
 
-      if(tmp > thresh && sampleCounter >= recoveryTime)
+      if(tmp >= thresh && sampleCounter >= recoveryTime)
       {
         output = TSig(1);
         sampleCounter = 0;
@@ -9866,6 +9866,13 @@ public:
         output = TSig(0);
         sampleCounter++;
       }
+
+      // I think, we should use a sampleCounter that counts _down_ from recoveryTime to zero. Maybe
+      // we should call the member variable stepsUntilRecovered. The rationale is that otherwise, 
+      // when we init the sampleCounter at 0, the whole system starts in a state where every neuron
+      // is initially in recovery state, i.e. in a state as if all neurons had just fired. But we 
+      // want the system to start at rest state - with all neurons ready to fire. It will also 
+      // solve the problem of an indefinitely increasing sampleCounter which may otherwise occur.
     }
 
     /** Schedules an input spike for this node. The node will see it arriving after "spikeDelay"
@@ -9875,7 +9882,7 @@ public:
       delay.addToInputAt(spikeValue, (int) spikeDelay);
 
       // ToDo: We need to de-interpolate the signalToInject into two samples of the delayline. The 
-      // current code is correct only for integer delay values.
+      // current code is correct only for integer delay values. Maybe rename to scheduleStimulus()
     }
 
 
@@ -9962,8 +9969,8 @@ void rsRecurrentNetwork<TSig, TPar>::propagateActivations()
   std::vector<TSig> spikes(numNodes);  // Temp array
   for(int n = 0; n < numNodes; n++)
   {
-    nodes[n].updateActivation(threshold, recoveryTime);
     spikes[n] = nodes[n].getActivation();
+    nodes[n].updateActivation(threshold, recoveryTime);
   }
 
   // Accumulate the activations into the delaylines of their target nodes:
@@ -9986,4 +9993,9 @@ void rsRecurrentNetwork<TSig, TPar>::propagateActivations()
   // 
   // - Maybe make the temporary "spikes" array a member to avoid repeated allocations. Then we 
   //   should probably call resize here which will do nothing most of the time.
+  //
+  // - Maybe make a naive implementation where the delay in integrated into the wires. This will
+  //   eat a lot more memory but might be useful as reference implementation for uni tests. 
+  //   Consolidating the wire-delays for each target node into the node-object is a memory 
+  //   optimization.
 }

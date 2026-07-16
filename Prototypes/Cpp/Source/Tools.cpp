@@ -9948,6 +9948,8 @@ public:
   };
 
 
+
+
 protected:
 
   std::vector<Node> nodes;
@@ -10026,15 +10028,9 @@ public:
   {
   public:
 
-    Node(rsVector3D<double> nodePosition)
-    {
-      pos = nodePosition;
-    }
+    Node(rsVector3D<double> nodePosition) { pos = nodePosition; }
 
-    double getActivation() const
-    {
-      return output;
-    }
+    double getActivation() const  { return output; }
 
     void updateActivation(double thresh, int recoveryTime)
     {
@@ -10064,11 +10060,40 @@ public:
   };
 
 
+  class Wire
+  {
+  public:
 
+    Wire(int newSourceIndex, int newTargetIndex, TPar newWeight, TPar newDelay)
+      : sourceIndex(newSourceIndex)
+      , targetIndex(newTargetIndex)
+      , weight(newWeight)
+      , delay(newDelay)
+    {}
+
+    int getSourceIndex() const { return sourceIndex; }
+    int getTargetIndex() const { return targetIndex; }
+    double getWeight()   const { return weight;      }
+    double getDelay()    const { return delay;       }
+
+  private:
+
+    int sourceIndex = -1;
+    int targetIndex = -1;
+    double weight   = 1.0;
+    double delay    = 0.0;
+
+    rsDelay<double> delayLine;
+  };
 
 
 protected:
 
+  std::vector<Node> nodes;
+  std::vector<Wire> wires;
 
+  int  recoveryTime  = 5;        // Maybe use 0 as default later
+  double smoothCoeff = 0.0;
+  double threshold   = 1.0;
 
 };

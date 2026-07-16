@@ -9706,12 +9706,9 @@ void rsPlotRootDistancesAndMap(
 
 //=================================================================================================
 
-/** UNDER CONSTRUCTION. Just a stub. 
+/** UNDER CONSTRUCTION. Just a stub. Doesn't work yet
 
-
-The idea is explained in:  RS-MET-Research/Notes/RecurrentActivationNetwork.txt
-
-*/
+The idea is explained in:  RS-MET-Research/Notes/RecurrentActivationNetwork.txt */
 
 template<class TSig, class TPar>
 class rsRecurrentNetwork
@@ -9759,8 +9756,6 @@ public:
     if(newMaxDelay > oldMaxDelay)
       node.setMaxDelay(newMaxDelay);
   }
-
-
 
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
@@ -9830,6 +9825,11 @@ public:
     void setMaxDelay(int newMax)
     {
       delay.setMaxDelayInSamples(newMax);
+      delay.setDelayInSamples(newMax);
+      // We always set the MaxDelay and Delay to the same value because in this context here, there
+      // is actually no such thing as a particular delay time that the delay line currently 
+      // operates at. Instead all the wires have their own delay value, so it's basically used as a
+      // multi-tap delay with no particular tap standing out as "the" current delay setting.
     }
 
 
@@ -9848,7 +9848,8 @@ public:
     /** Under construction. */
     void updateActivation(TSig thresh, int recoveryTime)
     {
-      TSig tmp = delay.readOutput();
+      //TSig tmp = delay.readOutput();
+      TSig tmp = delay.readOutputAt(0);
       delay.writeInputAndUpdate(TSig(0));                    // Output was consumed. Reset zero.
       // Maybe this can be expressed in one step
       // tmp = delay.getSample(TSig(0));
@@ -9881,6 +9882,8 @@ public:
     void scheduleInputSpike(TSig spikeValue, TPar spikeDelay)
     {
       delay.addToInputAt(spikeValue, (int) spikeDelay);
+
+      //rsPlotDelayLineContent(delay, delay);
 
       // ToDo: We need to de-interpolate the signalToInject into two samples of the delayline. The 
       // current code is correct only for integer delay values. Maybe rename to scheduleStimulus()
@@ -9950,7 +9953,7 @@ protected:
   std::vector<Node> nodes;
   std::vector<Wire> wires;
 
-  int  recoveryTime = 10;
+  int  recoveryTime = 5;        // Maybe use 0 as default later
   TPar smoothCoeff  = TPar(0);
   TSig threshold    = 1.0;
 
@@ -9968,8 +9971,11 @@ void rsRecurrentNetwork<TSig, TPar>::propagateActivations()
   std::vector<TSig> spikes(numNodes);  // Temp array
   for(int n = 0; n < numNodes; n++)
   {
-    spikes[n] = nodes[n].getActivation();
     nodes[n].updateActivation(threshold, recoveryTime);
+    spikes[n] = nodes[n].getActivation();
+
+    // ToDo: Document why we need this particular order of the statements, i.e. update -> read vs
+    // read -> update
   }
 
   // Accumulate the activations into the delaylines of their target nodes:
@@ -9994,7 +10000,75 @@ void rsRecurrentNetwork<TSig, TPar>::propagateActivations()
   //   should probably call resize here which will do nothing most of the time.
   //
   // - Maybe make a naive implementation where the delay in integrated into the wires. This will
-  //   eat a lot more memory but might be useful as reference implementation for uni tests. 
+  //   eat a lot more memory but might be useful as reference implementation for unit tests. 
   //   Consolidating the wire-delays for each target node into the node-object is a memory 
   //   optimization.
 }
+
+//=================================================================================================
+
+/** A naive prototyp implementation of the recurrent network in which we implement the delays 
+inside the wires where they conceptually belong. The production version optimizes this by 
+consolidting the delaylines of all the wires that feed into a particular target node into that
+node. ...TBC... */
+
+class rsRecurrentNetworkProto
+{
+
+public:
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Internal types
+
+  class Node
+  {
+  public:
+
+    Node(rsVector3D<double> nodePosition)
+    {
+      pos = nodePosition;
+    }
+
+    double getActivation() const
+    {
+      return output;
+    }
+
+    void updateActivation(double thresh, int recoveryTime)
+    {
+      double tmp = 0.0;
+
+      // ToDo: Loop over the wired to collect the inputs
+
+      tmp = smoother.getSample(tmp);
+      if(tmp >= thresh && timeToRecover == 0)
+      {
+        output = 0.0;
+        timeToRecover = recoveryTime;
+      }
+      else
+      {
+        output = 0.0;
+        timeToRecover = rsMax(timeToRecover-1, 0);
+      }
+    }
+
+  private:
+
+    rsVector3D<double> pos;
+    rsOnePoleFilter<double, double> smoother;
+    double output = 0.0;
+    int timeToRecover = 0;
+  };
+
+
+
+
+
+protected:
+
+
+
+};

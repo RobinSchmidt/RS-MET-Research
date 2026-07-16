@@ -25532,7 +25532,7 @@ bool testRecurrentNetwork1()
   using Vec3 = rsVector3D<Real>;
   using Net  = rsRecurrentNetwork<Real, Real>;
 
-  Real spikePeriod =  20.0;
+  Real spikePeriod =  10.0;
   int  numSamples  = 100;
 
   // Create our recurrent network object and set up its global parameters:
@@ -25583,6 +25583,13 @@ bool testRecurrentNetwork1()
   //   output of node[0] over time and plot it. Check that it behvaes as expected. I think, we 
   //   should expect a spike train with spike distance of 20 samples. If the plot looks right, add
   //   a programmatic, unit-test like check, too.
+  //
+  // - The spikes occurr at the wrong times. I think, we should really first do a naive 
+  //   implementation where the delay lines are part of the wires. I think, we still get it wrong 
+  //   to insert-into and read-from the delay line at the right tap-pointers. It's a bit tricky to
+  //   get right. Spikes occurr at 1,8,15,22,29,36,.... so the spike distance is 7 when we request
+  //   spikePeriod = 10. When we request 11, we get 6. ...ToDo: Gather more data to see the 
+  //   pattern.
 }
 
 

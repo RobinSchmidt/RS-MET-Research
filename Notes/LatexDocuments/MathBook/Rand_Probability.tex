@@ -245,6 +245,14 @@ Let's assume we have a random variable $X$ and make an observation and observe t
 
 
 
+% Maybe it's more natural to define the information of an event with probability p as 
+% I = log2(1/p) rather than I = -log2(p). The result is the same, but the minus is somehow
+% weird from an aesthetic perspective. 3b1b says that viewing it as log_{1/2}(p) is also a nice way
+% to frame it.
+%
+% https://www.youtube.com/watch?v=l6DKRf-fAAM  at around 15:40
+% https://www.youtube.com/watch?v=GlYgs6v2YfU
+
 \paragraph{Entropy}
 
 % -Entropy is the expectation value (or mean) of the information
@@ -394,9 +402,7 @@ TODO: explain how discrete distributions can be framed inside the continuous fra
 
 \paragraph{Variance}
 
-\paragraph{Covariance}
 
-\paragraph{Correlation}
 
 \paragraph{Moments}
 % skew, kurtosis, central moments, ...
@@ -411,16 +417,32 @@ TODO: explain how discrete distributions can be framed inside the continuous fra
 
 % ToDo:
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Parameters of Pairs of Distributions}
+% Rename this. Maybe Mesurements on Distribution Pairs
+
+\paragraph{Covariance}
+
+\paragraph{Correlation}
 
 \paragraph{Cross Entropy}
 
-
 \paragraph{Kullback-Leibler Divergence}
+
+% But what is cross-entropy? | Compression is Intelligence Part 2
+% https://www.youtube.com/watch?v=GlYgs6v2YfU  around 31:35
 
 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Operations with Distributions}
+
+% List operations here that take distributions as inputs and produce new distributions
+
+\paragraph{Transformation}
+% Consider a random variable X with distribution p_X(x). Now we apply a nonlinear function f to X to
+% obtain a new random variably Y = f(X). What is the distribution p_Y(y) of Y?
+
 
 \paragraph{Convolution}
 % Consider two random variables X,Y with distributions p_X, p_Y. Consider a new random variable 
@@ -432,13 +454,13 @@ TODO: explain how discrete distributions can be framed inside the continuous fra
 % an 8 is given by 5/36.
 
 
-\paragraph{Transformation}
-% Consider a random variable X with distribution p_X(x). Now we apply a nonlinear function f to X to
-% obtain a new random variably Y = f(X). What is the distribution p_Y(y) of Y?
-
-
-
 % central limit theorem
+
+% ToDo: KL-Divergence, Cross Entropy
+
+
+
+
 
 
 %---------------------------------------------------------------------------------------------------

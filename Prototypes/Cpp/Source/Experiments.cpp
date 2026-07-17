@@ -1642,7 +1642,6 @@ void testPitchDitherSuperSawFiltered()
 
   using Real = float;
   using Vec  = std::vector<Real>;
-  using SVF  = rsStateVariableFilter<Real, Real>;
 
   // Setup:
   int  sampleRate =  44100;      // Sample rate for the wave files
@@ -1664,6 +1663,7 @@ void testPitchDitherSuperSawFiltered()
   Vec supSawRaw = amp * getPitchDitherSuperSaw3(midFreq, fs, detune, mix, N, seed);
 
   // Apply highpass filters to raw:
+  using SVF = rsStateVariableFilter<Real, Real>;
   SVF hpf;
   Real hpfW = hpfFrqRat * Real(2*PI)*midFreq/sampleRate;
   hpf.setupHighpass(hpfW, hpfQ);
@@ -1683,11 +1683,30 @@ void testPitchDitherSuperSawFiltered()
   //rsPlotArrays(5000, &impRespAp[0]);
   //rsPlotArrays(5000, &supSawAp[0]);
 
+  // Apply steep (high order) highpass to raw:
+  using FM = RAPT::rsInfiniteImpulseResponseDesigner<Real>::modes;
+  using AM = RAPT::rsPrototypeDesigner<Real>::approximationMethods;
+  using EF = RAPT::rsEngineersFilter<Real, Real>;
+  // ToDo: Figure out why we need the RAPT:: qualifier. Without it, we get an "...is ambiguous"
+  // compiler error. Is there a class with the same name in another namespace?
+  EF ef;
+  ef.setSampleRate(fs);
+  ef.setFrequency(hpfFrqRat * midFreq);
+  ef.setPrototypeOrder(8);
+  ef.setApproximationMethod(AM::CHEBYCHEV);
+  ef.setMode(FM::HIGHPASS);
+  ef.setRipple(0.5);                            // in dB
+  ef.setStopbandRejection(80.0);                // in dB
+  Vec supSawHpH = filterResponse(ef, numSamples, supSawRaw);
+  rsPlotArrays(5000, &supSawRaw[0], &supSawHpH[0]);
+
+
 
   // Write supersaw signals to wave files:
   rosic::writeToMonoWaveFile("PiDiSupSaw.wav",    &supSawRaw[0], N, fs);
   rosic::writeToMonoWaveFile("PiDiSupSawHp1.wav", &supSawHp1[0], N, fs);
   rosic::writeToMonoWaveFile("PiDiSupSawHp2.wav", &supSawHp2[0], N, fs);
+  rosic::writeToMonoWaveFile("PiDiSupSawHpH.wav", &supSawHpH[0], N, fs);
   rosic::writeToMonoWaveFile("PiDiSupSawAp.wav",  &supSawAp[0],  N, fs);
 
   // Observations:
@@ -1719,6 +1738,8 @@ void testPitchDitherSuperSawFiltered()
   //   not look like a ringing at a specific frequency but somehow more complicated. Increasing the
   //   Q to 10 turns the initial blip more into something that sounds like a fast pitch envelope 
   //   and going up to 20 makes it almost disappear.
+  // 
+  // - An 8th order Chebychev highpass nicely cleans up the noise
   //
   //
   // ToDo:
@@ -1738,6 +1759,21 @@ void testPitchDitherSuperSawFiltered()
   // - Maybe the ringing time (i.e. the Q) of the allpass should increase with frequency because
   //   lower frequencies are less noisy such that they may need less ringing to impose the pitched
   //   character.
+  // 
+  // - I think, a Chebychev 1 filter may be best suited for this purpose because it is very steep
+  //   at the cutoff freq while also still having high gain there. Elliptic filters are even 
+  //   steeper at middle frequency of the trasition band, but their gain is already quite low there
+  //   such that in a steady state condition (which is important here), the ringing might not be
+  //   all that present due to the low gain. Try to confirm that experimentally! The Papoulis 
+  //   filter is steepest at the cutoff _under_the_constraint_ of monotonicity but I think, such a
+  //   constraint isn't really useful in this case because we already have some ripple in the 
+  //   harmonics anyway due to the aliasing, so a little bit of additional ripple may not change
+  //   all that much (macht den Kohl auch nicht mehr fett). I think, the non-monotonicity allows 
+  //   for even more steepness at the cutoff compared to Papoulis (verify!). Maybe try Chebychev 1
+  //   of order 4..8. Maybe use the impulse-invariant design method to arrive at an allpole filter
+  //   so we don't need to implement the zeros at Nyquist - whose benefits are questionable but 
+  //   they cost processing power. ...Although, if we use an SVF implementation (which we probably 
+  //   should), it may not make a difference.
   //
   // - Try using a comb filter on the output that supresses the frequencies in between the desired
   //   harmonics. Try feedforward and feedback configurations. Maybe also try to supress the even

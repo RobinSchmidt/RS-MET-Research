@@ -1698,7 +1698,7 @@ void testPitchDitherSuperSawFiltered()
   ef.setRipple(0.5);                            // in dB
   ef.setStopbandRejection(80.0);                // in dB
   Vec supSawHpH = filterResponse(ef, numSamples, supSawRaw);
-  rsPlotArrays(5000, &supSawRaw[0], &supSawHpH[0]);
+  //rsPlotArrays(5000, &supSawHpH[0]);
 
 
 
@@ -18028,6 +18028,13 @@ void testGeneralizedCollatz()
   // deal with very large numbers - because taking a  p_i ^ k_i  factor to  k_i ^ p_i  can really 
   // blow it up. For example, 29^3 is managable but 3^29 is huge. The algo would have to involve
   // factoring the k_i. But maybe try this first in a math software like sage
+  //
+  //
+  // https://www.youtube.com/watch?v=1ZRxaZ-Yypg
+  // The Simplest Problem Mathematics Can't Solve
+  //
+  // Says at 9:35 that using the rule: 5x + 1 for odd x and x/2 for even x diverges and explains 
+  // why we should expect this to happen from a statistical perspective.
 }
 
 void testPowerCommutator()

@@ -59,7 +59,7 @@ ToDo: give formulas for finite and infinite geometric series, infinite alternati
 
 
 
-
+% Q: Does sum_{1}^{\infty} \frac{1}{k \ln k}   converge? If so, what's the value?
 
 
 
@@ -96,7 +96,9 @@ Specifically for series, there is a definition for an even stronger form of conv
 %  https://www.youtube.com/watch?v=fuUBMFYDZNg&lc=UgyS38H5Wb2P1gJM6nF4AaABAg
 
 
-\subsubsection{Riemann's Reordering Theorem} There is a pretty interesting theorem that applies to conditionally convergent series, i.e. series that do converge but fail to converge absolutely. Such series can be made to converge to any value or even to diverge just by reordering the terms. This theorem is called \emph{Riemann reordering theorem}, \emph{Riemann rearrangement theorem} or \emph{Riemann series theorem}. That result is kinda weird because in finite sums, we can reorder the terms in any way we like without changing the final sum. That is a consequence of the associativity of addition. Infinite sums may break the associativity of addition in certain cases. [VERIFY!] ...TBC....Give example - maybe use the alternating harmonic series and show how to make it approach any value
+\subsubsection{Riemann's Reordering Theorem} There is a pretty interesting theorem that applies to conditionally convergent series, i.e. series that do converge but fail to converge absolutely. Such series can be made to converge to any value just by reordering the terms. It can even be made to diverge in any way you want, i.e. to plus or minus infinity or oscillate forever. This theorem is called the \emph{Riemann reordering theorem}, \emph{Riemann rearrangement theorem} or \emph{Riemann series theorem}. That result is kinda weird because in finite sums, we can reorder the terms in any way we like without changing the final sum. That is a consequence of the associativity and commutativity of addition. Infinite sums may break these laws of addition in certain cases. [VERIFY!] ...TBC....Give example - maybe use the alternating harmonic series and show how to make it approach any value
+
+% Explain use cases. This video has some at the end (at 20:40):
 
 % Can you change a sum by rearranging its numbers? --- The Riemann Series Theorem
 % https://www.youtube.com/watch?v=U0w0f0PDdPA  by Morphocular
@@ -109,6 +111,9 @@ Specifically for series, there is a definition for an even stronger form of conv
 % https://www.youtube.com/watch?v=3aCM5KoV9zY  Rearrange and Transform Zero into Infinity
 
 % This section should come below the one where we explain absolute convergence!
+
+% The Sum That Equals Any Number You Want
+% https://www.youtube.com/watch?v=98TQzC4s9gI
 
 \subsubsection{Summation Methods} Certain divergent series can be transformed into other series that are convergent. Of course, if we would allow any transformation, that would be trivially true and an uninteresting statement - we could just transform our divergent series into a series of all zeros, for example. We want to allow only those kinds of transformations that, when being applied to a convergent series, do not change their value. So, the name of the game is to transform the series in a certain way and then trying to figure out the value of the transformed series. This is what summation methods are about. A summation method that has our desired the property of not changing the value of any convergent series is called regular (VERIFY!). If we have found such a regular transformation and then apply it to a divergent series, it may happen that the transformed series becomes convergent. If that works out, we will have a way to assign numerical values to divergent series. If it furthermore turns out that different regular transformations will always lead to the same values, then we may be on to something - maybe some mathematically well defined way to actually evaluate divergent series ...TBC..
 
@@ -335,6 +340,9 @@ Given a functional dependency $x = f(y)$ such that $y = f^{-1}(x)$, there is als
 
 % See also:
 % https://en.wikipedia.org/wiki/Lagrange_reversion_theorem
+
+% The Hidden Formula That Inverts Almost Any Function
+% https://www.youtube.com/watch?v=3yYEV2JwIrg
 
 \subsubsection{Formal Power Series}
 A formal power series is an expression of the form (\ref{Eq:PowerSeries}) without any considerations for the convergence of the sum. The series are just treated as formal expressions that can be formally manipulated using algebraic operations (like sum, product, etc.) without any intention to ever evaluate the expression. It's the (infinite) sequence of coefficients itself that is of interest, not the number that would result when evaluating the sum. Such a number may or may not exist and in the context of formal power series, we don't care about that question. ...TBC...explain use cases

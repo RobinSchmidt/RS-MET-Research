@@ -119,7 +119,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPairingFunctions();
   //testOrdinals();
 
-  //testGeneralizedCollatz();
+  testGeneralizedCollatz();
   //testPowerCommutator();
   //testParticleSystem();
   //testWeightedAverages();

@@ -315,7 +315,11 @@ An important tool for solving linear differential equations in continuous calcul
 % Maybe call it "Fractional Sums" ..but that suggests that we want to evaluate only at rational
 % numbers when in fact, the techniques apply to real (and I think even complex) numbers
 \subsection{Interpolation of Sums}
-Suppose we are given a function $f(x)$ and suppose that for some order $m$, the difference $\Delta^m$ of $f$ vanishes for large values of $x$ such that $\lim_{x \rightarrow \infty} \Delta^m f(x) = 0$. We want to evaluate the sum $S(x)$ defined via $S(x) = \sum_{k=1}^{x} f(k)$. We have suggestively used $x$ as variable name to indicate that we want to evaluate the sum at non integers. But the $x$ occurs as upper summation limit so we can use the defining formula for evaluating $S$ only for integer $x$. The following formula provides a nice, smooth and "natural" interpolation for $S(x)$ for non-integer values of $x$:
+Suppose we are given a function $f(x)$ and suppose that for some order $m$, the difference $\Delta^m$ of $f$ vanishes for large values of $x$ such that $\lim_{x \rightarrow \infty} \Delta^m f(x) = 0$. We want to evaluate the sum $S(x)$ defined via:
+\begin{equation}
+S(x) = \sum_{k=1}^{x} f(k)
+\end{equation}
+We have suggestively used $x$ as variable name to indicate that we want to evaluate the sum at non integers. But the $x$ occurs as upper summation limit so we can use the defining formula for evaluating $S$ only for integer $x$. The following formula provides a nice, smooth and "natural" interpolation for $S(x)$ for non-integer values of $x$:
 \begin{equation}
 S(x) = \lim_{n \rightarrow \infty} 
 \left(   \sum_{k=1}^{n-1} \left(f(k) - f(x+k) \right) 
@@ -353,6 +357,13 @@ where
 
 % Extending the Zeta Function with Fractional Sums
 % https://www.youtube.com/watch?v=N0Ho0XGuXZs
+
+% Adding a Non-Integer Number of Terms
+% https://www.youtube.com/watch?v=9naIxxeNdMk
+% - Has another formula:
+%   \sum_{k=1}^{x} f(k) = \sum_{k=1}^{\infty} ( f(k) - f(x+k) )  +   x \cdot f(\infty)
+% - Maybe this formula reduces to the one given above when f(inf) = 0?
+% -> Implement both formulas and try them out on some example functions f(k)
 
 % Applications:
 % - Solving nasty sums

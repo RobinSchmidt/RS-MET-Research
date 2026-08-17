@@ -61,7 +61,7 @@ It simplified so nicely because we could cancel the 3 in the numerator of the fi
    = \lim_{n \rightarrow \infty} \frac{n+1}{2} 
    = \infty
 \end{equation}
-The infinite variant of the product diverges to infinity. The individual factors in the product approach 1 from above - but not quickly enough to lead to a convergent infinite product. This is somewhat analogous to the divergence of the harmonic series where we sum terms of the form $\frac{1}{n}$. These terms approach zero but not fast enough to make the infinite sum convergent.
+The infinite variant of the product diverges to infinity. The individual factors in the product actually do approach 1 (from above). However, they do not not approach it quickly enough to lead to a convergent infinite product. This is somewhat analogous to the divergence of the harmonic series where we sum terms of the form $\frac{1}{n}$. These terms approach zero but not fast enough to make the infinite sum convergent.
 
 
 \paragraph{Divergence to Zero}
@@ -161,7 +161,7 @@ Let's now see what have we achieved with this somewhat subtle definition. Firstl
 % The behavior of a finite initial section does not affect the convergence
 
 \paragraph{Absolute Convergence}
-Like with series, there is also a notion of absolute convergence for products. Unlike with series, we do not just take the absolute values of the $a_k$. Instead, we take the absolute values of the $h_k$. So we define: An infinite product $\prod_{k=k_0}^{\infty} (1 + h_k)$ is said to be \emph{absolutely convergent} if the product $\prod_{k=k_0}^{\infty} (1 + |h_k|)$ is convergent. Every product that is absolutely convergent is also convergent but not vice versa. As with series, absolute convergence is a stronger requirement.
+Like with series, there is also a notion of absolute convergence for products. Unlike with series, we do not just take the absolute values of the $a_k$. Instead, we take the absolute values of the $h_k$. So we define: An infinite product $\prod_{k=k_0}^{\infty} (1 + h_k)$ is said to be \emph{absolutely convergent} if the product $\prod_{k=k_0}^{\infty} (1 + |h_k|)$ is convergent. Every product that is absolutely convergent is also convergent but not vice versa. As with series, absolute convergence is a stronger requirement. Q: Is there also a reordering theorem for convergent but not absolutely convergent infinite products?
 
 
 % Would 
@@ -171,9 +171,6 @@ Like with series, there is also a notion of absolute convergence for products. U
 % -We want a definition that respects the property of finite products: a convergent product is 
 %  zero iff and only if one of its factors is zero. 
 % -Explain convergence to zero vs divergence to zero
-
-
-
 
 
 %---------------------------------------------------------------------------------------------------
@@ -210,7 +207,6 @@ holds. That means that beyond some index $N_{\varepsilon}$ that depends on the c
 %...TBC...
 
 % ak = 1 + hk  ->  hk = ak - 1
-
 
 
 
@@ -303,6 +299,7 @@ which is known as the \emph{Wallis product} representation of $\pi$. Due to its 
 
 % Can Sine be Factored?
 % https://www.youtube.com/watch?v=s2oO4g-13sc
+% https://www.youtube.com/watch?v=nw6W_fMf008
 % -Explains why the $\prod_{k} (x - r_k)$ form for sine doesn't coverge but the
 %  $\prod_{k} (1 - \frac{x}{r_k})$ does. It's because in the 2nd form, the factors approach 1 
 %  whereas in the 1st case, they oscillate and grow bigger.

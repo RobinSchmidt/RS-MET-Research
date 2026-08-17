@@ -371,7 +371,13 @@ Questions
   therefore is sufficient to look at the reciprocal tables of two isomorphic GFs to figure out the
   isomorphism
 
-
+- Can we also perform exponentiation, roots and logarithms? If so, try to create the operation
+  tables for the operations as well. We expect these operations to not commutative, though so we
+  need a convention wether the first or second operand should give the table's row or column. But
+  the same is true for the subtraction and division tables as well - so adopt the convention used 
+  there. To do this, we need to extend rsFiniteFieldTables::createOperationTables() and then
+  write functions pow(x,a), logB(x,b), rootN(x,n) for rsFiniteFieldElement and perhaps also 
+  implement the ^ operator for exponentiation like we did for rsPolynomial.
 
 
 */

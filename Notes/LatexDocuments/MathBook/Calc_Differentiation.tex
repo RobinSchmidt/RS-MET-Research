@@ -37,6 +37,12 @@ With the derivative, we have an operation to produce a new "derived" function $f
 
 \paragraph{Notations} The second derivative of a function $f(x)$ is denoted as $f''(x)$ in Lagrange notation, the third as $f'''(x)$. From the fourth one onwards, the "dash" or "prime" notation becomes impractical so one often sees the notation $f^{(n)}(x)$ to denote the $n$-th order derivative of the function $f$. In this notation, the $0$-th order derivative means the function $f$ itself. This makes sense because taking the derivative zero times should be a "do-nothing" operation. To translate this into Leibniz notation, one would write $f^{(n)}(x) = \frac{d^n}{d x^n} f(x) = \frac{d^n f(x)}{d x^n}$. In operator notation with suppressed argument $x$, one would write $f^{(n)} = D^n f$ or $D^n[f]$. That is: in operator notation, putting a superscript like $n$ on an operator usually means: apply the operator $n$ times. It does not mean: apply the operator and then take the $n$th power of the result. This is different to putting a superscript on functions. Something like $f^2(x)$ does indeed usually\footnote{To make matters worse, there are exceptions to that, too. For example: in complex dynamics, $f^n(x)$ indeed means: apply $f$ $n$ times. It's a mess!} means: apply the function $f$, then square the result. This is the reason why in Lagrange notation for arbitrary derivatives, we need to use these additional parentheses in the superscript to avoid confusion. Higher order derivatives in Newton notation use multiple dots above the function as in $\dot{x}(t), \ddot{x}(t), \dddot{x}(t), \ddddot{x}(t)$. I have seen up to 4 dots but there, the usefulness of this notation ends (and for more than 2, it's already questionable). Time derivatives of order higher than 4 typically do not occur in physics which is the place where Newton's notation is used. Mostly, we deal only with first and second derivatives anyway - and for these, Newton notation works fine. 
 
+% ToDo: mention that the operator notation is also called "D-notation" or "Arbogst notation", see:
+% https://en.wikipedia.org/wiki/Notation_for_differentiation#D-notation
+% There's also a corresponding notation for partial derivatives - for example D_x^n is the n-th 
+% derivative with respect to x. Would D_{xy}^2 be a 2nd mixed derivative in this notation? Mention
+% this in the section about partial derivatives.
+
 %[ToDo: figure out if there's a general way to write an $n$-th time derivative in Newton notation - maybe something $\overset{n}{x}(t)$?]
 
 % ToDo:
@@ -44,6 +50,20 @@ With the derivative, we have an operation to produce a new "derived" function $f
 % -interpret the formula in terms of a numeric 2nd derivative when h is small.
 % -Explain the intuitive meaning of the higher derivatives:
 %  2nd: (linearized) curvature (actual curvature is defined in terms of a tangent circle)
+
+% This is not the Second Derivative #SoME5
+% https://www.youtube.com/watch?v=4ZB2PNUYR1Y
+% - Does some weird algebraic manipulations to make the point that d^2 y / dx^2 is not the 2nd 
+%   derivative. I don't understand it, though because he doesn't explain what it means to "apply the
+%   differential operator d".
+% - It's based on this paper:
+%   https://arxiv.org/abs/1801.09553  Extending the Algebraic Manipulability of Differentials
+% - See also:
+%   https://arxiv.org/abs/1811.03459  Simplifying and Refactoring Introductory Calculus
+% - Maybe that should go into a section about differentials - which I don't really understand well 
+%   enough yet. Physcicists throw them around all the time without ever thinking about it or 
+%   explaining it. Probably the creator is a physicist?
+
 
 %===================================================================================================
 \subsection{Elementary Derivatives}
@@ -828,6 +848,11 @@ Suppose we have a function $f$ of $x$, say $f(x) = x^6$, and we want to take the
 
 ...TBC...
 
+
+% I think, wiggling g(x) will cause a wiggle in x itself given by the inverse function of g. Maybe 
+% try to arrive at the result via that route. Maybe the inverse function rule will play a role here.
+% Whe we say: "...wiggling $g(x)$ will indirectly also wiggle $x$ itself..." we should continue 
+% with: "...but the wiggle will be mediated by (or go through) g^{-1}"
 
 % That was all very formal. It shows the power of the Leibniz notation
 

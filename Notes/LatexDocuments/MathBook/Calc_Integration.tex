@@ -325,6 +325,62 @@ TODO: give Sage and Mathematica code to calculate definite integrals - maybe som
 
 
 %===================================================================================================
+\subsection{Applications} 
+The integral was introduced as a way to compute the (signed) area between a function graph and the $x$-axis but it turns out that we can also use it to compute quite a lot of other quantities that could potentially be of interest. ...TBC...
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Areas}
+ToDo: Explain how integrals can be used to not only compute areas between function graphs and the x-axis but also areas of geometric objects defined as the region enclosed between two function graphs, areas of geometric shapes like circles and ellipses, etc.
+
+% Maybe make a subsection about applications (maybe after "Integration Techniques")
+% -One application is the computation of areas between a function and the x-axis
+% -It can be generalized to compute the area enclosed between two functions
+% -In some cases, we may use it to compute the areas of geometric figures such as circles and
+%  ellipses
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Lengths}
+ToDo: Explain how integration can be used to compute (arc) lengths of function graphs and of geometric objects described by parametric equations.
+% Can it also be used when no parameztric form is available and only an implicit equation is
+% available?
+
+% By applying integration not to $f(x)$ itself but to the function $\sqrt{(f'(x))^2 + 1}$, we can compute the arc length of the graph of $f(x)$ (verify!)
+
+
+
+% -One can use integrals to compute the arc-length of a function graph
+% -We can use it to compute energies in physics (like the total energy picked up by a particle that 
+%  moves in a force field). Maybe we can compute other physical quantities: position when velocity
+%  or acceleration is given, charge if current is given, etc.
+% -We can use it to compute average values of functions over an interval. We can generalize this
+%  to higher order "moments" in statistics
+% -We can use it to compute an error measure between a function and an approximant (using e.g.
+%  least  squares)
+% -We can use it to define similarity measures between functions (using the dot-product and 
+%  cross-correlation, which is basically the dot product evaulated at various values for a shift/lag
+%  applied to one of the two functions).
+% -We can use it to combine two functions - for example using a convolution integral. Convolution
+%  can be seen as another generalization of averaging. in averaging the kernel is a rectangular
+%  pulse - in convolution, we may use other functions as well. We could frame convolution in terms
+%  of weighted averaging (or, more generally, weighted summing - calling it weighted averaging is
+%  only appropriate if the kernel has unit area)
+% -We can use it to compute global properties of the function that we then may want to optimize
+%  (like the total curvature, for example) - this ultimately results in the calculus of
+%  variations
+% -Integrals can be used to approximate sums. Often, integrals are more complicated to compute 
+%  than so the usefulness of this may be questionable - but that's not always the case. Sometimes
+%  evaluating an integral can indeed be simpler. That can help to determine the convergence 
+%  properties of certain sums.
+% -Volumes of rotation bodies
+% -..I deliberately try to mention only applications of 1D integrals here. If we go to nD, we get 
+%  even more applications - but that should be defered to the section about multiple integrals
+
+
+
+
+
+
+%===================================================================================================
 \subsection{The Lebesgue Integral} 
 Most functions that we will typically encounter in applications are indeed Riemann-integrable, so the definition of the Riemann integral is all we need to integrate them. However, in certain areas of mathematics, some more exotic functions pop up which are not Riemann integrable. An example is the Dirichlet function which is defined to be $1$ at the rationals and $0$ at the irrationals. But not all is lost: a more powerful (albeit more complicated) definition of an integral exists under which some of these wilder functions become integrable. This is the Lebesgue integral. For Riemann-integrable functions, it produces the same results as the Riemann integral but it can be applied to a wider range of functions. Some functions that are not Riemann-integrable are Lebesgue-integrable. The general idea is to not split the integration interval on the $x$-axis into many subintervals but instead split the $y$-axis into intervals and add up horizontal slabs rather than vertical columns. To define the Lebesgue integral formally, we will first need to define the notion of a measure.
 
@@ -532,31 +588,6 @@ After these general considerations, we now want to construct a concrete measure 
 
 
 
-
-
-% Maybe make a subsection about applications (maybe after "Integration Techniques")
-% -One application is the computation of areas between a function and the x-axis
-% -It can be generalized to compute the area enclosed between two functions
-% -In some cases, we may use it to compute the areas of geometric figures such as circles and ellipses
-% -One can use integrals to compute the arc-length of a function graph
-% -We can use it to compute energies in physics (like the total energy picked up by a particle that 
-%  moves in a force field)
-% -We can use it to compute average values of functions over an interval. We can generalize this
-%  to higher order "moments" in statistics
-% -We can use it to compute an error measure between a fcuntion and an approximant (using e.g. least 
-%  squares)
-% -We can use it to define similarity measures between functions (using the dot-product and 
-%  cross-correlation, which is basically the dot product evaulated at various values for a shift/lag
-%  applied to one of the two functions).
-% -We can use it to combine two functions - for example using a convolution integral.
-% -We can use it to compute global properties of the function that we then may want to optimize (like
-%  the total curvature, for example)
-% -Integrals can be used to approximate sums. Often, integrals are more complicated to compute 
-%  than so the usefulness of this may be questionable - but that's not always the case. Sometimes
-%  evaluating an integral can indeed be simpler. That can help to determine the convergence 
-%  properties of certain sums.
-% -..I deliberately try to mention only applications of 1D integrals here. If we go to nD, we get 
-%  even more applications - but that should be defered to the section about multiple integrals
 
 
 

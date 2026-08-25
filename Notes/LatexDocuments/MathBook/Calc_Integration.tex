@@ -76,7 +76,16 @@ This relationship is called the \emph{fundamental theorem of calculus}. As the n
 \begin{equation}
  F(b) - F(a) = \Big[ F(x) \Big]_a^b = F(x) \bigg\rvert_a^b
 \end{equation}
-This notation is useful when instead of the symbolic $F(x)$, we deal with a written out and possibly complicated expression for $F(x)$, like e.g. $x + e^x \cos(2 x^2 + \pi x /2 )$, because then we don't need to write it out twice. With the fundamental theorem of calculus in hand, we can easily compute (signed) areas under the graph of a function $f$ over an interval $[a,b]$ provided that we know an antiderivative $F$ of $f$. We just need to evaluate our antiderivative $F$ at two points $b$ and $a$ and subtract the results. To find such an antiderivative for some simple functions, we just need to read our table of derivatives backwards. For more complicated functions, there are certain laws that we can use. %Before we get to them, let's try to convince ourselves that this theorem is plausible. 
+This notation is useful when instead of the symbolic $F(x)$, we deal with a written out and possibly complicated expression for $F(x)$, like e.g. $x + e^x \cos(2 x^2 + \pi x /2 )$, because then we don't need to write it out twice. Another way to write down the FTC is as follows:
+\begin{equation}
+ \int_a^b f'(x) \, dx = f(b) - f(a)
+\end{equation}
+It's pretty neat because it only needs the single function symbol $f$ rather than the two symbols $f$ and $F$ whose relationship needed to be specified in the surrounding text. Here, the information about this relationship is contained within the formula itself provided that reader knows what the dash (aka prime) in the $f'$ notation means. The form using $f$ and $F$ given further above is more commonly seen, though.
+
+\medskip
+With the fundamental theorem of calculus in hand, we can easily compute (signed) areas under the graph of a function $f$ over an interval $[a,b]$ provided that we know an antiderivative $F$ of $f$. We just need to evaluate our antiderivative $F$ at two points $b$ and $a$ and subtract the results. To find such an antiderivative for some simple functions, we just need to read our table of derivatives backwards. Note that the integration constants that are part of our antiderivative will cancel in the subtraction such that this constant really doesn't matter when computing areas (or, more generally \emph{definite} integrals). For finding antidervivatives for functions that are not listed in our table, there are certain laws that we can use. However, the task can become difficult rather quickly because it is often not so easy to see, which sequence of application of the laws (if any at all) will lead to a success.
+
+% For finding antiderivatives of more complicated functions, there are certain laws that we can use. %Before we get to them, let's try to convince ourselves that this theorem is plausible. 
 
 % I think, it's called an integral bar - or evaluation bar?
 % https://math.stackexchange.com/questions/52651/what-is-the-name-of-the-vertical-bar-in-x21-vert-x-4-or-left-left

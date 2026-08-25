@@ -40,6 +40,12 @@ f(x) = f_e(x) + f_o(x)
 \end{equation}
 \emph{Injectivity}, \emph{surjectivity} and \emph{bijectivity} are also important features which have already been discussed in the section about set theory. To reiterate, injectivity means that different inputs get mapped to different outputs: $x_1 \neq x_2 \Rightarrow f(x_1) \neq f(x_2)$. This is sometimes also called a \emph{one-to-one} mapping. Surjectivity means that all possible numbers from the codomain are reached: $\forall y \exists x: f(x) = y$. A surjective function is sometimes also called \emph{onto} - it maps the domain onto the full codomain. Bijectivity means injectivity and surjectivity, i.e. the function is one-to-one and onto. Bijective functions are \emph{invertible}. If you know the output $y$, you can uniquely figure out\footnote{In principle, you can. It may not be easy, though.}, which $x$ gave rise to that $y$ under $f$. Functions can also be \emph{periodic}. That means that there exists some number $p$, called the period, such that $f(x) = f(x + k p)$ for all inputs $x$ and all integers $k$. Such a function repeats itself over and over. Functions may have \emph{asymptotes} which are straight lines which the function approaches as the argument goes to plus or minus infinity. Asymptotes can also be vertical lines. In this case, the line is approached as the argument approaches a finite value and at that value itself, the function is usually undefined. When a function $f(x)$ has a vertical asymptote at some input value $x_0$, we call $x_0$ a \emph{pole} of the function. A function is said to be \emph{compactly supported}, if it is nonzero only in some finite interval and zero outside that interval. A function is called \emph{convex} if you can pick any two points $(a,f(a)),(b,f(b))$ on its graph, connect them with a straight line and the function will be below that line everywhere. The function behaves like a chain hanging down, i.e. it is curved downward like a bowl. The opposite of convex is \emph{concave}. Such functions are everywhere above the straight line. They look like an arch. A \emph{continuous} function is one that can be drawn without lifting the pencil or drawing vertical lines. Functions can also be classified according to their degree of \emph{smoothness} and/or according to whether or not they have a finite area under their graph. To define exactly what that means, we will need a few tools from calculus (differentiability, integrability), so we will defer further discussion about these features to later chapters.
 
+% ToDo: In the context of upper and lower bounds, also mention the supremum and infimum (as least 
+% upper bound and greates lower bound). Maybe also mention the relation to the maximum and minimum. 
+% They are supremums and infimums that are actually reached. This may depend on the specification of
+% the domain. For example, the identity function f(x) = x has a maximum of 1 on the domain [0,1] but
+% only a supremum of 1 on the domain [0,1).
+
 % surjective: codomain coincides with image?
 % "surjective" could better be called "exhaustive". "injective" could be called "unambiguous" or
 % "monogamous", "reversible". Surjective is also called "onto"
@@ -286,7 +292,9 @@ We are trying to define a "function" that is zero everywhere except at zero. The
 %ToDo: integral equation
 % maybe make these subsubsection of an "Elementary functions"  section
 
-
+% Mathematicians Dubbed His Work "Evil". It Broke Mathematics
+% https://www.youtube.com/watch?v=UNNLM9y2S50
+% -About the Weierstrass function
 
 \paragraph{Whoa!} That was a tour de force! I have presented quite a lot of ways how a mathematical function can be defined. Some of them required some rather high level math which doesn't really belong into such an early chapter. I did this to point out that the idea of "defining a function" can, when intepreted liberally as we do in the modern world, include much more diverse and creative ways rather than just a simple and explicit calculation rule. However - most functions that we encounter in everyday life are not of such a complicated nature. There's a set of functions that tends to pop up everywhere and constitutes a sort of basic mathematical vocabulary that everybody needs to be familiar with. I'm talking about the so called...
 
@@ -1451,6 +1459,8 @@ https://www.youtube.com/shorts/iAjWqH8vx48
 The Search For Math's Simplest Building Block | Symbolic Computation
 https://www.youtube.com/watch?v=aEY_hh2BiJ0
 
+Can You Build a Scientific Calculator with ONE Button? | Symbolic Computation
+https://www.youtube.com/watch?v=aEY_hh2BiJ0
 
 The Top 10 Most Beautiful Mathematical Functions
 https://www.youtube.com/watch?v=WilKgMUy3sY

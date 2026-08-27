@@ -457,7 +457,19 @@ Assume we have a set $A$ and an equivalence relation $\sim$ on $A$. That is, we 
 
 \paragraph{Cardinality} While we are speaking of the number of elements of a set, i.e. the "size" of a set, it should be noted that this size has been given a special name: \emph{cardinality}. The operation of taking the cardinality of a set $A$ is denoted like taking an absolute value: $|A|$ and the result of that operation is a so called cardinal number\footnote{Cardinal numbers are, of course (you know the drill), also special kinds of sets}. We do not simply call it "size" because there are different notions of set size in mathematics and cardinality is just one of them (another one would be the so called \emph{measure}, for example). In the case of finite sets, the cardinality is just the number of elements, i.e. a natural number. That means, the natural numbers are also cardinal numbers. They are the finite cardinal numbers - but there are infinite cardinal numbers, too. And yes, that means there are different sizes of infinity in math. In a sense that can be made rigorous, there are more real numbers than natural numbers, for example. The cardinal number of the set of real numbers is bigger than that of the set of natural numbers. The notion of cardinality for infinite sets is defined in terms of existence of bijections: If for two infinite sets, you can find a bijective function between those sets, then these sets have, by definition, the same cardinality. This has a couple of counterintuitive consequences, one of which is that a strict subset of an infinite set can have the same cardinality as the whole set. The part is \emph{not} smaller than the whole. For example, the set of natural numbers and the set of even numbers have the same cardinality. The required bijection and its inverse are simply the functions $y = f(x) = 2 x$ and $x = f^{-1}(y) = y / 2$. We'll go deeper into this in a later chapter.
 
+\paragraph{$\star$ Inclusion-Exclusion Principle}
+When we take the union $A \cup B$ of two sets $A,B$, then the cardinality of this union satisfies:
+\begin{equation}
+|A \cup B| = |A| + |B| - |A \cap B|
+\end{equation}
+This can be understood intuitively as follows: If we throw the contents of two sets together into a new set, the number of elements of the new set will be the sum of the numbers of elements of the two original sets except for those elements that both sets had in common. These common elements would now have been doubly counted, so we must now subtract the number of them once. That's what the $- |A \cap B|$ is for. If we take the union of 3 sets, the result is: ...TBC...
+
+
+
 %But this stuff is beyond the scope of this book. [TODO: give equations for cardinalities]
+
+% ToDo: Explain the Inclusion-Exclusion Principle
+% https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Operations on Relations}

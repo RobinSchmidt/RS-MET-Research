@@ -267,6 +267,11 @@ The finite case for the union can be thought of as special case of the infinite 
 
 % In geometry, it is the idea of distances between points that defines shapes. When we move a vertex of a polygon to some other place, the change of shape is recorded in the way that the vertex has changed its distance to the other points of the shape. All other shape-determining quantities, such as angles, are really defined in terms of distance. Look formula ...[def. of angle as arccos of scalar product]
 
+% Q: What has this definition of "a topology" to do with the idea of "connectedness"? Could it be this: "Two elements a,b of a set are called connected iff there exists t in T such that a in t and b in t"? This is something I made up myself. Figure out, if that's the intention of the definition. Maybe, if that is true, then the definition of a topology T as above ensures that the idea of "connectedness" behaves as we usually think about it. Let's try to specify how we think about connectedness by viewing it as a relation. Let's denote it by ~ such that a ~ b means: a is connected to b. I think, ~ should behave like an equvalence relation: a ~ a, a ~ b  <->  b ~ a, a ~ b and  b ~ c  ->  a ~ c. Maybe we should also explicitly require: ((a != c) and (a !~ b or b !~ c))  ->  a !~ c? That is: two distinct(!) points a,c are disconnected if there exists an intermediate point b such that a is disconnected from b or b is disconnected from c? Or would such a requirement be redundant?
+
+% Give some example topologies on finite sets. Maybe take modular integers with some modulus m, for example with m = 10, the set would be 0,1,2,...,9. What would be legal topologies on this set? How about: {0,1},{2,3},{4,5},{6,7},{8,9} plus all the possible unions? Or {0,1,2},{3,4,5},{6,7,8,9},
+
+
 \paragraph{Definition: Topological Space} A \emph{topological space} is a set $X$ on which a topology $T$ is defined.
 
 % https://en.wikipedia.org/wiki/Topological_space

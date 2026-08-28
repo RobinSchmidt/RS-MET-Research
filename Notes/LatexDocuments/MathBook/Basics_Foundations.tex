@@ -1,4 +1,4 @@
-
+% ToDo: Elevate the levels of all headlines by 1.  "Naive Set Theory" becomes a section instead of a subsection, etc.
 
 \subsection{Naive Set Theory}
 \label{Sec:NaiveSetTheory}
@@ -489,13 +489,23 @@ The intuition why it has to be that way is as follows: When we throw together th
 \sum_{k=1}^{n} (-1)^{k-1} 
  \left( \sum_{1 \le i_1 < \dots < i_k \le n} | A_{i_1} \cap \dots \cap A_{i_k} | \right)
 \end{equation}
-The formula works as follows: The outer sum realizes the summation over the 3 lines in the 3-sets example above (where we had $n=3$) with the sign alternation baked in. The inner sum ...TBC...TODO: Explain what the formula does in words. Verify the formula (I had AI generate it and edited it a bit)
+The formula works as follows: The outer sum over $k$ realizes the summation over the 3 lines in the 3-sets example above (where we had $n=3$) with the sign alternation baked in. The inner sum runs over the cardinalities of all possible $k$-wise intersections. For $k=1$, we just get the sets themselves. We include (add) the sum of their cardinalities. For $k=2$, we get all possible pairwise intersections. We exclude (subtract) the sum of their cardinalities. For $k=3$, we get all possible triple-wise intersections. We include (add) the sum of their cardinalities. And so on. Whenever $k$ is odd, we include the $k$-wise intersections and whenever $k$ is even, we exclude them. We continue until $k$ reaches $n$.
+
+\medskip
+Note that in this formula, we cannot replace the finite upper limit $n$ by $\infty$ due to possible convergence problems of the outer sum which would become an infinite alternating series whose convergence properties may depend on the ordering of the terms given by the inner sums (as by Riemann's reordering theorem). It may be possible in certain special cases (i.e. when we can ensure that the outer sum converges absolutely) but we need to be very cautious and cannot assume the validity of the formula in general.
+
+% It keeps alternating forever (verify). 
+
+% ToDo: State conditions under which it may work. See discussion with Gemeni in the link below.
+
+% Verify the formula (I had AI generate it and edited it a bit)
 
 % Maybe mention that the case for the cardinality of the union of two sets can also be expressed using the symmetric difference: $|A \triangle B| = |A| + |B| + |A \cap B|$ (verify!)  or  $|A \cup B| = |A \triangle B| + |A \cap B|$
 
 
-% Here is where i let Gemini generate the formula:
+% Here is where I let Gemini generate the formula:
 % https://share.google/aimode/H5eAR4GZJwB50NoJz
+% https://share.google/aimode/9aAO1x7k1RGTOSia7     ...updated
 
 
 %But this stuff is beyond the scope of this book. [TODO: give equations for cardinalities]

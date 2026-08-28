@@ -764,7 +764,7 @@ Set as a data type:
 
 - To formulate all of this purely in terms of sets, we will first need to clarify what the auxiliary
   data types like Bool and Nat are in terms of sets. For the naturals, we can use the von Neumann 
-  construction and for Bool, we can just use the numbers 0,1. Basically, what that means that all 
+  construction and for Bool, we can just use the numbers 0,1. Basically, what that means is that all 
   operations can only take sets as inputs and produce sets as outputs and the designations "Bool" 
   and "Nat" just indicate that we expect to produce a Set that has a specific form/anatomy.
 
@@ -782,7 +782,7 @@ These 3 are interdependent in a 3-way mutual recursion:
 isElementOf(x,A):
   for all a in A:
     if(isEqualTo(a,x)):
-	  return true
+      return true
   return false
   
 isEqualTo(A,B):
@@ -794,16 +794,22 @@ isEqualTo(A,B):
 isSubsetOf(A,B):
   for all a in A:
     if(not(isElementOf(a,B)):
-	  return false
+      return false
   return true
-	  
+  
+I think, these recursions can never enter an infinite recursion because the recursive calls always
+operate on operands at a lower nesting level such that eventually, we must hit the base case of the 
+empty set. I think, we will hit it implicitly in isElementOf(x,A) when A is the empty set. It will
+immediately return false because the "for all a in A" loop is not entered. (verify!) I think, we can 
+also hit the base case in isSubsetOf(A,B) when A is empty. Then we immediately return true without
+ever entering the loop. (verify!)
 
-	  
+
 These 2 are interdependent in a 2-way mutual recursion:	 
-	 
+
 isLess(A,B):
   if(isEmpty(A) and not isEmpty(B))
-    return true	    
+    return true    
   elif(isEmpty(B) and not isEmpty(A))
     return false
   else
@@ -816,7 +822,7 @@ getMinimum(A):
   m = getSomeElementOf(A)
   for all a in A:
     if(isLess(a,m))
-	  m = a
+      m = a
   return m
   
 Actually, calling getMinimum on an empty set should be an error anyway. But if it's done by 

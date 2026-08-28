@@ -483,17 +483,13 @@ Here "countable" means either countably infinite or finite. That means that the 
 \paragraph{$\star$ Inclusion-Exclusion Principle}
 In equation (\ref{Eq:InclusionExclusion}) on page \pageref{Eq:InclusionExclusion}, we already encountered the inclusion-exclusion principle for cardinalities of sets. There is also an analoguous principle for measures. It is given by: 
 \begin{equation}
-\mu \left( \bigcup_{i=1}^{n} A_i \right) = 
+\mu \left( \bigcup_{k=1}^{n} X_k \right) = 
 \sum_{k=1}^{n} (-1)^{k-1} 
- \left( \sum_{1 \le i_1 < \dots < i_k \le n} \mu ( A_{i_1} \cap \dots \cap A_{i_k} ) \right)
+ \left( \sum_{1 \le i_1 < \dots < i_k \le n} \mu ( X_{i_1} \cap \dots \cap X_{i_k} ) \right)
 \end{equation}
-It's the exact same formula just with the cardinality function $|\ldots|$ replaced by the measure function $\mu(\ldots)$. ToDo: Maybe make notation consistent, i.e. use $X_k,k$ here or use $A_i,i$ above.
+It's the exact same formula just with the cardinality function $|\ldots|$ replaced by the measure function $\mu(\ldots)$. It's interesting to note that both cardinalities and measures are ways to quantify the sizes of sets and for both of these ways, we have such inclusion-exclusion principles.
 
-%...TBC... Give formula for inclusion-exclusion principle for measures.
-
-
-
-% ToDo: Mention how the inclusion-exclusion principle works for measures. See "Harmonic Analysis..." by Chirikijan/Kyatkin (extended and updated Edition) pg. 770
+% See "Harmonic Analysis..." by Chirikijan/Kyatkin (extended and updated Edition) pg. 770
 
 
 \subsubsection{The Lesbesgue Measure}

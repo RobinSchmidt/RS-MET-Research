@@ -394,6 +394,14 @@ The set difference $A \setminus B$ is sometimes denoted by a regular minus sign,
 \medskip
 The power set $\mathcal{P}(A)$ may alternatively be denoted by $2^A$ where the latter notation is motivated by the observation that, if the set $A$ has $n$ elements, then the power set will have $2^n$ elements. This also explains the name "power set". We may use both notations here. The elements $x$ of the power set $2^A$ are themselves sets - namely, subsets of $A$. The empty set does also count as a subset of any nonempty set. If a set has $n$ elements, then the number of subsets with $k$ elements is given by the binomial coefficient "$n$-choose-$k$". [VERIFY, REF needed]. The fact that the power set of a finite set $A$ with $n$ elements has $2^n$ elements can also be understood as follows: For each subset, we may define a function $f$ from $A$ to the set $\{0,1\}$ which maps an element $a$ of $A$ to $1$, if the element $a$ is to be included into the subset and to $0$ if the element $a$ is not to be included. For such a function $f$, there are $2^n$ different possibilities because for each element $a \in A$ (of which there are $n$), we can choose either $0$ or $1$ as the mapped value. Including an element into a subset or not is a binary decision. We can establish a bijection between the subsets of $A$ and the set of possible functions $f: A \rightarrow \{0,1\}$, so these sets must have the same number of elements - namely, both have $2^n$ elements.
 
+\paragraph{Big Unions and Intersections}
+The binary operations of set union $A \cup B$ and set intersection $A \cap B$ can be generalized to $n$-ary operations, i.e. operations that take $n$ arguments. The notation for taking such $n$-ary unions and intersections is as follows:
+\begin{equation}
+A_1 \cup A_2 \cup \ldots \cup A_n = \bigcup_{i=1}^n A_i,  \qquad
+A_1 \cap A_2 \cap \ldots \cap A_n = \bigcap_{i=1}^n A_i
+\end{equation}
+These $n$-ary unions and intersections are sometimes informally called \emph{big unions} and \emph{big intersections} respectively. In certain more advanced contexts, we may also encounter the case where the finite number $n$ is replaced by the infinity symbol $\infty$. That is: We may sometimes also take unions or intersections of infinitely many sets.
+
 \paragraph{Less Common Operations}
 In addition to these basic and most common set operations, there are a couple of more, less common ones. Some of them are:
 \begin{eqnarray}
@@ -462,8 +470,26 @@ When we take the union $A \cup B$ of two sets $A,B$, then the cardinality of thi
 \begin{equation}
 |A \cup B| = |A| + |B| - |A \cap B|
 \end{equation}
-This can be understood intuitively as follows: If we throw the contents of two sets together into a new set, the number of elements of the new set will be the sum of the numbers of elements of the two original sets except for those elements that both sets had in common. These common elements would now have been doubly counted, so we must now subtract the number of them once. That's what the $- |A \cap B|$ is for. If we take the union of 3 sets, the result is: ...TBC...
+This can be understood intuitively as follows: If we throw the contents of two sets together into a new set, the number of elements of the new set will be the sum of the numbers of elements of the two original sets except for those elements that both sets had in common. These common elements would now have been doubly counted, so we must now subtract the number of them once. That's what the $- |A \cap B|$ is for. If we take the union of 3 sets, the result is: 
+\begin{equation}
+\begin{split}
+ |A \cup B \cup C| = 
+ & + (|A| + |B| + |C|)  \\
+ & - (|A \cap B| + |A \cap C| + |B \cap C|)  \\
+ & + (|A \cap B \cap C|)
+\end{split}
+\end{equation}
+The intuition why it has to be that way is as follows: When we throw together the content of the 3 sets $A,B,C$, we must again add their cardinalities (in line 1) but then again subtract the doubly counted common elements of all the possible pairs of the sets (in line 2). But now the number of those elements that were actually present in all three was now subtracted one time too often so we need to add it back again (in line 3). I have formatted this equation in a slightly unusual way to better expose the general pattern. This general pattern leads to the following formula for the cardinality of an intersection on $n$ sets $A_i, i = 1,\ldots,n$: 
+\begin{equation}
+\left| \bigcup_{i=1}^{n} A_i \right| = 
+\sum_{k=1}^{n} (-1)^{k-1} 
+ \left( \sum_{1 \le i_1 < \dots < i_k \le n} | A_{i_1} \cap \dots \cap A_{i_k} | \right)
+%| \bigcup_{i=1}^{n} A_i | = \sum ...
+\end{equation}
+The formula works as follows: The outer sum realizes the summation over the 3 lines in the 3-sets example above (where we had $n=3$) with the sign alternation baked in. The inner sum ...TBC...ToDo: Explain what the formula does in words. Verify the formula (I had AI generate it and edited it a bit)
 
+% Here is where i let Gemini generate the formula:
+% https://share.google/aimode/H5eAR4GZJwB50NoJz
 
 
 %But this stuff is beyond the scope of this book. [TODO: give equations for cardinalities]

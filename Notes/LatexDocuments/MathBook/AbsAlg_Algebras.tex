@@ -348,7 +348,7 @@ Certain types of non associative algebras satisfy weaker forms of associativity 
 
 
 \subsubsection{Differential Algebras} 
-Differential algebras have an additional univariate operator that we call a \emph{derivation}. That is: a derivation takes one vector as input and produces another one. Let's denote the operation as $D$ and use functional notation, i.e. $D(a)$ means: apply the operator $D$ to the vector $a$. The operator must satisfy the product rule:
+Differential algebras have an additional univariate operator that we call a \emph{derivation}. That is: A derivation takes one vector as input and produces another one. Let's denote the operation as $D$ and use functional notation, i.e. $D(a)$ means: apply the operator $D$ to the vector $a$. The operator must satisfy the product rule:
 \begin{equation}
 D(a \cdot b) = a \cdot D(b) + D(a) \cdot b
 %D(a \times b) = a \times D(b) + D(a) \times b
@@ -386,7 +386,7 @@ Compare this to the product rule that you know from calculus and you will notice
 \subsubsection{Graded Algebras} [VERIFY!]
 In a graded algebra, we are dealing with objects of different kinds that cannot be mixed up with one another in addition but can be in multiplication. As an example, consider the algebra of tensors over a vector space $V^n$. The product is, of course, the tensor product. We cannot add tensors of different ranks $m$ and $n$ but we can always multiply such tensors to get a new tensor of rank $m+n$. The rank of the tensor may also be called the \emph{grade}. Another example is the exterior algebra with the exterior product. We have scalars, vectors, bivectors, trivectors, etc. We cannot\footnote{Not \emph{yet} in exterior algebra (aka Grassmann algebra), that is. But that problem is satisfyingly resolved in geometric algebra (aka Clifford algebra).} add a vector to a bivector - but we can multiply them to get a trivector ...TBC...
 
-% Q: Is geoemtric algebra a graded algebra? We do have objects of different grades but wa can mix them additively.
+% Q: Is geoemtric algebra a graded algebra? We do have objects of different grades but wa can mix them additively. Maybe geometric algebra is about to overcome the borders between the different grades of exterior algebra and to unify them all in a shared space?
 
 %For example, it doesn't make sense to add a scalar to a vector but multiplication between a scalar and a vector does. 
 
@@ -714,6 +714,32 @@ https://www.youtube.com/watch?v=ekHoYfT3rFI
  many more degrees of freedom than the 2 vectors, i.e. more dimensions. A 3x3 matrix has 9 entries, 
  whereas a pair of 2 3-vectors has only 6, for example
 
+
+-Q: Is it always possible to decompose a product x y like so:
+   x y = sum_{i,j}  (A_{ij} x_i y_j) (e_i e_j)
+ where: 
+ -x_i, y_j are the (scalar) components of the vectors, x,y  
+ -A is a matrix with components A_{ij}
+ -e_i, e_j are the basis vectors of the vector space and (e_i e_j) is their (vector valued) product
+ Note that here we are dealing with 3 different sort of products: A_{ij} x_i x_j are products 
+ between scalars, e_i e_j is a product between vectors and the outer multiplcation of
+ (A_{ij} x_i x_j)(e_i e_j) would be a product between a vector and a scalar
+-> Try to express the complex product and the cross product in that way.
+-> Could the matrix A be something akin to a Caley table?
+-> Compare that to hwo we actually implement the geometric product in code
+-> I think there, they Cayley tables that we create there determine a finite group in the sense
+   of group theory. It has 2^n elements where n is the dimension of the underlying space. It
+   describes how the 2^n basis vectors behave under multiplication, so here, it would describe all
+   the possible products e_i e_j. There, the result is always some other basis vector e_k. Is this
+   here true as well? And in general? Or does it only work when the basis vectors are orthonormal?
+-> See "Harmonic Analysis..." page 776. There is a similar formula (for decomposing a product into
+   a linear combination of basis vectors?) but I don't get it. It looks wrong to me. There's an 
+   index j appearing on the RHS but j is neither a summation index nor and index of a component of 
+   the result. It's somehow just dangling.
+
+  
+
+  
 
 
 

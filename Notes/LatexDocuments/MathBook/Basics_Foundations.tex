@@ -484,7 +484,7 @@ This can be understood intuitively as follows: If we throw the contents of two s
  & + (|A \cap B \cap C|)
 \end{split}
 \end{equation}
-The intuition why it has to be that way is as follows: When we throw together the content of the 3 sets $A,B,C$, we must again add their cardinalities (in line 1) but then again subtract the doubly counted common elements of all the possible pairs of the sets (in line 2). But now the number of those elements that were actually present in all three was now subtracted one time too often so we need to add it back again (in line 3). I have formatted this equation in a slightly unusual way to better expose the general pattern. This general pattern leads to the following formula for the cardinality of an intersection on $n$ sets $A_i, i = 1,\ldots,n$:
+The intuition why it has to be that way is as follows: When we throw together the content of the 3 sets $A,B,C$, we must again add their cardinalities (in line 1) but then again subtract the doubly counted common elements of all the possible pairs of the sets (in line 2). But now the number of those elements that were actually present in all three was now subtracted one time too often so we need to add it back again (in line 3). I have formatted this equation in a slightly unusual way (with some superfluous parentheses and a unary plus) to better expose the general pattern. This general pattern leads to the following formula for the cardinality of an intersection on $n$ sets $A_i, i = 1,\ldots,n$:
 \begin{equation}
 \label{Eq:InclusionExclusion}
 \left| \bigcup_{i=1}^{n} A_i \right| = 

@@ -619,8 +619,8 @@ TFlt rsPitchDitherSawOscOld<TFlt, TInt>::readSawValue(TInt n, TInt N)
 /** This implements a supersaw oscillator that uses pitch dithering. It is supposed to produce the 
 same result as 7 instances of type rsPitchDitherOsc but it takes advantage of certain values 
 that are shared between the individual oscillators to avoid redundancies. So using a single 
-instance of this class should be more memory friendly (and therefore more cahce friendly and 
-therefore more CPU firendly) than using 7 instances of a single osc. 
+instance of this class should be more memory friendly (and therefore more cache friendly and 
+therefore more CPU friendly) than using 7 instances of a single osc. 
 
 ToDo:
 
@@ -650,12 +650,12 @@ public:
   which is supposed to correspond to the pitch of the note being played. */
   void setFrequency(T newFreq) { freq = newFreq; updateSawPeriods(); }
 
-  /** Sets the amount yb which the other 6 saws are detuned with respect to the middle saw. It 
+  /** Sets the amount by which the other 6 saws are detuned with respect to the middle saw. It 
   should typically be a value in the range 0..1. */
   void setDetune(T newDetune) { detune = newDetune; updateSawPeriods(); }
 
   /** Sets the amplitude by which the 6 other saws are mixed with the center saw. It's a raw 
-  amplitude multiplier witha typical range of 0..1. */
+  amplitude multiplier with a typical range of 0..1. */
   void setMix(T newMix) { mix = newMix; /*updateAmpScaler();*/ }
 
   /*
@@ -746,6 +746,10 @@ protected:
   // \name Embedded DSP Objects:
 
   rsRandomGenerator<T> prngs[maxNumSaws];
+  // Maybe we could get away with a single prng for all saws. I think, the potential disadvantage 
+  // would be that we would run into the inevitable prng periodicity earlier, namely by a factor of
+  // 1/numSaws earlier. But that may not even matter because when that happens, the phases of the
+  // individual saws will be completely different than on noteOn().
 
 };
 

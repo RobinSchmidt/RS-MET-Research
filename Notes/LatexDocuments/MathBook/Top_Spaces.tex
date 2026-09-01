@@ -176,7 +176,7 @@ Intuitively, an interior point of a set $X$ is a point $x$ that admits us to def
 Intuitively, an open set does not have any boundary points as elements of the set. A boundary point of a set $X$ is usually defined to be a point $x$ where every $\varepsilon$-ball around the point contains points that are inside the set $X$ as well as points that are outside the set $X$. When a set is open, we can always find some (possibly tiny) open ball around it that is fully inside the set. Open sets are important in analysis because in open sets, we can be sure to be able to approach any point from any direction which is what we need to define (directional) derivatives. On a boundary point, such a definition may not be possible.
 
 \medskip
-Some important properties of open sets are: (1a) The empty set is open because it contains no points, so there is no point in it which could fail to have a halo. (1b) A Euclidean space like $\mathbb{R}^n$ is also open. (2) The intersection of a finite number of open sets is open. (3) The union of any number or even of infinitely many sets is also open. Tuck these properties away for later. Spoiler: we will see them again in the definition of \emph{a topology}.
+Some important properties of open sets are: (1a) The empty set is open because it contains no points, so there is no point in it which could fail to have a halo. (1b) A Euclidean space like $\mathbb{R}^n$ is also open. (2) The intersection of a finite number of open sets is open. (3) The union of any number or even of infinitely many sets is also open. Tuck these properties away for later. Spoiler: We will see them again in the definition of \emph{a topology}.
 
 % example of a non-open infinite intersection of open sets: intersect intervals [-1/n,+1/n]. The infinite intersection is just singleton zero which is obviously not open.
 
@@ -248,6 +248,8 @@ Note that this definition of compactness only applies to metric space. For more 
 In geometry, we study shapes. These shapes are defined by the spatial relationships between the points that make up the shape. The essential quantity that captures all these spatial relationships is the notion of a distance between two points. All other shape-determining quantities like angles, sizes, etc. can ultimately be boiled down to questions about distances. In topology, we want to abstract from the actual shape and the path towards this goal is to forget about quantitative measures of distance. In a \emph{topological space}, we can talk about "distances" and "closeness" between of elements and "neighborhoods" of elements in a purely qualitative way. This way will not need to refer to a metric function $d(x,y)$ that tells us precisely, how far apart the points $x$ and $y$ are. The only fundamental notion that we will need to refer to is that of an open set. In the context of metric spaces, open sets are defined via open balls which in turn are defined in terms of a metric. For topology, we will obviously need an alternative definition for what "open set" is supposed to mean if we want to do away with the metric. That new definition should be compatible with the old one in the sense of being equivalent when the space happens to be a metric space.
 
 % Maybe mention the formula for the (cosine of) angle in terms of the scalar product
+
+% Q: Could it be said that we could model the property of a pair of points of being (path) connected by a binary distance function that is 0 when the points are connected and 1 when they are disconnected? Or maybe it could be some finite number when they are connected and infinity when they are disconnected?
 
 \subsubsection{Topologies on a Set}
 
@@ -339,6 +341,7 @@ Some kinds of topological spaces occur often enough that mathematicians found it
 
 % Give an example of a non-metric Hausdorff space. Explain why Hausdorff spaces are a relevant notion.
 
+% Maybe mention that "Hausdorff" is also sometimes used as an ajective as in "This space is Hausdorff." ...We usually don't call it "Hausdorffian".
 
 % https://de.wikipedia.org/wiki/Hausdorff-Raum
 

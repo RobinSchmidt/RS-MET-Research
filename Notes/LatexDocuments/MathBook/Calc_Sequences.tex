@@ -12,7 +12,7 @@ A \emph{sequence} can be defined as a function from the natural into the real nu
 The examples with an $n$ or $n^2$ in the denominator can only be meaningfully defined as functions from the positive naturals into the reals because otherwise we would have a division by zero for the first (actually zero-th) element, i.e. when $n=0$. For the last two, plugging in $n=0$ poses no problem because $2^0=1$ and $\sqrt{0} = 0$. So, for those which would have a division by zero for $n=0$, we would chose a domain of $\mathbb{N}^+$ while for the others, we could choose $\mathbb{N}$. We could also say that they are all defined on $\mathbb{N}$ and make a special case definition $a_0 = 0$ for the problematic ones. The function definition would then look a bit ugly but is entirely legitimate. When we deal with sequences, we will be mostly concerned with the question of \emph{convergence} for which it doesn't really matter, if finitely many elements in an initial section are ill defined, so we will mostly ignore this detail. 
 
 \medskip
-The notation for the whole sequence is $(a_n)$. That is: By $a_n$ we mean a specific element whereas by $(a_n)$ we mean the whole sequence of elements at once, i.e. treat the sequence itself as an object. It's like the difference between writing $f(x)$ or just $f$. In a sense, a sequence can be seen as an infinite tuple so using the parentheses notation known from tuples seems like an appropriate reminder. In the context of a normal calculus course, sequences themselves are, a sort of preliminary to the definition of the important notion \emph{continuity} of functions and the idea of \emph{series}. The latter are infinite sums of sequence elements. That is, we are given a sequence $(a_n)$ and consider infinite sums of the form $\sum_{n=0}^{\infty} a_n$. The lower summation index may also be $1$ rather than $0$ or some arbitrary other number $n_0$. When I say "normal calculus", I refer to the calculus of continuous functions that deals with functions $f: \mathbb{R} \rightarrow \mathbb{R}$. There is, however, a whole other type of calculus, called \emph{discrete calculus}, which deals with the sequences themselves, i.e. functions $f: \mathbb{N} \rightarrow \mathbb{R}$, in more depth. In the continuous calculus, we will deal with derivatives, integrals and differential equations. In the discrete calculus, the analogous concepts are differences, sums and difference equations. We'll look into these topics later in the discrete math part of the book. 
+The notation for the whole sequence is $(a_n)$. That is: By $a_n$ we mean a specific element (namely the $n$th) whereas by $(a_n)$ we mean the whole sequence of elements at once, i.e. treat the sequence itself as an object. It's like the difference between writing $f(x)$ or just $f$. In a sense, a sequence can be seen as an infinite tuple so using the parentheses notation known from tuples seems like an appropriate reminder. In the context of a normal calculus course, sequences themselves are a sort of preliminary to the definition of the important notion \emph{continuity} of functions and the idea of \emph{series}. The latter are infinite sums of sequence elements. That is, we are given a sequence $(a_n)$ and consider infinite sums of the form $\sum_{n=0}^{\infty} a_n$. The lower summation index may also be $1$ rather than $0$ or some arbitrary other number $n_0$. When I say "normal calculus", I refer to the calculus of continuous functions that deals with functions $f: \mathbb{R} \rightarrow \mathbb{R}$. There is, however, a whole other type of calculus, called \emph{discrete calculus}, which deals with the sequences themselves, i.e. functions $f: \mathbb{N} \rightarrow \mathbb{R}$, in more depth. In the continuous calculus, we will deal with derivatives, integrals and differential equations. In the discrete calculus, the analogous concepts are differences, sums and difference equations. We'll look into these topics later in the discrete math part of the book. 
 
 % https://en.wikipedia.org/wiki/Sequence
 
@@ -33,6 +33,9 @@ Another binary operation that we can perform on two sequences $(a_n),(b_n)$ is \
 \end{equation}
 Each coefficient $c_n$ of the resulting sequence is given by a sum of products of coefficients from the original sequences and in each term of this sum, the indices of the two factors must sum up to $n$, the index in the $c_n$ sequence of the coefficient that is being computed. From this fact and the formula, you may already correctly infer that the operation is commutative.
 [VERIFY! What about complex sequences?]. It is also associative and distributive over element-wise addition and subtraction (but not over element-wise multiplication and division - VERIFY). This distributivity, together with the fact that scaling one of the inputs by a factor yields an output scaled by the same factor constitutes the important property of \emph{bilinearity} [VERIFY! might be only sesquilinear in complex case?]. That means, the operation is linear in both of its input arguments. In the literature, especially the DSP literature, they will often say that convolution is \emph{linear} rather than \emph{bilinear}. I guess, this is because in this context, they view it as a single input operation because one of the two sequences is assumed to be fixed once and for all. In this context, the fixed sequence is often called the \emph{impulse response} and sometimes also as \emph{kernel}. But be careful: the term kernel has another meaning in math, too - namely the set of inputs to a function that get mapped to zero - but that other meaning has nothing to do with the meaning here\footnote{Yeah - I know - it's a mess!}. TODO: explain relation to multiplication of polynomials
+
+% ToDo: Maybe mention that convolution is only commutative under the assumption that the multiplication of the sequence elements is commutative i.e. b_i a_j = a_j b_i. This may not be true when the a_i, b_j are matrices, quaternions, etc.
+
 % https://mathworld.wolfram.com/CauchyProduct.html
 
 % https://en.wikipedia.org/wiki/Convolution#Discrete_convolution
@@ -71,7 +74,7 @@ As a side note, an analogous operation of convolution can also be defined betwee
 \end{equation}
 This is not relevant in the context of series but it's sometimes good to point out the connections to other topics. I have used $t$ for the input and $\tau$ for the dummy integration variable here because this is the way, you often find it stated. This operation occurs a lot in (continuous time) signal processing where $t$ stands for time and $\tau$ for a time-lag or delay.
 
-\paragraph{Dirichlet Convolution}
+\paragraph{$\star$ Dirichlet Convolution}
 An operation that is of interest in the context of number theory and related to our regular old standard convolution is called Dirichlet convolution. It is defined as follows: 
 \begin{equation}
  (c_n) = (a_n) \ast_D (b_n) 
@@ -137,6 +140,15 @@ We already informally used statements like "converges faster". Now we'll make mo
 
 \subsubsection{Cauchy Sequences and Real Numbers}
 A concept related to convergence is that of Cauchy sequences. When saying that a sequence of numbers converges to some limit, there is usually an implicit assumption that the limit is also an element of the same set of numbers as the individual sequence elements. But that isn't always the case. Consider the following recursive definition of a sequence: $a_0 = 2, a_{n+1} = (a_n^2 + 2) / (2 a_n)$ for $n > 0$. It converges to the irrational number $\sqrt{2}$ but every element of the sequence is a rational number. We may therefore consider it as a sequence of rational numbers - but one that doesn't converge \emph{within} the rational numbers. To express the limit, we need to extend our number system to include $\sqrt{2}$. We could form the set $\mathbb{Q} \cup \sqrt{2}$ and say that our sequence converges within that set. However, we are of course interested in a more general extension - one that works for every imaginable sequence and not just that particular one. That's how we arrive at the set of real numbers $\mathbb{R}$. ...TBC...
+
+% To verify that the recursion above converges to sqrt(2) we can use the SageMath snippet:
+%
+% a = 2.0
+% for i in range(1,8):
+%     a = (a^2 + 2) / (2 * a)
+%     print(a)
+%
+% It does indeed converge to sqrt(2) but it's _not_ the Babylonian algo. What is it?
 
 % ToDo: Explain that the definition of convergence of a sequence a_n to a limit a requires us to 
 % know the number a beforehand in order to apply the definition. What if we do not have any idea

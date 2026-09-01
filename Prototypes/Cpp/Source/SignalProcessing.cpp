@@ -343,10 +343,10 @@ public:
 
   // Maybe instead of using assigment operators, us a (free) function rsCopyData(newMatrix, F), 
   // etc. and provide suitable explicit specializations of this function for all the relevant 
-  // matrix classes. The idea is tha we want to avoid memory re-allocations in these setters, if
+  // matrix classes. The idea is that we want to avoid memory re-allocations in these setters, if
   // possible to make them potentially realtime safe. The idea is that for larger Kalman filters 
   // (with big matrices), the memory allocation is done once. When setting the filter object up 
-  // under realtime conditions, no further (re)allocations happen because the matrxi-size doesn't
+  // under realtime conditions, no further (re)allocations happen because the matrix-size doesn't
   // change in calling the setters. ...although - such an optimization is irrelevant as long as
   // the getSample function produces temporary matrices wthin its computations - which it does.
   // Maybe a production implementation should avoid that
@@ -609,7 +609,7 @@ TFlt rsPitchDitherSawOscOld<TFlt, TInt>::readSawValue(TInt n, TInt N)
 //   turned out to be the right one experimentally. But maybe for experimentation and demonstration
 //   purposes, an implementation that offers the different modes could be useful, so maybe 
 //   implement all possible modes in this class and then make a smaller, optimized class that only
-//   has the equal-variance algorithm. It could also precompute the cycle distribtuion (i.e. L1..L3
+//   has the equal-variance algorithm. It could also precompute the cycle distribution (i.e. L1..L3
 //   and p1..p3) so it doesn't need to be computed in each call to updateCycleLength().
 
 
@@ -758,7 +758,7 @@ template<class T>
 rsPitchDitherSuperSawOsc<T>::rsPitchDitherSuperSawOsc()
 {
   // ToDo: Move this into a function setFrequencyDistribution() which takes an enum value where one
-  // of the possible values is JP_8000. In the correspoanding case-block, do these assignments. Or 
+  // of the possible values is JP_8000. In the corresponding case-block, do these assignments. Or 
   // better: Move the code into class rsRatioGenerator.
   freqOffsets[0] =  0.0;
   freqOffsets[1] = +0.01953125;

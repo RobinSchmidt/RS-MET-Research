@@ -2422,6 +2422,8 @@ bool testUpDownSampleRoundTrip(const std::vector<T>& x, int M,
   //
   // - For our test case with M = 2, it seems to almost work. It's just that the decimated signal 
   //   xd has two additional zero samples at the end compared to the original x.
+  //   ...is this still true? I think, I may have fixed that already. -> Verify and maybe delete 
+  //   this comment
   //
   //
   // ToDo:
@@ -2483,7 +2485,7 @@ std::vector<T> rsSincUpSampleKernel(int L, int M)
   }
   */
   // ToDo: Make this optional. Actually, it may make sense to factor it out into a function. Maybe
-  // it should be called rsNormalizeUpsampleKernel
+  // it should be called rsNormalizeUpsampleKernel()
   // The reason is that we may want to do this kind of normalization after applying a window
   // But the plot looks wrong! Maybe simple uniform scaling is not the right approach. Maybe we 
   // need to shift instead - or apply a window, i.e. scale non-uniformly. But how? That seems to be
@@ -2494,9 +2496,9 @@ std::vector<T> rsSincUpSampleKernel(int L, int M)
   // b[n] be two different kernels. They can be anything but here we will take a[n] to be our raw 
   // sinc kernel and b[n] a windowed sinc kernel. Let sa be the sum of all values in a and sb the 
   // sum of all values in b. Assume sa > 1 and sb < 1. I think, what we need to to is to transform
-  // the interval sb..sa to the interval 0..1 vua na affine transform and we get our linear 
-  // intrepolation coeff by transforming 1 using the exact same affine trafo. Then just form the 
-  // weighted sum of a and b using the found coeff as weight. I think this sjould work because of
+  // the interval sb..sa to the interval 0..1 via an affine transform and we get our linear 
+  // interpolation coeff by transforming 1 using the exact same affine trafo. Then just form the 
+  // weighted sum of a and b using the found coeff as weight. I think this should work because of
   // linearity of summation. If we don't have sa > 1 and sb < 1, it may still work but the coeff 
   // may not be in 0..1 as it usually is in interpolation settings.
 
@@ -2802,8 +2804,8 @@ bool testUpDownSample1D_1()
 
   // Define the filter kernel for downsampling:
   Vec h({-0.25, 0.5, 0.5, 0.5, -0.25});   // maybe rename to d
-  // This kernel has been found by considering the situation arising from upsampling an impulse by a 
-  // factor 2 via linear interpolation. This gives:
+  // This kernel has been found by considering the situation arising from upsampling an impulse by
+  // a factor 2 via linear interpolation. This gives:
   //
   //   in-index:      0         1         2         3         4
   //   input:        0.0       0.0       1.0       0.0       0.0
@@ -2821,7 +2823,7 @@ bool testUpDownSample1D_1()
   // -(2) The ends must be -0.5 times the values next to the end. I think, this is because the 
   //      spike spreads with weight 0.5 into the adjacent samples int the oversampled signal.
   // -Let's express the downsampling kernel in general as [d2 d1 d0 d1 d2] where d0 is the center 
-  // coeff. I think, the conditions can now be formulated as:
+  //  coeff. I think, the conditions can now be formulated as:
   //    (1) d0 + 2*(d1+d2) = 1
   //    (2) d2 = -d1/2
   //  This should give us a 1-parametric family of filter kernels. Maybe use d0 as parameter. 
@@ -2874,7 +2876,7 @@ bool testUpDownSample1D_1()
     kernels.setRow(i, h);
   }
   // The response with d = 0.75 has a zero at the oversampled Nyquist limit (good!) but it features
-  // a little bit of a bumpsomewhere below the non-oversampled Nyquist limit.
+  // a little bit of a bump somewhere below the non-oversampled Nyquist limit (bad!).
 
   // Create the kernel that represents the upsampler, i.e. the linear interpolator, in the 
   // oversampled domain. The mental image is that upsampling consists of zero-stuffing and then 
@@ -3473,7 +3475,7 @@ bool testOverSample_M2_L3()
   // produce 5 equations of which 3 were already fixed by the perfect roundtrip requirement. Here,
   // we only have 3 unknowns in the first place. It turns out the the perfect roundtrip conditions
   // fix only 2 degrees of freedom if we assume the upsampling kernel u to be symmetric. That means
-  // we have the freedom to choose one degree of freedom just like in the saymmetric case. This is
+  // we have the freedom to choose one degree of freedom just like in the symmetric case. This is
   // as it should be because the situation is fundamentally the same. It's just that here, we 
   // impose symmetry by construction whereas in the other case, we imposed it by a constraint.
 
@@ -3869,8 +3871,8 @@ bool testUpDownSample1D()
   bool ok = true;
 
   // Under construction:
-  ok &= testSincUpSampler();
-  //ok &= testOverSample_M2_L3();
+  //ok &= testSincUpSampler();
+  ok &= testOverSample_M2_L3();
   //ok &= testOverSample_M3_L5();
   //ok &= testSincUpSampler();
   //ok &= testOverSample_M2_L5();

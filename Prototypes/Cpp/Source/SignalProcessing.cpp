@@ -634,11 +634,13 @@ class rsPitchDitherSuperSawOsc
 
 public:
 
-  using PDO = rsPitchDitherOsc<T>;     // Shorthand for convenience
+  using PDO = rsPitchDitherOsc<T>;     // Shorthand for convenience - maybe get rid
 
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Lifetime
 
   rsPitchDitherSuperSawOsc();
-
 
   //-----------------------------------------------------------------------------------------------
   // \name Setup

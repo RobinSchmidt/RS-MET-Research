@@ -187,10 +187,25 @@ variance.
  
 Maybe we can combine the dithering of the amplitude values with jittering of (re)sampling instants 
 at a non-uniform sample rate to turn aliasing into noise?
- 
- 
+
 ---------------------------------------------------------------------------------------------------- 
- 
+Spike Noise
+
+- Produce a noise out of mostly zero samples with occasional spikes.
+
+- Define a probability distribution function for spike distance. For example, the distances between
+  spike could be uniformly distributed between t_min, t_max and use that. In a realtime 
+  implementation whenever we just have produced some spike a sample index n, we schedule the timing
+  of the next spike according to this distribution.
+  
+- I think, the average spike distance would be some sort of pseudo period leading to a perception of
+  some pseudo frequency. -> Try it!
+
+- Optionally alternate (also probabilitically) between upward and downward spikes or maybe multiply
+  the spikes by some random number from the interval -1..+1. This random number could have its own
+  probability distribution.
+
+----------------------------------------------------------------------------------------------------
  
  
 https://ultra.audio/   Nice GUI!

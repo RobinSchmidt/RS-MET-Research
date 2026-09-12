@@ -226,7 +226,7 @@ then $p(x)$ and $q(x)$ will have the same roots as $f(x)$. If we first form the 
  p(x) = \prod_{r \in R} (x - r)  \qquad \text{or} \qquad
  q(x) = \prod_{r \in R} (1 - \frac{x}{r})
 \end{equation}
-which may be even more convenient in some situations. Of course, if the product is infinite, we may have to worry about convergence and even if it is finite, it is not clear whether or not the product will match the function anywhere else. If the function $f(x)$ happens to be a polynomial, though, we can actually confidently say that when we include all of the roots of $f(x)$ into our product function $p(x)$, then $p(x)$ must actually indeed be equal to $f(x)$ up to a constant scale factor. The same is true for $q(x)$ but with a different scale factor [VERIFY!]. If we now remember that a power series expansion of a function can be regarded as a sort of "infinite polynomial", we may plausibly hope that we can express our function $f(x)$ with such an infinite product. In practice, the form of $q(x)$ tends to be easier to deal with. First, it has the desirable form of products where the factors are of the form $(1 + h_k)$. I think, it also tends to be less prone to divergence away from the roots (VERIFY!). To turn one form into the other, one just needs to multiply a linear factor of the form $(x - r_k)$ with an appropriate constant, namely $-1 / r_k$. That could be problematic if one of the $r_k$ is zero, though. But that is a problem that can easily be solved by pulling these factors out of the product. ...TBC...
+which may be even more convenient in some situations. Of course, if the product is infinite, we may have to worry about convergence and even if it is finite, it is not clear whether or not the product will match the function anywhere else. If the function $f(x)$ happens to be a polynomial, though, we can actually confidently say that when we include all of the roots of $f(x)$ into our product function $p(x)$, then $p(x)$ must actually indeed be equal to $f(x)$ up to a constant scale factor. The same is true for $q(x)$ but with a different scale factor [VERIFY!]. If we now remember that a power series expansion of a function can be regarded as a sort of "infinite polynomial", we may plausibly hope that we can express our function $f(x)$ with such an infinite product. In practice, the form of $q(x)$, which I will call the $q$-form, tends to be easier to deal with. First, it has the desirable form of products where the factors are of the form $(1 + h_k)$. I think, it also tends to be less prone to divergence away from the roots (VERIFY!). To turn the $p$-form into the $q$-form, one just needs to multiply a linear factor of the form $(x - r_k)$ with an appropriate constant, namely $-1 / r_k$. Multiplying a linear factor by a constant (nonzero) factor only scales it but doesn't change the location where it becomes zero. That could be problematic if one of the $r_k$ is zero, though. But that is a problem that can easily be solved by pulling these factors out of the product sign and using the $p$-form for them. The $p$-form of a linear factor $(x - r_k)$ where $r_k = 0$ is just $x$. If we have $m$ of such factors, i.e. zero is a root with multiplicity $m$, that would contribute a factor of $x^m$ in front of the product sign. All the other linear factors with $r_k \neq 0$ pose no problem to convert into $q$-form. ...TBC...
 
 % To tame the polynomial, we may want to multiply each factor of the form (x - r_k) by some number c
 %  that turns the factor into the form (1 - x/r_k)
@@ -438,7 +438,7 @@ where $\gamma = 0.5772\ldots$ is the Euler-Mascheroni constant.
 %---------------------------------------------------------------------------------------------------
 
 \subsubsection{Factorization Theorems}
-In the factorization of the sine function, we just took all of its roots $r_k$ whose locations we already knew (they occur at the multiples of $\pi$) and formed an infinite product with linear factors of the form $(1 + \frac{x}{r_k})$ with some special treatment for the root at zero (which we took care of by incorporating a factor of $x$ into the product). We\footnote{Well, actually it was not us but Euler.} arrived at an infinite product that indeed did converge to the sine function. At the outset, it was not at all obvious that the roots alone are enough to determine the sine function uniquely. After all, we could multiply the whole product expression by any arbitrary function that itself has no roots whatsoever to obtain a different function that still has the exact same roots. That observation hints at that the roots of a function alone might not be enough to determine it uniquely. ...TBC...
+In the factorization of the sine function, we just took all of its roots $r_k$ whose locations we already knew (they occur\footnote{And there are indeed no other roots of sine in the complex plane. This might not be obvious by looking at the graph over the real axis alone but it is true.} at the integer multiples of $\pi$) and formed an infinite product with linear factors of the form $(1 + \frac{x}{r_k})$ with some special treatment for the root at zero (which we took care of by incorporating a factor of $x$ into the product). We\footnote{Well, actually it was not us but Euler.} arrived at an infinite product that indeed did converge to the sine function. At the outset, it was not at all obvious that the roots alone are enough to determine the sine function uniquely. After all, we could multiply the whole product expression by any arbitrary function that itself has no roots whatsoever to obtain a different function that still has the exact same roots. That observation hints at that the roots of a function alone might not be enough to determine it uniquely. ...TBC...
 
 %Not only is it conceivable that the actual sine function needs a constant factor in front of it - we could even multiply the product by an arbitrary function (perhaps one that doesn't itself have real zeros such as exp(x)) and the resulting would still have exactly the same zeros as the sine function. At least along the real axis. It may be a different story once we widen our perspective to the complex plane (exp does have complex roots - or does it? ...nope! It doesn't!)
 
@@ -446,7 +446,7 @@ In the factorization of the sine function, we just took all of its roots $r_k$ w
 
 
 \paragraph{The Weierstrass Factorization Theorem}
-...TBC...ToDo: Explain hat this theorem ensures that every \emph{entire function} can be factored in a way that generalizes the procedure that Euler used to factor the sine function. Explain what "entire functions" are. The factors in the generalization are potentially more complicated than just $1 - x/r_k$, though. There may be exponential factors allowed and there may also a pre-factor involving an exponential function. 
+...TBC...ToDo: Explain hat this theorem ensures that every \emph{entire function} can be factored in a way that generalizes the procedure that Euler used to factor the sine function. Explain what "entire functions" are. The factors in the generalization are potentially more complicated than just $1 - x/r_k$, though. There may be exponential factors allowed and there may also a pre-factor involving an exponential function.  ...TBC...
 
 %Maybe that should be a topic for complex analysis
 
@@ -463,9 +463,22 @@ With certain further restrictions on $f(z)$, we can give an even more specific f
 
 % ToDo: State the conditions and the form of the factorization under these conditions.
 
-% In light of the general pattern of the factorization as shwon in the Weierstrass theorem, the factorizations of sine and cosine can be recovered as special cases as follows:
+\paragraph{Examples Revisited}
+In light of the general pattern of the factorization as shown in the Weierstrass theorem, the factorizations of sine and cosine can be recovered as special cases as follows:
+\begin{equation}
+\sin(z) = z \prod_{k \in \mathbb{Z}^*} 
+          \left( 1 - \frac{z}{k \pi} \right) \exp \left(\frac{z}{k \pi} \right)
+        = z \prod_{k=1}^{\infty} \left( 1 - \frac{z^2}{n^2 \pi^2}  \right)
+\end{equation}
+where $\mathbb{Z}^* = \mathbb{Z} \setminus 0$. The right hand side version is the formula that we have already seen just with $z$ instead of $x$. The formula in the middle is the new one. We can again combine the factors in pairs for positive and negative $k$ which lets the exponential parts cancel one another. [VERIFY!]. Here $m = 1$, $g(z) = 0, p_k = 1$. [VERIFY]. Similarly, the cosine can be written as: 
+\begin{equation}
+\cos(z) = ...
+\end{equation}
 
-% 
+
+% sin(z) = z \prod_{k \in \mathbb{Z}^*} (1 - z/(k \pi) ) e^{ \frac{z}{k \pi} }
+
+% where $\mathbb{Z}^* = \mathbb{Z}\0$ 
 
 
 

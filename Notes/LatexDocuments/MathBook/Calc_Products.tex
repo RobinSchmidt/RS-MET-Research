@@ -212,7 +212,8 @@ holds. That means that beyond some index $N_{\varepsilon}$ that depends on the c
 
 
 %===================================================================================================
-\subsection{Functions Expressed via Products}
+%\subsection{Functions Expressed via Products}
+\subsection{Factorization of Functions}  % Alternative title
 Some of our favorite functions have expressions based on infinite products. One way to find such an expression for a given function $f(x)$ is to consider the roots of the function, i.e. the values of $x$ where $f(x) = 0$. Let's call these roots $r_k$ where the index $k$ ranges over all the roots, however many there may be. If we know all the roots $r_k$ and construct a function in one of the two ways:
 \begin{equation}
  p(x) = \prod_{k} (x - r_k)  \qquad \text{or} \qquad
@@ -244,7 +245,11 @@ which may be even more convenient in some situations. Of course, if the product 
 % https://www.youtube.com/watch?v=wbirLVLNYNk
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Factoring the Sine Function}
+
+%\subsubsection{Factoring the Trigonometric Function}
+\subsubsection{Example Factorizations}
+
+\paragraph{Factoring Sine}
 A nice infinite product representation of the sine function was found by Euler and is given by:
 \begin{equation}
 \label{Eq:SineInfProduct}
@@ -260,10 +265,29 @@ A nice infinite product representation of the sine function was found by Euler a
 \end{equation}
 He "factored out" all the infinitely many roots of the sine function that occur at all the integer multiples of $\pi$. Each positive integer $k$ gives one factor of $(1 + \frac{x}{k \pi})$ and one of $(1 - \frac{x}{k \pi})$. These pairs of factors can be combined into a single $(1 - \frac{x^2}{k^2 \pi^2})$ factor. The $k=0$ case is treated separately to avoid division by zero. That's the single $x$ in the middle of the right hand side expression and the single $x$ in front of the product sign of the mid hand side\footnote{Who would not want to have an additional mid hand?} expression. Having found this product representation for the sine function had a couple of interesting spin off results.
 
+% Maybe mention that the more naive approach of factoring sine as:
+% sin(x) = x * (x-pi) * (x+pi) * (x-2pi) * (x+2pi) * ...
+% doesn't work. The product doesn't converge. Maybe try to fix it by defining the partial products
+% (up to N) by introducing a pre-factor of 1/N or maybe 1/N^2 and then consider letting N -> inf. I 
+% think it may work but writing it in the form above obviates the pre-factor. Try it!
+% Mention that the form above is the q(x) form. Using the naive approach would be the p(x) form.
+% Note that the q(x) sastifies the necesarry condition for convergence of the individual factors 
+% approaching 1 whereas in the p(x) form, the factors diverge (linearly) to infinity.
+
 % Maybe mention that the single x factor could also be brought over to the left hand side such that
 % sin(x) / x = \prod ... Doing so would directly define a product representation of the sinc 
 % function which might be useful for evaluating a polynomial approximation of sinc. I think, I did
 % some numerical experiments with this idea somewhere.
+
+% Mention the product formula for cosine.
+% see: https://www.youtube.com/watch?v=y12QM6d8pO0 at 7:00
+
+% Mention that looking at the graph over real axis alone might not be enough to see _all_ the 
+% zeros. Some functions may also have complex zeros. We were lucky with the sine though because
+% the zeros at k*pi, k in Z are indeed all of the zeros of sine, even when considered as a complex
+% function. Remind the reader that the complex versions of real functions are usually defined by
+% extending their power series expressions to complex arguments (at least in case of analytic 
+% functions - which the sine is).
 
 % % https://de.wikipedia.org/wiki/Basler_Problem#Eulers_erste_L%C3%B6sung
 
@@ -271,10 +295,13 @@ He "factored out" all the infinitely many roots of the sine function that occur 
 % This Problem Took a CENTURY — Euler Needed ONE Night
 % https://www.youtube.com/watch?v=LWNNlDhlGyc
 
-\paragraph{The Basel Problem}
-Euler discovered this product formula in the course of solving the so called Basel problem. This is the problem of finding the value of the infinite sum $\sum_{k=1}^{\infty} \frac{1}{k^2}$. Euler found the value of this sum to be $\frac{\pi^2}{6}$ and his investigations led also to the definition of the famous Riemann zeta function. ...TBC.. ToDo: explain the connections
+%\paragraph{The Basel Problem}
+\medskip
+Euler discovered this product formula in the course of solving the so called \emph{Basel problem}. This is the problem of finding the value of the infinite sum $\sum_{k=1}^{\infty} \frac{1}{k^2}$. Euler found the value of this sum to be $\frac{\pi^2}{6}$ and his investigations led also to the definition of the famous Riemann zeta function. 
+%...TBC.. ToDo: explain the connections ...or maybe not here - but maybe provide references
 
-\paragraph{The Wallis Product}
+%\paragraph{The Wallis Product}
+\medskip
 By evaluating the product formula (\ref{Eq:SineInfProduct}) at $x = \frac{\pi}{2}$, one obtains:
 \begin{equation}
  1 = \frac{\pi}{2} \cdot \prod_{k=1}^{\infty} \left( 1 - \frac{1}{4 k^2}  \right)
@@ -315,7 +342,23 @@ which is known as the \emph{Wallis product} representation of $\pi$. Due to its 
 % -At around 14:15, he explains how the product formula for sin(x)/x was used by Euler to solve the
 %  Basel problem
 
-% At the outset, it is not obvious that the roots alone are enough to determine the sine function uniquely. Not only is it conceivable that the actual sine function needs a constant factor in front of it - we could even multiply the product by an arbitrary function (perhaps one that doesn't itself have real zeros such as exp(x)) and the resulting would still have exactly the same zeros as the sine function. At least along the real axis. It may be a different story once we widen our perspective to the complex plane (exp does have complex roots - or does it?)
+
+\paragraph{Factoring Cosine}
+The cosine function also has an expression as an infinite product. It looks like:
+\begin{equation}
+\cos(x) = \prod_{k=1}^{\infty} \left( 1 - \frac{4 x^2}{(2k - 1)^2 \pi^2}  \right)
+\end{equation}
+
+
+
+%\paragraph{Factoring the Reciprocal of Gamma}
+
+
+% At the outset, it is not obvious that the roots alone are enough to determine the sine function uniquely. Not only is it conceivable that the actual sine function needs a constant factor in front of it - we could even multiply the product by an arbitrary function (perhaps one that doesn't itself have real zeros such as exp(x)) and the resulting would still have exactly the same zeros as the sine function. At least along the real axis. It may be a different story once we widen our perspective to the complex plane (exp does have complex roots - or does it? ...nope! It doesn't!)
+
+% This may go into the section of the factorization theorem. In this theorem we do indeed modify the function defined via a product over the zeros by an additional factor e^{g(z)} which itself has no zeros. Moreover each factor in the product has a multiplicative multiplier e^(...) which also can nowhere become zero (because the exponential function itself has no zeros - not even in the complex plane)
+
+
 
 % ToDo: 
 %
@@ -385,13 +428,28 @@ which is known as the \emph{Wallis product} representation of $\pi$. Due to its 
 %   product" form to obtain results like Euler did with the Basel problem. In this case, he looked
 %   at the sine function because the 
 
+
+
+
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Weierstrass Factorization Theorem}
-...TBC...ToDo: Explain hat this theorem ensures that every \emph{entire function} can be factored in a way that generalizes the procedure that Euler used to factor the sine function. Explain what "entire functions" are. Maybe that should be a topic for complex analysis
+...TBC...ToDo: Explain hat this theorem ensures that every \emph{entire function} can be factored in a way that generalizes the procedure that Euler used to factor the sine function. Explain what "entire functions" are. The factors in the generalization are potentially more complicated than just $1 - x/r_k$, though. There may be exponential factors allowed and there may also a pre-factor involving an exponential function. 
+
+%Maybe that should be a topic for complex analysis
 
 % https://en.wikipedia.org/wiki/Weierstrass_factorization_theorem
 % https://de.wikipedia.org/wiki/Weierstra%C3%9Fscher_Produktsatz
 
+% Let's Factor Functions! | Weierstrass Factorization Theorem
+% https://www.youtube.com/watch?v=y12QM6d8pO0
+% -Explains factorizations of sin, cos, exp, 1/gamma and the Weierstrass factorization theorem
+%  (the latter starts around 22:00, the formula appears at 24:00)
+
+\paragraph{The Hadamard Factorization Theorem}
+With certain further restrictions on $f(z)$, we can give an even more specific form that the factorization has to obey. ...TBC...
+
+% ToDo: State the conditions and the form of the factorization under these conditions.
 
 %---------------------------------------------------------------------------------------------------
 

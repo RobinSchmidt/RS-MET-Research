@@ -724,20 +724,37 @@ https://www.youtube.com/watch?v=ekHoYfT3rFI
  Note that here we are dealing with 3 different sort of products: A_{ij} x_i x_j are products 
  between scalars, e_i e_j is a product between vectors and the outer multiplcation of
  (A_{ij} x_i x_j)(e_i e_j) would be a product between a vector and a scalar
--> Try to express the complex product and the cross product in that way.
--> Could the matrix A be something akin to a Caley table?
--> Compare that to hwo we actually implement the geometric product in code
--> I think there, they Cayley tables that we create there determine a finite group in the sense
-   of group theory. It has 2^n elements where n is the dimension of the underlying space. It
-   describes how the 2^n basis vectors behave under multiplication, so here, it would describe all
-   the possible products e_i e_j. There, the result is always some other basis vector e_k. Is this
-   here true as well? And in general? Or does it only work when the basis vectors are orthonormal?
--> See "Harmonic Analysis..." page 776. There is a similar formula (for decomposing a product into
-   a linear combination of basis vectors?) but I don't get it. It looks wrong to me. There's an 
-   index j appearing on the RHS but j is neither a summation index nor and index of a component of 
-   the result. It's somehow just dangling.
+ -> Try to express the complex product and the cross product in that way.
+ -> Could the matrix A be something akin to a Caley table?
+ -> Compare that to hwo we actually implement the geometric product in code
+ -> I think there, they Cayley tables that we create there determine a finite group in the sense
+    of group theory. It has 2^n elements where n is the dimension of the underlying space. It
+    describes how the 2^n basis vectors behave under multiplication, so here, it would describe all
+    the possible products e_i e_j. There, the result is always some other basis vector e_k. Is this
+    here true as well? And in general? Or does it only work when the basis vectors are orthonormal?
+ -> See "Harmonic Analysis..." page 776. There is a similar formula (for decomposing a product into
+    a linear combination of basis vectors?) but I don't get it. It looks wrong to me. There's an 
+    index j appearing on the RHS but j is neither a summation index nor and index of a component of 
+    the result. It's somehow just dangling.
+ -> Or maybe a component of the product can in general be expressed as a linear combination of the
+    n^2 possible products of the components? Like (x_1,x_2,...,x_n) (y_1,y_2,...y_n)
+    = (a_111 x_1 y_1 + a_112 x_1 y_2 + ..., a_211 x_1 y_1 + ..., ....). I think, that would require
+    n^3 coefficients to specify a product in general.
+ -> Could the Cayley table be a condensed version of that 3D array of coeffs?
 
-  
+
+Multiplication tables:
+
+Complex numbers: 
+
+Basis vectors: e1 = 1, e2 = i
+
+Product:       (x1,x2) (y1,y2) = (x1y1-x2y2, x1y2+x2y1)
+
+Table:              e1   e2          1   i
+
+               e1   e1   e2       1  1   i
+               e2   e2  -e1       i  i  -1
 
   
 

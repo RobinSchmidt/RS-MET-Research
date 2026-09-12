@@ -833,7 +833,7 @@ void rsPitchDitherSuperSawOsc<T>::updateSawPeriods()
   // - We loop only up to numSaws rather than maxNumSaws in order to avoid unnecessary computations
   //   when the user is using less saws and the setFrequency() is called often (i.e. per sample) 
   //   due to a pitch envelope or LFO. That implies that setNumSaws() should also call 
-  //   updateCycleLengths() to have all periods be computed correctly when the used increases the
+  //   updateCycleLengths() to have all periods be computed correctly when the user increases the
   //   numSaws parameter on a GUI or by automation.
 }
 

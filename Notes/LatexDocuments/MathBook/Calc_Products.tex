@@ -446,12 +446,20 @@ In the factorization of the sine function, we just took all of its roots $r_k$ w
 
 
 \paragraph{The Weierstrass Factorization Theorem}
+states that an entire function $f(z)$ in the complex plane can be constructed from the set of its roots $\{ r_k \}$ via an expression of the following general form:
 \begin{equation}
 f(z) = z^m \cdot e^{g(z)} \cdot \prod_{n=1}^{\infty} 
        \left(1 - \frac{z}{r_n} \right)
        \exp \left( \sum_{k=1}^{p_n} \frac{1}{k} \left( \frac{z}{r_n} \right)^k \right)
 \end{equation}
+...TBC...
 
+% m: multiplicity of the root at zero. If none, m = 0 and z^m = 1
+% g(z): an entire function
+% exp(...): adjustment of the factors to ensure convergence of the product
+% p_n: ...  when 0: sum is empty, so its zero and the exponential evalautes to 1
+%           when 1: only the linear term (1/1)*(z/r_n)^1 appears. Example seein in 1/Gamma(x)
+% e^{g(z)}: Has no zeros, compensates for the exp(...) factors? ..not sure. Verify!
 
 %...TBC...ToDo: Explain hat this theorem ensures that every \emph{entire function} can be factored in a way that generalizes the procedure that Euler used to factor the sine function. Explain what "entire functions" are. The factors in the generalization are potentially more complicated than just $1 - x/r_k$, though. There may be exponential factors allowed and there may also a pre-factor involving an exponential function.  ...TBC...
 
@@ -459,6 +467,8 @@ f(z) = z^m \cdot e^{g(z)} \cdot \prod_{n=1}^{\infty}
 
 % https://en.wikipedia.org/wiki/Weierstrass_factorization_theorem
 % https://de.wikipedia.org/wiki/Weierstra%C3%9Fscher_Produktsatz
+% https://mathworld.wolfram.com/WeierstrassProductTheorem.html    ...not much there
+% https://encyclopediaofmath.org/index.php?title=Weierstrass_theorem
 
 % Let's Factor Functions! | Weierstrass Factorization Theorem
 % https://www.youtube.com/watch?v=y12QM6d8pO0
@@ -475,9 +485,9 @@ In light of the general pattern of the factorization as shown in the Weierstrass
 \begin{equation}
 \sin(z) = z \prod_{k \in \mathbb{Z}^*} 
           \left( 1 - \frac{z}{k \pi} \right) \exp \left(\frac{z}{k \pi} \right)
-        = z \prod_{k=1}^{\infty} \left( 1 - \frac{z^2}{n^2 \pi^2}  \right)
+        = z \prod_{k=1}^{\infty} \left( 1 - \frac{z^2}{k^2 \pi^2}  \right)
 \end{equation}
-where $\mathbb{Z}^* = \mathbb{Z} \setminus 0$. The right hand side version is the formula that we have already seen just with $z$ instead of $x$. The formula in the middle is the new one. We can again combine the factors in pairs for positive and negative $k$ which lets the exponential parts cancel one another. [VERIFY!]. Here $m = 1$, $g(z) = 0, p_k = 1$. [VERIFY]. Similarly, the cosine can be written as: 
+where $\mathbb{Z}^* = \mathbb{Z} \setminus 0$. The right hand side version is the formula that we have already seen just with $z$ instead of $x$. The formula in the middle is the new one. We can again combine the factors in pairs for positive and negative $k$ which lets the exponential parts cancel one another. [VERIFY!]. Here $m = 1$, $g(z) = 0, p_k = 1 \; \forall k$. [VERIFY]. Similarly, the cosine can be written as: 
 \begin{equation}
 \cos(z) = \prod_{k \in \mathbb{Z}} 
           \left(1 - \frac{2 z}{(2k-1) \pi} \right) \exp \left(\frac{2z}{(2k-1) \pi} \right)

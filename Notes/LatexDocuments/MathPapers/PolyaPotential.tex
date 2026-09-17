@@ -43,6 +43,7 @@
 \author{Robin Schmidt}
 \maketitle
 
+
 \section{Preview}
 In this paper, I propose a way to boil down the 4D information content of analytic functions into a 3D object without any loss of information. The key to this is the observation that analytic functions satisfy the Cauchy-Riemann equations which implies that their so called Polya vector fields are potential fields. A potential field is a vector field that can be obtained from a scalar field, called its potential, by way of taking partial derivatives. It turns out that the Cauchy-Riemann equations imply that the Polya vector field of an analytic function is indeed such a special potential field. We can therefore construct the potential of the Polya vector field which I will call the "Polya potential". Such a Polya potential is a function $P: \mathbb{R}^2 \rightarrow \mathbb{R}$, i.e. a function with two real inputs and one real output - all in all an object that lives in 3D space rather than in 4D as the original complex function does. It is therefore simpler than the original 4D function and easier to visualize. Yet, it contains the full information. We can always reconstruct our original complex function from it. I propose to make that Polya potential an object of investigation and I hope that, besides helping in visualizing complex functions, it may also suggest new ways of analyzing them. I'm not sure, if that idea is any new - but if it isn't, then information about that is not so easy to find on the internet (or my search skills are lacking). The Polya vector fields seem to be moderately well known - but their potentials seem to be, so far, largely ignored. I propose that we should take a closer look at them. To facilitate this, I will derive expressions for the Polya potentials of many important elementary functions, state some rules for how to derive such expressions for more complicated functions when they are expressed as power series and I'll explain how to interpret plots of such Polya potentials. 
 
@@ -136,7 +137,7 @@ $\tan(z)$  & $ \frac{\sin(2x)}{\cos(2x) + \cosh(2y)}$
 % -If the table grows large, maybe split into powers, trig-funcs, exp/sinh/cosh/log
 
 \subsection{Positive Integer Powers}
-We now want to derive expressions for the Polya vector field and potential a general positive integer power, i.e. for functions of the form $f(z) = z^n$. Setting $z = x + \i y$ and expanding $z^n$ according to the binomial theorem, we get:
+We now want to derive expressions for the Polya vector field and potential of a general positive integer power, i.e. for functions of the form $f(z) = z^n$. Setting $z = x + \i y$ and expanding $z^n$ according to the binomial theorem, we get:
 \begin{equation}
 	z^n = (x + \i y)^n = \sum_{k=0}^n \binom{n}{k}  x^k (\i y)^{n-k}
 \end{equation}

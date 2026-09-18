@@ -252,6 +252,16 @@ spaced by 5 from A. It may seem weird that the boundary points use 3 coeffs/term
 point use only 2. But that is misleading: the inner points also use 3 terms. It just happens to be 
 the case that the coeff for the middle term is zero in the central difference formula.
 
+We could also implement the solver for bi-periodic domain, i.e. a torus, by modifying the equations
+at the boundary points in such a way to us just the same central difference formula ansatz but with
+wraparound. That means to uniformly use the ansatz:
+
+  U(i,j) = ( P((i+1) % I,  j    % J) - P((i-1) % I,  j    % J ) ) / (2*dx)    and
+  V(i,j) = ( P( i    % I, (j+1) % J) - P( i    % I, (j-1) % J ) ) / (2*dy)
+
+for all i,j, i.e. i = 0,..,I-1, j = 0,..,J-1. We could also let the user choose to just make one of
+the two dimensions periodic, i.e. solve the problem on a cylindrical domain.
+
 
 Resources:
 

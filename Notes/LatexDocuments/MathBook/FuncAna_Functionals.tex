@@ -31,7 +31,7 @@ It is indeed infinitely often differentiable everywhere, even at the potentially
 % https://www.youtube.com/watch?v=Jz8VCv1MIYE
 
 \paragraph{Notation}
-As mentioned above, the set of functions that are continuous on a given interval $(a,b)$ is denoted as $C(a,b)$ and the set of functions that are continuously differentiable $k$ times on $(a,b)$ is denoted as $C^k(a,b)$. A smooth function is continuously differentiable infinitely often, so here $k = \infty$ and hence the set of smooth functions on $(a,b)$ is denoted as $C^{\infty}(a,b)$. Finally, the set of smooth functions that are zero outside the interval $(a,b)$, i.e. the set of our test functions, is denoted as  $C_0^{\infty}(a,b)$.
+As mentioned above, the set of functions that are continuous on a given interval $(a,b)$ is denoted as $C(a,b)$ and the set of functions that are continuously differentiable $k$ times on $(a,b)$ is denoted as $C^k(a,b)$. A smooth function is continuously differentiable infinitely often, so here $k = \infty$ and hence the set of smooth functions on $(a,b)$ is denoted as $C^{\infty}(a,b)$. Finally, the set of smooth functions that are zero outside the interval $(a,b)$, i.e. the set of our test functions, is denoted as  $C_0^{\infty}(a,b)$. TODO: Move this up to "Continuity and Differentiability"
 % Maybe do not regurgitate this stuff! Just explain the new thing:  $C_0^{\infty}(a,b)$
 %or should we use brackets [] instead of ()?
 
@@ -178,15 +178,17 @@ The distributional derivative is also called the \emph{weak derivative}. ...TBC.
 % -Räume schwach differenzierbarer Funktionen sind die Sobolev-Räume. Ein noch allgemeinerer Begriff der Ableitung ist die Distributionenableitung
 
 \paragraph{Example: Derivative of $|x|$}
-To see our new tool in action, consider the absolute value function $f(x) = |x|$. We can write down the derivative as:
+To see our new tool in action, consider the absolute value function $f(x) = |x|$. We can tacitly try to write down the derivative in a piecewise way as:
 \begin{equation}
 f'(x) = 
  \begin{cases}
- -1 \qquad  x < 0 \\
- +1 \qquad  x > 0
+ -1  \qquad & x < 0 \\
+ ??! \qquad & x = 0 \\
+ +1  \qquad & x > 0
  \end{cases}
 \end{equation}
-But note that this doesn't say anything about $f'(x)$ at $x = 0$. We can't assign a value there because $f(x) = |x|$ not differentiable at $x = 0$ in the usual sense. But it is differentiable in the weak sense. The derivative given above has only values for $x \neq 0$. But that is no problem if we view $f'$ as a distribution. Distributions are not supposed to have values everywhere - or anywhere at all, for that matter. All that we want from a distribution is to test it with a test function. We do not generally expect to be able to evaluate it a an arbitrary point in the sense of asking: "What's your value there?". If we can, that's a bonus but it's not required. ...TBC...explain the Heaviside step function - if shift and scale $f'$ above appropriately and arbitrarily define the value at zero to 1, we obtain it.
+%But note that this doesn't say anything about $f'(x)$ at $x = 0$. 
+With our usual notion of differentiation, we are stumped at how to define $f'(x)$ at $x = 0$. We can't assign a value there because $f(x) = |x|$ not differentiable at $x = 0$ in the usual sense. But it is differentiable in the weak sense. The derivative given above has only values for $x \neq 0$. But that is no problem if we view $f'$ as a distribution. Distributions are not supposed to have values everywhere (or indeed, anywhere at all, for that matter). All that we want from a distribution is to test it with a test function (TODO: Explain what that means). We do not generally expect to be able to evaluate it a an arbitrary point in the sense of asking: "What's your value there?". If we can, that's a bonus but it's not required. ...TBC...explain the Heaviside step function - if shift and scale $f'$ above appropriately and arbitrarily define the value at zero to 1, we obtain it.
 
 % ToDo:
 % -Explain that for the derivatives of jump discontinuities, we see delta functions scaled by the

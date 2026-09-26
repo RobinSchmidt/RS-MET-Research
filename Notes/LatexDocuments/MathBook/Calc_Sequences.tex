@@ -163,7 +163,10 @@ A concept related to convergence is that of Cauchy sequences. When saying that a
 % what the limit a could possibly be? The answer is to look at tail segments of the sequence. If the
 % terms of the sequence get and then remain(!) arbitrarily close to each other, the further we go 
 % out, then the sequence is considered to be convergent. This idea is formally captured in the 
-% definition of a Cauchy sequence: ...
+% definition of a Cauchy sequence: 
+% Choose any eps > 0. Then there must exist some index N such that for all m,n >= N we must have
+% |a_n - a_m| < eps. The index N typically depends on eps: The smaller eps we choose, the larger
+% N may have to be.
 
 % Point out that it is not enough for the neighboring terms to get arbitrarily close - nor is it 
 % enough that the terms within finite segments remain close. All terms in the tail end must remain
@@ -172,6 +175,12 @@ A concept related to convergence is that of Cauchy sequences. When saying that a
 % constant because the frequency approaches zero. Nevertheless, the sequence does not converge to
 % anything. The tail end will always eventually break out from any epsilon-hose (is that a term? In
 % German, Epsilon-Schlauch indeed is one)
+
+% A convergent sequence is necessarily a Cauchy sequence but the converse is not true (verify!).
+% ToDo: Give an example for a sequence that is Cauchy but not convergent, i.e. a sequence where
+% the terms get closer to each other but nevertheless do not approach a constant number. Maybe
+% something like  a_n = n + 1/n  could work? There's a general linear trend but the distance between
+% terms shrinks like 1/n. But no! I think, this doesn't work
 
 % https://www.desmos.com/calculator/2zwrtsuo1u
 
@@ -280,6 +289,8 @@ One way to transform a sequence into a new one is to convolve it with some fixed
 
 %===================================================================================================
 \subsection{Sequences of Functions} So far, the elements of our sequences were supposed to be numbers. In some contexts, it is useful to consider sequences whose elements are functions. Just like with sequences of numbers, we denote such a sequence of functions as $(f_n)$ and an individual element as $f_n$. It's only the letter $f$ that reminds us that we are now talking about functions - otherwise the notation is the same. Functions have an argument, so we may consider evaluating an element $f_n$ at some input $x$, i.e. consider $f_n(x)$. For each fixed value of $x$, $(f_n(x))$ will be a sequence of numbers. ...TBC... ToDo: explain uniform convergence (rate of convergence does not depend on $x$), Weierstrass approximation theorem, the Weierstrass function ...
+
+% ToDo: Explain how for sequences of functions, it may matter which norm we choose for the question whether or not a sequence converges. For sequences of numbers, the chosen norm doesn't matter as far as convergence is concerned.
 
 % https://en.wikipedia.org/wiki/Uniform_convergence
 

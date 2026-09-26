@@ -12,7 +12,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Signal Processing:
   //testRandomVectors();               // Stub - Produce random vectors with user specified covariance matrix
-  //testKalmanFilter();                // Under construction - doesn't work yet
+  testKalmanFilter();                // Under construction - doesn't work yet
   //testPitchDithering();              // Pitch dithering waveforms (mostly saw)
   //testPitchDitherSuperSaw();         // Pitch dither applied to the supersaw
 

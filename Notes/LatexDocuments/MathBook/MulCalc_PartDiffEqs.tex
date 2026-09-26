@@ -50,6 +50,7 @@ u(\mathbf{r}, t) = g(\mathbf{r} - t \mathbf{v})
 where $g$ is an arbitrary initial shape. That is: we prescribe as initial condition an arbitrary shape $g(\mathbf{r})$ where $\mathbf{r}$ is our spatial coordinate vector and the time-varying $u(\mathbf{r}, t)$ is then just that initial shape $g$, but shifted at time $t$ by a displacement vector given by $t \mathbf{v}$.
 
 %...tbc..
+% Maybe we need to put some constraints on g. Maybe it needs to be differentiable or at least, the partial derivatives with respect to the coordinates must exist (which is a weaker requirement, I think). But the analytic solution could actually work even for discontinuous functions. What do we make of that? I think, we may need the differentiability condition in order to derive the solution but once derived, the solution could be applied to a broader range of initial conditions?
 
 % https://en.wikibooks.org/wiki/Partial_Differential_Equations/The_transport_equation
 % https://en.wikipedia.org/wiki/Continuity_equation
@@ -72,6 +73,7 @@ The right hand side of the equation is proportional the Laplacian of our scalar 
 % The energy has dispersed
 
 % aka Heat Equation
+% ToDo: Mention how Fourier solved it by assuming an initial condition that is a superposition of sines and cosines. These shapes decay down while keeping their shape. The rate of decay depnds on the frequency. higher frequencies decay faster. The sinusoids are eigenfunctions of the Laplacian, I think [VERIFY!].
 
 \paragraph{Diffusion Equation} 
 The diffusion equation is a more complicated version of the heat equation that allows the coefficient of diffusion $D$ to depend on the quantity $u$ itself such that $D = D(u)$. ...TBC...
@@ -141,7 +143,8 @@ I used waves on a pond of water as an example for the sort of phenomena that the
 % https://math.stackexchange.com/questions/3112564/derivation-of-2d-korteweg-de-vries-equation
 % https://de.wikipedia.org/wiki/Kadomtsev-Petviashvili-Gleichung
 
-\paragraph{The Schroedinger Wavefunctions} ...tbc...
+%\paragraph{The Schroedinger Wavefunctions} ...tbc...
+\paragraph{Schroedinger Equation} 
 %\paragraph{Quantum Wavefunctions} ...tbc...
 
 % aka Schroedinger Equation
@@ -168,10 +171,20 @@ I used waves on a pond of water as an example for the sort of phenomena that the
 % https://en.wikipedia.org/wiki/Fluid_dynamics
 % https://en.wikipedia.org/wiki/Navier%E2%80%93Stokes_equations
 
+% SOLVED: Navier-Stokes cracked by AI - Numberphile
+% https://www.youtube.com/watch?v=3geDF-DAwpg
+
+% Deriving Navier Stokes equations from scratch
+% https://www.youtube.com/watch?v=fk5g2fFmoDA
+
+
 \paragraph{Electrodynamics} ...tbc...
 % aka Maxwell's Equations -> this is a *system* of PDEs not just a single PDE -> even more difficult
 % to handle
 % maybe rename to electrodynamics
+
+% Maxwell’s Equations Explained Visually | The Symphony of Electromagnetism
+% https://www.youtube.com/watch?v=aB9gzFvwab4
 
 \paragraph{Magnetohydrodynamics} ...tbc...
 

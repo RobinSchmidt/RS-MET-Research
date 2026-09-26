@@ -4,6 +4,13 @@ Operators take a function as input and produce another function as output. Domai
 
 % Maybe the notation $g = T f$ or $T f = g$ can be better justified when T is a linear operator (which it often is) because in this case, the equations looks analogous to $A x = b$ from linear algebra.
 
+% Maybe mention that in more elementary math, the term "operator" is also used for certain bivariate functions such as addition and multiplication. The + "operator" defines the bivariate function f(x,y) = x+y, for example.
+
+% Q: Is the Fourier series an example of an operator where domain and range are different spaces? The domain is the space of real valued functions on a real interval [a,b] whereas the range is the space of functions from the integers to the reals. The coefficients are indexed by integers. They don't define a continuous function. It's similar for Taylor series, I think. There, the domain is the space of analytic functions from the reals to the reals (or complexes to complexes) and the range is the space of functions from the naturals to the reals.
+
+% See:
+% Functional Analysis vs. Linear Algebra – The Infinite-Dimensional SHOCK
+% https://www.youtube.com/watch?v=SwAzs9YfmJw
 
 \subsection{Linear Operators}
 The definition of linearity for operators is as always: for any two functions $f,g$ and any scalar $a$, an operator $L$ is said to be linear if satisfies the conditions of homogeneity: $L[a g] = a L[g]$ and additivity: $L[f+g] = L[f] + L[g]$. The two conditions can, again as always, combined into the single condition $L[af+bg] = aL[f] + bL[g]$ where $b$ is another scalar. The theory of linear operators parallels the theory of matrices. Matrices represent linear transformations of finite-dimensional vectors. Operators transform vectors in general - including also the infinite-dimensional ones, such as functions. ...TBC...

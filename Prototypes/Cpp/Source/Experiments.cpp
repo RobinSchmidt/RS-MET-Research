@@ -319,6 +319,9 @@ bool testKalmanFilter()
   // Visually Explained: Kalman Filters
   // https://www.youtube.com/watch?v=IFeCIbljreY    
   // (I didn't watch it yet. 1st impression looks good, though)
+  //
+  // Kalman Filter: The Math Behind Self-Driving Cars
+  // https://www.youtube.com/watch?v=LsBwn9FANVk
 
   // ToDo:
   //

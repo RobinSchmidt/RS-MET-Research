@@ -1,4 +1,20 @@
 \section{Integral Transforms}
+In this section we will have a closer look at one particular class of linear operators that are called \emph{integral transforms}. These are important because they occur in a lot of scientific and engineering applications. These operators are typically built as follows: They take the function $f(x)$ and pointwise multiply it by another function $g_p(x)$ that is a member of a family of functions that is parameterized by some parameter $p$ and then they integrate that product over some interval. Because the multiplier function $g$ had a free parameter $p$ in it, we'll get a result that will be a function of that parameter. So, our original function $f(x)$ gets transformed into a function $F(p)$. The general anatomy of an integral transform looks like:
+\begin{equation}
+F(p) = \int_{a}^{b} f(x) \, g_p(x) \; dx
+\end{equation}
+VERIFY! ...TBC...
+
+% -Maybe also use the notation g(x,p) or g(p,x)
+% -Explain that it is customary to use the same letter in upprcase for the transformed function. But
+%  sometimes you'll also see a hat or a tilde or something like that. But for Fourier- and Laplace 
+%  transforms, one usually uses the uppercase convention.
+% -Mention also that the generic letter p is often replaced by some other letter that depends on the
+%  particular transform. For Foruier transforms, it's usually an omega. For Laplace transforms, it's
+%  usually an s. And in these cases, the x is often replaced by t. But not always. Only when the 
+%  independent variable is time. Sometimes it's alse a spatial variable in which case we keep using
+%  x.
+
 
 \subsection{The Fourier Transform}
 
@@ -7,6 +23,11 @@
 %  -introduce it as limiting case for the Fourier series when the period grows to infinity
 %  -mention the different conventions for the normalization. Maybe use the 
 %   symmetric convention here (with 1/sqrt(pi) in front of both integrals)
+% -Explain that we are dealing with functions from the real into the complex numbers. In the special
+%  case where the input function produces purely real numbers, we just treat the output as complex 
+%  anyway, i.e. as complex values with real part identically zero. In such a case, the output will
+%  be complex nonetheless (unless the function additionally has even symmetry, I think) but we will
+%  observe certain symmetries in the output.
 % -convolution theorem
 % -introduce 2D version and maybe variations like sine and cosine trafos
 
@@ -14,6 +35,9 @@
 % https://www.youtube.com/watch?v=p0fOdmziO2o
 
 \subsection{The Laplace Transform}
+
+% -Here we are again dealing with input functions from the reals into the complexes but the output 
+%  function is from the complexes into the complexes.
 
 % What 99% of Stanford students don't understand about Laplace theorem
 % https://www.youtube.com/watch?v=_ngYWe58toc

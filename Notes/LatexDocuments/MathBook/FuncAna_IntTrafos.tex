@@ -1,11 +1,13 @@
 \section{Integral Transforms}
-In this section we will have a closer look at one particular class of linear operators that are called \emph{integral transforms}. These are important because they occur in a lot of scientific and engineering applications. These operators are typically built as follows: They take the function $f(x)$ and pointwise multiply it by another function $g_p(x)$ that is a member of a family of functions that is parameterized by some parameter $p$ and then they integrate that product over some interval. Because the multiplier function $g$ had a free parameter $p$ in it, we'll get a result that will be a function of that parameter. So, our original function $f(x)$ gets transformed into a function $F(p)$. The general anatomy of an integral transform looks like:
+In this section we will have a closer look at one particular class of linear operators that are called \emph{integral transforms}. These are important because they occur in a lot of scientific and engineering applications. These operators are typically built as follows: They take the function $f(x)$ and pointwise multiply it by another function $g_p(x)$ that is a member of a family of functions that is parameterized by some parameter $p$ and then they integrate that product over some interval. Instead of writing $g_p(x)$, we will mostly see it written as $g(p,x)$, i.e. we treat the parameter $p$ like a second variable. It doesn't really make any substantial difference if we consider $p$ as a parameter or as another variable. The math doesn't really care about such a distinction. Because the multiplier function $g$ had the free parameter $p$ in it, we'll get a result that will be a function of that parameter. So, our original function $f(x)$ gets transformed into a function $F(p)$. The general anatomy of an integral transform looks like:
 \begin{equation}
 F(p) = \int_{a}^{b} f(x) \, g_p(x) \; dx
+     = \int_{a}^{b} f(x) \, g(p,x) \; dx
 \end{equation}
+
 VERIFY! ...TBC...
 
-% -Maybe also use the notation g(x,p) or g(p,x)
+% -Maybe also use the notation g(x,p) or g(p,x) ...doe. Explain it
 % -Explain that it is customary to use the same letter in upprcase for the transformed function. But
 %  sometimes you'll also see a hat or a tilde or something like that. But for Fourier- and Laplace 
 %  transforms, one usually uses the uppercase convention.

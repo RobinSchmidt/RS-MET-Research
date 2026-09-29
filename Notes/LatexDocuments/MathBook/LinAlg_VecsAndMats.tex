@@ -236,6 +236,12 @@ The operation of turning the rows of a matrix into the columns of a new matrix a
 % The Matrix Transpose: Visual Intuition
 % https://www.youtube.com/watch?v=wjYpzkQoyD8
 
+% Transpose of a Matrix — Finally Explained Visually! | Geometry & Transformations
+% https://www.youtube.com/watch?v=f62W4BbDdxo
+% -Explains that (A x) \cdot y = x \cdot (A^T y)  for an NxN matrix A and Nx1 vectors x,y. I think
+%  this is equivalent to (A x) y = x (A^T y) because the matrix product reduces to the dot product
+%  anyway. ..or wait? Maybe we should write it as  (A x)^T y = x^T (A^T y)  ? Figure out!
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Inversion}
 If we have given a matrix $\mathbf{A}$ and we can find another matrix $\mathbf{B}$ such that  $\mathbf{B} \mathbf{A} = \mathbf{I}$, then we call $\mathbf{B}$ a left inverse of $\mathbf{A}$. A matrix $\mathbf{C}$ with the property $\mathbf{A} \mathbf{C} = \mathbf{I}$ would be called a right inverse. It turns out that if $\mathbf{A}$ is a square matrix, then there is no difference between these two notions, i.e. left inverses are always also right inverses and vice versa so we call a matrix that has both of these properties just an inverse matrix of $\mathbf{A}$. It turns furthermore out that if such an inverse exists, then it is unique, so we call such a matrix \emph{the inverse} of $\mathbf{A}$ and denote it by $\mathbf{A}^{-1}$. Finding such an inverse for a given matrix $\mathbf{A}$ can be done by an algorithm called Gauss-Jordan elimination which we will be explained later.
@@ -638,7 +644,7 @@ A matrix $\mathbf{A}$ is said to be \emph{positive definite} if for every nonzer
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Eigenspaces}
-When forming a product between an $n \times n$ matrix $\mathbf{A}$ and an $n$-vector $\mathbf{v}$, we will get a new $n$-vector, which will, in general, point into a different direction than  $\mathbf{v}$. There may, however, be certain special vectors which do not change direction as a result of such a multiplication by a matrix but rather just (possibly) change their length. Such special vectors are called the \emph{eigenvectors} of the matrix $\mathbf{A}$ and the length-change factor is called the corresponding \emph{eigenvalue}. The equation that expresses this circumstance is given by:
+When forming a product between an $n \times n$ matrix $\mathbf{A}$ and an $n$-vector $\mathbf{v}$, we will get a new $n$-vector, which will, in general, point into a different direction than  $\mathbf{v}$. There may, however, be certain special vectors which do not change direction as a result of such a multiplication by a matrix but rather just (possibly) change their length and/or be reflected\footnote{In this context, we do not consider a reflection as a change of direction because the vector is still on the same line. This line is seen as defining one direction along which we can move forward or backward.}. Such special vectors are called the \emph{eigenvectors} of the matrix $\mathbf{A}$ and the length-change factor is called the corresponding \emph{eigenvalue}. The equation that expresses this circumstance is given by:
 \begin{equation}
  \mathbf{A v} = \lambda \mathbf{v}  
  \quad \Leftrightarrow \quad
@@ -726,7 +732,7 @@ We have learned that an eigenvector of a matrix $\mathbf{A}$ is a vector $\mathb
 
 
 \paragraph{Cayley Hamilton Theorem}
-We know how to multiply matrices and we also know how to scale them. Therefore we can create polynomials with scalar coefficients and (square) matrix valued inputs (and outputs). The characteristic polynomial of a matrix $\mathbf{A}$ is a polynomial with scalar coefficients. What happens, if we interpret it as polynomial that takes a matrix argument and then plug in the matrix $\mathbf{A}$? That might seem like a random thing to do so we might not expect anything in particular. No so! The Cayley Hamilton theorem tells us than when we do this, the result will always be zero matrix. That means: every matrix sastifies its own characteristic equation, i.e. the equation that sets its characteristic polynomial to zero.
+We know how to multiply matrices and we also know how to scale them. Therefore we can create polynomials with scalar coefficients and (square) matrix valued inputs (and outputs). The characteristic polynomial of a matrix $\mathbf{A}$ is a polynomial with scalar coefficients. What happens, if we interpret it as polynomial that takes a matrix argument and then plug in the matrix $\mathbf{A}$? That might seem like a random thing to do so we might not expect anything in particular. Not so! The Cayley Hamilton theorem tells us than when we do this, the result will always be zero matrix. That means: Every matrix satisfies its own characteristic equation, i.e. the equation that sets its characteristic polynomial to zero.
 
 % https://en.wikipedia.org/wiki/Cayley%E2%80%93Hamilton_theorem
 

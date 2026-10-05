@@ -210,6 +210,16 @@ TArg rsPolynomialRootFinder::convergeLaguerre(
 // - Maybe it could make sense to have different classes of root finders for the various possible
 //   scenarios. For example: rsPolyRootFinderReal, rsPolyRootFinderComplex, 
 //   rsPolyRootFinderInteger, rsPolyRootFinderRational, rsPolyRootFinderFinite, ....
+// 
+// - In general, for polynomials, we may have to use 3 different template parameters for maximum
+//   flexibility: One for the coefficients, one for argument and value, one for the roots. Or wait:
+//   Maybe roots and arg should be of the same type. For one thing, we need to be able to subtract 
+//   roots from the argument in the product form of the polynomial and secondly and perhaps more
+//   obviously: The roots of a function are quite generally understood to be particular assigments
+//   of the function's argument anyway so they have to be of the same type. But on the other hand,
+//   we could have - for example - real coefficients and complex roots but we could nevertheless
+//   plug in a matrix-valued argument, for example. How should we deal with that? Maybe the 
+//   situation is a bit contrived but it would be nice if we could handle it anyway.
 //
 // Other links that may or may not be useful:
 //

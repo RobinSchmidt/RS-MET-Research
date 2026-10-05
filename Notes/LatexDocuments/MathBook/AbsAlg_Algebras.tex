@@ -147,14 +147,16 @@ $(a c - b d, a d + b c)$             & Result written as vector  \\
 \end{tabular}
 \medskip
 
-I was very detailed and careful here while making at every step explicit, which law was invoked. If you are concerned about the fact that the "Use commutativity of addition" step also involves a subtraction, recall that the notation the $- bd$ is just a shorthand for $+ (-(bd))$. If you are concerned about the validity of the "Use commutativity of multiplication" step, then you have a point. The step is valid in the special case here, but in general we need to be careful with such things because such a commutative law of multiplication is not always given. We will come back to this when deriving the formulas for the quaternion product later. Let's summarize what we have found. In the algebra of the complex numbers, the product of two vectors $(x_1,x_2)$ and $(y_1,y_2)$ is defined as:
+I was very detailed and careful here while making at every step explicit, which law was invoked. If you are concerned about the fact that the "Use commutativity of addition" step also involves a subtraction, recall that the notation the $- bd$ is just a shorthand for $+ (-(bd))$. If you are concerned about the validity of the "Use commutativity of multiplication" step, then you have a point. The step is valid in the special case here, but in general we need to be careful with such things because such a commutative law of multiplication is not always given [VERIFY!]. We will come back to this when deriving the formulas for the quaternion product later. Let's summarize what we have found. In the algebra of the complex numbers, the product of two vectors $(x_1,x_2)$ and $(y_1,y_2)$ is defined as:
 \begin{equation}
 %(a,b) \cdot (c,d) = (ac-bd, ad+bc)
 (x_1,x_2) \cdot (y_1,y_2) = (x_1 y_1 - x_2 y_2, \; x_1 y_2 + x_2 y_1)
 \end{equation}
 where we have switched to the more generic notation of using $x_1,x_2,\ldots$ for vector components because this notation will generalize better to the other cases that we will see later.
 
-%TODO: Write doem properties: commutativity, existence of neutral element, product rule for norm (i.e. absolute value), ...
+%TODO: Write dowm properties: commutativity, existence of neutral element, product rule for norm (i.e. absolute value), ...
+
+% Maybe we can indeed assume commutativity of the multiplication of vector components? What do we assume about the vector components? Must they come from a field? If so, we may indeed assume commutativity, I think.
 
 %...TBC...
 
@@ -408,9 +410,11 @@ In a graded algebra, we are dealing with objects of different kinds that cannot 
 
 % https://en.wikipedia.org/wiki/Free_algebra
 
-
 % Coalgebras:
 % https://en.wikipedia.org/wiki/Coalgebra
+
+% What about algebras where we have an additionaö exponentiation operation defined that follows the well known rules for exponentiation? ...or maybe in general, they should follow the Baker-Campbell-Hausdorff formula?
+
 
 \subsection{Existence of Algebras}
 Having all of these possible classifications in place, we could now proceed to ask: "Which types of algebras are possible?". Could there be a $3D$ division algebra, for example? And that specific question is far from being contrived. A $3D$ division algebra was actually precisely the thing that Hamilton so desperately wanted to find. Instead, what he found were the quaternions which are $4D$. And there's a deeper reason for that: It turns out that a $3D$ division algebra is, in fact, provably impossible. If only Hamilton would have known this theorem, it would have saved him years (or even decades?) of futile and frustrating search. This shows that such theorems can be pretty useful indeed so in this section, we will list a couple of important theorems about what kinds of algebras are (im)possible. ...TBC...

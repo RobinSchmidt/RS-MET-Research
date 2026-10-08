@@ -178,14 +178,26 @@ void testVaryCoefFilter()
 
 
   int N = numSamples;
-  Vec y(N);
+  Vec c(N), y(N);
   Flt cFlt, yFlt;             // Filters for the coeff c[n] and the signal y[n]
 
+  // Init filters:
   cFlt.setTimeConstant(transTime);
+  cFlt.setState(startCoeff);
   yFlt.setCoefficient(startCoeff);
 
-  // ...TBC...
+  // Produce impulse response:
+  y[0] = yFlt.getSample(1);
+  c[0] = cFlt.getSample(endCoeff);
+  for(int n = 1; n < N; n++)
+  {
+    y[n] = yFlt.getSample(0);
+    c[n] = cFlt.getSample(endCoeff);
+    yFlt.setCoefficient(c[n]);
+  }
 
+  // Plot results:
+  rsPlotVectors(c, y);
 }
 
 

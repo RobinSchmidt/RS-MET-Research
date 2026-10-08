@@ -467,8 +467,7 @@ public:
 
   void setTimeConstant(TPar newTauInSamples)
   {
-    //c = exp(-TPar(1)/newTauInSamples);     // AI suggestion
-    c = rsExp(-newTauInSamples);             // ...what I think - verify!
+    c = rsExp(-TPar(1)/newTauInSamples);
 
     // Formula from rosic::LeakyIntegrator:
     // coeff = exp( -1.0 / (sampleRate*0.001*tau)  );
@@ -479,12 +478,20 @@ public:
   // setCutoff(TPar newOmega). These functions just apply some formula (-> look them up) to the 
   // input value and assign the result to c.
 
+  /** Sets the filter state, i.e. the stored output value from the previous sample instant. In the
+  next call to getSample(), this value will be the y[n-1] value in the filter's difference 
+  equation. */
+  void setState(TSig newState)
+  {
+    y = newState;
+  }
+
   //-----------------------------------------------------------------------------------------------
   // \name Processing
 
   inline TSig getSample(TSig in)
   {
-    y = (TPar(1)-c) * in  +  c * y;
+    y = (TPar(1)-c) * in  +  c * y;  // y[n] = (1-c) * x[n]  +  c * y[n-1]
     return y;
   }
 

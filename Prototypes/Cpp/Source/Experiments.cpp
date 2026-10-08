@@ -139,6 +139,38 @@ bool testRandomVectors()
   //   diagonalization algorithm. The user should be able to set up: order, variance, correlation.
 }
 
+
+void testVaryCoefFilter()
+{
+  // Stub
+
+  // Inspired by this thread:
+  //
+  //   https://www.kvraudio.com/forum/viewtopic.php?t=633942
+  //
+  // I had the following idea: What if we create a leaky integrator type of lowpass filter with a
+  // time varying filter coefficient that is itself the result of a filteriing process. That is,
+  // the normal upate equation:
+  // 
+  //   y[n] = (1-c) * x[n] + c * y[n-1]
+  //
+  // would be replaced by:
+  //
+  //   y[n] = (1-c[n]) * x[n] + c[n] * y[n-1]
+  //
+  // where:
+  //
+  //   c[0] = startCoeff
+  //   c[n] = (1-b) * endCoeff + b * c[n-1]
+  //
+  // with a transition coefficient b. When b=0, we immediately produce the filter with the final
+  // coeff (endcoeff). With b=1, the filter will remain at the inital coeff (startCoeff) all the 
+  // time. ...maybe that behavior should be reversed, though
+
+  // ...TBC...
+}
+
+
 bool testKalmanFilter()
 {
   // Under construction - this doesn't work yet

@@ -142,14 +142,12 @@ bool testRandomVectors()
 
 void testVaryCoefFilter()
 {
-  // Stub
-
   // Inspired by this thread:
   //
   //   https://www.kvraudio.com/forum/viewtopic.php?t=633942
   //
   // I had the following idea: What if we create a leaky integrator type of lowpass filter with a
-  // time varying filter coefficient that is itself the result of a filteriing process. That is,
+  // time varying filter coefficient that is itself the result of a filtering process? That is,
   // the normal upate equation:
   // 
   //   y[n] = (1-c) * x[n] + c * y[n-1]
@@ -165,31 +163,33 @@ void testVaryCoefFilter()
   //
   // with a transition coefficient b. When b=0, we immediately produce the filter with the final
   // coeff (endcoeff). With b=1, the filter will remain at the inital coeff (startCoeff) all the 
-  // time. ...maybe that behavior should be reversed, though  ...TBC...
+  // time. 
 
+  // Types:
   using Real = double;
   using Vec  = std::vector<Real>;
   using Flt  = rsLeakyIntegrator<Real, Real>;
 
-  int  numSamples = 500;      // Number of samples to produce
-  Real startCoeff =   0.8;    // We start with a fast decay..
-  Real endCoeff   =   0.99;   // ..and transition to a slow decay
-  Real transTime  = 200;      // Transition time in samples.
+  // Setup:
+  int  numSamples = 200;             // Number of samples to produce
+  Real startCoeff =   0.9;           // We start with a fast decay..
+  Real endCoeff   =   1.0;           // ..and transition to a no decay
+  Real transTime  =  20;             // Transition time in samples.
 
-
+  // Allocations:
   int N = numSamples;
   Vec c(N), y(N);
-  Flt cFlt, yFlt;             // Filters for the coeff c[n] and the signal y[n]
+  Flt cFlt, yFlt;                    // Filters for the coeff c[n] and the signal y[n]
 
-  // Init filters:
+  // Set up and init filters:
   cFlt.setTimeConstant(transTime);
   cFlt.setState(startCoeff);
   yFlt.setCoefficient(startCoeff);
+  //yFlt.setState(1);                // y starts at starCoeff
+  yFlt.setState(1/startCoeff);       // y starts at 1
 
   // Produce impulse response:
-  y[0] = yFlt.getSample(1);
-  c[0] = cFlt.getSample(endCoeff);
-  for(int n = 1; n < N; n++)
+  for(int n = 0; n < N; n++)
   {
     y[n] = yFlt.getSample(0);
     c[n] = cFlt.getSample(endCoeff);
@@ -198,6 +198,22 @@ void testVaryCoefFilter()
 
   // Plot results:
   rsPlotVectors(c, y);
+
+
+  // Observations:
+  //
+  // - The resulting signal y does indeed look like an exponentially decay whose decay rate falls
+  //   off over time until it reaches a "no decay" state, i.e. a sustain state.
+  //
+  //
+  // ToDo:
+  //
+  // - At the moment, we create the signal by initializing the state of yFlt and then feed only
+  //   zeros as input signal. That means, We are not actually filtering an incoming input signal 
+  //   here. Instead, we have a pure generator algorithm. Try to modify the algorithm in such a 
+  //   way that we actually process an incoming signal and such that we get the result as impulse
+  //   response. That means we need to init the state of yFlt to zero. We probably need to feed in
+  //   the unit impulse with a gain of 1/startCoeff. But how would we deal with cFlt?
 }
 
 

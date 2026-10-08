@@ -446,6 +446,64 @@ TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& y, const TVec& u)
 
 //=================================================================================================
 
+template<class TSig, class TPar> 
+class rsLeakyIntegrator
+{
+
+public:
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  /** Sets the raw filter coefficient directly. It's a value in the closed interval [0,1]. A value
+  of 0 means that no filtering is happening at all, i.e. we get a bypass setting. A value of 1 
+  sets the filter up to be a Riemann integrator that is not leaky. Typical settings in the actual 
+  "leaky integrator" range should be close to but below 1, e.g. 0.9 ... 0.999 or maybe even 
+  closer. */
+  void setCoefficient(TPar newCoefficient)
+  {
+    c = newCoefficient;
+  }
+
+  void setTimeConstant(TPar newTauInSamples)
+  {
+    //c = exp(-TPar(1)/newTauInSamples);     // AI suggestion
+    c = rsExp(-newTauInSamples);             // ...what I think - verify!
+
+    // Formula from rosic::LeakyIntegrator:
+    // coeff = exp( -1.0 / (sampleRate*0.001*tau)  );
+    // in which the time constantb tau is given in milliseconds
+  }
+
+  // ToDo: Add functions setTimeConstant(TPar newTauInSamples) or setDecayTime(...),
+  // setCutoff(TPar newOmega). These functions just apply some formula (-> look them up) to the 
+  // input value and assign the result to c.
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Processing
+
+  inline TSig getSample(TSig in)
+  {
+    y = (TPar(1)-c) * in  +  c * y;
+    return y;
+  }
+
+  void reset()
+  {
+    y = TSig(0);
+  }
+
+
+protected:
+
+  TSig y = TSig(0);  // Output sample and filter state.
+  TPar c = TPar(0);  // Filter coefficient. 0: No filtering, 1: Unleaky Riemann integrator
+
+};
+
+
+
+//=================================================================================================
 
 
 

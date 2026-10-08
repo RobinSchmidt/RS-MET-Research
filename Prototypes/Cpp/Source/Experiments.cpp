@@ -165,9 +165,27 @@ void testVaryCoefFilter()
   //
   // with a transition coefficient b. When b=0, we immediately produce the filter with the final
   // coeff (endcoeff). With b=1, the filter will remain at the inital coeff (startCoeff) all the 
-  // time. ...maybe that behavior should be reversed, though
+  // time. ...maybe that behavior should be reversed, though  ...TBC...
+
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using Flt  = rsLeakyIntegrator<Real, Real>;
+
+  int  numSamples = 500;      // Number of samples to produce
+  Real startCoeff =   0.8;    // We start with a fast decay..
+  Real endCoeff   =   0.99;   // ..and transition to a slow decay
+  Real transTime  = 200;      // Transition time in samples.
+
+
+  int N = numSamples;
+  Vec y(N);
+  Flt cFlt, yFlt;             // Filters for the coeff c[n] and the signal y[n]
+
+  cFlt.setTimeConstant(transTime);
+  yFlt.setCoefficient(startCoeff);
 
   // ...TBC...
+
 }
 
 

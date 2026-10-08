@@ -149,7 +149,7 @@ void testVaryCoefFilter()
   // I had the following idea: What if we create a leaky integrator type of lowpass filter with a
   // time varying filter coefficient that is itself the result of a filtering process? That is,
   // the normal upate equation:
-  // 
+  //
   //   y[n] = (1-c) * x[n] + c * y[n-1]
   //
   // would be replaced by:
@@ -162,8 +162,8 @@ void testVaryCoefFilter()
   //   c[n] = (1-b) * endCoeff + b * c[n-1]
   //
   // with a transition coefficient b. When b=0, we immediately produce the filter with the final
-  // coeff (endcoeff). With b=1, the filter will remain at the inital coeff (startCoeff) all the 
-  // time. 
+  // coeff (endCoeff). With b=1, the filter will remain at the inital coeff (startCoeff) all the 
+  // time.
 
   // Types:
   using Real = double;
@@ -173,7 +173,7 @@ void testVaryCoefFilter()
   // Setup:
   int  numSamples = 200;             // Number of samples to produce
   Real startCoeff =   0.9;           // We start with a fast decay..
-  Real endCoeff   =   1.0;           // ..and transition to a no decay
+  Real endCoeff   =   0.995;         // ..and transition to a no decay
   Real transTime  =  20;             // Transition time in samples.
 
   // Allocations:
@@ -185,7 +185,7 @@ void testVaryCoefFilter()
   cFlt.setTimeConstant(transTime);
   cFlt.setState(startCoeff);
   yFlt.setCoefficient(startCoeff);
-  //yFlt.setState(1);                // y starts at starCoeff
+  //yFlt.setState(1);                // y starts at startCoeff
   yFlt.setState(1/startCoeff);       // y starts at 1
 
   // Produce impulse response:
@@ -202,14 +202,16 @@ void testVaryCoefFilter()
 
   // Observations:
   //
-  // - The resulting signal y does indeed look like an exponentially decay whose decay rate falls
-  //   off over time until it reaches a "no decay" state, i.e. a sustain state.
+  // - With endCoeff = 1.0, the resulting signal y does indeed look like an exponential decay curve
+  //   whose decay rate falls off over time until it reaches a "no decay" state, i.e. a sustain 
+  //   state. If we use endCoeff = 0.995 instead, it doesn't transition to a sustain but instead to
+  //   a slow decay.
   //
   //
   // ToDo:
   //
   // - At the moment, we create the signal by initializing the state of yFlt and then feed only
-  //   zeros as input signal. That means, We are not actually filtering an incoming input signal 
+  //   zeros as input signal. That means, we are not actually filtering an incoming input signal 
   //   here. Instead, we have a pure generator algorithm. Try to modify the algorithm in such a 
   //   way that we actually process an incoming signal and such that we get the result as impulse
   //   response. That means we need to init the state of yFlt to zero. We probably need to feed in

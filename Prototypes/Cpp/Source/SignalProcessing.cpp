@@ -464,6 +464,9 @@ public:
   {
     c = newCoefficient;
   }
+  // Maybe rename to something more despcriptive like setFilterAmount(), setFilterCoeff(),
+  // setIntegratorCoeff(), setIntegratorGain(). Maybe the converse function that does 
+  // c = 1 - newCoeff; could be called setLeakage().
 
   void setTimeConstant(TPar newTauInSamples)
   {
@@ -471,7 +474,7 @@ public:
 
     // Formula from rosic::LeakyIntegrator:
     // coeff = exp( -1.0 / (sampleRate*0.001*tau)  );
-    // in which the time constantb tau is given in milliseconds
+    // in which the time constant tau is given in milliseconds
   }
 
   // ToDo: Add functions setTimeConstant(TPar newTauInSamples) or setDecayTime(...),
@@ -491,8 +494,14 @@ public:
 
   inline TSig getSample(TSig in)
   {
-    y = (TPar(1)-c) * in  +  c * y;  // y[n] = (1-c) * x[n]  +  c * y[n-1]
+    //y = (TPar(1)-c) * in  +  c * y;  // y[n] = (1-c) * x[n]  +  c * y[n-1]
+    y = in + c * (y - in);             // y[n] = x[n] + c * (y[n-1] - x[n])
     return y;
+
+    // ToDo: Maybe add explicit type conversion:
+    // y = in + TSig(c) * (y - in);  ...but maybe not. It should be understood throughout the 
+    // codebase that parameters can always be implicitly converted to signals. Otherwise we would
+    // get a mess if we would want to do explicit conversions consistently everywhere.
   }
 
   void reset()

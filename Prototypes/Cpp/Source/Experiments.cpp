@@ -173,7 +173,7 @@ void testVaryCoefFilter()
   // Setup:
   int  numSamples = 200;             // Number of samples to produce
   Real startCoeff =   0.9;           // We start with a fast decay..
-  Real endCoeff   =   0.995;         // ..and transition to a no decay
+  Real endCoeff   =   1.0;           // ..and transition to a no decay
   Real transTime  =  20;             // Transition time in samples.
 
   // Allocations:
@@ -216,6 +216,14 @@ void testVaryCoefFilter()
   //   way that we actually process an incoming signal and such that we get the result as impulse
   //   response. That means we need to init the state of yFlt to zero. We probably need to feed in
   //   the unit impulse with a gain of 1/startCoeff. But how would we deal with cFlt?
+  //
+  // - Alternatively, if it turns out to be impractical to implement this as a filter, we could 
+  //   replace the leaky integrator by a simpler multiplicative accumulator, i.e. replace:
+  //   y[n] = (1-c) * x[n]  +  c * y[n-1];  by  y[n] *= c;
+  //
+  // - Think about a useful parameterization for the user. Perhaps it should be in terms of the 2
+  //   time constants (at start and end) and the transition time constant between them. For the
+  //   end time constant, we may allow infinity as value. Maybe for the others as well.
 }
 
 

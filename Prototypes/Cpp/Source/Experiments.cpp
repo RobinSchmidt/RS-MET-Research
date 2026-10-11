@@ -198,6 +198,7 @@ void testVaryCoefFilter()
 
   // Plot results:
   rsPlotVectors(c, y);
+  //rsPlotVectors(y);
 
 
   // Observations:

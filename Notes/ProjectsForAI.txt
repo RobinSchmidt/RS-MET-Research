@@ -55,4 +55,8 @@ could be finished with the help of AI.
 Circuit Models
 
 I don't know much about circuit modeling but I'd like to have some circuit modeled filters in my 
-DSP library. Maybe try to develop some with the help of AI.
+DSP library. Maybe try to develop some with the help of AI. Maybe the first project could be a 
+nonlinear variant of the SVF and/or the Ladder. Urs Heckmann has actually published some code into
+the public domain for a nonlinear Ladder filter. Maybe that could be used as starting point. Maybe
+I could also look into mystran's Halite circuit simulator for prototyping such filters. Maybe I
+could also look into Spice models and let AI translate those into realtime DSP code. 

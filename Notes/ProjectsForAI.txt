@@ -32,3 +32,27 @@ sets up, what "now" means such that the plot always shows the entire history up 
 waterfall plot. 
 
 ----------------------------------------------------------------------------------------------------
+Transparent Oversampling
+
+Use an interactive chat with a mathematically and algorithmically well versed AI model to figure out
+hwo to implement the transparent oversampling idea explained here:
+
+ RS-MET-Research/Notes/DSP/TransparentOversampling.txt
+ 
+In the experiments here in this repo, I have already implementations for the simplemost cases. The 
+goal is to generalize this idea to higher order (and higher quality) up- and downsampling filters. 
+It will probably have to be formulated as a constrained optimization problem. But that's something 
+the AI should figure out.
+
+----------------------------------------------------------------------------------------------------
+Spectral Pitch Shifting
+
+I once started to implement a sepctral (i.e. FFT based) pitch shifting algorithm but I didn't finish
+it and it doesn't work properly yet. I think, it's somewhere in the main repo. Maybe that algorithm
+could be finished with the help of AI.
+
+----------------------------------------------------------------------------------------------------
+Circuit Models
+
+I don't know much about circuit modeling but I'd like to have some circuit modeled filters in my 
+DSP library. Maybe try to develop some with the help of AI.

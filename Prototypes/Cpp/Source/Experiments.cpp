@@ -217,6 +217,27 @@ void testVaryCoefFilter()
   //   way that we actually process an incoming signal and such that we get the result as impulse
   //   response. That means we need to init the state of yFlt to zero. We probably need to feed in
   //   the unit impulse with a gain of 1/startCoeff. But how would we deal with cFlt?
+  // 
+  // - Maybe to figure out how to implement this as filter, we should assume that the filter is in 
+  //   steady state, which, I think, means that the state variable y has the same value tha we feed
+  //   in in our main loop over the samples, i.e. 0 for yFlt and endCoeff for cFlt. Then we should
+  //   use the update formula to figure out what x[n] would have to by to make y[n] the desired 
+  //   value of 1. I think, that might give us a gain by which we should multiply the unit impulse
+  //   on input. But wait: There's a problem. The fact that we feed in endCoeff rather than 0 into
+  //   cFlt thwarts this. Maybe we first need to rewrite the filter in such a way that we can 
+  //   indeed input 0 rather than endCoeff. Maybe to achieve that, we need to replace the update 
+  //   equation by:  y[n] = k + (1-c[n]) * x[n] + c[n] * y[n-1]  for some constant k that is 
+  //   another member of the filter class that we can set up beforehand. In the case of cFlt, we
+  //   would set k to endCoeff. Maybe try that in another experiment testVaryCoefFilter2(). We may 
+  //   need an extended verson of rsLeakyIntegrator for that. Maybe realize this as a subclass. But
+  //   wait! No! With this difference equation, the output would actually never reach a steady 
+  //   state. It would produce an upward ramp for zero input. Maybe it should be:
+  //   y[n] = (1-c[n]) * (k + x[n]) + c[n] * y[n-1]. That may work when c[n] approaches 1. But what
+  //   if it doesn't? 
+  // 
+  // - Maybe as a compromise, we could run yFlt as an actual filter but let cFlt be externally 
+  //   controlled, i.e. the reset of the state inside cFlt should be triggered by some external 
+  //   event by yFlt would just be a normal filter that we feed by a unit impulse.
   //
   // - Alternatively, if it turns out to be impractical to implement this as a filter, we could 
   //   replace the leaky integrator by a simpler multiplicative accumulator, i.e. replace:

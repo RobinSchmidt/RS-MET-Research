@@ -18,6 +18,8 @@
     <GROUP id="{9D6FC012-FDEA-B506-96A3-33E47579AA64}" name="Source">
       <FILE id="bIdKbP" name="Attractors.cpp" compile="0" resource="0" file="Source/Attractors.cpp"/>
       <FILE id="NqOD66" name="Experiments.cpp" compile="0" resource="0" file="Source/Experiments.cpp"/>
+      <FILE id="nfnopA" name="ExperimentsResampling.cpp" compile="0" resource="0"
+            file="Source/ExperimentsResampling.cpp"/>
       <FILE id="Hc0YzS" name="ImageProcessing.cpp" compile="0" resource="0"
             file="Source/ImageProcessing.cpp"/>
       <FILE id="noNb5o" name="InputOutput.cpp" compile="0" resource="0" file="Source/InputOutput.cpp"/>

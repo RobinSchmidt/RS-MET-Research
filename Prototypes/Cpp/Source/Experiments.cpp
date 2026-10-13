@@ -1,4 +1,5 @@
 // ToDo: Organize the way, we include and compile this code more properly!
+// Maybe rename file to Scripts.cpp
 
 #include <regex>
 //#include <numeric>                           // iota
@@ -3651,7 +3652,7 @@ bool testOverSample_M2_L3()
   Vec ud = rsConvolve(u, d);
 
   // Plot all 3 kernels:
-  rsPlotVectors(u, d, ud);
+  rsPlotVectors(u, d, ud);  // ToDo: Plot as stem/lollipop plot
 
   return ok;
 

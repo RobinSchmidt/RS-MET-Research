@@ -304,6 +304,9 @@
     <ClCompile Include="..\..\Source\Experiments.cpp">
       <Filter>Experiments\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\ExperimentsResampling.cpp">
+      <Filter>Experiments\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\ImageProcessing.cpp">
       <Filter>Experiments\Source</Filter>
     </ClCompile>

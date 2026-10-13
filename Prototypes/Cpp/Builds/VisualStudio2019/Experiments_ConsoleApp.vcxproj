@@ -161,6 +161,9 @@
     <ClCompile Include="..\..\Source\Experiments.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\Source\ExperimentsResampling.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\Source\ImageProcessing.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>

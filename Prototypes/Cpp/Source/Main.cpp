@@ -1,5 +1,6 @@
-#include "Experiments.cpp"  // includes Tools.cpp which includes libraries rapt and rosic 
-#include "Renderings.cpp"   // ...what about the rs_testing module? Where is this included?
+#include "Experiments.cpp"            // Includes Tools.cpp which includes libs rapt and rosic.
+#include "ExperimentsResampling.cpp"
+#include "Renderings.cpp"             // What about the rs_testing module? Where is this included?
 
 // ToDo: 
 // -Bring some order into the code of the experiments. At the moment, they are all in the flat file
@@ -12,7 +13,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Signal Processing:
   //testRandomVectors();               // Stub - Produce random vectors with user specified covariance matrix
-  testVaryCoefFilter();                // Leaky integrator with time varying coeff
+  //testVaryCoefFilter();              // Leaky integrator with time varying coeff
   //testKalmanFilter();                // Under construction - doesn't work yet
   //testPitchDithering();              // Pitch dithering waveforms (mostly saw)
   //testPitchDitherSuperSaw();         // Pitch dither applied to the supersaw

@@ -1,5 +1,10 @@
 // Maybe rename file to ScriptsResampling.cpp
 
+// Contains some scripts with experiments that try to implement the ideas explained in the file:
+// RS-MET-Research/Notes/DSP/TransparentOversampling.txt
+
+//=================================================================================================
+// Helper functions:
 
 /** Zero stuffs the signal x by the factor M, i.e. produces a new signal y in which between any 
 pair of values in x, M-1 zeros will be interspersed. This operation can be viewed as the first step
@@ -323,6 +328,8 @@ bool rsIsKernelInterpolating(const std::vector<T>& h, int M, T tol)
   //   values are added as markers
 }
 
+//=================================================================================================
+// Unit test and experimental scripts:
 
 bool testSincUpSampler()
 {
@@ -1453,9 +1460,6 @@ bool testOverSample_M2_L5()
   //   to generate it. Maybe use a window based on binomial coeffs. It has a nice Gaussian shape. 
   //   Or maybe use a true Gaussian window
 }
-
-
-
 
 bool testUpDownSampleFilterDilation()
 {

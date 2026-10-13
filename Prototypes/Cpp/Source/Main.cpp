@@ -32,8 +32,8 @@ int main (int /*argc*/, char* /*argv[]*/)
 
 
   // Resampling:
-  testUpDownSample1D();                // up- and downsampling with lossless roundtrip
-  //testUpDownSample2D();              // stub, lossless up/downsampling for images
+  //testUpDownSample1D();                // up- and downsampling with lossless roundtrip
+  testUpDownSample2D();                // stub, lossless up/downsampling for images
 
 
   //epidemic();

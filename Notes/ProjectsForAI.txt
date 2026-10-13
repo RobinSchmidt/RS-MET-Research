@@ -44,6 +44,28 @@ goal is to generalize this idea to higher order (and higher quality) up- and dow
 It will probably have to be formulated as a constrained optimization problem. But that's something 
 the AI should figure out.
 
+
+Prompt:
+
+I write audio signal processing algorithms for musical purposes. In this context, it is often necessary to use oversampling, i.e. to first upsample an incoming signal to a higher sample rate, then do the actual processing at that higher rate, then downsample it to the original sample rate again. Both, up- and downsampling steps involve lowpass filtering the signal. In the case of upsampling, the lowpass is called anti-imaging lowpass, in the case of downsampling, it's called anti-aliasing lowpass. What I want to create is a pair of FIR upsampling and downsampling filter kernels (let's denote them by u[n] and d[n] respectively), such that an upsampling-downsampling roundtrip is an exact identity operations (up to floating point roundoff errors). For concreteness, let's assume I want to implement a waveshaping distortion effect. So, the processing would be:
+
+  input -> upsample -> waveshaper -> downsample -> output
+
+The goal is that my oversampled distortion algorithm is completely transparent as long as the waveshaper that sits in between the upsampler and the downsampler is itself an identity function (i.e. does nothing). Is there any known literature for this particluar type of filter design problem?
+
+
+
+----------------------------------------------------------------------------------------------------
+Filter Morphing
+
+I want to figure out how to morph between different filter types such that the transition feels and
+sounds natural. 
+
+It may also include morphing between lowpasses with different slopes. For example, we may want to 
+morph from a -6 db/oct slope to a -12 db/oct slope. Ideally, in the middle, the magnitude response
+should approximate a -9 dB/oct slope. ...TBC...
+
+
 ----------------------------------------------------------------------------------------------------
 Spectral Pitch Shifting
 

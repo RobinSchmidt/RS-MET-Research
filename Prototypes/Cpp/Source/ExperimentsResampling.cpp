@@ -1361,8 +1361,6 @@ bool testOverSample_M3_L5()
   //   to make that work.
 }
 
-
-
 bool testOverSample_M2_L5()
 {
   bool ok = true;

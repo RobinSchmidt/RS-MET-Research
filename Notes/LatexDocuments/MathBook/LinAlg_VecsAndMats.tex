@@ -34,10 +34,25 @@ where the right hand sides can be seen as an interpretation of what the tuple $(
 % https://www.youtube.com/watch?v=EQ5Xct2YyLk
 
 \paragraph{Matrices}
-Vectors can be used to represent locations and displacements aka translations. Translations are a specific kind of geometric transformation. A matrix represents a different kind of transformation, namely a \emph{linear transformation}, that we can apply to a vector. In geometric terms, linear transformations are scalings, rotations and shears. In this point of view, the columns of the matrices tell us, where the standard basis vectors will get mapped to (we'll see later what these are).
+As we have seen, a vector can be represented by a 1D array of numbers, i.e. a tuple. Linear transformations of vectors into other vectors (not necessarily of the same dimension) can be represented by a 2D array of numbers, i.e. a table with rows and columns. Each cell contains a number pretty much like in a spreadsheet. Such a rectangular table of numbers is called a \emph{matrix}. If the matrix has $m$ rows and $n$ columns, we say that the matrix is $m \times n$. Matrices are usually denoted by uppercase boldface letters such as $\mathbf{A}$. Such an $m \times n$ matrix $\mathbf{A}$ looks as follows:
+\begin{equation}
+\mathbf{A} =
+\begin{pmatrix} 
+  a_{11} & a_{12} & \dots  & a_{1n} \\
+  a_{21} & a_{22} & \dots  & a_{2n} \\
+  \vdots & \vdots & \ddots & \vdots \\
+  a_{m1} & a_{m2} & \dots  & a_{mn} 
+\end{pmatrix} 
+\end{equation}
+
+
+
+%Vectors can be used to represent locations and displacements aka translations. Translations are a specific kind of geometric transformation. A matrix represents a different kind of transformation, namely a \emph{linear transformation}, that we can apply to a vector. In geometric terms, linear transformations are scalings, rotations and shears. In this point of view, the columns of the matrices tell us, where the standard basis vectors will get mapped to (we'll see later what these are).
 
 ...TBC...
 
+
+% 
 
 % A matrix is a 2D array of numbers, i.e. a table with rows and columns. Each cell contains a number pretty much like in a spreadsheet.
 % the columns of the matrix say where the basis vectors go
@@ -920,6 +935,12 @@ The direct sum $\mathbf{C}$ of two matrices $\mathbf{A},\mathbf{B}$ is denoted b
 \end{pmatrix} 
 \end{equation}
 where the two $\mathbf{0}$s are zero matrices of appropriate shapes. ...TBC...
+
+% Equations:
+% tr(A \oplus B) = tr(A) + tr(B)
+% det(A \oplus B) = det(A)  det(B)
+%
+% See "Harmonic Analysis..." by Kyatkin/Chirijian, p. 327
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Vectorization of a Matrix}

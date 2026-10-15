@@ -135,6 +135,17 @@ Note how this is analogous to decompose a function $f(x)$ into its symmetric par
 
 % https://math.stackexchange.com/questions/2559915/decompose-matrix-a-into-its-symmetric-and-skew-symmetric-parts
 
+% In "Harmonic Analysis.." by Kyatkin/Chirikjian, p. 326, there's a decomposition of a 3x3 matrix as
+%   X = X_skew + X_sym1 + X_sym2
+% where
+%   X_sym1 = (1/3) tr(X) I, X_skew = (1/2) (X - X^T), X_sym2 = (1/2) (X + X^T)  -  (1/3) tr(X) I
+% This decomposition can be seen as the symmetric/antisymmetric decomposition in which the symmetric
+% part is further decomposed into a part X_sym1 that is a constant multiple of the identity and a
+% part X_sym2 that is traceless. ToDo: Figure out where the factor 1/3 comes from. Would it in 
+% general be 1/N for NxN matrices? Figure out why this matters. What special properties do 
+% traceless matrices have that make them useful?
+
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Matrix Splitting}
 Of course, we can always split a matrix $\mathbf{A}$ additively into a sum $\mathbf{A} = \mathbf{P + R}$ where $\mathbf{P}$ could literally be \emph{any} matrix whatsoever. We would just have to choose $\mathbf{R} = \mathbf{A - P}$. We can interpret $\mathbf{P}$ as "prescribed" or - if it arises from taking a part out of $\mathbf{A}$ - as "partial". Then we can interpret $\mathbf{R}$ as the "residual" or "rest" or "remainder" - "full matrix equals part plus rest" sounds pretty reasonable. For example, we could choose $\mathbf{P}$ to be the upper triangular part of $\mathbf{A}$, i.e. matrix where we just zero out all elements of $\mathbf{A}$ below the main diagonal. Then the residual $\mathbf{R}$ would be lower triangular with zeros on the diagonal. In the context of iterative numerical algorithms, it is sometimes desirable to split a matrix in such a way. Sometimes, we may also split a matrix into more than two summands. Examples for the application of such splitting methods are Jacobi- and Gauss-Seidel iterations.

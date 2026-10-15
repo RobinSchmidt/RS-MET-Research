@@ -44,7 +44,17 @@ As we have seen, a vector can be represented by a 1D array of numbers, i.e. a tu
   a_{m1} & a_{m2} & \dots  & a_{mn} 
 \end{pmatrix} 
 \end{equation}
-The numbers $a_{ij}$ where $i = 1, \ldots, m$ and $j = 1, \ldots, n$ are called the \emph{elements} or \emph{entries} of the matrix $\mathbf{A}$. Just like vectors, matrices have a geometric interpretation. Vectors can be used to represent locations and displacements aka translations. Translations are a specific kind of geometric transformation. A matrix represents a different kind of transformation, namely a \emph{linear transformation}, that we can apply to a vector. In geometric terms, linear transformations are scalings, rotations and shears. In this point of view, the columns of the matrices tell us, where the standard basis vectors will get mapped to (we'll see later what these are). In algebraic terms, a linear transformation is a transformation that satisfies the homogeneity and additivity requirements introduced on page \pageref{Def:Linearity}.
+The numbers $a_{ij}$ where $i = 1, \ldots, m$ and $j = 1, \ldots, n$ are called the \emph{elements} or \emph{entries} of the matrix $\mathbf{A}$. The matrix can also be seen as a row vector of column vectors. If we would want to be consistent with our notation of row vectors as tuples introduced above, we should write this as $\mathbf{A} = (\mathbf{a_1}, \mathbf{a_2}, \dots, \mathbf{a_n})$. Sometimes the commas are left out which case we would write it as:
+\begin{equation}
+\mathbf{A} = 
+\begin{pmatrix} 
+ \mathbf{a_1} & \mathbf{a_2} & \dots & \mathbf{a_n}
+\end{pmatrix} 
+\end{equation}
+This notation could perhaps be better justified when we interpret this as block matrix notation (which will be introduced later) rather than writing down a (row) vector of (column) vectors. Note that the index $k$ that appears in the vector $\mathbf{a_k}$ corresponds to the second index $j$, i.e. the column index in the $a_{ij}$.
+
+\medskip
+Just like vectors, matrices have a geometric interpretation. Vectors can be used to represent locations and displacements aka translations. Translations are a specific kind of geometric transformation. A matrix represents a different kind of transformation, namely a \emph{linear transformation}, that we can apply to a vector. In geometric terms, linear transformations are scalings, rotations and shears. In this point of view, the columns of the matrices tell us, where the standard basis vectors will get mapped to (we'll see later what these are). In algebraic terms, a linear transformation is a transformation that satisfies the homogeneity and additivity requirements introduced on page \pageref{Def:Linearity}.
 ...TBC...
 
 

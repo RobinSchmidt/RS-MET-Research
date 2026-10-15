@@ -1,0 +1,1 @@
+This folder has some subfolders like .ipynb_checkpoints that made it accidentally into the repo. Delete them. Ideally with their history - but that might be difficult and dangerous so maybe not. Then make sure that this mistake doesn't happen again by adding those folders to .gitignore. Or maybe do it the other way around.

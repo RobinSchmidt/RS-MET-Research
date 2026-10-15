@@ -34,7 +34,7 @@ where the right hand sides can be seen as an interpretation of what the tuple $(
 % https://www.youtube.com/watch?v=EQ5Xct2YyLk
 
 \paragraph{Matrices}
-As we have seen, a vector can be represented by a 1D array of numbers, i.e. a tuple. Linear transformations of vectors into other vectors (not necessarily of the same dimension) can be represented by a 2D array of numbers, i.e. a table with rows and columns. Each cell contains a number pretty much like in a spreadsheet. Such a rectangular table of numbers is called a \emph{matrix}. If the matrix has $m$ rows and $n$ columns, we say that the matrix is $m \times n$. Matrices are usually denoted by uppercase boldface letters such as $\mathbf{A}$. Such an $m \times n$ matrix $\mathbf{A}$ looks as follows:
+As we have seen, a vector can be represented by a 1D array of numbers, i.e. a tuple. Linear transformations of vectors into other vectors (not necessarily of the same dimension) can be represented by a 2D array of numbers, i.e. a table with rows and columns. Each cell contains a number pretty much like in a spreadsheet. Such a rectangular table of numbers is called a \emph{matrix}. If the matrix has $m$ rows and $n$ columns, we say that the matrix is "m-by-n" and denote this as $m \times n$. Matrices are usually denoted by uppercase boldface letters such as $\mathbf{A}$. Such an $m \times n$ matrix $\mathbf{A}$ looks as follows:
 \begin{equation}
 \mathbf{A} =
 \begin{pmatrix} 
@@ -44,15 +44,18 @@ As we have seen, a vector can be represented by a 1D array of numbers, i.e. a tu
   a_{m1} & a_{m2} & \dots  & a_{mn} 
 \end{pmatrix} 
 \end{equation}
-
-
-
-%Vectors can be used to represent locations and displacements aka translations. Translations are a specific kind of geometric transformation. A matrix represents a different kind of transformation, namely a \emph{linear transformation}, that we can apply to a vector. In geometric terms, linear transformations are scalings, rotations and shears. In this point of view, the columns of the matrices tell us, where the standard basis vectors will get mapped to (we'll see later what these are).
-
+The numbers $a_{ij}$ where $i = 1, \ldots, m$ and $j = 1, \ldots, n$ are called the \emph{elements} or \emph{entries} of the matrix $\mathbf{A}$. Just like vectors, matrices have a geometric interpretation. Vectors can be used to represent locations and displacements aka translations. Translations are a specific kind of geometric transformation. A matrix represents a different kind of transformation, namely a \emph{linear transformation}, that we can apply to a vector. In geometric terms, linear transformations are scalings, rotations and shears. In this point of view, the columns of the matrices tell us, where the standard basis vectors will get mapped to (we'll see later what these are). In algebraic terms, a linear transformation is a transformation that satisfies the homogeneity and additivity requirements introduced on page \pageref{Def:Linearity}.
 ...TBC...
 
 
-% 
+% Explain how a matrix can also be seen as a row vector of column vectors or vice versa, although the former is more common. Write it as:
+
+% \begin{pmatrix} 
+%   \mathbf{a_1} & \mathbf{a_2} & \dots & \mathbf{a_n}
+% \end{pmatrix} 
+
+% where .... wite out a_1, a_2, a_n as column vectors
+
 
 % A matrix is a 2D array of numbers, i.e. a table with rows and columns. Each cell contains a number pretty much like in a spreadsheet.
 % the columns of the matrix say where the basis vectors go

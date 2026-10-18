@@ -925,14 +925,17 @@ Two matrices $\mathbf{A}$ and $\mathbf{B}$ are said to be bi-orthogonal iff $\ma
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Block Matrices}
-Matrices whose entries are themselves also matrices (and not numbers as usual) are called block matrices. For example, such a block matrix could look like:
+Matrices whose entries are themselves also matrices (and not numbers as usual) are called block matrices. For example, such a block matrix $\mathbf{M}$ could look like:
 \begin{equation}
+\mathbf{M} = 
 \begin{pmatrix}
 \mathbf{A} & \mathbf{B} & \mathbf{C} \\
 \mathbf{D} & \mathbf{E} & \mathbf{F} 
 \end{pmatrix}
 \end{equation}
-The constituent matrices may or may not be of equal shape, but the shapes must be related in such a way that the tiling fits together [VERIFY]. For example, we could have $\mathbf{A} = 2 \times 4$,  $\mathbf{B} = 2 \times 2$, $\mathbf{C} = 2 \times 3$, $\mathbf{D} = 3 \times 4$, $\mathbf{E} = 3 \times 2$, $\mathbf{F} = 3 \times 3$. However, when we want to add or multiply two block matrices, not only must the outer matrix shapes be compatible but also the shapes of all the inner element-matrices. That may then actually constrain the shapes of the inner matrices some more. The constraints on the shapes really depend on what types of operations we want to perform with such block matrices. ...TBC...
+The constituent matrices may or may not be of equal shape, but the shapes must be related in such a way that the tiling fits together to form a rectangle [VERIFY]. For example, we could have $\mathbf{A} = 2 \times 4$,  $\mathbf{B} = 2 \times 2$, $\mathbf{C} = 2 \times 3$, $\mathbf{D} = 3 \times 4$, $\mathbf{E} = 3 \times 2$, $\mathbf{F} = 3 \times 3$. However, when we want to add or multiply two block matrices, not only must the outer matrix shapes be compatible but also the shapes of all the inner element-matrices. That may then actually constrain the shapes of the inner matrices some more. The constraints on the shapes really depend on what types of operations we want to perform with such block matrices. ...TBC...
+
+% ToDo: Figure out and explain under which circumstances the block structure (i.e. the subdivision into sub-matrices) is ignored and isntead we consider the whole matrix as a "flattened" 2D array of entries. I think, the interpretation as being structured into submatrices vs as flat matrix matters when we want to form products of block matrices. 
 
 % https://en.wikipedia.org/wiki/Block_matrix
 

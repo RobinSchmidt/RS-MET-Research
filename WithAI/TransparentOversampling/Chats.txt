@@ -16,3 +16,5 @@ Follow up questions:
 -Can you elaborate on the statement "Joint optimization of u and d, or a minimax criterion, would need an iterative method such as alternating between the two.". How exactly would that be done?
 
 -Are there any libraries specifically for that purpose?
+
+-Is it also possible to design u and d such that they are both the same kernel, i.e. u = d?

@@ -91,11 +91,11 @@ I could also look into mystran's Halite circuit simulator for prototyping such f
 could also look into Spice models and let AI translate those into realtime DSP code. 
 
 ----------------------------------------------------------------------------------------------------
-Anti Derivative anti Aliasing
+Anti Derivative Anti Aliasing (ADAA)
 
 Questions:
 
 - Ask the AI to write a little demonstration script using some common waveshaping functions like 
   tanh, hard-clip
 
-- Can this be applied to arbitrary functions (like in FuncShaper) using numerical intergration?
+- Can this be applied to arbitrary functions (like in FuncShaper) using numerical integration?

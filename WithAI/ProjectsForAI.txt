@@ -1,6 +1,13 @@
 In this text file, I collect some project ideas that may be suitable to approach with AI assistence.
 
 ----------------------------------------------------------------------------------------------------
+General Ideas
+
+- I think, AI can be great to translate from a scientific paper (such as DAFX, IEEE, etc.) to some 
+  working prototype code.
+
+
+----------------------------------------------------------------------------------------------------
 PDE Explorer
 
 Maybe try to write (or vibe code) a little interactive program (maybe in JS or Python as Jupyter
@@ -82,3 +89,13 @@ nonlinear variant of the SVF and/or the Ladder. Urs Heckmann has actually publis
 the public domain for a nonlinear Ladder filter. Maybe that could be used as starting point. Maybe
 I could also look into mystran's Halite circuit simulator for prototyping such filters. Maybe I
 could also look into Spice models and let AI translate those into realtime DSP code. 
+
+----------------------------------------------------------------------------------------------------
+Anti Derivative anti Aliasing
+
+Questions:
+
+- Ask the AI to write a little demonstration script using some common waveshaping functions like 
+  tanh, hard-clip
+
+- Can this be applied to arbitrary functions (like in FuncShaper) using numerical intergration?

@@ -91,7 +91,7 @@ I could also look into mystran's Halite circuit simulator for prototyping such f
 could also look into Spice models and let AI translate those into realtime DSP code. 
 
 ----------------------------------------------------------------------------------------------------
-Anti Derivative Anti Aliasing (ADAA)
+AntiDerivAntiAlias - Anti Derivative Anti Aliasing (ADAA)
 
 Questions:
 
@@ -99,3 +99,10 @@ Questions:
   tanh, hard-clip
 
 - Can this be applied to arbitrary functions (like in FuncShaper) using numerical integration?
+
+----------------------------------------------------------------------------------------------------
+PoylRoots - Polynomial Root Finders
+
+Let the AI generate code snippets for various polynomial root finding algorithms such as Laguerre,
+Jenkins-Traub, etc. Ask it about the pros and cons of the various methods anf for a recommendation
+for what to use by defualt. What do scientific software packages such as SciPy and MatLab use?

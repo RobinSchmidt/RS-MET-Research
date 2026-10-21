@@ -24,3 +24,21 @@ To my question about how to choose the integration constants:
 It may make sense to choose then in such a way that the antiderivatives have a value of zero at x=0.
 Additionally, they need to be consistent, i.e. F2' must be F1 exactly.
 
+
+
+At the start, it says:
+
+"
+The ADAA approach:
+
+- Treat x(t) as a continuous, piecewise-linear interpolation of the samples.
+
+- Apply f to that continuous signal, giving y(t) = f(x(t)).
+
+- Low-pass filter y(t) with a one-sample-wide moving-average (box) filter, then sample the result.
+"
+
+which makes me think that maybe using the simple linear interpolation approach, i.e. using a 3 
+sample long upsampling filter u[n] together with a 5 sample long downsampling filter d[n] (for 2x
+oversampling) might be viable for transparent oversampling as well. Try it!
+

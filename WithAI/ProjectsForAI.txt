@@ -39,7 +39,7 @@ sets up, what "now" means such that the plot always shows the entire history up 
 waterfall plot. 
 
 ----------------------------------------------------------------------------------------------------
-Transparent Oversampling
+Transparent Oversampling (partially done)
 
 Use an interactive chat with a mathematically and algorithmically well versed AI model to figure out
 hwo to implement the transparent oversampling idea explained here:
@@ -105,4 +105,30 @@ PoylRoots - Polynomial Root Finders
 
 Let the AI generate code snippets for various polynomial root finding algorithms such as Laguerre,
 Jenkins-Traub, etc. Ask it about the pros and cons of the various methods anf for a recommendation
-for what to use by defualt. What do scientific software packages such as SciPy and MatLab use?
+for what to use by default. What do scientific software packages such as SciPy and MatLab use?
+
+
+----------------------------------------------------------------------------------------------------
+Misc
+
+- Finding roots of (weighted) sums of polynomials p(x),q(x) when the roots of p and q are known 
+  without resorting to conversion to coefficient form and throwing a general root finder at it. 
+  
+- Implement closed form solution formulas for cubic and quartic equations.
+
+- Turn the list of open source audio software projects into a database with website.
+
+- Fix the VST3 build for ToolChain.
+
+- Explore how to find good L-systems for SnowFlake.
+
+- Explore the idea with the recurrent activation network. How could such a network learn? Is the 
+  idea biologically plausible?
+  
+- Create manim animations.
+
+- Create TikZ figures.
+
+- Help with sections for the math book.
+
+- Figure out hwo allpass FDNs work.

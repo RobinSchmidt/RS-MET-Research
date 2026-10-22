@@ -122,6 +122,12 @@ Misc
 
 - Turn the list of open source audio software projects into a database with website.
 
+- Fix that ugly JUCE hack where I removed the "final" qualifier from JUCE::Image because I created
+  a subclass of it form my pixel fonts. Aks AI for a better solution. Ask AI about the purpose of
+  that "final" qualifier.
+
+- Update the codebase to the current version of JUCE.
+
 - Fix the VST3 build for ToolChain.
 
 - MIDI export for AcidDevil. (1) Conversion of the AcidSequence into a JUCE MIDI message list (or
@@ -154,3 +160,12 @@ Misc
 
 - FFT load spreading algo for fast convolution. Single threaded and multi threaded. For the single
   threaded version, the FFT algorithm itself needs an API that allows it to do partial FFTs.
+  
+- Figure out a general scheme to replace aliasing with noise. Maybe it could be based on irregular
+  resampling, i.e. taking a nominal sample fs and changing it from sample to sample randomly in a 
+  range fs-df...fs+df for some frequency delta df. Or maybe fs/r...fs*r for some ratio r. Or maybe
+  an irregular sampling interval T-dt...T+dT where T = 1/fs. Maybe try to create a naive sawtooth
+  oscillator first. Maybe it should have a modified API  getSample(double dt)  to create samples.
+  Look at the filters for irregular sampled data and mimic the API of those. Compare the results to
+  the pitch-dithered saw. Experiment with different probability distributions - maybe try Irwin-Hall
+  of various orders. Resampling to a regular rate could be done by linear or cubic interpolation.

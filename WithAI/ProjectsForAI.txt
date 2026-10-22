@@ -6,6 +6,10 @@ General Ideas
 - I think, AI can be great to translate from a scientific paper (such as DAFX, IEEE, etc.) to some 
   working prototype code.
 
+- I asked Google (Gemini) what AI model would be best for DSP algorithm development and the winner
+  seems to be OpenAI o3-mini (as of october 2026):
+  https://share.google/aimode/QvGDLp7B2pP8mpJWM
+  ...unfortunately, it's not available in my current GitHub Copilot tier.
 
 ----------------------------------------------------------------------------------------------------
 PDE Explorer
@@ -120,6 +124,10 @@ Misc
 
 - Fix the VST3 build for ToolChain.
 
+- MIDI export for AcidDevil. (1) Conversion of the AcidSequence into a JUCE MIDI message list (or
+  whatever it is called). (2) Conversion to a JUCE::String containing the content of the .mid file.
+  (3) Save the .mid file to disk.  ...and create a button for all of that on the GUI.
+
 - Explore how to find good L-systems for SnowFlake.
 
 - Explore the idea with the recurrent activation network. How could such a network learn? Is the 
@@ -129,6 +137,20 @@ Misc
 
 - Create TikZ figures.
 
-- Help with sections for the math book.
+- Help with sections for the math book. Not for actually writing them up but for helping me to
+  understand the concepts so I can write them down in my own words.
 
-- Figure out hwo allpass FDNs work.
+- Figure out how allpass FDNs work.
+
+- Compute spectrograms with time/frequency reassignment.
+
+- Talk about math ideas like Polya potentials and quantifying set sizes by growth rate.
+
+- Translation of LAPack to C++
+
+- Implementation of advanced linear algebra algorithms.
+
+- HRTF spatializer
+
+- FFT load spreading algo for fast convolution. Single threaded and multi threaded. For the single
+  threaded version, the FFT algorithm itself needs an API that allows it to do partial FFTs.

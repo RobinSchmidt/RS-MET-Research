@@ -185,3 +185,24 @@ Misc
   of various orders. Resampling to a regular rate could be done by linear or cubic interpolation.
   
 - Figure out how to make a nonlinear version of the ZDF-SVF.
+
+- Add responses of 1st order LP, HP, LS, HS, AP types to the (linear) SVF.
+
+- Figure out how to morph between various response types.
+
+- Ask AI how to write realtime audio plugins and DSP code in Rust. What would be the appropriate 
+  analog of a class like rsStateVariableFilter. How would the API look like? I want an object that
+  holds the (filter) algorithm's state, I want setup functions, I want some sort of getSample() 
+  function to produce one audio sample at a time, optionally also a processBlock() function, inquiry
+  functions like getMagnitudeAt(), etc. I also would like the code to be generic - what is the 
+  analog of C++ templates? My current approach to an API of a DSP obects is to have the following 
+  kinds of member functions: 
+  
+    Lifetime:    constructors, copy/move assignment, destructors, factory functions
+    Setup:       setters
+    Inquiry:     getters
+    Processing:  the actual DSP, getSample(), reset(), processBlock(), ...
+    Helpers:     utility functions, often static for reuse in other contexts
+    Internals:   internal functions, not part public API
+    
+  How would one do something similar in Rust?

@@ -1,2 +1,158 @@
 These are generated  code snippets that are supposed to work as drop in replacements of the
 corresponding member functions in my rsStateVariableFilter class.
+
+----------------------------------------------------------------------------------------------------
+1st version
+
+// Sketch only. Assumes TSig is a float type and tanh is available.
+inline void getPartialOutputsNL(TSig in, TSig* yL, TSig* yB, TSig* yH)
+{
+  TSig u = (in - c*z1 - z2) * s;           // warm start: the linear solution
+  for(int i = 0; i < numIterations; i++)   // typically 1..3 are enough
+  {
+    TSig tu  = tanh(u);
+    TSig b   = z1 + g*tu;
+    TSig tb  = tanh(b);
+    TSig l   = z2 + g*tb;
+    TSig F   = u - (in - r*b - l);
+    TSig db  = g*(1 - tu*tu);
+    TSig dl  = g*(1 - tb*tb)*db;
+    u -= F / (1 + r*db + dl);
+  }
+  TSig tu = tanh(u);
+  *yH = u;
+  *yB = z1 + g*tu;
+  *yL = z2 + g*tanh(*yB);
+  z1 = 2 * *yB - z1;
+  z2 = 2 * *yL - z2;
+}
+
+----------------------------------------------------------------------------------------------------
+2nd version:
+
+// Members to add to the class:
+int  numIterations = 2;   // Number of Newton iterations (1..3 is usually enough)
+TSig drive         = 1;   // Input gain: how hard the signal hits the nonlinearities
+
+// Derivative of tanh, given the already computed value th = tanh(x):
+static TSig tanhDerivative(TSig th) { return 1 - th*th; }
+
+
+// Variant A: Saturation at the integrator inputs (OTA-style). This models the OTA output current 
+// saturating, as in the SEM and OTA-C filters. It also makes the cutoff shift with level.
+inline void getPartialOutputsNL_A(TSig in, TSig* yL, TSig* yB, TSig* yH)
+{
+  TSig x = drive * in;                      // drive-scaled input
+
+  // Initial guess for u: the solution of the linear filter (closed form)
+  TSig u = (x - c*z1 - z2) * s;
+
+  // Solve F(u) = u - (x - r*yB(u) - yL(u)) = 0 by Newton iteration:
+  for(int i = 0; i < numIterations; i++)
+  {
+    TSig tu  = tanh(u);                     // saturated input of integrator 1
+    TSig b   = z1 + g*tu;                   // yB as function of u
+    TSig tb  = tanh(b);                     // saturated input of integrator 2
+    TSig l   = z2 + g*tb;                   // yL as function of u
+
+    TSig F   = u - (x - r*b - l);           // residual of the loop equation
+    TSig db  = g * tanhDerivative(tu);      // d yB / d u
+    TSig dl  = g * tanhDerivative(tb) * db; // d yL / d u
+    TSig dF  = 1 + r*db + dl;               // dF/du, always >= 1 (well conditioned)
+
+    u -= F / dF;                            // Newton step
+  }
+
+  // Final outputs from the converged u:
+  TSig tu = tanh(u);
+  *yH = u;
+  *yB = z1 + g*tu;
+  *yL = z2 + g*tanh(*yB);
+
+  // Trapezoidal state update (same as the linear filter):
+  z1 = 2 * *yB - z1;                        // == z1 + 2*g*tanh(yH)
+  z2 = 2 * *yL - z2;                        // == z2 + 2*g*tanh(yB)
+}
+
+
+// Variant B: Saturation in the damping/resonance path. The integrators stay linear. Only the 
+// feedback r*yB is saturated, so the resonance is bounded and self-oscillation settles at a finite
+// amplitude. The equation is scalar and cheap.
+inline void getPartialOutputsNL_B(TSig in, TSig* yL, TSig* yB, TSig* yH)
+{
+  TSig x = drive * in;
+
+  // Initial guess: the linear solution
+  TSig u = (x - c*z1 - z2) * s;
+
+  // The integrators are linear here, so as functions of u:
+  //   yB(u) = z1 + g*u
+  //   yL(u) = z2 + g*yB(u) = z2 + g*z1 + g*g*u
+  // Loop equation: F(u) = u - (x - r*tanh(yB(u)) - yL(u)) = 0
+  for(int i = 0; i < numIterations; i++)
+  {
+    TSig b   = z1 + g*u;                    // yB as function of u
+    TSig tb  = tanh(b);                     // saturated damping feedback signal
+    TSig l   = z2 + g*b;                    // yL as function of u
+
+    TSig F   = u - (x - r*tb - l);          // residual
+    TSig dF  = 1 + r*g*tanhDerivative(tb) + g*g;  // dF/du, always >= 1 + g*g
+
+    u -= F / dF;
+  }
+
+  *yH = u;
+  *yB = z1 + g * *yH;
+  *yL = z2 + g * *yB;
+
+  z1 = 2 * *yB - z1;
+  z2 = 2 * *yL - z2;
+}
+
+
+// Variant C: Static saturation at input and/or output. There is no feedback interaction here. These
+// are waveshapers around the linear core. They are cheap, but they don't shift the cutoff or shape 
+// the resonance. They are useful for drive and for modeling op-amp stages.
+inline TSig getSampleNL_C(TSig in)
+{
+  TSig x = tanh(drive * in);                // input stage saturation
+  TSig yL, yB, yH;
+  getPartialOutputs(x, &yL, &yB, &yH);      // your existing linear core
+  TSig y = aH*yH + aB*yB + aL*yL;           // mix as in getSample()
+  return tanh(y);                           // output stage saturation (optional)
+}
+
+
+// Variant D: A + B combined. This is the most realistic of the four. It has OTA saturation in both
+// integrators and a saturated damping path.
+inline void getPartialOutputsNL_D(TSig in, TSig* yL, TSig* yB, TSig* yH)
+{
+  TSig x = drive * in;
+  TSig u = (x - c*z1 - z2) * s;             // initial guess: linear solution
+
+  // Loop equation: F(u) = u - (x - r*tanh(yB(u)) - yL(u)) = 0 with
+  //   yB(u) = z1 + g*tanh(u)
+  //   yL(u) = z2 + g*tanh(yB(u))
+  for(int i = 0; i < numIterations; i++)
+  {
+    TSig tu  = tanh(u);                     // saturated input of integrator 1
+    TSig b   = z1 + g*tu;                   // yB(u)
+    TSig tb  = tanh(b);                     // used both for integrator 2 and damping
+    TSig l   = z2 + g*tb;                   // yL(u)
+
+    TSig F   = u - (x - r*tb - l);          // residual
+    TSig db  = g * tanhDerivative(tu);      // d yB / d u
+    TSig dtb = tanhDerivative(tb) * db;     // d tanh(yB) / d u
+    TSig dF  = 1 + r*dtb + g*dtb;           // dF/du (the damping and integrator 2
+                                            // terms share the same derivative here)
+    u -= F / dF;
+  }
+
+  TSig tu = tanh(u);
+  *yH = u;
+  *yB = z1 + g*tu;
+  *yL = z2 + g*tanh(*yB);
+
+  z1 = 2 * *yB - z1;
+  z2 = 2 * *yL - z2;
+}

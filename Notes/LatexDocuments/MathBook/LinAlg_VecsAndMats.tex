@@ -606,6 +606,9 @@ A square matrix is defined to be symmetric if it is equal to its own transpose: 
 % Give fomrula for invers of transpose and/or for (AB)^T = B^T A^T iirc
 % Symmetry means that $a_{ij} = a_{ji}$ for all $i,j$
 
+% ToDo: Give examples of where symmetric matrices occur in practice:
+% covariance matrices, matrices in least squares problems, stiffness matrices, Jacobian matrices, ...
+
 \paragraph{Antisymmetric Matrices}
 A square matrix is defined to be antisymmetric if $a_{ij} = -a_{ji}$ for all pairs $i,j$. For the diagonal elements, they only way that $a_{ii} = -a_{ii}$ can happen is when $a_{ii} = 0$. So, antisymmetric matrices necessarily have all zeros on their diagonal.
 
@@ -635,7 +638,7 @@ A unitary matrix is one whose Hermitian transpose is equal to its inverse: $\mat
 %https://mathworld.wolfram.com/HermitianMatrix.html
 
 \paragraph{Definite Matrices}
-A matrix $\mathbf{A}$ is said to be \emph{positive definite} if for every nonzero vector $\mathbf{x}$, the sandwich product of the vector with that matrix is positive: $\forall \mathbf{x \neq 0}: \; \mathbf{x}^T \mathbf{A x} > 0$. It's called \emph{positive semidefinite} if $\mathbf{x}^T \mathbf{A x} \geq 0$, \emph{negative definite} if $\mathbf{x}^T \mathbf{A x} < 0$ and \emph{negative semidefinite} if $\mathbf{x}^T \mathbf{A x} \leq 0$. I believe that I have heard the term "definite" without any qualifiers being used for matrices that satisfy $\mathbf{x}^T \mathbf{A x} \neq 0$ for all nonzero vectors $\mathbf{x}$ [VERIFY!]. TODO: explain indefinite and what definiteness implies for the eigenvalues
+A matrix $\mathbf{A}$ is said to be \emph{positive definite} if for every nonzero vector $\mathbf{x}$, the sandwich product of the vector with that matrix is positive: $\forall \mathbf{x \neq 0}: \; \mathbf{x}^T \mathbf{A x} > 0$. It's called \emph{positive semidefinite} if $\mathbf{x}^T \mathbf{A x} \geq 0$, \emph{negative definite} if $\mathbf{x}^T \mathbf{A x} < 0$ and \emph{negative semidefinite} if $\mathbf{x}^T \mathbf{A x} \leq 0$. I believe that I have heard the term "definite" without any qualifiers being used for matrices that satisfy $\mathbf{x}^T \mathbf{A x} \neq 0$ for all nonzero vectors $\mathbf{x}$ [VERIFY!]. TODO: explain indefinite and what definiteness implies for the eigenvalues, explain that definiteness means: no saddle-like behavior, i.e. we have an extremum in the quadratic form  $x^T A x$
 
 % It was here - at 15:35:
 % https://www.youtube.com/watch?v=qwsvXa7nIGg
@@ -677,6 +680,23 @@ A matrix $\mathbf{A}$ is said to be \emph{positive definite} if for every nonzer
 % https://www.youtube.com/watch?v=8gNKE5jVqYY
 % -Explains the connection between matrices and graphs.
 % -A matrix in Frobenius normal form correponds to a graph that is not strongly connected (verify!)
+
+% In maybe applications, we see matrices that symmetric _and_ positive definite so maybe make a
+% paragraph about that specific combination of features. Maybe make little sections for other
+% important combinations, too. Or maybe juts make a signle section about important combinations
+% of features. Maybe make a table with matrices coming from applications (covariance, Jacobian, 
+% optimization, stress/strain? ...) with checkboxes, which features they have like so:
+%
+%                 sym  pos .....
+% Covariance       *    *
+% Jacobian         *    ?
+% Lest Squares     *    *
+% ...
+
+% See:
+% LU Decomposition vs Cholesky Decomposition — Explained Visually!
+% https://www.youtube.com/watch?v=4L5-qsAn9ow
+
 
 
 %---------------------------------------------------------------------------------------------------

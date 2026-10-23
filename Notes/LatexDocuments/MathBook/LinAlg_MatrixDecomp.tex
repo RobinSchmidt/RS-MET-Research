@@ -16,6 +16,21 @@ The LU-decomposition decomposes the matrix into a product $\mathbf{A = L U}$ whe
 % Maybe make a subsection about Gaussian Elimination and another one as
 % LU as Gauss with Receipts
 
+% LU Decomposition vs Cholesky Decomposition — Explained Visually!
+% https://www.youtube.com/watch?v=4L5-qsAn9ow
+
+%===================================================================================================
+\subsection{Cholesky Decomposition}
+
+% Applicable only to symmetric psotoive definite matrices. There, it is more efficient than general
+% LU decomp. They tend to come up in applications often enough that it is worthwhile to have a 
+% specialized algorithm for them. The factorization is  A = L L^T  whe L is lower triangular. For
+% symmetric but non-positive definite matrices, we can do a factorization as  A = L D L^T for a 
+% diagonal matrix D.
+% For symmetric matrices, the Cholesky decomposition can serve as test form positive definiteness.
+% If it ever encounters a non-positive pivot, the matrix is not positive definite.
+
+
 %===================================================================================================
 \subsection{QR Decomposition}
 % Orthonormal, Upper Triangular

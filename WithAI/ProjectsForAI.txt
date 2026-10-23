@@ -190,6 +190,9 @@ Misc
 
 - Figure out how to morph between various response types.
 
+- How do feedback compressors work? In which ways do they sound different from feedfroward 
+  compressors? Can you give me example code for both?
+
 - Ask AI how to write realtime audio plugins and DSP code in Rust. What would be the appropriate 
   analog of a class like rsStateVariableFilter. How would the API look like? I want an object that
   holds the (filter) algorithm's state, I want setup functions, I want some sort of getSample() 

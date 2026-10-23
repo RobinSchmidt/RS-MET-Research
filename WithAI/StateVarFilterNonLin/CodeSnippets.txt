@@ -1,0 +1,2 @@
+These are generated  code snippets that are supposed to work as drop in replacements of the
+corresponding member functions in my rsStateVariableFilter class.

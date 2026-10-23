@@ -125,6 +125,20 @@ Misc
 - Fix that ugly JUCE hack where I removed the "final" qualifier from JUCE::Image because I created
   a subclass of it form my pixel fonts. Aks AI for a better solution. Ask AI about the purpose of
   that "final" qualifier.
+  
+- Fix the ugly hack where I use raw pointers for the XML state management where JUCE wants me to use
+  smart pointers and I just strip off the smart-pointer wrapper. Maybe before fixing that, implement
+  a unit test that sets up some of my AudioModules (maybe start with simple ones but then also use 
+  more complex ones). Check, if the state is correctly retrieved as xml and correctly restored from
+  the xml.
+  
+- Let the AI help with making the API of rapt, rosic and jura consistent. Firstly, lets create an
+  overview over the inconsistencies to fix. Secondly, create a plan how to modify the code. The plan
+  should involve creating unit tests before making the changes such that we can verify that we did 
+  not break anything. Also, before actually making any changes, make a plan what to change where and
+  document that plan somewhere. The most dangerous changes are those that silently break the 
+  functionality such as changing the order of function parameters especially when they have the same 
+  type.
 
 - Update the codebase to the current version of JUCE.
 
@@ -169,3 +183,5 @@ Misc
   Look at the filters for irregular sampled data and mimic the API of those. Compare the results to
   the pitch-dithered saw. Experiment with different probability distributions - maybe try Irwin-Hall
   of various orders. Resampling to a regular rate could be done by linear or cubic interpolation.
+  
+- Figure out how to make a nonlinear version of the ZDF-SVF.

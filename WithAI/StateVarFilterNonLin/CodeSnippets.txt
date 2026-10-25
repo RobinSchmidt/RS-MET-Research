@@ -1,5 +1,20 @@
 These are generated  code snippets that are supposed to work as drop in replacements of the
-corresponding member functions in my rsStateVariableFilter class.
+member function getPartialOutputs() in my rsStateVariableFilter class. My original code for the 
+linear SVF is this:
+
+template<class TSig, class TPar>
+inline void rsStateVariableFilter<TSig, TPar>::getPartialOutputs(
+  TSig in, TSig* yL, TSig* yB, TSig* yH)
+{
+  // Compute HP, BP and LP outputs:
+  *yH = (in - c*z1 - z2) * s;            // == (in - (g+r)*z1 - z2) / (1 + g*(g+r))
+  *yB = z1 + g * *yH;
+  *yL = z2 + g * *yB;
+
+  // Update integrator state variables:
+  z1 = 2 * *yB - z1;                     // Equivalent to: z1 += 2 * g * *yH
+  z2 = 2 * *yL - z2;                     // Equivalent to: z2 += 2 * g * *yB
+}
 
 ----------------------------------------------------------------------------------------------------
 1st version
@@ -108,6 +123,8 @@ inline void getPartialOutputsNL_B(TSig in, TSig* yL, TSig* yB, TSig* yH)
   z1 = 2 * *yB - z1;
   z2 = 2 * *yL - z2;
 }
+
+// Q: Why is r*yB called the feedback signal? Don't we have 2 feedback paths via z1 and z2?
 
 
 // Variant C: Static saturation at input and/or output. There is no feedback interaction here. These

@@ -1961,6 +1961,31 @@ void testPitchDitherSuperSaw()
 }
 
 
+void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
+{
+  // Stub
+
+  // Here, we implement an idea that is similar in spirit to the pitch-dithering method but more 
+  // generally applicable. Instead of dithering the cycle length, we use a randomized non-uniform
+  // sampling approach. That is, we voluntarily introduce a significant amount of jitter into our 
+  // internal sample rate and then resample the result to a regular sample rate. The hope is that 
+  // the jittering of the sampling intervals has a similar effect as the dithering of the cycle 
+  // lengths. Dithering cycle lengths is something that can be applied to oscillators only but 
+  // jittering the sampling interval is something, that might potentially be applicable to any DSP
+  // algorithm. We try it first on a sawtooth osc here, though, because that seems to be the 
+  // simplest thing to do. 
+  //
+  // ...TBC...
+
+
+
+  // ToDo:
+  // 
+  // - In a next step, we may try to apply it to waveshaping distortion. That will involve to 
+  //   first resampling the signal to the irregular sample rate, then applying the distortion, 
+  //   then resampling back to the original, regular rate.
+}
+
 //-------------------------------------------------------------------------------------------------
 
 void testGaussBlurFIR()

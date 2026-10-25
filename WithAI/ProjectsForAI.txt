@@ -6,6 +6,8 @@ General Ideas
 - I think, AI can be great to translate from a scientific paper (such as DAFX, IEEE, etc.) to some 
   working prototype code.
 
+- Maybe AI can also translate between a recursive and iterative implementation of an algorithm?
+
 - I asked Google (Gemini) what AI model would be best for DSP algorithm development and the winner
   seems to be OpenAI o3-mini (as of october 2026):
   https://share.google/aimode/QvGDLp7B2pP8mpJWM
@@ -166,11 +168,17 @@ Misc
 
 - Talk about math ideas like Polya potentials and quantifying set sizes by growth rate.
 
-- Translation of LAPack to C++
+- Translation of LAPack to C++. Maybe it should use the double-precision complex implementation.
 
-- Implementation of advanced linear algebra algorithms.
+- Implementation of advanced linear algebra algorithms from scratch. Eigendecomposition, SVD, Jordan
+  Normal Form, etc.
 
-- HRTF spatializer
+- HRTF spatializer. Maybe it should create a parameterized (in terms of spherical coordinates) IIR 
+  approximation of the HRTF. Alternatively, it could use a library of recorded HRTFs and somehow
+  interpolate between them according to the parameters. Distance could perhaps be modeled via a 
+  combination of gain, high damping and reverb (but that obviously require a reverb algorithm 
+  which is actually a bit out of scope - but maybe the client code could drop in their own reverb
+  algo like in a plugin slot. Maybe the API could just produce gain factors for dry and wet signal)
 
 - FFT load spreading algo for fast convolution. Single threaded and multi threaded. For the single
   threaded version, the FFT algorithm itself needs an API that allows it to do partial FFTs.
@@ -184,7 +192,8 @@ Misc
   the pitch-dithered saw. Experiment with different probability distributions - maybe try Irwin-Hall
   of various orders. Resampling to a regular rate could be done by linear or cubic interpolation.
   
-- Figure out how to make a nonlinear version of the ZDF-SVF.
+- Figure out how to make a nonlinear version of the ZDF-SVF. 
+  ...Done. Needs tests.
 
 - Add responses of 1st order LP, HP, LS, HS, AP types to the (linear) SVF.
 

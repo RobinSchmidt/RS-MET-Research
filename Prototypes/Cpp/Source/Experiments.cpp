@@ -1961,7 +1961,7 @@ void testPitchDitherSuperSaw()
 }
 
 
-void testRandomSamplingSaw()  // Maybe rename it testJitterSaw()
+void testJitterSaw()
 {
   // Here, we implement an idea that is similar in spirit to the pitch-dithering method but more 
   // generally applicable. Instead of dithering the cycle length, we use a randomized non-uniform

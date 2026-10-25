@@ -17,7 +17,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testKalmanFilter();                // Under construction - doesn't work yet
   //testPitchDithering();              // Pitch dithering waveforms (mostly saw)
   //testPitchDitherSuperSaw();         // Pitch dither applied to the supersaw
-  testRandomSamplingSaw();             // Under construction
+  testJitterSaw();                     // Sawtooth with sample-rate jittering
 
 
   // Image processing:

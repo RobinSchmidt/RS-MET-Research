@@ -17,7 +17,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testKalmanFilter();                // Under construction - doesn't work yet
   //testPitchDithering();              // Pitch dithering waveforms (mostly saw)
   //testPitchDitherSuperSaw();         // Pitch dither applied to the supersaw
-  testRandomSamplingSaw();             // Stub
+  testRandomSamplingSaw();             // Under construction
 
 
   // Image processing:
@@ -122,7 +122,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPairingFunctions();
   //testOrdinals();
 
-  testGeneralizedCollatz();
+  //testGeneralizedCollatz();
   //testPowerCommutator();
   //testParticleSystem();
   //testWeightedAverages();
@@ -182,7 +182,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Misc:
   //testMerge();  // Trying to find an in-place merge algorithm - not sure, if that's possible, though
-  testRecurrentNetwork();                 // Stub
+  //testRecurrentNetwork();                 // Stub
 
 
   //testGaussIntRoots();                  // stub

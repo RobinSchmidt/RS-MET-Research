@@ -1963,7 +1963,7 @@ void testPitchDitherSuperSaw()
 
 void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
 {
-  // Stub
+  // Under construction. Does not yet work.
 
   // Here, we implement an idea that is similar in spirit to the pitch-dithering method but more 
   // generally applicable. Instead of dithering the cycle length, we use a randomized non-uniform
@@ -1976,24 +1976,57 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
   // simplest thing to do.
 
   // Types:
-  using Real = double;
-  using Vec  = std::vector<Real>;
+  using Real   = double;
+  using Vec    = std::vector<Real>;
+  using Phasor = rsJitteredPhasor<Real>;
 
-  // Setup:
-  Real fs     = 44100.0;     // Output sample rate
-  Real jitter =     0.1;     // Amount of jitter
+  // Parameters:
+  Real fs         = 44100.0;     // Output sample rate
+  Real freq       =   100.0;     // Oscillator frequency
+  Real jitter     =     0.1;     // Amount of jitter
+  int  numSamples =  1000;       // Number of samples to produce
 
   // Internal variables:
-  //Real T  = 1 / fs;          // Nominal sampling interval.
-  //Real dT = jitter * T;      // We use time steps dt in the interval T-dT...T+dT
+  //Real T  = 1 / fs;            // Nominal sampling interval.
+  //Real dT = jitter * T;        // We use time steps dt in the interval T-dT...T+dT
+  // Obsolete! We now work with a normalized value of dt where dt = 1 means time moves forward one
+  // time step per sample. We don't consider the time steps to be in units of seconds anymore.
 
+  // Allocations, setup, initialization:
+  int N = numSamples;
+  Vec t(N);                      // Time axis
+  Vec x(N);                      // Non-uniformly sampled (jittered) output
+  Vec y(N);                      // Uniformly resampled output
+  rsRandomGenerator<Real> prng;
+  Phasor phs;
+  phs.setPhaseSlope(fs/freq);;   // Verify! Sets up nominal frequency
 
+  // Produce jittered signal:
+  t[0] = 0;
+  x[0] = phs.getSample();
+  for(int n = 1; n < N; n++)
+  {
+    // Compute randomized length of time step:
+    Real r = prng.getSampleInUnitRange();  // Preliminary! Is in range [0,1) but should be in [0,1]
+    r = 2*r + 1;                           // [0,1] -> [-1,+1]
+    Real dt = 1 + (r * jitter);            // dt = 1 +- r * jitter
 
+    // Compute current time and jittered saw output
+    t[n] = t[n-1] + dt;
+    x[n] = phs.getSample(dt);               // Prelimimary! Is in 0..1 but should be in -1..+1
+  }
 
-
+  // Resample jittered signal to uniform sample rate using linear interpolation:
   // ...TBC...
 
+  // Plot results:
+  rsPlotVectorsXY(t, x);
 
+  // Observations:
+  // 
+  // - The output still looks completely wrong. The code does not yet work at all.
+  //
+  //
   // ToDo:
   // 
   // - Maybe work with two fixed sample rates: (1) The eventual target sample rate, (2) An 
@@ -2002,6 +2035,7 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
   // - In a next step, we may try to apply it to waveshaping distortion. That will involve to 
   //   first resampling the signal to the irregular sample rate, then applying the distortion, 
   //   then resampling back to the original, regular rate.
+  // 
   //
   // See:
   //

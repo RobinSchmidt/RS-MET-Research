@@ -1973,13 +1973,28 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
   // lengths. Dithering cycle lengths is something that can be applied to oscillators only but 
   // jittering the sampling interval is something, that might potentially be applicable to any DSP
   // algorithm. We try it first on a sawtooth osc here, though, because that seems to be the 
-  // simplest thing to do. 
-  //
+  // simplest thing to do.
+
+  // Types:
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+  // Setup:
+  Real fs     = 44100.0;     // Output sample rate
+  Real jitter =     0.1;     // Amount of jitter
+
+  // Internal variables:
+  Real T  = 1 / fs;          // Nominal sampling interval.
+  Real dT = jitter * T;      // We use time steps dt in the interval T-dT...T+dT
+
+
   // ...TBC...
 
 
-
   // ToDo:
+  // 
+  // - Maybe work with two fixed sample rates: (1) The eventual target sample rate, (2) An 
+  //   oversampled rate that is used to determine the internal nominal sampling interval T.
   // 
   // - In a next step, we may try to apply it to waveshaping distortion. That will involve to 
   //   first resampling the signal to the irregular sample rate, then applying the distortion, 

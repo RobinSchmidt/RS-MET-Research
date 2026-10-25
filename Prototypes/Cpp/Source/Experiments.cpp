@@ -1961,10 +1961,8 @@ void testPitchDitherSuperSaw()
 }
 
 
-void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
+void testRandomSamplingSaw()  // Maybe rename it testJitterSaw()
 {
-  // Under construction. Does not yet work.
-
   // Here, we implement an idea that is similar in spirit to the pitch-dithering method but more 
   // generally applicable. Instead of dithering the cycle length, we use a randomized non-uniform
   // sampling approach. That is, we voluntarily introduce a significant amount of jitter into our 
@@ -1982,15 +1980,9 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
 
   // Parameters:
   Real fs         = 44100.0;     // Output sample rate
-  Real freq       =   100.0;     // Oscillator frequency
-  Real jitter     =     0.25;    // Amount of jitter
+  Real freq       =  1000.0;     // Oscillator frequency
+  Real jitter     =     0.5;     // Amount of jitter
   int  numSamples =  2000;       // Number of samples to produce
-
-  // Internal variables:
-  //Real T  = 1 / fs;            // Nominal sampling interval.
-  //Real dT = jitter * T;        // We use time steps dt in the interval T-dT...T+dT
-  // Obsolete! We now work with a normalized value of dt where dt = 1 means time moves forward one
-  // time step per sample. We don't consider the time steps to be in units of seconds anymore.
 
   // Allocations, setup, initialization:
   int N = numSamples;
@@ -2008,14 +2000,14 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
   for(int n = 1; n < N; n++)
   {
     // Compute randomized length of time step:
-    Real r = prng.getSampleInUnitRange();  // Preliminary! Is in range [0,1) but should be in [0,1]
+    Real r = prng.getSampleInUnitRange();  // Preliminary! Is in [0,1) but should be in [0,1].
     r = 2*r - 1;                           // [0,1] -> [-1,+1]
     Real dt = 1 + (r * jitter);            // dt = 1 +- r * jitter
 
     // Compute current time and jittered saw output
     tj[n] = tj[n-1] + dt;                  // Jittered time axis.
     Real p = phs.getSample(dt);            // Normalized phase in 0..1
-    xj[n] = 2*p - 1;                        // [0,1] -> [-1,+1]
+    xj[n] = 2*p - 1;                       // [0,1] -> [-1,+1]
   }
 
   // Resample jittered signal to uniform sample rate using linear interpolation:
@@ -2035,12 +2027,33 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
   //
   // ToDo:
   // 
+  // - Fix the little bug where the prng produces values in the range [0,1) where it should be in
+  //   [0,1]. It probably won't matter in practice, but still.
+  // 
   // - Maybe work with two fixed sample rates: (1) The eventual target sample rate, (2) An 
   //   oversampled rate that is used to determine the internal nominal sampling interval T.
   // 
   // - Subtract a naively computed saw from the jittered saw to see the difference.
   // 
+  // - Render a longer signal and write it into a wave file for listening. Plot the magnitude
+  //   spectrum. Does it show aliasing or is it really just the clean saws plus noise?
+  // 
+  // - Experiment with different jittering amounts. What is the sweet spot? May it depend on the
+  //   oscillator frequency?
+  // 
   // - Try using filtered noise (lopwass, highpass, bandpass).
+  // 
+  // - Maybe try to avoid drift by filtering out low frequencies from the noise, i.e. from r after
+  //   converting to -1..+1.
+  // 
+  // - Try to not jitter the sampling interval but rather the sampling frequency. This will also
+  //   jitter the interval, of course, but with a different probability distribution. I don't know
+  //   yet, which distribution is right.
+  // 
+  // - Try to rewrite the algorithm in a realtime friendly form, i.e. one where we don't produce
+  //   the whole tj,xj signals first and then tu,xu from that. Instead, we need to implement some 
+  //   sort of on-the-fly interpolation scheme. But do that in a separate function in order to keep
+  //   this one here clear and readable.
   // 
   // - In a next step, we may try to apply it to waveshaping distortion. That will involve to 
   //   first resampling the signal to the irregular sample rate, then applying the distortion, 

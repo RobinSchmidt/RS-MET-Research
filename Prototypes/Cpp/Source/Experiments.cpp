@@ -1994,16 +1994,17 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
 
   // Allocations, setup, initialization:
   int N = numSamples;
-  Vec t(N);                      // Time axis
-  Vec x(N);                      // Non-uniformly sampled (jittered) output
-  Vec y(N);                      // Uniformly resampled output
+  Vec tj(N);                     // Jittered time axis
+  Vec xj(N);                     // Non-uniformly sampled (jittered) output
+  Vec tu(N);                     // Uniformly sampled time axis
+  Vec xu(N);                     // Uniformly resampled output
   rsRandomGenerator<Real> prng;
   Phasor phs;
   phs.setPhaseSlope(freq/fs);;   // Verify! Sets up nominal frequency
 
   // Produce jittered signal:
-  t[0] = 0;
-  x[0] = 2 * phs.getSample() - 1;
+  tj[0] = 0;
+  xj[0] = 2 * phs.getSample() - 1;
   for(int n = 1; n < N; n++)
   {
     // Compute randomized length of time step:
@@ -2012,21 +2013,24 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
     Real dt = 1 + (r * jitter);            // dt = 1 +- r * jitter
 
     // Compute current time and jittered saw output
-    t[n] = t[n-1] + dt;                    // Jittered time axis.
+    tj[n] = tj[n-1] + dt;                  // Jittered time axis.
     Real p = phs.getSample(dt);            // Normalized phase in 0..1
-    x[n] = 2*p - 1;                        // [0,1] -> [-1,+1]
+    xj[n] = 2*p - 1;                        // [0,1] -> [-1,+1]
   }
 
   // Resample jittered signal to uniform sample rate using linear interpolation:
-  // ...TBC...
+  tu = rsRangeLinear(Real(0), Real(N-1), N);
+  rsInterpolateLinear(&tj[0], &xj[0], N, &tu[0], &xu[0], N);
 
   // Plot results:
-  rsPlotVectorsXY(t, x);
+  rsPlotVectorsXY(tj, xj);
+  rsPlotVectorsXY(tu, xu);
 
 
   // Observations:
   // 
-  // - The jittered output still looks like a saw with some noise in it.
+  // - The jittered output still looks like a saw with some noise in it. So does the the uniformly
+  //   resampled saw.
   //
   //
   // ToDo:
@@ -2035,6 +2039,8 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
   //   oversampled rate that is used to determine the internal nominal sampling interval T.
   // 
   // - Subtract a naively computed saw from the jittered saw to see the difference.
+  // 
+  // - Try using filtered noise (lopwass, highpass, bandpass).
   // 
   // - In a next step, we may try to apply it to waveshaping distortion. That will involve to 
   //   first resampling the signal to the irregular sample rate, then applying the distortion, 

@@ -1984,8 +1984,11 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
   Real jitter =     0.1;     // Amount of jitter
 
   // Internal variables:
-  Real T  = 1 / fs;          // Nominal sampling interval.
-  Real dT = jitter * T;      // We use time steps dt in the interval T-dT...T+dT
+  //Real T  = 1 / fs;          // Nominal sampling interval.
+  //Real dT = jitter * T;      // We use time steps dt in the interval T-dT...T+dT
+
+
+
 
 
   // ...TBC...
@@ -1999,6 +2002,11 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
   // - In a next step, we may try to apply it to waveshaping distortion. That will involve to 
   //   first resampling the signal to the irregular sample rate, then applying the distortion, 
   //   then resampling back to the original, regular rate.
+  //
+  // See:
+  //
+  // - https://www.kvraudio.com/forum/viewtopic.php?p=9189214#p9189214
+  //   https://www.researchgate.net/publication/237136907_IMPLEMENTATION_OF_NON-UNIFORM_SAMPLING_FOR_%27ALIAS-FREE_PROCESSING%27_IN_DIGITAL_CONTROL
 }
 
 //-------------------------------------------------------------------------------------------------

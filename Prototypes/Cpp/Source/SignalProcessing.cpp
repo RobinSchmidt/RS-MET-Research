@@ -518,6 +518,90 @@ protected:
 };
 
 
+//=================================================================================================
+
+template<class T>
+class rsJitteredPhasor
+{
+
+public:
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  /** Sets the slope for the phasor. ...TBC... ToDo: Explain what that means.  */
+  void setPhaseSlope(T newSlope) { slope = newSlope; }
+  // Maybe add convenience function setFrequency(T newFreq, T sampleRate)
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Processing
+
+  /** Produces a sample of a phasor value, i.e. a value in the range 0..1. */
+  inline T getSample()
+  {
+    T y = phase;
+    phase += slope;
+    if(phase >= T(1))
+      phase -= T(1);
+    return y;
+
+    // ToDo: 
+    // 
+    // - Maybe as an optimization, we could do:
+    // 
+    //     phase += slope;
+    //     if(phase >= T(1))
+    //       phase -= T(1);
+    //     return phase;
+    //
+    //   instead. To get the same behavior as before, we would have to adapt reset() to do:
+    // 
+    //     phase = -slope;
+    //
+    // - Maybe use "while" instead of "if". It's safer to use, i.e. it allows slope > 1. But it may
+    //   be more expensive. Maybe provide both variants ant leave it to client code to pick the 
+    //   safe or the unsafe one. Maybe we could also wokr with fmod. But that might be even more 
+    //   expensive
+  }
+
+  /** Similar to getSample() without parameter but this version here takes the instantaneous 
+  (normalized) sampling interval dt as parameter. It is meant to be used in the context of using a 
+  non-uniform sampling rate, i.e. a jittered sampling rate. Normally, we would assume dt = 1, i.e.
+  time steps forward at a rate of one sample per time interval.  */
+  inline T getSample(T dt)
+  {
+    T y = phase;
+    phase += dt * slope;
+    while(phase >= T(1))
+      phase -= T(1);
+    return y;
+
+    // Notes:
+    //
+    // - Here we use "while" rather than "if" because in the context of using a non-uniform 
+    //   sampling interval dt, it becomes more likely and more common to overshoot 2.0. (verify!)
+  }
+
+  /** Resets the internal state. */
+  void reset() { phase = T(0); }
+
+
+protected:
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Data
+
+  T phase = T(0);      // Normalized phase in 0..1
+  T slope = T(0.01);   // Increment per sample for phasor (which is in [0,1] or [0,1)).
+
+};
+
+
+
+
 
 //=================================================================================================
 

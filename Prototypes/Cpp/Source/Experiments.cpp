@@ -1983,8 +1983,8 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
   // Parameters:
   Real fs         = 44100.0;     // Output sample rate
   Real freq       =   100.0;     // Oscillator frequency
-  Real jitter     =     0.1;     // Amount of jitter
-  int  numSamples =  1000;       // Number of samples to produce
+  Real jitter     =     0.25;    // Amount of jitter
+  int  numSamples =  2000;       // Number of samples to produce
 
   // Internal variables:
   //Real T  = 1 / fs;            // Nominal sampling interval.
@@ -1999,21 +1999,22 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
   Vec y(N);                      // Uniformly resampled output
   rsRandomGenerator<Real> prng;
   Phasor phs;
-  phs.setPhaseSlope(fs/freq);;   // Verify! Sets up nominal frequency
+  phs.setPhaseSlope(freq/fs);;   // Verify! Sets up nominal frequency
 
   // Produce jittered signal:
   t[0] = 0;
-  x[0] = phs.getSample();
+  x[0] = 2 * phs.getSample() - 1;
   for(int n = 1; n < N; n++)
   {
     // Compute randomized length of time step:
     Real r = prng.getSampleInUnitRange();  // Preliminary! Is in range [0,1) but should be in [0,1]
-    r = 2*r + 1;                           // [0,1] -> [-1,+1]
+    r = 2*r - 1;                           // [0,1] -> [-1,+1]
     Real dt = 1 + (r * jitter);            // dt = 1 +- r * jitter
 
     // Compute current time and jittered saw output
-    t[n] = t[n-1] + dt;
-    x[n] = phs.getSample(dt);               // Prelimimary! Is in 0..1 but should be in -1..+1
+    t[n] = t[n-1] + dt;                    // Jittered time axis.
+    Real p = phs.getSample(dt);            // Normalized phase in 0..1
+    x[n] = 2*p - 1;                        // [0,1] -> [-1,+1]
   }
 
   // Resample jittered signal to uniform sample rate using linear interpolation:
@@ -2022,15 +2023,18 @@ void testRandomSamplingSaw()  // Mayby rename it testJitterSaw()
   // Plot results:
   rsPlotVectorsXY(t, x);
 
+
   // Observations:
   // 
-  // - The output still looks completely wrong. The code does not yet work at all.
+  // - The jittered output still looks like a saw with some noise in it.
   //
   //
   // ToDo:
   // 
   // - Maybe work with two fixed sample rates: (1) The eventual target sample rate, (2) An 
   //   oversampled rate that is used to determine the internal nominal sampling interval T.
+  // 
+  // - Subtract a naively computed saw from the jittered saw to see the difference.
   // 
   // - In a next step, we may try to apply it to waveshaping distortion. That will involve to 
   //   first resampling the signal to the irregular sample rate, then applying the distortion, 

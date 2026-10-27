@@ -2131,7 +2131,9 @@ void testJitterSaw2()
 bool testDriftFreeJitter()
 {
   // Unit test for class rsDriftFreeJitter. This is a white box test in which we make assumptions 
-  // about the inner working of the class. ...TBC...
+  // about the inner working of the class, namely that it uses an object of class rsRandomGenerator
+  // internally at every even indexed sample to produce a new random number and repeat that value 
+  // with a negative sign at the following odd indexed sample.
 
   bool ok = true;
 
@@ -2140,7 +2142,7 @@ bool testDriftFreeJitter()
   using Vec  = std::vector<Real>;
 
   // Parameters:
-  int numSamples = 20;
+  int numSamples = 100;
   uint32_t seed  = 0;
 
 
@@ -2162,7 +2164,7 @@ bool testDriftFreeJitter()
     x[n] = dfg.getSample();
 
   // Integrate x numerically using a simple Riemann sum. We should get the raw random sequence r[n]
-  // interleaved with zeros.
+  // interleaved with zeros:
   Vec xi(2*N);
   rsArrayTools::cumulativeSum(&x[0], &xi[0], 2*N);
 
@@ -2184,13 +2186,6 @@ bool testDriftFreeJitter()
   }
 
   return ok;
-
-
-  // ToDo:
-  //
-  // - Integrate x numerically using recursive Riemann summation and verify the even-indexed 
-  //   samples are all zero. Maybe we need a numerical tolerance but I actually don't think so.
-  //   Try it without first.
 }
 
 void testJitterSaw()

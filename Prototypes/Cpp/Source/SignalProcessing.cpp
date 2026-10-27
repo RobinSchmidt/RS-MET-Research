@@ -605,7 +605,7 @@ protected:
 even number of samples is exactly zero. We ensure this by producing a new random number only on 
 every other sample, namely at the even numbered samples, and at the odd numbered samples, we just 
 repeat the previous value with opposite sign. The range of produced random samples in the interval
-(-1,+1) where by the round  nd parenthese, we mean that the interval is open to both sides, i.e. 
+(-1,+1) where by the round parentheses, we mean that the interval is open to both sides, i.e. 
 the end values -1 and +1 are excluded.
 
 ...TBC...ToDo: Explain how this can be used for de/jittering the time axis as we do in the 
@@ -629,46 +629,45 @@ public:
 
   /** Sets the seed of the pseudo random number generator. */
   void setRandomSeed(uint32_t newSeed) { seed = newSeed; }
+  // Maybe this should optionally call reset() because client code might expect that a 
+  // setRandomSeed() actually also applies the new seed as new state?
 
 
   //-----------------------------------------------------------------------------------------------
   // \name Processing
 
+  /** Produces one output sample at a time. The values produced are in the open interval (-1,+1).
+  At the even indexed samples, we produce a fresh random number from the right-open interval [0,1)
+  and at the odd indexed samples, we produce the negative of the previous output which is therefore
+  from the left-open interval (-1,0]. */
   T getSample()
   {
-    // New:
     if(sign > T(0))
     {
       sign = -sign;
-      val  = prng.getSampleInUnitRange();
+      val  = prng.getSampleInUnitRange();  // Is in [0,+1).
       return val;
     }
     else
     {
       sign = -sign;
-      return -val;
+      return -val;                         // Is in (-1,0].
     }
-
-    //// Old:
-    //if(sign == T(+1))                        // Maybe use if(sign > T(0))
-    //  val = prng.getSampleInUnitRange();     // Is in [0,1).
-    //sign *= T(-1);                           // Maybe use sign = -sign. Avoid mul, just negate.
-    //return sign * val;                       // Is in (-1,+1).
-    //// We could also avoid the multiplication in the return statement.
   }
 
-  /** Resets the internal state. */
+  /** Resets the internal state. After calling this, the sample index in the next call to 
+  getSample() may be considered to be zero, i.e. n = 0. */
   void reset()
   { 
     sign = T(+1);
-    val  = T(0);                             // Irrelevant but cleaner
+    val  = T(0);                           // Irrelevant but cleaner
     prng.setState(seed);
   }
 
 protected:
 
-  T sign = T(+1);
-  T val  = T(0);
+  T sign = T(+1);                          // Alternates between +1 and -1
+  T val  = T(0);                           // Random values in [0,1)
 
   // Embedded DSP objects:
   rsRandomGenerator<T> prng;

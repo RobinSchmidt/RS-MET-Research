@@ -2138,7 +2138,6 @@ bool testDriftFreeJitter()
   // Types:
   using Real = double;
   using Vec  = std::vector<Real>;
-  //using DFJ  = rsDriftFreeJitter<Real>;
 
   // Parameters:
   int numSamples = 20;
@@ -2162,7 +2161,12 @@ bool testDriftFreeJitter()
   for(int n = 0; n < 2*N; n++)
     x[n] = dfg.getSample();
 
-  // Check, if the rsDriftFreeJitter output is as expected:
+  // Integrate x numerically using a simple Riemann sum. We should get the raw random sequence r[n]
+  // interleaved with zeros.
+  Vec xi(2*N);
+  rsArrayTools::cumulativeSum(&x[0], &xi[0], 2*N);
+
+  // Check, if the rsDriftFreeJitter output x and its cumulative sum xi is as expected:
   for(int n = 0; n < N; n++)
   {
     // Check r:
@@ -2173,20 +2177,11 @@ bool testDriftFreeJitter()
     // Check x:
     ok &= x[2*n]   ==  rn;
     ok &= x[2*n+1] == -rn;
+
+    // Check xi:
+    ok &= xi[2*n]   == rn;
+    ok &= xi[2*n+1] == Real(0);
   }
-
-
-  // Integrate x numerically using a simple Riemann sum:
-  Vec xi(2*N);
-  rsArrayTools::cumulativeSum(&x[0], &xi[0], 2*N);
-  // When we do it like this, we get the raw random sequence interleaved with zeros.
-
-  //xi[0] = Real(0);
-  //for(int n = 1; n < 2*N; n++)
-  //  xi[n] = xi[n-1] + x[n-1];
-
-
-
 
   return ok;
 

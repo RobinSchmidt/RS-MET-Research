@@ -599,6 +599,44 @@ protected:
 
 };
 
+//-------------------------------------------------------------------------------------------------
+
+template<class T>
+class rsDriftFreeJitter
+{
+
+public:
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Processing
+
+  void getSample()
+  {
+    if(sign == T(+1))                        // Maybe use if(sign > T(0))
+      val = prng.getSampleInUnitRange();     // Is in [0,1).
+    sign *= T(-1);                           // Maybe use sign = -sign
+    return sign * val;                       // Is in (-1,+1).
+  }
+
+  /** Resets the internal state. */
+  void reset()
+  { 
+    sign = T(+1);
+    val  = T(0);
+    prng.setState(seed);
+  }
+
+protected:
+
+  T sign = T(+1);
+  T val  = T(0);
+
+  // Embedded DSP objects:
+  rsRandomGenerator<T> prng;
+  uint32_t seed = 0;
+
+};
 
 
 

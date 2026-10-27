@@ -604,14 +604,16 @@ protected:
 /** This is a special pseudo random number generator that ensures that the average value over any
 even number of samples is exactly zero. We ensure this by producing a new random number only on 
 every other sample, namely at the even numbered samples, and at the odd numbered samples, we just 
-use the same value with opposite sign. The range of produced random samples in the interval (-1,+1)
-where by the roudn  nd parenthese, we mean that the interval is open to both sides, i.e. the end 
-values -1 and +1 are excluded.
+repeat the previuos value with opposite sign. The range of produced random samples in the interval
+(-1,+1) where by the round  nd parenthese, we mean that the interval is open to both sides, i.e. 
+the end values -1 and +1 are excluded.
 
 ...TBC...ToDo: Explain how this can be used for de/jittering the time axis as we do in the 
-jitter-saw experiments. Explain what sample index n = 0 means. It's the sample index for the first
-call to getSample() after a call to reset() or after object creation. Tell that for even n, the 
-output is always positive and for odd n it's negative. Class is untested.
+jitter-saw experiments without running into the problematic situation where we cannot interpolate 
+back to the regular, uniform sample rate (where we would have to extrapolate and then the value 
+would be wrong). Explain what sample index n = 0 means. It's the sample index for the first call to
+getSample() after a call to reset() or after object creation. Tell that for even n, the  output is
+always positive and for odd n it's negative. Class is untested.
 
 */
 

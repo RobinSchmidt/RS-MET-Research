@@ -3,13 +3,19 @@ In this text file, I collect some project ideas that may be suitable to approach
 ----------------------------------------------------------------------------------------------------
 General Ideas
 
+- I think, AI can help a lot with the "make it work" part in the 3-stage "make it work, make it 
+  right, make it fast" procedure, i.e. it can be helpful to create a first working prototype. Making
+  it "right", i.e. refactoring it into readable, re-usable code and integrating it into my existing
+  codebase following all its conventions, is something I'd rather do myself. Maybe AI can also help 
+  with the 3rd step, i.e. suggest performance optimizations.
+
 - I think, AI can be great to translate from a scientific paper (such as DAFX, IEEE, etc.) to some 
   working prototype code.
 
 - Maybe AI can also translate between a recursive and iterative implementation of an algorithm?
 
 - I asked Google (Gemini) what AI model would be best for DSP algorithm development and the winner
-  seems to be OpenAI o3-mini (as of october 2026):
+  seems to be OpenAI o3-mini (as of October 2026):
   https://share.google/aimode/QvGDLp7B2pP8mpJWM
   ...unfortunately, it's not available in my current GitHub Copilot tier.
 
@@ -97,7 +103,7 @@ I could also look into mystran's Halite circuit simulator for prototyping such f
 could also look into Spice models and let AI translate those into realtime DSP code. 
 
 ----------------------------------------------------------------------------------------------------
-AntiDerivAntiAlias - Anti Derivative Anti Aliasing (ADAA)
+AntiDerivAntiAlias - Anti Derivative Anti Aliasing (ADAA)   ...partially done
 
 Questions:
 
@@ -107,11 +113,12 @@ Questions:
 - Can this be applied to arbitrary functions (like in FuncShaper) using numerical integration?
 
 ----------------------------------------------------------------------------------------------------
-PoylRoots - Polynomial Root Finders
+PolyRoots - Polynomial Root Finders
 
 Let the AI generate code snippets for various polynomial root finding algorithms such as Laguerre,
-Jenkins-Traub, etc. Ask it about the pros and cons of the various methods anf for a recommendation
-for what to use by default. What do scientific software packages such as SciPy and MatLab use?
+Jenkins-Traub, etc. Ask it about the pros and cons of the various methods and for a recommendation
+for what to use by default. What do scientific software packages such as SciPy and MatLab use? I 
+think, it's Jenkins-Traub. Verify that!
 
 
 ----------------------------------------------------------------------------------------------------
@@ -125,7 +132,7 @@ Misc
 - Turn the list of open source audio software projects into a database with website.
 
 - Fix that ugly JUCE hack where I removed the "final" qualifier from JUCE::Image because I created
-  a subclass of it form my pixel fonts. Aks AI for a better solution. Ask AI about the purpose of
+  a subclass of it form my pixel fonts. Ask AI for a better solution. Ask AI about the purpose of
   that "final" qualifier.
   
 - Fix the ugly hack where I use raw pointers for the XML state management where JUCE wants me to use
@@ -166,7 +173,7 @@ Misc
 
 - Compute spectrograms with time/frequency reassignment.
 
-- Talk about math ideas like Polya potentials and quantifying set sizes by growth rate.
+- Talk about my math ideas like Polya potentials and quantifying set sizes by growth rate.
 
 - Translation of LAPack to C++. Maybe it should use the double-precision complex implementation.
 
@@ -201,6 +208,16 @@ Misc
 
 - How do feedback compressors work? In which ways do they sound different from feedfroward 
   compressors? Can you give me example code for both?
+  
+- Making neural models of sounds like in Axel Röbel's dissertation. I have some first steps into
+  that direction in my RS-ML repo but it's not very far yet. 
+  
+- Maybe AI can help with figuring out the CLAP API and writing convenience classes around it. A task
+  which I already started without AI, i.e. the hard way. With AI, I may be able continue that in 
+  easy mode.
+
+- Conversion (of the coefficients) between different filter topologies (biquad-chain, state-space,
+  lattice, direct forms, ...)
 
 - Ask AI how to write realtime audio plugins and DSP code in Rust. What would be the appropriate 
   analog of a class like rsStateVariableFilter. How would the API look like? I want an object that

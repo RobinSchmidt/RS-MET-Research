@@ -1960,8 +1960,7 @@ void testPitchDitherSuperSaw()
   //   - Tuned comb to clean up the spectrum by reducing the noise between the harmonics
 }
 
-
-void testJitterSaw()
+void testJitterSaw1()
 {
   // Here, we implement an idea that is similar in spirit to the pitch-dithering method but more 
   // generally applicable. Instead of dithering the cycle length, we use a randomized non-uniform
@@ -2004,10 +2003,10 @@ void testJitterSaw()
     r = 2*r - 1;                           // [0,1] -> [-1,+1]
     Real dt = 1 + (r * jitter);            // dt = 1 +- r * jitter
 
-    // Compute current time and jittered saw output
+    // Compute current time and jittered saw output:
     tj[n] = tj[n-1] + dt;                  // Jittered time axis.
     Real p = phs.getSample(dt);            // Normalized phase in 0..1
-    xj[n] = 2*p - 1;                       // [0,1] -> [-1,+1]
+    xj[n] = 2*p - 1;                       // [0,1] -> [-1,+1]. Convert phasor to saw.
   }
 
   // Resample jittered signal to uniform sample rate using linear interpolation:
@@ -2021,49 +2020,89 @@ void testJitterSaw()
 
   // Observations:
   // 
-  // - The jittered output still looks like a saw with some noise in it. So does the the uniformly
-  //   resampled saw.
+  // - The jittered output looks like a saw with some noise in it. So does the the uniformly 
+  //   resampled saw. This is what we expect, so it seems to generally work.
   //
   //
   // ToDo:
+  // 
+  // - Plot both versions of the signal (xj against tj, xu against tu) in a single plot. I think, I
+  //   don't have a convenience function that allows several x-axes, so we may need to use the 
+  //   lower level API to GNUPlotter for that.
   // 
   // - Fix the little bug where the prng produces values in the range [0,1) where it should be in
   //   [0,1]. It probably won't matter in practice, but still.
   // 
   // - Maybe work with two fixed sample rates: (1) The eventual target sample rate, (2) An 
-  //   oversampled rate that is used to determine the internal nominal sampling interval T.
+  //   oversampled rate. But maybe that should be up to a higher level wrapper.
   // 
-  // - Subtract a naively computed saw from the jittered saw to see the difference.
+  // - Subtract a naively computed saw from the jittered saw and plot the difference.
   // 
   // - Render a longer signal and write it into a wave file for listening. Plot the magnitude
-  //   spectrum. Does it show aliasing or is it really just the clean saws plus noise?
+  //   spectrum. Does it show aliasing or is it really just the harmonics of a clean saw plus a 
+  //   noise floor?
   // 
   // - Experiment with different jittering amounts. What is the sweet spot? May it depend on the
   //   oscillator frequency?
   // 
-  // - Try using filtered noise (lopwass, highpass, bandpass).
+  // - Try using filtered noise (lowpass, highpass, bandpass) for r.
   // 
   // - Maybe try to avoid drift by filtering out low frequencies from the noise, i.e. from r after
-  //   converting to -1..+1.
+  //   converting to -1..+1. Or maybe keep track of the accumulated drift (i.e. compare the sum over
+  //   the dt values to the expected nominal exact t without jitter) and if it exceeds some
+  //   prescribed threshold value, apply some nudges to the dt values to drive the (sum dt) closer
+  //   to the expected t. But that has also problems with precision loss when t get larger so we 
+  //   may have to restart the drift detector itself from time to time. So maybe a simple highpass
+  //   is more practical.
   // 
   // - Try to not jitter the sampling interval but rather the sampling frequency. This will also
   //   jitter the interval, of course, but with a different probability distribution. I don't know
   //   yet, which distribution is right.
   // 
   // - Try to rewrite the algorithm in a realtime friendly form, i.e. one where we don't produce
-  //   the whole tj,xj signals first and then tu,xu from that. Instead, we need to implement some 
-  //   sort of on-the-fly interpolation scheme. But do that in a separate function in order to keep
-  //   this one here clear and readable.
+  //   the whole tj,xj signals first and then tu,xu from these finished vectors. Instead, we need 
+  //   to implement some sort of on-the-fly interpolation scheme. But do that in a separate 
+  //   function in order to keep this one here clear and readable. Maybe write a class for that
+  //   realtime de-jittering.
+  // 
+  // - Try using different interpolation methods. I think, in a realtime context, these would 
+  //   introduce more delay.
   // 
   // - In a next step, we may try to apply it to waveshaping distortion. That will involve to 
-  //   first resampling the signal to the irregular sample rate, then applying the distortion, 
-  //   then resampling back to the original, regular rate.
+  //   first resampling the input signal to the irregular sample rate, then applying the 
+  //   distortion, then resampling back to the original, regular rate.
+  // 
+  // - Try to use it with FM/PM synthesis.
+  // 
+  // - When setting up a chain of jittered synthesis and effect algorithms, do the jittering and
+  //   de-jittering only once at the start and end of the chain. The whole chain uses the same dt 
+  //   value for each sample. Do not jitter and de-jitter in each effect separately because that 
+  //   may introduce more noise and be also more computationally costly.
   // 
   //
   // See:
   //
   // - https://www.kvraudio.com/forum/viewtopic.php?p=9189214#p9189214
   //   https://www.researchgate.net/publication/237136907_IMPLEMENTATION_OF_NON-UNIFORM_SAMPLING_FOR_%27ALIAS-FREE_PROCESSING%27_IN_DIGITAL_CONTROL
+}
+
+void testJitterSaw2()
+{
+  // A second experiment with jittered sawtooth wave. This time, we attempt a realtime-friendly 
+  // implementation. To this end, we want to ensure that out linear interpolation scheme by which 
+  // we convert from the jittered to the uniformly sampled time axis can always be applied. This 
+  // means that the jittered time instant tj[n] shall never be behind its regular counterpart 
+  // tu[n] because in that case we would have to extrapolate, which we want to avoid. To ensure 
+  // that tj[n] >= tu[n] for all n, we use a special random number generator. 
+  // 
+  // ...TBC...
+
+}
+
+void testJitterSaw()
+{
+  testJitterSaw1();
+  testJitterSaw2();
 }
 
 //-------------------------------------------------------------------------------------------------

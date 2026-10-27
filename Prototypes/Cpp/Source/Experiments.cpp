@@ -2165,12 +2165,28 @@ bool testDriftFreeJitter()
   // Check, if the rsDriftFreeJitter output is as expected:
   for(int n = 0; n < N; n++)
   {
+    // Check r:
     Real rn = r[n];
     ok &= rn >= Real(0);
     ok &= rn <  Real(1);
+
+    // Check x:
     ok &= x[2*n]   ==  rn;
     ok &= x[2*n+1] == -rn;
   }
+
+
+  // Integrate x numerically using a simple Riemann sum:
+  Vec xi(2*N);
+  rsArrayTools::cumulativeSum(&x[0], &xi[0], 2*N);
+  // When we do it like this, we get the raw random sequence interleaved with zeros.
+
+  //xi[0] = Real(0);
+  //for(int n = 1; n < 2*N; n++)
+  //  xi[n] = xi[n-1] + x[n-1];
+
+
+
 
   return ok;
 

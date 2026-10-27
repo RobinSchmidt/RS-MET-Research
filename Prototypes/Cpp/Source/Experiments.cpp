@@ -2097,12 +2097,96 @@ void testJitterSaw2()
   // 
   // ...TBC...
 
+  // Types:
+  using Real   = double;
+  using Vec    = std::vector<Real>;
+  using Phasor = rsJitteredPhasor<Real>;
+
+  // Parameters:
+  Real fs         = 44100.0;     // Output sample rate
+  Real freq       =  1000.0;     // Oscillator frequency
+  Real jitter     =     0.5;     // Amount of jitter
+  int  numSamples =  2000;       // Number of samples to produce
+
+  // Allocations, setup, initialization:
+  int N = numSamples;
+  Vec tj(N);                     // Jittered time axis
+  Vec xj(N);                     // Non-uniformly sampled (jittered) output
+  Vec tu(N);                     // Uniformly sampled time axis
+  Vec xu(N);                     // Uniformly resampled output
+  rsDriftFreeJitter<Real> prng;
+  Phasor phs;
+  phs.setPhaseSlope(freq/fs);;   // Verify! Sets up nominal frequency
+
+
+  // ...something to do here....
+
+
+  // Plot results:
+  rsPlotVectorsXY(tj, xj);
+  rsPlotVectorsXY(tu, xu);
+
+}
+
+bool testDriftFreeJitter()
+{
+  // Unit test for class rsDriftFreeJitter. This is a white box test in which we make assumptions 
+  // about the inner working of the class. ...TBC...
+
+  bool ok = true;
+
+  // Types:
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  //using DFJ  = rsDriftFreeJitter<Real>;
+
+  // Parameters:
+  int numSamples = 20;
+  uint32_t seed  = 0;
+
+
+  // Produce the raw random number sequence:
+  int N = numSamples;
+  rsRandomGenerator<Real> rng;
+  rng.setState(seed);
+  Vec r(N);
+  for(int n = 0; n < N; n++)
+    r[n] = rng.getSampleInUnitRange();
+
+  // Produce the output of the rsDriftFreeJitter object. We make it twice as long as the raw random
+  // sequence:
+  rsDriftFreeJitter<Real> dfg;
+  dfg.setRandomSeed(seed);
+  dfg.reset();
+  Vec x(2*N);
+  for(int n = 0; n < 2*N; n++)
+    x[n] = dfg.getSample();
+
+  // Check, if the rsDriftFreeJitter output is as expected:
+  for(int n = 0; n < N; n++)
+  {
+    Real rn = r[n];
+    ok &= rn >= Real(0);
+    ok &= rn <  Real(1);
+    ok &= x[2*n]   ==  rn;
+    ok &= x[2*n+1] == -rn;
+  }
+
+  return ok;
+
+
+  // ToDo:
+  //
+  // - Integrate x numerically using recursive Riemann summation and verify the even-indexed 
+  //   samples are all zero. Maybe we need a numerical tolerance but I actually don't think so.
+  //   Try it without first.
 }
 
 void testJitterSaw()
 {
-  testJitterSaw2();
+  //testJitterSaw2();
 
+  bool ok = testDriftFreeJitter();
 
   testJitterSaw1();
   testJitterSaw2();

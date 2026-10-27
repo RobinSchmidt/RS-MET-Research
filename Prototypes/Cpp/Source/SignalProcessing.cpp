@@ -604,7 +604,7 @@ protected:
 /** This is a special pseudo random number generator that ensures that the average value over any
 even number of samples is exactly zero. We ensure this by producing a new random number only on 
 every other sample, namely at the even numbered samples, and at the odd numbered samples, we just 
-repeat the previuos value with opposite sign. The range of produced random samples in the interval
+repeat the previous value with opposite sign. The range of produced random samples in the interval
 (-1,+1) where by the round  nd parenthese, we mean that the interval is open to both sides, i.e. 
 the end values -1 and +1 are excluded.
 
@@ -618,21 +618,43 @@ always positive and for odd n it's negative. Class is untested.
 */
 
 template<class T>
-class rsDriftFreeJitter
+class rsDriftFreeJitter // Maybe rename to something more general
 {
 
 public:
 
 
   //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  /** Sets the seed of the pseudo random number generator. */
+  void setRandomSeed(uint32_t newSeed) { seed = newSeed; }
+
+
+  //-----------------------------------------------------------------------------------------------
   // \name Processing
 
-  void getSample()
+  T getSample()
   {
-    if(sign == T(+1))                        // Maybe use if(sign > T(0))
-      val = prng.getSampleInUnitRange();     // Is in [0,1).
-    sign *= T(-1);                           // Maybe use sign = -sign. Avoid mul, just negate.
-    return sign * val;                       // Is in (-1,+1).
+    // New:
+    if(sign > T(0))
+    {
+      sign = -sign;
+      val  = prng.getSampleInUnitRange();
+      return val;
+    }
+    else
+    {
+      sign = -sign;
+      return -val;
+    }
+
+    //// Old:
+    //if(sign == T(+1))                        // Maybe use if(sign > T(0))
+    //  val = prng.getSampleInUnitRange();     // Is in [0,1).
+    //sign *= T(-1);                           // Maybe use sign = -sign. Avoid mul, just negate.
+    //return sign * val;                       // Is in (-1,+1).
+    //// We could also avoid the multiplication in the return statement.
   }
 
   /** Resets the internal state. */

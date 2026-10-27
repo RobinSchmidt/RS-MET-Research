@@ -601,6 +601,20 @@ protected:
 
 //-------------------------------------------------------------------------------------------------
 
+/** This is a special pseudo random number generator that ensures that the average value over any
+even number of samples is exactly zero. We ensure this by producing a new random number only on 
+every other sample, namely at the even numbered samples, and at the odd numbered samples, we just 
+use the same value with opposite sign. The range of produced random samples in the interval (-1,+1)
+where by the roudn  nd parenthese, we mean that the interval is open to both sides, i.e. the end 
+values -1 and +1 are excluded.
+
+...TBC...ToDo: Explain how this can be used for de/jittering the time axis as we do in the 
+jitter-saw experiments. Explain what sample index n = 0 means. It's the sample index for the first
+call to getSample() after a call to reset() or after object creation. Tell that for even n, the 
+output is always positive and for odd n it's negative. Class is untested.
+
+*/
+
 template<class T>
 class rsDriftFreeJitter
 {
@@ -615,7 +629,7 @@ public:
   {
     if(sign == T(+1))                        // Maybe use if(sign > T(0))
       val = prng.getSampleInUnitRange();     // Is in [0,1).
-    sign *= T(-1);                           // Maybe use sign = -sign
+    sign *= T(-1);                           // Maybe use sign = -sign. Avoid mul, just negate.
     return sign * val;                       // Is in (-1,+1).
   }
 
@@ -623,7 +637,7 @@ public:
   void reset()
   { 
     sign = T(+1);
-    val  = T(0);
+    val  = T(0);                             // Irrelevant but cleaner
     prng.setState(seed);
   }
 

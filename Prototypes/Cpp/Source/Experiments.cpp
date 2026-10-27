@@ -2101,6 +2101,9 @@ void testJitterSaw2()
 
 void testJitterSaw()
 {
+  testJitterSaw2();
+
+
   testJitterSaw1();
   testJitterSaw2();
 }

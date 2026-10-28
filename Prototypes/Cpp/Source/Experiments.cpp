@@ -2209,6 +2209,13 @@ void testJitterSaw()
 
   testJitterSaw1();
   testJitterSaw2();
+
+  // ToDo:
+  //
+  // - Maybe factor out common code from testJitterSaw1/2. The main difference between the two 
+  //   functions is how the dt[n] values are produced, so maybe we should factor out a function
+  //   rsGetJitterSaw(const std::vector<T>& dt, seed, normalizedFreq, ...) that returns the saw
+  //   as std::vector<T>.
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -2114,18 +2114,31 @@ void testJitterSaw2()
   Vec xj(N);                     // Non-uniformly sampled (jittered) output
   Vec tu(N);                     // Uniformly sampled time axis
   Vec xu(N);                     // Uniformly resampled output
-  rsDriftFreeJitter<Real> prng;
+  rsDriftFreeJitter<Real> dfj;
   Phasor phs;
   phs.setPhaseSlope(freq/fs);;   // Verify! Sets up nominal frequency
 
+  // Produce jittered signal:
+  tj[0] = 0;
+  xj[0] = 2 * phs.getSample() - 1;
+  for(int n = 1; n < N; n++)
+  {
+    // Compute randomized length of time step:
+    Real r  = dfj.getSample();
+    Real dt = 1 + (r * jitter);            // dt = 1 +- r * jitter
 
-  // ...something to do here....
+    // Compute current time and jittered saw output:
+    tj[n] = tj[n-1] + dt;                  // Jittered time axis.
+    Real p = phs.getSample(dt);            // Normalized phase in 0..1
+    xj[n] = 2*p - 1;                       // [0,1] -> [-1,+1]. Convert phasor to saw.
 
+    // Compute de-jittered saw from jittered saw samples xj[n-1] and xj[n]:
+    // ...something to do here....
+  }
 
   // Plot results:
   rsPlotVectorsXY(tj, xj);
   rsPlotVectorsXY(tu, xu);
-
 }
 
 bool testDriftFreeJitter()
@@ -2156,12 +2169,12 @@ bool testDriftFreeJitter()
 
   // Produce the output of the rsDriftFreeJitter object. We make it twice as long as the raw random
   // sequence:
-  rsDriftFreeJitter<Real> dfg;
-  dfg.setRandomSeed(seed);
-  dfg.reset();
+  rsDriftFreeJitter<Real> dfj;
+  dfj.setRandomSeed(seed);
+  dfj.reset();
   Vec x(2*N);
   for(int n = 0; n < 2*N; n++)
-    x[n] = dfg.getSample();
+    x[n] = dfj.getSample();
 
   // Integrate x numerically using a simple Riemann sum. We should get the raw random sequence r[n]
   // interleaved with zeros:
@@ -2190,7 +2203,7 @@ bool testDriftFreeJitter()
 
 void testJitterSaw()
 {
-  //testJitterSaw2();
+  testJitterSaw2();
 
   bool ok = testDriftFreeJitter();
 

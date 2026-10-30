@@ -618,8 +618,15 @@ always positive and for odd n it's negative. Class is untested.
 */
 
 template<class T>
-class rsDriftFreeJitter // Maybe rename to something more general
+class rsDriftFreeJitter 
 {
+
+// ToDo: 
+// 
+// - Maybe rename to something more general. The drift-free-jitter thing is actually just the
+//   priamry intended application of this class but it doesn't really describe what it actually
+//   does. 
+
 
 public:
 

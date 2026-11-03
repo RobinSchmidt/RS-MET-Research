@@ -2212,6 +2212,15 @@ bool testDriftFreeJitter1()
   return ok;
 }
 
+// Maybe move to library:
+template<class T>
+bool rsIsInOpenRange(const std::vector<T>& x, T min, T max)
+{
+  for(const auto& xi : x)
+    if(xi <= min || xi >= max)
+      return false;
+  return true;
+}
 
 bool testDriftFreeJitter2()
 {
@@ -2236,7 +2245,10 @@ bool testDriftFreeJitter2()
     x1[n] = dfj.getSample1();
   Vec s1(N);
   rsArrayTools::cumulativeSum(&x1[0], &s1[0], N);
+  ok &= rsIsInOpenRange(s1, Real(-1), Real(+1));
   // ToDo: Check that s1 in in range (-1,+1)
+
+
 
   // ToDo: Do the same test for algorithm 2, i.e. getSample2(). Use new arrays x2,s2 for that.
   // Maybe plot the arrays. Try longer sequences and different seeds. Maybe take seed and length

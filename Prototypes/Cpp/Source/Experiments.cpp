@@ -2228,9 +2228,11 @@ bool testDriftFreeJitter2()
 
   // ToDo: Do the same test for algorithm 2, i.e. getSample2(). Use new arrays x2,s2 for that.
   // Maybe plot the arrays. Try longer sequences and different seeds. Maybe take seed and length
-  // as parameters.
-
-
+  // as parameters. Plot histograms of x1,x2. What does the distribution look like? Is it still
+  // uniform? What if we just produce the running sum directly by the PRNG and produce the actual
+  // output as its 1st difference? That should also restrict the running sum to -1..+1. But 
+  // perhaps roundoff errors could throw it off? And what would that do to the probability 
+  // distribution?
 
   return ok;
 }

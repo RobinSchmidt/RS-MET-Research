@@ -739,6 +739,17 @@ public:
   // then it might be equivalent. Hmm...I think, such a threshold t may not make much sense after 
   // all.
 
+  T getSample3()
+  {
+    T sumOld = sum;
+    sum = prng.getSampleInUnitRange();      // Random value in [0,1). ...should be in (0,1)
+    sum = T(2)*sum - T(1);                  // (0,1) -> (-1,+1)
+    rsAssert(sum > T(-1) && sum < T(+1));   // Verify invariant.
+    return sum - oldSum;
+  }
+  // Yet another algorithm. It's based on computing the desired running sum directly via the PRNG
+  // and then producing the actual output by differencing. 
+
 
   /** Resets the internal state. */
   void reset()

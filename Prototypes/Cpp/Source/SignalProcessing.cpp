@@ -684,6 +684,58 @@ protected:
 
 
 
+/**  Under construction  
+
+*/
+
+template<class T>
+class rsDriftFreeJitter2
+{
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  /** Sets the seed of the pseudo random number generator. */
+  void setRandomSeed(uint32_t newSeed) { seed = newSeed; }
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Processing
+
+  /** Produces one output sample at a time. The values produced are in the open interval (-1,+1) 
+  and we ensure that the running sum of the values is always within (-1,+1) as well. */
+  T getSample()
+  {
+    T r = prng.getSampleInUnitRange();  // Random value in [0,1).
+    if(sum > T(0))
+      r = -r;
+    sum += r;
+    return r;
+  }
+  // Needs tests
+  // Maybe use >= rather than >. Maybe provide both variants
+
+
+  /** Resets the internal state. */
+  void reset()
+  { 
+    sum = T(0); 
+    prng.setState(seed);
+  }
+
+protected:
+
+  T sum = T(0);                         // Running sum of outputs
+
+  // Embedded DSP objects:
+  rsRandomGenerator<T> prng;
+  uint32_t seed = 0;
+
+};
+
+
+
 
 //=================================================================================================
 

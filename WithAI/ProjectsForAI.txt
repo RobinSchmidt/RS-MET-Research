@@ -219,6 +219,9 @@ Misc
 - Conversion (of the coefficients) between different filter topologies (biquad-chain, state-space,
   lattice, direct forms, ...)
 
+- A standalone application for rendering multisamples and .sfz files using modal synthesis and
+  other expensive sound synthesis algorithms.
+
 - Ask AI how to write realtime audio plugins and DSP code in Rust. What would be the appropriate 
   analog of a class like rsStateVariableFilter. How would the API look like? I want an object that
   holds the (filter) algorithm's state, I want setup functions, I want some sort of getSample() 

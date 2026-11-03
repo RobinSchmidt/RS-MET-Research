@@ -2089,7 +2089,7 @@ void testJitterSaw1()
 void testJitterSaw2()
 {
   // A second experiment with jittered sawtooth wave. This time, we attempt a realtime-friendly 
-  // implementation. To this end, we want to ensure that out linear interpolation scheme by which 
+  // implementation. To this end, we want to ensure that our linear interpolation scheme by which 
   // we convert from the jittered to the uniformly sampled time axis can always be applied. This 
   // means that the jittered time instant tj[n] shall never be behind its regular counterpart 
   // tu[n] because in that case we would have to extrapolate, which we want to avoid. To ensure 

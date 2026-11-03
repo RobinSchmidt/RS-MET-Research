@@ -707,26 +707,27 @@ class rsDriftFreeJitter2
   and we ensure that the running sum of the values is always within (-1,+1) as well. */
   T getSample()
   {
-    T r = prng.getSampleInUnitRange();  // Random value in [0,1).
+    T r = prng.getSampleInUnitRange();      // Random value in [0,1).
     if(sum > T(0))
-      r = -r;
+      r = -r;                               // Now r is in (-1,+1).
     sum += r;
+    rsAssert(sum > T(-1) && sum < T(+1));   // Verify invariant.
     return r;
   }
   // Needs tests
-  // Maybe use >= rather than >. Maybe provide both variants
+  // Maybe use >= rather than > in the if(...). Maybe provide both variants
 
 
   /** Resets the internal state. */
   void reset()
   { 
-    sum = T(0); 
+    sum = T(0);
     prng.setState(seed);
   }
 
 protected:
 
-  T sum = T(0);                         // Running sum of outputs
+  T sum = T(0);                             // Running sum of outputs
 
   // Embedded DSP objects:
   rsRandomGenerator<T> prng;

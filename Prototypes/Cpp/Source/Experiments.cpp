@@ -2139,6 +2139,18 @@ void testJitterSaw2()
   // Plot results:
   rsPlotVectorsXY(tj, xj);
   rsPlotVectorsXY(tu, xu);
+
+  // ToDo:
+  //
+  // - Implement a roundtrip that resamples from regular x[n] -> irregular y[n] -> regular z[n]
+  //   via linear interpolation. We will generally have that z[n] depends on x[n-1],x[n],x[n+1] 
+  //   such that a realtime implementation would introduce a delay of 1 sample. We need dt[0] < 1,
+  //   I think.
+  //
+  // - Try different probability distributions. Maybe bi-triangular could be nice. We could produce
+  //   it as follows: (1) Create triangular distribution in -1..+1. (2) Add or subtract 1 based on
+  //   fair coin flip (based on another PRNG). (3) Maybe multiply by 0.5 to get the range back to
+  //   -1..+1 (it's now in -2..+2).
 }
 
 bool testDriftFreeJitter1()

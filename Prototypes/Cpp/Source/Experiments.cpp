@@ -2229,9 +2229,10 @@ bool testDriftFreeJitter2()
   // Types:
   using Real = double;
   using Vec  = std::vector<Real>;
+  using AT   = rsArrayTools;
 
   // Parameters:
-  int numSamples = 100;
+  int numSamples = 1000;
   uint32_t seed  = 0;
 
   // Produce output of rsDriftFreeJitter object using 1st algorithm, i.e. getSample1(), the produce
@@ -2239,14 +2240,17 @@ bool testDriftFreeJitter2()
   int N = numSamples;
   rsDriftFreeJitter2<Real> dfj;
   dfj.setRandomSeed(seed);
+
+  // Move into helper function:
   dfj.reset();
   Vec x1(N);
   for(int n = 0; n < N; n++)
     x1[n] = dfj.getSample1();
   Vec s1(N);
-  rsArrayTools::cumulativeSum(&x1[0], &s1[0], N);
+  AT::cumulativeSum(&x1[0], &s1[0], N);
   ok &= rsIsInOpenRange(s1, Real(-1), Real(+1));
-  // ToDo: Check that s1 in in range (-1,+1)
+  rsPlotVectors(s1);
+  //rsPlotVectors(x1, s1);
 
 
 
@@ -2257,6 +2261,10 @@ bool testDriftFreeJitter2()
   // output as its 1st difference? That should also restrict the running sum to -1..+1. But 
   // perhaps roundoff errors could throw it off? And what would that do to the probability 
   // distribution?
+
+  // Maybe wrap the whole stuff from reset() downward into a helper function. But for that to work,
+  // we need to let dfj have a general getSample() function that switches internally between the
+  // different algorithms which we would then set up as dfj::setAlgorithm(...)
 
   return ok;
 }

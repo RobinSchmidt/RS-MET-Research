@@ -2141,7 +2141,7 @@ void testJitterSaw2()
   rsPlotVectorsXY(tu, xu);
 }
 
-bool testDriftFreeJitter()
+bool testDriftFreeJitter1()
 {
   // Unit test for class rsDriftFreeJitter. This is a white box test in which we make assumptions 
   // about the inner working of the class, namely that it uses an object of class rsRandomGenerator
@@ -2157,7 +2157,6 @@ bool testDriftFreeJitter()
   // Parameters:
   int numSamples = 100;
   uint32_t seed  = 0;
-
 
   // Produce the raw random number sequence:
   int N = numSamples;
@@ -2201,11 +2200,51 @@ bool testDriftFreeJitter()
   return ok;
 }
 
+
+bool testDriftFreeJitter2()
+{
+  bool ok = true;
+
+  // Types:
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+  // Parameters:
+  int numSamples = 100;
+  uint32_t seed  = 0;
+
+  // Produce output of rsDriftFreeJitter object using 1st algorithm, i.e. getSample1(), the produce
+  // its running sum and check that it is within the range (-1,+1):
+  int N = numSamples;
+  rsDriftFreeJitter2<Real> dfj;
+  dfj.setRandomSeed(seed);
+  dfj.reset();
+  Vec x1(N);
+  for(int n = 0; n < N; n++)
+    x1[n] = dfj.getSample1();
+  Vec s1(N);
+  rsArrayTools::cumulativeSum(&x1[0], &s1[0], N);
+  // ToDo: Check that s1 in in range (-1,+1)
+
+  // ToDo: Do the same test for algorithm 2, i.e. getSample2(). Use new arrays x2,s2 for that.
+  // Maybe plot the arrays. Try longer sequences and different seeds. Maybe take seed and length
+  // as parameters.
+
+
+
+  return ok;
+}
+
+
+
 void testJitterSaw()
 {
-  testJitterSaw2();
+  //testJitterSaw2();
 
-  bool ok = testDriftFreeJitter();
+  bool ok = true;
+  ok &= testDriftFreeJitter1();
+  ok &= testDriftFreeJitter2();
+
 
   testJitterSaw1();
   testJitterSaw2();

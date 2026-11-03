@@ -705,7 +705,7 @@ class rsDriftFreeJitter2
 
   /** Produces one output sample at a time. The values produced are in the open interval (-1,+1) 
   and we ensure that the running sum of the values is always within (-1,+1) as well. */
-  T getSample()
+  T getSample1()
   {
     T r = prng.getSampleInUnitRange();      // Random value in [0,1).
     if(sum > T(0))
@@ -716,6 +716,27 @@ class rsDriftFreeJitter2
   }
   // Needs tests
   // Maybe use >= rather than > in the if(...). Maybe provide both variants
+  // This algorithm may be a bit overly aggressive with the nudging.
+
+
+  T getSample2()
+  {
+    T r = prng.getSampleInUnitRange();      // Random value in [0,1). ...should be in (0,1)
+    r = T(2)*r - T(1);                      // (0,1) -> (-1,+1)
+    if(rsAbs(sum + r) >= T(1))
+      r = -r;
+    rsAssert(sum > T(-1) && sum < T(+1));   // Verify invariant.
+    return r;
+  }
+  // Another variant that is somewhat less aggressive with the nudging and therefore less 
+  // predictable. It only inverts the sign of the current value, if keeping it would get the
+  // running sum outside the allowed interval of (-1,+1).
+  // Maybe replace the comparison  if(rsAbs(sum + r) >= T(1))  with a more flexible
+  // if(rsAbs(sum + r) >= t)  for some threshold value t that can be passed in as parameter. But 
+  // maybe that would be equivalent to just scaling the output r? But no! At least not if we scale
+  // the final output. If we would scale r by t before the comparison (and replace the if(...)), 
+  // then it might be equivalent. Hmm...I think, such a threshold t may not make much sense after 
+  // all.
 
 
   /** Resets the internal state. */

@@ -725,6 +725,7 @@ public:
     r = T(2)*r - T(1);                      // (0,1) -> (-1,+1)
     if(rsAbs(sum + r) >= T(1))
       r = -r;
+    sum += r;
     rsAssert(sum > T(-1) && sum < T(+1));   // Verify invariant.
     return r;
   }
@@ -736,7 +737,7 @@ public:
   // maybe that would be equivalent to just scaling the output r? But no! At least not if we scale
   // the final output. If we would scale r by t before the comparison (and replace the if(...)), 
   // then it might be equivalent. Hmm...I think, such a threshold t may not make much sense after 
-  // all.
+  // all. ..Or maybe it does? It may give us some sort of safety margin.
   // Rename to getSampleNegateOnOvershoot()
 
   T getSample3()

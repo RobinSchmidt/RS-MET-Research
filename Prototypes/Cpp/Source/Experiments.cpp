@@ -2259,7 +2259,7 @@ bool testDriftFreeJitter2()
   };
 
   // Do the tests with the different modes:
-  doTest(Mode::negateOnOvershoot);  // Fails!
+  doTest(Mode::negateOnOvershoot);
   doTest(Mode::alternateSign);
   doTest(Mode::differentiate);
 
@@ -2290,7 +2290,12 @@ bool testDriftFreeJitter2()
 
   // Maybe wrap the whole stuff from reset() downward into a helper function. But for that to work,
   // we need to let dfj have a general getSample() function that switches internally between the
-  // different algorithms which we would then set up as dfj::setAlgorithm(...)
+  // different algorithms which we would then set up as dfj::setAlgorithm(...) ...done
+
+  // Use this to produce a jittered time axis. Plot the resulting jittered time axes that would be
+  // produced by the different algorithms. Try to figure out which one is "best" - whatever that 
+  // means. I think, it should perhaps mean that the jittered time instants tend to fall 
+  // preferably near the half integers?
 
   return ok;
 }

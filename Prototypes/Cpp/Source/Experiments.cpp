@@ -2259,9 +2259,9 @@ bool testDriftFreeJitter2()
   };
 
   // Do the tests with the different modes:
-  doTest(Mode::alternateSign);
   doTest(Mode::negateOnOvershoot);  // Fails!
-  doTest(Mode::differentiate);      // Fails!
+  doTest(Mode::alternateSign);
+  doTest(Mode::differentiate);
 
 
   // Old:

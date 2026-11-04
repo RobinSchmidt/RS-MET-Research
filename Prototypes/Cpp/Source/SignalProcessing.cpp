@@ -745,7 +745,7 @@ public:
     sum = prng.getSampleInUnitRange();      // Random value in [0,1). ...should be in (0,1)
     sum = T(2)*sum - T(1);                  // (0,1) -> (-1,+1)
     rsAssert(sum > T(-1) && sum < T(+1));   // Verify invariant.
-    return sum - oldSum;
+    return sum - sumOld;
   }
   // Yet another algorithm. It's based on computing the desired running sum directly via the PRNG
   // and then producing the actual output by first order differencing which is the inverse 
@@ -799,7 +799,7 @@ public:
     {
     case Mode::alternateSign:     return Base::getSample1();
     case Mode::negateOnOvershoot: return Base::getSample2();
-    case Mode::differentiate:     return Base::getSample2();
+    case Mode::differentiate:     return Base::getSample3();
     }
   }
 

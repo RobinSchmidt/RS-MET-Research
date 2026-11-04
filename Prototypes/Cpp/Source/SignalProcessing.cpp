@@ -684,9 +684,7 @@ protected:
 
 
 
-/**  Under construction  
-
-*/
+/**  Under construction  */
 
 template<class T>
 class rsDriftFreeJitter2
@@ -718,6 +716,7 @@ public:
   // Needs tests
   // Maybe use >= rather than > in the if(...). Maybe provide both variants
   // This algorithm may be a bit overly aggressive with the nudging.
+  // Rename to getSampleAlternate()
 
 
   T getSample2()
@@ -738,6 +737,7 @@ public:
   // the final output. If we would scale r by t before the comparison (and replace the if(...)), 
   // then it might be equivalent. Hmm...I think, such a threshold t may not make much sense after 
   // all.
+  // Rename to getSampleNegateOnOvershoot()
 
   T getSample3()
   {
@@ -750,7 +750,7 @@ public:
   // Yet another algorithm. It's based on computing the desired running sum directly via the PRNG
   // and then producing the actual output by first order differencing which is the inverse 
   // operation to the running sum.
-
+  // Rename to getSampleDifferentiate()
 
   /** Resets the internal state. */
   void reset()
@@ -768,6 +768,50 @@ protected:
   uint32_t seed = 0;
 
 };
+
+
+
+
+/** Convenience wrapper class around rsDriftFreeJitter2 that lets the user set the mode and then
+call a general getSample() function which does the dispatch accroding to the desired mode 
+internally. */
+
+template<class T>
+class rsDriftFreeJitter3 : public rsDriftFreeJitter2<T>
+{
+
+public:
+
+  using Base = rsDriftFreeJitter2<T>;
+
+  enum class Mode
+  {
+    alternateSign,
+    negateOnOvershoot,
+    differentiate
+  };
+
+  void setMode(Mode newMode) { mode = newMode; }
+
+  T getSample()
+  {
+    switch(mode)
+    {
+    case Mode::alternateSign:     return Base::getSample1();
+    case Mode::negateOnOvershoot: return Base::getSample2();
+    case Mode::differentiate:     return Base::getSample2();
+    }
+  }
+
+
+
+protected:
+
+  Mode mode = Mode::negateOnOvershoot;
+
+};
+
+
 
 
 

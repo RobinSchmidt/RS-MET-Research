@@ -748,7 +748,8 @@ public:
     return sum - oldSum;
   }
   // Yet another algorithm. It's based on computing the desired running sum directly via the PRNG
-  // and then producing the actual output by differencing. 
+  // and then producing the actual output by first order differencing which is the inverse 
+  // operation to the running sum.
 
 
   /** Resets the internal state. */

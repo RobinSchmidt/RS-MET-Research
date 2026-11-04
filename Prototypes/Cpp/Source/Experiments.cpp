@@ -2237,25 +2237,25 @@ bool testDriftFreeJitter2()
   int numSamples = 1000;
   uint32_t seed  = 0;
 
-  // Produce output of rsDriftFreeJitter object using 1st algorithm, i.e. getSample1(), the produce
-  // its running sum and check that it is within the range (-1,+1):
-  int N = numSamples;
+  // Create and set up rsDriftFreeJitter3 object:
   rsDriftFreeJitter3<Real> dfj;
   dfj.setRandomSeed(seed);
 
-  // Helper function:
+  // Helper function that produces the output of the dfj object, then computes it running sum and
+  // verifies that it remains in the allowed interval of (-1,+1). We may also plot the result.
   auto doTest = [&](Mode mode)
   {
     dfj.setMode(mode);
     dfj.reset();
-    Vec x1(N);
+    int N = numSamples;
+    Vec x(N);
     for(int n = 0; n < N; n++)
-      x1[n] = dfj.getSample();
-    Vec s1(N);
-    AT::cumulativeSum(&x1[0], &s1[0], N);
-    ok &= rsIsInOpenRange(s1, Real(-1), Real(+1));
-    rsPlotVectors(s1);
-    //rsPlotVectors(x1, s1);
+      x[n] = dfj.getSample();
+    Vec s(N);
+    AT::cumulativeSum(&x[0], &s[0], N);
+    ok &= rsIsInOpenRange(s, Real(-1), Real(+1));
+    rsPlotVectors(s);
+    //rsPlotVectors(x, s);
   };
 
   // Do the tests with the different modes:
@@ -2263,41 +2263,20 @@ bool testDriftFreeJitter2()
   doTest(Mode::alternateSign);
   doTest(Mode::differentiate);
 
-
-  // Old:
-  /*
-  // Move into helper function:
-  dfj.reset();
-  Vec x1(N);
-  for(int n = 0; n < N; n++)
-    x1[n] = dfj.getSample();
-  Vec s1(N);
-  AT::cumulativeSum(&x1[0], &s1[0], N);
-  ok &= rsIsInOpenRange(s1, Real(-1), Real(+1));
-  rsPlotVectors(s1);
-  //rsPlotVectors(x1, s1);
-  */
-
-
-
-  // ToDo: Do the same test for algorithm 2, i.e. getSample2(). Use new arrays x2,s2 for that.
-  // Maybe plot the arrays. Try longer sequences and different seeds. Maybe take seed and length
-  // as parameters. Plot histograms of x1,x2. What does the distribution look like? Is it still
-  // uniform? What if we just produce the running sum directly by the PRNG and produce the actual
-  // output as its 1st difference? That should also restrict the running sum to -1..+1. But 
-  // perhaps roundoff errors could throw it off? And what would that do to the probability 
-  // distribution?
-
-  // Maybe wrap the whole stuff from reset() downward into a helper function. But for that to work,
-  // we need to let dfj have a general getSample() function that switches internally between the
-  // different algorithms which we would then set up as dfj::setAlgorithm(...) ...done
-
-  // Use this to produce a jittered time axis. Plot the resulting jittered time axes that would be
-  // produced by the different algorithms. Try to figure out which one is "best" - whatever that 
-  // means. I think, it should perhaps mean that the jittered time instants tend to fall 
-  // preferably near the half integers?
-
   return ok;
+
+  // ToDo:
+  // 
+  // - Maybe take seed and length N (aka numSamples) as parameters. 
+  // 
+  // - Plot histograms of x and s. What do the distributions look like? Are they uniform? Maybe in
+  //   case of Mode::differentiate triangular?
+  // 
+  // - Use this class to produce a jittered time axis. That may involve to use the output of this
+  //   class, scale it by some factor and add it to 1 and then take the running sum of that. Plot 
+  //   the resulting jittered time axes that would be produced by the different algorithms. Try to 
+  //   figure out which one is "best" - whatever that means. I think, it should perhaps mean that 
+  //   the jittered time instants tend to fall preferably near the half integers?
 }
 
 

@@ -716,7 +716,7 @@ public:
   // Needs tests
   // Maybe use >= rather than > in the if(...). Maybe provide both variants
   // This algorithm may be a bit overly aggressive with the nudging.
-  // Rename to getSampleAlternate()
+  // Rename to getSampleSignAlternate()
 
 
   T getSample2()
@@ -737,7 +737,11 @@ public:
   // maybe that would be equivalent to just scaling the output r? But no! At least not if we scale
   // the final output. If we would scale r by t before the comparison (and replace the if(...)), 
   // then it might be equivalent. Hmm...I think, such a threshold t may not make much sense after 
-  // all. ..Or maybe it does? It may give us some sort of safety margin.
+  // all. ..Or maybe it does? It may give us some sort of safety margin of m = 1-t. I think, the
+  // function getSample1() does the same as getSample2() would do when we set t = 0. Verify this!
+  // If true, it means that we can morph the the behavior betweenthese two functions continuously.
+  // Maybe somewhere there is a sweet spot in some sense? Maybe at t=0.5, i.e. right in the middle
+  // of the range for t?
   // Rename to getSampleNegateOnOvershoot()
 
   T getSample3()
@@ -774,7 +778,7 @@ protected:
 
 
 /** Convenience wrapper class around rsDriftFreeJitter2 that lets the user set the mode and then
-call a general getSample() function which does the dispatch accroding to the desired mode 
+call a general getSample() function which does the dispatch according to the desired mode 
 internally. */
 
 template<class T>

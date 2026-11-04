@@ -2230,6 +2230,8 @@ bool testDriftFreeJitter2()
   using Real = double;
   using Vec  = std::vector<Real>;
   using AT   = rsArrayTools;
+  using DFJ  = rsDriftFreeJitter3<Real>;
+  using Mode = DFJ::Mode;
 
   // Parameters:
   int numSamples = 1000;
@@ -2238,19 +2240,43 @@ bool testDriftFreeJitter2()
   // Produce output of rsDriftFreeJitter object using 1st algorithm, i.e. getSample1(), the produce
   // its running sum and check that it is within the range (-1,+1):
   int N = numSamples;
-  rsDriftFreeJitter2<Real> dfj;
+  rsDriftFreeJitter3<Real> dfj;
   dfj.setRandomSeed(seed);
 
+  // Helper function:
+  auto doTest = [&](Mode mode)
+  {
+    dfj.setMode(mode);
+    dfj.reset();
+    Vec x1(N);
+    for(int n = 0; n < N; n++)
+      x1[n] = dfj.getSample();
+    Vec s1(N);
+    AT::cumulativeSum(&x1[0], &s1[0], N);
+    ok &= rsIsInOpenRange(s1, Real(-1), Real(+1));
+    rsPlotVectors(s1);
+    //rsPlotVectors(x1, s1);
+  };
+
+  // Do the tests with the different modes:
+  doTest(Mode::alternateSign);
+  doTest(Mode::negateOnOvershoot);  // Fails!
+  doTest(Mode::differentiate);      // Fails!
+
+
+  // Old:
+  /*
   // Move into helper function:
   dfj.reset();
   Vec x1(N);
   for(int n = 0; n < N; n++)
-    x1[n] = dfj.getSample1();
+    x1[n] = dfj.getSample();
   Vec s1(N);
   AT::cumulativeSum(&x1[0], &s1[0], N);
   ok &= rsIsInOpenRange(s1, Real(-1), Real(+1));
   rsPlotVectors(s1);
   //rsPlotVectors(x1, s1);
+  */
 
 
 

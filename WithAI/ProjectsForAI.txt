@@ -221,8 +221,13 @@ Misc
 
 - A standalone application for rendering multisamples and .sfz files using modal synthesis and
   other expensive sound synthesis algorithms.
+  
+- Implement various adaptive filtering algorithms. Scan the relevant pages from the Haykin book,
+  translate them to LaTeX, then to C++ code.
 
-- Maybe AI can help to create VST2 Plugins without the Steinberg SDK
+- Maybe AI can help to create VST2 Plugins without the Steinberg SDK.
+
+-Let AI help with the licensing documents (GPL + commercial). But which GPL? 2.0, 3.0, AGPL, ...?
 
 - Ask AI how to write realtime audio plugins and DSP code in Rust. What would be the appropriate 
   analog of a class like rsStateVariableFilter. How would the API look like? I want an object that

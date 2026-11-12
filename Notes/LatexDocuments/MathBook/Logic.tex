@@ -186,6 +186,9 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 % https://en.wikipedia.org/wiki/List_of_logic_symbols
 % I think, we should use the \turnstile symbol instead of \Rightarrow
 
+% This video:
+% https://www.youtube.com/watch?v=fa7C8b5_s_Y
+% says at 1:30 that the "hypothetical syllogism" is also called a "chain"
 
 
 %---------------------------------------------------------------------------------------------------
@@ -308,10 +311,21 @@ In 1st order logic, the variables that were formerly just atomic truth values no
 \medskip
 In 2nd order logic, we can additionally quantify over predicates. For example, we could write down the law of the excluded middle as: $\forall \varphi \forall x: (\varphi(x) \vee \neg \varphi(x))$. The formula says that for any predicate $\varphi$ and for any variable $x$, either $\varphi(x)$ or $\neg \varphi(x)$ is true\footnote{Shouldn't the law use an exclusive or, i.e. say $\varphi(x) \xor \neg \varphi(x)$? I mean, the use of inclusive or does not render the statement wrong (in fact, it turns it into a tautology) - but it doesn't seem to express that $\varphi$ and $\neg \varphi$ are mutually exclusive which is clearly the intended meaning when calling it law of the \emph{excluded} middle. Figure out!}.
 
-% The "middle" in this context could either mean: "p is neither true nor false" or it could mean: "p is true and false at the same time". The formula using the inclusive or onyl excludes the first of these possibilities, I think.
+% The "middle" in this context could either mean: "p is neither true nor false" or it could mean: "p is true and false at the same time". The formula using the inclusive or only excludes the first of these possibilities, I think.
+
+% OK - I could resolve the problem with Claude Sonnet 5.5 (medium effort) here:
+% https://claude.ai/share/b2c81683-f1aa-426f-95d9-ad933d5d7df5
+% It has to do with the fact that the "law of excluded" middle is only one of "three laws of thought". Another one of these is the law of non-contradiction which rules out a situation like "p and not(p)". The third is ....
+
+% On its own, the law of excluded middle is more like a "law of excluded neither" but not a "law of excluded both"
+
+% https://en.wikipedia.org/wiki/Law_of_excluded_middle
 
 % https://www.youtube.com/watch?v=niqqm1DRTkE
 % Mentions law of excluded middle at 6:20
+
+% https://www.britannica.com/topic/laws-of-thought
+% https://math.stackexchange.com/questions/3987142/logic-without-the-three-traditional-laws-of-thought
 
 % -bound variables
 

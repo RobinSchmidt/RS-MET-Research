@@ -70,7 +70,7 @@ ToDo: give formulas for finite and infinite geometric series, infinite alternati
 \subsection{Convergence}
 We met the notion of convergence already in the context of sequences. Since a series is just a special kind of sequence, we can apply this notion of convergence to sequences, too. 
 
-% ToDo: Explain that when you add infinitely many things of a certain kind, you may get as result a thing of a different kind. For example, adding up infinitely many rational numbers may yield an irrational number. Use  \sum 1/n^2 = pi^2/6  as example. As another example, adding infinitely many continuous (even smooth) functions can yield a discontinuous function. Examples are the Fourier series of the saw- and square wave. The triangle wave would be an example for getting function with a corner (rather than a jump) from smooth functions. Here, the convergence is even better (explain in which sense - I think it converges pointwise and at a higher rate). Maybe explain the relation of that observation with the notion of a space being (Cauchy?) "complete".
+% ToDo: Explain that when you add infinitely many things of a certain kind, you may get as result a thing of a different kind. For example, adding up infinitely many rational numbers may yield an irrational number. Use  \sum 1/n^2 = pi^2/6  as example. As another example, adding infinitely many continuous (even smooth) functions can yield a discontinuous function. Examples are the Fourier series of the saw- and square wave. The triangle wave would be an example for getting function with a corner (rather than a jump) from smooth functions. Here, the convergence is even better (explain in which sense - I think it converges pointwise and at a higher rate). Maybe explain the relation of that observation with the notion of a space being (Cauchy?) "complete". This may be mnetioned further below in the section about Fourier series.
 
 \subsubsection{Absolute Convergence}
 Specifically for series, there is a definition for an even stronger form of convergence that is relevant in certain contexts. This stronger type of convergence is called \emph{absolute convergence}. If a series converges absolutely, it means that we can form a new series by taking the absolute values of terms of the original series and that new series still converges. We can intuitively see that this is a stronger requirement by noticing that when a series has positive and negative terms, they may partially cancel out thereby making the partial sums smaller compared to the case when all terms would have the same sign. Series that converge but do not converge absolutely, have a rather peculiar property which is encapsulated in...
@@ -234,6 +234,7 @@ where $c$ is some fixed constant. It's often zero but for generality, I've alrea
 
 % https://en.wikipedia.org/wiki/Entire_function
 
+% Mention that "power series" are also known as Taylor series (with MacLauren series as special case.)
 
 
 
@@ -419,6 +420,7 @@ There are different conventions for dealing with the $a_0$ coefficient which rep
 %...TBC...
 
 %explain different conventions - some use $2 \pi x$ as argument, some pull out $a_0/2$, etc.
+% Mention that trig series are also known as Fourier series
 
 \subsubsection{Fourier Expansion}
 Recall that the Taylor expansion expressed arbitrary functions as (potentially) infinite weighted sums of powers of the variable $x$. The coefficients were computed using derivatives of the function at one single point. Fourier expansions, on the other hand, express arbitrary periodic functions as (potentially) infinite sums of sines and cosines of $x$. The coefficients are calculated by a definite integral over one period. The formulas are:
@@ -511,6 +513,13 @@ If we truncate a Fourier series at a given index, say $n$, then we obtain what i
 % Gibbs Phenomenon Explained Visually — Why Fourier Series Overshoots!
 % https://www.youtube.com/watch?v=ca_KpRv3kJ8
 
+
+% ToDo: Make a section that explains under which conditions Fourier series converge and in which sense.
+
+% See 9:08 here:
+% The Greatest Mathematicians in Paris Wouldn't Accept His Math. Now It's in Every Phone.
+% https://www.youtube.com/watch?v=Hf-dzAmYzUg
+% It states that even for continuous functions, the series may fail to converge. What are these? Maybe frcatal functions like the Weierstrass function? It mentions a function constructed by Andrey Kolmogorov
 
 \subsubsection{Connection to Power Series}
 Taylor and Fourier series seem to be totally disconnected things. However, when we widen our perspective to the complex domain, a beautiful connection between these two emerges...

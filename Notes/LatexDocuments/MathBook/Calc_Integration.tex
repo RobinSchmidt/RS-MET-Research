@@ -394,7 +394,16 @@ ToDo: Explain how integration can be used to compute (arc) lengths of function g
 \subsection{The Lebesgue Integral} 
 Most functions that we will typically encounter in applications are indeed Riemann-integrable, so the definition of the Riemann integral is all we need to integrate them. However, in certain areas of mathematics, some more exotic functions pop up which are not Riemann integrable. An example is the Dirichlet function which is defined to be $1$ at the rationals and $0$ at the irrationals. But not all is lost: a more powerful (albeit more complicated) definition of an integral exists under which some of these wilder functions become integrable. This is the Lebesgue integral. For Riemann-integrable functions, it produces the same results as the Riemann integral but it can be applied to a wider range of functions. Some functions that are not Riemann-integrable are Lebesgue-integrable. The general idea is to not split the integration interval on the $x$-axis into many subintervals but instead split the $y$-axis into intervals and add up horizontal slabs rather than vertical columns. To define the Lebesgue integral formally, we will first need to define the notion of a measure.
 
+% ToDo: Define the Dirichlet function with a formula
+
 %https://en.wikipedia.org/wiki/Lebesgue_integration
+
+% Why Quantum Physics Needs Better Math
+% https://www.youtube.com/watch?v=vm25_ryHZ9k
+% -Has another example of a function that is not Riemann integrable: A function that is 1 for
+%  x \in a "fat Cantor set" and 0 everywhere else.
+
+
 
 \subsubsection{Measures}
 Let's assume, we have a given set $A$. For the time being, you may think of $A = \mathbb{R}^n$ for some positive natural number $n$ as an example. Informally, a measure on $A$ is a function, typically denoted as $\mu(X)$, into which we can plug in a subset $X$ of $A$ as input and it spits out a nonnegative real number or infinity as output. A first attempt to formalize it could look like: $\mu: \mathcal{P}(A) \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ where $\mathcal{P}(A)$ denotes the power set of $A$, i.e. the set of all subsets of A. However, the actual definition is slightly more complicated and more general. The domain of $\mu$ is not necessarily the set of \emph{all} subsets of $A$, although it could be. Instead, it is some set of subsets that satisfies some constraints. These constraints are encapsulated in the definition of a so called $\sigma$-algebra. With this definition in place, we will be able to state the actual formal definition of what a measure is.

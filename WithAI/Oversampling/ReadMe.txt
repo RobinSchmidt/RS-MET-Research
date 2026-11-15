@@ -6,6 +6,7 @@ an identity operation up to numeric roundofff errors.
 
 Chat with Claude Sonnet 5.5, 2026-10-13
 https://github.com/copilot/share/c25e12ac-49a0-88d5-8943-b80804806057
+...Its gone! GitHub deletes them after some time!! WTF!!! Try to re-create it and then export it!
 
 Follow up questions:
 

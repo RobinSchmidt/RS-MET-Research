@@ -7,8 +7,22 @@ an identity operation up to numeric roundofff errors.
 Chat with Claude Sonnet 5.5, 2026-10-13
 https://github.com/copilot/share/c25e12ac-49a0-88d5-8943-b80804806057
 ...Its gone! GitHub deletes them after some time!! WTF!!! Try to re-create it and then export it!
+But maybe this time, do it in claude.ai. There, the chats are stored indefinitely. This was the
+first prompt:
+
+I write audio signal processing algorithms for musical purposes. In this context, it is often necessary to use oversampling, i.e. to first upsample an incoming signal to a higher sample rate, then do the actual processing at that higher rate, then downsample it to the original sample rate again. Both, up- and downsampling steps involve lowpass filtering the signal. In the case of upsampling, the lowpass is called anti-imaging lowpass, in the case of downsampling, it's called anti-aliasing lowpass. What I want to create is a pair of FIR upsampling and downsampling filter kernels (let's denote them by u[n] and d[n] respectively), such that an upsampling-downsampling roundtrip is an exact identity operations (up to floating point roundoff errors). For concreteness, let's assume I want to implement a waveshaping distortion effect. So, the processing would be:
+
+  input -> upsample -> waveshaper -> downsample -> output
+
+The goal is that my oversampled distortion algorithm is completely transparent as long as the waveshaper that sits in between the upsampler and the downsampler is itself an identity function (i.e. does nothing). Is there any known literature for this particular type of filter design problem?
+
+
+
+
 
 Follow up questions:
+
+
 
 -Why is the downsampling kernel roughly twice as long as the upsampling kernel? Is this a general rule?
 

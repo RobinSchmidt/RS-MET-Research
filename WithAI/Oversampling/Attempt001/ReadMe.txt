@@ -1,6 +1,6 @@
-Some investigations about desigining a pair of filters for upsampling and downsampling that allows
+Some investigations about designing a pair of filters for upsampling and downsampling that allows
 for a transparent oversampling process, i.e. one in which the upsample -> downsample roundtrip is
-an identity operation up to numeric roundofff errors.
+an identity operation up to numeric roundoff errors.
 
 
 

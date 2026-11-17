@@ -21,3 +21,11 @@ In the third attempt, I went back to GitHub Copilot but this time using the mode
 default effort level. This time, I made sure to export the chat to a .md file so it doesn't get lost
 again. Codex gave pretty concise replies and code. If that code works, it might be the best option.
 Codex also directly offered to write a Python script with a convenient API.
+
+
+
+Some resources:
+
+Multirate Systems and Filter Banks  by  Vaidyanathan
+https://www.amazon.de/-/en/Multirate-Systems-Filter-Banks-Vaidyanathanm/dp/0136057187
+https://authors.library.caltech.edu/records/rmhds-22q28

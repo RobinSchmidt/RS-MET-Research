@@ -189,3 +189,52 @@ Here are the plots for the final design (I found and fixed a plotting-axis bug a
 **Figure 2** — roundtrip base-rate gain for M = 2/4/8: 0 dB passband, transition centered exactly at π/M (dashed), ~−87 dB stopband. The passband detail shows ripple around ±0.001 dB up to the band edge.
 
 One note: the passband of `|H|` sits at +12 dB (= M = 4×) by design — this exactly cancels the 1/M scaling of decimation, so the roundtrip gain at base rate is unity, not M.
+
+## @RobinSchmidt
+
+Is it possible to design a linear phase u[n] with even symmetry such that u[n] = u[-n]. That would be more symmetrical and avoids the reversal of d. Maybe can you add an option to the function to switch between minimum phase and linear phase designs? Or maybe provide a second function for the linear phase case? Do whatever is cleaner code wise, i.e. avoids code duplication best.
+
+## Copilot
+
+Good question — yes, that's possible! If `u` is symmetric (zero-phase), then `h = u*u` means `H(ω) = U(ω)²` with real, even `U(ω) = sqrt(A(ω))` — a valid spectral factorization of the same Nyquist prototype. So `d = u`, no reversal. One caveat: the exact square root is generally an *infinite* sequence, so truncation perturbs the Nyquist zeros. I'll fix that with a few Newton iterations that drive the off-center `kM` taps of `u*u` back to zero exactly — the symmetric kernel has more free parameters than zero-constraints, so this converges to machine precision.
+
+Implementation: one function with a `phase` parameter ("min" or "linear"), sharing the prototype design, lift, and normalization steps:
+
+Linear-phase kernels are exactly symmetric but the Newton iteration stalls at ~1e-4. Let me debug the convergence:
+
+My debug script has an operator-precedence typo (`Lh-1//2` = 129, not 64). Fixing:
+
+Found it — Jacobian bug: I clip negative `m-j` indices to 0 but only mask the upper out-of-range side, so negative-index contributions leak in. Fixing in the library:
+
+Linear-phase now hits machine precision for M=4/8. M=2 stalls — let me check if it's a singular system (M=2, L=31 gives a square 16×16 Jacobian):
+
+Done. Let me generate a comparison plot of the two kernel variants:
+
+The null-space fit made things worse — I suspect the real problem is the huge first Newton step (the truncated sqrt kernel's center tap is off by ~0.75), which throws the iterate far from the good-response start point. Let me try prescaling the start so the center tap is already 1:
+
+Something's off — even the unconstrained fit looks bad. Let me sanity-check the pure least-squares fit without any constraints:
+
+Even the truncated sqrt kernel shows −4.4 dB stopband here, contradicting the earlier −38 dB plot. Let me find the discrepancy:
+
+The linear variant regressed to ~3e-3 (was 8e-4 in my earlier prototype). Let me find what changed:
+
+Lift doesn't matter — the residual might be DFT-discretization (time-aliasing) limited rather than truncation-limited. Checking `n_fft` dependence:
+
+Not grid-limited either — it's genuine truncation error: the sqrt kernel inherits the windowed-sinc's ~1/n tail, so the residual decays only like 1/L (3.2e-3 at L=65 → 2.2e-3 at L=129). This is the fundamental price of the symmetric root. Let me finalize the file with honest documentation and regenerate the comparison plot:
+
+Done — I added a `phase` parameter to the same function (no code duplication; prototype design, lift, and normalization are shared). But the investigation uncovered an important theoretical caveat you should know about:
+
+## The math
+
+Yes, a symmetric `u[n] = u[-n]` with `d = u` is possible in principle: if `u` is zero-phase, `U(ω)` is real, so `u*u = h` just means `U(ω) = ±√A(ω)` — a valid square root of the same Nyquist prototype. **However**: since `A(ω) > 0` except at stopband nulls, the sign is fixed, so the symmetric root is essentially unique — and it has *infinite* length. Truncating it to L taps is the only option, and I verified the hard way that Newton iterations to force the `kM` taps back to exact zero destroy the magnitude response (the tap-constraint Jacobian is nearly singular in the symmetric parametrization — tested damped Newton, penalty methods, null-space optimization; all bad tradeoffs).
+
+## Results (`/root/nyquist_pair.py`)
+
+| variant | roundtrip error | per-kernel response | structure |
+|---|---|---|---|
+| `phase="min"` (default) | ~1e-7 (≈ −140 dB) | −38 dB stopband | `d = u[::-1]` |
+| `phase="linear"` | ~2e-3 (≈ −50 dB, improves ~1/L) | identical magnitude | `d = u`, symmetric |
+
+The plot shows both: min-phase kernel is front-loaded, linear-phase is symmetric; magnitudes are essentially identical (both are √ of the prototype); group delay differs per-stage (the min-phase *roundtrip* is still linear-phase overall since `d` mirrors `u`); both roundtrips show a clean delta on linear scale.
+
+**My recommendation**: use `phase="min"` for production (exact identity where it matters) and `phase="linear"` only if the symmetric single-kernel structure is worth −50 dB roundtrip residue — e.g., for debugging or if you want to share one kernel table between upsampler and downsampler.

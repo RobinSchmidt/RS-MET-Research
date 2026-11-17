@@ -31,3 +31,10 @@ def test_errors_and_warnings():
         ps.design_matched(2, 0.8, K=20)                     # L=2 has no freedom
     with pytest.raises(ps.SpecNotReached):
         ps.design_matched(4, 0.8, 90, K=10, strict=True)
+
+
+def test_betas_multistart_not_worse_than_single():
+    one = ps.design_matched(4, 0.8, K=24, betas=(4.0,))
+    many = ps.design_matched(4, 0.8, K=24, betas=(2.0, 4.0, 6.0))
+    assert many.metrics()["u_stop_db"] <= one.metrics()["u_stop_db"] + 1e-9
+    assert many.nyquist_error < 1e-14

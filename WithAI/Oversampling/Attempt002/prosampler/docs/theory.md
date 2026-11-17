@@ -68,8 +68,12 @@ onto the constraint set (so the result is exactly Nyquist) and perturbed restart
 * Degrees of freedom: `(L - 2) K / 2` for symmetric `g` with `N = L K + 1` taps. For `L = 2` this is zero: the
   solutions are isolated points, badly conditioned (Jacobian condition about 1e12), and the from-scratch solver finds
   poor ones. For `L = 2` prefer the pair.
-* The solver is reliable up to about 60 dB. Beyond that it may stall (e.g. `L = 4`, passband 0.9 near -74 dB although
-  -83 dB is achievable). The result is always exactly Nyquist; only its stopband may be worse than attainable.
+* The optimiser finds local minima: the result depends on the starting kernel and is not monotone in `K`
+  (`L = 4`, passband 0.9: -84.0 dB at K = 130 but -75.7 dB at K = 140 from the same default start; a Kaiser start with
+  `beta = 2` gives -86.7 dB at K = 140). `design_matched` therefore uses several cold starts (`betas`; automatic above
+  60 dB) plus the warm start, and keeps the best. A spec-driven search that only warm-started from failed designs got
+  stuck near -74.6 dB all the way up to K = 596. With multi-start, `L = 4`, passband 0.9, 80 dB is reached at K = 123
+  (N = 493, -80.5 dB) and 85 dB at K = 133 (N = 533, -86.8 dB), each in about 4.5 minutes. The result is always exactly Nyquist; only the stopband may be worse than attainable.
 * `g` has DC gain only approximately `sqrt(L)`: (N) fixes every L-th sample of `g * g`, not the total sum.
 
 ### Cost of matching
@@ -95,6 +99,14 @@ when memory, not arithmetic, is the constraint. (Symmetry is exploited for the s
 * `tie`: penalise `|u / sqrt(L) - d sqrt(L)|^2` with increasing weight on an equal-length pair, average, and polish with
   the exact matched solver. Typical cost: tens of dB (L = 4, 40 dB start: about -48 dB at equal lengths, about -28 dB
   after tying). The result is exactly `u = d`.
+
+Test at larger size (`L = 4`, passband 0.9, N = 521, i.e. K = 130; start: 361-tap Kaiser-sinc `u` with 100 dB and its
+681-tap partner): the rebalance path stays near -103 / -108 dB for the first ~10 steps, degrades to about -90 dB in the
+middle and ends at -91.0 dB (`u`) / -95.8 dB (`d`) at equal lengths (14 minutes). Tying brings the two kernels together
+(relative difference below 1e-3) at about -89 dB, but projecting the average onto an exact `u = d` solution leaves -81.7 dB.
+The from-scratch matched solver reaches -84.0 dB at the same N in 7 seconds (-86.7 dB with `beta = 2`). So at this size
+the continuation route is not better than starting from scratch with a good start: the exact-matching constraint, not
+the starting point, is what costs attenuation, and the final projection loses most of what the path gained.
 
 These routines are research tools; they work on symmetric centred pairs only.
 

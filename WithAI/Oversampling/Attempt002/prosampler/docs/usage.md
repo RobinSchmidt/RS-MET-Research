@@ -119,8 +119,10 @@ print(g.n_u, g.latency)                    # g has L*K + 1 taps, latency K
 ```
 
 Matched kernels need about a quarter fewer stored coefficients but about half again as many multiplications as the
-pair (section 7). The solver is reliable up to roughly 60 dB; beyond that the stopband may stall above the target and
-`info["meets_spec"]` says so. `L = 2` is not recommended (warns): the problem has no degrees of freedom.
+pair (section 7). The optimisation has local minima, so the result depends on the start and is not monotone in `K`; above 60 dB
+`design_matched` automatically tries several Kaiser starts (`betas=(2, 4, 6)`; set `betas=` yourself to change this),
+which makes high attenuations (80 dB and more) reachable but slower (minutes). `info["meets_spec"]` says whether the
+target was reached. `L = 2` is not recommended (warns): the problem has no degrees of freedom.
 
 ## 6. Experimental: joint optimisation, rebalancing, tying
 
@@ -173,7 +175,7 @@ plots.plot_path(equal)                     # stopbands along a rebalance path
 | `d` has a bump (> 1 dB) between passband and stopband | use `transition_weight` (e.g. 0.3) in `design_pair` / `design_partner` |
 | `ProsamplerError: ... no exact partner` | `n_d` too short for the Nyquist constraints, or wrong latency |
 | `ValueError: latency must be given` | `u` is not symmetric/odd or `n_d` is even: pass `latency=` explicitly |
-| matched design stalls above target | solver limit near 60 dB: use the pair, or a smaller `atten_db` |
+| matched design misses the target | local minimum: try other `betas=`, a slightly different `K=`, or use the pair |
 | `rebalance` is slow | each step costs seconds at several hundred taps; use `progress=` to watch |
 
 ## 10. API summary

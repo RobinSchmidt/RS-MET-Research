@@ -17,7 +17,7 @@ Early development (`0.1.0.dev0`); everything below is implemented and tested.
 |---|---|
 | specification | `Spec`, `passband_from_hz` |
 | two-kernel design | `design_pair` (spec- or length-driven, own `u` allowed), `design_partner` (null-space / KKT, grid / energy objective) |
-| matched kernel `u = d = g` | `design_matched` (from scratch; reliable to ~60 dB; `L = 2` not recommended) |
+| matched kernel `u = d = g` | `design_matched` (from scratch, multi-start; `L = 2` not recommended) |
 | experimental | `optimise_joint`, `rebalance`, `tie` |
 | analysis | `FilterPair.metrics()`, `compare()`, `prosampler.plots` (matplotlib optional) |
 | checks | `nyquist_error`, `verify_roundtrip`, `reference_roundtrip` |

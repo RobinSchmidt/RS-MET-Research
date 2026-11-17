@@ -17,14 +17,17 @@ Design facts
   -69 dB was found by continuation from a (u, d) pair) but it is badly conditioned (Jacobian condition ~3e12) and
   could not be projected to an exact ``u = d`` solution better than ~5e-10 / -52 dB.  For ``L = 2`` prefer
   :func:`~prosampler.design_pair`.
-* The optimiser (SLSQP + Gauss-Newton projection) is reliable up to about 60 dB.  Beyond that it can stall
-  (e.g. ``L=4, passband=0.9`` plateaus near -74 dB although -83 dB is achievable).  The result is always exactly
-  Nyquist (the projection guarantees it); only the stopband may be worse than what is achievable.
+* The optimiser (SLSQP + Gauss-Newton projection) finds LOCAL minima, so the result depends on the start (Kaiser-sinc
+  with window parameter ``beta``) and is not monotone in ``K``: for ``L=4, passband=0.9`` a cold start gives -84.0 dB
+  at K=130 but -75.7 dB at K=140, while ``beta=2`` gives -86.7 dB at K=140.  ``design_matched`` therefore tries several
+  starts (``betas``) and keeps the best; warm-starting alone can get trapped (a spec-driven 80 dB search that only
+  warm-started stayed near -74.6 dB up to K=596).  The result is always exactly Nyquist (the projection guarantees
+  it); only the stopband may be worse than what is achievable.
 """
 from __future__ import annotations
 
 import warnings
-from typing import Optional
+from typing import Optional, Sequence
 
 import numpy as np
 from scipy.optimize import minimize
@@ -111,7 +114,7 @@ def _make_pair(g, L, K, passband, meta) -> FilterPair:
 
 
 def design_matched(L: int, passband: float, atten_db: Optional[float] = None, *, K: Optional[int] = None,
-                   g_init=None, beta: Optional[float] = None, K_max: int = 600, growth: float = 1.08,
+                   g_init=None, beta: Optional[float] = None, betas: Optional[Sequence[float]] = None, K_max: int = 600, growth: float = 1.08,
                    max_pass_ripple_db: Optional[float] = None, strict: bool = False,
                    verbose: bool = False) -> FilterPair:
     """
@@ -120,6 +123,11 @@ def design_matched(L: int, passband: float, atten_db: Optional[float] = None, *,
     * **Length-driven**: give ``K`` (``g`` then has ``L*K + 1`` taps, ``L*K`` must be even).
     * **Spec-driven**: give ``atten_db``; the smallest ``K`` reaching it is searched (growth, then bisection, each
       length warm-started from the previous failing design).
+
+    The problem has many local minima and the result depends on the starting point (Kaiser-sinc with window parameter
+    ``beta``; also not monotone in ``K``).  ``betas`` is a list of cold-start betas of which the best result is kept
+    (together with the warm start from ``g_init`` / the previous length); default: ``(beta,)``, or ``(2, 4, 6)`` when
+    ``atten_db > 60``.  ``beta`` is a shorthand for ``betas=(beta,)``.
 
     The returned :class:`FilterPair` has ``u`` and ``d`` equal to ``g`` (DC gain ``sqrt(L)`` each) and ``latency = K``.
     ``info`` holds ``K``, ``N``, ``meets_spec``.  Emits a warning for ``L = 2`` (see module docs) and when the spec
@@ -130,8 +138,13 @@ def design_matched(L: int, passband: float, atten_db: Optional[float] = None, *,
                       "solutions; prefer design_pair", stacklevel=2)
     spec = Spec(L, passband, atten_db)
     step = 2 if L % 2 else 1                        # keep L*K even
-    if beta is None:
-        beta = min(kaiser_beta(atten_db), 6.0) if atten_db is not None else 4.0
+    if betas is None:
+        if beta is not None:
+            betas = (beta,)
+        elif atten_db is not None and atten_db > 60:
+            betas = (2.0, 4.0, 6.0)
+        else:
+            betas = (min(kaiser_beta(atten_db), 6.0) if atten_db is not None else 4.0,)
     ripple_limit = None
     if atten_db is not None:
         ripple_limit = max_pass_ripple_db if max_pass_ripple_db is not None else max(0.01, 4 * 8.686 * 10 ** (-atten_db / 20))
@@ -146,6 +159,13 @@ def design_matched(L: int, passband: float, atten_db: Optional[float] = None, *,
             print(f"  K={K} N={len(g)}: stop={m['u_stop_db']:.1f} dB nyq={m['nyquist_error']:.0e}", flush=True)
         return fp
 
+    def solve(K, g_warm):
+        """Best of the cold starts (one per beta) and the warm start; keeps the lowest stopband."""
+        cands = [measure(optimise_matched(L, K, passband, b), K) for b in betas]
+        if g_warm is not None:
+            cands.append(measure(optimise_matched(L, K, passband, betas[0], g_warm), K))
+        return min(cands, key=lambda fp: fp.info["stop_db"])
+
     def fail(fp, msg):
         full = f"{msg} (stop {fp.info['stop_db']:.1f} dB, ripple {fp.info['pass_ripple_db']:.4f} dB)"
         if strict:
@@ -156,7 +176,7 @@ def design_matched(L: int, passband: float, atten_db: Optional[float] = None, *,
     if K is not None:
         if (L * K) % 2:
             raise ValueError("L*K must be even")
-        fp = measure(optimise_matched(L, K, passband, beta, g_init), K)
+        fp = solve(K, g_init)
         if fp.info["meets_spec"] is False:
             fail(fp, f"matched design with K={K} does not meet {atten_db} dB")
         return fp
@@ -169,7 +189,7 @@ def design_matched(L: int, passband: float, atten_db: Optional[float] = None, *,
     K0 += K0 % step
     lo, g_lo, K_ = None, g_init, K0
     while True:
-        fp = measure(optimise_matched(L, K_, passband, beta, g_lo), K_)
+        fp = solve(K_, g_lo)
         if fp.info["meets_spec"]:
             break
         lo, g_lo = K_, fp.u
@@ -183,7 +203,7 @@ def design_matched(L: int, passband: float, atten_db: Optional[float] = None, *,
         mid -= mid % step
         if mid <= lo or mid >= hi:
             break
-        fm = measure(optimise_matched(L, mid, passband, beta, g_lo), mid)
+        fm = solve(mid, g_lo)
         if fm.info["meets_spec"]:
             hi, best = mid, fm
         else:

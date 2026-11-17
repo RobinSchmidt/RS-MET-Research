@@ -41,7 +41,7 @@ def _symmetric_spectral_root(h, L, n_fft=2**16):
     return np.concatenate([uf[n_fft - k:], uf[:k + 1]])
 
 
-def design_nyquist_pair(M, Lu, Ld, lift=1e-12, phase="min"):
+def design_nyquist_pair(M, Lu, Ld, lift=1e-12, phase="min", beta=8.6):
     """
     Design upsampling kernel u[n] and downsampling kernel d[n] for
     oversampling factor M, such that up->identity->down is transparent.
@@ -83,8 +83,11 @@ def design_nyquist_pair(M, Lu, Ld, lift=1e-12, phase="min"):
         raise ValueError(
             f"Require kernel length L = k*M + 1, got (L-1) % M = {c % M}")
     # Windowed sinc with cutoff pi/M: zeros at (n-c) = k*M hold analytically.
+    # beta controls the Kaiser stopband: each kernel gets ~half the dB, so
+    # pick beta for 2x the desired per-kernel attenuation (8.6 ~ 2x38 dB,
+    # 12.5 ~ 2x60 dB, 16.7 ~ 2x80 dB), possibly widening the transition.
     n = np.arange(Lh)
-    h = (1.0 / M) * np.sinc((n - c) / M) * np.kaiser(Lh, beta=8.6)
+    h = (1.0 / M) * np.sinc((n - c) / M) * np.kaiser(Lh, beta=beta)
 
     # 2. Make the zero-phase amplitude A(w) = Re(e^{jwc} H(w)) nonnegative so
     #    a spectral factor exists (lifting delta at center keeps the zeros).

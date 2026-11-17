@@ -1,0 +1,190 @@
+# prosampler - usage guide
+
+All code blocks on this page are executed by the test suite (`tests/test_docs.py`), so they stay correct.
+
+## 1. The idea in one picture
+
+```
+x -> zero-stuff by L -> u -> [waveshaper] -> d -> keep every L-th sample -> y
+```
+
+`u` is the anti-imaging (upsampling) filter, `d` the anti-aliasing (downsampling) filter. With the waveshaper
+removed, `y[m] = x[m - latency]` exactly (up to float roundoff) because `u * d` is a Nyquist(L) filter. See
+[theory.md](theory.md).
+
+Conventions: `passband` is a **fraction of the original Nyquist frequency** (0.9 means 19.8 kHz at 44.1 kHz).
+`u` has DC gain `L`, `d` has DC gain 1. `latency` counts **base-rate** samples.
+
+## 2. Quick start: a pair for a given specification
+
+```python
+import numpy as np
+import prosampler as ps
+
+fp = ps.design_pair(L=4, passband=0.85, atten_db=60)
+print(fp)                                  # lengths, latency, Nyquist error
+print(fp.info["meets_spec"])               # True: both kernels reach 60 dB and the ripple limits
+m = fp.metrics()
+print(round(m["u_stop_db"], 1), round(m["d_stop_db"], 1))
+fp.verify()                                # identity roundtrip on white noise; raises VerificationError otherwise
+```
+
+`design_pair` searches the shortest linear-phase pair that meets the specification. Always look at
+`info["meets_spec"]` (or call with `strict=True` to get an exception): an exact roundtrip alone proves nothing about
+quality, since a windowed-sinc `u` is itself nearly Nyquist(L) and `d = delta` is an exact partner.
+
+Passband from Hz:
+
+```python
+passband = ps.passband_from_hz(19000.0, 44100.0)       # 0.8617...
+assert 0.86 < passband < 0.87
+```
+
+## 3. Using the filters in your own code
+
+`fp.u` and `fp.d` are plain NumPy arrays. The reference chain `ps.reference_roundtrip(x, u, d, L, latency, shaper)`
+is slow (full convolutions) and meant for testing. In a real implementation use polyphase filters: the upsampler
+computes `y[L m + p] = sum_j x[m - j] u[L j + p]` for each phase `p`; the downsampler only computes every L-th
+output. A block-processing version to check your own implementation against:
+
+```python
+def poly_up(x, u, L):
+    y = np.zeros(len(x) * L + len(u) - 1)
+    for p in range(L):
+        c = np.convolve(x, u[p::L])
+        idx = L * np.arange(len(c)) + p
+        k = idx < len(y)
+        y[idx[k]] = c[k]
+    return y
+
+def poly_down(v, d, L, latency, n):
+    out = np.zeros(n)
+    for r in range(L):
+        dr = d[r::L]
+        idx = L * np.arange(n + latency + len(dr)) - r
+        ok = (idx >= 0) & (idx < len(v))
+        vr = np.where(ok, v[np.clip(idx, 0, len(v) - 1)], 0.0)
+        out += np.convolve(vr, dr)[latency:latency + n]
+    return out
+
+x = np.random.default_rng(0).standard_normal(300)
+y = poly_down(np.tanh(poly_up(x, fp.u, fp.L)), fp.d, fp.L, fp.latency, len(x))
+ref = ps.reference_roundtrip(x, fp.u, fp.d, fp.L, fp.latency, shaper=np.tanh)
+assert np.max(np.abs(y - ref)) < 1e-12
+```
+
+The output is delayed by `fp.latency` base-rate samples. Linear-phase kernels have a constant delay, so this is a
+pure delay. Zero end taps (forced by the Nyquist condition) can be dropped; `fp.macs_per_sample` and
+`fp.stored_coeffs` already account for that and for symmetry.
+
+## 4. Variations of the two-kernel design
+
+Fixed lengths instead of a specification (`n_d` given: length-driven; then `atten_db` is only used to judge the result):
+
+```python
+fp2 = ps.design_pair(4, 0.85, 55, n_u=99, n_d=215)
+assert fp2.latency == 39
+```
+
+For a centred linear-phase pair `n_u + n_d - 2` must be a multiple of `2 L`; `ps.partner_length(n_u, L, latency)`
+and `ps.symmetric_latency(n_u, n_d, L)` help choosing lengths.
+
+Your own `u` (any window, any optimised FIR); it is rescaled to DC gain `L`:
+
+```python
+u = ps.kaiser_sinc(4, 99, atten_db=60)
+fp3 = ps.design_pair(4, 0.85, 55, u=u, n_d=215)
+assert fp3.info["u_rescaled"] and fp3.nyquist_error < 1e-12
+```
+
+Solver and objective of the partner design (all four combinations are exact; they differ in the stopband of `d`):
+
+```python
+spec = ps.Spec(4, 0.85)
+d_ns  = ps.design_partner(u, spec, 215, latency=39)                                  # null-space, grid objective (default)
+d_kkt = ps.design_partner(u, spec, 215, latency=39, method="kkt", objective="energy")  # as in the old KKT script
+assert ps.nyquist_error(u, d_ns, 4, 39) < 1e-12 and ps.nyquist_error(u, d_kkt, 4, 39) < 1e-12
+```
+
+`method="nullspace"` is the robust default; `"kkt"` solves the KKT system directly and is more fragile for long
+kernels. `objective="grid"` fits a flat passband and a zero stopband on a frequency grid, `"energy"` minimises the
+closed-form stopband energy. `transition_weight > 0` suppresses the transition-band bump of `d`.
+
+## 5. A single matched kernel (u = d = g)
+
+```python
+g = ps.design_matched(4, 0.85, 60)         # from scratch; spec-driven (or K=... for a fixed length)
+assert g.is_matched and g.nyquist_error < 1e-12
+print(g.n_u, g.latency)                    # g has L*K + 1 taps, latency K
+```
+
+Matched kernels need about a quarter fewer stored coefficients but about half again as many multiplications as the
+pair (section 7). The solver is reliable up to roughly 60 dB; beyond that the stopband may stall above the target and
+`info["meets_spec"]` says so. `L = 2` is not recommended (warns): the problem has no degrees of freedom.
+
+## 6. Experimental: joint optimisation, rebalancing, tying
+
+These work on symmetric centred pairs such as the output of `design_pair`:
+
+```python
+small = ps.design_pair(4, 0.8, 40)
+joint = ps.optimise_joint(small)                       # optimise u and d together
+equal = ps.rebalance(joint, target="equal")            # shift taps from d to u until the lengths are equal
+tied  = ps.tie(equal)                                  # exact u = d = g, polished by the matched solver
+assert equal.n_u == equal.n_d and tied.is_matched
+```
+
+`rebalance` records the whole path in `equal.info["path"]` (use `plots.plot_path`); `target="best"` returns the
+point on the path with the best worst-case stopband. Tying usually costs a lot of stopband attenuation at equal
+total length.
+
+## 7. Comparing designs
+
+```python
+print(ps.compare({"pair": fp, "matched": g}))
+```
+
+```
+name    | L | n_u | n_d | lat | stored | MACs | u stop | d stop | ripple | nyq err
+```
+
+`stored` is the number of coefficients to keep (symmetry exploited, zero end taps dropped, a matched kernel counted
+once), `MACs` the multiplications per base-rate sample (polyphase, symmetry not exploited). Measured for
+`L=4, passband=0.85, 60 dB`: pair 99 + 223 taps, 161 stored, 320 MACs, about -60 / -64 dB; matched 237 taps, 118
+stored, 470 MACs, about -62 dB.
+
+## 8. Plots (optional, needs matplotlib)
+
+```python
+import matplotlib
+matplotlib.use("Agg")
+from prosampler import plots
+
+ax = plots.plot_responses(fp)              # magnitude responses with shaded passband/stopband
+plots.plot_kernels(fp)
+plots.plot_path(equal)                     # stopbands along a rebalance path
+```
+
+## 9. Troubleshooting
+
+| Symptom | Cause / remedy |
+|---|---|
+| `info["meets_spec"]` is `False` / `SpecNotReached` | spec too hard for the chosen lengths: give longer `n_d` (or `n_u`), or use spec-driven mode |
+| `d` has a bump (> 1 dB) between passband and stopband | use `transition_weight` (e.g. 0.3) in `design_pair` / `design_partner` |
+| `ProsamplerError: ... no exact partner` | `n_d` too short for the Nyquist constraints, or wrong latency |
+| `ValueError: latency must be given` | `u` is not symmetric/odd or `n_d` is even: pass `latency=` explicitly |
+| matched design stalls above target | solver limit near 60 dB: use the pair, or a smaller `atten_db` |
+| `rebalance` is slow | each step costs seconds at several hundred taps; use `progress=` to watch |
+
+## 10. API summary
+
+| Name | Purpose |
+|---|---|
+| `Spec(L, passband, atten_db)`, `passband_from_hz` | specification |
+| `kaiser_sinc`, `windowed_sinc`, `design_kaiser_sinc` | starting kernels |
+| `design_pair`, `design_partner` | pair design (steps 1-2) |
+| `design_matched`, `optimise_matched` | matched kernel from scratch |
+| `optimise_joint`, `rebalance`, `tie` | experimental steps 3-5 |
+| `FilterPair` | result: `u, d, L, latency, metrics(), verify(), swapped(), stored_coeffs, macs_per_sample` |
+| `nyquist_error`, `verify_roundtrip`, `reference_roundtrip` | checking |
+| `compare`, `prosampler.plots` | analysis |

@@ -12,10 +12,12 @@ This is a second attempt with Claude Sonnet 5.5 at medium effort but this time I
 claude.ai. Not only will the chat be retained there indefinitely but it has also the additional 
 advantage that Sonnet can directly execute code there such that it can actually try out its own 
 scripts, debug them etc. That was not possible in a chat on github, so the generated code snippets
-from there were untested.n In this second attempt, my goal was to recreate the results form the
-first but this time, Sonnet took another approach for the optimization problem. ...TBC...
+from there were untested.n In this second attempt, my goal was to recreate the results from the
+first but this time, Sonnet took another approach for the optimization problem. The chat actually 
+went rather deep and we ended up with a small Python library. ...TBC...
 
 Attempt003
 In the third attempt, I went back to GitHub Copilot but this time using the model GPT-5.3-Codex with
 default effort level. This time, I made sure to export the chat to a .md file so it doesn't get lost
-again.
+again. Codex gave pretty concise replies and code. If that code works, it might be the best option.
+Codex also directly offered to write a Python script with a convenient API.

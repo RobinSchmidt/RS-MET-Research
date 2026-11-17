@@ -16,3 +16,6 @@ from there were untested.n In this second attempt, my goal was to recreate the r
 first but this time, Sonnet took another approach for the optimization problem. ...TBC...
 
 Attempt003
+In the third attempt, I went back to GitHub Copilot but this time using the model GPT-5.3-Codex with
+default effort level. This time, I made sure to export the chat to a .md file so it doesn't get lost
+again.

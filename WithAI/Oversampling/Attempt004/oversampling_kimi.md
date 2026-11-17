@@ -238,3 +238,92 @@ Yes, a symmetric `u[n] = u[-n]` with `d = u` is possible in principle: if `u` is
 The plot shows both: min-phase kernel is front-loaded, linear-phase is symmetric; magnitudes are essentially identical (both are √ of the prototype); group delay differs per-stage (the min-phase *roundtrip* is still linear-phase overall since `d` mirrors `u`); both roundtrips show a clean delta on linear scale.
 
 **My recommendation**: use `phase="min"` for production (exact identity where it matters) and `phase="linear"` only if the symmetric single-kernel structure is worth −50 dB roundtrip residue — e.g., for debugging or if you want to share one kernel table between upsampler and downsampler.
+
+## @RobinSchmidt
+
+Where does the d=u requirement come from?
+
+## Copilot
+
+It comes from chaining the two requirements — transparency + symmetric kernels — and seeing what they force:
+
+**1. Transparency forces the cascade to be a Nyquist filter.** Up/down by M with filters `u`, `d` roundtrip to a pure delay iff the cascade `h[n] = (u * d)[n]` satisfies `h[kM] = 0` for all k ≠ k₀ and `h[k₀M] = 1` (that's the definition of an M-th band / Nyquist filter — all aliased copies of the signal cancel at the decimation instants).
+
+**2. Your request was symmetric kernels with no reversal.** "Linear phase with even symmetry" means each kernel obeys `u[n] = u[L-1-n]` (symmetry about its own center), and "avoids the reversal of d" means you want to use the *same* kernel in both places: `d = u`.
+
+**3. Combine them.** With `d = u`, step 1 becomes:
+
+```
+h[n] = (u * u)[n]   must be Nyquist
+```
+
+In the frequency domain, a symmetric (zero-phase) kernel has a *real* transfer function `U(ω)`. So the cascade response is `H(ω) = U(ω) · U(ω) = U(ω)²` — real and necessarily ≥ 0. That pins down `U` almost uniquely:
+
+```
+U(ω) = ±√H(ω)   ⇒   U(ω) = √H(ω)  up to sign flips at stopband nulls
+```
+
+i.e. `u` must be a *spectral square root* of `h`. And here's the catch: the exact square root of a finite-length sequence is generically **infinite-length** (the sqrt of a polynomial is not a polynomial). So `d = u` with both symmetric forces you into a truncated square root, which is exactly why that variant only achieves ~−50 dB identity instead of machine precision.
+
+**Contrast with `d = u[::-1]` (matched filter):** there `D(ω) = U*(ω)`, so the cascade is `H(ω) = |U(ω)|²`. The requirement is now on the *magnitude* only — the phase of `U` is free. Choosing minimum phase gives a *finite, exact* factor: `u * u[::-1] = h` holds to machine precision with no truncation, because spectral factorization of a nonnegative polynomial is exact (roots come in conjugate-reciprocal pairs; put all inside the unit circle into `u`).
+
+So in short: the `d = u` constraint isn't imposed by me — it follows from *your* constraints (symmetric + identical kernels). It trades exactness for structural symmetry, because real-valued `U` kills the phase freedom that makes exact finite factorization possible.
+
+## @RobinSchmidt
+
+I didn't really mean to require d = u. For me, it would be fine if d and u are different as long as both are reasonably similar and reasonably good linear phase lowpass filters. Can we improve the design (i.e. achieve better stopband rejection) when we allow d and u to be different?
+
+## Copilot
+
+Yes — this reframing unlocks a much better approach. Key insight: the identity property only depends on the Nyquist taps of the *product* `u*d`; nothing requires `u*d` to equal a fixed prototype. So instead of *factoring* a prototype, we can *jointly design* two linear-phase filters subject to linear constraints on their product. With `d` fixed, the constraint `(u*d)[kM] = δ[k]` is **linear in u**, so the subproblem is exactly-solvable least squares; alternate between designing `u` given `d` and vice versa. Let me prototype:
+
+KKT is singular (constraint rows with tiny entries at the edges). Switching to `lstsq`:
+
+Identity is exact (~1e-6) but stopbands are weak and unbalanced. Improvements: Lawson reweighting (near-minimax), symmetric initialization from the truncated sqrt kernel, and adaptive weight balancing between the two filters:
+
+A single unconstrained filter achieves −58 to −104 dB at these specs, so −23 dB means my alternation is stalling. Let me diagnose convergence with row-normalized constraints and monitor over iterations:
+
+Two roots are near-real. Let me inspect and handle real roots properly:
+
+The prototype has off-circle real roots ({1.23, 0.81} reciprocal pair) which cause a large passband tilt in whichever filter receives them. Let me check whether a larger lift removes them (pushing all zeros onto the unit circle as clean double pairs):
+
+The KKT-lstsq is numerically unreliable at these scales. Switching to an explicit nullspace parametrization (particular solution + SVD nullspace basis), which is much cleaner numerically:
+
+Only 6 zeros found — the prototype's stopband must not be oscillating around zero. Let me inspect the prototype's actual response:
+
+The CLS prototype itself is broken (passband at 3.29!). Let me debug it directly:
+
+Constraints are rank-17 (symmetric duplicates — fine), and a good feasible point exists (the windowed sinc). So the LS solve must be failing numerically. Let me compare objectives directly:
+
+Only 48 of 64 zeros are on the real frequency axis — the rest are off-circle quartets. Let me examine the actual root structure of the CLS prototype carefully:
+
+Now I understand the full structure (this is exactly the CDF wavelet-filter factorization setup). Key realizations:
+
+1. The CLS prototype's zero end taps are *forced* by the Nyquist constraint (m=0 and m=Lh−1 are multiples of M) → they contribute a root at 0 and one at ∞, which is an atomic pair for symmetric factors. So equal-length L factors split as: one filter gets the {0,∞} pair (zero end taps, effective length L−2), the other is full length L — same structure as CDF 9/7 wavelets.
+2. Off-circle zeros come in quartets (atomic, 4 roots to one filter); on-circle zeros are simple pairs assigned alternately.
+
+Let me implement this properly:
+
+Just a swap — the greedy landed on 64/62 instead of 62/64. Fix:
+
+Sign issue in normalization (center tap negative). Quick fix:
+
+Bug: I trimmed *interior* zero coefficients (the Nyquist zeros!), destroying the indexing. Must trim only trailing zeros:
+
+Something's inconsistent (product taps exact but stopbands don't add up). Let me debug the M=2 case directly:
+
+Chebyshev factorization is exact. The bug must be in assignment/build. Let me trace M=2 step by step:
+
+The product still doesn't reconstruct A for M=2 — let me check the M=2 prototype itself and the product comparison directly:
+
+The M=2 prototype is actually *too* good (−183 dB — float64 product evaluation breaks down). But for M=4 there's a real inconsistency to pin down. Let me check the product identity directly:
+
+Found a measurement bug in my diagnostic (grid off-by-2×) — the product identity is actually fine. Let me now verify the built kernels against their target amplitudes directly:
+
+Conflicting evidence — let me settle it by directly comparing `conv(u,d)` against the prototype `h`:
+
+Factorization is exact (2.9e-14). Now let me resolve the stopband paradox in one consistent script — measuring u, d, and their product with FFTs:
+
+The product identity holds exactly (−91.8 dB both) — my earlier "sum" reasoning was flawed since peaks occur at different frequencies. The real issue is *assignment balance*: u got −56 dB while d got +7.5 dB. Let me optimize the assignment directly in log-domain with greedy swaps, targeting balanced stopband + passband:
+
+Now the picture is complete and consistent. Let me verify the final balanced result once more and also compare against the min-phase pair at the same length for the summary:

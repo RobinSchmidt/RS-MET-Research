@@ -83,6 +83,8 @@ def design_same_kernel_pr(
                 N = 2*span*L + 1 (odd, symmetric, delay aligns to L-grid)
     pass_frac : passband edge as fraction of ideal cutoff (ideal cutoff = 1/L Nyquist units)
     stop_frac : stopband start as fraction of ideal cutoff
+    
+    If optimization fails, increase span first (more taps gives the constraints room).
     """
     if span < 1:
         raise ValueError("span must be >= 1")

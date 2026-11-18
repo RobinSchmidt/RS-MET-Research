@@ -1963,23 +1963,24 @@ void testPitchDitherSuperSaw()
 /** Verifies, if the given vector v represents a valid jittered time axis. The conditions that we
 want to enforce is t[0] = 0 and for al n in 1,2,...N-1: n-1 <= t[n] <= n. The first time instant 
 is always zero and the following time instants interleave the integers. */
-/*
 template<class T> 
-bool rsValidJitteredTimeAxisIntegers(<const std::vector<T>& t)
+bool rsValidJitteredTimeAxisIntegers(const std::vector<T>& t)
 {
+  if(t.empty())
+    return false;  // By convention, we consider an emty list invalid
+
   bool ok = true;
 
   ok &= t[0] == T(0);
   for(size_t n = 1; n < t.size(); n++)
   {
     T tn = T(t[n]);
-    ok &= tn >= Real(n-1);
-    ok &= tn <= Real(n);
+    ok &= tn >= T(n-1);
+    ok &= tn <= T(n);
   }
 
   return ok;
 }
-*/
 
 
 void testJitterSaw1()
@@ -2159,18 +2160,9 @@ void testJitterSaw2()
   // Sanity check the jittered time axis. We want to ensure that the jittered sampling instants are
   // interleaved with the regular sampling instants. We want t0 = 0, 0 <= t1 <= 1, 1 <= t2 <= 2,
   // 2 <= t3 <= 3, ...,  n-1 <= tn <= n  for all n in 0,1,2,...,N-1
-  rsAssert(tj[0] == Real(0));
-  for(int n = 1; n < N; n++)
-  {
-    Real tn = tj[n];
-    rsAssert(tn >= Real(n-1));
-    rsAssert(tn <= Real(n)  );
-  }
-  //bool valid = rsValidJitteredTimeAxisIntegers(tj);
-  //rsAssert(valid);
-  // Maybe factor this out into a function rsCheckJitteredTimeAxis(tj) that returns a bool. Maybe
-  // the function yould be more generally called rsInterleavesIntegers(tj) ...done
-
+  bool valid = rsValidJitteredTimeAxisIntegers(tj);
+  rsAssert(valid);
+  // FAILS!!! That's our problem!
 
 
   // Compute de-jittered saw from jittered saw samples: 

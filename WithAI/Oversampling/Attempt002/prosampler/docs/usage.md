@@ -73,6 +73,12 @@ ref = ps.reference_roundtrip(x, fp.u, fp.d, fp.L, fp.latency, shaper=np.tanh)
 assert np.max(np.abs(y - ref)) < 1e-12
 ```
 
+**Levels with a nonlinearity.** The level at the waveshaper is `fp.shaper_level = sum(u)/L` times the input level:
+1 for a pair (`u` has DC gain `L`), but `1/sqrt(L)` for a matched kernel (`u = d = g`, gain `sqrt(L)` each). The
+identity roundtrip does not care, a nonlinearity does. So multiply by `1/fp.shaper_level` before the waveshaper and by
+`fp.shaper_level` after it (for a matched kernel this is two scalar gains, no extra kernel). The reference chain
+does this with `compensate_levels=True`.
+
 The output is delayed by `fp.latency` base-rate samples. Linear-phase kernels have a constant delay, so this is a
 pure delay. Zero end taps (forced by the Nyquist condition) can be dropped; `fp.macs_per_sample` and
 `fp.stored_coeffs` already account for that and for symmetry.
@@ -108,7 +114,10 @@ assert ps.nyquist_error(u, d_ns, 4, 39) < 1e-12 and ps.nyquist_error(u, d_kkt, 4
 
 `method="nullspace"` is the robust default; `"kkt"` solves the KKT system directly and is more fragile for long
 kernels. `objective="grid"` fits a flat passband and a zero stopband on a frequency grid, `"energy"` minimises the
-closed-form stopband energy. `transition_weight > 0` suppresses the transition-band bump of `d`.
+closed-form stopband energy. `transition_weight` (default 0) adds a least-squares penalty on the transition band. It looks like a way to flatten the
+small bump of `d` at the passband edge (about +1.1 dB), but it does not: measured on `L=4`, passband 0.9, 261/541 taps,
+the bump grows to +1.5...+1.6 dB while the stopband of `d` degrades from -104.6 dB (weight 0) to -87.9 dB (0.003),
+-68 dB (0.01) and -53 dB (0.3); a spec-driven 80 dB design then needs a `d` that is 25-50 % longer. Leave it at 0.
 
 ## 5. A single matched kernel (u = d = g)
 
@@ -152,8 +161,11 @@ name    | L | n_u | n_d | lat | stored | MACs | u stop | d stop | ripple | nyq e
 
 `stored` is the number of coefficients to keep (symmetry exploited, zero end taps dropped, a matched kernel counted
 once), `MACs` the multiplications per base-rate sample (polyphase, symmetry not exploited). Measured for
-`L=4, passband=0.85, 60 dB`: pair 99 + 223 taps, 161 stored, 320 MACs, about -60 / -64 dB; matched 237 taps, 118
-stored, 470 MACs, about -62 dB.
+`L=4, passband=0.85, 60 dB`: pair 99 + 215 taps, 157 stored, 312 MACs, -60.3 / -60.9 dB; matched 233 taps, 116
+stored, 462 MACs, -60.2 dB.
+
+For a complete, runnable scenario (design from Hz, report, roundtrip check, impulse/step/magnitude plots) see
+[`demos/design_and_plot.py`](../demos/design_and_plot.py).
 
 ## 8. Plots (optional, needs matplotlib)
 
@@ -172,7 +184,7 @@ plots.plot_path(equal)                     # stopbands along a rebalance path
 | Symptom | Cause / remedy |
 |---|---|
 | `info["meets_spec"]` is `False` / `SpecNotReached` | spec too hard for the chosen lengths: give longer `n_d` (or `n_u`), or use spec-driven mode |
-| `d` has a bump (> 1 dB) between passband and stopband | use `transition_weight` (e.g. 0.3) in `design_pair` / `design_partner` |
+| `d` has a small bump (about +1 dB) between passband and stopband | normal for these designs; `transition_weight` does not remove it (see section 4); `info`/`metrics()` report it as `d_transition_peak_db` |
 | `ProsamplerError: ... no exact partner` | `n_d` too short for the Nyquist constraints, or wrong latency |
 | `ValueError: latency must be given` | `u` is not symmetric/odd or `n_d` is even: pass `latency=` explicitly |
 | matched design misses the target | local minimum: try other `betas=`, a slightly different `K=`, or use the pair |

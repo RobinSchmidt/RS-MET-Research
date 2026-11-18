@@ -26,6 +26,12 @@ Important: a windowed-sinc `u` is itself (nearly) Nyquist(L), so `d = delta` is 
 roundtrip says nothing about filter quality; check `FilterPair.metrics()` / `info["meets_spec"]`.
 
 Documentation: [usage guide](docs/usage.md), [theory and design notes](docs/theory.md).
+Demo: [`demos/design_and_plot.py`](demos/design_and_plot.py) designs a pair from a few parameters (in Hz) and plots impulse,
+step and magnitude responses; see [demos/README.md](demos/README.md).
+
+Note: with a nonlinearity between the filters, a matched kernel changes the signal level at the nonlinearity
+(`FilterPair.shaper_level`, `1/sqrt(L)`); compensate with `reference_roundtrip(..., compensate_levels=True)` or scalar
+gains around the waveshaper (usage guide, section 3).
 
 ```python
 import prosampler as ps

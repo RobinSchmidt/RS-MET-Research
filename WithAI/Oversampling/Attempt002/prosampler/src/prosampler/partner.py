@@ -18,7 +18,9 @@ so this is an equality-constrained quadratic program
 Objectives (``objective=``)
     ``"grid"``    least squares on a frequency grid: passband rows ask ``D(w) U(w) = L exp(-j w n0)``
                   (a flat passband), stopband rows ask ``D(w) = 0``, optional transition rows ask ``D(w) = 0``
-                  (keeps ``d`` from bumping in the unconstrained transition band).
+                  (intended to limit a bump of ``d`` in the unconstrained transition band; measured: for linear-phase
+                  pairs it does NOT help - the ~+1.1 dB bump grows to ~+1.6 dB and the stopband gets much worse -
+                  so the default is 0).
     ``"energy"``  closed form stopband energy ``d^T Q d`` (no grid; this is what the old KKT script did),
                   optionally plus transition-band energy.
 

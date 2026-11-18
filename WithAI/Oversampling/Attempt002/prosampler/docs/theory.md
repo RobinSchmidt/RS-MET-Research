@@ -68,12 +68,16 @@ onto the constraint set (so the result is exactly Nyquist) and perturbed restart
 * Degrees of freedom: `(L - 2) K / 2` for symmetric `g` with `N = L K + 1` taps. For `L = 2` this is zero: the
   solutions are isolated points, badly conditioned (Jacobian condition about 1e12), and the from-scratch solver finds
   poor ones. For `L = 2` prefer the pair.
-* The optimiser finds local minima: the result depends on the starting kernel and is not monotone in `K`
-  (`L = 4`, passband 0.9: -84.0 dB at K = 130 but -75.7 dB at K = 140 from the same default start; a Kaiser start with
-  `beta = 2` gives -86.7 dB at K = 140). `design_matched` therefore uses several cold starts (`betas`; automatic above
-  60 dB) plus the warm start, and keeps the best. A spec-driven search that only warm-started from failed designs got
-  stuck near -74.6 dB all the way up to K = 596. With multi-start, `L = 4`, passband 0.9, 80 dB is reached at K = 123
-  (N = 493, -80.5 dB) and 85 dB at K = 133 (N = 533, -86.8 dB), each in about 4.5 minutes. The result is always exactly Nyquist; only the stopband may be worse than attainable.
+* The optimiser finds local minima: the result depends on the starting kernel and is not monotone in `K`.
+  `L = 4`, passband 0.9, default Kaiser start (`beta = 4`): -68.0, -72.4, -76.5, -82.7 and -74.5 dB for
+  K = 100, 110, 120, 130 and 140; a start with `beta = 2` gives -85.6 dB at K = 140 but only -79.8 dB at K = 130.
+  `design_matched` therefore uses several cold starts (`betas`; automatic above 60 dB) plus the warm start, and keeps
+  the best. A spec-driven search that only warm-started from failed designs got stuck near -75 dB all the way up to
+  K = 596. With multi-start (passband 0.9, L = 4): 70 dB is met at K = 104 (N = 417, -71.4 dB, 3 min), 80 dB at
+  K = 124 (N = 497, **-87.3 dB**, 4 min) and 85 dB at K = 138 (N = 553, -85.4 dB, 4 min). Note that K = 124 beats the
+  K = 130 result above by 4 dB: a shorter kernel can be better, so the search assumption "longer is better" (bisection)
+  only finds *a* length that meets the spec, not necessarily the shortest. The result is always exactly Nyquist; only
+  the stopband may be worse than attainable.
 * `g` has DC gain only approximately `sqrt(L)`: (N) fixes every L-th sample of `g * g`, not the total sum.
 
 ### Cost of matching
@@ -83,30 +87,38 @@ freedom), so to reach the same attenuation it needs more taps. Measured for `L =
 
 | Design | taps | stored coefficients (symmetry, shared) | multiplies per base-rate sample | stopband |
 |---|---|---|---|---|
-| pair `u`, `d` | 99 + 223 | 161 | 320 | -60.3 / -63.6 dB |
-| matched `g` | 237 | 118 | 470 | -61.6 dB |
+| pair `u`, `d` | 99 + 215 | 157 | 312 | -60.3 / -60.9 dB |
+| matched `g` | 233 | 116 | 462 | -60.2 dB |
 
-So matching saves about 27 % of the coefficient memory but costs about 47 % more multiplications. It pays off only
+So matching saves about 26 % of the coefficient memory but costs about 48 % more multiplications. It pays off only
 when memory, not arithmetic, is the constraint. (Symmetry is exploited for the stored count and not for the multiplies.)
 
 ## 5. Experimental: joint optimisation, rebalancing, tying
 
 * `optimise_joint`: let `u` and `d` both move, objective `E_stop(u) / L^2 + E_stop(d)`, constraints (N) and
-  `sum(u) = L`. The gain over the partner design depends on how far `u` is from optimal (about 5 dB worst-case from
-  Kaiser-sinc kernels at `L = 4`, 40 dB; small at 100 dB).
+  `sum(u) = L`. The gain over the partner design depends on how far `u` is from optimal (about 6 dB worst-case from
+  Kaiser-sinc kernels at `L = 4`, 40 dB: -41.9 to -47.7 dB; small at 100 dB).
 * `rebalance`: move taps from `d` to `u` two at a time (total length constant), re-optimising and tracking the
   worst-case stopband, until `n_u = n_d`. This is a continuation path from the pair towards the matched regime.
 * `tie`: penalise `|u / sqrt(L) - d sqrt(L)|^2` with increasing weight on an equal-length pair, average, and polish with
-  the exact matched solver. Typical cost: tens of dB (L = 4, 40 dB start: about -48 dB at equal lengths, about -28 dB
+  the exact matched solver. Typical cost: tens of dB (L = 4, passband 0.8, 40 dB start: -47.4 / -49.6 dB at equal lengths 81/81, -28.9 dB
   after tying). The result is exactly `u = d`.
 
 Test at larger size (`L = 4`, passband 0.9, N = 521, i.e. K = 130; start: 361-tap Kaiser-sinc `u` with 100 dB and its
-681-tap partner): the rebalance path stays near -103 / -108 dB for the first ~10 steps, degrades to about -90 dB in the
-middle and ends at -91.0 dB (`u`) / -95.8 dB (`d`) at equal lengths (14 minutes). Tying brings the two kernels together
-(relative difference below 1e-3) at about -89 dB, but projecting the average onto an exact `u = d` solution leaves -81.7 dB.
-The from-scratch matched solver reaches -84.0 dB at the same N in 7 seconds (-86.7 dB with `beta = 2`). So at this size
-the continuation route is not better than starting from scratch with a good start: the exact-matching constraint, not
-the starting point, is what costs attenuation, and the final projection loses most of what the path gained.
+681-tap partner), run twice with slightly different partner designs (before and after a measurement/grid fix):
+
+| Route | stopband | time |
+|---|---|---|
+| rebalance path to equal lengths 521/521 | run 1: -91.0 / -95.8 dB; run 2: -91.9 / -84.3 dB (u / d) | 11-14 min |
+| ... then tie + exact matched refinement | run 1: **-81.7 dB**; run 2: **-88.2 dB** | + 2-3 min |
+| from scratch, best of 5 Kaiser starts, K = 130 | -82.7 dB | 33 s |
+
+(In run 1 the from-scratch solver was measured at -84.0 dB, on the old grid; all run-2 numbers use the corrected grid.)
+The path itself is attractive (about -103 dB for the first steps, degrading towards -90 dB), but the outcome after
+tying varied by 6.5 dB between the two runs, from 2 dB worse to 5.5 dB better than the cold starts. So continuation
+plus tying *can* find better local minima than cold starts at this size, but it is slow (minutes instead of seconds) and
+its result is sensitive to tiny changes of the starting pair; no reliable advantage has been shown. Open: repeat it
+with several starting pairs and use the tied result as a warm start for `design_matched`.
 
 These routines are research tools; they work on symmetric centred pairs only.
 
@@ -117,6 +129,13 @@ the identity roundtrip unchanged. With a nonlinearity in the middle the two assi
 first filter determines what the nonlinearity sees. `FilterPair.swapped()` provides the swapped pair.
 
 ## 7. Practical notes
+
+* **Signal level at the nonlinearity.** The level at the waveshaper is `sum(u)/L` times the input level, i.e. 1 for the
+  pair convention but `1/sqrt(L)` for a matched kernel. Compensate with scalar gains around the waveshaper
+  (`FilterPair.shaper_level`); otherwise the same distortion curve acts on a different signal level than with a pair.
+* **Measuring the stopband.** The stopband peak of an optimised design sits at the stopband edge. All measurements
+  include the exact edge frequency on the grid; without it, the reported attenuation depended on the grid size
+  (up to a few dB).
 
 * Aliasing from `f` is suppressed only by the stopband attenuation of `d`; the exact-identity property concerns the
   linear signal path, not the nonlinear products.

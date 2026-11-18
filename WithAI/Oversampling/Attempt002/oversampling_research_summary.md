@@ -1,6 +1,6 @@
 # Exactly transparent FIR oversampling filter pairs for waveshaping — a research summary
 
-*Written up 2026-11-17 from a working session. Companion code: the `prosampler` Python package (`prosampler.zip`, docs in `docs/usage.md` and `docs/theory.md`). Numbers below were measured in the session unless marked otherwise.*
+*Written up 2026-11-17, corrected 2026-11-18 (see the note at the end of section 3 about a measurement fix). Companion code: the `prosampler` Python package (`prosampler.zip`, docs in `docs/usage.md` and `docs/theory.md`). Numbers below were measured in the session unless marked otherwise.*
 
 ---
 
@@ -65,12 +65,14 @@ For `u = d = g`, (N) becomes **quadratic**: `(g*g)[n0 + L·j] = δ[j]`. Nonconve
 ### 3.1 Two-kernel pair (`design_pair`, `design_partner`)
 
 * Exact to ≈ 1e-16 for all four combinations of {null-space, KKT} × {grid, energy}.
-* Reference case L = 4, `u` = 261-tap Kaiser-sinc (100 dB), 541-tap `d`, latency 100:
-  * energy objective, KKT (as in the first attempt's script): **−100.4 dB** — the first attempt's result was reproduced;
-  * grid objective: −102.0 dB (−102.8 dB in an earlier routine that also used a transition weight).
-* Spec-driven search (L = 4, passband 0.85, 60 dB): 99-tap `u`, 215–223-tap `d`, both ≈ −60 / −64 dB.
+* Reference case L = 4, passband 0.9, `u` = 261-tap Kaiser-sinc (100 dB, measures −100.2 dB), 541-tap `d`, latency 100 (stopband of `d`, exact edge on the grid):
+  * energy objective, null-space or KKT (the first attempt's script used KKT + energy): **−98.4 dB**;
+  * grid objective (null-space or KKT): **−104.6 dB**. The grid objective is the better default.
+  * (Earlier in the session the energy design was reported as −100.4 dB and said to "reproduce" the first attempt's number. That measurement missed the stopband-edge peak by about 2 dB, see the correction note below.)
+* Spec-driven search (L = 4, passband 0.85, 60 dB): 99-tap `u`, 215-tap `d`, latency 39, both ≈ −60 / −61 dB.
+* Demo scenario (L = 4, 20 kHz passband at 44.1 kHz, 80 dB): `u` 217 taps, `d` 457 taps, latency 84 samples (1.9 ms). Lengths drop strongly with a lower passband: 18 kHz → 121/241 taps, 16 kHz → 81/161 (80 dB).
 * **Low-latency (non-linear-phase) variants turned out useless** in the early experiments; the library is linear-phase only.
-* `d` may bump by ≈ 1 dB in the transition band; `transition_weight` (≈ 0.3) suppresses it. (An early low-latency `d` had a +117 dB bump — hence the limit of 3 dB in the spec check.)
+* `d` has a small bump of ≈ +1.1 dB at the passband edge. **`transition_weight > 0` does not remove it**: measured at 261/541 taps the bump grows to +1.5…+1.6 dB and the stopband of `d` degrades from −104.6 dB (weight 0) to −87.9 (0.003), −68 (0.01) and −53 dB (0.3); spec-driven 80 dB designs then need a 25–50 % longer `d`. Keep it at 0. (It was introduced for an early low-latency `d` with a +117 dB bump, a different regime; hence also the 3 dB limit in the spec check.)
 
 ### 3.2 Matched kernel (`design_matched`)
 
@@ -79,34 +81,35 @@ For `u = d = g`, (N) becomes **quadratic**: `(g*g)[n0 + L·j] = δ[j]`. Nonconve
 
   | Design | taps | stored coefficients (symmetry, shared) | MACs per base-rate sample | stopband |
   |---|---|---|---|---|
-  | pair `u`, `d` | 99 + 223 | 161 | 320 | −60.3 / −63.6 dB |
-  | matched `g` | 237 | 118 | 470 | −61.6 dB |
+  | pair `u`, `d` | 99 + 215 | 157 | 312 | −60.3 / −60.9 dB |
+  | matched `g` | 233 | 116 | 462 | −60.2 dB |
 
-  Matching saves ≈ 27 % coefficient memory but costs ≈ 47 % more multiplies; worthwhile only if memory, not arithmetic, is the constraint.
+  Matching saves ≈ 26 % coefficient memory but costs ≈ 48 % more multiplies; worthwhile only if memory, not arithmetic, is the constraint.
 * **Local minima.** The result depends on the starting kernel and is **not monotone in `K`**. L = 4, passband 0.9, default Kaiser start (`beta = 4`):
 
   | K | 100 | 110 | 120 | 130 | 140 |
   |---|---|---|---|---|---|
-  | stopband (dB) | −68.9 | −73.3 | −77.6 | −84.0 | −75.7 |
+  | stopband (dB) | −68.0 | −72.4 | −76.5 | −82.7 | −74.5 |
 
-  At K = 140 a start with `beta = 2` gives −86.7 dB. A spec-driven search that only warm-started from the previous *failed* design got stuck at ≈ −74.6 dB all the way to K = 596 (505 s, spec missed). The documented "plateau at −74 dB" was this warm-start trap, not a solver limit.
-* **Fix:** multi-start (several Kaiser betas plus the warm start, keep the best; automatic above 60 dB). With it: 70 dB at K = 103 (N = 413, −70.8 dB, 40 s); 80 dB at K = 123 (N = 493, −80.5 dB); 85 dB at K = 133 (N = 533, −86.8 dB); the latter two take ≈ 4.5 min each.
+  At K = 140 a start with `beta = 2` gives −85.6 dB (but only −79.8 dB at K = 130). A spec-driven search that only warm-started from the previous *failed* design got stuck near −75 dB all the way to K = 596 (505 s, spec missed). The documented "plateau at −74 dB" was this warm-start trap, not a solver limit.
+* **Fix:** multi-start (several Kaiser betas plus the warm start, keep the best; automatic above 60 dB). With it (L = 4, passband 0.9): 70 dB at K = 104 (N = 417, −71.4 dB, 3 min); 80 dB at K = 124 (N = 497, **−87.3 dB**, 4 min); 85 dB at K = 138 (N = 553, −85.4 dB, 4 min). K = 124 beats K = 130 (−82.7 dB) by 4 dB: a shorter kernel can be better, so the bisection finds *a* length meeting the spec, not necessarily the shortest.
 
 ### 3.3 Joint optimisation, rebalancing, tying (experimental)
 
-* **Joint optimisation** of `(u, d)` (balanced stopband objective; exact Nyquist; `sum(u) = L`): the gain depends on how suboptimal the starting `u` is. L = 4, passband 0.8, 40 dB, Kaiser start (47/115 taps): worst stopband −41.9 → −47.2 dB (≈ 5 dB). At 100 dB starting from a good `u` the gain is small. *(An earlier claim of a larger benefit was measured against an untuned start and was overstated.)*
-* **Rebalancing** (move taps from `d` to `u` two at a time, total length constant, re-optimise): 47/115 → 81/81 gives −48.0 / −49.9 dB.
-* **Tying** (penalty continuation, average, exact matched polish): −28 dB for the same example — tying costs 20–35 dB at equal total length.
-* **Continuation at larger size** (L = 4, passband 0.9, N = 521, start 361/681 taps, 100 dB):
+* **Joint optimisation** of `(u, d)` (balanced stopband objective; exact Nyquist; `sum(u) = L`): the gain depends on how suboptimal the starting `u` is. L = 4, passband 0.8, 40 dB, Kaiser start (47/115 taps): worst stopband −41.9 → −47.7 dB (≈ 6 dB; the pair measures −41.9 / −45.0, the joint result −49.9 / −47.7). At 100 dB starting from a good `u` the gain is small. *(An earlier claim of a larger benefit was measured against an untuned start and was overstated.)*
+* **Rebalancing** (move taps from `d` to `u` two at a time, total length constant, re-optimise): 47/115 → 81/81 gives −47.4 / −49.6 dB.
+* **Tying** (penalty continuation, average, exact matched polish): −28.9 dB for the same example — tying costs 20–35 dB at equal total length.
+* **Continuation at larger size** (L = 4, passband 0.9, N = 521, K = 130; start 361/681 taps, 100 dB), run twice with slightly different partner designs (before / after the measurement fix):
 
   | Route | stopband | time |
   |---|---|---|
-  | rebalance path, equal lengths | −91.0 / −95.8 dB (u / d) | 14 min |
-  | after tying + exact refinement (`u = d`) | −81.7 dB | — |
-  | from scratch, default start | −84.0 dB | 7 s |
-  | from scratch, `beta = 2` (at K = 140) | −86.7 dB | 12 s |
+  | rebalance path to equal lengths 521/521 | run 1: −91.0 / −95.8 dB; run 2: −91.9 / −84.3 dB (u / d) | 11–14 min |
+  | … then tie + exact matched refinement (`u = d`) | run 1: **−81.7 dB**; run 2: **−88.2 dB** | + 2–3 min |
+  | from scratch, best of 5 Kaiser starts, K = 130 | −82.7 dB | 33 s |
 
-  The path itself looks attractive (≈ −103 dB for the first ~10 steps, ≈ −90 dB mid-path), but the final projection onto an exact `u = d` solution loses most of the gain. **At this size continuation is not better than a good from-scratch start**: the exact-matching constraint, not the starting point, is what costs attenuation.
+  The path itself looks attractive (≈ −103 dB for the first steps, degrading toward −90 dB), but the result after tying varied by 6.5 dB between the two runs: from 2 dB worse to 5.5 dB *better* than the cold starts. **Continuation + tying can find better local minima than cold starts at this size, but it is slow and sensitive to tiny changes of the starting pair; no reliable advantage has been shown.** (An earlier version of this summary concluded that continuation is not better than starting from scratch; that was based on run 1 alone.)
+
+* **Correction note (2026-11-18).** The stopband peak of a good design sits at the stopband edge, but the evaluation grid did not contain the exact edge frequency, so reported attenuations were grid-size dependent and up to ~2 dB too optimistic (a 60 dB matched design printed −59.6 dB in one report and passed `meets_spec` in another). The grid now always contains both band edges. The tables in 3.1–3.3 were re-measured with the fix (N = 521 run 1 is kept as originally measured and marked as such). Not re-measured, and therefore only approximate: the "20–35 dB worse at equal total length" figure and the L = 2 matched-design numbers (−69 dB, −52 dB) from earlier experiments.
 
 ### 3.4 Swapping roles
 
@@ -125,6 +128,10 @@ Exchanging `u` and `d` (with a gain fix: new `u = d·L/sum(d)`, new `d = u·sum(
 9. **Objective scaling.** Stopband energies of 1e-10 and below are under SLSQP's absolute tolerances; rescale to O(1) and restart.
 10. **Overstated early claims** (joint-optimisation benefit, the "−74 dB plateau", "L = 2 impossible") — all corrected; treat anything not in the tables above as unverified.
 11. **Reading helper:** reference roundtrips use full convolutions (slow); use polyphase in production (a tested block implementation is in `docs/usage.md`).
+12. **Evaluation grid must contain the band edges.** The stopband peak is at the edge; a grid that misses it under-reports it (and makes `meets_spec` grid dependent). Fixed in `Spec.grid`; keep it in mind for any own measurement code.
+13. **Signal level at the nonlinearity.** The shaper sees `sum(u)/L` times the input level: 1 for a pair, but `1/√L` for a matched kernel (gain `√L` each). The identity roundtrip hides this; a nonlinearity does not (a matched chain driven through `tanh(4x)` gave an output peak of 1.9 instead of ≤ 1). Scale by `1/shaper_level` before and `shaper_level` after the waveshaper (`FilterPair.shaper_level`, `reference_roundtrip(..., compensate_levels=True)`).
+14. **`transition_weight` is not a bump remedy** (see 3.1): it enlarges the bump and wrecks the stopband.
+15. **Single runs of the continuation/tying route are not reproducible in outcome** (6.5 dB spread, see 3.3); never judge it from one run.
 
 ## 5. Related work (not exhaustive; references partly unverified)
 
@@ -140,9 +147,9 @@ Exchanging `u` and `d` (with a gain fix: new `u = d·L/sum(d)`, new `d = u·sum(
 2. **Minimax objective.** The pair's partner design is *convex*; a minimax (Chebyshev) stopband objective could be solved as an LP/SOCP and would give equiripple stopbands (better peak attenuation than the least-squares objectives used here).
 3. **Root-Nyquist route for the matched case.** Design a Nyquist `h ≥ 0` with an optimised stopband and factor `h = g*g`. For linear-phase `g` this needs double zeros on the unit circle in the stopband, which turns the problem into a constrained (convex-ish) design of `h` rather than the nonconvex NLP in `g`. Speculative; compare with the root-Nyquist literature first.
 4. **Global optimisation for the matched problem.** More starts, basin hopping, or continuation in `L`/passband; map the landscape over `K` and `beta`; understand why `beta = 2` often wins.
-5. **Why does continuation + tying lose the gain?** Study the geometry of the feasible set `{g*g Nyquist}`; try tying with a trust-region/Riemannian method instead of penalty + projection, or tie early in the path.
+5. **Make continuation + tying reliable (or know when it wins).** Repeat the N = 521 experiment with many starting pairs to get a distribution; use the tied result as a warm start for `design_matched`; study the geometry of the feasible set `{g*g Nyquist}`; try a trust-region/Riemannian method instead of penalty + projection, or tie early in the path.
 6. **Non-symmetric / low-latency filters.** The `partner` design supports non-symmetric `u` with explicit latency; a systematic study of minimum-phase or low-latency pairs (with nonlinear-phase side effects on the waveshaper) is unexplored — the early low-latency attempt was dropped as useless, but that was a narrow experiment.
-7. **Transition band shaping.** Trade-offs between `d`'s transition-band bump, `transition_weight`, and attenuation; a principled specification of the transition-band behaviour.
+7. **Transition band shaping.** `transition_weight` (least-squares penalty) does not help (3.1). A constrained formulation (e.g. as a bound on |D(ω)| in the transition band within a minimax/SOCP design) may; the +1.1 dB bump at the passband edge of `d` is the thing to understand: is it inherent to the Nyquist constraint with a Kaiser `u`?
 8. **Larger `L` and other passbands.** Most experiments used L = 4 (some L = 3, 8). Check scaling of the memory/MAC trade-off and the matched solver for L = 8, 16, and for passbands near 1.
 9. **Efficient implementation.** Polyphase + symmetric-folding implementations, a C++ port (the first attempt's repo already has a C++ version for the KKT pair), cost models including symmetry in the multiply count (currently not exploited in `macs_per_sample`).
 10. **Tied-from-pair at equal memory.** At fixed *stored coefficients* rather than fixed total length, is the pair or the matched kernel better? (The table in 3.2 compares at roughly equal attenuation, not at equal memory.)
@@ -162,16 +169,17 @@ src/prosampler/
   joint.py      optimise_joint, rebalance, tie                   # experimental steps 3-5
   pair.py       FilterPair (u, d, latency, metrics, verify, swapped, stored_coeffs, macs_per_sample)
   compare.py    compare()      plots.py   plot_responses / plot_kernels / plot_path
-docs/usage.md, docs/theory.md; tests: 56 passing (docs examples are executed by the test suite)
+demos/design_and_plot.py   runnable scenario: design from Hz, report, roundtrip check, impulse/step/magnitude plots
+docs/usage.md, docs/theory.md; tests: 62 passing (docs examples are executed by the test suite)
 ```
 
 Minimal usage:
 
 ```python
 import prosampler as ps
-fp = ps.design_pair(L=4, passband=0.85, atten_db=60)    # u (99 taps), d (~223 taps)
+fp = ps.design_pair(L=4, passband=0.85, atten_db=60)    # u (99 taps), d (215 taps)
 fp.verify()
-g = ps.design_matched(4, 0.85, 60)                       # single kernel, 237 taps
+g = ps.design_matched(4, 0.85, 60)                       # single kernel, 233 taps
 print(ps.compare({"pair": fp, "matched": g}))
 ```
 

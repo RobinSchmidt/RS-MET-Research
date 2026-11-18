@@ -19,13 +19,27 @@ def test_exact_all_combinations(ref, method, objective):
     ps.verify_roundtrip(u, d, 4, 100)
 
 
-def test_regression_old_script_numbers(ref):
+def test_regression_reference_case(ref):
+    """L=4, passband 0.9, 261-tap Kaiser-sinc u (100 dB), 541-tap d, latency 100.
+
+    Measured with the exact stopband edge on the grid.  (Before the edge was added to the grid the energy design
+    looked 2 dB better, -100.4 dB, because the grid missed the edge peak.)"""
     u, spec = ref
     fp = ps.FilterPair(u, ps.design_partner(u, spec, 541, 100, objective="energy", method="kkt"), 4, 100, 0.9)
     m = fp.metrics()
-    assert m["u_stop_db"] < -99.5 and -101.5 < m["d_stop_db"] < -99.5
+    assert m["u_stop_db"] < -99.5 and -99.5 < m["d_stop_db"] < -97.5
     fp = ps.FilterPair(u, ps.design_partner(u, spec, 541, 100), 4, 100, 0.9)
-    assert fp.metrics()["d_stop_db"] < -101.5
+    m = fp.metrics()
+    assert m["d_stop_db"] < -103.5 and m["d_transition_peak_db"] < 1.5
+
+
+def test_transition_weight_is_not_a_bump_remedy(ref):
+    """Documented finding: transition_weight > 0 makes the bump of d larger and the stopband much worse."""
+    u, spec = ref
+    base = ps.FilterPair(u, ps.design_partner(u, spec, 541, 100), 4, 100, 0.9).metrics()
+    tw = ps.FilterPair(u, ps.design_partner(u, spec, 541, 100, transition_weight=0.1), 4, 100, 0.9).metrics()
+    assert tw["d_stop_db"] > base["d_stop_db"] + 20
+    assert tw["d_transition_peak_db"] >= base["d_transition_peak_db"]
 
 
 def test_methods_agree(ref):

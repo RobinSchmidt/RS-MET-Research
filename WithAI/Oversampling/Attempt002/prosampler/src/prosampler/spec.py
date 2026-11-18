@@ -77,8 +77,14 @@ class Spec:
         return self.stopband_edge - self.passband_edge
 
     def grid(self, n: int = 3000) -> Grid:
-        """Uniform frequency grid of ``n`` points on [0, pi] with passband / stopband / transition masks."""
-        w = np.linspace(0.0, np.pi, n)
+        """
+        Uniform frequency grid of about ``n`` points on [0, pi] with passband / stopband / transition masks.
+
+        The exact passband and stopband edge frequencies are always included (the stopband peak of a good design
+        sits right at its edge, so a grid that misses it would under-report the peak by an amount that depends on
+        the grid size).
+        """
+        w = np.unique(np.concatenate([np.linspace(0.0, np.pi, n), [self.passband_edge, self.stopband_edge]]))
         pas = w <= self.passband_edge
         stp = w >= self.stopband_edge
         return Grid(w=w, passband=pas, stopband=stp, transition=~(pas | stp))

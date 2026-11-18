@@ -81,6 +81,18 @@ class FilterPair:
         return self.n_u == self.n_d and bool(np.array_equal(self.u, self.d))
 
     @property
+    def shaper_level(self) -> float:
+        """
+        Signal level at the nonlinearity relative to the input level, ``sum(u) / L``.
+
+        1 for the pair convention (``u`` has DC gain ``L``); ``1/sqrt(L)`` for a matched kernel.  With a nonlinearity
+        between the filters multiply by ``1 / shaper_level`` before it and by ``shaper_level`` after it (or use
+        ``reference_roundtrip(..., compensate_levels=True)``) to make the shaper see the input level.  The identity
+        roundtrip is the same either way.
+        """
+        return float(np.sum(self.u)) / self.L
+
+    @property
     def stored_coeffs(self) -> int:
         """Coefficients that must be stored, exploiting symmetry, dropping zero end taps and sharing ``u = d``."""
         return _stored(self.u) if self.is_matched else _stored(self.u) + _stored(self.d)

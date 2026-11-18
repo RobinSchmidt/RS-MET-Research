@@ -121,3 +121,28 @@ def test_filterpair_validation():
         FilterPair(np.ones(3), np.ones(3), 1, 0)
     with pytest.raises(ValueError):
         FilterPair(np.ones(3), np.ones(3), L, -1)
+
+
+def test_stopband_measurement_independent_of_grid_size():
+    import prosampler as ps
+    fp = ps.design_pair(4, 0.8, 40)
+    vals = [fp.metrics(n_grid=n)["u_stop_db"] for n in (500, 1000, 4000, 9000)]
+    assert max(vals) - min(vals) < 0.05          # the exact band edges are always on the grid
+    g = ps.Spec(4, 0.8).grid(777)
+    assert np.any(g.w == ps.Spec(4, 0.8).stopband_edge) and np.any(g.w == ps.Spec(4, 0.8).passband_edge)
+
+
+def test_level_compensation_makes_pair_and_matched_equivalent_for_nonlinearity():
+    import prosampler as ps
+    m = ps.design_matched(4, 0.8, K=20)
+    p = ps.design_pair(4, 0.8, 40)
+    assert abs(p.shaper_level - 1) < 1e-9 and abs(m.shaper_level - 0.5) < 1e-5
+    x = 0.5 * np.sin(2 * np.pi * 0.01 * np.arange(400))
+    shaper = lambda v: np.tanh(3 * v)
+    y_id = ps.reference_roundtrip(x, m.u, m.d, 4, m.latency, compensate_levels=True)
+    assert np.max(np.abs(y_id - x)) < 1e-12
+    y_m = ps.reference_roundtrip(x, m.u, m.d, 4, m.latency, shaper=shaper, compensate_levels=True)
+    y_p = ps.reference_roundtrip(x, p.u, p.d, 4, p.latency, shaper=shaper, compensate_levels=True)
+    assert np.max(np.abs(y_m - y_p)) < 0.02       # same nonlinearity, same level -> nearly the same result
+    y_raw = ps.reference_roundtrip(x, m.u, m.d, 4, m.latency, shaper=shaper)
+    assert np.max(np.abs(y_raw - y_p)) > 0.1      # without compensation the matched chain differs clearly

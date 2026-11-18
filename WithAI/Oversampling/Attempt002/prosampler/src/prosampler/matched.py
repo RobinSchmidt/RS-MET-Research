@@ -18,11 +18,12 @@ Design facts
   could not be projected to an exact ``u = d`` solution better than ~5e-10 / -52 dB.  For ``L = 2`` prefer
   :func:`~prosampler.design_pair`.
 * The optimiser (SLSQP + Gauss-Newton projection) finds LOCAL minima, so the result depends on the start (Kaiser-sinc
-  with window parameter ``beta``) and is not monotone in ``K``: for ``L=4, passband=0.9`` a cold start gives -84.0 dB
-  at K=130 but -75.7 dB at K=140, while ``beta=2`` gives -86.7 dB at K=140.  ``design_matched`` therefore tries several
+  with window parameter ``beta``) and is not monotone in ``K``: for ``L=4, passband=0.9`` a cold start gives -82.7 dB
+  at K=130 but -74.5 dB at K=140, while ``beta=2`` gives -85.6 dB at K=140.  ``design_matched`` therefore tries several
   starts (``betas``) and keeps the best; warm-starting alone can get trapped (a spec-driven 80 dB search that only
-  warm-started stayed near -74.6 dB up to K=596).  The result is always exactly Nyquist (the projection guarantees
-  it); only the stopband may be worse than what is achievable.
+  warm-started stayed near -75 dB up to K=596).  The result is always exactly Nyquist (the projection guarantees
+  it); only the stopband may be worse than what is achievable.  The spec-driven search bisects on K and so finds
+  a length that meets the spec, not necessarily the shortest (a shorter K can be better than a longer one).
 """
 from __future__ import annotations
 

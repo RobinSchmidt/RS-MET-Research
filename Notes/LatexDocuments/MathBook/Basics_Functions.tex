@@ -689,9 +689,12 @@ x = \int_1^y \frac{1}{t} \, dt
 \end{equation}
 % maybe replace the y in the parameter integral by e^x. I think, that is, what it means
 % give continuous fraction expansion
-It satisfies the following differential equation\footnote{Don't worry if you don't know what a differential equation is - we'll learn about them later and you can ignore it for now} and functional equation:
+% Maybe mention that the reader may ignore the parameter integral definition if they don't
+% know what that means.
+It satisfies the following differential equation\footnote{Don't worry if you don't know what a differential equation is. We'll learn about them later and you can ignore it for now} and functional equation:
 \begin{equation}
-\frac{d}{dx} \e^x = \e^x, \quad
+%\frac{d}{dx} \e^x = \e^x, \quad
+(\e^x)' = \e^x, \quad
 \e^{x+y} = \e^x \cdot \e^y
 \end{equation}
 This functional equation is pretty interesting indeed. It means that the exponential function translates between our two most important arithmetic operations addition and multiplication \footnote{subtraction and division are less important because they can be seen as mere inverses of the more fundamental operations of addition and multiplication}. The differential equation is quite noteworthy as well. It means that the exponential function is its own derivative. We can also insert complex arguments into the series definition. The resulting series will converge for any complex number $z$ whatsoever and the properties mentioned above continue to hold.
@@ -777,8 +780,10 @@ By applying these odd/even decomposition formulas to the power series of $\e^x$ 
 \end{equation}
 These power series can also be constructed from the power series of the exponential function by just extracting the terms with odd exponents for $\sinh$ and the terms with even exponents for $\cosh$. This way of extracting the even and odd parts of a power series works for any function [VERIFY!]. The two functions satisfy the following system of coupled differential equations:
 \begin{equation}
-\frac{d}{dx} \sinh(x) = \cosh(x), \quad
-\frac{d}{dx} \cosh(x) = \sinh(x)
+%\frac{d}{dx} \sinh(x) = \cosh(x), \quad
+%\frac{d}{dx} \cosh(x) = \sinh(x)
+(\sinh(x))' = \cosh(x), \quad
+(\cosh(x))' = \sinh(x)
 \end{equation} 
 If you repeatedly differentiate, you'll always cycle through the same two functions. So we have a 2-cycle here. As an interesting parallel, recall that the exponential function is its own derivative which can be viewed as a 1-cycle. There is also a pair of formulas for hyperbolic functions that parallels the functional equation of the exponential function:
 \begin{equation}
@@ -857,8 +862,10 @@ These series expansions look very similar to those of $\sinh$ and $\cosh$ but th
 \end{figure}
 There are also differential and functional equations for sine and cosine that are reminiscent of the corresponding equations for the exponential function. Sine and cosine satisfy the following system of coupled differential equations:
 \begin{equation}
-\frac{d}{dx} \sin(x) = \cos(x), \quad
-\frac{d}{dx} \cos(x) = -\sin(x)
+%\frac{d}{dx} \sin(x) =  \cos(x), \quad
+%\frac{d}{dx} \cos(x) = -\sin(x)
+(\sin(x))' =  \cos(x), \quad
+(\cos(x))' = -\sin(x)
 \end{equation}
 That means, if you start with the sine function and repeatedly differentiate, you'll cycle through the 4 functions $\sin, \cos, -\sin, -\cos$. Sine and cosine also obey the following system of coupled functional equations which are also known under the name of \emph{addition theorems}:
 \begin{equation}
@@ -927,6 +934,26 @@ for any complex number $z$. From this relation together with the rules for expon
 % The Trigonometry Guide I Wish I Had
 % https://www.youtube.com/watch?v=kDnLvRQBTQM
 
+% The Mysterious Connection Between Derivatives and Imaginary Numbers
+% https://www.youtube.com/watch?v=SH7WwuVhlIs
+% -Shows the connection between the 3 different 1D geometric algebras (without mentioning the term)
+%  namely the complex numbers, hyperbolic numbers and dual numbers, differentiation and certain sets
+%  of functions (i.e. trgonometric, hypebolic and the identity)
+% -It notes the following cyclic relationships and visualizes them in circular diagrams:
+%
+%   (1)  exp(i x) ---D--> i exp(i x) ---D--> -exp(i x) ---D--> -i exp(i x) ---D--> exp(i x)
+%   (2)  sin(x)   ---D-->   cos(x)   ---D-->  -sin(x)  ---D-->  -cos(x)    ---D--> sin(x)
+%   (3)     1     ---i-->     i      ---i-->    -1     ---i-->     -i      ---i--> 1 
+%
+%  where (1) is the basis from which we get (2) by extracting real and imaginary parts and (3)
+%  by extracting th +1,-1 coefficients. here, ---D--> means differentiation with respect to x and
+%  ---i--> means multiplication by i. It notes the similarity between D^2 = -1 and i^2 = -1
+% -It then goes on to draw a similar connection between D and j of the hyperbolic numbers where
+%    sinh(x) ---D--> cosh(x) ---D--> sinh(x)
+%  and D^2 = 1, j^2 = 1, j !=1
+% -Finally, it also points out the parallel beween D and eps(epsilon) in the dual numbers where
+%    id(x) ---D--> 1 ---D--> 0 
+%  with D^2 = 0, eps^2 = 0, eps != 0
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Relations between Exponential, Hyperbolic and Trigonometric Functions}

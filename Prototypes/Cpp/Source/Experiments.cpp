@@ -2136,7 +2136,7 @@ void testJitterSaw2()
 
   // Sanity check the jittered time axis. We want to ensure that the jittered sampling instants are
   // interleaved with the regular sampling instants. We want t0 = 0, 0 <= t1 <= 1, 1 <= t2 <= 2,
-  // 2 <= t3 <= 3, ...
+  // 2 <= t3 <= 3, ...,  n-1 <= tn <= n  for all n in 0,1,2,...,N-1
   rsAssert(tj[0] == Real(0));
   for(int n = 1; n < N; n++)
   {
@@ -2186,10 +2186,17 @@ void testJitterSaw2()
 
   // ToDo:
   // 
-  // - I think, the output rsDriftFreeJitter<Real> does not correspond to the pic in
-  //   IrregularResampling.drawio. I think, we nee to compute xu[1] outside the loop and in order
-  //   to compute xu[n], we need xj[n] and xj[n+1]. In a jitter/dejitter roundtrip, we acquire a 
-  //   delay of one sample.
+  // - ToDo: Extract a fcuntion that verifies the desired "interlevaing" condition: n-1 <= tn <= n 
+  //   and then integrate it into the unit tests for the rsDriftFreeJitter... objects. I guess they
+  //   will then fail. If that is confirmed, it means that my mental model is wrong. The "drift 
+  //   free" condition does _not_ imply our desired "interleaving" condition. That means we must go
+  //   back to the drawing board for the special PRNG. May set up the problem by taking the 
+  //   half-integers as reference points and if a randomAmount parameter is zero, the generator
+  //   will produce the exact half-integers (as cumulated values) and if it is 1, it will at each
+  //   sample produce a dt value such that the next time instand (i.e. cumulated dt value) will 
+  //   land on on a half integer plusminus a random number in the interval  
+  //   (-0.5..+0.5) * randomAmount. To ensure that, it may have to keep a state that stores the 
+  //   fractional part that was produced at the previous sample.
   //
   // - Implement a roundtrip that resamples from regular x[n] -> irregular y[n] -> regular z[n]
   //   via linear interpolation. We will generally have that z[n] depends on x[n-1],x[n],x[n+1] 

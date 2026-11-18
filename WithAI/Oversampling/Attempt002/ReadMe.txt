@@ -9,5 +9,5 @@ code exporter that exports a ready-to-use C++ class with hardcoded coeffs that u
 polyphase implementation. It should have the usual getSample() functions. Maybe the classes should 
 be named like Upsampler_L4_90_75 and Downsampler_L4_90_75 for a pair with L=4, passband = 0.9 (90 %)
 and rejection = 75 dB. Or maybe instead of passband and rejection, it should give the lengths of u 
-and d like Upsampler_L4_U63_L127. And/or maybe we should be able to export C implementations, too.
-And maybe Rust.
+and d like Upsampler_L4_U63_D127. And/or maybe we should be able to export C implementations, too.
+And maybe Rust. Maybe we could explore IIR designs, too?

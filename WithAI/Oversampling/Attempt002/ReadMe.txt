@@ -7,7 +7,7 @@ https://claude.ai/share/e5f52b28-a86d-47da-be86-2d92bd6e0786
 In the "Open questions" section in the file: oversampling_research_summary.md, the following ideas
 seem to be very interesting to explore later:
 
-- Item 2: Using a minimax objective. Maybe this will result in quiripple responses that achieve an
+- Item 2: Using a minimax objective. Maybe this will result in equiripple responses that achieve an
   even better stopband attenuation.
 
 - Item 7: Transition band shaping. Maybe we could prescribe a desired shape for the transition. But
@@ -16,7 +16,7 @@ seem to be very interesting to explore later:
   functions like  f(x) = 1 - x^p, f(x) = (cos(0.5*pi*x))^(1/p)  for some parameter p >= 1. See:
   https://www.desmos.com/calculator/pe0oopida3
   
-- Item 3: Explorer the "Root-Nyquist design" route. I think, this is what Kimi tried in Attempt004.
+- Item 3: Explore the "Root-Nyquist design" route. I think, this is what Kimi tried in Attempt004.
   
 
 Here are a couple of my own additional ideas that can be explored further:
@@ -34,7 +34,11 @@ Here are a couple of my own additional ideas that can be explored further:
   would be [1, 0.3, 1]? Verify this!
 
 - Maybe we could try to enforce similar magnitude responses for u and d by penalizing differences
-  in the magnitude responses.
+  in the magnitude responses. But maybe together with the linear phase constraint, this will again 
+  boil down to enforcing d = u which was found to result in significantly worse magnitude responses
+  for a given filter length. The additional degrees of freedom when allowing d != u really unlocks
+  further optimization potential. But what if we drop the linear phase constraint, i.e. allow 
+  asymmetric u and d again?
 
 - Maybe we could also provide a convenient code exporter that exports a ready-to-use C++ class with
   hardcoded coeffs that uses an efficient polyphase implementation. It should have the usual 

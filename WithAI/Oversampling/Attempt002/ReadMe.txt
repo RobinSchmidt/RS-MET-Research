@@ -54,4 +54,4 @@ Here are a couple of my own additional ideas that can be explored further:
   somewhat realistic scenario. The demo should design a filter pair, plot the impulse-, step- and 
   magnitude-responses and optionally export C/C++/Rust code with an optimized polyphase 
   implementation. It should be easy to modify the design parameters in the demo such that it can be
-  used as default starting point.
+  used as default starting point.  ...work on that is in progress...

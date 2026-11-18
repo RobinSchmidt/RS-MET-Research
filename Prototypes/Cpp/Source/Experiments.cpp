@@ -2131,16 +2131,43 @@ void testJitterSaw2()
     tj[n] = tj[n-1] + dt;                  // Jittered time axis.
     Real p = phs.getSample(dt);            // Normalized phase in 0..1
     xj[n] = 2*p - 1;                       // [0,1] -> [-1,+1]. Convert phasor to saw.
-
-    // Compute de-jittered saw from jittered saw samples xj[n-1] and xj[n]:
-    // ...something to do here....
   }
+
+
+
+  // Compute de-jittered saw from jittered saw samples: 
+  xu[0] = xj[0];
+  for(int n = 1; n < N; n++)
+  {
+    // ...something to do here....
+    // 
+    // I think, to compute xu[n], we need to use xj[n-1], xj[n] and dt = tj[n] - tj[n-1]
+
+    Real dt = tj[n] - tj[n-1];
+
+
+    // PRELIMINARY! Formulas for b0 and b1 are still missing!
+    // Compute the weights for xj[n-1] and xj[n]:
+    Real b0 = 1.0;  // Weight for xj[n] = xj[n-0]
+    Real b1 = 0.0;  // Weight for xj[n]
+    // For these coeffs, we need to figure out the right formula.
+
+    // Compute the de-jittered signal as weighted sum of the jittered samples:
+    xu[n] = b0*xj[n] + b1*xj[n-1];
+    int dummy = 0;
+  }
+
 
   // Plot results:
   rsPlotVectorsXY(tj, xj);
   rsPlotVectorsXY(tu, xu);
 
   // ToDo:
+  // 
+  // - I think, the output rsDriftFreeJitter<Real> does not correspond to the pic in
+  //   IrregularResampling.drawio. I think, we nee to compute xu[1] outside the loop and in order
+  //   to compute xu[n], we need xj[n] and xj[n+1]. In a jitter/dejitter roundtrip, we acquire a 
+  //   delay of one sample.
   //
   // - Implement a roundtrip that resamples from regular x[n] -> irregular y[n] -> regular z[n]
   //   via linear interpolation. We will generally have that z[n] depends on x[n-1],x[n],x[n+1] 
@@ -2151,6 +2178,12 @@ void testJitterSaw2()
   //   it as follows: (1) Create triangular distribution in -1..+1. (2) Add or subtract 1 based on
   //   fair coin flip (based on another PRNG). (3) Maybe multiply by 0.5 to get the range back to
   //   -1..+1 (it's now in -2..+2).
+  //
+  // - To see a picture of how the jitter and unjittered samples are related, look at the pic
+  //   RS-MET-Research/Notes/DSP/Diagrams/IrregularResampling.drawio
+  //   In this case, only the bottom two lines are relevant. The first line above them is relevant
+  //   in the process of resampling (i.e. artifically jittering) and incoming regularly sampled 
+  //   signal.
 }
 
 bool testDriftFreeJitter1()
@@ -2283,7 +2316,7 @@ bool testDriftFreeJitter2()
 
 void testJitterSaw()
 {
-  //testJitterSaw2();
+  testJitterSaw2();
 
   bool ok = true;
   ok &= testDriftFreeJitter1();

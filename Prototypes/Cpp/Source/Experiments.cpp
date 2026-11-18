@@ -1960,6 +1960,28 @@ void testPitchDitherSuperSaw()
   //   - Tuned comb to clean up the spectrum by reducing the noise between the harmonics
 }
 
+/** Verifies, if the given vector v represents a valid jittered time axis. The conditions that we
+want to enforce is t[0] = 0 and for al n in 1,2,...N-1: n-1 <= t[n] <= n. The first time instant 
+is always zero and the following time instants interleave the integers. */
+/*
+template<class T> 
+bool rsValidJitteredTimeAxisIntegers(<const std::vector<T>& t)
+{
+  bool ok = true;
+
+  ok &= t[0] == T(0);
+  for(size_t n = 1; n < t.size(); n++)
+  {
+    T tn = T(t[n]);
+    ok &= tn >= Real(n-1);
+    ok &= tn <= Real(n);
+  }
+
+  return ok;
+}
+*/
+
+
 void testJitterSaw1()
 {
   // Here, we implement an idea that is similar in spirit to the pitch-dithering method but more 
@@ -2144,8 +2166,10 @@ void testJitterSaw2()
     rsAssert(tn >= Real(n-1));
     rsAssert(tn <= Real(n)  );
   }
+  //bool valid = rsValidJitteredTimeAxisIntegers(tj);
+  //rsAssert(valid);
   // Maybe factor this out into a function rsCheckJitteredTimeAxis(tj) that returns a bool. Maybe
-  // the function yould be more generally called rsInterleavesIntegers(tj)
+  // the function yould be more generally called rsInterleavesIntegers(tj) ...done
 
 
 

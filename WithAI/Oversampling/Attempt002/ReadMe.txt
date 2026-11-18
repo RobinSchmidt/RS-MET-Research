@@ -49,3 +49,9 @@ Here are a couple of my own additional ideas that can be explored further:
   Rust. 
 
 - Maybe we could explore IIR designs, too?
+
+- Maybe the library could have a "demos" folder that demonstrates the usage of the library in a 
+  somewhat realistic scenario. The demo should design a filter pair, plot the impulse-, step- and 
+  magnitude-responses and optionally export C/C++/Rust code with an optimized polyphase 
+  implementation. It should be easy to modify the design parameters in the demo such that it can be
+  used as default starting point.

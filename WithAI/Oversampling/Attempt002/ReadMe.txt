@@ -1,7 +1,39 @@
 This is my 2nd attempt at the problem. This time, I use claude.ai directly rather than GitHub 
 Copilot. The model was Sonnet 5.5 with medium effort level. The chat is publically shared here:
 
-https://claude.ai/share/e5f52b28-a86d-47da-be86-2d92bd6e0786
+https://claude.ai/chat/b98c9ff2-aaed-467d-a295-d17944ea98bf    my private link
+https://claude.ai/share/e5f52b28-a86d-47da-be86-2d92bd6e0786   the published shared link
+
+This chat has now grown enormously large such that any single follow up question will burn through
+tokens like there is no tomorrow. To continue, we need to start a fresh session. Google Gemini
+recommended to request a summary with the following prompt (I modified it a bit):
+
+This chat has grown too long to meaningfully continue here. We need to start a new session with a fresh context window. Stop all other tasks and generate a compact, high-density "Context Handoff" of our research so far so I can continue in a fresh chat without losing progress. 
+
+Keep it strictly factual, concise, using these exact sections:
+1. **Core Research Goal:** What I am trying to figure out or decide.
+2. **Confirmed Findings & Key Facts:** Bullet points of established facts, figures, sources, or conclusions we reached.
+3. **Ruled Out / Dead Ends:** Options or assumptions we already dismissed and why.
+4. **Constraints & Context:** My specific requirements, setup, or rules you must follow.
+5. **Next Immediate Question:** The exact question or subtopic we were about to explore next.
+
+Do not include conversational filler, greetings, or explanations.
+
+
+...and then copy the result of that into the prompt of the new session. Or export the response to an
+.md file with tools like saveAI or Inkpour and link the generated document in the prompt of the 
+fresh chat.
+
+
+
+
+
+Some possible follow up questions:
+
+- The doc of the prosampler library says:
+    "a windowed-sinc u is itself (nearly) Nyquist(L), so d = delta is an exact partner."
+  Why is it only "nearly" Nyquist(L) and not exactly? What is the error and why does it occur? Maybe
+  the center sample is not exactly 1?
 
 
 In the "Open questions" section in the file: oversampling_research_summary.md, the following ideas
@@ -55,3 +87,5 @@ Here are a couple of my own additional ideas that can be explored further:
   magnitude-responses and optionally export C/C++/Rust code with an optimized polyphase 
   implementation. It should be easy to modify the design parameters in the demo such that it can be
   used as default starting point.  ...work on that is in progress...
+  
+  

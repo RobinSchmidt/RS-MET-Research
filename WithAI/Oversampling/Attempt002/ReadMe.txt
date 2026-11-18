@@ -3,18 +3,35 @@ Copilot. The model was Sonnet 5.5 with medium effort level. The chat is publical
 
 https://claude.ai/share/e5f52b28-a86d-47da-be86-2d92bd6e0786
 
+
 In the "Open questions" section in the file: oversampling_research_summary.md, the following ideas
 seem to be very interesting to explore later:
 
 - Item 2: Using a minimax objective. Maybe this will result in quiripple responses that achieve an
   even better stopband attenuation.
 
-- Item 7: Transition band shaping.
+- Item 7: Transition band shaping. Maybe we could prescribe a desired shape for the transition. But
+  what shape? In the simplest case, it could just go linearly down from 1 to 0. But we may also try
+  to use functions that are closer to what such FIR filters actually tend to want to do. Maybe try
+  functions like  f(x) = 1 - x^p, f(x) = (cos(0.5*pi*x))^(1/p)  for some parameter p >= 1. See:
+  https://www.desmos.com/calculator/pe0oopida3
+  
+- Item 3: Explorer the "Root-Nyquist design" route. I think, this is what Kimi tried in Attempt004.
+  
+
+Here are a couple of my own additional ideas that can be explored further:
+
+- If we do this transition band shaping, we may also look at how the prescribed transition shape 
+  impacts the step response of the filter. It may be desirable in certain contexts to have a step 
+  response that doesn't overshoot and ring too much. Maybe by prescribing a suitable transition band
+  shape, we may indirectly influence the amount of overshoot and ringing. Alternatively we may try 
+  to minimize ringing more directly by adding a term that penalizes the ringing into the 
+  optimization objective.
 
 - Maybe we could use 3 different weighting factors for the errors in the passband, transition band 
   and stopband. I guess, we now use weights [1, 0, 1]? The code has an option for a transition band
-  weight and Claude recommends a value of 0.3, so I guess in this case, it would be [1, 0.3, 1]?
-  Verify this!
+  weight ("transition_weight") and Claude recommends a value of 0.3, so I guess in this case, it 
+  would be [1, 0.3, 1]? Verify this!
 
 - Maybe we could try to enforce similar magnitude responses for u and d by penalizing differences
   in the magnitude responses.

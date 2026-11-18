@@ -2114,7 +2114,8 @@ void testJitterSaw2()
   Vec xj(N);                     // Non-uniformly sampled (jittered) output
   Vec tu(N);                     // Uniformly sampled time axis
   Vec xu(N);                     // Uniformly resampled output
-  rsDriftFreeJitter<Real> dfj;
+  //rsDriftFreeJitter<Real> dfj;
+  rsDriftFreeJitter3<Real> dfj;
   Phasor phs;
   phs.setPhaseSlope(freq/fs);;   // Verify! Sets up nominal frequency
 
@@ -2133,17 +2134,38 @@ void testJitterSaw2()
     xj[n] = 2*p - 1;                       // [0,1] -> [-1,+1]. Convert phasor to saw.
   }
 
+  // Sanity check the jittered time axis. We want to ensure that the jittered sampling instants are
+  // interleaved with the regular sampling instants. We want t0 = 0, 0 <= t1 <= 1, 1 <= t2 <= 2,
+  // 2 <= t3 <= 3, ...
+  rsAssert(tj[0] == Real(0));
+  for(int n = 1; n < N; n++)
+  {
+    Real tn = tj[n];
+    rsAssert(tn >= Real(n-1));
+    rsAssert(tn <= Real(n)  );
+  }
+  // Maybe factor this out into a function rsCheckJitteredTimeAxis(tj) that returns a bool. Maybe
+  // the function yould be more generally called rsInterleavesIntegers(tj)
+
 
 
   // Compute de-jittered saw from jittered saw samples: 
   xu[0] = xj[0];
-  for(int n = 1; n < N; n++)
+  for(int n = 1; n < N-1; n++)
   {
     // ...something to do here....
     // 
     // I think, to compute xu[n], we need to use xj[n-1], xj[n] and dt = tj[n] - tj[n-1]
 
-    Real dt = tj[n] - tj[n-1];
+    Real dL = Real(n) - tj[n];    // == -(tj[n] - n)
+    Real dR = tj[n+1] - Real(n);
+
+    // This triggers:
+    rsAssert(dL >= 0.0);
+    rsAssert(dR >= 0.0);
+    // ..something is still wrong!
+
+    Real dt = tj[n+1] - tj[n];
 
 
     // PRELIMINARY! Formulas for b0 and b1 are still missing!
@@ -2316,7 +2338,7 @@ bool testDriftFreeJitter2()
 
 void testJitterSaw()
 {
-  testJitterSaw2();
+  testJitterSaw2();  // Triggers an assert
 
   bool ok = true;
   ok &= testDriftFreeJitter1();
@@ -2324,7 +2346,7 @@ void testJitterSaw()
 
 
   testJitterSaw1();
-  testJitterSaw2();
+  //testJitterSaw2();  // Triggers an assert
 
   // ToDo:
   //

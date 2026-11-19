@@ -2,4 +2,4 @@
 
 Tuning the delayline lengths:
 
-In feedback delay networks (FDNs) for artificial reverberation, it is common wisdom in the literature that the lengths of the delaylines should be mutually prime in order to avoid colliding echos as much as possible. Are there any known techniques beyond choosing mutually pirme numbers for tuning the delayline lengths?
+In feedback delay networks (FDNs) for artificial reverberation, it is common wisdom in the literature that the lengths of the delaylines should be mutually prime in order to avoid colliding echoes as much as possible. Are there any known techniques beyond choosing mutually prime numbers for tuning the delayline lengths?

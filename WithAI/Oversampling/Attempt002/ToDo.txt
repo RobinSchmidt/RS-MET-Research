@@ -8,7 +8,12 @@ def test_demo_design_function_accepts_overrides(demo):
     assert fp.L == 3 and fp.nyquist_error < 1e-12
 
 So in the call demo.design(), we already pass a parameter objective="energy". What are the current
-possible options to pass for this parameter. Can we just add another option like "minimax" to that 
+possible options to pass for this parameter. I think, it's currently ["grid", "energy"]? May it make
+sense to tweak the grid, i.e. let the user have some control over the grid used? Maybe the density
+could be a parameter, maybe we could use a grid that is denser around the passband and stopband 
+edges? Maybe we could start the optimization with a coarser grid and progressively use finer grids?
+
+Can we just add another option like "minimax" to that 
 to get the optimization with the Chebychev criterion, i.e. minimal maximum deviation from the spec 
 or from desired response (not sure which - by desired response, I mean an ideal lowpass)?
 
@@ -27,6 +32,32 @@ In my own preliminary explorations, I also started with this simplest case but f
 script uses a fixed global variable with L=4). In this case, I found a parametric family of possible
 d kernels and explored them myself manually. Maybe these could be integrated into the test suite, 
 too. -> Look up these experiments.
+
+----------------------------------------------------------------------------------------------------
+
+Maybe the docs folder should get another file like "reference.md" that gives a complete reference 
+over all the functions that client code is supposed to call together with their input parameters and
+return values and an explanation of their purpose. But I think, that may be redundant with the 
+already existing docstrings of the functions. Maybe a somewhat shorter description should go into
+the reference and point to the docstrings for more details.
+
+----------------------------------------------------------------------------------------------------
+
+In spec.py, it lists the conventions used in the library. It says:
+
+* Frequencies are in radians per HIGH-rate sample, ``w`` in ``[0, pi]``.  The original Nyquist
+  frequency is therefore ``pi / L``.
+* ``passband`` is the passband edge as a FRACTION of the original Nyquist frequency, i.e. the edge is
+  at ``passband * pi / L`` (``0 < passband < 1``).  At a base rate of 44.1 kHz, ``passband = 0.9``
+  means 19.8 kHz.
+
+That is inconsistent. I think, all frequency-like parameters should be given in the same unit. 
+Either all frequencies are given in 0.. pi or all in 0..1. Look up what conventions comparable 
+libraries use and maybe mimic that. I think Matlab uses 0..1 or 0..0.5 but the latter would be a bit
+weird. OK - it means "fraction of the sample rate" and 0.5 is the highest possible value for that 
+but even knowing that, it's still weird. Look up what standard Python DSP libraries use and maybe 
+follow that. Or maybe try to figure out the reason for this inconsistent convention. Maybe there's a
+good reason for it that I don't see.
 
 ----------------------------------------------------------------------------------------------------
 

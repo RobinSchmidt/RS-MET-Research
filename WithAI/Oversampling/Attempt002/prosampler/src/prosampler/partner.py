@@ -48,7 +48,7 @@ from .nyquist import nyquist_error, symmetric_latency
 from .spec import Spec
 
 METHODS = ("nullspace", "kkt")
-OBJECTIVES = ("grid", "energy")
+OBJECTIVES = ("grid", "energy", "minimax")
 
 
 def resolve_latency(u, n_d: int, L: int, latency):
@@ -63,7 +63,8 @@ def resolve_latency(u, n_d: int, L: int, latency):
 
 def design_partner(u, spec: Spec, n_taps: int, latency=None, *, method: str = "nullspace",
                    objective: str = "grid", stop_weight: float = 1.0, transition_weight: float = 0.0,
-                   n_grid: int = 3000, symmetric="auto", ridge: float = 1e-12, refine: bool = True) -> np.ndarray:
+                   n_grid: int = 3000, symmetric="auto", ridge: float = 1e-12, refine: bool = True,
+                   transition_max_db=None, passband_flat_db=None) -> np.ndarray:
     """
     Kernel ``d`` of length ``n_taps`` such that ``u * d`` is exactly Nyquist(L) with centre ``L * latency``.
 
@@ -83,7 +84,13 @@ def design_partner(u, spec: Spec, n_taps: int, latency=None, *, method: str = "n
         linear-phase pair (requires symmetric odd-length ``u`` and odd ``n_taps`` with ``len(u) + n_taps - 2``
         a multiple of ``2 L``; see :func:`prosampler.symmetric_latency`).
     method : {"nullspace", "kkt"}
-    objective : {"grid", "energy"}
+    objective : {"grid", "energy", "minimax"}
+        ``"minimax"`` minimises the worst-case stopband magnitude by linear programming (see
+        :mod:`prosampler.minimax`); ``method``, ``stop_weight``, ``transition_weight``, ``symmetric``, ``ridge`` and
+        ``refine`` are ignored then.  It needs symmetric odd-length ``u`` and the centred latency.
+    transition_max_db, passband_flat_db : float, optional
+        Only for ``"minimax"``: upper bound (dB) on ``|D|`` between the passband and stopband edges, and the
+        allowed deviation (dB) of the product ``D U / L`` from 1 in the passband.
     stop_weight, transition_weight : float
         Weights of the stopband and (optional) transition-band terms relative to the passband term (``"grid"``) or
         relative to each other (``"energy"``).
@@ -105,6 +112,10 @@ def design_partner(u, spec: Spec, n_taps: int, latency=None, *, method: str = "n
         raise ValueError(f"method must be one of {METHODS}, got {method!r}")
     if objective not in OBJECTIVES:
         raise ValueError(f"objective must be one of {OBJECTIVES}, got {objective!r}")
+    if objective == "minimax":
+        from .minimax import design_partner_minimax
+        return design_partner_minimax(u, spec, n_taps, latency, transition_max_db=transition_max_db,
+                                      passband_flat_db=passband_flat_db, n_grid=n_grid)
     u = np.asarray(u, dtype=float)
     L, n_u, n_d = spec.L, len(u), int(n_taps)
     latency = resolve_latency(u, n_d, L, latency)

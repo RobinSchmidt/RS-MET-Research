@@ -116,6 +116,15 @@ For `u = d = g`, (N) becomes **quadratic**: `(g*g)[n0 + L·j] = δ[j]`. Nonconve
 
 Exchanging `u` and `d` (with a gain fix: new `u = d·L/sum(d)`, new `d = u·sum(d)/L`) leaves `h` and the identity roundtrip unchanged. With a nonlinearity in between the two assignments are **not** equivalent (the first filter determines what `f` sees). For matched kernels swapping is meaningless.
 
+### 3.5 Minimax (peak) objective (`objective="minimax"`, `optimise_joint_minimax`)
+
+* **Why:** energy objectives can lower the far stopband while raising the peak at the edge (which is what the joint-energy experiments showed). For symmetric centred kernels the stopband bound `|A(w)| <= t` and the Nyquist conditions are linear, so the partner design is an LP: global optimum, equiripple, no local minima. The same LP designs `u` given `d`.
+* **Partner design (u fixed):** L = 4, passband 0.9, 261-tap Kaiser `u` (100 dB), 541-tap `d`: −104.6 dB (grid LS) → **−114.5 dB**. Spec-driven, `d` gets 7–14 % shorter: 115 → 99 taps (0.8 / 40 dB), 215 → 191 (0.85 / 60 dB), 433 → 401 (0.9 / 80 dB). LP time seconds to ~70 s.
+* **Transition bump:** a bound on `d` between the band edges is respected exactly but costs stopband steeply (passband 0.9, 541 taps: +1.0 dB → −99.9 dB, +0.5 → −87.1, +0.2 → −68.6, ≤ 0 infeasible). With `u` fixed, `d` must compensate `u`'s roll-off (`d(edge) ≈ L / u(edge) ≈ 0 dB`), so the bump is a matter of how the transition is split between `u` and `d`.
+* **Joint (alternating LPs, each filter's passband ripple bounded):** both peaks are non-increasing and the ripple stays unchanged, but at the usual 1 : 2 split `u` gains only 1–1.4 dB while `d` gains 12–17 dB. Real gains need a different split at constant total length: 0.85 / 60 dB, 314 taps: 117/197 gives −63.7 / −63.8 dB against −60.3 dB for the plain 99/215 (start dependent: another start gave −63.0 dB at 109/205).
+* **Shortest total length meeting the spec:** 0.8 / 40 dB: 162 (plain) → 146 (minimax partner) → 138 (joint, 45/93). 0.85 / 60 dB: 314 → 290 (minimax partner; joint gives the same length with more margin). So most of the saving comes from the minimax partner.
+* **Not done:** a minimax version of the matched design (`u = d`, nonconvex); a joint LP over lengths and split; checking how much better the best local optimum of the alternation is (several starts).
+
 ## 4. Pitfalls (things that went wrong or are easy to get wrong)
 
 1. **Exact ≠ good.** `d = δ` is an exact partner of a windowed-sinc `u` (a 61-tap `d` came out exact with ≈ 0 dB stopband). Check `metrics()` / `info["meets_spec"]`.

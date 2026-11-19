@@ -20,6 +20,7 @@ def design_pair(L: int, passband: float, atten_db: Optional[float] = None, *, u=
                 latency: Optional[int] = None, method: str = "nullspace", objective: str = "grid",
                 stop_weight: float = 1.0, transition_weight: float = 0.0, n_grid: int = 3000,
                 max_pass_ripple_db: Optional[float] = None, max_transition_gain_db: float = 3.0,
+                transition_max_db: Optional[float] = None, passband_flat_db: Optional[float] = None,
                 strict: bool = False) -> FilterPair:
     """
     Design ``u`` and its exact partner ``d``  (pipeline steps 1 and 2).
@@ -47,7 +48,10 @@ def design_pair(L: int, passband: float, atten_db: Optional[float] = None, *, u=
     latency : int, optional
         Roundtrip latency in base-rate samples; default is the centred one.
     method, objective, stop_weight, transition_weight, n_grid :
-        Passed to :func:`~prosampler.design_partner`.
+        Passed to :func:`~prosampler.design_partner`.  ``objective="minimax"`` minimises the stopband peak (LP).
+    transition_max_db, passband_flat_db : float, optional
+        Only for ``objective="minimax"``: bound on the gain of ``d`` between the passband and stopband edges, and on
+        the passband deviation of ``u * d / L`` (both in dB).
     max_pass_ripple_db : float, optional
         Largest accepted passband ripple of each kernel (default ``max(0.01, 4 * 8.686 * 10**(-atten_db/20))`` dB).
     max_transition_gain_db : float
@@ -68,6 +72,8 @@ def design_pair(L: int, passband: float, atten_db: Optional[float] = None, *, u=
         ripple_limit = max_pass_ripple_db if max_pass_ripple_db is not None else max(0.01, 4 * 8.686 * 10 ** (-atten_db / 20))
     pkw = dict(method=method, objective=objective, stop_weight=stop_weight,
                transition_weight=transition_weight, n_grid=n_grid)
+    if objective == "minimax":
+        pkw.update(transition_max_db=transition_max_db, passband_flat_db=passband_flat_db)
 
     # ------------------------------------------------------------------ the upsampling kernel
     external = u is not None

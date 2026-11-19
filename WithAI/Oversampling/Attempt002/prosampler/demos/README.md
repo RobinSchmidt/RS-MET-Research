@@ -19,6 +19,8 @@ python demos/design_and_plot.py                       # default design, opens tw
 python demos/design_and_plot.py --design matched      # single kernel u = d = g
 python demos/design_and_plot.py --L 8 --atten-db 100 --passband-hz 19000
 python demos/design_and_plot.py --joint --atten-db 60 --passband-hz 17000   # experimental, see below
+python demos/design_and_plot.py --objective minimax --atten-db 60 --passband-hz 17000   # shorter d (LP)
+python demos/design_and_plot.py --joint-minimax --atten-db 60 --passband-hz 17000       # + joint minimax refinement
 python demos/design_and_plot.py --no-show --save out  # writes out.png and out_detail.png
 python demos/design_and_plot.py --help
 ```
@@ -37,6 +39,7 @@ Open the file: everything you would want to change is in the **PARAMETERS** bloc
 | `PAIR_METHOD`, `PAIR_OBJECTIVE` | solver (`nullspace`/`kkt`) and objective (`grid`/`energy`) for `d` | nullspace, grid |
 | `N_U`, `N_D` | fixed lengths instead of "shortest that meets the spec" | `None` |
 | `MATCHED_K` | fixed latency (`g` has `L*K+1` taps) instead of a search | `None` |
+| `JOINT_MINIMAX`, `JOINT_MINIMAX_RIPPLE_DB` | `--joint-minimax`: alternating-LP joint minimax refinement (pair only) | off, `None` |
 | `JOINT`, `JOINT_PASSBAND_WEIGHT`, `JOINT_ON_WORSE_PEAK` | `--joint`: refine `u` and `d` jointly after the pair design (pair only) | off, 1.0, `"warn"` |
 | `TRANSITION_WEIGHT` | leave at 0 (see `docs/usage.md`, section 4) | 0 |
 | `TEST_FREQS_HZ`, `DRIVE`, `TEST_SECONDS` | the little time-domain check | 1 kHz + 6 kHz, 4x, 50 ms |
@@ -81,3 +84,11 @@ usually the same or worse than that of the plain pair (e.g. L=4, 17 kHz, 60 dB: 
 passband term (`JOINT_PASSBAND_WEIGHT = 0`) the peak can gain a few dB, but `u` and `d` then ripple against each other
 by up to several dB. A peak (minimax) objective would be needed for a real gain. With `JOINT_ON_WORSE_PEAK = "keep"`
 the demo falls back to the plain pair whenever the peak got worse.
+
+### `--objective minimax` and `--joint-minimax`
+
+`--objective minimax` designs `d` by linear programming (minimal stopband peak, global optimum): for the same
+specification `d` gets 7-14 % shorter (L=4, 17 kHz, 60 dB: 143 -> 127 taps, 105 -> 97 stored coefficients).
+`--joint-minimax` then alternates LPs for `d` and `u`, keeping each filter flat; the plain pair is overlaid in grey.
+At the default 1 : 2 length split `d` gains most (here -63.7 -> -65.5 dB, `u` -60.4 -> -62.3 dB). Unlike `--joint`
+(stopband energy, no reliable peak gain) it can only improve both peaks.

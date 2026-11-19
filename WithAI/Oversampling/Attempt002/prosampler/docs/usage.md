@@ -149,6 +149,21 @@ assert equal.n_u == equal.n_d and tied.is_matched
 point on the path with the best worst-case stopband. Tying usually costs a lot of stopband attenuation at equal
 total length.
 
+### Minimax objective and joint minimax
+
+```python
+fp = ps.design_pair(4, 0.85, 60, objective="minimax")      # linear program: minimal stopband PEAK of d, shorter d
+ref = ps.optimise_joint_minimax(fp)                        # alternating LPs for d and u; each filter stays flat
+print(ref.info["joint_minimax"]["history"])                # (u, d) stopband peaks after every round
+```
+
+`objective="minimax"` is a global optimum (convex), typically 7-14 % fewer taps in `d` than the grid objective for
+the same specification, at the cost of seconds to about a minute. `transition_max_db=` and `passband_flat_db=` add
+linear bounds (a tight transition bound costs a lot of stopband because `d` must compensate `u`'s roll-off).
+`optimise_joint_minimax` keeps the lengths; its gain at the usual 1 : 2 split is mostly in `d`, the worst peak (that of
+`u`) improves by only 1-1.4 dB. To use the freedom, shift taps from `d` to `u` (give `n_u`, `n_d` to `design_pair` with a
+stronger `u` start and refine). Both routines need symmetric odd-length kernels and the centred latency.
+
 ## 7. Comparing designs
 
 ```python
@@ -199,6 +214,7 @@ plots.plot_path(equal)                     # stopbands along a rebalance path
 | `design_pair`, `design_partner` | pair design (steps 1-2) |
 | `design_matched`, `optimise_matched` | matched kernel from scratch |
 | `optimise_joint`, `rebalance`, `tie` | experimental steps 3-5 |
+| `design_partner_minimax`, `optimise_joint_minimax` | LP-based minimax partner design and alternating joint refinement |
 | `FilterPair` | result: `u, d, L, latency, metrics(), verify(), swapped(), stored_coeffs, macs_per_sample` |
 | `nyquist_error`, `verify_roundtrip`, `reference_roundtrip` | checking |
 | `compare`, `prosampler.plots` | analysis |

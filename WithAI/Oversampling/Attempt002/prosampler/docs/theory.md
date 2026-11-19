@@ -59,6 +59,34 @@ parametrised as symmetric (half the unknowns, exact linear phase).
 parameters. A decent stopband needs `d` about twice as long as `u`. `design_pair` therefore picks a Kaiser-sinc `u`
 meeting the specification and searches the shortest latency for which the partner `d` meets it too.
 
+### 3.1 Minimax objective: a linear program (`objective="minimax"`)
+
+The least-squares objectives minimise energy, but the quoted figure is the worst-case stopband magnitude. For symmetric
+centred kernels the zero-phase amplitude `A(w) = sum_n d[n] cos(w (n - mid))` is **linear** in `d`, and so is (N), so
+
+    minimise  t   subject to   C d = e,   -t <= A(w) <= t   on the stopband
+
+is a linear program: convex, one global optimum, no local minima, equiripple solution (`prosampler.minimax`). The
+equalities are eliminated through the null space, so (N) holds exactly; HiGHS solves the inequalities on a frequency
+grid that is refined Remez-style (the true peaks between grid points are added and the LP re-solved). Extra linear
+constraints are available: `transition_max_db` (bound on `|A|` between the passband and stopband edges) and
+`passband_flat_db` (the product `A_d A_u / L` stays near 1).
+
+Measured (L = 4):
+
+* Reference case (passband 0.9, 261-tap Kaiser-sinc `u`, 100 dB, `d` with 541 taps): `d` stopband -104.6 dB (grid least
+  squares) -> **-114.5 dB** (minimax), 0.5 s -> 15 s; transition bump +1.12 -> +1.15 dB.
+* Shorter `d` for the same specification (`design_pair`, `u` unchanged): 115 -> 99 taps (passband 0.8, 40 dB), 215 ->
+  191 (0.85, 60 dB), 433 -> 401 (0.9, 80 dB), i.e. about 7-14 % fewer taps in `d`. The gain is limited because the
+  Kaiser `u` already sits at the specification and the pair is only as good as its worse member.
+* **The bump of `d` at the passband edge cannot be removed by a bound alone.** With `u` fixed, `d` has to compensate the
+  roll-off of `u` near the edge (`d(edge) ~ L / u(edge)`, which is ~0 dB), so a bound `transition_max_db` costs
+  stopband steeply (passband 0.9, 541 taps, 100 dB start): bound +1.0 dB -> -99.9 dB, +0.5 dB -> -87.1 dB, +0.2 dB ->
+  -68.6 dB, <= 0 dB infeasible (rejected immediately). The bump is a property of the split of the transition between `u` and
+  `d`, not of the partner objective; shifting it needs `u` to change (see joint minimax in section 5).
+* Numerics: the LP level is scaled to the achieved peak and floored at -160 dB (`floor_db`); below that HiGHS's absolute
+  tolerances are too coarse and longer kernels could not be exploited anyway.
+
 ## 4. Matched design: one kernel for both filters (`design_matched`)
 
 Requiring `u = d = g` makes (N) **quadratic** in `g`: `(g * g)[n0 + L k] = delta[k]`. This is a nonconvex NLP
@@ -124,6 +152,35 @@ Test at larger size (`L = 4`, passband 0.9, N = 521, i.e. K = 130; start: 361-ta
 The path stays near -103 dB for about three steps and then degrades to about -86 dB. With the passband term on, tying
 gives -82.9 dB versus -82.7 dB from scratch: **no reliable advantage**, at 30 times the cost. Run 2's -88.2 dB was
 probably helped by unconstrained passband ripple, which is why it is not reproduced with the passband term.
+
+**Joint minimax (`optimise_joint_minimax`).** The LP is symmetric in the two kernels: for a fixed `d` the same program
+designs `u`. Alternating `d`-steps and `u`-steps keeps both stopband PEAKS non-increasing (each step starts from a
+feasible point) and the Nyquist condition exact; each filter's passband ripple is bounded (`ripple_db`, default twice the
+input's, at least 0.001 dB), which prevents `u` and `d` from rippling against each other as in the energy-based joint
+optimisation above. The joint problem is bilinear, so the result is a local optimum that depends on the start. Measured
+(Kaiser `u` + grid partner as start, lengths unchanged, L = 4):
+
+| passband / spec | lengths | start `u` / `d` stopband | after joint minimax |
+|---|---|---|---|
+| 0.8 / 40 dB | 47/115 | -41.9 / -45.0 dB | -42.4 / -57.4 dB |
+| 0.85 / 60 dB | 99/215 | -60.3 / -60.9 dB | -61.7 / -76.7 dB |
+| 0.9 / 40 dB | 91/215 | -40.1 / -41.8 dB | -41.1 / -54.8 dB |
+| 0.9 / 60 dB | 147/319 | -60.3 / -60.9 dB | -61.5 / -75.0 dB |
+
+Ripple is unchanged (flatness bound), `u` gains only 1-1.4 dB, and `d` gains 12-17 dB: at the usual 1 : 2 split `d` is
+simply too long, and the worst peak stays that of `u`. The gain comes from **moving taps from `d` to `u`** at constant
+total length (the minimax analogue of `rebalance`): at 0.85 / 60 dB with 314 taps the split 117/197 reaches
+**-63.7 / -63.8 dB** against -60.3 dB for the plain 99/215 pair (that run started from Kaiser `u` kernels designed for 75 dB; starting from 60 dB designs gave
+-63.0 dB at 109/205: the optimum is start dependent). Shortest total length meeting the
+specification (best of several splits, `design_pair(..., objective="minimax")` + `optimise_joint_minimax`):
+
+| passband / spec | plain pair | minimax partner only | joint minimax, best split |
+|---|---|---|---|
+| 0.8 / 40 dB | 47/115 = 162 taps | 47/99 = 146 | **45/93 = 138** (-40.4 dB) |
+| 0.85 / 60 dB | 99/215 = 314 taps | 99/191 = 290 | 99/191 = 290 (-62.4 dB; 282 misses at -59.5) |
+
+So most of the saving (5-10 % of the total taps, 7-14 % of `d`) comes from the minimax partner; joint minimax adds margin
+(1-3 dB at equal length) and, at 40 dB, a few taps more. Each joint search costs minutes at 60 dB.
 
 These routines are research tools; they work on symmetric centred pairs only.
 

@@ -23,6 +23,8 @@ HOW TO USE: edit the parameters in the PARAMETERS block, or override a few from 
 
     python demos/design_and_plot.py --L 8 --atten-db 100 --passband-hz 19000
     python demos/design_and_plot.py --design matched --atten-db 60 --save design.png --no-show
+    python demos/design_and_plot.py --objective minimax --atten-db 60 --passband-hz 17000
+    python demos/design_and_plot.py --joint-minimax --atten-db 60 --passband-hz 17000
     python demos/design_and_plot.py --joint --atten-db 60 --passband-hz 17000
     python demos/design_and_plot.py --help
 
@@ -54,13 +56,16 @@ DESIGN = "pair"         # "pair"    : u and d are different filters (shortest, b
 
 # --- options for DESIGN = "pair" -------------------------------------------------------------------------------------
 PAIR_METHOD = "nullspace"        # solver for d: "nullspace" (robust) or "kkt"
-PAIR_OBJECTIVE = "grid"          # "grid" (frequency-grid least squares) or "energy" (closed-form stopband energy)
+PAIR_OBJECTIVE = "grid"          # "grid" (frequency-grid least squares), "energy" (closed-form stopband energy) or
+                                 # "minimax" (linear program: minimal stopband PEAK; d about 5-12 % shorter for the same spec)
 TRANSITION_WEIGHT = 0.0          # extra least-squares weight on the transition band.  Keep it 0: for linear-phase pairs
                                  # it does NOT remove the ~+1.1 dB bump of d at the passband edge (it grows to ~+1.6 dB)
                                  # and it costs stopband, so d must get 25-50 % longer to meet the same spec
 N_U = None                       # fixed lengths (odd numbers); None = let the library pick the shortest that works.
 N_D = None                       # If you set N_D you must also set N_U (or give atten_db and let N_U follow the spec)
 
+JOINT_MINIMAX = False            # True: alternating-LP joint minimax refinement of (u, d) (pair design only)
+JOINT_MINIMAX_RIPPLE_DB = None   # allowed passband deviation of each filter in that refinement (None = 2x the start's)
 JOINT = False                    # True: refine (u, d) jointly after the pair design (experimental, see below)
 JOINT_PASSBAND_WEIGHT = 1.0      # weight of the passband-flatness term; 0 lets u and d ripple against each other
 JOINT_ON_WORSE_PEAK = "warn"     # "warn": keep the result and warn if the worst stopband peak got worse; "keep": fall
@@ -107,6 +112,15 @@ def refine_joint(fp, weight=JOINT_PASSBAND_WEIGHT, on_worse_peak=JOINT_ON_WORSE_
     print(f"\njoint optimisation (passband weight {j['passband_weight']:g}); stopband energy x{j['objective_ratio']:.2f}")
     print(f"  stopband peak   before: {f(j['stop_db_before'])}   after: {f(j['stop_db_after'])}")
     print(f"  passband ripple before: {r(j['ripple_db_before'])}   after: {r(j['ripple_db_after'])}")
+    return out
+
+
+def refine_joint_minimax(fp, ripple_db=JOINT_MINIMAX_RIPPLE_DB):
+    """Alternating-LP joint minimax refinement of ``(u, d)``; prints a before/after comparison."""
+    out = ps.optimise_joint_minimax(fp, ripple_db=ripple_db)
+    h = out.info["joint_minimax"]["history"]
+    print(f"\njoint minimax: {len(h) - 1} round(s), passband ripple bound {out.info['joint_minimax']['ripple_db']:.4f} dB per filter")
+    print(f"  stopband peak   before: u {h[0][0]:.1f} / d {h[0][1]:.1f} dB   after: u {h[-1][0]:.1f} / d {h[-1][1]:.1f} dB")
     return out
 
 
@@ -249,6 +263,10 @@ def main(argv=None):
     ap.add_argument("--design", choices=("pair", "matched"), default=DESIGN)
     ap.add_argument("--joint", action="store_true", default=JOINT,
                     help="refine u and d jointly (pair design only; experimental, usually no better peak stopband)")
+    ap.add_argument("--objective", choices=("grid", "energy", "minimax"), default=PAIR_OBJECTIVE,
+                    help="objective of the partner design for --design pair (minimax = linear program, minimal peak)")
+    ap.add_argument("--joint-minimax", action="store_true", default=JOINT_MINIMAX,
+                    help="alternating-LP joint minimax refinement of u and d (pair design only)")
     ap.add_argument("--save", metavar="PREFIX", help="save figures as PREFIX.png and PREFIX_detail.png")
     ap.add_argument("--no-show", action="store_true", help="do not open plot windows")
     args = ap.parse_args(argv)
@@ -258,13 +276,13 @@ def main(argv=None):
         if args.no_show:
             matplotlib.use("Agg")
 
-    fp = design(args.fs, args.L, args.passband_hz, args.atten_db, args.design)
+    fp = design(args.fs, args.L, args.passband_hz, args.atten_db, args.design, objective=args.objective)
     base = None
-    if args.joint:
+    if args.joint or args.joint_minimax:
         if args.design != "pair":
-            ap.error("--joint needs --design pair")
+            ap.error("--joint / --joint-minimax need --design pair")
         report(fp, args.fs)
-        joint = refine_joint(fp)
+        joint = refine_joint_minimax(fp) if args.joint_minimax else refine_joint(fp)
         if joint is not fp:
             m = joint.metrics()
             joint.info["meets_spec"] = max(m["u_stop_db"], m["d_stop_db"]) <= -args.atten_db   # re-evaluate

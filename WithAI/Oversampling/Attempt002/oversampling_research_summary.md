@@ -96,18 +96,19 @@ For `u = d = g`, (N) becomes **quadratic**: `(g*g)[n0 + L·j] = δ[j]`. Nonconve
 
 ### 3.3 Joint optimisation, rebalancing, tying (experimental)
 
-* **Joint optimisation** of `(u, d)` (balanced stopband objective; exact Nyquist; `sum(u) = L`): the gain depends on how suboptimal the starting `u` is. L = 4, passband 0.8, 40 dB, Kaiser start (47/115 taps): worst stopband −41.9 → −47.7 dB (≈ 6 dB; the pair measures −41.9 / −45.0, the joint result −49.9 / −47.7). At 100 dB starting from a good `u` the gain is small. *(An earlier claim of a larger benefit was measured against an untuned start and was overstated.)*
+* **Joint optimisation** of `(u, d)` (balanced stopband ENERGY objective, optional passband flatness term; exact Nyquist; `sum(u) = L`): the energy always drops (to 30–60 %), but the worst stopband **peak** does not reliably improve. Without a passband term the peak gains up to ≈ 6 dB (L = 4, passband 0.8, 40 dB: −41.9 → −47.7 dB) while per-filter ripple explodes (0.12 → 0.96 dB there, up to 5.9 dB elsewhere), because (N) only fixes the product `u * d`. With `passband_weight = 1` the peak got **worse** in every case tried (p 0.8/40: −41.9 → −38.3; 0.8/60: −60.4 → −55.4; 0.8/80: −80.2 → −79.0; 0.9/40: −40.1 → −34.3; 0.9/60: −60.3 → −53.7; 0.9/80: −80.0 → −75.7; unchanged at 100 dB). No weight beat the plain pair in both peak and ripple. *(Earlier claims of a ≈ 6 dB benefit ignored passband ripple and were wrong.)* A minimax objective is needed for a real gain.
 * **Rebalancing** (move taps from `d` to `u` two at a time, total length constant, re-optimise): 47/115 → 81/81 gives −47.4 / −49.6 dB.
 * **Tying** (penalty continuation, average, exact matched polish): −28.9 dB for the same example — tying costs 20–35 dB at equal total length.
-* **Continuation at larger size** (L = 4, passband 0.9, N = 521, K = 130; start 361/681 taps, 100 dB), run twice with slightly different partner designs (before / after the measurement fix):
+* **Continuation at larger size** (L = 4, passband 0.9, N = 521, K = 130; start 361/681 taps, 100 dB; start pair −103.3 / −112.5 dB, ripple 0.0001 dB), three runs:
 
-  | Route | stopband | time |
+  | Route | stopband | notes |
   |---|---|---|
-  | rebalance path to equal lengths 521/521 | run 1: −91.0 / −95.8 dB; run 2: −91.9 / −84.3 dB (u / d) | 11–14 min |
-  | … then tie + exact matched refinement (`u = d`) | run 1: **−81.7 dB**; run 2: **−88.2 dB** | + 2–3 min |
   | from scratch, best of 5 Kaiser starts, K = 130 | −82.7 dB | 33 s |
+  | run 1: old grid, no passband term; rebalance, tie | −81.7 dB | kept as originally measured |
+  | run 2: corrected grid, no passband term; rebalance, tie | −88.2 dB | ripple unchecked |
+  | run 3: corrected grid, passband term on; path ends 521/521 at −93.9 / −86.2 dB (ripple 0.0002) | averaged −83.8 dB; refined tied `g` **−82.9 dB** (ripple 0) | path 935 s, total 1140 s |
 
-  The path itself looks attractive (≈ −103 dB for the first steps, degrading toward −90 dB), but the result after tying varied by 6.5 dB between the two runs: from 2 dB worse to 5.5 dB *better* than the cold starts. **Continuation + tying can find better local minima than cold starts at this size, but it is slow and sensitive to tiny changes of the starting pair; no reliable advantage has been shown.** (An earlier version of this summary concluded that continuation is not better than starting from scratch; that was based on run 1 alone.)
+  The path stays near −103 dB for ~3 steps, then degrades to ≈ −86 dB. **With the passband term, tie ≈ from scratch (−82.9 vs −82.7 dB): no reliable advantage**, at ~30× the cost. Run 2's −88.2 dB was probably helped by unconstrained ripple. (Earlier versions of this summary drew the opposite conclusions from run 1 alone, then from runs 1–2; both are superseded.)
 
 * **Correction note (2026-11-18).** The stopband peak of a good design sits at the stopband edge, but the evaluation grid did not contain the exact edge frequency, so reported attenuations were grid-size dependent and up to ~2 dB too optimistic (a 60 dB matched design printed −59.6 dB in one report and passed `meets_spec` in another). The grid now always contains both band edges. The tables in 3.1–3.3 were re-measured with the fix (N = 521 run 1 is kept as originally measured and marked as such). Not re-measured, and therefore only approximate: the "20–35 dB worse at equal total length" figure and the L = 2 matched-design numbers (−69 dB, −52 dB) from earlier experiments.
 

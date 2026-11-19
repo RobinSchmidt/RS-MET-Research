@@ -95,9 +95,15 @@ when memory, not arithmetic, is the constraint. (Symmetry is exploited for the s
 
 ## 5. Experimental: joint optimisation, rebalancing, tying
 
-* `optimise_joint`: let `u` and `d` both move, objective `E_stop(u) / L^2 + E_stop(d)`, constraints (N) and
-  `sum(u) = L`. The gain over the partner design depends on how far `u` is from optimal (about 6 dB worst-case from
-  Kaiser-sinc kernels at `L = 4`, 40 dB: -41.9 to -47.7 dB; small at 100 dB).
+* `optimise_joint`: let `u` and `d` both move, objective `E_stop(u) / L^2 + E_stop(d)` (+ `passband_weight` times the
+  passband flatness energy), constraints (N) and `sum(u) = L`. It lowers the stopband ENERGY (to 30-60 % of the start),
+  but it does **not** reliably improve the worst stopband PEAK. Because (N) only fixes the product `u * d`, `u` and `d`
+  can ripple against each other. Without the passband term the peak improves by up to ~6 dB (L = 4, passband 0.8, 40 dB:
+  -41.9 to -47.7 dB) but the per-filter ripple explodes (0.12 to 0.96 dB there; up to 5.9 dB in other cases). With
+  `passband_weight = 1` the peak got WORSE in every case tried (passband 0.8 / 0.9 at 40, 60, 80 dB: e.g. -41.9 to
+  -38.3, -60.3 to -53.7, -80.0 to -75.7 dB; unchanged at 100 dB), since the far stopband drops (~15 dB) while the
+  peak next to the edge rises. No weight beat the plain pair in both peak and ripple. A real gain would need a PEAK
+  (minimax) objective that includes passband flatness.
 * `rebalance`: move taps from `d` to `u` two at a time (total length constant), re-optimising and tracking the
   worst-case stopband, until `n_u = n_d`. This is a continuation path from the pair towards the matched regime.
 * `tie`: penalise `|u / sqrt(L) - d sqrt(L)|^2` with increasing weight on an equal-length pair, average, and polish with
@@ -105,20 +111,19 @@ when memory, not arithmetic, is the constraint. (Symmetry is exploited for the s
   after tying). The result is exactly `u = d`.
 
 Test at larger size (`L = 4`, passband 0.9, N = 521, i.e. K = 130; start: 361-tap Kaiser-sinc `u` with 100 dB and its
-681-tap partner), run twice with slightly different partner designs (before and after a measurement/grid fix):
+681-tap partner, pair stopband -103.3 / -112.5 dB, ripple 0.0001 dB), run three times with different settings:
 
 | Route | stopband | time |
 |---|---|---|
-| rebalance path to equal lengths 521/521 | run 1: -91.0 / -95.8 dB; run 2: -91.9 / -84.3 dB (u / d) | 11-14 min |
-| ... then tie + exact matched refinement | run 1: **-81.7 dB**; run 2: **-88.2 dB** | + 2-3 min |
 | from scratch, best of 5 Kaiser starts, K = 130 | -82.7 dB | 33 s |
+| run 1: old grid, no passband term; rebalance to 521/521, tie | -81.7 dB | 11-14 min + 2-3 min |
+| run 2: corrected grid, no passband term; rebalance, tie | -88.2 dB (ripple not checked) | same |
+| run 3: corrected grid, passband term on; rebalance path ends 521/521 at -93.9 / -86.2 dB (ripple 0.0002 dB) | averaged: -83.8 dB; exact refinement of the tied `g`: **-82.9 dB** (ripple 0) | path 935 s, total 1140 s |
 
-(In run 1 the from-scratch solver was measured at -84.0 dB, on the old grid; all run-2 numbers use the corrected grid.)
-The path itself is attractive (about -103 dB for the first steps, degrading towards -90 dB), but the outcome after
-tying varied by 6.5 dB between the two runs, from 2 dB worse to 5.5 dB better than the cold starts. So continuation
-plus tying *can* find better local minima than cold starts at this size, but it is slow (minutes instead of seconds) and
-its result is sensitive to tiny changes of the starting pair; no reliable advantage has been shown. Open: repeat it
-with several starting pairs and use the tied result as a warm start for `design_matched`.
+(In run 1 the from-scratch solver was measured at -84.0 dB on the old grid; runs 2 and 3 use the corrected grid.)
+The path stays near -103 dB for about three steps and then degrades to about -86 dB. With the passband term on, tying
+gives -82.9 dB versus -82.7 dB from scratch: **no reliable advantage**, at 30 times the cost. Run 2's -88.2 dB was
+probably helped by unconstrained passband ripple, which is why it is not reproduced with the passband term.
 
 These routines are research tools; they work on symmetric centred pairs only.
 

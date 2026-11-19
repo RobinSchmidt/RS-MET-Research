@@ -88,4 +88,22 @@ Here are a couple of my own additional ideas that can be explored further:
   implementation. It should be easy to modify the design parameters in the demo such that it can be
   used as default starting point.  ...work on that is in progress...
   
-  
+----------------------------------------------------------------------------------------------------
+
+
+Verify this:
+
+When we use the kernels u,d specifically for upsampling and downsampling rather than for filtering
+arbitrary signals at the oversampled rate, we unlock an optimization that is known as "polyphase 
+filtering" in the DSP literature. It works as follows:
+
+Polyphase upsampling takes advantage of the fact that only every L-th sample of the zero-stuffed 
+input signal is nonzero. It avoids computing the zero contributions from the zero samples to the 
+FIR convolution sum. 
+
+Polyphase downsampling takes advantage of the fact that in the decimation stage, we will throw away 
+all samples except every L-th anyway. It avoids to compute these extra samples that we will not need
+anyway.
+
+So, the polyphase upsampling and downsampling stages merge the filter-then-upsample and
+filter-then-downsample steps into a single operation.

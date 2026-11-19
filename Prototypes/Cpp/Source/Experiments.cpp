@@ -2212,8 +2212,23 @@ void testJitterSaw2()
   //   sample produce a dt value such that the next time instand (i.e. cumulated dt value) will 
   //   land on on a half integer plusminus a random number in the interval  
   //   (-0.5..+0.5) * randomAmount. To ensure that, it may have to keep a state that stores the 
-  //   fractional part that was produced at the previous sample.
-  //
+  //   fractional part that was produced at the previous sample. Maybe the algorithm could be:
+  // 
+  //     newFrac = 0.5 + randAmount * rand(-0.5, +0.5);
+  //     delta   = (1+newFrac) - oldFrac;
+  //     oldFrac = newFrac;
+  //     return delta;
+  // 
+  //   This is just pseudocode and not supposed to work. Here rand(-0.5, +0.5) means a random 
+  //   number in the interval [-0.5, +0.5] and delta is the dt value that the function should 
+  //   produce. This dt value needs to be the distance between n+newFrac and (n-1)+oldFrac.
+  //   Without loss of generality, we can assume that n = 1 which results in the formula. But 
+  //   maybe it's better to implement it as  newFrac - oldFrac + 1. Maybe the roundoff error will
+  //   be less in this case because newFrac and oldFrac are of more similar size than 1+newFrac
+  //   and oldFrac. But wait! I think, subtracting two numbers of similar size is actually bad.
+  //   We'll see. Maybe it doesn't matter. But maybe try both and leave a comment why we opt for
+  //   one way or the other.
+  // 
   // - Implement a roundtrip that resamples from regular x[n] -> irregular y[n] -> regular z[n]
   //   via linear interpolation. We will generally have that z[n] depends on x[n-1],x[n],x[n+1] 
   //   such that a realtime implementation would introduce a delay of 1 sample. We need dt[0] < 1,

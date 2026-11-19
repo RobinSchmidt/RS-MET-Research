@@ -57,7 +57,8 @@ libraries use and maybe mimic that. I think Matlab uses 0..1 or 0..0.5 but the l
 weird. OK - it means "fraction of the sample rate" and 0.5 is the highest possible value for that 
 but even knowing that, it's still weird. Look up what standard Python DSP libraries use and maybe 
 follow that. Or maybe try to figure out the reason for this inconsistent convention. Maybe there's a
-good reason for it that I don't see.
+good reason for it that I don't see. And/or: Maybe request a code review in a new session or better:
+Request multiple reviews from different models. Maybe they will also flag that inconsistency?
 
 ----------------------------------------------------------------------------------------------------
 

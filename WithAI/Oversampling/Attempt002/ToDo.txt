@@ -81,6 +81,10 @@ seem to be very interesting to explore later:
   to use functions that are closer to what such FIR filters actually tend to want to do. Maybe try
   functions like  f(x) = 1 - x^p, f(x) = (cos(0.5*pi*x))^(1/p)  for some parameter p >= 1. See:
   https://www.desmos.com/calculator/pe0oopida3
+  These functions are just ad hoc ideas. For a more principled approach, we may want to figure out
+  what shape it is that FIRs typically "want" to produce. Maybe we should look at the Fourier 
+  transforms of windowed sincs? I think, the FT of the sinc is just a rectangle, so it should boil 
+  down to the FT of the window itself.
   
 - Item 3: Explore the "Root-Nyquist design" route. I think, this is what Kimi tried in Attempt004.
   

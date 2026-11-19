@@ -2202,7 +2202,7 @@ void testJitterSaw2()
 
   // ToDo:
   // 
-  // - ToDo: Extract a fcuntion that verifies the desired "interlevaing" condition: n-1 <= tn <= n 
+  // - ToDo: Extract a fucntion that verifies the desired "interlevaing" condition: n-1 <= tn <= n 
   //   and then integrate it into the unit tests for the rsDriftFreeJitter... objects. I guess they
   //   will then fail. If that is confirmed, it means that my mental model is wrong. The "drift 
   //   free" condition does _not_ imply our desired "interleaving" condition. That means we must go

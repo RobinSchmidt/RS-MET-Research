@@ -13,13 +13,29 @@ def worst(fp):
     return max(m["u_stop_db"], m["d_stop_db"])
 
 
-def test_optimise_joint_exact_and_not_worse(pair):
-    j = ps.optimise_joint(pair)
+def test_optimise_joint_exact_and_lower_objective(pair):
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")                  # the peak may legitimately get worse (documented)
+        j = ps.optimise_joint(pair)
     assert (j.n_u, j.n_d, j.latency) == (pair.n_u, pair.n_d, pair.latency)
     assert j.nyquist_error < 1e-13
     assert abs(j.u.sum() - 4) < 1e-12
-    assert worst(j) <= worst(pair) + 0.5
+    info = j.info["joint"]
+    assert info["objective_ratio"] < 1.0                 # the optimised (energy) objective drops
+    assert max(info["ripple_db_after"]) < 0.5            # passband term keeps ripple small (about 1-6 dB without it)
     j.verify()
+
+
+def test_optimise_joint_warns_or_keeps_when_peak_worse(pair):
+    import warnings
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        j = ps.optimise_joint(pair)
+    worse = worst(j) > worst(pair) + 1e-9
+    assert worse == any("worse" in str(x.message) for x in w)
+    k = ps.optimise_joint(pair, on_worse_peak="keep")
+    assert worst(k) <= worst(pair) + 1e-9
 
 
 def test_rebalance_equal_and_best(pair):

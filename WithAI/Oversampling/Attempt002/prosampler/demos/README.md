@@ -18,6 +18,7 @@ Run it from the repository root (needs matplotlib: `pip install -e .[plots]`):
 python demos/design_and_plot.py                       # default design, opens two plot windows
 python demos/design_and_plot.py --design matched      # single kernel u = d = g
 python demos/design_and_plot.py --L 8 --atten-db 100 --passband-hz 19000
+python demos/design_and_plot.py --joint --atten-db 60 --passband-hz 17000   # experimental, see below
 python demos/design_and_plot.py --no-show --save out  # writes out.png and out_detail.png
 python demos/design_and_plot.py --help
 ```
@@ -36,6 +37,7 @@ Open the file: everything you would want to change is in the **PARAMETERS** bloc
 | `PAIR_METHOD`, `PAIR_OBJECTIVE` | solver (`nullspace`/`kkt`) and objective (`grid`/`energy`) for `d` | nullspace, grid |
 | `N_U`, `N_D` | fixed lengths instead of "shortest that meets the spec" | `None` |
 | `MATCHED_K` | fixed latency (`g` has `L*K+1` taps) instead of a search | `None` |
+| `JOINT`, `JOINT_PASSBAND_WEIGHT`, `JOINT_ON_WORSE_PEAK` | `--joint`: refine `u` and `d` jointly after the pair design (pair only) | off, 1.0, `"warn"` |
 | `TRANSITION_WEIGHT` | leave at 0 (see `docs/usage.md`, section 4) | 0 |
 | `TEST_FREQS_HZ`, `DRIVE`, `TEST_SECONDS` | the little time-domain check | 1 kHz + 6 kHz, 4x, 50 ms |
 
@@ -69,3 +71,13 @@ can also copy the script and reuse the pieces.
   `shaper_level` after the waveshaper) in your own implementation.
 * `reference_roundtrip` uses full convolutions: fine for a 50 ms test, far too slow for real signals. A polyphase
   implementation is in `docs/usage.md`, section 3.
+
+### `--joint` (experimental)
+
+Runs `optimise_joint` on the pair design, prints before/after stopband peak and passband ripple, and overlays the
+plain pair in grey in both figures. **It is not an improvement in peak stopband attenuation**: the joint objective is
+stopband *energy* (which does drop, typically to 30-60 %), but with flat passbands the worst stopband *peak* is
+usually the same or worse than that of the plain pair (e.g. L=4, 17 kHz, 60 dB: u -60.4 -> -53.0 dB). Without the
+passband term (`JOINT_PASSBAND_WEIGHT = 0`) the peak can gain a few dB, but `u` and `d` then ripple against each other
+by up to several dB. A peak (minimax) objective would be needed for a real gain. With `JOINT_ON_WORSE_PEAK = "keep"`
+the demo falls back to the plain pair whenever the peak got worse.

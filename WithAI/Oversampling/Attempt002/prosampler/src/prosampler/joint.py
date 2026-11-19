@@ -36,8 +36,9 @@ from .pair import FilterPair
 class _Joint:
     """Parametrisation, constraints and objective of the joint problem for fixed lengths."""
 
-    def __init__(self, L: int, Nu: int, Nd: int, passband: float):
+    def __init__(self, L: int, Nu: int, Nd: int, passband: float, passband_weight: float = 0.0):
         self.L, self.Nu, self.Nd, self.p = L, Nu, Nd, passband
+        self.pw = float(passband_weight)
         if Nu % 2 == 0 or Nd % 2 == 0 or (Nu + Nd - 2) % (2 * L):
             raise ProsamplerError(f"lengths ({Nu}, {Nd}) are not a centred linear-phase pair "
                                   f"(need odd lengths and (n_u + n_d - 2) a multiple of 2L)")
@@ -52,6 +53,20 @@ class _Joint:
         self.tgt = (np.arange(self.K) == 0).astype(float)
         self.gu = self.Su.sum(axis=0)
         self.lam = 0.0                                       # tie penalty weight (see tie())
+        if self.pw:
+            self._init_passband()
+
+    def _init_passband(self):
+        """Quadratic form of the passband flatness: int_0^{p pi/L} (A(w)/g - 1)^2 dw per filter (g = DC gain target)."""
+        x, wgt = np.polynomial.legendre.leggauss(600)
+        wp = self.p * np.pi / self.L
+        w, wgt = 0.5 * wp * (x + 1), 0.5 * wp * wgt
+        def parts(N, S, g):
+            A = np.cos(np.outer(w, np.arange(N) - (N - 1) / 2)) @ S / g      # zero-phase amplitude / g
+            return A.T @ (wgt[:, None] * A), A.T @ wgt
+        self.pc = float(wgt.sum())                          # 0.5 * (constant of u) + 0.5 * (constant of d)
+        self.Pu, self.pu = parts(self.Nu, self.Su, self.L)
+        self.Pd, self.pd = parts(self.Nd, self.Sd, 1.0)
 
     # ---- parametrisation
     def to_x(self, u, d):
@@ -89,6 +104,8 @@ class _Joint:
     def f(self, x):
         a, b = x[:self.mu], x[self.mu:]
         val = 0.5 * (a @ self.Qu @ a + b @ self.Qd @ b)
+        if self.pw:
+            val += self.pw * (0.5 * (a @ self.Pu @ a + b @ self.Pd @ b) - self.pu @ a - self.pd @ b + self.pc)
         if self.lam:
             dd = self.diff(x)
             val += 0.5 * self.lam * dd @ dd
@@ -97,6 +114,8 @@ class _Joint:
     def grad(self, x):
         a, b = x[:self.mu], x[self.mu:]
         g = np.concatenate([self.Qu @ a, self.Qd @ b])
+        if self.pw:
+            g += self.pw * np.concatenate([self.Pu @ a - self.pu, self.Pd @ b - self.pd])
         if self.lam:
             dd = self.diff(x)
             g[:self.mu] += self.lam * (self.Su.T @ dd) / np.sqrt(self.L)
@@ -132,12 +151,12 @@ class _Joint:
         return x
 
 
-def _prepare(pair: FilterPair) -> _Joint:
+def _prepare(pair: FilterPair, passband_weight: float = 0.0) -> _Joint:
     if pair.passband is None:
         raise ProsamplerError("the pair needs a passband")
     if not (is_symmetric(pair.u) and is_symmetric(pair.d) and pair.n_u % 2 == 1 and pair.n_d % 2 == 1):
         raise ProsamplerError("joint optimisation supports symmetric odd-length u and d only")
-    jt = _Joint(pair.L, pair.n_u, pair.n_d, pair.passband)
+    jt = _Joint(pair.L, pair.n_u, pair.n_d, pair.passband, passband_weight)
     if jt.K != pair.latency:
         raise ProsamplerError(f"pair latency {pair.latency} is not the centred latency {jt.K}")
     if abs(pair.d[0]) > 1e-6 * np.max(np.abs(pair.d)):
@@ -156,21 +175,44 @@ def _as_pair(jt: _Joint, x, pair: FilterPair, tag: str, **info) -> FilterPair:
     return FilterPair(u, d, jt.L, jt.K, pair.passband, method=f"{pair.method}+{tag}", info={**pair.info, **info})
 
 
-def optimise_joint(pair: FilterPair, *, restarts: int = 4, maxiter: int = 150) -> FilterPair:
-    """
-    Optimise ``u`` and ``d`` jointly (balanced stopband objective, exact Nyquist and ``sum(u) = L``).
-
-    The input pair must be symmetric, centred and have ``d`` with zero end taps (as from ``design_pair``).
-    Returns a new pair with the same lengths; the stopband never gets worse in the balanced objective.
-    """
-    jt = _prepare(pair)
-    x = jt.optimise(_start_x(jt, pair), restarts, maxiter)
-    return _as_pair(jt, x, pair, "joint")
-
-
 def _worst_db(fp: FilterPair) -> float:
     m = fp.metrics()
     return max(m["u_stop_db"], m["d_stop_db"])
+
+
+def optimise_joint(pair: FilterPair, *, restarts: int = 4, maxiter: int = 150, passband_weight: float = 1.0,
+                   on_worse_peak: str = "warn") -> FilterPair:
+    """
+    Optimise ``u`` and ``d`` jointly (EXPERIMENTAL; exact Nyquist and ``sum(u) = L`` at every step).
+
+    The objective is the balanced stopband ENERGY plus ``passband_weight`` times the passband flatness energy of
+    both filters.  Without the passband term (``passband_weight=0``) the stopband peak can improve by a few dB but
+    u and d ripple against each other (up to several dB per filter), because the Nyquist condition only fixes the
+    product ``u * d``.  With it, the energy still drops, but the worst stopband PEAK is usually not better than that
+    of the plain ``design_pair`` result: do not expect a gain in peak attenuation.
+
+    ``on_worse_peak``: ``"warn"`` returns the result anyway and emits a warning if the worst stopband peak got worse;
+    ``"keep"`` returns the input pair unchanged in that case.  Before/after numbers are in ``info["joint"]``.
+    The input pair must be symmetric, centred and have ``d`` with zero end taps (as from ``design_pair``).
+    """
+    import warnings
+    if on_worse_peak not in ("warn", "keep"):
+        raise ProsamplerError("on_worse_peak must be 'warn' or 'keep'")
+    jt = _prepare(pair, passband_weight)
+    f0 = jt.f(_start_x(jt, pair))
+    x = jt.optimise(_start_x(jt, pair), restarts, maxiter)
+    out = _as_pair(jt, x, pair, "joint")
+    mb, ma = pair.metrics(), out.metrics()
+    out.info["joint"] = dict(
+        objective_ratio=float(jt.f(x) / f0) if f0 else float("nan"), passband_weight=float(passband_weight),
+        stop_db_before=(mb["u_stop_db"], mb["d_stop_db"]), stop_db_after=(ma["u_stop_db"], ma["d_stop_db"]),
+        ripple_db_before=(mb["u_ripple_db"], mb["d_ripple_db"]), ripple_db_after=(ma["u_ripple_db"], ma["d_ripple_db"]))
+    if _worst_db(out) > _worst_db(pair) + 1e-9:
+        if on_worse_peak == "keep":
+            return pair
+        warnings.warn(f"joint optimisation made the worst stopband peak worse "
+                      f"({_worst_db(pair):.1f} -> {_worst_db(out):.1f} dB)", stacklevel=2)
+    return out
 
 
 def rebalance(pair: FilterPair, *, target: str = "equal", step: int = 2, restarts: int = 4, maxiter: int = 150,

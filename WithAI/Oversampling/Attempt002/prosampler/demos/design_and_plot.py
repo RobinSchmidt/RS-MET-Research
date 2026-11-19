@@ -14,6 +14,8 @@ What this script does
   2. prints a summary (lengths, latency, stopband, ripple, memory, multiplies),
   3. checks the identity roundtrip and runs a short test signal through a tanh waveshaper,
   4. plots impulse, step and magnitude responses of u and d (figure 1),
+  4b. optionally (--joint, pair design only) refines u and d jointly and overlays the plain pair in grey.  This is
+     EXPERIMENTAL and measured NOT to improve the worst stopband peak with flat passbands (see docs/theory.md),
   5. plots the passband detail and the combined response h = u * d, whose samples at the Nyquist positions are
      exactly 1 and 0 (figure 2).
 
@@ -21,6 +23,7 @@ HOW TO USE: edit the parameters in the PARAMETERS block, or override a few from 
 
     python demos/design_and_plot.py --L 8 --atten-db 100 --passband-hz 19000
     python demos/design_and_plot.py --design matched --atten-db 60 --save design.png --no-show
+    python demos/design_and_plot.py --joint --atten-db 60 --passband-hz 17000
     python demos/design_and_plot.py --help
 
 Needs matplotlib (pip install prosampler[plots]).  Run it from the repository root, or install the package first
@@ -58,6 +61,12 @@ TRANSITION_WEIGHT = 0.0          # extra least-squares weight on the transition 
 N_U = None                       # fixed lengths (odd numbers); None = let the library pick the shortest that works.
 N_D = None                       # If you set N_D you must also set N_U (or give atten_db and let N_U follow the spec)
 
+JOINT = False                    # True: refine (u, d) jointly after the pair design (experimental, see below)
+JOINT_PASSBAND_WEIGHT = 1.0      # weight of the passband-flatness term; 0 lets u and d ripple against each other
+JOINT_ON_WORSE_PEAK = "warn"     # "warn": keep the result and warn if the worst stopband peak got worse; "keep": fall
+                                 # back to the plain pair in that case.  The joint objective is stopband ENERGY, not the
+                                 # peak, so the peak is often NOT better than the plain pair's.
+
 # --- options for DESIGN = "matched" ----------------------------------------------------------------------------------
 MATCHED_K = None                 # None = search the smallest latency K that meets ATTEN_DB; else g has L*K+1 taps
 
@@ -84,6 +93,21 @@ def design(fs=FS, L=L, passband_hz=PASSBAND_HZ, atten_db=ATTEN_DB, design=DESIGN
     if design == "matched":
         return ps.design_matched(L, passband, atten_db, K=opts.get("K", MATCHED_K))
     raise ValueError("design must be 'pair' or 'matched'")
+
+
+def refine_joint(fp, weight=JOINT_PASSBAND_WEIGHT, on_worse_peak=JOINT_ON_WORSE_PEAK):
+    """Joint optimisation of (u, d) starting from the pair design ``fp``; prints a before/after comparison."""
+    out = ps.optimise_joint(fp, passband_weight=weight, on_worse_peak=on_worse_peak)
+    j = out.info.get("joint")
+    if j is None:                                  # on_worse_peak="keep" returned the input pair
+        print("\njoint optimisation: peak not improved, plain pair kept")
+        return out
+    f = lambda t: f"u {t[0]:.1f} / d {t[1]:.1f} dB"
+    r = lambda t: f"u {t[0]:.4f} / d {t[1]:.4f} dB"
+    print(f"\njoint optimisation (passband weight {j['passband_weight']:g}); stopband energy x{j['objective_ratio']:.2f}")
+    print(f"  stopband peak   before: {f(j['stop_db_before'])}   after: {f(j['stop_db_after'])}")
+    print(f"  passband ripple before: {r(j['ripple_db_before'])}   after: {r(j['ripple_db_after'])}")
+    return out
 
 
 def report(fp, fs):
@@ -123,7 +147,7 @@ def time_domain_check(fp, fs, freqs=TEST_FREQS_HZ, drive=DRIVE, seconds=TEST_SEC
     return x, y_id, y_nl
 
 
-def plot_main(fp, fs, max_step_ms=MAX_STEP_SECONDS):
+def plot_main(fp, fs, max_step_ms=MAX_STEP_SECONDS, base=None):
     """Figure 1: impulse, step and magnitude responses of u and d."""
     import matplotlib.pyplot as plt
 
@@ -132,10 +156,13 @@ def plot_main(fp, fs, max_step_ms=MAX_STEP_SECONDS):
     pb_hz = fp.passband * fs / 2
     sb_hz = (2 - fp.passband) * fs / 2
     for col, (h, name) in enumerate(((fp.u, "u (upsampling, anti-imaging)"), (fp.d, "d (downsampling, anti-aliasing)"))):
+        hb = None if base is None else (base.u, base.d)[col]
         dc = float(np.sum(h))
         t_ms = 1000 * np.arange(len(h)) / fs_hi
 
         ax = axes[0, col]
+        if hb is not None:
+            ax.plot(1000 * np.arange(len(hb)) / fs_hi, hb / np.sum(hb), color="0.6", lw=0.9, label="plain pair")
         ax.plot(t_ms, h / dc, lw=0.9)
         ax.set_title(f"{name}\n{len(h)} taps")
         ax.set_ylabel("impulse response\n(normalised to DC gain 1)")
@@ -143,6 +170,8 @@ def plot_main(fp, fs, max_step_ms=MAX_STEP_SECONDS):
         ax.grid(alpha=0.3)
 
         ax = axes[1, col]
+        if hb is not None:
+            ax.plot(1000 * np.arange(len(hb)) / fs_hi, np.cumsum(hb) / np.sum(hb), color="0.6", lw=0.9)
         ax.plot(t_ms, np.cumsum(h) / dc, lw=0.9)
         ax.axhline(1.0, color="k", lw=0.5, alpha=0.5)
         ax.set_ylabel("step response")
@@ -155,7 +184,10 @@ def plot_main(fp, fs, max_step_ms=MAX_STEP_SECONDS):
         w = np.linspace(0, np.pi, 8000)
         mag = np.abs(ps.freqz(h, w)) / abs(dc)
         f_khz = w / np.pi * fs_hi / 2 / 1000
-        ax.plot(f_khz, 20 * np.log10(mag + 1e-300), lw=0.9)
+        if hb is not None:
+            ax.plot(f_khz, 20 * np.log10(np.abs(ps.freqz(hb, w)) / abs(np.sum(hb)) + 1e-300), color="0.6", lw=0.9,
+                    label="plain pair")
+        ax.plot(f_khz, 20 * np.log10(mag + 1e-300), lw=0.9, label="joint" if hb is not None else None)
         ax.axvspan(0, pb_hz / 1000, color="C2", alpha=0.12, label="passband")
         ax.axvspan(sb_hz / 1000, fs_hi / 2000, color="C3", alpha=0.08, label="stopband")
         ax.axvline(fs / 2000, color="k", lw=0.6, ls=":", label="original Nyquist")
@@ -164,13 +196,13 @@ def plot_main(fp, fs, max_step_ms=MAX_STEP_SECONDS):
         ax.set_ylabel("magnitude (dB)")
         ax.set_xlabel(f"frequency (kHz, at the oversampled rate {fs_hi / 1000:g} kHz)")
         ax.grid(alpha=0.3)
-        if col == 0:
+        if col == 0 or hb is not None:
             ax.legend(loc="upper right", fontsize=8)
     fig.suptitle(f"prosampler: {fp.method}   L = {fp.L}, passband {pb_hz:.0f} Hz at fs = {fs:g} Hz", fontsize=12)
     return fig
 
 
-def plot_detail(fp, fs):
+def plot_detail(fp, fs, base=None):
     """Figure 2: passband magnitude in detail, and the combined response h = u * d (the Nyquist property)."""
     import matplotlib.pyplot as plt
 
@@ -178,6 +210,9 @@ def plot_detail(fp, fs):
 
     w = np.linspace(0, fp.passband * np.pi / fp.L, 2000)
     f = w / np.pi * fs * fp.L / 2
+    if base is not None:
+        for h, label in ((base.u, "u plain"), (base.d, "d plain")):
+            ax1.plot(f / 1000, 20 * np.log10(np.abs(ps.freqz(h, w)) / abs(np.sum(h))), color="0.6", lw=1, label=label)
     for h, label in ((fp.u, "u"), (fp.d, "d")):
         mag = np.abs(ps.freqz(h, w)) / abs(np.sum(h))
         ax1.plot(f / 1000, 20 * np.log10(mag), label=label, lw=1)
@@ -212,6 +247,8 @@ def main(argv=None):
     ap.add_argument("--passband-hz", type=float, default=PASSBAND_HZ)
     ap.add_argument("--atten-db", type=float, default=ATTEN_DB)
     ap.add_argument("--design", choices=("pair", "matched"), default=DESIGN)
+    ap.add_argument("--joint", action="store_true", default=JOINT,
+                    help="refine u and d jointly (pair design only; experimental, usually no better peak stopband)")
     ap.add_argument("--save", metavar="PREFIX", help="save figures as PREFIX.png and PREFIX_detail.png")
     ap.add_argument("--no-show", action="store_true", help="do not open plot windows")
     args = ap.parse_args(argv)
@@ -222,12 +259,22 @@ def main(argv=None):
             matplotlib.use("Agg")
 
     fp = design(args.fs, args.L, args.passband_hz, args.atten_db, args.design)
+    base = None
+    if args.joint:
+        if args.design != "pair":
+            ap.error("--joint needs --design pair")
+        report(fp, args.fs)
+        joint = refine_joint(fp)
+        if joint is not fp:
+            m = joint.metrics()
+            joint.info["meets_spec"] = max(m["u_stop_db"], m["d_stop_db"]) <= -args.atten_db   # re-evaluate
+            base, fp = fp, joint
     report(fp, args.fs)
     time_domain_check(fp, args.fs)
 
-    figs = [plot_main(fp, args.fs)]
+    figs = [plot_main(fp, args.fs, base=base)]
     if SHOW_DETAIL_FIGURE:
-        figs.append(plot_detail(fp, args.fs))
+        figs.append(plot_detail(fp, args.fs, base=base))
     if args.save:
         figs[0].savefig(f"{args.save}.png", dpi=130)
         if len(figs) > 1:

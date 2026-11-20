@@ -144,6 +144,20 @@ Exchanging `u` and `d` (with a gain fix: new `u = d·L/sum(d)`, new `d = u·sum(
 * **Prescribed shapes:** the product of the transition amplitudes must satisfy `r(x) + r(1 − x) = 1` (cosine², linear, Kaiser-window integral; `1 − x^p` is not admissible), with split `u = r^alpha`, `d = r^(1 − alpha)`. As a linear tube this was too restrictive for a short `u` and long `d` (alpha → 1 forces `d` ≈ 0 dB up to the stopband edge; cosine tubes with tol 0.05 stalled at −22.7 / −31.8 dB); the simple gain cap is the practical control. `TransitionShape` stays as a research option.
 * **Not done:** lengths and split as LP variables (best split by scanning only), several starts to gauge local optima, the same simultaneous move for the matched design, and combining the SLP with the shorter-`d` result of the minimax partner for a minimum-length search.
 
+### 3.7 Shortest pair for a specification (`search_pair`)
+
+* **Method:** total length reduced stepwise, several splits per length; start = Kaiser-sinc `u` of `n_u` taps + minimax partner; refine with the SLP at the plain pair's ripple and a transition cap. Local search: the shortest length *found*.
+* **Results (L = 4):**
+
+  | passband / spec | plain pair | minimax `d` only | SLP, cap +0.5 dB | SLP, cap +0.2 dB |
+  |---|---|---|---|---|
+  | 0.8 / 40 dB | 47/115 = 162 (81 stored) | 146 | **47/83 = 130** (65 stored) | **55/83 = 138** (69 stored) |
+  | 0.85 / 60 dB | 99/215 = 314 (157 stored) | 290 | **99/183 = 282** (141 stored) | **99/183 = 282** |
+
+  15–20 % fewer taps at 40 dB, ≈ 10 % at 60 dB, with the bump ≤ the cap (plain: +1.2 dB). The 60 dB search was coarse (steps of 16 taps); 266 taps missed by 1–7 dB, so the true minimum lies in 266–282.
+* **Where the gain comes from:** the best split at a given total has a much **longer `u`** than the plain pair: 314 taps, cap +0.5 dB: `115/199` → −71.7 dB (bump +0.28 dB) vs −60.3 dB for `99/215`; 162 taps (0.8 / 40): `63/99` → −51.1 dB vs −41.9 dB. At the shortest totals the best `u` even exceeds `d` (0.8 / 40, 154 taps: `87/59`, −45 dB at cap +0.2 dB). Neighbouring candidates scatter by a few dB (local optima).
+* **Open:** a finer length / split search (the 60 dB one was coarse), several starts per candidate, lengths and split as optimisation variables, and the same machinery for the matched design (`u = d`).
+
 ## 4. Pitfalls (things that went wrong or are easy to get wrong)
 
 1. **Exact ≠ good.** `d = δ` is an exact partner of a windowed-sinc `u` (a 61-tap `d` came out exact with ≈ 0 dB stopband). Check `metrics()` / `info["meets_spec"]`.

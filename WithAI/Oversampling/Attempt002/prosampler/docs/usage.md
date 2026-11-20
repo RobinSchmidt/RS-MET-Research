@@ -182,6 +182,19 @@ the allowed ripple (`ripple_db`, peak-to-peak like `metrics()`) is a free resour
 The result is a local optimum; `shape=ps.TransitionShape(...)` additionally prescribes a roll-off tube (research option,
 see `docs/theory.md` section 5).
 
+### Shortest pair for a specification
+
+```py
+best = ps.search_pair(4, 0.8, 40, transition_max_db=0.5, verbose=True)   # minutes: many SLP runs
+print(best.n_u, best.n_d, best.stored_coeffs, best.info["search"]["table"][:3])
+```
+
+`search_pair` reduces the total length stepwise and tries several `u` / `d` splits per length (start: Kaiser-sinc `u` + minimax
+partner, refined by `optimise_joint_slp` with the passband ripple held at the plain pair's value and an optional transition cap).
+It returns the shortest pair found that meets the specification; `info["search"]["table"]` lists every candidate. In the examples
+of `docs/theory.md` it saves 10-20 % of the taps against `design_pair`, mostly by making `u` longer and `d` shorter.
+Runtime is minutes (several SLP runs per length), so it is not part of the executed examples above.
+
 ## 7. Comparing designs
 
 ```python
@@ -233,6 +246,7 @@ plots.plot_path(equal)                     # stopbands along a rebalance path
 | `design_matched`, `optimise_matched` | matched kernel from scratch |
 | `optimise_joint`, `rebalance`, `tie` | experimental steps 3-5 |
 | `design_partner_minimax`, `optimise_joint_minimax` | LP-based minimax partner design and alternating joint refinement |
+| `search_pair` | shortest pair found for a specification (length and split search with the SLP) |
 | `optimise_joint_slp`, `TransitionShape` | simultaneous joint minimax by sequential LP, with an optional transition cap or prescribed roll-off |
 | `FilterPair` | result: `u, d, L, latency, metrics(), verify(), swapped(), stored_coeffs, macs_per_sample` |
 | `nyquist_error`, `verify_roundtrip`, `reference_roundtrip` | checking |

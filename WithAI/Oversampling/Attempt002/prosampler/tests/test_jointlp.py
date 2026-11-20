@@ -62,3 +62,16 @@ def test_slp_transition_cap_removes_most_of_the_bump(base, r0):
     assert m["d_transition_peak_db"] <= 0.5 + 0.05 and m["u_transition_peak_db"] <= 0.5 + 0.05
     assert _worst(j) < _worst(base) + 0.5                                               # cap costs at most ~ nothing here
     assert m["nyquist_error"] < 1e-13
+
+
+def test_search_pair_returns_pair_meeting_spec_and_table():
+    plain = ps.design_pair(L, P, ATT)
+    best = ps.search_pair(L, P, ATT, transition_max_db=0.5, n_u_offsets=(0, 16), iterations=8, max_steps=2)
+    s = best.info["search"]
+    assert best.n_u + best.n_d <= plain.n_u + plain.n_d
+    assert s["table"] and all({"total", "n_u", "n_d", "worst_db", "bump_db", "meets"} <= set(r) for r in s["table"])
+    m = best.metrics()
+    assert max(m["u_stop_db"], m["d_stop_db"]) <= -ATT
+    assert m["nyquist_error"] < 1e-13
+    assert max(m["u_ripple_db"], m["d_ripple_db"]) <= s["ripple_ref_db"] * (1 + 1e-3) + 1e-6
+    best.verify()

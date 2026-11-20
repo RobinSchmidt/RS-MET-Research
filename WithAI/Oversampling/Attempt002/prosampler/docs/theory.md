@@ -209,6 +209,25 @@ bump of at most +0.5 dB**, and an essentially bump-free pair (+0.2 dB) costs abo
 (`x = 1/2`, the product is -6 dB) `u` / `d` were -5.9 / 0.0 dB for the plain 0.85 / 60 pair, -5.1 / -0.8 dB with cap +0.5 dB
 and -3.9 / -2.0 dB with cap 0 dB (matched kernels: -3 / -3 dB). Times: 10-40 s (47/115 taps) and 30-170 s (99/215 taps).
 
+**Shortest pair for a specification (`search_pair`).** Combining the minimax partner, the simultaneous move and a transition
+cap: for each total length (reduced stepwise from the plain pair's) and several splits `n_u / n_d`, start from a Kaiser-sinc `u`
+of `n_u` taps with its minimax partner and refine with `optimise_joint_slp`, passband ripple held at the plain pair's value.
+Results (L = 4; local search, shortest length *found*; MACs per base-rate sample are about the total number of taps):
+
+| passband / spec | plain pair | minimax partner only | joint SLP, cap +0.5 dB | joint SLP, cap +0.2 dB |
+|---|---|---|---|---|
+| 0.8 / 40 dB (ripple 0.124 dB) | 47/115 = 162 taps (81 stored) | 47/99 = 146 | **47/83 = 130** (65 stored, -40.7 dB) | **55/83 = 138** (69 stored, -41.8 dB) |
+| 0.85 / 60 dB (ripple 0.016 dB) | 99/215 = 314 taps (157 stored) | 99/191 = 290 | **99/183 = 282** (141 stored, -62.7 dB) | **99/183 = 282** (-60.7 dB) |
+
+That is 15-20 % fewer taps (0.8 / 40) and about 10 % (0.85 / 60) than the plain pair, with a bump of at most the cap (plain: +1.2 dB).
+The 60 dB search was coarse (total steps of 16 taps, `u` lengths 99 / 115 / 131); the next step (266 taps) missed by 1-7 dB,
+so the true minimum lies between 266 and 282. Outcomes scatter by a few dB between neighbouring candidates (local optima), so
+treat the lengths as achievable, not minimal. The search also shows where the gain comes from: **the best split at a given total has a
+much longer `u` than the plain pair**. At 314 taps and cap +0.5 dB, `115/199` reaches **-71.7 dB** (bump +0.28 dB) against -60.3 dB for
+the plain `99/215`; at 162 taps (0.8 / 40) `63/99` reaches -51.1 dB against -41.9 dB. At the shortest totals the best `u` is
+even longer than `d` (0.8 / 40 at 154 taps: `87/59`, -45 dB at cap +0.2 dB). Runs take 10-40 s per candidate (162 taps) and
+1-3 min (314 taps); the full searches took 16-20 min and 10-12 min on two cores.
+
 **Prescribed transition shapes (`TransitionShape`).** The product of the two transition amplitudes must be point-symmetric
 (`r(x) + r(1 - x) = 1`, see `prosampler.transition`); `1 - x^p` is not admissible for `p != 1`, the raised cosine `cos^2`, the
 linear ramp and the integral of a Kaiser-window main lobe are. A split exponent `alpha` gives `A_u / L = r^alpha`,

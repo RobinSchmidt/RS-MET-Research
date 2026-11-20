@@ -39,6 +39,7 @@ Open the file: everything you would want to change is in the **PARAMETERS** bloc
 | `PAIR_METHOD`, `PAIR_OBJECTIVE` | solver (`nullspace`/`kkt`) and objective (`grid`/`energy`) for `d` | nullspace, grid |
 | `N_U`, `N_D` | fixed lengths instead of "shortest that meets the spec" | `None` |
 | `MATCHED_K` | fixed latency (`g` has `L*K+1` taps) instead of a search | `None` |
+| `JOINT_SLP`, `JOINT_SLP_RIPPLE_FACTOR`, `TRANSITION_MAX_DB` | `--joint-slp`, `--transition-max-db`: simultaneous joint minimax (pair only; seconds to minutes) | off, 1.0, `None` |
 | `JOINT_MINIMAX`, `JOINT_MINIMAX_RIPPLE_DB` | `--joint-minimax`: alternating-LP joint minimax refinement (pair only) | off, `None` |
 | `JOINT`, `JOINT_PASSBAND_WEIGHT`, `JOINT_ON_WORSE_PEAK` | `--joint`: refine `u` and `d` jointly after the pair design (pair only) | off, 1.0, `"warn"` |
 | `TRANSITION_WEIGHT` | leave at 0 (see `docs/usage.md`, section 4) | 0 |
@@ -92,3 +93,11 @@ specification `d` gets 7-14 % shorter (L=4, 17 kHz, 60 dB: 143 -> 127 taps, 105 
 `--joint-minimax` then alternates LPs for `d` and `u`, keeping each filter flat; the plain pair is overlaid in grey.
 At the default 1 : 2 length split `d` gains most (here -63.7 -> -65.5 dB, `u` -60.4 -> -62.3 dB). Unlike `--joint`
 (stopband energy, no reliable peak gain) it can only improve both peaks.
+
+### `--joint-slp` and `--transition-max-db`
+
+Moves `u` and `d` together by sequential LPs with the passband ripple held at the start pair's value (`JOINT_SLP_RIPPLE_FACTOR`),
+so the printed before/after comparison is fair. Without a cap it gains 7-9 dB at the same lengths but the bump of `d` grows
+(+1.25 -> +1.7 dB); `--transition-max-db 0.5` still gains 1-3 dB with a bump of at most +0.5 dB, `0.2` is about break-even and `0`
+(no bump) costs about 1-4 dB. Slow for long kernels (minutes at 100+/200+ taps); the demo reports whether the requested attenuation
+is still met.

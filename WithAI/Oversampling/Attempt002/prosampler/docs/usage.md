@@ -164,6 +164,24 @@ linear bounds (a tight transition bound costs a lot of stopband because `d` must
 `u`) improves by only 1-1.4 dB. To use the freedom, shift taps from `d` to `u` (give `n_u`, `n_d` to `design_pair` with a
 stronger `u` start and refine). Both routines need symmetric odd-length kernels and the centred latency.
 
+### Simultaneous joint minimax and the transition bump
+
+```python
+small = ps.design_pair(4, 0.8, 40)
+m = small.metrics()
+r0 = max(m["u_ripple_db"], m["d_ripple_db"])             # hold the passband ripple at the start's value
+sl = ps.optimise_joint_slp(small, ripple_db=r0, transition_max_db=0.5, iterations=15)
+print(max(sl.metrics()["u_stop_db"], sl.metrics()["d_stop_db"]), sl.metrics()["d_transition_peak_db"])
+```
+
+`optimise_joint_slp` moves `u` and `d` in the same step (sequential LPs, seconds per iteration for kernels of a few hundred
+taps, minutes in total at 100+/200+ taps). At the same lengths and ripple it gains 7-9 dB without a transition cap; the
+cap `transition_max_db` limits the gain of both filters between the band edges (`0` = no bump) at a modest cost: caps of
+0.5 / 0.2 / 0 dB give +3 / +1 / -1.5 dB relative to the plain pair in the 0.85 / 60 dB example. **Compare at equal ripple:**
+the allowed ripple (`ripple_db`, peak-to-peak like `metrics()`) is a free resource and every doubling buys about 3 dB.
+The result is a local optimum; `shape=ps.TransitionShape(...)` additionally prescribes a roll-off tube (research option,
+see `docs/theory.md` section 5).
+
 ## 7. Comparing designs
 
 ```python
@@ -215,6 +233,7 @@ plots.plot_path(equal)                     # stopbands along a rebalance path
 | `design_matched`, `optimise_matched` | matched kernel from scratch |
 | `optimise_joint`, `rebalance`, `tie` | experimental steps 3-5 |
 | `design_partner_minimax`, `optimise_joint_minimax` | LP-based minimax partner design and alternating joint refinement |
+| `optimise_joint_slp`, `TransitionShape` | simultaneous joint minimax by sequential LP, with an optional transition cap or prescribed roll-off |
 | `FilterPair` | result: `u, d, L, latency, metrics(), verify(), swapped(), stored_coeffs, macs_per_sample` |
 | `nyquist_error`, `verify_roundtrip`, `reference_roundtrip` | checking |
 | `compare`, `prosampler.plots` | analysis |

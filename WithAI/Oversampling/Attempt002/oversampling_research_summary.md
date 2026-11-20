@@ -125,6 +125,25 @@ Exchanging `u` and `d` (with a gain fix: new `u = d·L/sum(d)`, new `d = u·sum(
 * **Shortest total length meeting the spec:** 0.8 / 40 dB: 162 (plain) → 146 (minimax partner) → 138 (joint, 45/93). 0.85 / 60 dB: 314 → 290 (minimax partner; joint gives the same length with more margin). So most of the saving comes from the minimax partner.
 * **Not done:** a minimax version of the matched design (`u = d`, nonconvex); a joint LP over lengths and split; checking how much better the best local optimum of the alternation is (several starts).
 
+### 3.6 Simultaneous joint minimax and the transition bump (`optimise_joint_slp`)
+
+* **Alternating LPs cannot move the roll-off split** (with a bound on `d`, `u` stayed identical and `d` paid in stopband). Moving both kernels at once needs the bilinear Nyquist coupling: sequential LP (linearise, trust region, Gauss-Newton projection). One LP is seconds; 99/215 taps takes 30–170 s in total. Local optimum.
+* **Ripple is a free resource**, so compare at equal ripple (held at the start's value): each doubling of the allowed ripple buys ≈ 3 dB and enlarges the bump (0.8 / 40 dB: −48.5 / −51.5 / −55.3 dB at 1x / 2x / 4x ripple, bumps +1.7 / +2.5 / +4.0 dB). An early run of mine at 4x ripple overstated the gain.
+* **Equal lengths and equal ripple:**
+
+  | cap on transition gain | 0.8 / 40 dB, 47/115 | 0.85 / 60 dB, 99/215 |
+  |---|---|---|
+  | plain pair | −41.9 dB (bump +1.25) | −60.3 dB (+1.17) |
+  | none | −48.5 (+1.69) | −69.1 (+1.72) |
+  | +1.0 dB | −45.3 | −65.7 |
+  | +0.5 dB | −42.7 | −63.2 |
+  | +0.2 dB | −40.9 | −61.5 |
+  | 0 dB | −37.8 | −58.8 |
+
+  Gain 7–9 dB without a cap; 1–3 dB with a bump ≤ +0.5 dB; an essentially bump-free pair costs ≈ 1 dB or gains ≈ 1 dB. This answers the earlier open question: yes, the optimiser can move the bump into `u` once `u` and `d` move together, and it shifts the roll-off split toward the matched case (at the original Nyquist frequency `u` / `d`: −5.9 / 0.0 dB plain → −3.9 / −2.0 dB at cap 0, matched −3 / −3 dB).
+* **Prescribed shapes:** the product of the transition amplitudes must satisfy `r(x) + r(1 − x) = 1` (cosine², linear, Kaiser-window integral; `1 − x^p` is not admissible), with split `u = r^alpha`, `d = r^(1 − alpha)`. As a linear tube this was too restrictive for a short `u` and long `d` (alpha → 1 forces `d` ≈ 0 dB up to the stopband edge; cosine tubes with tol 0.05 stalled at −22.7 / −31.8 dB); the simple gain cap is the practical control. `TransitionShape` stays as a research option.
+* **Not done:** lengths and split as LP variables (best split by scanning only), several starts to gauge local optima, the same simultaneous move for the matched design, and combining the SLP with the shorter-`d` result of the minimax partner for a minimum-length search.
+
 ## 4. Pitfalls (things that went wrong or are easy to get wrong)
 
 1. **Exact ≠ good.** `d = δ` is an exact partner of a windowed-sinc `u` (a 61-tap `d` came out exact with ≈ 0 dB stopband). Check `metrics()` / `info["meets_spec"]`.

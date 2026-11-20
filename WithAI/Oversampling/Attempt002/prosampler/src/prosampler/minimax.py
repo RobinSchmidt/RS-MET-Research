@@ -18,7 +18,8 @@ Optional extra (still linear) constraints:
 
 * ``transition_max_db``: ``|A(w)| <= G 10**(x/20)`` between the passband and stopband edges (bounds the bump of the
   kernel at the passband edge),
-* ``ripple_db``: ``A(w) / G`` stays within ``+-x`` dB of 1 in the passband (each filter's own flatness),
+* ``ripple_db``: ``A(w) / G`` stays within ``+-x/2`` dB of 1 in the passband, i.e. peak-to-peak ripple ``x`` dB (each
+  filter's own flatness, same definition as ``metrics()``),
 * ``passband_flat_db`` (partner design only): the PRODUCT ``A_d(w) A_u(w) / L`` stays within ``+-x`` dB of 1.
 
 The equalities are eliminated through the nullspace of ``C`` (``theta = theta0 + Z y``), so they hold exactly, and
@@ -77,7 +78,7 @@ def _solve_kernel(other, n_x: int, spec: Spec, n0: int, gain: float, *, transiti
     pass_rows = []                                   # (A_matrix, lo, hi) with lo <= A @ theta <= hi
     if ripple_db is not None:
         pass_rows.append((_amp_matrix(n_x, grid.w[grid.passband], T),
-                          gain * 10 ** (-ripple_db / 20), gain * 10 ** (ripple_db / 20)))
+                          gain * 10 ** (-ripple_db / 40), gain * 10 ** (ripple_db / 40)))
     if product_flat_db is not None:
         wp = grid.w[grid.passband]
         a_other = _amp_matrix(len(other), wp, np.eye(len(other))) @ other
@@ -199,7 +200,7 @@ def optimise_joint_minimax(pair, *, iterations: int = 8, ripple_db=None, transit
     Parameters
     ----------
     ripple_db : float, optional
-        Allowed passband deviation of each filter from its DC gain (dB), applied to ``u`` and ``d``.  Default:
+        Allowed peak-to-peak passband ripple of each filter (dB, as in ``metrics()``), applied to ``u`` and ``d``.  Default:
         twice the ripple of the input pair, but at least 0.001 dB.  Looser values let ``u`` and ``d`` trade passband
         flatness for stopband attenuation (the ripple then partly cancels in ``u * d``); this is rarely wanted.
     transition_max_db : float, optional

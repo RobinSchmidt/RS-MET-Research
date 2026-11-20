@@ -182,6 +182,43 @@ specification (best of several splits, `design_pair(..., objective="minimax")` +
 So most of the saving (5-10 % of the total taps, 7-14 % of `d`) comes from the minimax partner; joint minimax adds margin
 (1-3 dB at equal length) and, at 40 dB, a few taps more. Each joint search costs minutes at 60 dB.
 
+**Simultaneous joint minimax (`optimise_joint_slp`).** The alternation above cannot move the split of the transition
+roll-off between `u` and `d`: for a fixed partner the Nyquist rows nearly force the other kernel's transition band (with the
+transition cap of the previous experiment `u` stayed identical and `d` just paid in stopband). Moving both kernels in the
+same step needs the bilinear coupling, handled by sequential linear programming (`prosampler.jointlp`): linearise
+`conv(u, d)[n0 + L k] = delta[k]` at the current feasible point, add a trust region, solve one LP over `(da, db, t)` with
+everything else (stopband peak, passband flatness, transition constraints) exactly linear, restore exactness by
+Gauss-Newton, accept if the merit decreases. The limit is a local optimum; one iteration is an LP of a few seconds.
+
+Measured, equal lengths and the **passband ripple held at the start pair's value** (the ripple is a free resource: every
+doubling of the allowed ripple buys about 3 dB of stopband and enlarges the bump, e.g. 0.8 / 40 dB: -48.5 / -51.5 / -55.3 dB
+at 1x / 2x / 4x ripple with bumps +1.7 / +2.5 / +4.0 dB, which is why results are only comparable at equal ripple):
+
+| `transition_max_db` (cap on `u` and `d` between the band edges) | 0.8 / 40 dB, 47/115 taps, ripple 0.124 dB | 0.85 / 60 dB, 99/215 taps, ripple 0.016 dB |
+|---|---|---|
+| plain pair (start) | -41.9 dB, bump +1.25 | -60.3 dB, bump +1.17 |
+| no cap | -48.5 dB, bump +1.69 | -69.1 dB, bump +1.72 |
+| +1.0 dB | -45.3 dB | -65.7 dB |
+| +0.5 dB | -42.7 dB | -63.2 dB |
+| +0.2 dB | -40.9 dB | -61.5 dB |
+| 0 dB (no bump at all) | -37.8 dB | -58.8 dB |
+
+So at equal lengths and equal ripple the simultaneous step gains 7-9 dB with the bump left alone, still **gains 1-3 dB with a
+bump of at most +0.5 dB**, and an essentially bump-free pair (+0.2 dB) costs about 1 dB (0.8 / 40) or gains 1 dB
+(0.85 / 60) against the plain pair. The roll-off split moves toward the matched case: at the original Nyquist frequency
+(`x = 1/2`, the product is -6 dB) `u` / `d` were -5.9 / 0.0 dB for the plain 0.85 / 60 pair, -5.1 / -0.8 dB with cap +0.5 dB
+and -3.9 / -2.0 dB with cap 0 dB (matched kernels: -3 / -3 dB). Times: 10-40 s (47/115 taps) and 30-170 s (99/215 taps).
+
+**Prescribed transition shapes (`TransitionShape`).** The product of the two transition amplitudes must be point-symmetric
+(`r(x) + r(1 - x) = 1`, see `prosampler.transition`); `1 - x^p` is not admissible for `p != 1`, the raised cosine `cos^2`, the
+linear ramp and the integral of a Kaiser-window main lobe are. A split exponent `alpha` gives `A_u / L = r^alpha`,
+`A_d = r^(1 - alpha)` (alpha = 1/2 is the matched root-Nyquist case). As a tube of half-width `tol` this is linear and
+available in `optimise_joint_slp(shape=...)`, but it turned out too restrictive for the usual short `u` / long `d`: alpha -> 1
+asks `d` to stay near 0 dB until the stopband edge (a 115-tap `d` cannot), and a cosine tube with tolerance 0.05 stalled at
+-22.7 dB (alpha 0.75) and -31.8 dB (alpha 0.5) against -41.9 dB for the plain pair (0.8 / 40 dB, 47/115 taps; run with a
+4x ripple allowance). The measured product of the plain pair is also steeper than `cos^2`. The simple gain cap above gives
+the practical control, so shapes remain a research option.
+
 These routines are research tools; they work on symmetric centred pairs only.
 
 ## 6. Swapping the roles

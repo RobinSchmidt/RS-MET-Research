@@ -25,6 +25,7 @@ HOW TO USE: edit the parameters in the PARAMETERS block, or override a few from 
     python demos/design_and_plot.py --design matched --atten-db 60 --save design.png --no-show
     python demos/design_and_plot.py --objective minimax --atten-db 60 --passband-hz 17000
     python demos/design_and_plot.py --joint-minimax --atten-db 60 --passband-hz 17000
+    python demos/design_and_plot.py --joint-slp --transition-max-db 0.2 --atten-db 40 --passband-hz 15000
     python demos/design_and_plot.py --joint --atten-db 60 --passband-hz 17000
     python demos/design_and_plot.py --help
 
@@ -64,6 +65,9 @@ TRANSITION_WEIGHT = 0.0          # extra least-squares weight on the transition 
 N_U = None                       # fixed lengths (odd numbers); None = let the library pick the shortest that works.
 N_D = None                       # If you set N_D you must also set N_U (or give atten_db and let N_U follow the spec)
 
+JOINT_SLP = False                # True: simultaneous joint minimax (sequential LP) of (u, d), pair design only
+JOINT_SLP_RIPPLE_FACTOR = 1.0    # allowed passband ripple of each filter as a multiple of the start pair's ripple
+TRANSITION_MAX_DB = None         # cap on the gain of u and d between the band edges (0 = no bump at all); None = no cap
 JOINT_MINIMAX = False            # True: alternating-LP joint minimax refinement of (u, d) (pair design only)
 JOINT_MINIMAX_RIPPLE_DB = None   # allowed passband deviation of each filter in that refinement (None = 2x the start's)
 JOINT = False                    # True: refine (u, d) jointly after the pair design (experimental, see below)
@@ -121,6 +125,19 @@ def refine_joint_minimax(fp, ripple_db=JOINT_MINIMAX_RIPPLE_DB):
     h = out.info["joint_minimax"]["history"]
     print(f"\njoint minimax: {len(h) - 1} round(s), passband ripple bound {out.info['joint_minimax']['ripple_db']:.4f} dB per filter")
     print(f"  stopband peak   before: u {h[0][0]:.1f} / d {h[0][1]:.1f} dB   after: u {h[-1][0]:.1f} / d {h[-1][1]:.1f} dB")
+    return out
+
+
+def refine_joint_slp(fp, cap=TRANSITION_MAX_DB, factor=JOINT_SLP_RIPPLE_FACTOR):
+    """Simultaneous joint minimax by sequential LP; prints a before/after comparison (takes seconds to minutes)."""
+    m0 = fp.metrics()
+    r0 = max(m0["u_ripple_db"], m0["d_ripple_db"])
+    out = ps.optimise_joint_slp(fp, ripple_db=max(factor * r0, 1e-3), transition_max_db=cap)
+    m1 = out.metrics()
+    print(f"\njoint SLP (ripple bound {factor:g}x start, transition cap {cap} dB): {len(out.info['slp']['history']) - 1} accepted steps")
+    print(f"  stopband peak   before: u {m0['u_stop_db']:.1f} / d {m0['d_stop_db']:.1f} dB   after: u {m1['u_stop_db']:.1f} / d {m1['d_stop_db']:.1f} dB")
+    print(f"  passband ripple before: {r0:.4f} dB   after: {max(m1['u_ripple_db'], m1['d_ripple_db']):.4f} dB")
+    print(f"  transition peak before: d {m0['d_transition_peak_db']:+.2f} dB   after: d {m1['d_transition_peak_db']:+.2f} / u {m1['u_transition_peak_db']:+.2f} dB")
     return out
 
 
@@ -267,6 +284,10 @@ def main(argv=None):
                     help="objective of the partner design for --design pair (minimax = linear program, minimal peak)")
     ap.add_argument("--joint-minimax", action="store_true", default=JOINT_MINIMAX,
                     help="alternating-LP joint minimax refinement of u and d (pair design only)")
+    ap.add_argument("--joint-slp", action="store_true", default=JOINT_SLP,
+                    help="simultaneous joint minimax (sequential LP) of u and d, pair design only; slow for long kernels")
+    ap.add_argument("--transition-max-db", type=float, default=TRANSITION_MAX_DB,
+                    help="with --joint-slp: cap on the gain of u and d between the band edges in dB (0 = no bump)")
     ap.add_argument("--save", metavar="PREFIX", help="save figures as PREFIX.png and PREFIX_detail.png")
     ap.add_argument("--no-show", action="store_true", help="do not open plot windows")
     args = ap.parse_args(argv)
@@ -278,11 +299,12 @@ def main(argv=None):
 
     fp = design(args.fs, args.L, args.passband_hz, args.atten_db, args.design, objective=args.objective)
     base = None
-    if args.joint or args.joint_minimax:
+    if args.joint or args.joint_minimax or args.joint_slp:
         if args.design != "pair":
-            ap.error("--joint / --joint-minimax need --design pair")
+            ap.error("--joint / --joint-minimax / --joint-slp need --design pair")
         report(fp, args.fs)
-        joint = refine_joint_minimax(fp) if args.joint_minimax else refine_joint(fp)
+        joint = (refine_joint_slp(fp, args.transition_max_db) if args.joint_slp
+                 else refine_joint_minimax(fp) if args.joint_minimax else refine_joint(fp))
         if joint is not fp:
             m = joint.metrics()
             joint.info["meets_spec"] = max(m["u_stop_db"], m["d_stop_db"]) <= -args.atten_db   # re-evaluate

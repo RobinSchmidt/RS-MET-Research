@@ -227,7 +227,7 @@ Misc
 
 - Maybe AI can help to create VST2 Plugins without the Steinberg SDK.
 
--Let AI help with the licensing documents (GPL + commercial). But which GPL? 2.0, 3.0, AGPL, ...?
+- Let AI help with the licensing documents (GPL + commercial). But which GPL? 2.0, 3.0, AGPL, ...?
 
 - Ask AI how to write realtime audio plugins and DSP code in Rust. What would be the appropriate 
   analog of a class like rsStateVariableFilter. How would the API look like? I want an object that
@@ -245,3 +245,5 @@ Misc
     Internals:   internal functions, not part public API
     
   How would one do something similar in Rust?
+  
+- Add MIDI to APE (Audio Programming Environment)

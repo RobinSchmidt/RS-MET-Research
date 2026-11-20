@@ -95,3 +95,18 @@ def test_slp_ripple_bound_is_elastic(base, r0):
     m = j.metrics()
     assert max(m["u_ripple_db"], m["d_ripple_db"]) < r0 * 0.8
     assert m["nyquist_error"] < 1e-13
+
+
+def test_search_pair_adaptive_runs_and_meets():
+    ev = []
+    fp = ps.search_pair(L, P, ATT, strategy="adaptive", resolution="coarse", progress=ev.append)
+    m = fp.metrics()
+    assert max(m["u_stop_db"], m["d_stop_db"]) <= -ATT + 1e-6
+    assert m["nyquist_error"] < 1e-13
+    s = fp.info["search"]
+    assert s["strategy"] == "adaptive" and ev and len(s["table"]) <= len(ev)
+
+
+def test_search_pair_rejects_bad_strategy():
+    with pytest.raises(ValueError):
+        ps.search_pair(L, P, ATT, strategy="bisect", progress=False)

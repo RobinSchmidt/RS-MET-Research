@@ -74,9 +74,82 @@ def _run_candidate(args):
     return fp, worst, bump, bool(ok), max(m["u_ripple_db"], m["d_ripple_db"])
 
 
+def _adaptive(plain, first, total0, length_step, split_step, span, win, max_rounds, atten_db, L, run_round):
+    """Secant search on the length index k (total = first - k * length_step); returns the best passing pair or the plain."""
+    margin = 0.3                                          # aim this many dB below the requirement
+    w = 8 if win is None else win
+    lo_k, hi_k = 0, None                                  # longest known passing index (0 assumed), shortest known failing
+    cache, best, ratio = {}, None, None
+    kmax = max(1, int((first - 0.6 * total0) / length_step))
+
+    def cands_for(total):
+        out, grid = [], range(span[0], span[1] + 1, split_step)
+        if ratio is not None:
+            centre = ratio * total
+            grid = [o for o in range(span[0] - 4 * split_step, span[1] + 4 * split_step + 1, split_step)
+                    if abs(plain.n_u + o - centre) <= w]
+        for off in grid:
+            n_u, n_d = plain.n_u + off, total - plain.n_u - off
+            if n_u >= 2 * L + 1 and n_d >= 2 * L + 1 and n_u % 2 == 1 and n_d % 2 == 1:
+                out.append((n_u, n_d))
+        return out
+
+    def probe(k, rnd):
+        nonlocal best, ratio
+        total = first - k * length_step
+        found, w_best, c_best = run_round(rnd, total, cands_for(total))
+        if w_best is None:
+            return None
+        cache[k] = (w_best, found is not None)
+        if found is not None:
+            if best is None or total < best.n_u + best.n_d:
+                best = found
+            ratio = found.n_u / total
+        if found is None and ratio is None:                # nothing passed yet: centre on the least bad split's ratio
+            ratio = c_best[0] / total
+        return cache[k]
+
+    k = max(1, min(kmax, int(round(0.12 * total0 / length_step))))
+    for rnd in range(max_rounds):
+        r = probe(k, rnd)
+        if r is None:
+            hi_k = k if hi_k is None else min(hi_k, k)
+        elif r[1]:
+            lo_k = max(lo_k, k)
+        else:
+            hi_k = k if hi_k is None else min(hi_k, k)
+        if hi_k is not None and hi_k - lo_k <= 1:
+            break
+        if hi_k is None and lo_k >= kmax:
+            break
+        # next index: secant through the two most informative points, else a step of 2
+        pts = sorted((kk, v[0]) for kk, v in cache.items())
+        target = -atten_db - margin
+        if hi_k is not None and lo_k in cache and hi_k in cache:
+            pair = ((lo_k, cache[lo_k][0]), (hi_k, cache[hi_k][0]))        # bracket ends
+        else:
+            pair = (pts[-2], pts[-1]) if len(pts) >= 2 else None             # the two longest-reduction probes
+        nk = None
+        if pair is not None:
+            (k1, g1), (k2, g2) = pair
+            if k2 != k1 and g2 > g1:
+                nk = int(round(k1 + (target - g1) * (k2 - k1) / (g2 - g1)))
+        if nk is None:
+            nk = lo_k + 2 if hi_k is None else (lo_k + hi_k) // 2
+        lo_lim = lo_k + 1
+        hi_lim = (hi_k - 1) if hi_k is not None else kmax
+        nk = max(lo_lim, min(hi_lim, nk))
+        if hi_k is None:
+            nk = min(nk, lo_k + 6)
+        if nk in cache:
+            break
+        k = nk
+    return best if best is not None else plain
+
+
 def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=None, ripple_factor: float = 1.0,
                 resolution: str = "medium", length_step=None, split_step=None, split_span=None, iterations=None,
-                window="preset", max_rounds=None, start_total=None, n_jobs: int = 1, progress=True):
+                window="preset", max_rounds=None, start_total=None, strategy: str = "scan", n_jobs: int = 1, progress=True):
     """
     Shortest (total taps) pair meeting ``atten_db`` with passband ripple at most ``ripple_factor`` times (+2 % for the
     difference between the LP's grid and the metrics grid) that of the plain
@@ -104,6 +177,15 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
     start_total : int, optional
         First total length to try (default: the plain pair's).  Use it to skip rounds already known to be feasible, e.g.
         after an earlier coarser search; must differ from the plain total by a multiple of ``length_step``.
+    strategy : {"scan", "adaptive"}
+        ``"scan"`` (default): descend from the plain length in steps of ``length_step`` until a round fails.
+        ``"adaptive"``: treat the best stopband peak at a total length as a nearly linear function of the length, probe a
+        first length (full split scan), then jump by secant steps to where the line reaches the specification, keep a
+        bracket (longest passing / shortest failing length) and finish when they are one ``length_step`` apart.  After
+        the first probe only candidates within ``window`` taps (default 8) of the previous best split *ratio* are tried.
+        Typically 2-3x fewer configurations than ``"scan"`` (the final answer is verified by the failing neighbour).
+        Because outcomes scatter by a few dB between neighbours (local optima) the result can differ from ``"scan"`` by
+        one length step.  ``max_rounds`` limits the number of probed lengths.
     n_jobs : int
         Number of worker processes for the candidates of a round (``-1``: all cores).
     progress : bool or callable
@@ -130,6 +212,8 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
         raise ValueError("length_step must be a positive multiple of 2 L")
     if split_step % 2 or split_step <= 0:
         raise ValueError("split_step must be a positive even number")
+    if strategy not in ("scan", "adaptive"):
+        raise ValueError('strategy must be "scan" or "adaptive"')
     if n_jobs == -1:
         n_jobs = os.cpu_count() or 1
 
@@ -156,7 +240,13 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
     n_win = len(range(-win, win + 1, split_step)) if win is not None else None     # candidates per later round (bound)
     sizes = [len(c) if (k == 0 or n_win is None) else min(len(c), n_win) for k, (_, c) in enumerate(rounds)]
     upper = sum(sizes)
-    n_typ = max(1, int(max(first - 0.8 * total0, 0) / length_step) + 1)          # typical: ~20 % shorter, then one failing round
+    if strategy == "adaptive":
+        w_ad = 8 if win is None else win
+        n_w = len(range(-w_ad, w_ad + 1, split_step))
+        n_first = len(candidates(first))
+        upper = n_first + max(0, min(max_rounds, 8) - 1) * n_w
+        sizes = [n_first] + [n_w] * 7
+    n_typ = max(1, int(max(first - 0.8 * total0, 0) / length_step) + 1) if strategy == "scan" else 4          # typical: ~20 % shorter, then one failing round
     typical = sum(sizes[:n_typ])
     done, t0, tried, best = 0, time.time(), [], None
     pool = ProcessPoolExecutor(max_workers=n_jobs) if n_jobs > 1 else None
@@ -177,35 +267,45 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
             print(f"[{done:3d} of at most {upper} | {_fmt_time(elapsed)} elapsed | typically ~{_fmt_time(eta_typ)}, "
                   f"at most {_fmt_time(eta)} left] total {total} split {n_u}/{n_d}: {msg}", flush=True)
 
+    def run_round(rnd, total, cands):
+        """Run the candidates of one total length; return the best passing pair (or None) and the best worst-peak."""
+        args = [(L, passband, atten_db, n_u, n_d, r_ref, transition_max_db, iterations) for n_u, n_d in cands]
+        if pool is None:
+            results = ((c, _run_candidate(a)) for c, a in zip(cands, args))
+        else:
+            futs = {pool.submit(_run_candidate, a): c for c, a in zip(cands, args)}
+            results = ((futs[f], f.result()) for f in as_completed(futs))
+        found, best_w, best_c = None, None, None
+        for (n_u, n_d), res in results:
+            if res is None:
+                emit(rnd, total, n_u, n_d, None, None, False)
+                continue
+            fp, worst, bump, ok, rip = res
+            tried.append(dict(total=total, n_u=n_u, n_d=n_d, worst_db=worst, bump_db=bump, ripple_db=rip, meets=ok))
+            emit(rnd, total, n_u, n_d, worst, bump, ok, rip)
+            if best_w is None or worst < best_w:
+                best_w, best_c = worst, (n_u, n_d)
+            if ok and (found is None or worst < _worst(found)):
+                found = fp
+        return found, best_w, best_c
+
     try:
-        for rnd, (total, cands) in enumerate(rounds):
-            if win is not None and best is not None:
-                cands = [(n_u, n_d) for n_u, n_d in cands if abs(n_u - best.n_u) <= win]
-            args = [(L, passband, atten_db, n_u, n_d, r_ref, transition_max_db, iterations) for n_u, n_d in cands]
-            if pool is None:
-                results = ((c, _run_candidate(a)) for c, a in zip(cands, args))
-            else:
-                futs = {pool.submit(_run_candidate, a): c for c, a in zip(cands, args)}
-                results = ((futs[f], f.result()) for f in as_completed(futs))
-            found = None
-            for (n_u, n_d), res in results:
-                if res is None:
-                    emit(rnd, total, n_u, n_d, None, None, False)
-                    continue
-                fp, worst, bump, ok, rip = res
-                tried.append(dict(total=total, n_u=n_u, n_d=n_d, worst_db=worst, bump_db=bump, ripple_db=rip, meets=ok))
-                emit(rnd, total, n_u, n_d, worst, bump, ok, rip)
-                if ok and (found is None or worst < _worst(found)):
-                    found = fp
-            if found is None:
-                break
-            best = found
+        if strategy == "scan":
+            for rnd, (total, cands) in enumerate(rounds):
+                if win is not None and best is not None:
+                    cands = [(n_u, n_d) for n_u, n_d in cands if abs(n_u - best.n_u) <= win]
+                found, _, _ = run_round(rnd, total, cands)
+                if found is None:
+                    break
+                best = found
+        else:
+            best = _adaptive(plain, first, total0, length_step, split_step, span, win, max_rounds, atten_db, L, run_round)
     finally:
         if pool is not None:
             pool.shutdown()
     if best is None:
         best = plain
     best.info["search"] = dict(table=tried, ripple_ref_db=r_ref, plain_total=total0, transition_max_db=transition_max_db,
-                               resolution=resolution, length_step=length_step, split_step=split_step, split_span=span,
+                               resolution=resolution, strategy=strategy, length_step=length_step, split_step=split_step, split_span=span,
                                iterations=iterations, window=win, start_total=first, elapsed_s=time.time() - t0)
     return best

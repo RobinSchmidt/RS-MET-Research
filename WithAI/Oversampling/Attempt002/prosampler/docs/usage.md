@@ -216,6 +216,14 @@ neighbouring candidates scatter by a few dB.
   longer for long kernels (high attenuation, passband near Nyquist). **`n_jobs`** (`-1` = all cores) runs the candidates of a
   round in parallel and divides the time by about the number of cores.
 
+**Strategy.** `strategy="scan"` (default) descends from the plain length round by round. `strategy="adaptive"` treats the best
+stopband peak at a total length as a nearly linear function of the length: it probes one length (about 12 % shorter than the plain
+pair, full split scan), then jumps by secant steps to where the line reaches the specification (0.3 dB margin), keeps a bracket
+(longest passing / shortest failing length) and stops when the two are one `length_step` apart. After the first probe only splits within
+`window` taps (default 8) of the best split *ratio* are tried. It tests about half as many configurations as the scan (see below),
+and the answer is confirmed by its failing neighbour. Measured for 0.85 / 60 dB, `resolution="fine"`, cap +0.5 dB, two cores: the scan needed 62 configurations (50 min), the adaptive search 27 (18 min) and both ended at 274 taps (103/171). Because neighbours scatter by a few dB, it can differ from the scan by one
+`length_step`. `max_rounds` limits the number of probed lengths; the "at most" figure in the progress line is then a rough bound.
+
 **Progress.** With `progress=True` (default) one line is printed per finished configuration, for example
 
 ```text

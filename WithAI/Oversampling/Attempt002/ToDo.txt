@@ -169,3 +169,13 @@ anyway.
 
 So, the polyphase upsampling and downsampling stages merge the filter-then-upsample and
 filter-then-downsample steps into a single operation.
+
+----------------------------------------------------------------------------------------------------
+Misc Questions:
+
+- What are allowed lengths for u and d? I think, we must ensure that h = u*d has odd length because 
+  only then h will have a center sample which is a precondition for a filter to be Nyquist(L) 
+  (verify!). Because the convolution of two sequences with lengths M,N has length M+N-1, I think, 
+  this means that u and d can have either both odd lengths or both even lengths. I think, so far we 
+  have explored only the cases where both were odd. Could even lengths give advantages? Or are 
+  they actually also disallowed by further constraints?

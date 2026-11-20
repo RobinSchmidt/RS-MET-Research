@@ -66,12 +66,32 @@ def test_slp_transition_cap_removes_most_of_the_bump(base, r0):
 
 def test_search_pair_returns_pair_meeting_spec_and_table():
     plain = ps.design_pair(L, P, ATT)
-    best = ps.search_pair(L, P, ATT, transition_max_db=0.5, n_u_offsets=(0, 16), iterations=8, max_steps=2)
+    events = []
+    best = ps.search_pair(L, P, ATT, transition_max_db=0.5, split_span=(0, 16), split_step=16, iterations=8, max_rounds=2,
+                          progress=events.append)
+    assert events and events[-1]["done"] == len(events) and events[0]["upper_bound"] >= len(events)
+    assert all(e["eta"] >= 0 and e["eta_typical"] >= 0 for e in events)
     s = best.info["search"]
     assert best.n_u + best.n_d <= plain.n_u + plain.n_d
     assert s["table"] and all({"total", "n_u", "n_d", "worst_db", "bump_db", "meets"} <= set(r) for r in s["table"])
     m = best.metrics()
     assert max(m["u_stop_db"], m["d_stop_db"]) <= -ATT
     assert m["nyquist_error"] < 1e-13
-    assert max(m["u_ripple_db"], m["d_ripple_db"]) <= s["ripple_ref_db"] * (1 + 1e-3) + 1e-6
+    assert max(m["u_ripple_db"], m["d_ripple_db"]) <= s["ripple_ref_db"] * 1.02 + 1e-4
     best.verify()
+
+
+def test_search_pair_argument_checks():
+    with pytest.raises(ValueError):
+        ps.search_pair(L, P, ATT, resolution="ultra", progress=False)
+    with pytest.raises(ValueError):
+        ps.search_pair(L, P, ATT, length_step=4, progress=False)          # not a multiple of 2 L
+    with pytest.raises(ValueError):
+        ps.search_pair(L, P, ATT, split_step=3, progress=False)
+
+
+def test_slp_ripple_bound_is_elastic(base, r0):
+    j = ps.optimise_joint_slp(base, iterations=20, ripple_db=0.6 * r0, tube_weight=100)   # start violates the bound: driven down (needs a heavy weight)
+    m = j.metrics()
+    assert max(m["u_ripple_db"], m["d_ripple_db"]) < r0 * 0.8
+    assert m["nyquist_error"] < 1e-13

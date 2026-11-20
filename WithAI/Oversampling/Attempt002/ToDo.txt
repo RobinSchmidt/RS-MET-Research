@@ -1,5 +1,6 @@
 
 ----------------------------------------------------------------------------------------------------
+I think, this is now obsolete. Minimax optimization has been added already.
 
 In test_demos.py:
 
@@ -125,7 +126,31 @@ Here are a couple of my own additional ideas that can be explored further:
   magnitude-responses and optionally export C/C++/Rust code with an optimized polyphase 
   implementation. It should be easy to modify the design parameters in the demo such that it can be
   used as default starting point.  ...work on that is in progress...
+
+- What search algorithm does search_pair use? Is it brute force. Is a more clever (faster) approach
+  possible, like bisection maybe?
+
+- When the algorithm and library is somewhat finished, request to generate a couple example designs.
+  The cases I may want to cover are:
+  -Pair, L = 2, p = 0.9, s = 100 dB, c = 0.2 dB
+  -Pair, L = 4, p = 0.9, s = 100 dB, c = 0.2 dB
+  -Pair, L = 8, p = 0.9, s = 100 dB, c = 0.2 dB
+   Here L: oversampling factor, p: passband width, s: stopband rejection, c: transition band bump 
+   cap
+
+- Maybe include a prepared prompt for AI agents into the documentation of the library for users that
+  don't want to install the library (and perhaps a Python environment) themselves just to design a 
+  filter. Instead, they can just use the prompt to request their AI agent to do that for them on a 
+  server. Something like:
   
+  "Hello agent. In ... you find a library to design a pair of FIR filters for perfect reconstruction
+  oversampling. Use that library to design me an upsampling/downsampling filter pair with the 
+  following specification: .... Use search_pair() to find me the shortest pair meeting the spec. 
+  When you are done, return me the found coefficients in the following format .... and prepare plots
+  with impulse-, step- and magnitude responses using the functionality included in the library".
+  
+  That way, the library can be used without even bothering to install it.
+
 ----------------------------------------------------------------------------------------------------
 
 Verify this:

@@ -185,15 +185,47 @@ see `docs/theory.md` section 5).
 ### Shortest pair for a specification
 
 ```py
-best = ps.search_pair(4, 0.8, 40, transition_max_db=0.5, verbose=True)   # minutes: many SLP runs
-print(best.n_u, best.n_d, best.stored_coeffs, best.info["search"]["table"][:3])
+best = ps.search_pair(4, 0.8, 40, transition_max_db=0.5, resolution="medium", n_jobs=2)   # minutes to hours
+print(best.n_u, best.n_d, best.stored_coeffs)
+print(best.info["search"]["table"][:3])                          # every candidate tried
 ```
 
-`search_pair` reduces the total length stepwise and tries several `u` / `d` splits per length (start: Kaiser-sinc `u` + minimax
-partner, refined by `optimise_joint_slp` with the passband ripple held at the plain pair's value and an optional transition cap).
-It returns the shortest pair found that meets the specification; `info["search"]["table"]` lists every candidate. In the examples
-of `docs/theory.md` it saves 10-20 % of the taps against `design_pair`, mostly by making `u` longer and `d` shorter.
-Runtime is minutes (several SLP runs per length), so it is not part of the executed examples above.
+`search_pair` reduces the total length round by round and tries several `u` / `d` splits per length (start: Kaiser-sinc `u`
++ minimax partner, refined by `optimise_joint_slp` with the passband ripple held at the plain pair's value, +2 % for grid
+differences, and an optional transition cap). It returns the shortest pair found that meets the specification; the plain pair
+is returned if nothing shorter works. The result is the shortest length *found* by a local search, not a proof of optimality;
+neighbouring candidates scatter by a few dB.
+
+**Resolution.** Two grids control the search; `resolution` selects a preset and each grid can be overridden:
+
+| `resolution` | `length_step` | `split_step` / span of `u` offsets | window | SLP iterations | candidates per round | use |
+|---|---|---|---|---|---|---|
+| `"coarse"` | 4 L (16 taps for L = 4) | 16 / 0...+32 | none | 20 | 3 | quick look; can miss the best split |
+| `"medium"` (default) | 2 L (8) | 8 / 0...+40 | none | 25 | 6 | good default |
+| `"fine"` | 2 L (8) | 4 / -8...+48 | +-12 after round 1 | 30 | 15, then 7 | finest useful split resolution |
+
+* **`length_step`** (total taps removed per round) cannot be finer than `2 L`: a centred linear-phase pair needs `n_u + n_d - 2` to be a
+  multiple of `2 L` with both lengths odd. The result is therefore only accurate to `length_step` taps.
+* **`split_step`** (even, >= 2) is the spacing of the candidate lengths of `u` within a round; **`split_span`** is their range relative to the
+  plain pair's `u`. Longer `u` is often much better, hence ranges that extend upward. **`window`** restricts later rounds to
+  splits near the previous round's best `u` (the best split moves slowly), which cuts the cost of a fine grid by 2-3x.
+* **Cost:** one configuration is one SLP run. Measured (one run per core, 20-30 iterations): about 10-40 s for totals of 130-160 taps
+  and 30-60 s for about 300 taps; it grows faster than linearly with the length. The number of configurations is
+  (rounds) x (candidates per round); the search ends at the first round with no feasible candidate, typically after a ~20 %
+  length reduction, i.e. 5-9 rounds. Typical durations on one core: `"coarse"` 5-15 min, `"medium"` 10-40 min, `"fine"` 30-120 min,
+  longer for long kernels (high attenuation, passband near Nyquist). **`n_jobs`** (`-1` = all cores) runs the candidates of a
+  round in parallel and divides the time by about the number of cores.
+
+**Progress.** With `progress=True` (default) one line is printed per finished configuration, for example
+
+```text
+[ 14 of at most 36 | 4:12 elapsed | typically ~3:10, at most 6:30 left] total 266 split 115/151: worst -61.2 dB, bump +0.50 dB, ripple 0.0160 dB, meets
+```
+
+"At most" assumes that every round is run to the limit of `max_rounds`; "typically" assumes ~20 % length reduction and uses the average
+time per configuration so far (so it is pessimistic for the first few lines). Pass a callable to receive the same information as a
+dict (`done, upper_bound, typical, elapsed, eta, eta_typical, round, total, n_u, n_d, worst_db, bump_db, meets`), or `progress=False`.
+These examples are not part of the executed tests because of the runtime.
 
 ## 7. Comparing designs
 

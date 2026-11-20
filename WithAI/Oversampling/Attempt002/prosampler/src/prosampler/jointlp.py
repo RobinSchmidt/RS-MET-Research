@@ -18,7 +18,7 @@ adds a trust region ``|da|, |db| <= rho`` and solves the LP
               A_u / L, A_d within ``ripple_db`` of 1 in the passband,
               |A_u / L - target_u| <= tol + xi,  |A_d - target_d| <= tol + xi   in the transition band,
 
-(``xi >= 0`` is an elastic slack so that a start outside the tube is allowed; without a ``shape`` there is no tube;
+(``xi >= 0`` is an elastic slack so that a start outside the passband ripple bound, the tube or the cap is allowed; without a ``shape`` there is no tube;
 ``transition_max_db`` adds the elastic rows ``A_u / L, A_d <= 10**(x/20) + xi`` in the transition band).
 The step is then projected back onto the exact Nyquist set by Gauss-Newton.  A step is accepted if the merit
 ``peak + tube_weight * tube_violation`` decreases; otherwise the trust region shrinks.  The limit is a local optimum.
@@ -67,6 +67,7 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
     ripple_db : float, optional
         Allowed peak-to-peak passband ripple of each filter in dB (as reported by ``metrics()``).  Default: twice the
         start's ripple, at least 0.001 dB.  Looser values let the optimiser trade flatness for stopband attenuation.
+        The bound is elastic: a start that exceeds it is driven down to it only if ``tube_weight`` is large (e.g. 100); with the default weight the optimiser may keep part of the excess in exchange for stopband attenuation.
     tube_weight : float
         Weight of the elastic tube violation against the stopband peak in the LP objective and the acceptance test.
     min_improve : float
@@ -120,7 +121,7 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
     Au_f, Ad_f = _amp_matrix(n_u, w_fine, Su), _amp_matrix(n_d, w_fine, Sd)
     Au_p, Ad_p = _amp_matrix(n_u, w_pass, Su), _amp_matrix(n_d, w_pass, Sd)
     Au_t, Ad_t = _amp_matrix(n_u, w_tr, Su), _amp_matrix(n_d, w_tr, Sd)
-    elastic = shape is not None or transition_max_db is not None
+    elastic = True                                   # slack xi: ripple, cap and tube are elastic (a start may violate them)
     gmax = None if transition_max_db is None else 10 ** (transition_max_db / 20)
     if shape is not None:
         tu, td = shape.u_target(x_tr), shape.d_target(x_tr)
@@ -129,7 +130,8 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
         return float(np.max(np.abs(Au_f @ a_)) / L), float(np.max(np.abs(Ad_f @ b_)))
 
     def tube_violation(a_, b_):
-        v = 0.0
+        ru, rd = Au_p @ a_ / L, Ad_p @ b_
+        v = max(ru.max() - hi, lo - ru.min(), rd.max() - hi, lo - rd.min())          # passband ripple excess
         if shape is not None:
             dev = max(np.max(np.abs(Au_t @ a_ / L - tu)), np.max(np.abs(Ad_t @ b_ - td)))
             v = max(v, dev - shape.tol)
@@ -144,6 +146,9 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
     if ripple_db is None:
         ripple_db = max(2 * ripple_of(a, b), 1e-3)
     lo, hi = 10 ** (-ripple_db / 40), 10 ** (ripple_db / 40)          # peak-to-peak ripple_db, like metrics()
+    _ru, _rd = Au_p @ a / L, Ad_p @ b
+    # ripple rows are hard if the start satisfies them, elastic (driven down to the bound) if it does not
+    rip_soft = 1.0 if ripple_of(a, b) > 1.05 * ripple_db else 0.0          # (5 % slack: LP grid vs metrics grid)
 
     def merit(a_, b_):
         return max(peaks(a_, b_)) + tube_weight * tube_violation(a_, b_)
@@ -191,10 +196,10 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
             add_rows(sg * Au_s, Z_d, -L * sigma, 0, 0, 0, -sg * (Au_s @ a))            # |A_u| <= L t
             add_rows(Z_u, sg * Ad_s, -sigma, 0, 0, 0, -sg * (Ad_s @ b))                # |A_d| <= t
         n_p = len(w_pass)
-        add_rows(Au_p, np.zeros((n_p, mb)), 0, 0, 0, 0, L * hi - Au_p @ a)
-        add_rows(-Au_p, np.zeros((n_p, mb)), 0, 0, 0, 0, -L * lo + Au_p @ a)
-        add_rows(np.zeros((n_p, ma)), Ad_p, 0, 0, 0, 0, hi - Ad_p @ b)
-        add_rows(np.zeros((n_p, ma)), -Ad_p, 0, 0, 0, 0, -lo + Ad_p @ b)
+        add_rows(Au_p, np.zeros((n_p, mb)), 0, 0, -L * rip_soft, 0, L * hi - Au_p @ a)
+        add_rows(-Au_p, np.zeros((n_p, mb)), 0, 0, -L * rip_soft, 0, -L * lo + Au_p @ a)
+        add_rows(np.zeros((n_p, ma)), Ad_p, 0, 0, -1.0 * rip_soft, 0, hi - Ad_p @ b)
+        add_rows(np.zeros((n_p, ma)), -Ad_p, 0, 0, -1.0 * rip_soft, 0, -lo + Ad_p @ b)
         n_t = len(w_tr)
         Z_ut, Z_dt = np.zeros((n_t, ma)), np.zeros((n_t, mb))
         if gmax is not None:

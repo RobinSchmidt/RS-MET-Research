@@ -110,3 +110,13 @@ def test_search_pair_adaptive_runs_and_meets():
 def test_search_pair_rejects_bad_strategy():
     with pytest.raises(ValueError):
         ps.search_pair(L, P, ATT, strategy="bisect", progress=False)
+
+
+def test_search_pair_rescue_starts_are_tried_and_recorded():
+    fp = ps.search_pair(L, P, ATT, resolution="coarse", rescue=(-6.0, 6.0), rescue_top=2, progress=False)
+    s = fp.info["search"]
+    assert s["rescue"] == (-6.0, 6.0) and s["rescue_top"] == 2
+    assert all("start_db" in r for r in s["table"])
+    assert any(r["start_db"] != 0.0 for r in s["table"])               # the scan ends in a failing round, which is rescued
+    m = fp.metrics()
+    assert max(m["u_stop_db"], m["d_stop_db"]) <= -ATT + 1e-6

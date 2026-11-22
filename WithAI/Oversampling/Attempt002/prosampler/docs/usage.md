@@ -224,6 +224,13 @@ pair, full split scan), then jumps by secant steps to where the line reaches the
 and the answer is confirmed by its failing neighbour. Measured for 0.85 / 60 dB, `resolution="fine"`, cap +0.5 dB, two cores: the scan needed 62 configurations (50 min), the adaptive search 27 (18 min) and both ended at 274 taps (103/171). Because neighbours scatter by a few dB, it can differ from the scan by one
 `length_step`. `max_rounds` limits the number of probed lengths; the "at most" figure in the progress line is then a rough bound.
 
+**Extra starts (`rescue`).** If no candidate of a length meets the specification, the `rescue_top` (3) best candidates are rerun with the
+Kaiser window of the starting `u` designed for `atten_db + delta` dB, for each `delta` in `rescue` (default `(-6, 6)`), to see whether a
+different start lands in a better local optimum. It costs `rescue_top * len(rescue)` extra configurations per failing length; `rescue=()`
+switches it off. In the one case tested (0.85 / 60 dB, cap +0.2 dB, 266 and 258 taps) it changed nothing: the best result stayed at -58.6 dB
+(266) and -56.6 dB (258), so the SLP result depends little on the start and the scatter between neighbours is mostly the split itself.
+The run took 39 instead of 27 configurations (29 instead of 18 min).
+
 **Progress.** With `progress=True` (default) one line is printed per finished configuration, for example
 
 ```text

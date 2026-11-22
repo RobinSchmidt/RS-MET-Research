@@ -60,9 +60,9 @@ def _fmt_time(sec: float) -> str:
 
 def _run_candidate(args):
     """One configuration (module level so that it can run in a worker process)."""
-    L, passband, atten_db, n_u, n_d, r_ref, cap, iterations = args
+    L, passband, atten_db, n_u, n_d, r_ref, cap, iterations, start_db = args
     try:
-        start = design_pair(L, passband, atten_db, n_u=n_u, n_d=n_d, objective="minimax")
+        start = design_pair(L, passband, atten_db + start_db, n_u=n_u, n_d=n_d, objective="minimax")      # start_db shifts u's Kaiser beta
         fp = optimise_joint_slp(start, ripple_db=r_ref, transition_max_db=cap, iterations=iterations)
     except ProsamplerError:
         return None
@@ -149,7 +149,7 @@ def _adaptive(plain, first, total0, length_step, split_step, span, win, max_roun
 
 def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=None, ripple_factor: float = 1.0,
                 resolution: str = "medium", length_step=None, split_step=None, split_span=None, iterations=None,
-                window="preset", max_rounds=None, start_total=None, strategy: str = "scan", n_jobs: int = 1, progress=True):
+                window="preset", max_rounds=None, start_total=None, strategy: str = "scan", rescue=(-6.0, 6.0), rescue_top: int = 3, n_jobs: int = 1, progress=True):
     """
     Shortest (total taps) pair meeting ``atten_db`` with passband ripple at most ``ripple_factor`` times (+2 % for the
     difference between the LP's grid and the metrics grid) that of the plain
@@ -186,6 +186,11 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
         Typically 2-3x fewer configurations than ``"scan"`` (the final answer is verified by the failing neighbour).
         Because outcomes scatter by a few dB between neighbours (local optima) the result can differ from ``"scan"`` by
         one length step.  ``max_rounds`` limits the number of probed lengths.
+    rescue : sequence of float
+        Extra starts for a *failing* length.  When no candidate of a round meets the specification, the ``rescue_top``
+        best candidates are rerun with the Kaiser window of the starting ``u`` designed for ``atten_db + delta`` dB, for each
+        ``delta`` in ``rescue`` (a different start can land in a better local optimum, which scatters by a few dB).
+        ``()`` or ``rescue_top=0`` switches this off.  The cost is ``rescue_top * len(rescue)`` extra configurations per failing round.
     n_jobs : int
         Number of worker processes for the candidates of a round (``-1``: all cores).
     progress : bool or callable
@@ -249,11 +254,13 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
     n_typ = max(1, int(max(first - 0.8 * total0, 0) / length_step) + 1) if strategy == "scan" else 4          # typical: ~20 % shorter, then one failing round
     typical = sum(sizes[:n_typ])
     done, t0, tried, best = 0, time.time(), [], None
+    upper_bound = [upper]
     pool = ProcessPoolExecutor(max_workers=n_jobs) if n_jobs > 1 else None
 
     def emit(rnd, total, n_u, n_d, worst, bump, ok, rip=None):
         nonlocal done
         done += 1
+        upper = max(upper_bound[0], done)
         elapsed = time.time() - t0
         per = elapsed / done
         eta, eta_typ = per * max(upper - done, 0), per * max(typical - done, 0)
@@ -269,24 +276,42 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
 
     def run_round(rnd, total, cands):
         """Run the candidates of one total length; return the best passing pair (or None) and the best worst-peak."""
-        args = [(L, passband, atten_db, n_u, n_d, r_ref, transition_max_db, iterations) for n_u, n_d in cands]
+        args = [(L, passband, atten_db, n_u, n_d, r_ref, transition_max_db, iterations, 0.0) for n_u, n_d in cands]
         if pool is None:
             results = ((c, _run_candidate(a)) for c, a in zip(cands, args))
         else:
             futs = {pool.submit(_run_candidate, a): c for c, a in zip(cands, args)}
             results = ((futs[f], f.result()) for f in as_completed(futs))
         found, best_w, best_c = None, None, None
-        for (n_u, n_d), res in results:
-            if res is None:
-                emit(rnd, total, n_u, n_d, None, None, False)
-                continue
-            fp, worst, bump, ok, rip = res
-            tried.append(dict(total=total, n_u=n_u, n_d=n_d, worst_db=worst, bump_db=bump, ripple_db=rip, meets=ok))
-            emit(rnd, total, n_u, n_d, worst, bump, ok, rip)
-            if best_w is None or worst < best_w:
-                best_w, best_c = worst, (n_u, n_d)
-            if ok and (found is None or worst < _worst(found)):
-                found = fp
+        scored = []
+
+        def collect(results, found, best_w, best_c, delta):
+            for (n_u, n_d), res in results:
+                if res is None:
+                    emit(rnd, total, n_u, n_d, None, None, False)
+                    continue
+                fp, worst, bump, ok, rip = res
+                tried.append(dict(total=total, n_u=n_u, n_d=n_d, worst_db=worst, bump_db=bump, ripple_db=rip, meets=ok,
+                                  start_db=delta))
+                emit(rnd, total, n_u, n_d, worst, bump, ok, rip)
+                scored.append((worst, n_u, n_d))
+                if best_w is None or worst < best_w:
+                    best_w, best_c = worst, (n_u, n_d)
+                if ok and (found is None or worst < _worst(found)):
+                    found = fp
+            return found, best_w, best_c
+
+        found, best_w, best_c = collect(results, found, best_w, best_c, 0.0)
+        if found is None and rescue and rescue_top and scored:
+            top = [(n_u, n_d) for _, n_u, n_d in sorted(scored)[:rescue_top]]
+            for delta in rescue:
+                a2 = [(L, passband, atten_db, n_u, n_d, r_ref, transition_max_db, iterations, float(delta)) for n_u, n_d in top]
+                if pool is None:
+                    res2 = ((c, _run_candidate(a)) for c, a in zip(top, a2))
+                else:
+                    f2 = {pool.submit(_run_candidate, a): c for c, a in zip(top, a2)}
+                    res2 = ((f2[f], f.result()) for f in as_completed(f2))
+                found, best_w, best_c = collect(res2, found, best_w, best_c, float(delta))
         return found, best_w, best_c
 
     try:
@@ -307,5 +332,5 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
         best = plain
     best.info["search"] = dict(table=tried, ripple_ref_db=r_ref, plain_total=total0, transition_max_db=transition_max_db,
                                resolution=resolution, strategy=strategy, length_step=length_step, split_step=split_step, split_span=span,
-                               iterations=iterations, window=win, start_total=first, elapsed_s=time.time() - t0)
+                               iterations=iterations, window=win, start_total=first, rescue=tuple(rescue), rescue_top=rescue_top, elapsed_s=time.time() - t0)
     return best

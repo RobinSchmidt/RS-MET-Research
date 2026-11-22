@@ -211,6 +211,8 @@ Misc Questions:
   also adjustable stopband ripple (just like Kaiser via the beta parameter). We could use chebwin()
   from SciPy. What about a standard optimized FIR design method?
 
+- Do an exhaustive literature research for prior art. Is this method novel?
+
 - Try to find a better name. Ideas:
   -ResamplerPRO: Resampler for Perfect Reconstruction Oversampling
   -PROFIR

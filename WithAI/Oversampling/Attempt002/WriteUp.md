@@ -35,9 +35,9 @@ ToDo:
 
 - Explain the settings in which such Nyquist(L) filters have been used so far. I think mostly in eprfect reconstruction filter banks (QMF, etc.) where a full bandwidth signal gets split into several subbands which are then individually downsampled. The goal in this setting is that adding up these downsampled subbands after upsampling them again gives the original signal back (verify!). So, with 2 subbands, the processing pipeline would be
 
-          |---1-d[n]---> D2 
+          |---1-d[n]-- -> D2 
  input ---|                   ....not sure....finish this picture - and be better at ASCII art
-          |----d[n]----> D2
+          |----d[n]--- -> D2
 
 - Explain that for a given fixed u, the problem of designing a corresponding partner kernel d is constrained linear optimization problem (with (linear)) equality constraints, I think. 
 

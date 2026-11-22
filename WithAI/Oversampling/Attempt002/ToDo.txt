@@ -1,4 +1,13 @@
 
+Open tasks that we have (sort of) scheduled:
+
+- Doing the same thing as in search_pair for the matched u = d case. Obviously, there we don not 
+  need to do a sub-search for the optimal length-split because the split is always N_U = N_D. Maybe
+  it should be called search_matched. ...although, I'm not sure, if "matched" is the best word for
+  it. Maybe "equal", "single", ... could be better? Because "matched" can be understood in different
+  ways. For example, we want to find a "matched" d for a given u. The word does not necessarily 
+  imply that both filters are equal. Maybe "single" is good because it's nice counterpart to "pair".
+
 ----------------------------------------------------------------------------------------------------
 I think, this is now obsolete. Minimax optimization has been added already.
 
@@ -35,14 +44,16 @@ d kernels and explored them myself manually. Maybe these could be integrated int
 too. -> Look up these experiments.
 
 ----------------------------------------------------------------------------------------------------
+Documentation:
 
-Maybe the docs folder should get another file like "reference.md" that gives a complete reference 
-over all the functions that client code is supposed to call together with their input parameters and
-return values and an explanation of their purpose. But I think, that may be redundant with the 
-already existing docstrings of the functions. Maybe a somewhat shorter description should go into
-the reference and point to the docstrings for more details.
+- Maybe the docs folder should get another file like "reference.md" that gives a complete reference 
+  over all the functions that client code is supposed to call together with their input parameters 
+  and return values and an explanation of their purpose. But I think, that may be redundant with the 
+  already existing docstrings of the functions. Maybe a somewhat shorter description should go into
+  the reference and point to the docstrings for more details.
 
 ----------------------------------------------------------------------------------------------------
+API
 
 In spec.py, it lists the conventions used in the library. It says:
 
@@ -60,6 +71,8 @@ but even knowing that, it's still weird. Look up what standard Python DSP librar
 follow that. Or maybe try to figure out the reason for this inconsistent convention. Maybe there's a
 good reason for it that I don't see. And/or: Maybe request a code review in a new session or better:
 Request multiple reviews from different models. Maybe they will also flag that inconsistency?
+
+- Maybe rename the "grid" objective to something more descriptive.
 
 ----------------------------------------------------------------------------------------------------
 
@@ -179,3 +192,25 @@ Misc Questions:
   this means that u and d can have either both odd lengths or both even lengths. I think, so far we 
   have explored only the cases where both were odd. Could even lengths give advantages? Or are 
   they actually also disallowed by further constraints?
+  
+- Are there any situations in which a filter pair optimized for stopband energy rather than maximum
+  rejection (minimax) is more desirable? Maybe when the signals are expected to be noisy rather than
+  a mix of sinusoids?
+
+- Can the inner optimizer be optimized in terms of computational efficiency? We have two solver 
+  methods: KKT and nullspace. The latter one is the more robust one but maybe KKT is faster? Could 
+  we still use KKT in the iteration? Are there yet other methods we could try? Does the matrix have
+  any special features that we could exploit? Is there even a matrix in the optimization problem? 
+  The KKT and nullspace methods were for designing a partner d when u is fixed, I think. That's not 
+  the situation that we deal with in the optimizer that searches for the best pair, I think.
+
+- Is a Kaiser sinc actually a good choice for the starting point of the (joint minimax) optimization
+  or could another design method reach a better local optimum, ideally the global optimum? What 
+  other methods could we try? Other windows, obviously. But which ones? I think, we want a window 
+  that has a parameter that controls the sidelobe attenuation. What about Dolph-Chebychev? It has 
+  also adjustable stopband ripple (just like Kaiser via the beta parameter). We could use chebwin()
+  from SciPy. What about a standard optimized FIR design method?
+
+- Try to find a better name. Ideas:
+  -ResamplerPRO: Resampler for Perfect Reconstruction Oversampling
+  -PROFIR

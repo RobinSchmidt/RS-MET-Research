@@ -26,7 +26,7 @@ Research
 
 Claude answered affirmatively and explained to me that the condition for perfect reconstruction, i.e. a lossless upsampling-downsampling roundtrip, is that the convolution product `h[n] = u[n] * d[n]`  of the upsampling and downsampling kernels u and d respectively must be a "Nyquist(L) filter" where L is the desired oversampling factor and the Nyquist(L) condition means that the center sample must be 1 and every sample that is a multiple of L away from the center must be 0. We assume an odd filter length for h here such that there exists a center sample. 
 
-If we start with `u[n]` given, for example produced by a standard method such as a windowed sinc design, finding a corresponding partner kernel `d[n]` is a constrained linear optimization problem ...TBC...
+If we start with `u[n]` given, for example produced by a standard method such as a windowed sinc design, finding a corresponding partner kernel `d[n]` is a constrained linear optimization problem. The constraints are embodied in the required Nyquist-L condition and the optimization objective is the frequency response of the filter. ...TBC...
 
 
 <!--

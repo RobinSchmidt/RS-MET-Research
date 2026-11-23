@@ -1,5 +1,5 @@
 """Build the shortest pairs for bump caps 0 / +0.1 / +0.2 dB (0.85 / 60 dB, L = 4) and save them as .npz in CAPS.
-Takes about 30 minutes (the +0.1 dB adaptive fine search on two cores).  Then run plot_bump_caps.py."""
+Takes about an hour (two adaptive fine searches on two cores).  Then run plot_bump_caps.py."""
 import os, sys
 CAPS = sys.argv[1] if len(sys.argv) > 1 else "bump_caps_data"
 os.makedirs(CAPS, exist_ok=True)
@@ -16,3 +16,5 @@ for name, cap, nu, nd in (("cap0.0", 0.0, 107, 183), ("cap0.2", 0.2, 103, 171)):
 fp = ps.search_pair(L, P, A, transition_max_db=0.1, resolution="fine", strategy="adaptive", n_jobs=2)
 save("cap0.1", fp)
 print("DONE", fp.info["search"]["elapsed_s"], len(fp.info["search"]["table"]), flush=True)
+fp = ps.search_pair(L, P, A, transition_max_db="ripple", resolution="fine", strategy="adaptive", n_jobs=2)      # cap = ripple / 2
+save("cap_ripple", fp)

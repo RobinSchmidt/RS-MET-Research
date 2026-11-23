@@ -153,7 +153,8 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
     """
     Shortest (total taps) pair meeting ``atten_db`` with passband ripple at most ``ripple_factor`` times (+2 % for the
     difference between the LP's grid and the metrics grid) that of the plain
-    ``design_pair(L, passband, atten_db)`` and, if given, a transition cap ``transition_max_db`` (dB, both filters).
+    ``design_pair(L, passband, atten_db)`` and, if given, a transition cap ``transition_max_db`` (dB, both filters; ``"ripple"``: half the reference ripple, i.e. the bump may not
+    exceed the gain that the passband ripple reaches anyway).
 
     Parameters
     ----------
@@ -225,6 +226,10 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
     plain = design_pair(L, passband, atten_db)
     mp = plain.metrics()
     r_ref = ripple_factor * max(mp["u_ripple_db"], mp["d_ripple_db"])
+    if isinstance(transition_max_db, str):
+        if transition_max_db != "ripple":
+            raise ValueError('transition_max_db must be a number, None or "ripple"')
+        transition_max_db = r_ref / 2                 # the bump may not exceed the gain the passband ripple reaches anyway
     total0 = plain.n_u + plain.n_d
     first = total0 if start_total is None else int(start_total)
     if (total0 - first) % length_step or first > total0:

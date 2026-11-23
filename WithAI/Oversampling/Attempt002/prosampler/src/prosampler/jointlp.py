@@ -57,9 +57,11 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
     shape : TransitionShape, optional
         Prescribed roll-off of both filters in the transition band (see :mod:`prosampler.transition`), as a tube of
         half-width ``shape.tol`` around ``u_target`` / ``d_target``.  ``None``: no transition constraint.
-    transition_max_db : float, optional
+    transition_max_db : float or "ripple", optional
         Cap on the gain of each filter between the passband and stopband edges, relative to its DC gain (``0`` = no
-        overshoot at all).  Elastic like the tube: a start that violates it is allowed and driven into the cap.
+        overshoot at all).  Elastic like the tube: a start that violates it is allowed and driven into the cap.  ``"ripple"``: the cap
+        is half the allowed peak-to-peak passband ripple (``ripple_db / 2``), i.e. the bump may not exceed the gain that the
+        passband ripple reaches anyway.
     iterations : int
         Maximum number of SLP iterations (each is one LP of a few seconds for kernels of a few hundred taps).
     trust : float
@@ -122,7 +124,7 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
     Au_p, Ad_p = _amp_matrix(n_u, w_pass, Su), _amp_matrix(n_d, w_pass, Sd)
     Au_t, Ad_t = _amp_matrix(n_u, w_tr, Su), _amp_matrix(n_d, w_tr, Sd)
     elastic = True                                   # slack xi: ripple, cap and tube are elastic (a start may violate them)
-    gmax = None if transition_max_db is None else 10 ** (transition_max_db / 20)
+    gmax = None
     if shape is not None:
         tu, td = shape.u_target(x_tr), shape.d_target(x_tr)
 
@@ -146,6 +148,11 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
     if ripple_db is None:
         ripple_db = max(2 * ripple_of(a, b), 1e-3)
     lo, hi = 10 ** (-ripple_db / 40), 10 ** (ripple_db / 40)          # peak-to-peak ripple_db, like metrics()
+    if isinstance(transition_max_db, str):
+        if transition_max_db != "ripple":
+            raise ValueError('transition_max_db must be a number, None or "ripple"')
+        transition_max_db = ripple_db / 2          # the bump may not exceed the gain the passband ripple reaches anyway
+    gmax = None if transition_max_db is None else 10 ** (transition_max_db / 20)
     _ru, _rd = Au_p @ a / L, Ad_p @ b
     # ripple rows are hard if the start satisfies them, elastic (driven down to the bound) if it does not
     rip_soft = 1.0 if ripple_of(a, b) > 1.05 * ripple_db else 0.0          # (5 % slack: LP grid vs metrics grid)

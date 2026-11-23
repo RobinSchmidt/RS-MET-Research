@@ -4,7 +4,7 @@ CAPS = sys.argv[1] if len(sys.argv) > 1 else "bump_caps_data"
 import os, numpy as np, matplotlib
 matplotlib.use("Agg"); import matplotlib.pyplot as plt, prosampler as ps
 L, P = 4, 0.85
-names = [("plain", "plain pair (314 taps)", "0.6"), ("cap0.2", "cap +0.2 dB", "C0"), ("cap0.1", "cap +0.1 dB", "C2"), ("cap0.0", "cap 0 dB", "C3")]
+names = [("plain", "plain pair (314 taps)", "0.6"), ("cap0.2", "cap +0.2 dB", "C0"), ("cap0.1", "cap +0.1 dB", "C2"), ("cap_ripple", "cap ripple/2 = +0.008 dB", "C1"), ("cap0.0", "cap 0 dB", "C3")]
 sets = []
 for k, lab, col in names:
     f = CAPS + f"/{k}.npz"

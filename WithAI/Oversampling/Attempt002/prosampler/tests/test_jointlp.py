@@ -120,3 +120,12 @@ def test_search_pair_rescue_starts_are_tried_and_recorded():
     assert any(r["start_db"] != 0.0 for r in s["table"])               # the scan ends in a failing round, which is rescued
     m = fp.metrics()
     assert max(m["u_stop_db"], m["d_stop_db"]) <= -ATT + 1e-6
+
+
+def test_transition_cap_ripple_option(base, r0):
+    j = ps.optimise_joint_slp(base, iterations=10, transition_max_db="ripple", ripple_db=2 * r0)
+    assert j.info["slp"]["transition_max_db"] == pytest.approx(r0)             # cap = ripple_db / 2
+    with pytest.raises(ValueError):
+        ps.optimise_joint_slp(base, iterations=1, transition_max_db="bump")
+    with pytest.raises(ValueError):
+        ps.search_pair(L, P, ATT, transition_max_db="bump", progress=False)

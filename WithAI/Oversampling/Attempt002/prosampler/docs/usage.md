@@ -216,6 +216,8 @@ neighbouring candidates scatter by a few dB.
   longer for long kernels (high attenuation, passband near Nyquist). **`n_jobs`** (`-1` = all cores) runs the candidates of a
   round in parallel and divides the time by about the number of cores.
 
+**Bump cap.** `transition_max_db` bounds the gain of both filters between the passband and stopband edges, relative to their DC gain (`0` = no overshoot). `transition_max_db="ripple"` sets it to half the allowed peak-to-peak passband ripple (the reference ripple in `search_pair`, `ripple_db` in `optimise_joint_slp`): the bump may then not exceed the gain that the passband ripple reaches anyway.
+
 **Strategy.** `strategy="scan"` (default) descends from the plain length round by round. `strategy="adaptive"` treats the best
 stopband peak at a total length as a nearly linear function of the length: it probes one length (about 12 % shorter than the plain
 pair, full split scan), then jumps by secant steps to where the line reaches the specification (0.3 dB margin), keeps a bracket

@@ -145,3 +145,9 @@ def test_best_pair_for_length():
         ps.best_pair_for_length(L, P, 75, progress=False)
     with pytest.raises(ValueError):
         ps.best_pair_for_length(L, P, 74, split_step=3, progress=False)
+
+
+def test_search_pair_absolute_ripple():
+    fp = ps.search_pair(L, P, ATT, resolution="coarse", ripple_db=0.2, transition_max_db="ripple", max_rounds=1, progress=False)
+    s = fp.info["search"]
+    assert s["ripple_ref_db"] == pytest.approx(0.2) and s["transition_max_db"] == pytest.approx(0.1)

@@ -150,7 +150,7 @@ def _adaptive(plain, first, total0, length_step, split_step, span, win, max_roun
     return best if best is not None else plain
 
 
-def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=None, ripple_factor: float = 1.0,
+def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=None, ripple_factor: float = 1.0, ripple_db: float | None = None,
                 resolution: str = "medium", length_step=None, split_step=None, split_span=None, iterations=None,
                 window="preset", max_rounds=None, start_total=None, strategy: str = "scan", rescue=(-6.0, 6.0), rescue_top: int = 3, n_jobs: int = 1, progress=True):
     """
@@ -190,6 +190,8 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
         Typically 2-3x fewer configurations than ``"scan"`` (the final answer is verified by the failing neighbour).
         Because outcomes scatter by a few dB between neighbours (local optima) the result can differ from ``"scan"`` by
         one length step.  ``max_rounds`` limits the number of probed lengths.
+    ripple_db : float, optional
+        Absolute allowed peak-to-peak passband ripple in dB (overrides ``ripple_factor``), e.g. ``0.1``.
     rescue : sequence of float
         Extra starts for a *failing* length.  When no candidate of a round meets the specification, the ``rescue_top``
         best candidates are rerun with the Kaiser window of the starting ``u`` designed for ``atten_db + delta`` dB, for each
@@ -228,7 +230,7 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
 
     plain = design_pair(L, passband, atten_db)
     mp = plain.metrics()
-    r_ref = ripple_factor * max(mp["u_ripple_db"], mp["d_ripple_db"])
+    r_ref = ripple_factor * max(mp["u_ripple_db"], mp["d_ripple_db"]) if ripple_db is None else float(ripple_db)
     if isinstance(transition_max_db, str):
         if transition_max_db != "ripple":
             raise ValueError('transition_max_db must be a number, None or "ripple"')

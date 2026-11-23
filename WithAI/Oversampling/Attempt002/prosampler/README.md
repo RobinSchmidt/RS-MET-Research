@@ -1,12 +1,8 @@
-# prosampler (Perfect Reconstruction OverSampler)
 
-Design of FIR up/down-sampling filter pairs for **perfect-reconstruction oversampling**. Consider the following signal processing pipeline:
 
 ```
-input -> zero-stuff by L -> filter by u -> nonlinear processing -> filter by d -> keep every L-th sample -> output
 ```
 
-If we remove the nonlinear processing from this pipeline (i.e. replace it by the identity function), the output should equal the input (delayed by `latency` samples) up to floating-point roundoff errors. This holds iff the convolution product of the two filter kernels `h = u * d` is a Nyquist(L) filter: `h[L*latency + L*k] = delta[k]`. In words: The middle sample of `h` is 1 and the samples that are integer multiples of `L` away from the middle are 0. In a real setup, the processing could be a waveshaper, for example.
 
 ## Status
 

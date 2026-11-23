@@ -216,6 +216,14 @@ neighbouring candidates scatter by a few dB.
   longer for long kernels (high attenuation, passband near Nyquist). **`n_jobs`** (`-1` = all cores) runs the candidates of a
   round in parallel and divides the time by about the number of cores.
 
+**Best pair for a given length.** `search_pair` finds the shortest length for a required attenuation. The opposite question - the best
+stopband for a *given* total length - is answered by `best_pair_for_length(L, passband, total, ripple_db=0.05, transition_max_db="ripple", n_jobs=2)`.
+It scans the split between `u` and `d` (default: `n_u` from 30 % to 46 % of `total` in steps of `split_step=4`, then the two
+neighbours of the best at half the step), optimises every candidate with the SLP at the given ripple and bump cap, and returns the best pair;
+`info["best_for_length"]["table"]` lists all candidates. `total - 2` must be a multiple of `2 L`. `atten_db` (default 60) only shapes the starting
+designs and the reference ripple if `ripple_db` is omitted. Each candidate takes about a minute at ~300 taps. Neighbouring splits scatter by 1-2 dB (local optima), so
+the result is the best *found*. Example: 0.85 passband, L = 4, 290 taps, 0.05 dB ripple, cap ripple/2: -66.2 dB at 109/181 (14 candidates, 11 min on 2 cores).
+
 **Bump cap.** `transition_max_db` bounds the gain of both filters between the passband and stopband edges, relative to their DC gain (`0` = no overshoot). `transition_max_db="ripple"` sets it to half the allowed peak-to-peak passband ripple (the reference ripple in `search_pair`, `ripple_db` in `optimise_joint_slp`): the bump may then not exceed the gain that the passband ripple reaches anyway.
 
 **Strategy.** `strategy="scan"` (default) descends from the plain length round by round. `strategy="adaptive"` treats the best

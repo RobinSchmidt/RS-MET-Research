@@ -129,3 +129,19 @@ def test_transition_cap_ripple_option(base, r0):
         ps.optimise_joint_slp(base, iterations=1, transition_max_db="bump")
     with pytest.raises(ValueError):
         ps.search_pair(L, P, ATT, transition_max_db="bump", progress=False)
+
+
+def test_best_pair_for_length():
+    ev = []
+    fp = ps.best_pair_for_length(L, P, 74, ripple_db=0.05, atten_db=ATT, transition_max_db="ripple", split_step=8,
+                                 iterations=10, progress=ev.append)
+    b = fp.info["best_for_length"]
+    assert fp.n_u + fp.n_d == 74 and ev and len(b["table"]) == len(ev)
+    assert b["transition_max_db"] == pytest.approx(0.025)
+    m = fp.metrics()
+    assert m["nyquist_error"] < 1e-13
+    assert max(m["u_stop_db"], m["d_stop_db"]) == pytest.approx(min(r["worst_db"] for r in b["table"]))
+    with pytest.raises(ValueError):
+        ps.best_pair_for_length(L, P, 75, progress=False)
+    with pytest.raises(ValueError):
+        ps.best_pair_for_length(L, P, 74, split_step=3, progress=False)

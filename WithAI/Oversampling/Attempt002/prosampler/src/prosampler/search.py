@@ -33,6 +33,7 @@ from __future__ import annotations
 import os
 import sys
 import time
+import warnings
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 from .design import design_pair
@@ -62,7 +63,9 @@ def _run_candidate(args):
     """One configuration (module level so that it can run in a worker process)."""
     L, passband, atten_db, n_u, n_d, r_ref, cap, iterations, start_db = args
     try:
-        start = design_pair(L, passband, atten_db + start_db, n_u=n_u, n_d=n_d, objective="minimax")      # start_db shifts u's Kaiser beta
+        with warnings.catch_warnings():                 # the plain starting points rarely meet the spec; that is expected
+            warnings.simplefilter("ignore", UserWarning)
+            start = design_pair(L, passband, atten_db + start_db, n_u=n_u, n_d=n_d, objective="minimax")      # start_db shifts u's Kaiser beta
         fp = optimise_joint_slp(start, ripple_db=r_ref, transition_max_db=cap, iterations=iterations)
     except ProsamplerError:
         return None
@@ -339,3 +342,118 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
                                resolution=resolution, strategy=strategy, length_step=length_step, split_step=split_step, split_span=span,
                                iterations=iterations, window=win, start_total=first, rescue=tuple(rescue), rescue_top=rescue_top, elapsed_s=time.time() - t0)
     return best
+
+
+def best_pair_for_length(L: int, passband: float, total: int, *, ripple_db: float | None = None, ripple_factor: float = 1.0,
+                         atten_db: float = 60.0, transition_max_db=None, split_step: int = 4, split_span=None,
+                         refine: bool = True, iterations: int = 30, n_jobs: int = 1, progress=True):
+    """
+    Best stopband rejection for a *given* total length: scan the split between ``u`` and ``d``.
+
+    The counterpart of :func:`search_pair` (which finds the shortest length for a given attenuation).  Every candidate
+    ``(n_u, total - n_u)`` is a Kaiser-sinc ``u`` with its minimax partner, refined by :func:`~prosampler.optimise_joint_slp`
+    at the given ripple and bump cap; the pair with the lowest worst stopband peak is returned.
+
+    Parameters
+    ----------
+    L, passband : int, float
+        Oversampling factor and passband edge (fraction of the original Nyquist frequency).
+    total : int
+        Total number of taps ``n_u + n_d``.  A centred pair needs ``total - 2`` to be a multiple of ``2 L``.
+    ripple_db : float, optional
+        Allowed peak-to-peak passband ripple of each filter in dB.  Default: ``ripple_factor`` times the ripple of the plain
+        pair ``design_pair(L, passband, atten_db)``.
+    atten_db : float
+        Attenuation (dB) used to design the starting points (Kaiser beta of ``u``) and, if ``ripple_db`` is not given,
+        the reference ripple.  It does not limit the result; a value near the attenuation you expect to reach is best.
+    transition_max_db : float or "ripple", optional
+        Cap on the gain between the passband and stopband edges (see :func:`~prosampler.optimise_joint_slp`).
+    split_step : int
+        Spacing (even) of the candidate lengths of ``u`` in the first scan.
+    split_span : (int, int), optional
+        Range of candidate ``n_u``.  Default: 30-46 % of ``total`` (the best split was at ~37 % in all cases tested).
+    refine : bool
+        After the first scan, also try the neighbours of the best ``n_u`` at half the step.
+    iterations, n_jobs, progress :
+        As in :func:`search_pair`.
+
+    Returns
+    -------
+    FilterPair
+        The best pair found; ``info["best_for_length"]`` holds the table of all candidates (``n_u``, ``n_d``,
+        ``worst_db``, ``bump_db``, ``ripple_db``), ``ripple_db``, ``transition_max_db``, ``total`` and ``elapsed_s``.
+        Local optima scatter the result by 1-2 dB between neighbouring splits, so this is the best *found*.
+    """
+    if total < 4 * L + 2 or (total - 2) % (2 * L) != 0:
+        raise ValueError(f"total must satisfy (total - 2) % (2 L) == 0 and be at least 4 L + 2, got {total} for L = {L}")
+    if split_step < 2 or split_step % 2:
+        raise ValueError("split_step must be an even integer >= 2")
+    if n_jobs == -1:
+        n_jobs = os.cpu_count() or 1
+    if ripple_db is None:
+        mp = design_pair(L, passband, atten_db).metrics()
+        ripple_db = ripple_factor * max(mp["u_ripple_db"], mp["d_ripple_db"])
+    cap = ripple_db / 2 if isinstance(transition_max_db, str) and transition_max_db == "ripple" else transition_max_db
+    if isinstance(cap, str):
+        raise ValueError('transition_max_db must be a number, None or "ripple"')
+    lo, hi = (int(0.30 * total), int(0.46 * total)) if split_span is None else split_span
+    lo = max(lo, 2 * L + 1)
+    hi = min(hi, total - (2 * L + 1))
+
+    def odd_grid(a, b, step):
+        first = a if a % 2 == 1 else a + 1
+        return list(range(first, b + 1, step))
+
+    pool = ProcessPoolExecutor(max_workers=n_jobs) if n_jobs > 1 else None
+    t0, table, done, planned = time.time(), [], 0, [0]
+
+    def run(cands):
+        nonlocal done
+        args = [(L, passband, atten_db, n_u, total - n_u, ripple_db, cap, iterations, 0.0) for n_u in cands]
+        if pool is None:
+            results = ((c, _run_candidate(a)) for c, a in zip(cands, args))
+        else:
+            futs = {pool.submit(_run_candidate, a): c for c, a in zip(cands, args)}
+            results = ((futs[f], f.result()) for f in as_completed(futs))
+        best = None
+        for n_u, res in results:
+            done += 1
+            elapsed = time.time() - t0
+            eta = elapsed / done * max(planned[0] - done, 0)
+            if res is None:
+                continue
+            fp, worst, bump, _, rip = res
+            table.append(dict(n_u=n_u, n_d=total - n_u, worst_db=worst, bump_db=bump, ripple_db=rip))
+            info = dict(done=done, planned=planned[0], elapsed=elapsed, eta=eta, n_u=n_u, n_d=total - n_u,
+                        worst_db=worst, bump_db=bump, ripple_db=rip)
+            if callable(progress):
+                progress(info)
+            elif progress:
+                print(f"[{done:3d} of {planned[0]} | {_fmt_time(elapsed)} elapsed | ~{_fmt_time(eta)} left] "
+                      f"total {total} split {n_u}/{total - n_u}: worst {worst:.1f} dB, bump {bump:+.3f} dB, ripple {rip:.4f} dB",
+                      file=sys.stderr, flush=True)
+            if best is None or worst < best[1]:
+                best = (fp, worst, n_u)
+        return best
+
+    try:
+        first = odd_grid(lo, hi, split_step)
+        planned[0] = len(first) + (2 if refine else 0)
+        best = run(first)
+        if refine and best is not None:
+            half = split_step // 2
+            extra = [n for n in (best[2] - half, best[2] + half) if lo <= n <= hi and n % 2 == 1 and n not in first]
+            planned[0] = done + len(extra)
+            if extra:
+                b2 = run(extra)
+                if b2 is not None and b2[1] < best[1]:
+                    best = b2
+    finally:
+        if pool is not None:
+            pool.shutdown()
+    if best is None:
+        raise ProsamplerError("no candidate could be designed for this total length and split range")
+    fp = best[0]
+    fp.info["best_for_length"] = dict(table=table, ripple_db=ripple_db, transition_max_db=cap, total=total,
+                                      split_step=split_step, split_span=(lo, hi), iterations=iterations, elapsed_s=time.time() - t0)
+    return fp

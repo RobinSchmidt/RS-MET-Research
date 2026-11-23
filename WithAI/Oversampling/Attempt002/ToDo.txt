@@ -202,14 +202,20 @@ Misc Questions:
   we still use KKT in the iteration? Are there yet other methods we could try? Does the matrix have
   any special features that we could exploit? Is there even a matrix in the optimization problem? 
   The KKT and nullspace methods were for designing a partner d when u is fixed, I think. That's not 
-  the situation that we deal with in the optimizer that searches for the best pair, I think.
+  the situation that we deal with in the optimizer that searches for the best pair, I think. What 
+  about writing the inner loop core in C or C++? But I guess, that's not the problem because then 
+  code is supposedly already vectorized and Python is just the high level orchestrator (verify 
+  that!).
 
 - Is a Kaiser sinc actually a good choice for the starting point of the (joint minimax) optimization
   or could another design method reach a better local optimum, ideally the global optimum? What 
   other methods could we try? Other windows, obviously. But which ones? I think, we want a window 
   that has a parameter that controls the sidelobe attenuation. What about Dolph-Chebychev? It has 
   also adjustable stopband ripple (just like Kaiser via the beta parameter). We could use chebwin()
-  from SciPy. What about a standard optimized FIR design method?
+  from SciPy. What about a standard optimized FIR design method? I think, the Kaiser window 
+  minimizes the stopband energy which seems to be in line with the energy optimization objective. 
+  But what we usually want is the minimax objective. For that, maybe a Dolph-Chebychev window might 
+  be a more appropriate starting point?
 
 - Do an exhaustive literature research for prior art. Is this method novel?
 

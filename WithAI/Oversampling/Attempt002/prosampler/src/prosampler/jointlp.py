@@ -69,7 +69,7 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
     ripple_db : float, optional
         Allowed peak-to-peak passband ripple of each filter in dB (as reported by ``metrics()``).  Default: twice the
         start's ripple, at least 0.001 dB.  Looser values let the optimiser trade flatness for stopband attenuation.
-        The bound is elastic: a start that exceeds it is driven down to it only if ``tube_weight`` is large (e.g. 100); with the default weight the optimiser may keep part of the excess in exchange for stopband attenuation.
+        The bound is elastic: a start that exceeds it (by more than 5 %) is driven down to it, with a violation weight 100 times that of the tube and the cap.
     tube_weight : float
         Weight of the elastic tube violation against the stopband peak in the LP objective and the acceptance test.
     min_improve : float
@@ -133,7 +133,7 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
 
     def tube_violation(a_, b_):
         ru, rd = Au_p @ a_ / L, Ad_p @ b_
-        v = max(ru.max() - hi, lo - ru.min(), rd.max() - hi, lo - rd.min())          # passband ripple excess
+        v = 100 * max(ru.max() - hi, lo - ru.min(), rd.max() - hi, lo - rd.min())          # passband ripple excess (weighted x100)
         if shape is not None:
             dev = max(np.max(np.abs(Au_t @ a_ / L - tu)), np.max(np.abs(Ad_t @ b_ - td)))
             v = max(v, dev - shape.tol)
@@ -155,7 +155,7 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
     gmax = None if transition_max_db is None else 10 ** (transition_max_db / 20)
     _ru, _rd = Au_p @ a / L, Ad_p @ b
     # ripple rows are hard if the start satisfies them, elastic (driven down to the bound) if it does not
-    rip_soft = 1.0 if ripple_of(a, b) > 1.05 * ripple_db else 0.0          # (5 % slack: LP grid vs metrics grid)
+    rip_soft = 0.01 if ripple_of(a, b) > 1.05 * ripple_db else 0.0          # (5 % slack: LP grid vs metrics grid)
 
     def merit(a_, b_):
         return max(peaks(a_, b_)) + tube_weight * tube_violation(a_, b_)

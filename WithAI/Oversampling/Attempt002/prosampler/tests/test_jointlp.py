@@ -91,7 +91,7 @@ def test_search_pair_argument_checks():
 
 
 def test_slp_ripple_bound_is_elastic(base, r0):
-    j = ps.optimise_joint_slp(base, iterations=20, ripple_db=0.6 * r0, tube_weight=100)   # start violates the bound: driven down (needs a heavy weight)
+    j = ps.optimise_joint_slp(base, iterations=20, ripple_db=0.6 * r0)   # start violates the bound: driven down
     m = j.metrics()
     assert max(m["u_ripple_db"], m["d_ripple_db"]) < r0 * 0.8
     assert m["nyquist_error"] < 1e-13

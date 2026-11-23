@@ -1,9 +1,9 @@
 # prosampler (Perfect Reconstruction OverSampler)
 
-Design of FIR up/down-sampling filter pairs for **perfect-reconstruction oversampling**.
+Design of FIR up/down-sampling filter pairs for **perfect-reconstruction oversampling**. Consider the following signal processing pipeline
 
 ```
-input -> zero-stuff by L -> u -> [processing, e.g. a waveshaper] -> d -> keep every L-th sample -> output
+input -> zero-stuff by L -> filter by u -> [processing, e.g. a waveshaper] -> filter by d -> keep every L-th sample -> output
 ```
 
 If the processing is the identity, the output equals the input (delayed by `latency` samples) up to

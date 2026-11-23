@@ -41,7 +41,7 @@ ToDo:
 
 - Explain that for a given fixed u, the problem of designing a corresponding partner kernel d is constrained linear optimization problem (with (linear)) equality constraints, I think. 
 
-- Explain the design "pipeline"
+- Explain the design "pipeline" (see chat session 1)
 
 - Explain the two methods to solve the constrained linear optimization problem (KKT, null-space). I think, the null-space method is preferable and the KKT method exists only because a previous session produced it but it turned out to be actually inferior due to numerical instability (verify!)
 

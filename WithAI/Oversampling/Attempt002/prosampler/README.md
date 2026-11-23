@@ -1,4 +1,4 @@
-# prosampler
+# prosampler (Perfect Reconstruction OverSampler)
 
 Design of FIR up/down-sampling filter pairs for **perfect-reconstruction oversampling**.
 

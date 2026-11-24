@@ -205,7 +205,8 @@ Misc Questions:
   the situation that we deal with in the optimizer that searches for the best pair, I think. What 
   about writing the inner loop core in C or C++? But I guess, that's not the problem because then 
   code is supposedly already vectorized and Python is just the high level orchestrator (verify 
-  that!).
+  that!). Look also into the algorithms in Attempt003 and Attempt004. I didn't see any mention of 
+  KKT or nullspace there, so maybe it's set another method?
 
 - Is a Kaiser sinc actually a good choice for the starting point of the (joint minimax) optimization
   or could another design method reach a better local optimum, ideally the global optimum? What 

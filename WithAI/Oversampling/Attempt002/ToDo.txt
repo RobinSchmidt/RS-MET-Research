@@ -89,6 +89,7 @@ seem to be very interesting to explore later:
 
 - Item 2: Using a minimax objective. Maybe this will result in equiripple responses that achieve an
   even better stopband attenuation.
+  DONE.
 
 - Item 7: Transition band shaping. Maybe we could prescribe a desired shape for the transition. But
   what shape? In the simplest case, it could just go linearly down from 1 to 0. But we may also try
@@ -99,9 +100,16 @@ seem to be very interesting to explore later:
   what shape it is that (max-flat, lowpass) FIRs typically "want" to produce. Maybe we should look 
   at the Fourier transforms of windowed sincs? I think, the FT of the sinc is just a rectangle, so 
   it should boil down to the FT of the window itself. 
+  DISMISSED
   
 - Item 3: Explore the "Root-Nyquist design" route. I think, this is what Kimi tried in Attempt004.
-  
+
+- Explore the "tail penalty" idea. The idea is that in the search for the shortest length, we start
+  with a given length and re-optimize with a term that penalizes the outermost coeffs of the kernel
+  to drive them to zero. When they are zero, they can be dropped, yielding a shorter kernel obtained
+  from (sort of) continuously shortening the longer one while tracking the optimum. Maybe this could 
+  track an optimum better than what we do now. What exactly do we do now anyway?
+
 
 Here are a couple of my own additional ideas that can be explored further:
 

@@ -121,6 +121,37 @@ freedom), so to reach the same attenuation it needs more taps. Measured for `L =
 So matching saves about 26 % of the coefficient memory but costs about 48 % more multiplications. It pays off only
 when memory, not arithmetic, is the constraint. (Symmetry is exploited for the stored count and not for the multiplies.)
 
+### 4.1 Minimax matched kernel and the shortest matched length (`optimise_matched_slp`, `search_matched`)
+
+The matched problem can be treated like the pair: the zero-phase amplitude of `g` is linear in its symmetric kernel parameters,
+so the stopband peak, a passband ripple bound and a bump cap are linear constraints; only `(g * g)[L k + (N - 1)] = delta[k]`
+is quadratic (linearised at the current feasible point, trust region, LP, Gauss-Newton projection). `optimise_matched_slp` does
+this for one kernel, starting from `optimise_matched` (energy-optimal), and typically gains about 10 dB in peak
+(L = 4, passband 0.8, K = 23: -31.3 -> -41.7 dB; different Kaiser starts end within 0.5 dB of each other).
+
+Two facts that differ from the pair. (1) The passband ripple and the bump are **not** free resources: `A_g(w)^2 + A_g(2 pi / L - w)^2`
+is nearly constant (Nyquist), and for `w` in the passband the second term lies in the stopband, so `A_g^2` is flat to the stopband
+power: ripple and bump of `g` are about 1e-5 dB at -60 dB and the ripple bound and bump cap never become active. (2) There is
+no split to scan, only the length `K` (`N = L K + 1` taps; `L K` even), and the best peak is smooth in `K` (about 1.7 dB per
+`K` at L = 4, passband 0.8; the earlier non-monotone behaviour came from the local energy optimiser, not from the SLP). `search_matched`
+therefore probes one length, jumps by secant steps to the predicted crossing, keeps a bracket and stops when the longest failing
+and shortest passing `K` are one step apart: 6 probes, 3 minutes on two cores for 0.85 / 60 dB (`betas = (2, 4)`, run in parallel).
+
+Result for 0.85 / 60 dB: K = 45 (181 taps) meets -60.5 dB, K = 44 reaches only -58.6 dB. Comparison (stored = coefficients to
+store with symmetry exploited; multiplies per base-rate sample, polyphase, symmetry not exploited; latency in base-rate samples):
+
+| design (L = 4, passband 0.85, 60 dB) | taps | stored coefficients | multiplies per base-rate sample | latency | stopband | ripple | bump |
+|---|---|---|---|---|---|---|---|
+| plain pair `u`, `d` | 99 + 215 | 157 | 312 | 39 | -60.3 dB | 0.016 dB | +1.17 dB |
+| pair, `search_pair` (0.1 dB ripple, cap ripple/2) | 99 + 159 | 129 | 256 | 32 | -62.2 dB | 0.100 dB | +0.05 dB |
+| matched `g`, energy objective (`design_matched`) | 233 | 116 | 462 | 58 | -60.2 dB | | |
+| matched `g`, minimax (`search_matched`, K = 45) | 181 | 90 | 358 | 45 | -60.5 dB | 0.00001 dB | 0.00 dB |
+
+The minimax matched kernel needs 22 % fewer taps than the energy-optimal one (181 against 233) and, against the best pair,
+30 % fewer stored coefficients (90 against 129) but 40 % more multiplies (358 against 256) and 13 samples more latency. So the
+conclusion of the table above stands (matching saves memory, not arithmetic), with a smaller gap in memory and a smaller
+penalty in arithmetic than for the energy-optimal designs.
+
 ## 5. Experimental: joint optimisation, rebalancing, tying
 
 * `optimise_joint`: let `u` and `d` both move, objective `E_stop(u) / L^2 + E_stop(d)` (+ `passband_weight` times the

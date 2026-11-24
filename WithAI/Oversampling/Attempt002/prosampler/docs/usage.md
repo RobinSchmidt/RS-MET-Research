@@ -133,6 +133,23 @@ pair (section 7). The optimisation has local minima, so the result depends on th
 which makes high attenuations (80 dB and more) reachable but slower (minutes). `info["meets_spec"]` says whether the
 target was reached. `L = 2` is not recommended (warns): the problem has no degrees of freedom.
 
+**Minimax matched kernel and the shortest length.** `design_matched` minimises the stopband *energy* (and its spec-driven search is only
+guaranteed to find *a* length that works). For the worst-case stopband use the minimax refinement and the length search:
+
+```py
+g = ps.search_matched(4, 0.85, 60, betas=(2.0, 4.0), n_jobs=2)          # 3 minutes; shortest K found (here 45, 181 taps)
+print(g.latency, g.n_u, g.stored_coeffs, g.macs_per_sample, g.info["search_matched"]["table"][:2])
+fp = ps.optimise_matched_slp(ps.design_matched(4, 0.8, K=20))           # minimax refinement of one length (a few seconds)
+```
+
+`search_matched` has no split to scan, only the length `K` (`N = L K + 1` taps). It probes one length, jumps by secant steps to where
+the stopband (nearly linear in `K`) reaches the specification, keeps a bracket and stops when the longest failing and the shortest
+passing `K` are one step apart. Each probe is an energy-optimal start (`optimise_matched`, per Kaiser `beta` in `betas`, parallel with
+`n_jobs`) followed by `optimise_matched_slp` with the passband ripple bound `ripple_db` (default 0.1 dB) and the bump cap
+`transition_max_db` (default `"ripple"`). For a matched kernel these two bounds never become active: Nyquist forces `A_g^2` flat up to
+the stopband power. Progress lines (or a callable receiving a dict) show each candidate. The result is the shortest length *found*;
+`info["search_matched"]["table"]` lists every candidate. `SpecNotReached` is raised if no length up to `K_max` meets the specification.
+
 ## 6. Experimental: joint optimisation, rebalancing, tying
 
 These work on symmetric centred pairs such as the output of `design_pair`:
@@ -306,7 +323,8 @@ plots.plot_path(equal)                     # stopbands along a rebalance path
 | `Spec(L, passband, atten_db)`, `passband_from_hz` | specification |
 | `kaiser_sinc`, `windowed_sinc`, `design_kaiser_sinc` | starting kernels |
 | `design_pair`, `design_partner` | pair design (steps 1-2) |
-| `design_matched`, `optimise_matched` | matched kernel from scratch |
+| `design_matched`, `optimise_matched` | matched kernel from scratch (energy objective) |
+| `optimise_matched_slp`, `search_matched` | minimax refinement of a matched kernel; shortest matched length for a specification |
 | `optimise_joint`, `rebalance`, `tie` | experimental steps 3-5 |
 | `design_partner_minimax`, `optimise_joint_minimax` | LP-based minimax partner design and alternating joint refinement |
 | `search_pair` | shortest pair found for a specification (length and split search with the SLP) |

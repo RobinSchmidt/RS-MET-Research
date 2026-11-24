@@ -160,6 +160,13 @@ Exchanging `u` and `d` (with a gain fix: new `u = d·L/sum(d)`, new `d = u·sum(
 * **Where the gain comes from:** the best split at a given total has a much **longer `u`** than the plain pair: 314 taps, cap +0.5 dB: `115/199` → −71.7 dB (bump +0.28 dB) vs −60.3 dB for `99/215`; 162 taps (0.8 / 40): `63/99` → −51.1 dB vs −41.9 dB. At the shortest totals the best `u` even exceeds `d` (0.8 / 40, 154 taps: `87/59`, −45 dB at cap +0.2 dB). Neighbouring candidates scatter by a few dB (local optima).
 * **Open:** a finer length / split search (the 60 dB one was coarse), several starts per candidate, lengths and split as optimisation variables, and the same machinery for the matched design (`u = d`).
 
+### 3.8 Minimax matched kernel and the shortest matched length (`optimise_matched_slp`, `search_matched`)
+
+* The matched problem (`u = d = g`) has the same structure as the pair: amplitude of `g` linear in the kernel parameters, only `(g*g)[Lk + N - 1] = delta[k]` quadratic. `optimise_matched_slp` (SLP as in 3.6, one kernel) gains about 10 dB in peak over the energy-optimal start (L = 4, passband 0.8, K = 23: −31.3 → −41.7 dB; Kaiser starts β = 2, 4, 6 end within 0.5 dB).
+* Ripple and bump are **not** resources for a matched kernel: `A_g(w)² + A_g(2π/L − w)²` ≈ const, so `A_g²` is flat up to the stopband power (ripple ≈ 1e-5 dB, bump 0 at −60 dB); the bounds never become active.
+* The best peak is smooth in `K` (≈ 1.7 dB per `K` at L = 4, passband 0.8), so `search_matched` (secant steps + bracket over `K`) needs 6 probes: 0.85 / 60 dB: **K = 45, 181 taps, −60.5 dB** (K = 44: −58.6 dB), 3 min on 2 cores.
+* Comparison at 0.85 / 60 dB (stored coefficients / multiplies per base-rate sample / latency): plain pair 99+215 taps 157 / 312 / 39; `search_pair` pair (0.1 dB, cap ripple/2) 99+159 taps 129 / 256 / 32; energy-optimal matched 233 taps 116 / 462 / 58; **minimax matched 181 taps 90 / 358 / 45**. Matching still saves memory (−30 % stored coefficients against the best pair) at the price of arithmetic (+40 % multiplies) and latency (+13 samples).
+
 ## 4. Pitfalls (things that went wrong or are easy to get wrong)
 
 1. **Exact ≠ good.** `d = δ` is an exact partner of a windowed-sinc `u` (a 61-tap `d` came out exact with ≈ 0 dB stopband). Check `metrics()` / `info["meets_spec"]`.
@@ -213,10 +220,15 @@ src/prosampler/
   design.py     design_pair(L, passband, atten_db, ...)          # steps 1-2
   matched.py    design_matched, optimise_matched (multi-start)   # independent route
   joint.py      optimise_joint, rebalance, tie                   # experimental steps 3-5
+  minimax.py    design_partner_minimax, optimise_joint_minimax   # LP-based minimax
+  jointlp.py    optimise_joint_slp (DEFAULT_RIPPLE_DB)           # simultaneous minimax by SLP
+  transition.py TransitionShape                                  # prescribed roll-off (kept for exploration)
+  search.py     search_pair, best_pair_for_length                # shortest length / best split
+  matchedlp.py  optimise_matched_slp, search_matched             # minimax matched kernel, shortest K
   pair.py       FilterPair (u, d, latency, metrics, verify, swapped, stored_coeffs, macs_per_sample)
   compare.py    compare()      plots.py   plot_responses / plot_kernels / plot_path
 demos/design_and_plot.py   runnable scenario: design from Hz, report, roundtrip check, impulse/step/magnitude plots
-docs/usage.md, docs/theory.md; tests: 62 passing (docs examples are executed by the test suite)
+docs/usage.md, docs/theory.md; tests: 88 passing (docs examples are executed by the test suite)
 ```
 
 Minimal usage:

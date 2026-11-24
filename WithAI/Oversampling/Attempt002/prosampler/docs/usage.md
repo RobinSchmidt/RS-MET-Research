@@ -185,14 +185,14 @@ see `docs/theory.md` section 5).
 ### Shortest pair for a specification
 
 ```py
-best = ps.search_pair(4, 0.8, 40, transition_max_db=0.5, resolution="medium", n_jobs=2)   # minutes to hours
+best = ps.search_pair(4, 0.85, 60, resolution="fine", strategy="adaptive", n_jobs=2)   # defaults: ripple 0.1 dB, bump cap ripple/2; ~15 min
 print(best.n_u, best.n_d, best.stored_coeffs)
 print(best.info["search"]["table"][:3])                          # every candidate tried
 ```
 
 `search_pair` reduces the total length round by round and tries several `u` / `d` splits per length (start: Kaiser-sinc `u`
-+ minimax partner, refined by `optimise_joint_slp` with the passband ripple held at the plain pair's value, +2 % for grid
-differences, and an optional transition cap). It returns the shortest pair found that meets the specification; the plain pair
++ minimax partner, refined by `optimise_joint_slp` with the passband ripple limited to `ripple_db` (default 0.1 dB peak-to-peak, +2 % for grid
+differences) and the bump capped at half the ripple by default, `transition_max_db="ripple"`). It returns the shortest pair found that meets the specification; the plain pair
 is returned if nothing shorter works. The result is the shortest length *found* by a local search, not a proof of optimality;
 neighbouring candidates scatter by a few dB.
 
@@ -223,6 +223,12 @@ neighbours of the best at half the step), optimises every candidate with the SLP
 `info["best_for_length"]["table"]` lists all candidates. `total - 2` must be a multiple of `2 L`. `atten_db` (default 60) only shapes the starting
 designs and the reference ripple if `ripple_db` is omitted. Each candidate takes about a minute at ~300 taps. Neighbouring splits scatter by 1-2 dB (local optima), so
 the result is the best *found*. Example: 0.85 passband, L = 4, 290 taps, 0.05 dB ripple, cap ripple/2: -66.2 dB at 109/181 (14 candidates, 11 min on 2 cores).
+
+**Defaults (ripple 0.1 dB, bump cap ripple/2).** `search_pair`, `best_pair_for_length` and `optimise_joint_slp` allow a passband ripple of
+`ripple_db=0.1` dB peak-to-peak per filter (`ps.DEFAULT_RIPPLE_DB`) and cap the bump at half of it (`transition_max_db="ripple"`). 0.1 dB is far below the audibility
+threshold of about 0.5-1 dB and was the sweet spot of the ripple sweep (`docs/theory.md`). Pass `transition_max_db=None` for no cap and `ripple_db=None` for the older
+behaviour (`search_pair`/`best_pair_for_length`: `ripple_factor` times the plain pair's ripple; `optimise_joint_slp`: twice the start's ripple). Because the ripple
+bound is elastic, a start with more ripple than allowed is driven down to it; a start with less may use the extra.
 
 **Bump cap.** `transition_max_db` bounds the gain of both filters between the passband and stopband edges, relative to their DC gain (`0` = no overshoot). `transition_max_db="ripple"` sets it to half the allowed peak-to-peak passband ripple (the reference ripple in `search_pair`, `ripple_db` in `optimise_joint_slp`): the bump may then not exceed the gain that the passband ripple reaches anyway.
 

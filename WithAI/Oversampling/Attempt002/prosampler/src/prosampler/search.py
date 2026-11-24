@@ -38,7 +38,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 
 from .design import design_pair
 from .errors import ProsamplerError
-from .jointlp import optimise_joint_slp
+from .jointlp import DEFAULT_RIPPLE_DB, optimise_joint_slp
 
 # (length step in units of 2 L, split step, offsets of n_u relative to the plain pair's, SLP iterations, window)
 # window: after the first round only candidates within +-window taps of the previous round's best n_u are tried
@@ -150,14 +150,14 @@ def _adaptive(plain, first, total0, length_step, split_step, span, win, max_roun
     return best if best is not None else plain
 
 
-def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=None, ripple_factor: float = 1.0, ripple_db: float | None = None,
-                resolution: str = "medium", length_step=None, split_step=None, split_span=None, iterations=None,
+def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db="ripple", ripple_factor: float = 1.0,
+                ripple_db: float | None = DEFAULT_RIPPLE_DB, resolution: str = "medium", length_step=None, split_step=None, split_span=None, iterations=None,
                 window="preset", max_rounds=None, start_total=None, strategy: str = "scan", rescue=(-6.0, 6.0), rescue_top: int = 3, n_jobs: int = 1, progress=True):
     """
-    Shortest (total taps) pair meeting ``atten_db`` with passband ripple at most ``ripple_factor`` times (+2 % for the
-    difference between the LP's grid and the metrics grid) that of the plain
-    ``design_pair(L, passband, atten_db)`` and, if given, a transition cap ``transition_max_db`` (dB, both filters; ``"ripple"``: half the reference ripple, i.e. the bump may not
-    exceed the gain that the passband ripple reaches anyway).
+    Shortest (total taps) pair meeting ``atten_db`` with passband ripple at most ``ripple_db`` (default 0.1 dB peak-to-peak; +2 % for the
+    difference between the LP's grid and the metrics grid) and a transition cap ``transition_max_db`` (dB, both filters; default ``"ripple"``: half the
+    ripple, i.e. the bump may not exceed the gain that the passband ripple reaches anyway; ``None``: no cap).  With ``ripple_db=None`` the allowed
+    ripple is ``ripple_factor`` times that of the plain ``design_pair(L, passband, atten_db)``.
 
     Parameters
     ----------
@@ -191,7 +191,7 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
         Because outcomes scatter by a few dB between neighbours (local optima) the result can differ from ``"scan"`` by
         one length step.  ``max_rounds`` limits the number of probed lengths.
     ripple_db : float, optional
-        Absolute allowed peak-to-peak passband ripple in dB (overrides ``ripple_factor``), e.g. ``0.1``.
+        Absolute allowed peak-to-peak passband ripple in dB (default 0.1).  ``None``: ``ripple_factor`` times the plain pair's ripple.
     rescue : sequence of float
         Extra starts for a *failing* length.  When no candidate of a round meets the specification, the ``rescue_top``
         best candidates are rerun with the Kaiser window of the starting ``u`` designed for ``atten_db + delta`` dB, for each
@@ -346,8 +346,8 @@ def search_pair(L: int, passband: float, atten_db: float, *, transition_max_db=N
     return best
 
 
-def best_pair_for_length(L: int, passband: float, total: int, *, ripple_db: float | None = None, ripple_factor: float = 1.0,
-                         atten_db: float = 60.0, transition_max_db=None, split_step: int = 4, split_span=None,
+def best_pair_for_length(L: int, passband: float, total: int, *, ripple_db: float | None = DEFAULT_RIPPLE_DB, ripple_factor: float = 1.0,
+                         atten_db: float = 60.0, transition_max_db="ripple", split_step: int = 4, split_span=None,
                          refine: bool = True, iterations: int = 30, n_jobs: int = 1, progress=True):
     """
     Best stopband rejection for a *given* total length: scan the split between ``u`` and ``d``.
@@ -363,13 +363,14 @@ def best_pair_for_length(L: int, passband: float, total: int, *, ripple_db: floa
     total : int
         Total number of taps ``n_u + n_d``.  A centred pair needs ``total - 2`` to be a multiple of ``2 L``.
     ripple_db : float, optional
-        Allowed peak-to-peak passband ripple of each filter in dB.  Default: ``ripple_factor`` times the ripple of the plain
+        Allowed peak-to-peak passband ripple of each filter in dB.  Default 0.1.  ``None``: ``ripple_factor`` times the ripple of the plain
         pair ``design_pair(L, passband, atten_db)``.
     atten_db : float
         Attenuation (dB) used to design the starting points (Kaiser beta of ``u``) and, if ``ripple_db`` is not given,
         the reference ripple.  It does not limit the result; a value near the attenuation you expect to reach is best.
-    transition_max_db : float or "ripple", optional
-        Cap on the gain between the passband and stopband edges (see :func:`~prosampler.optimise_joint_slp`).
+    transition_max_db : float, "ripple" or None
+        Cap on the gain between the passband and stopband edges (see :func:`~prosampler.optimise_joint_slp`).  Default
+        ``"ripple"`` (half the ripple); ``None``: no cap.
     split_step : int
         Spacing (even) of the candidate lengths of ``u`` in the first scan.
     split_span : (int, int), optional

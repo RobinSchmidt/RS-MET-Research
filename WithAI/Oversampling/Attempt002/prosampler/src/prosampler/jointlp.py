@@ -44,8 +44,11 @@ def _lp(cost, A_ub, b_ub, A_eq, b_eq, bounds):
     return res
 
 
-def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition_max_db=None, iterations: int = 40, trust: float = 0.05,
-                       ripple_db=None, tube_weight: float = 1.0, n_grid: int = 3000, min_improve: float = 1e-4,
+DEFAULT_RIPPLE_DB = 0.1      # default allowed peak-to-peak passband ripple of each filter (dB); inaudible and a good trade-off, see docs/theory.md
+
+
+def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition_max_db="ripple", iterations: int = 40, trust: float = 0.05,
+                       ripple_db=DEFAULT_RIPPLE_DB, tube_weight: float = 1.0, n_grid: int = 3000, min_improve: float = 1e-4,
                        verbose: bool = False):
     """
     Simultaneous joint minimax refinement of a symmetric centred pair, optionally with a prescribed transition shape.
@@ -57,8 +60,8 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
     shape : TransitionShape, optional
         Prescribed roll-off of both filters in the transition band (see :mod:`prosampler.transition`), as a tube of
         half-width ``shape.tol`` around ``u_target`` / ``d_target``.  ``None``: no transition constraint.
-    transition_max_db : float or "ripple", optional
-        Cap on the gain of each filter between the passband and stopband edges, relative to its DC gain (``0`` = no
+    transition_max_db : float, "ripple" or None
+        Default ``"ripple"``.  ``None``: no cap.  Cap on the gain of each filter between the passband and stopband edges, relative to its DC gain (``0`` = no
         overshoot at all).  Elastic like the tube: a start that violates it is allowed and driven into the cap.  ``"ripple"``: the cap
         is half the allowed peak-to-peak passband ripple (``ripple_db / 2``), i.e. the bump may not exceed the gain that the
         passband ripple reaches anyway.
@@ -66,9 +69,9 @@ def optimise_joint_slp(pair, *, shape: TransitionShape | None = None, transition
         Maximum number of SLP iterations (each is one LP of a few seconds for kernels of a few hundred taps).
     trust : float
         Initial trust region as a fraction of the largest coefficient of each kernel.
-    ripple_db : float, optional
-        Allowed peak-to-peak passband ripple of each filter in dB (as reported by ``metrics()``).  Default: twice the
-        start's ripple, at least 0.001 dB.  Looser values let the optimiser trade flatness for stopband attenuation.
+    ripple_db : float or None
+        Allowed peak-to-peak passband ripple of each filter in dB (as reported by ``metrics()``).  Default: 0.1 dB
+        (``DEFAULT_RIPPLE_DB``).  ``None``: twice the start's ripple, at least 0.001 dB.  Looser values let the optimiser trade flatness for stopband attenuation.
         The bound is elastic: a start that exceeds it (by more than 5 %) is driven down to it, with a violation weight 100 times that of the tube and the cap.
     tube_weight : float
         Weight of the elastic tube violation against the stopband peak in the LP objective and the acceptance test.

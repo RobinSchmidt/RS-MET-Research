@@ -44,7 +44,7 @@ def test_split_exponents_multiply_to_the_product():
 
 
 def test_slp_improves_peak_at_equal_ripple_and_stays_exact(base, r0):
-    j = ps.optimise_joint_slp(base, iterations=12, ripple_db=r0)
+    j = ps.optimise_joint_slp(base, iterations=12, ripple_db=r0, transition_max_db=None)
     m = j.metrics()
     assert (j.n_u, j.n_d, j.latency) == (base.n_u, base.n_d, base.latency)
     assert m["nyquist_error"] < 1e-13

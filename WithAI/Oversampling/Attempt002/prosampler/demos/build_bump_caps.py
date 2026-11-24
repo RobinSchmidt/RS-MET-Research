@@ -13,8 +13,8 @@ def save(name, fp):
 for name, cap, nu, nd in (("cap0.0", 0.0, 107, 183), ("cap0.2", 0.2, 103, 171)):
     st = ps.design_pair(L, P, A, n_u=nu, n_d=nd, objective="minimax")
     save(name, ps.optimise_joint_slp(st, ripple_db=r_ref, transition_max_db=cap, iterations=30))
-fp = ps.search_pair(L, P, A, transition_max_db=0.1, resolution="fine", strategy="adaptive", n_jobs=2)
+fp = ps.search_pair(L, P, A, transition_max_db=0.1, ripple_db=None, resolution="fine", strategy="adaptive", n_jobs=2)
 save("cap0.1", fp)
 print("DONE", fp.info["search"]["elapsed_s"], len(fp.info["search"]["table"]), flush=True)
-fp = ps.search_pair(L, P, A, transition_max_db="ripple", resolution="fine", strategy="adaptive", n_jobs=2)      # cap = ripple / 2
+fp = ps.search_pair(L, P, A, transition_max_db="ripple", ripple_db=None, resolution="fine", strategy="adaptive", n_jobs=2)      # cap = ripple / 2
 save("cap_ripple", fp)

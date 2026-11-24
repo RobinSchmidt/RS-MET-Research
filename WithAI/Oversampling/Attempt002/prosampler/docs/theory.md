@@ -211,7 +211,7 @@ and -3.9 / -2.0 dB with cap 0 dB (matched kernels: -3 / -3 dB). Times: 10-40 s (
 
 **Shortest pair for a specification (`search_pair`).** Combining the minimax partner, the simultaneous move and a transition
 cap: for each total length (reduced stepwise from the plain pair's) and several splits `n_u / n_d`, start from a Kaiser-sinc `u`
-of `n_u` taps with its minimax partner and refine with `optimise_joint_slp`, passband ripple held at the plain pair's value.
+of `n_u` taps with its minimax partner and refine with `optimise_joint_slp`, passband ripple held at the plain pair's value (the results below up to the ripple sweep use `ripple_db=None`, i.e. this setting; the library default is now 0.1 dB with a bump cap of ripple/2).
 Results (L = 4; local search, shortest length *found*; MACs per base-rate sample are about the total number of taps):
 
 | passband / spec | plain pair | minimax partner only | joint SLP, cap +0.5 dB | joint SLP, cap +0.2 dB |

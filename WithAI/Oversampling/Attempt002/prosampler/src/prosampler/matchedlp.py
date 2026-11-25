@@ -95,7 +95,7 @@ def optimise_matched_slp(pair, *, transition_max_db="ripple", iterations: int = 
     th = project(th)
     grid = spec.grid(n_grid)
     w_pass, w_stop, w_tr = grid.w[grid.passband], grid.w[grid.stopband], grid.w[grid.transition]
-    w_fine = np.linspace(spec.stopband_edge, np.pi, 8 * n_grid)
+    w_fine = np.linspace(spec.stopband_rad, np.pi, 8 * n_grid)
     A_f, A_p, A_t = (_amp_matrix(N, w, S) for w in (w_fine, w_pass, w_tr))
 
     def peak(t):

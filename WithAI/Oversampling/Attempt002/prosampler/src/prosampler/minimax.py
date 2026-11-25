@@ -88,10 +88,10 @@ def _solve_kernel(other, n_x: int, spec: Spec, n0: int, gain: float, *, transiti
     if transition_max_db is not None and grid.transition.any():
         A_trans = _amp_matrix(n_x, grid.w[grid.transition], T)
         gmax = gain * 10 ** (transition_max_db / 20)
-        wt = np.linspace(spec.passband_edge, spec.stopband_edge, 2 * n_grid)
+        wt = np.linspace(spec.passband_rad, spec.stopband_rad, 2 * n_grid)
         A_trans_fine = _amp_matrix(n_x, wt, T)
 
-    w_fine = np.linspace(spec.stopband_edge, np.pi, 8 * n_grid)
+    w_fine = np.linspace(spec.stopband_rad, np.pi, 8 * n_grid)
     A_fine = _amp_matrix(n_x, w_fine, T)
     cost = np.zeros(nz + 1)
     cost[-1] = 1.0
@@ -175,7 +175,7 @@ def design_partner_minimax(u, spec: Spec, n_taps: int, latency=None, *, transiti
     L, n_d = spec.L, int(n_taps)
     latency, n0 = _check_centred(u, n_d, L, latency)
     if transition_max_db is not None:
-        edge_gain = L / abs(_amp_matrix(len(u), np.array([spec.passband_edge]), np.eye(len(u))) @ u)[0]
+        edge_gain = L / abs(_amp_matrix(len(u), np.array([spec.passband_rad]), np.eye(len(u))) @ u)[0]
         if 10 ** (transition_max_db / 20) < edge_gain * (1 + 1e-4):
             raise ProsamplerError(
                 f"transition_max_db = {transition_max_db} is infeasible: d must already have gain "

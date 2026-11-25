@@ -78,7 +78,7 @@ def kaiser_sinc(L: int, n_taps: int, atten_db: Optional[float] = None, beta: Opt
 
 def design_kaiser_sinc(spec: Spec, gain: Optional[float] = None, max_factor: float = 6.0) -> np.ndarray:
     """
-    Shortest odd-length Kaiser-sinc whose stopband (from ``spec.stopband_edge``) is below ``-spec.atten_db``.
+    Shortest odd-length Kaiser-sinc whose stopband (from ``spec.stopband_rad``) is below ``-spec.atten_db``.
 
     Starts below the Kaiser length estimate and grows in steps of 2.  Raises
     :class:`~prosampler.errors.SpecNotReached` if not met within ``max_factor`` times the estimate.

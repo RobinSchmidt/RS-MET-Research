@@ -31,6 +31,7 @@ from .analysis import band_energy_matrix
 from .errors import ProsamplerError
 from .matched import optimise_matched
 from .pair import FilterPair
+from .spec import Spec
 
 
 class _Joint:
@@ -45,7 +46,7 @@ class _Joint:
         self.n0 = (Nu + Nd - 2) // 2
         self.K = self.n0 // L
         self.Su, self.Sd = mirror_matrix(Nu), mirror_matrix(Nd, drop_ends=True)
-        ws = (2 - passband) * np.pi / L
+        ws = Spec(L, passband).stopband_rad
         self.Qu = self.Su.T @ band_energy_matrix(Nu, ws, np.pi) @ self.Su / L ** 2
         self.Qd = self.Sd.T @ band_energy_matrix(Nd, ws, np.pi) @ self.Sd
         self.mu, self.md = self.Su.shape[1], self.Sd.shape[1]

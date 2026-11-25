@@ -158,9 +158,9 @@ def design_partner(u, spec: Spec, n_taps: int, latency=None, *, method: str = "n
         M = np.vstack(blocks)
         rhs = np.concatenate([rhs[0], rhs[1], *rhs[2:]])
     else:
-        Q = stop_weight ** 2 * band_energy_matrix(n_d, spec.stopband_edge, np.pi)
+        Q = stop_weight ** 2 * band_energy_matrix(n_d, spec.stopband_rad, np.pi)
         if transition_weight > 0:
-            Q = Q + transition_weight ** 2 * band_energy_matrix(n_d, spec.passband_edge, spec.stopband_edge)
+            Q = Q + transition_weight ** 2 * band_energy_matrix(n_d, spec.passband_rad, spec.stopband_rad)
         Qt = T.T @ Q @ T
         r = ridge
         while True:

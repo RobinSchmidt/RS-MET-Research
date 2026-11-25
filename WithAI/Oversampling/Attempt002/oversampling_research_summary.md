@@ -20,7 +20,7 @@ x -> zero-stuff by L -> u -> [nonlinearity f] -> d -> keep every L-th sample -> 
 2. a single matched kernel `g` with `u = d = g` (mainly to save memory in resource-constrained environments);
 3. user-adjustable parameters: oversampling factor `L`, stopband attenuation, passband width.
 
-Conventions: passband is a **fraction of the original Nyquist frequency**; `u` has DC gain `L`, `d` has DC gain 1; latency is counted in base-rate samples.
+Conventions: passband (and the derived stopband = 2 − passband) is a **fraction of the original Nyquist frequency**; numerical code uses the same edges in rad per high-rate sample (`Spec.passband_rad`, `Spec.stopband_rad`); `u` has DC gain `L`, `d` has DC gain 1; latency is counted in base-rate samples.
 
 ## 2. Theory in brief
 

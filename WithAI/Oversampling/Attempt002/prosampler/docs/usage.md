@@ -14,6 +14,17 @@ removed, `y[m] = x[m - latency]` exactly (up to float roundoff) because `u * d` 
 
 Conventions: `passband` is a **fraction of the original Nyquist frequency** (0.9 means 19.8 kHz at 44.1 kHz).
 `u` has DC gain `L`, `d` has DC gain 1. `latency` counts **base-rate** samples.
+The stopband edge is fixed by the Nyquist condition to `stopband = 2 - passband` (same unit). For numerical work,
+e.g. evaluating a response with `ps.freqz`, the same two edges in rad per high-rate sample are `passband_rad` and
+`stopband_rad`:
+
+```python
+import prosampler as ps
+
+spec = ps.Spec(4, 0.85)
+print(spec.stopband)                       # 1.15  (fraction of the original Nyquist frequency)
+print(spec.passband_rad, spec.stopband_rad)   # 0.85*pi/4 and 1.15*pi/4
+```
 
 ## 2. Quick start: a pair for a given specification
 
@@ -106,6 +117,8 @@ assert fp3.info["u_rescaled"] and fp3.nyquist_error < 1e-12
 Solver and objective of the partner design (all four combinations are exact; they differ in the stopband of `d`):
 
 ```python
+import prosampler as ps
+
 spec = ps.Spec(4, 0.85)
 d_ns  = ps.design_partner(u, spec, 215, latency=39)                                  # null-space, grid objective (default)
 d_kkt = ps.design_partner(u, spec, 215, latency=39, method="kkt", objective="energy")  # as in the old KKT script

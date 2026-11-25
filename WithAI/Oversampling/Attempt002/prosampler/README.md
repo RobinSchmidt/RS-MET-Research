@@ -41,10 +41,12 @@ print(ps.compare({"pair": fp, "matched": ps.design_matched(4, 0.85, 60)}))
 
 ## Conventions
 
-* Filters run at the high rate; frequencies are in rad per high-rate sample.
-* `passband` is a fraction of the original Nyquist frequency (0.9 -> 19.8 kHz at 44.1 kHz).
-* The stopband starts at `(2 - passband)`, the mirror image around the original Nyquist frequency
-  (forced by the Nyquist condition).
+* Filters run at the high rate (`L` times the base rate).
+* Design specs are given as fractions of the original Nyquist frequency: `passband` (0.9 -> 19.8 kHz at 44.1 kHz) and the
+  derived `stopband = 2 - passband`, the mirror image around the original Nyquist frequency (forced by the Nyquist
+  condition). `passband_from_hz` converts from Hz.
+* Numerical code (`freqz`, `band_energy_matrix`, frequency grids) uses rad per high-rate sample. The same edges in that
+  unit are `Spec.passband_rad` and `Spec.stopband_rad`.
 * `u` has DC gain `L`, `d` has DC gain 1.
 
 ## Install and test

@@ -31,7 +31,8 @@ Gain convention: `u` has DC gain `L` (it compensates the zero-stuffing), `d` has
 
 ### Consequences
 
-* The stopband of `u` and `d` cannot start before `(2 - passband) * pi / L` (rad per high-rate sample): the passband
+* The stopband of `u` and `d` cannot start before `stopband = 2 - passband` (fractions of the original Nyquist frequency,
+  i.e. `(2 - passband) * pi / L` rad per high-rate sample): the passband
   edge and the stopband edge are mirror images around the original Nyquist frequency. A wider passband needs a
   narrower transition band and therefore longer filters.
 * A windowed-sinc `u` is itself (nearly) Nyquist(L), so `d = delta` is an exact partner: exactness proves nothing

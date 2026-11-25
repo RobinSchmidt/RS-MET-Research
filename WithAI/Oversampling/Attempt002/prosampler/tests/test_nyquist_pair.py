@@ -129,7 +129,7 @@ def test_stopband_measurement_independent_of_grid_size():
     vals = [fp.metrics(n_grid=n)["u_stop_db"] for n in (500, 1000, 4000, 9000)]
     assert max(vals) - min(vals) < 0.05          # the exact band edges are always on the grid
     g = ps.Spec(4, 0.8).grid(777)
-    assert np.any(g.w == ps.Spec(4, 0.8).stopband_edge) and np.any(g.w == ps.Spec(4, 0.8).passband_edge)
+    assert np.any(g.w == ps.Spec(4, 0.8).stopband_rad) and np.any(g.w == ps.Spec(4, 0.8).passband_rad)
 
 
 def test_level_compensation_makes_pair_and_matched_equivalent_for_nonlinearity():

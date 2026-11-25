@@ -7,8 +7,9 @@ from prosampler import (Spec, SpecNotReached, design_kaiser_sinc, kaiser_length_
 
 def test_spec_edges():
     s = Spec(4, 0.9, 80)
-    assert s.passband_edge == pytest.approx(0.9 * np.pi / 4)
-    assert s.stopband_edge == pytest.approx(1.1 * np.pi / 4)
+    assert s.stopband == pytest.approx(1.1)                      # fraction of the original Nyquist frequency
+    assert s.passband_rad == pytest.approx(0.9 * np.pi / 4)
+    assert s.stopband_rad == pytest.approx(1.1 * np.pi / 4)
     assert s.transition_width == pytest.approx(0.2 * np.pi / 4)
 
 

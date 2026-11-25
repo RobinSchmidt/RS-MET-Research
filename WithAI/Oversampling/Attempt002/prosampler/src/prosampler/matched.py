@@ -56,7 +56,7 @@ def optimise_matched(L: int, K: int, passband: float, beta: float = 4.0, g_init=
     idx = (N - 1) + L * np.arange(K)               # the constraint n = K is implied by the zero end taps
     tgt = (np.arange(K) == 0).astype(float)
     S = mirror_matrix(N, drop_ends=True)
-    Qt = S.T @ band_energy_matrix(N, (2.0 - passband) * np.pi / L, np.pi) @ S
+    Qt = S.T @ band_energy_matrix(N, Spec(L, passband).stopband_rad, np.pi) @ S
     mid = (N - 1) // 2
 
     def r(th):

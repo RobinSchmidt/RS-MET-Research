@@ -52,6 +52,12 @@ Documentation:
   already existing docstrings of the functions. Maybe a somewhat shorter description should go into
   the reference and point to the docstrings for more details.
 
+- Maybe when we give the library its won repo, we could add a /notes folder into which we can dump
+  additional .md files such as the research summary. Or maybe it could be put into docs as well.
+  
+- Verify in docs/usage.md if some of the "experimental" stuff can now be lifted into a "ready" 
+  status
+
 ----------------------------------------------------------------------------------------------------
 API
 
@@ -63,8 +69,9 @@ In spec.py, it lists the conventions used in the library. It says:
   at ``passband * pi / L`` (``0 < passband < 1``).  At a base rate of 44.1 kHz, ``passband = 0.9``
   means 19.8 kHz.
 
-That is inconsistent. I think, all frequency-like parameters should be given in the same unit. 
-Either all frequencies are given in 0.. pi or all in 0..1. Look up what conventions comparable 
+That seems to be a bit inconsistent. Shouldn't all frequency-like parameters should be given in the same unit like rither all frequencies are given in 0.. pi or all in 0..1? What do comparable libraries do - in particular the filter design routines from SciPy? Or is one unit for the user facing API and the other just used internally?
+
+Look up what conventions comparable 
 libraries use and maybe mimic that. I think Matlab uses 0..1 or 0..0.5 but the latter would be a bit
 weird. OK - it means "fraction of the sample rate" and 0.5 is the highest possible value for that 
 but even knowing that, it's still weird. Look up what standard Python DSP libraries use and maybe 
@@ -236,4 +243,62 @@ Misc Questions:
   support dropping the inner "prosampler" folder into some sort of "lib/src" folder? Is this 
   standard practice for Python libraries?
   
+- Does the stopband have to be 2-passband? Can we let the user (optionally) set that to something
+  else? For example by passing (..., passband=0.9, stopband=1.05, ...). Would the design then also 
+  support settings like passband=0.9, stopband=1.0 or even  passband=0.8, stopband=0.9 or 
+  passband=1.1, stopband=1.2. Not that I think that such a setting would be practical, though. I 
+  just want to know, if it's possible. 
+  -> Answered at the start of the 3rd session and the answer is: no, the stopband cannot be 
+     meaningfully set independently due to symmetry constraints resulting from the perfect 
+     reconstruction requirement. The relevant part of the answer was:
+  "Nyquist(L) means the images of H = U·D sum to a constant. If H ≈ 1 up to wp and H ≈ 0 from ws (in
+  fractions of the original Nyquist), then H(w) + H(2 - w) = 1 must hold. So the transition band 
+  must be antisymmetric about 1, and only min(1 - wp, ws - 1) is meaningful."
   
+----------------------------------------------------------------------------------------------------
+Summary of open tasks at the end of Session002:
+
+#1 Measure alias suppression with a real waveshaper (tanh, folding) against conventional independently designed filters of equal length. This is the one that would show whether all of this matters in practice.
+
+#3 Root-Nyquist route for the matched case.
+
+#5 Making continuation and tying reliable.
+
+#6 Non-symmetric and low-latency pairs.
+
+#9 Efficient implementation: polyphase, a C++ port, and symmetry in the multiply count.
+
+#10 Pair against matched at equal stored coefficients, not equal length.
+
+#11 Perceptual weighting of stopband regions.
+
+#12 Literature check before publishing any claims.
+
+#13 The tail-penalty idea, added this week and speculative.
+
+
+From our conversation, not in the list
+
+Other specs. The length, ripple and bump studies are all 0.85 / 60 dB, L = 4. Checking 0.9 / 80 dB, and L = 2 and L = 8, would show whether the pattern holds. It overlaps with #8.
+
+Fair plain baseline. The plain 314-tap pair sits at 0.016 dB ripple. A plain pair redesigned at 0.1 dB ripple would be the like-for-like reference. You said you mainly care about shortest-at-given-ripple, so this is optional.
+
+Bump penalty instead of cap. A weight option that traces the whole stopband-against-bump curve in one go. We decided the constraint covers the same designs, so it is low priority.
+
+Warm starts in the searches. Starting each candidate from the previous length’s solution, resampled to the new lengths. I never built it and never measured the gain.
+
+Matched search extras. Specs above 60 dB, L = 8, and whether the multi-start betas ever matter for the matched search.
+
+Tidy-ups. Remove the transition-shape code when we agree it’s a dead end (you said to leave it for now), and make design_matched use the new SLP when you ask for a matched design at a spec.
+
+
+...I think I'd be first interested in warm starts. Maybe we should explore two ways of doing it. 
+First by resampling as suggested. Second by implementing the "tail penalty" idea for a shortening
+step and just zero initialization of the new weights at start and end of the kernel. But I guess, 
+that would only work well for the fine search where we shorten or lengthen by the minimal possible
+amount. I think such warm starts might potentially speed up the whole optimization/search process a
+lot.
+
+I'm skeptical of the "Perceptual weighting" idea. Does that make any sense? We are talking about a 
+frequency range that is typically between 18 and 22+ kHz or something. Or do you mean weighting the 
+frequency components _after_ they have aliased?

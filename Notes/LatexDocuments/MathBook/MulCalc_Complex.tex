@@ -160,6 +160,9 @@ Such a geometric transformation might also be called an \emph{amplitwist}. This 
 
 %From an information theoretic point of view, it makes sense that the Jacobian can only have two degrees of freedom if we assume that we want to encode the derivative in a complex number. And this is precisely what we want to do here: The derivative of some complex function $f$ at some value $z_0$ should just be a complex number, i.e. an object with two degrees of freedom rather than the four which a general, unconstrained Jacobian would have.
 
+% The Cauchy-Riemann Equations – Why a Complex Derivative Only Rotates and Scales
+% https://www.youtube.com/watch?v=MB0np7eJpag
+
 \paragraph{Example} Let's take $f(z) = z^2$ as an example function. Expressing it as $f(x + \i y) = u(x,y) + \i v(x,y)$, we find that $u(x,y) = x^2 - y^2, v(x,y) = 2 x y$. The partial deriavtives are given by $u_x = 2 x, u_y = - 2 y, v_x = 2 y, v_y = 2 x$. We verify that the Cauchy-Riemann equations are indeed satisfied for this function.
 
 % Try to find a scalar potential u for the vector field (u_x, u_y) = (2x, -2y) and another scalar potential v for the vector field (v_x, v_y) = (2x, 2y). Try also to find a scalar potential for (x^2-y^2, 2 x y)

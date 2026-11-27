@@ -254,6 +254,21 @@ Misc Questions:
   "Nyquist(L) means the images of H = U·D sum to a constant. If H ≈ 1 up to wp and H ≈ 0 from ws (in
   fractions of the original Nyquist), then H(w) + H(2 - w) = 1 must hold. So the transition band 
   must be antisymmetric about 1, and only min(1 - wp, ws - 1) is meaningful."
+
+----------------------------------------------------------------------------------------------------
+Cruft that resulted from exploring options that turned out to be dead ends:
+
+- The warm-start stuff including the tail penalty idea. Changes Claude reported after exploring 
+  these:
+  - optimise_joint_slp gained tail_taps and tail_weight. They are off by default, so existing 
+    results are  unchanged.
+  - A new prosampler/warmstart.py holds pad_pair, shrink_pair and penalise_and_shrink. It is study 
+    code and not exported.
+  - The study script is demos/warm_start_study.py. It writes no figures. A new 
+    tests/test_warmstart.py covers the three new helpers, and the demos README is updated.
+  We might want to undo these.
+
+- The whole stuff with the prescription of a transition shape. I think, that should be thrown out.
   
 ----------------------------------------------------------------------------------------------------
 Summary of open tasks at the end of Session002:
